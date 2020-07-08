@@ -14,6 +14,7 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
+        "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_core",

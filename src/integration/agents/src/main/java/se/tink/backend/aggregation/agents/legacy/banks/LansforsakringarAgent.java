@@ -15,11 +15,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.filter.ClientFilter;
+import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
+import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -30,6 +33,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.codec.binary.Hex;
@@ -59,6 +63,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LFUtils;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.LansforsakringarBaseApiClient;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LansforsakringarDateUtil;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.Session;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.errors.HttpStatusCodeErrorException;
@@ -112,7 +117,6 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.Transferr
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionListResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpdatePaymentRequest;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -131,7 +135,12 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
+import se.tink.backend.aggregation.agents.modules.LegacyAgentProductionStrategyModule;
+import se.tink.backend.aggregation.agents.modules.LegacyAgentWiremockStrategyModule;
+import se.tink.backend.aggregation.agents.modules.providers.LegacyAgentStrategyInterface;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -157,6 +166,8 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
+@AgentDependencyModulesForProductionMode(modules = LegacyAgentProductionStrategyModule.class)
+@AgentDependencyModulesForDecoupledMode(modules = LegacyAgentWiremockStrategyModule.class)
 public class LansforsakringarAgent extends AbstractAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -168,6 +179,7 @@ public class LansforsakringarAgent extends AbstractAgent
                 RefreshIdentityDataExecutor,
                 TransferExecutor,
                 PersistentLogin {
+    private final Function<ApacheHttpClient4Config, TinkApacheHttpClient4> strategy;
     private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
             new DefaultAccountIdentifierFormatter();
     private static final DisplayAccountIdentifierFormatter GIRO_FORMATTER =
@@ -267,6 +279,7 @@ public class LansforsakringarAgent extends AbstractAgent
     private final Credentials credentials;
     private final String deviceId;
     private final TransferMessageFormatter transferMessageFormatter;
+    private final LansforsakringarBaseApiClient lansforsakringarBaseApiClient;
     private String ticket = null;
     private String token = null;
     private String loginName = null;
@@ -279,13 +292,16 @@ public class LansforsakringarAgent extends AbstractAgent
             ImmutableList.of(
                     "connection reset", "connect timed out", "read timed out", "failed to respond");
 
+    @Inject
     public LansforsakringarAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
-
+            AgentComponentProvider agentComponentProvider,
+            LegacyAgentStrategyInterface strategyProvider) {
+        super(agentComponentProvider.getCredentialsRequest(), agentComponentProvider.getContext());
+        strategy = strategyProvider.getLegacyHttpClientStrategy();
         catalog = context.getCatalog();
         credentials = request.getCredentials();
-        client = clientFactory.createCustomClient(context.getLogOutputStream());
+        client = strategy.apply(new DefaultApacheHttpClient4Config());
+
         addBankSideFailureFilter();
 
         deviceId =
@@ -293,6 +309,9 @@ public class LansforsakringarAgent extends AbstractAgent
                         Hex.encodeHex(
                                 StringUtils.hashSHA1(
                                         credentials.getField(Field.Key.USERNAME) + "-TINK")));
+        lansforsakringarBaseApiClient =
+                new LansforsakringarBaseApiClient(
+                        client, strategyProvider.getLegacyHostStrategy(), deviceId);
         transferMessageFormatter =
                 new TransferMessageFormatter(
                         catalog,
@@ -421,24 +440,6 @@ public class LansforsakringarAgent extends AbstractAgent
         throw BankIdError.TIMEOUT.exception();
     }
 
-    private Builder createClientRequest(String url) {
-        Builder request = client.resource(url).accept(MediaType.APPLICATION_JSON);
-
-        if (token != null) {
-            request = request.header("ctoken", token);
-        }
-
-        if (ticket != null) {
-            request = request.header("utoken", ticket);
-        }
-
-        if (deviceId != null) {
-            request = request.header("DeviceId", deviceId);
-        }
-
-        return request;
-    }
-
     private <T> T createPostRequestWithResponseHandling(
             String url, Class<T> returnClass, Object requestEntity)
             throws HttpStatusCodeErrorException {
@@ -447,20 +448,20 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     private ClientResponse createPostRequest(String url, Object requestEntity) {
-        Builder request = createClientRequest(url);
+        Builder request = lansforsakringarBaseApiClient.createClientRequest(url, token, ticket);
         request.type(MediaType.APPLICATION_JSON);
         return request.post(ClientResponse.class, requestEntity);
     }
 
     private <T> T createGetRequest(String url, Class<T> returnClass)
             throws HttpStatusCodeErrorException {
-        Builder request = createClientRequest(url);
+        Builder request = lansforsakringarBaseApiClient.createClientRequest(url, token, ticket);
         ClientResponse response = request.get(ClientResponse.class);
         return handleRequestResponse(response, returnClass);
     }
 
     private ClientResponse createGetRequest(String url) {
-        Builder request = createClientRequest(url);
+        Builder request = lansforsakringarBaseApiClient.createClientRequest(url, token, ticket);
         return request.get(ClientResponse.class);
     }
 
@@ -1320,7 +1321,9 @@ public class LansforsakringarAgent extends AbstractAgent
 
     @Override
     public void logout() throws Exception {
-        createClientRequest(PASSWORD_LOGIN_URL).delete();
+        lansforsakringarBaseApiClient
+                .createClientRequest(PASSWORD_LOGIN_URL, token, ticket)
+                .delete();
     }
 
     private <T> T createGetRequestFromUrlAndDepotNumber(
