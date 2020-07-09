@@ -12,11 +12,12 @@ public class HandelsbankenDateUtilsTest {
     @Test
     public void testPaymentDateIsNotChanged_when_ExplicitlySet() {
         // given
+        HandelsbankenDateUtils handelsbankenDateUtils = new HandelsbankenDateUtils();
         LocalDate localDate = LocalDate.of(2020, 05, 29);
         final Date executionDate = Date.from(localDate.atStartOfDay(ZoneId.of("CET")).toInstant());
 
         // when
-        final String paymentDate = HandelsbankenDateUtils.getTransferDateForBgPg(executionDate);
+        final String paymentDate = handelsbankenDateUtils.getTransferDateForBgPg(executionDate);
 
         // then
         assertEquals(paymentDate, localDate.toString());

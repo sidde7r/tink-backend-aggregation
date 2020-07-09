@@ -9,23 +9,26 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class HandelsbankenDateUtils {
 
-    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
-    private static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
-    private static final CountryDateHelper dateHelper =
-            new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
+    private final CountryDateHelper dateHelper;
 
-    public static String getTransferDateForInternalTransfer(Date date) {
+    public HandelsbankenDateUtils() {
+        ZoneId defaultZoneId = ZoneId.of("CET");
+        Locale defaultLocale = new Locale("sv", "SE");
+        dateHelper = new CountryDateHelper(defaultLocale, TimeZone.getTimeZone(defaultZoneId));
+    }
+
+    public String getTransferDateForInternalTransfer(Date date) {
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(
                 dateHelper.getProvidedDateOrBestPossibleDate(date, 23, 59));
     }
 
-    public static String getTransferDateForExternalTransfer(Date date) {
+    public String getTransferDateForExternalTransfer(Date date) {
 
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(
                 dateHelper.getProvidedDateOrBestPossibleDate(date, 14, 00));
     }
 
-    public static String getTransferDateForBgPg(Date date) {
+    public String getTransferDateForBgPg(Date date) {
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(
                 dateHelper.getProvidedDateOrBestPossibleDate(date, 00, 00));
     }

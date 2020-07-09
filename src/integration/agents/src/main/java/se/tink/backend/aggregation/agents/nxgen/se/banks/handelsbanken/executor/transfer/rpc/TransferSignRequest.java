@@ -56,15 +56,16 @@ public class TransferSignRequest implements BaseSignRequest {
     }
 
     private static String getDueDate(Transfer transfer, boolean isInternalTransfer) {
+        HandelsbankenDateUtils handelsbankenDateUtils = new HandelsbankenDateUtils();
         String formattedDate;
 
         if (isInternalTransfer) {
             formattedDate =
-                    HandelsbankenDateUtils.getTransferDateForInternalTransfer(
+                    handelsbankenDateUtils.getTransferDateForInternalTransfer(
                             transfer.getDueDate());
         } else {
             formattedDate =
-                    HandelsbankenDateUtils.getTransferDateForExternalTransfer(
+                    handelsbankenDateUtils.getTransferDateForExternalTransfer(
                             transfer.getDueDate());
         }
         return formattedDate;
