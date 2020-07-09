@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.authenticator.AmexAccessTokenProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.authenticator.AmexThirdPartyAppRequestParamsProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.filter.AmexRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.filter.InvalidTokenFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.macgenerator.AmexMacGenerator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.macgenerator.MacSignatureCreator;
@@ -40,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
@@ -88,6 +90,11 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
 
         this.creditCardRefreshController = constructCreditCardController();
         client.addFilter(new InvalidTokenFilter(hmacMultiTokenStorage));
+        client.addFilter(
+                new AmexRetryFilter(
+                        AmericanExpressConstants.HttpClient.MAX_ATTEMPTS,
+                        AmericanExpressConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     @Override
