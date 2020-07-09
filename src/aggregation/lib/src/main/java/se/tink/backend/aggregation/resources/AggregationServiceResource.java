@@ -396,11 +396,19 @@ public class AggregationServiceResource implements AggregationService {
                         .filter(prv -> !StringUtils.containsIgnoreCase(prv.getName(), "sandbox"))
                         .collect(Collectors.toList());
 
-        Preconditions.checkState(
-                filteredProviders.size() == 1,
-                String.format(
-                        "Trying to get secrets template. Should find 1 provider for providerName : %s, but found instead : %d",
-                        providerName, filteredProviders.size()));
+        HttpResponseHelper httpResponseHelper = new HttpResponseHelper(logger);
+
+        if (filteredProviders.size() == 0) {
+            httpResponseHelper.error(
+                    Response.Status.NOT_FOUND,
+                    String.format("Provider not found: %s", providerName));
+        } else if (filteredProviders.size() != 1) {
+            httpResponseHelper.error(
+                    Response.Status.INTERNAL_SERVER_ERROR,
+                    String.format(
+                            "Trying to get secrets template. Should find 1 provider for providerName : %s, but found instead : %d",
+                            providerName, filteredProviders.size()));
+        }
 
         return Provider.of(filteredProviders.get(0));
     }
