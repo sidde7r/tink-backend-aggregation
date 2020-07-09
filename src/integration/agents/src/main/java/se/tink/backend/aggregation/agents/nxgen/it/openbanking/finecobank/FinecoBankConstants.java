@@ -28,7 +28,8 @@ public final class FinecoBankConstants {
         public static final String INVALID_CONSENT_TRANSACTIONS =
                 "Could not fetch transactions, because the consent is invalid. Please try again with a full consent.";
         public static final int ACCESS_EXCEEDED_ERROR_CODE = 429;
-        public static final int PERIOD_INVALID_ERROR = 400;
+        public static final int BAD_REQUEST_ERROR_CODE = 400;
+        public static final String PERIOD_INVALID_ERROR = "PERIOD_INVALID";
         public static final String UNKNOWN_SIGNING_STEP = "Unknown step %s";
         public static final String MISSING_SIGNING_LINK = "Signing link is missing";
         public static final String MAPPING_STATUS_TO_TINK_STATUS_ERROR =
