@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import java.io.File;
+import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -17,6 +18,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import org.apache.commons.codec.DecoderException;
@@ -32,16 +34,14 @@ public class SerializationUtils {
     private static final ObjectMapper STRING_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    public static <T> T deserializeFromBinary(byte[] data, Class<T> cls) {
-        if (data == null) {
-            return null;
-        }
+    public static <T> T deserializeFromBinary(byte[] data, Class<T> cls) throws IOException {
+        Objects.requireNonNull(data);
 
         try {
             return BINARY_MAPPER.readValue(data, cls);
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("Could not deserialize object", e);
-            return null;
+            throw e;
         }
     }
 
