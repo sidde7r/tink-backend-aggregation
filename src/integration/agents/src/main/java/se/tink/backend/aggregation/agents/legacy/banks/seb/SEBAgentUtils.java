@@ -78,45 +78,29 @@ public class SEBAgentUtils {
     static AccountCapabilities guessAccountCapabilities(
             Integer accountTypeCode, String accountTypeDescription) {
         final AccountCapabilities capabilities = AccountCapabilities.createDefault();
-        if (accountTypeCode.equals(SEBAccountType.PRIVATKONTO.getCode())) {
+        if (accountTypeCode.equals(SEBAccountType.PRIVATKONTO.getCode())
+                || accountTypeCode.equals(SEBAccountType.PERSONALLONEKONTO.getCode())) {
             capabilities.setCanWithdrawCash(Answer.YES);
             capabilities.setCanPlaceFunds(Answer.YES);
             capabilities.setCanExecuteExternalTransfer(Answer.YES);
             capabilities.setCanReceiveExternalTransfer(Answer.YES);
-        } else if (accountTypeCode.equals(SEBAccountType.PERSONALLONEKONTO.getCode())) {
-            capabilities.setCanWithdrawCash(Answer.YES);
-            capabilities.setCanPlaceFunds(Answer.YES);
-            capabilities.setCanExecuteExternalTransfer(Answer.YES);
-            capabilities.setCanReceiveExternalTransfer(Answer.YES);
-        } else if (accountTypeCode.equals(SEBAccountType.ENKLA_SPARKONTOT.getCode())) {
+        } else if (accountTypeCode.equals(SEBAccountType.ENKLA_SPARKONTOT.getCode())
+                || accountTypeCode.equals(SEBAccountType.ISK_KAPITALKONTO.getCode())) {
             capabilities.setCanWithdrawCash(Answer.NO);
             capabilities.setCanPlaceFunds(Answer.YES);
             capabilities.setCanExecuteExternalTransfer(Answer.YES);
             capabilities.setCanReceiveExternalTransfer(Answer.YES);
-        } else if (accountTypeCode.equals(SEBAccountType.SPECIALINLONEKONTO.getCode())) {
+        } else if (accountTypeCode.equals(SEBAccountType.SPECIALINLONEKONTO.getCode())
+                || accountTypeCode.equals(SEBAccountType.PLACERINGSKONTO.getCode())
+                || (accountTypeCode.equals(SEBAccountType.OTHER.getCode())
+                        && accountTypeDescription.equalsIgnoreCase("notariatkonto"))) {
             capabilities.setCanWithdrawCash(Answer.NO);
             capabilities.setCanPlaceFunds(Answer.YES);
             capabilities.setCanExecuteExternalTransfer(Answer.NO);
             capabilities.setCanReceiveExternalTransfer(Answer.NO);
-        } else if (accountTypeCode.equals(SEBAccountType.PLACERINGSKONTO.getCode())) {
-            capabilities.setCanWithdrawCash(Answer.NO);
-            capabilities.setCanPlaceFunds(Answer.YES);
-            capabilities.setCanExecuteExternalTransfer(Answer.NO);
-            capabilities.setCanReceiveExternalTransfer(Answer.NO);
-        } else if (accountTypeCode.equals(SEBAccountType.ISK_KAPITALKONTO.getCode())) {
-            capabilities.setCanWithdrawCash(Answer.NO);
-            capabilities.setCanPlaceFunds(Answer.YES);
-            capabilities.setCanExecuteExternalTransfer(Answer.YES);
-            capabilities.setCanReceiveExternalTransfer(Answer.YES);
         } else if (accountTypeCode.equals(SEBAccountType.IPS.getCode())) {
             capabilities.setCanWithdrawCash(Answer.NO);
             capabilities.setCanPlaceFunds(Answer.YES);
-        } else if (accountTypeCode.equals(SEBAccountType.OTHER.getCode())
-                && accountTypeDescription.equalsIgnoreCase("notariatkonto")) {
-            capabilities.setCanWithdrawCash(Answer.NO);
-            capabilities.setCanPlaceFunds(Answer.YES);
-            capabilities.setCanExecuteExternalTransfer(Answer.NO);
-            capabilities.setCanReceiveExternalTransfer(Answer.NO);
         }
 
         return capabilities;
