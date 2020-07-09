@@ -70,6 +70,7 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     private Date dueDate;
     private String messageType;
     private String payloadSerialized;
+    private String endUserIp;
 
     @JsonProperty private RemittanceInformation remittanceInformation;
 
@@ -438,5 +439,13 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     @JsonIgnore
     public boolean isRemittanceInformationGenerated() {
         return isMessageGenerated(remittanceInformation.getValue());
+    }
+
+    public String getEndUserIp() {
+        return endUserIp;
+    }
+
+    public void setEndUserIp(String endUserIp) {
+        this.endUserIp = endUserIp;
     }
 }

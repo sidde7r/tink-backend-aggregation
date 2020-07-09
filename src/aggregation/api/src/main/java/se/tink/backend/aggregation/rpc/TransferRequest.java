@@ -14,6 +14,7 @@ public class TransferRequest extends CredentialsRequest {
     private SignableOperation signableOperation;
     private boolean update;
     private boolean skipRefresh;
+    private String endUserIp;
 
     public TransferRequest() {}
 
@@ -68,5 +69,13 @@ public class TransferRequest extends CredentialsRequest {
 
     public void setSkipRefresh(boolean skipRefresh) {
         this.skipRefresh = skipRefresh;
+    }
+
+    public String getEndUserIp() {
+        return endUserIp;
+    }
+
+    public void setEndUserIp(String endUserIp) {
+        this.endUserIp = endUserIp;
     }
 }
