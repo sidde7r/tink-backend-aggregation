@@ -6,6 +6,4 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class PsuDataEntity {
     private String bankID = RequestValues.SWEDBANK_BANKID;
-    private String personalID; // for baltic banks only
-    private String phoneNumber; // for baltic banks only
 }

@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authent
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
@@ -171,7 +170,6 @@ public class SwedbankAuthenticationController
     private void handleSwedbankFlow() {
         ConsentResponse initConsent = authenticator.getConsentForAllAccounts();
         authenticator.useConsent(initConsent);
-        List<String> ibanList = authenticator.getAccountList();
 
         ConsentResponse consentResponseIbanList = authenticator.getConsentForIbanList();
         authenticator.useConsent(consentResponseIbanList);

@@ -30,7 +30,6 @@ public class SwedbankAgent extends NextGenerationAgent
 
     private final SwedbankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private SwedbankTransactionFetcher transactionFetcher;
 
     public SwedbankAgent(
             CredentialsRequest request,
