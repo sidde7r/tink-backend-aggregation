@@ -61,7 +61,7 @@ public class FinecoBankCreditCardAccountFetcher
                             .getTinkTransactions());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == ErrorMessages.ACCESS_EXCEEDED_ERROR_CODE
-                    || e.getResponse().getStatus() == ErrorMessages.PERIOD_INVALID_ERROR) {
+                    || e.getResponse().getStatus() == ErrorMessages.BAD_REQUEST_ERROR_CODE) {
                 return PaginatorResponseImpl.createEmpty(false);
             } else {
                 throw e;

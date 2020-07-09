@@ -59,7 +59,11 @@ public class FinecoBankTransactionalAccountFetcher
             return PaginatorResponseImpl.create(
                     apiClient.getTransactions(account, fromDate, toDate).getTinkTransactions());
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == ErrorMessages.ACCESS_EXCEEDED_ERROR_CODE) {
+            if (e.getResponse().getStatus() == ErrorMessages.ACCESS_EXCEEDED_ERROR_CODE
+                    || (e.getResponse().getStatus() == ErrorMessages.BAD_REQUEST_ERROR_CODE
+                            && e.getResponse()
+                                    .getBody(String.class)
+                                    .contains(ErrorMessages.PERIOD_INVALID_ERROR))) {
                 return PaginatorResponseImpl.createEmpty(false);
             } else {
                 throw e;
