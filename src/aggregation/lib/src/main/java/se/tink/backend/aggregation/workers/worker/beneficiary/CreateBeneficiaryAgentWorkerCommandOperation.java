@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
+import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
@@ -72,7 +73,8 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             LoginAgentWorkerCommandState loginAgentWorkerCommandState,
             LoginAgentEventProducer loginAgentEventProducer,
             AgentWorkerOperationState agentWorkerOperationState,
-            ProviderTierConfiguration providerTierConfiguration) {
+            ProviderTierConfiguration providerTierConfiguration,
+            RegulatoryRestrictions regulatoryRestrictions) {
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -85,7 +87,8 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
         String metricsName = "create-beneficiary";

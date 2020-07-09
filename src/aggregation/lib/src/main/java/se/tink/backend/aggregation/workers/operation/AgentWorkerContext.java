@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDa
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.Psd2PaymentAccountClassifier;
 import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.result.Psd2PaymentAccountClassificationResult;
+import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.locks.BarrierName;
@@ -116,6 +117,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected ControllerWrapper controllerWrapper;
 
     protected IdentityData identityData;
+    private RegulatoryRestrictions regulatoryRestrictions;
 
     public AgentWorkerContext(
             CredentialsRequest request,
@@ -126,7 +128,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             ProviderSessionCacheController providerSessionCacheController,
             ControllerWrapper controllerWrapper,
             String clusterId,
-            String appId) {
+            String appId,
+            RegulatoryRestrictions regulatoryRestrictions) {
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
@@ -139,6 +142,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         // _Not_ instanciating a SystemService from the ServiceFactory here.
         this.coordinationClient = coordinationClient;
+        this.regulatoryRestrictions = regulatoryRestrictions;
 
         setClusterId(clusterId);
         setAggregatorInfo(aggregatorInfo);
@@ -372,6 +376,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             // (For now we discard the result as in the beginning we just want to collect metrics)
             Optional<Psd2PaymentAccountClassificationResult> paymentAccountClassification =
                     psd2PaymentAccountClassifier.classify(request.getProvider(), account);
+            regulatoryRestrictions.shouldAccountBeRestricted(
+                    request, account, paymentAccountClassification);
         } catch (RuntimeException e) {
             log.error("[classifyAsPaymentAccount] Unexpected exception occurred", e);
         }

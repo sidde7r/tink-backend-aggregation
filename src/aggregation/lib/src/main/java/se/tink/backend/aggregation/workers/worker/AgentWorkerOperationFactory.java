@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
+import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
@@ -125,6 +127,8 @@ public class AgentWorkerOperationFactory {
     private TppSecretsServiceClient tppSecretsServiceClient;
     private InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
 
+    private RegulatoryRestrictions regulatoryRestrictions;
+
     @Inject
     public AgentWorkerOperationFactory(
             CacheClient cacheClient,
@@ -152,7 +156,8 @@ public class AgentWorkerOperationFactory {
             ManagedTppSecretsServiceClient tppSecretsServiceClient,
             InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory,
             ProviderTierConfiguration providerTierConfiguration,
-            @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands) {
+            @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands,
+            @Nullable RegulatoryRestrictions regulatoryRestrictions) {
         this.cacheClient = cacheClient;
 
         this.cryptoConfigurationDao = cryptoConfigurationDao;
@@ -182,6 +187,7 @@ public class AgentWorkerOperationFactory {
         this.interProcessSemaphoreMutexFactory = interProcessSemaphoreMutexFactory;
         this.providerTierConfiguration = providerTierConfiguration;
         this.shouldAddExtraCommands = shouldAddExtraCommands;
+        this.regulatoryRestrictions = regulatoryRestrictions;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(CredentialsRequest request) {
@@ -315,7 +321,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
 
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -435,7 +442,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -519,7 +527,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
 
         String operationName;
         List<AgentWorkerCommand> commands;
@@ -585,7 +594,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
         context.setWhitelistRefresh(true);
 
         String operationName = "execute-whitelisted-transfer";
@@ -747,7 +757,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -786,7 +797,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -824,7 +836,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -881,7 +894,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
 
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -961,7 +975,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
 
         context.setWhitelistRefresh(true);
         CryptoWrapper cryptoWrapper =
@@ -1085,7 +1100,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -1271,7 +1287,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
-                        correlationId);
+                        correlationId,
+                        regulatoryRestrictions);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -1334,7 +1351,8 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         loginAgentEventProducer,
                         agentWorkerOperationState,
-                        this.providerTierConfiguration));
+                        this.providerTierConfiguration,
+                        regulatoryRestrictions));
     }
 
     private static String generateOrGetCorrelationId(String correlationId) {

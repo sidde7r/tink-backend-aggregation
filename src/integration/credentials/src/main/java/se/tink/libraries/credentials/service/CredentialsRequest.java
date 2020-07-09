@@ -3,6 +3,7 @@ package se.tink.libraries.credentials.service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.ImmutableSortedMap;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
@@ -29,7 +30,7 @@ public abstract class CredentialsRequest {
     // TODO: Remove with new AgentWorker
     protected boolean update;
 
-    private List<DataFetchingRestrictions> dataFetchingRestrictions;
+    private List<DataFetchingRestrictions> dataFetchingRestrictions = new ArrayList<>();
 
     /** @return true if and only if this request was not initiated by a cron job */
     @JsonIgnore
