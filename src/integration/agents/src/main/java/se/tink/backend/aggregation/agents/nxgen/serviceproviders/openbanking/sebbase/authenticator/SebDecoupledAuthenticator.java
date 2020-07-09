@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.PollResponses;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryValues;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
@@ -65,7 +67,9 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
             case PollResponses.COMPLETE:
                 if (Strings.nullToEmpty(response.getHintCode())
                         .equalsIgnoreCase(PollResponses.UNKNOWN_BANK_ID)) {
-                    return BankIdStatus.FAILED_UNKNOWN;
+                    throw BankIdError.BLOCKED.exception(
+                            new LocalizableKey(
+                                    "Message from SEB - SEB needs you to verify your BankID before you can continue using the service. Visit www.seb.se or open the SEB app to verify your BankID. Note that you must be a customer of SEB to be able to use the service."));
                 }
 
                 startAuthorization();
