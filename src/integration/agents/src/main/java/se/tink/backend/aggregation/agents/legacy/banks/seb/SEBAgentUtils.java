@@ -75,7 +75,8 @@ public class SEBAgentUtils {
         return null;
     }
 
-    static AccountCapabilities guessAccountCapabilities(Integer accountTypeCode) {
+    static AccountCapabilities guessAccountCapabilities(
+            Integer accountTypeCode, String accountTypeDescription) {
         final AccountCapabilities capabilities = AccountCapabilities.createDefault();
         if (accountTypeCode.equals(SEBAccountType.PRIVATKONTO.getCode())) {
             capabilities.setCanWithdrawCash(Answer.YES);
@@ -107,8 +108,26 @@ public class SEBAgentUtils {
             capabilities.setCanPlaceFunds(Answer.YES);
             capabilities.setCanExecuteExternalTransfer(Answer.YES);
             capabilities.setCanReceiveExternalTransfer(Answer.YES);
+        } else if (accountTypeCode.equals(SEBAccountType.IPS.getCode())) {
+            capabilities.setCanWithdrawCash(Answer.NO);
+            capabilities.setCanPlaceFunds(Answer.YES);
+        } else if (accountTypeCode.equals(SEBAccountType.OTHER.getCode())
+                && accountTypeDescription.equalsIgnoreCase("notariatkonto")) {
+            capabilities.setCanWithdrawCash(Answer.NO);
+            capabilities.setCanPlaceFunds(Answer.YES);
+            capabilities.setCanExecuteExternalTransfer(Answer.NO);
+            capabilities.setCanReceiveExternalTransfer(Answer.NO);
         }
 
+        return capabilities;
+    }
+
+    public static AccountCapabilities getLoanAccountCapabilities() {
+        final AccountCapabilities capabilities = AccountCapabilities.createDefault();
+        capabilities.setCanWithdrawCash(Answer.NO);
+        capabilities.setCanPlaceFunds(Answer.UNKNOWN);
+        capabilities.setCanExecuteExternalTransfer(Answer.NO);
+        capabilities.setCanReceiveExternalTransfer(Answer.NO);
         return capabilities;
     }
 
