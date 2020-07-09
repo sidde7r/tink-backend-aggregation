@@ -154,12 +154,16 @@ public class AccountEntity {
                 .setApiIdentifier(accountNumber)
                 .addHolderName(getHolderName())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_CUSTOMER_ID, customerId)
-                .canWithdrawCash(SebPaymentAccountCapabilities.canWithdrawCash(accountType))
-                .canPlaceFunds(SebPaymentAccountCapabilities.canPlaceFunds(accountType))
+                .canWithdrawCash(
+                        SebPaymentAccountCapabilities.canWithdrawCash(accountType, accountTypeName))
+                .canPlaceFunds(
+                        SebPaymentAccountCapabilities.canPlaceFunds(accountType, accountTypeName))
                 .canExecuteExternalTransfer(
-                        SebPaymentAccountCapabilities.canExecuteExternalTransfer(accountType))
+                        SebPaymentAccountCapabilities.canExecuteExternalTransfer(
+                                accountType, accountTypeName))
                 .canReceiveExternalTransfer(
-                        SebPaymentAccountCapabilities.canReceiveExternalTransfer(accountType))
+                        SebPaymentAccountCapabilities.canReceiveExternalTransfer(
+                                accountType, accountTypeName))
                 .build();
     }
 }

@@ -140,7 +140,7 @@ public class SebConstants {
         }
 
         public static final String PRIVATKONTO = "1";
-        // 2: NOTARIATKONTO, SKOGSKONTO, FÖRETAGSKONTO: classified as OTHER in legacy agent
+        // 2: NOTARIATKONTO, SKOGSKONTO, FÖRETAGSKONTO
         // sometimes 1 has KTOSLAG_TXT=NOTARIATKONTO, but shows as product=Privatkonto on OB
         public static final String OTHER = "2";
         public static final String PERSONALLONEKONTO = "3";
@@ -151,6 +151,8 @@ public class SebConstants {
         public static final String IPS = "27";
         public static final String PLACERINGSKONTO = "35";
         public static final String ISK_KAPITALKONTO = "54";
+        // To handle subtypes of OTHER, account capabilities mapping tries "<code>:<name>" first
+        public static final String OTHER_NOTARIATKONTO = "2:NOTARIATKONTO";
     }
 
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
@@ -189,7 +191,9 @@ public class SebConstants {
                                 AccountTypeCode.ENKLA_SPARKONTOT,
                                 AccountTypeCode.SPECIALINLANINGSKONTO,
                                 AccountTypeCode.PLACERINGSKONTO,
-                                AccountTypeCode.ISK_KAPITALKONTO)
+                                AccountTypeCode.ISK_KAPITALKONTO,
+                                AccountTypeCode.IPS,
+                                AccountTypeCode.OTHER_NOTARIATKONTO)
                         .build();
 
         public static final TypeMapper<Answer> CAN_PLACE_FUNDS_MAPPER =
@@ -201,7 +205,9 @@ public class SebConstants {
                                 AccountTypeCode.ENKLA_SPARKONTOT,
                                 AccountTypeCode.SPECIALINLANINGSKONTO,
                                 AccountTypeCode.PLACERINGSKONTO,
-                                AccountTypeCode.ISK_KAPITALKONTO)
+                                AccountTypeCode.ISK_KAPITALKONTO,
+                                AccountTypeCode.IPS,
+                                AccountTypeCode.OTHER_NOTARIATKONTO)
                         .build();
 
         public static final TypeMapper<Answer> CAN_EXECUTE_EXTERNAL_TRANSFER_MAPPER =
@@ -215,7 +221,8 @@ public class SebConstants {
                         .put(
                                 Answer.NO,
                                 AccountTypeCode.SPECIALINLANINGSKONTO,
-                                AccountTypeCode.PLACERINGSKONTO)
+                                AccountTypeCode.PLACERINGSKONTO,
+                                AccountTypeCode.OTHER_NOTARIATKONTO)
                         .build();
 
         public static final TypeMapper<Answer> CAN_RECEIVE_EXTERNAL_TRANSFER_MAPPER =
@@ -229,7 +236,8 @@ public class SebConstants {
                         .put(
                                 Answer.NO,
                                 AccountTypeCode.SPECIALINLANINGSKONTO,
-                                AccountTypeCode.PLACERINGSKONTO)
+                                AccountTypeCode.PLACERINGSKONTO,
+                                AccountTypeCode.OTHER_NOTARIATKONTO)
                         .build();
     }
 }
