@@ -158,7 +158,6 @@ public class SebConstants {
                     .put(
                             AccountTypes.CHECKING,
                             AccountTypeCode.PRIVATKONTO,
-                            AccountTypeCode.OTHER,
                             AccountTypeCode.PERSONALLONEKONTO,
                             AccountTypeCode.SPECIALINLANINGSKONTO)
                     .put(
@@ -171,6 +170,7 @@ public class SebConstants {
                             AccountTypeCode.IPS,
                             AccountTypeCode.PLACERINGSKONTO,
                             AccountTypeCode.ISK_KAPITALKONTO)
+                    .put(AccountTypes.OTHER, AccountTypeCode.OTHER)
                     .build();
 
     public static final class AccountCapabilities {
