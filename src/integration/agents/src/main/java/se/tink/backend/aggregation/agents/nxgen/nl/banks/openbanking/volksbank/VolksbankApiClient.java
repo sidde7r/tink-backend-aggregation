@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -88,8 +86,7 @@ public class VolksbankApiClient {
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .addBearerToken(oauth2Token);
 
-        String response = request.get(String.class);
-        return getResponse(response, TransactionResponse.class);
+        return request.get(TransactionResponse.class);
     }
 
     public BalancesResponse readBalance(
@@ -99,36 +96,27 @@ public class VolksbankApiClient {
                 urlFactory.buildURL(
                         Paths.ACCOUNTS + "/" + account.getResourceId() + Paths.BALANCES);
 
-        String response =
-                client.request(url)
-                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, consentId)
-                        .addBearerToken(oAuth2Token)
-                        .get(String.class);
-
-        return getResponse(response, BalancesResponse.class);
+        return client.request(url)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
+                .header(HeaderKeys.CONSENT_ID, consentId)
+                .addBearerToken(oAuth2Token)
+                .get(BalancesResponse.class);
     }
 
     public AccountsResponse fetchAccounts(final String consentId, final OAuth2Token oAuth2Token) {
 
         URL url = urlFactory.buildURL(Paths.ACCOUNTS);
 
-        final String response =
-                client.request(url)
-                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, consentId)
-                        .addBearerToken(oAuth2Token)
-                        .get(String.class);
-        return getResponse(response, AccountsResponse.class);
+        return client.request(url)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
+                .header(HeaderKeys.CONSENT_ID, consentId)
+                .addBearerToken(oAuth2Token)
+                .get(AccountsResponse.class);
     }
 
     public ConsentResponse consentRequest(final URL redirectUrl, final String clientId) {
-        return getResponse(consentRequestString(redirectUrl, clientId), ConsentResponse.class);
-    }
-
-    public String consentRequestString(final URL redirectUrl, final String clientId) {
         final URL url = urlFactory.buildURL(VolksbankConstants.Paths.CONSENT);
         final ConsentRequestBody body =
                 new ConsentRequestBody(
@@ -143,7 +131,7 @@ public class VolksbankApiClient {
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
                 .header(HeaderKeys.AUTHORIZATION, clientId)
                 .body(body)
-                .post(String.class);
+                .post(ConsentResponse.class);
     }
 
     public OAuth2Token getBearerToken(
@@ -167,21 +155,5 @@ public class VolksbankApiClient {
                 .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.AUTHORIZATION, clientId)
                 .get(ConsentStatusResponse.class);
-    }
-
-    private <E> E getResponse(String response, Class<E> contentClass) {
-
-        /*
-           We are getting )]}',\n extra characters in response, we need to clean them first and then
-           we can serialize the JSON string into an object
-        */
-        response = response.substring(response.indexOf("\n") + 1);
-
-        try {
-            return new ObjectMapper().readValue(response, contentClass);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }
