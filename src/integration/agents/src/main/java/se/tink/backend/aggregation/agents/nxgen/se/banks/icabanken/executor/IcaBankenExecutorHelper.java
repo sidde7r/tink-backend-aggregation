@@ -293,7 +293,7 @@ public class IcaBankenExecutorHelper {
                 .build();
     }
 
-    private void cleanUpOutbox() {
+    public void cleanUpOutbox() {
         try {
             List<AssignmentEntity> unsignedTransfers = apiClient.fetchUnsignedTransfers();
             deleteUnsignedTransfer(unsignedTransfers);
