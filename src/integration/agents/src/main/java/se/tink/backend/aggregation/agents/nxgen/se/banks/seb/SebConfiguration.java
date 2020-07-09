@@ -11,7 +11,7 @@ public class SebConfiguration extends SebBaseConfiguration {
 
     @Override
     public String getAuthBaseUrl() {
-        throw new UnsupportedOperationException("Not implemented");
+        return Urls.AUTH_BASE;
     }
 
     @Override
