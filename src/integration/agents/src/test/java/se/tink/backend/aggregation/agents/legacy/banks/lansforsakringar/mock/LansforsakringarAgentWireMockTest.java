@@ -39,7 +39,7 @@ public class LansforsakringarAgentWireMockTest {
 
     private Transfer createMockedDomesticTransfer() {
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "90240583681"));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "90247744574"));
 
         transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "7355837"));
         transfer.setAmount(Amount.inSEK(171d));
