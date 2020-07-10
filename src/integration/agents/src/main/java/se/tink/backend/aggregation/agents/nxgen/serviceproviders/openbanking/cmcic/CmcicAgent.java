@@ -86,7 +86,12 @@ public abstract class CmcicAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         return Optional.of(
                 new PaymentController(
-                        new CmcicPaymentExecutor(apiClient, sessionStorage, agentConfiguration)));
+                        new CmcicPaymentExecutor(
+                                apiClient,
+                                sessionStorage,
+                                agentConfiguration,
+                                supplementalInformationHelper,
+                                strongAuthenticationState)));
     }
 
     @Override

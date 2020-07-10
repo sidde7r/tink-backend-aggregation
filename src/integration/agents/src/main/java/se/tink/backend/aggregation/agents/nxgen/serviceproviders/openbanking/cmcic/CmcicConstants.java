@@ -87,4 +87,8 @@ public final class CmcicConstants {
     public static class DateFormat {
         public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
     }
+
+    public static class PaymentSteps {
+        public static final String POST_SIGN_STEP = "post_sign_state";
+    }
 }
