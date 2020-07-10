@@ -95,6 +95,10 @@ data:
     sendDataTrackingEvents: {{ .Values.sendDataTrackingEvents }}
     {{ end }}
 
+    {{ if .Values.sendAccountHoldersRefreshedEvents }}
+    sendAccountHoldersRefreshedEvents: {{ .Values.sendAccountHoldersRefreshedEvents }}
+    {{ end }}
+
     {{ if .Values.sendAgentLoginCompletedEvents }}
     sendAgentLoginCompletedEvents: {{ .Values.sendAgentLoginCompletedEvents }}
     {{ end }}
