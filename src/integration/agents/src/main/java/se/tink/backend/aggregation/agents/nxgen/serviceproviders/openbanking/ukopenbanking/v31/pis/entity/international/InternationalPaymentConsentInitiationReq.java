@@ -26,7 +26,8 @@ public class InternationalPaymentConsentInitiationReq {
 
     public InternationalPaymentConsentInitiationReq(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
-        this.remittanceInformation = new RemittanceInformation(payment.getReference());
+        this.remittanceInformation =
+                new RemittanceInformation(payment.getUniqueId(), payment.getReference());
         this.currencyOfTransfer = payment.getCurrency();
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;

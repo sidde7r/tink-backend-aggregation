@@ -39,7 +39,8 @@ public class Initiation {
         this.debtorAccount =
                 Objects.isNull(payment.getDebtor()) ? null : new DebtorAccount(payment.getDebtor());
         this.creditorAccount = new CreditorAccount(payment.getCreditor());
-        this.remittanceInformation = new RemittanceInformation(payment.getReference());
+        this.remittanceInformation =
+                new RemittanceInformation(payment.getUniqueId(), payment.getReference());
     }
 
     public ExactCurrencyAmount toTinkAmount() {

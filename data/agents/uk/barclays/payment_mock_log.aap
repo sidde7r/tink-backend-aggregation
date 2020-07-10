@@ -51,7 +51,7 @@ x-fapi-financial-id: MOCK_ORG_ID
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 
-{"Risk":{},"Data":{"Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"RemittanceInformation":{"Unstructured":"","Reference":"UK Demo"}}}}
+{"Risk":{},"Data":{"Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"RemittanceInformation":{"Unstructured":"b900555d03124056b54930e1c53c9cac","Reference":"UK Demo"}}}}
 
 RESPONSE 3
 201
@@ -66,7 +66,7 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"ConsentId":"BARCLAYS-P-10000000245531","CreationDateTime":"2020-03-04T14:34:37Z","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-03-04T14:34:37Z","Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"RemittanceInformation":{"Unstructured":"","Reference":"UK Demo"}}},"Risk":{},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/pisp/domestic-payment-consents"},"Meta":{}}
+{"Data":{"ConsentId":"BARCLAYS-P-10000000245531","CreationDateTime":"2020-03-04T14:34:37Z","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-03-04T14:34:37Z","Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"RemittanceInformation":{"Unstructured":"b900555d03124056b54930e1c53c9cac","Reference":"UK Demo"}}},"Risk":{},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/pisp/domestic-payment-consents"},"Meta":{}}
 
 REQUEST 4 MATCH STATE_PAYMENT
 POST https://token.tiaa.barclays.com/as/token.oauth2
@@ -100,7 +100,7 @@ x-fapi-financial-id: MOCK_ORG_ID
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 
-{"Risk":{},"Data":{"ConsentId":"BARCLAYS-P-10000000245531","Initiation":{"RemittanceInformation":{"Unstructured":"","Reference":"UK Demo"},"EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructionIdentification":"b900555d03124056b54930e1c53c9cac","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
+{"Risk":{},"Data":{"ConsentId":"BARCLAYS-P-10000000245531","Initiation":{"RemittanceInformation":{"Unstructured":"b900555d03124056b54930e1c53c9cac","Reference":"UK Demo"},"EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructionIdentification":"b900555d03124056b54930e1c53c9cac","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
 
 RESPONSE 5
 201
@@ -115,7 +115,7 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"DomesticPaymentId":"BARCLAYS-P-10000000245531","ConsentId":"BARCLAYS-P-10000000245531","CreationDateTime":"2020-03-04T14:35:17Z","Status":"AcceptedSettlementInProcess","StatusUpdateDateTime":"2020-03-04T14:35:13Z","Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"RemittanceInformation":{"Unstructured":"","Reference":"UK Demo"}}},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/pisp/domestic-payments"},"Meta":{}}
+{"Data":{"DomesticPaymentId":"BARCLAYS-P-10000000245531","ConsentId":"BARCLAYS-P-10000000245531","CreationDateTime":"2020-03-04T14:35:17Z","Status":"AcceptedSettlementInProcess","StatusUpdateDateTime":"2020-03-04T14:35:13Z","Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"RemittanceInformation":{"Unstructured":"b900555d03124056b54930e1c53c9cac","Reference":"UK Demo"}}},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/pisp/domestic-payments"},"Meta":{}}
 
 REQUEST 6
 GET https://telesto.api.barclays:443/open-banking/v3.1/pisp/domestic-payments/BARCLAYS-P-10000000245531
