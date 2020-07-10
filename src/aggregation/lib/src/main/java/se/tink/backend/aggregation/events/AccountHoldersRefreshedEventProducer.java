@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.events;
 
 import com.google.protobuf.Any;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.slf4j.Logger;
@@ -34,19 +35,21 @@ public class AccountHoldersRefreshedEventProducer {
         if (!eventEnabled) {
             return;
         }
-        AccountHoldersRefreshedEventProto.AccountHoldersRefreshedEvent event =
-                AccountHoldersRefreshedEventProto.AccountHoldersRefreshedEvent.newBuilder()
-                        .setClusterId(clusterId)
-                        .setAppId(appId)
-                        .setUserId(userId)
-                        .setProviderName(providerName)
-                        .setCorrelationId(correlationId)
-                        .setAccountId(accountId)
-                        .setHoldersCount(holdersCount)
-                        .setHolderType(holderType)
-                        .build();
-
         try {
+            AccountHoldersRefreshedEventProto.AccountHoldersRefreshedEvent.Builder builder =
+                    AccountHoldersRefreshedEventProto.AccountHoldersRefreshedEvent.newBuilder()
+                            .setClusterId(clusterId)
+                            .setAppId(appId)
+                            .setUserId(userId)
+                            .setProviderName(providerName)
+                            .setCorrelationId(correlationId)
+                            .setAccountId(accountId)
+                            .setHoldersCount(holdersCount);
+
+            Optional.ofNullable(holderType).ifPresent(builder::setHolderType);
+
+            AccountHoldersRefreshedEventProto.AccountHoldersRefreshedEvent event = builder.build();
+
             eventProducerServiceClient.postEventFireAndForget(Any.pack(event));
         } catch (RuntimeException e) {
             log.warn("could not produce event: AccountHoldersRefreshedEvent", e);
