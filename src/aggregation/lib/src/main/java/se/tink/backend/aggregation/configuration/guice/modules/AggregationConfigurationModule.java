@@ -54,6 +54,10 @@ public class AggregationConfigurationModule extends AbstractModule {
                 .annotatedWith(Names.named("sendAgentRefreshEvents"))
                 .to(configuration.isSendAgentRefreshEvents());
 
+        bindConstant()
+                .annotatedWith(Names.named("sendAccountHoldersRefreshedEvents"))
+                .to(configuration.isSendAccountHoldersRefreshedEvents());
+
         bind(CacheConfiguration.class)
                 .toProvider(Providers.of(configuration.getCacheConfiguration()));
         bind(SqsQueueConfiguration.class)

@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.events.AccountHoldersRefreshedEventProducer;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
@@ -287,6 +288,8 @@ public final class AgentWorkerOperationFactoryTest {
                     .toInstance(mock(ManagedTppSecretsServiceClient.class));
             bind(InterProcessSemaphoreMutexFactory.class)
                     .toInstance(mock(InterProcessSemaphoreMutexFactory.class));
+            bind(AccountHoldersRefreshedEventProducer.class)
+                    .toInstance(mock(AccountHoldersRefreshedEventProducer.class));
         }
     }
 }
