@@ -1124,6 +1124,8 @@ public class LansforsakringarAgent extends AbstractAgent
                             EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY);
                 case "12215":
                     throw cancelTransfer(EndUserMessage.INVALID_OCR);
+                case "122422":
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
                 default:
                     throw cancelTransferWithMessage(
                             String.format(
