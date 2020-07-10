@@ -181,6 +181,14 @@ public class DemobankApiClient {
                 .post(CreateTicketResponse.class, request);
     }
 
+    public CreateTicketResponse initDecoupledAppToApp(String username, String code) {
+        CreateTicketRequest request = new CreateTicketRequest(username, null, null, code);
+        return createRequest(fetchBaseUrl().concat(Urls.A2A_INIT_DECOUPLED_URL))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(CreateTicketResponse.class, request);
+    }
+
     public CollectTicketResponse collectAppToApp(String ticketId) {
         return createRequest(
                         fetchBaseUrl()

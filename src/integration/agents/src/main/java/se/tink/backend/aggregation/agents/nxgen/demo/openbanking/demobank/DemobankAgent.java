@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterIds;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterSpecificCallbacks;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankAppToAppAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankDecoupledAppAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockDkNemIdReAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAndOtpAuthenticator;
@@ -96,6 +97,9 @@ public class DemobankAgent extends NextGenerationAgent
                 && AccessType.OTHER.equals(provider.getAccessType())
                 && "DK".equals(provider.getMarket())) {
             return constructMockNemIdAuthenticator();
+        } else if (AccessType.OPEN_BANKING.equals(provider.getAccessType())
+                && AuthenticationFlow.DECOUPLED.equals(provider.getAuthenticationFlow())) {
+            return constructDecoupledAppAuthenticator();
         } else if (CredentialsTypes.PASSWORD.equals(provider.getCredentialsType())
                 && AccessType.OPEN_BANKING.equals(provider.getAccessType())
                 && AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())) {
@@ -133,6 +137,12 @@ public class DemobankAgent extends NextGenerationAgent
                 new ThirdPartyAppAuthenticationController<>(
                         demobankNemIdAuthenticator, supplementalInformationHelper),
                 demobankNemIdAuthenticator);
+    }
+
+    private Authenticator constructDecoupledAppAuthenticator() {
+        DemobankDecoupledAppAuthenticator authenticator =
+                new DemobankDecoupledAppAuthenticator(apiClient, supplementalRequester);
+        return authenticator;
     }
 
     private Authenticator constructApptToAppAuthenticator() {

@@ -2459,7 +2459,7 @@ public class SEBApiAgent extends AbstractAgent
     private enum UserMessage implements LocalizableEnum {
         SEB_UNKNOWN_BANKID(
                 new LocalizableKey(
-                        "Message from SEB - This BankId is unknown to SEB. Make sure to verify it and that you are a customer at www.seb.se")),
+                        "Message from SEB - SEB needs you to verify your BankID before you can continue using the service. Visit www.seb.se or open the SEB app to verify your BankID. Note that you must be a customer of SEB to be able to use the service.")),
 
         MUST_AUTHORIZE_BANKID(
                 new LocalizableKey(
