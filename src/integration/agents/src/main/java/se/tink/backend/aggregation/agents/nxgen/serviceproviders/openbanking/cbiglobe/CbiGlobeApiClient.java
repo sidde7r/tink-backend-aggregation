@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
@@ -270,11 +271,8 @@ public class CbiGlobeApiClient {
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
-
         return createRequestInSession(Urls.PAYMENT)
-                .header(
-                        HeaderKeys.PSU_IP_ADDRESS,
-                        sessionStorage.get(CbiGlobeConstants.HeaderKeys.PSU_IP_ADDRESS))
+                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
                 .header(
@@ -285,9 +283,17 @@ public class CbiGlobeApiClient {
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
+    private String getPsuIpAddress() {
+        String psuIpAddress = sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS);
+        if (Strings.isNullOrEmpty(psuIpAddress)) {
+            psuIpAddress = HeaderValues.DEFAULT_PSU_IP_ADDRESS;
+        }
+        return psuIpAddress;
+    }
+
     public CreatePaymentResponse getPayment(String uniqueId) {
         return createRequestInSession(Urls.FETCH_PAYMENT.parameter(IdTags.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
                 .get(CreatePaymentResponse.class);
     }
