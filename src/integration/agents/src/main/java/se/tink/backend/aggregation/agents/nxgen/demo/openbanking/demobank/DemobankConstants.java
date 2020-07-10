@@ -12,6 +12,7 @@ public class DemobankConstants {
 
         // App to app URLs
         public static final String A2A_INIT_URL = "/api/auth/ticket";
+        public static final String A2A_INIT_DECOUPLED_URL = "/api/auth/ticket/decoupled";
         public static final String A2A_COLLECT_URL = "/api/auth/ticket/{ticketId}/collect";
 
         // Norwegian BankID mocks
