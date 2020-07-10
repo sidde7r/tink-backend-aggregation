@@ -272,7 +272,9 @@ public class CbiGlobeApiClient {
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
 
         return createRequestInSession(Urls.PAYMENT)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS)
+                .header(
+                        HeaderKeys.PSU_IP_ADDRESS,
+                        sessionStorage.get(CbiGlobeConstants.HeaderKeys.PSU_IP_ADDRESS))
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
                 .header(
