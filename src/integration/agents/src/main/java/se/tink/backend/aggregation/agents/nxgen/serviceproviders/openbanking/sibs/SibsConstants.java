@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 public final class SibsConstants {
 
-    private static final String API_VERSION = "v1-0-3";
+    private static final String API_VERSION = "v1-0-2";
     private static final String ASPSP_CODE_WITH_VERSION = "/{aspsp-cde}/" + API_VERSION;
 
     private SibsConstants() {}
