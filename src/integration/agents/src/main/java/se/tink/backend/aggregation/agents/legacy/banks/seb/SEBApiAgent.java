@@ -1793,6 +1793,12 @@ public class SEBApiAgent extends AbstractAgent
 
     @Override
     public void execute(final Transfer transfer) throws Exception, TransferExecutionException {
+        List<TransferListEntity> unsignedTransfers = getUnsignedTransfers();
+        if (!unsignedTransfers.isEmpty()) {
+            deleteUnsignedTransfersFromOutbox(unsignedTransfers);
+            validateNoUnsignedTransfers();
+        }
+
         List<AccountEntity> accounts = listAccounts(customerId);
 
         ensureIsValidSourceAccount(accounts, transfer);
@@ -1812,6 +1818,34 @@ public class SEBApiAgent extends AbstractAgent
         // refresh comes
         // to fast. This would make use try to parse an a date that is an empty string.
         Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
+    }
+
+    private void deleteUnsignedTransfersFromOutbox(List<TransferListEntity> unsignedTransfers) {
+        try {
+            unsignedTransfers.forEach(
+                    transferQueuedUp -> {
+                        if (!deleteTransferFromOutbox(transferQueuedUp)) {
+                            log.error("Could not clean up transfer.");
+                        }
+                    });
+
+        } catch (Exception deleteException) {
+            log.warn(
+                    "Could not delete unsigned transfer from outbox but was expecting it to be possible.",
+                    deleteException);
+        }
+    }
+
+    private void validateNoUnsignedTransfers() {
+        if (!getUnsignedTransfers().isEmpty()) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(
+                            context.getCatalog()
+                                    .getString(
+                                            TransferExecutionException.EndUserMessage
+                                                    .EXISTING_UNSIGNED_TRANSFERS))
+                    .build();
+        }
     }
 
     public void ensureIsValidTransferAmount(Transfer transfer) throws TransferExecutionException {
