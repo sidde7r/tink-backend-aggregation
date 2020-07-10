@@ -2,10 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordea.fetcher.t
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 
-public class NordeaDkTransactionalAccountFetcher extends NordeaBaseTransactionalAccountFetcher {
+public class NordeaDkTransactionalAccountFetcher<R extends GetTransactionsResponse<?>>
+        extends NordeaBaseTransactionalAccountFetcher<R> {
 
-    public NordeaDkTransactionalAccountFetcher(NordeaBaseApiClient apiClient) {
-        super(apiClient);
+    public NordeaDkTransactionalAccountFetcher(
+            NordeaBaseApiClient apiClient, Class<R> transactionResponseClass) {
+        super(apiClient, transactionResponseClass);
     }
 }

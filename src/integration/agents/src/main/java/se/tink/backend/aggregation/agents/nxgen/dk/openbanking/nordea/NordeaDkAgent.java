@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordea.fetcher.tr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.BaseGetTransactionResponse;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -77,8 +78,9 @@ public final class NordeaDkAgent extends NordeaBaseAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        NordeaBaseTransactionalAccountFetcher accountFetcher =
-                new NordeaDkTransactionalAccountFetcher(apiClient);
+        NordeaBaseTransactionalAccountFetcher<BaseGetTransactionResponse> accountFetcher =
+                new NordeaDkTransactionalAccountFetcher<>(
+                        apiClient, BaseGetTransactionResponse.class);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

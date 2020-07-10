@@ -193,7 +193,7 @@ public class NordeaBaseApiClient implements TokenInterface {
         return createRequestInSession(url, HttpMethod.GET, null).get(GetTransactionsResponse.class);
     }
 
-    public GetTransactionsResponse getTransactions(TransactionalAccount account, String key) {
+    public <T> T getTransactions(TransactionalAccount account, String key, Class<T> responseClass) {
         URL url =
                 Optional.ofNullable(key)
                         .map(k -> new URL(NordeaBaseConstants.Urls.BASE_URL + k))
@@ -204,7 +204,7 @@ public class NordeaBaseApiClient implements TokenInterface {
 
         RequestBuilder request = createRequestInSession(url, HttpMethod.GET, null);
 
-        return requestRefreshableGet(request, GetTransactionsResponse.class);
+        return requestRefreshableGet(request, responseClass);
     }
 
     @Override
