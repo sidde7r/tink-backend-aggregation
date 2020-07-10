@@ -7,6 +7,8 @@ java_library(
     deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/lansforsakringar",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/modules",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/modules/providers",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:demo",
@@ -20,6 +22,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/annotation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/jersey/filter",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
