@@ -11,7 +11,7 @@ public class SebConfiguration extends SebBaseConfiguration {
 
     @Override
     public String getAuthBaseUrl() {
-        return Urls.AUTH_BASE;
+        return SebConstants.Urls.AUTH_BASE;
     }
 
     @Override
