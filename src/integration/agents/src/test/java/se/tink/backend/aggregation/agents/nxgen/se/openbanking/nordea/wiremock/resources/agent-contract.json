@@ -1,13 +1,45 @@
 {
   "accounts" : [ {
+    "accountNumber" : "************6641",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 50000.0,
+      "exactValue" : 50000.0,
+      "scale" : 1,
+      "unscaledValue" : 500000
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 23456.12,
+      "exactValue" : 23456.12,
+      "scale" : 2,
+      "unscaledValue" : 2345612
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "6641",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Nordea Gold",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "availableCredit" : 50000.0,
+    "balance" : 23456.12
+  }, {
     "accountNumber" : "9999783242",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "exactValue" : 17470.73,
       "doubleValue" : 17470.73,
-      "unscaledValue" : 1747073,
-      "scale" : 2
+      "exactValue" : 17470.73,
+      "scale" : 2,
+      "unscaledValue" : 1747073
     },
     "currencyCode" : "SEK",
     "bankId" : "3242",
@@ -26,6 +58,253 @@
     "balance" : 17470.73
   } ],
   "transactions" : [ {
+    "amount" : 0.0,
+    "date" : 1595584800000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1595412000000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1595412000000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1595325600000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1595325600000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1595325600000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1595325600000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1595325600000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1595325600000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1595325600000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1594720800000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1594634400000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1594634400000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1594634400000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1594634400000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1594634400000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1594461600000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1594461600000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 0.0,
+    "date" : 1594461600000,
+    "description" : "narrative",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "CREDIT_CARD_HOLDER" : "narrative"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
     "amount" : -249.0,
     "date" : 1594375200000,
     "description" : "type_description",

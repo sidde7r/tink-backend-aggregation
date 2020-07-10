@@ -218,3 +218,92 @@ Transfer-Encoding: chunked
 Server: Jetty(9.4.z-SNAPSHOT)
 
 {"group_header":{"message_identification":"fa98eefad61b0a11","creation_date_time":"2020-07-07T13:47:12.416Z","http_code":200},"response":{"transactions":[{"transaction_id":"200420258875AF7323","currency":"EUR","booking_date":"2020-04-20","value_date":"2020-04-20","type_description":"type_description_values","narrative":"narrative_values","message":"message_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-20","card_number":"************3586","payment_date":"2020-04-20","amount":"-28.20"},{"transaction_id":"2004162588NGPF2622","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-16","amount":"70.00"},{"transaction_id":"2004162588MRM91406","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values,15 EUR200416258875BZ6127","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"","transaction_date":"2020-04-16","payment_date":"2020-04-16","amount":"-10.00"},{"transaction_id":"200416258875BZ6127","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","card_number":"************3586","payment_date":"2020-04-16","amount":"-15.15"},{"transaction_id":"2004162588MRM86249","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values,18 EUR200416258875BV9429","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"","transaction_date":"2020-04-16","payment_date":"2020-04-16","amount":"-10.00"},{"transaction_id":"200416258875BV9429","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","card_number":"************3586","payment_date":"2020-04-16","amount":"-55.18"},{"transaction_id":"200416258875BS0168","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","card_number":"************3586","payment_date":"2020-04-16","amount":"54.98"},{"transaction_id":"2004162588MRM78152","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_valuesän Apteekki    28,65 EU200416258875BJ1228","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"","transaction_date":"2020-04-16","payment_date":"2020-04-16","amount":"-10.00"},{"transaction_id":"200416258875BJ1228","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","card_number":"************3586","payment_date":"2020-04-16","amount":"-28.65"},{"transaction_id":"2004162588MRM71166","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values,99 EUR 200416258875BP4742","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"","transaction_date":"2020-04-16","payment_date":"2020-04-16","amount":"-10.00"},{"transaction_id":"200416258875BP4742","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","card_number":"************3586","payment_date":"2020-04-16","amount":"-11.99"},{"transaction_id":"2004162588MRM11969","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values,32 EUR200416258875AO2367","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"","transaction_date":"2020-04-16","payment_date":"2020-04-16","amount":"-10.00"},{"transaction_id":"200416258875AO2367","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-16","type_description":"type_description_values","narrative":"narrative_values","message":"message_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","card_number":"************3586","payment_date":"2020-04-16","amount":"-72.32"},{"transaction_id":"2004152588NGR95014","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-130.39"},{"transaction_id":"2004152588NGRV4898","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-180.00"},{"transaction_id":"2004152588NGPE4822","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-95.65"},{"transaction_id":"2004152588NGPD4978","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-135.97"},{"transaction_id":"2004152588NGPG4822","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-46.83"},{"transaction_id":"2004152588NGRK4894","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-41.54"},{"transaction_id":"2004152588NGP84902","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-350.00"},{"transaction_id":"2004152588NGR64927","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-49.96"},{"transaction_id":"2004152588NGNH4841","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-281.79"},{"transaction_id":"2004152588NGN95035","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-35.00"},{"transaction_id":"2004152588NGR74890","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-130.39"},{"transaction_id":"2004152588NGRD4875","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-149.97"},{"transaction_id":"2004152588NGM74876","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-34.67"},{"transaction_id":"2004152588NGRJ4895","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-113.00"},{"transaction_id":"2004152588INC11260","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-350.00"},{"transaction_id":"2004152588INH81229","currency":"EUR","booking_date":"2020-04-16","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-16","payment_date":"2020-04-15","amount":"-355.00"},{"transaction_id":"2004152588INHT1224","currency":"EUR","booking_date":"2020-04-15","value_date":"2020-04-15","type_description":"type_description_values","status":"billed","counterparty_account":"counterparty_account_values","counterparty_name":"counterparty_name","transaction_date":"2020-04-15","payment_date":"2020-04-15","amount":"-99.00"}],"_links":[{"rel":"self","href":"/v4/accounts/FI1410093000123458-EUR/transactions?continuation_key=0320200420000001--2"}]}}
+
+
+REQUEST 9
+GET https://open.nordea.com/personal/v4/cards
+Content-Type: application/json
+
+RESPONSE 9
+200
+Date: Wed, 12 Aug 2020 14:30:59 GMT
+Date: Wed, 12 Aug 2020 14:31:00 GMT
+Content-Type: application/json;charset=utf-8
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+x-request-id: 6f21234567c62830f1179696a5185123
+X-Global-Transaction-ID: 78fe41e15f33fd2304c9f743
+Access-Control-Allow-Origin: *
+X-RateLimit-Limit: name=rate-limit-1,5000;
+X-RateLimit-Remaining: name=rate-limit-1,0;
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"group_header":{"message_identification":"dcd5033a7b64cae9","creation_date_time":"2020-08-12T14:31:00.008Z","http_code":200},"response":{"cards":[{"id":"CS1-O4bl3JBIAYTKJij1lkAtK24L4sHH2Ke-Zqw58rdZNJKYtMEgHR1698z1dX2Gfox9KZmk1ERuNvLTZIGZl7IovQ","masked_credit_card_number":"5208 **** **** 6641","product_name":"Nordea Gold"}]}}
+
+REQUEST 10
+GET https://open.nordea.com/personal/v4/cards/CS1-O4bl3JBIAYTKJij1lkAtK24L4sHH2Ke-Zqw58rdZNJKYtMEgHR1698z1dX2Gfox9KZmk1ERuNvLTZIGZl7IovQ
+Content-Type: application/json
+
+RESPONSE 10
+200
+Date: Wed, 12 Aug 2020 14:31:00 GMT
+Date: Wed, 12 Aug 2020 14:31:01 GMT
+Content-Type: application/json;charset=utf-8
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+x-request-id: 2138cd239ac62830c117969aa5f8e044
+X-Global-Transaction-ID: f193ec025f33fd2408527291
+Access-Control-Allow-Origin: *
+X-RateLimit-Limit: name=rate-limit-1,5000;
+X-RateLimit-Remaining: name=rate-limit-1,0;
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"group_header":{"message_identification":"fb6977cc6f46cd24","creation_date_time":"2020-08-12T14:31:01.026Z","http_code":200},"response":{"id":"CS1-O4bl3JBIAYTKJij1lkAtK24L4sHH2Ke-Zqw58rdZNJKYtMEgHR1698z1dX2Gfox9KZmk1ERuNvLTZIGZl7IovQ","masked_credit_card_number":"5208 **** **** 6641","product_name":"Nordea Gold","credit_limit":"50000.00","credit_available_balance":"23456.12","credit_booked_balance":"26543.88"}}
+
+REQUEST 11
+GET https://open.nordea.com/personal/v4/cards/CS1-O4bl3JBIAYTKJij1lkAtK24L4sHH2Ke-Zqw58rdZNJKYtMEgHR1698z1dX2Gfox9KZmk1ERuNvLTZIGZl7IovQ/transactions
+Content-Type: application/json
+
+RESPONSE 11
+200
+Date: Thu, 13 Aug 2020 10:24:12 GMT
+Date: Thu, 13 Aug 2020 10:24:13 GMT
+Content-Type: application/json;charset=utf-8
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+x-request-id: 470e078c2967ccac679824ff181b4b64
+X-Global-Transaction-ID: 78fe41e15f3514cc08544401
+Access-Control-Allow-Origin: *
+X-RateLimit-Limit: name=rate-limit-1,5000;
+X-RateLimit-Remaining: name=rate-limit-1,0;
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"group_header":{"message_identification":"00b14486c879c422","creation_date_time":"2020-08-13T10:24:14.249Z","http_code":200},"response":{"continuation_key":"2","transactions":[{"id":"154174294","beneficiary":"narrative","amount":"-199.90","currency":"SEK","transaction_date":"2020-07-24"},{"id":"-1628048557","beneficiary":"narrative","amount":"-9200.00","currency":"SEK","transaction_date":"2020-07-22"},{"id":"614323584","beneficiary":"narrative","amount":"-2588.22","currency":"SEK","transaction_date":"2020-07-22"},{"id":"868481212","beneficiary":"narrative","amount":"-171.00","currency":"SEK","transaction_date":"2020-07-21"},{"id":"1835902869","beneficiary":"narrative","amount":"-2086.28","currency":"SEK","transaction_date":"2020-07-21"},{"id":"1290168540","beneficiary":"narrative","amount":"-597.55","currency":"SEK","transaction_date":"2020-07-21"},{"id":"-957424787","beneficiary":"narrative","amount":"-543.00","currency":"SEK","transaction_date":"2020-07-21"},{"id":"-619056807","beneficiary":"narrative","amount":"-180.42","currency":"SEK","transaction_date":"2020-07-21"},{"id":"868481212","beneficiary":"narrative","amount":"-64.00","currency":"SEK","transaction_date":"2020-07-21"},{"id":"1973063715","beneficiary":"narrative","amount":"-354.00","currency":"SEK","transaction_date":"2020-07-21"}]}}
+
+REQUEST 12
+GET https://open.nordea.com/personal/v4/cards/CS1-O4bl3JBIAYTKJij1lkAtK24L4sHH2Ke-Zqw58rdZNJKYtMEgHR1698z1dX2Gfox9KZmk1ERuNvLTZIGZl7IovQ/transactions?continuation_key=2
+Content-Type: application/json
+
+RESPONSE 12
+200
+Date: Thu, 13 Aug 2020 10:24:13 GMT
+Date: Thu, 13 Aug 2020 10:24:14 GMT
+Content-Type: application/json;charset=utf-8
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+x-request-id: 2a36903074c7429d091b26c3f4c5c9d7
+X-Global-Transaction-ID: f193ec025f3514cd0520b8f3
+Access-Control-Allow-Origin: *
+X-RateLimit-Limit: name=rate-limit-1,5000;
+X-RateLimit-Remaining: name=rate-limit-1,0;
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"group_header":{"message_identification":"343f03eed8e0703e","creation_date_time":"2020-08-13T10:24:19.073Z","http_code":200},"response":{"transactions":[{"id":"190370745","beneficiary":"narrative","amount":"-108.62","currency":"SEK","transaction_date":"2020-07-14"},{"id":"-2093430023","beneficiary":"narrative","amount":"-1450.00","currency":"SEK","transaction_date":"2020-07-13"},{"id":"684338255","beneficiary":"narrative","amount":"-965.36","currency":"SEK","transaction_date":"2020-07-13"},{"id":"-191161918","beneficiary":"narrative","amount":"-4495.00","currency":"SEK","transaction_date":"2020-07-13"},{"id":"-1089080380","beneficiary":"narrative","amount":"-1168.68","currency":"SEK","transaction_date":"2020-07-13"},{"id":"1649588706","beneficiary":"narrative","amount":"-615.00","currency":"SEK","transaction_date":"2020-07-13"},{"id":"1093838642","beneficiary":"narrative","amount":"-90.00","currency":"SEK","transaction_date":"2020-07-11"},{"id":"-924759527","beneficiary":"narrative","amount":"499.00","currency":"SEK","transaction_date":"2020-07-11"},{"id":"-924759527","beneficiary":"narrative","amount":"499.00","currency":"SEK","transaction_date":"2020-07-11"}]}}
