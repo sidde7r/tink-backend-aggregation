@@ -8,12 +8,6 @@ public final class PostbankConstants {
         public static final String FAILED = "failed";
     }
 
-    public static class Configuration {
-        public static final String BASE_URL = "https://xs2a.db.com/ais/DE/Postbank";
-        public static final String PSU_IP_ADDRESS = "127.0.0.1";
-        public static final String PSU_ID_TYPE = "DE_ONLB_POBA";
-    }
-
     public static class Crypto {
         public static final String URL =
                 "https://xs2a.db.com/pb/aspsp-certificates/tpp-pb-password_cert.pem";
