@@ -56,7 +56,8 @@ public class HandelsbankenSEConstants {
 
     public static final class BankIdUserMessages {
         public static final LocalizableKey ACTIVATION_NEEDED =
-                new LocalizableKey("You need to activate your BankID in the Handelsbanken app.");
+                new LocalizableKey(
+                        "Message from Handelsbanken - Handelsbanken needs you to verify your BankID before you can continue using the service. Visit www.handelsbanken.se or open the Handelsbanken app to verify your BankID. Note that you must be a customer of Handelsbanken to be able to use the service.");
     }
 
     public static final class Authentication {
