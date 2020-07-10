@@ -21,7 +21,7 @@ public class InvalidTokenFilter extends Filter {
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
 
-        if (response.getStatus() > 400) {
+        if (response.getStatus() >= 400 && response.getStatus() < 500) {
             ErrorResponseDto errorResponseDto = response.getBody(ErrorResponseDto.class);
             if (AmericanExpressConstants.ErrorMessages.REVOKED_TOKEN_MAPPER
                     .translate(errorResponseDto.getMessage())

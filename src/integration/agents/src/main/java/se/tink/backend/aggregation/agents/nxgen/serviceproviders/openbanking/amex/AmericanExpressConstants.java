@@ -75,4 +75,9 @@ public class AmericanExpressConstants {
         public static final String ENDPOINT_BALANCES = BASE_PATH + "/financials/balances";
         public static final String ENDPOINT_TRANSACTIONS = BASE_PATH + "/financials/transactions";
     }
+
+    static class HttpClient {
+        public static final int MAX_ATTEMPTS = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+    }
 }
