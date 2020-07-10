@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.util.SignatureUtil;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -58,15 +59,16 @@ public class NordeaBaseApiClient implements TokenInterface {
     protected final PersistentStorage persistentStorage;
     protected NordeaBaseConfiguration configuration;
     protected String redirectUrl;
-    private EidasProxyConfiguration eidasProxyConfiguration;
-    private EidasIdentity eidasIdentity;
+    private QsealcSigner qsealcSigner;
 
-    public NordeaBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public NordeaBaseApiClient(
+            TinkHttpClient client, PersistentStorage persistentStorage, QsealcSigner qsealcSigner) {
         this.client = client;
         this.persistentStorage = persistentStorage;
 
         this.client.addFilter(new BankSideFailureFilter());
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        this.qsealcSigner = qsealcSigner;
     }
 
     public NordeaBaseConfiguration getConfiguration() {
@@ -91,8 +93,6 @@ public class NordeaBaseApiClient implements TokenInterface {
             EidasIdentity eidasIdentity) {
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.eidasIdentity = eidasIdentity;
     }
 
     protected RequestBuilder createRequest(URL url, String httpMethod, String body) {
@@ -380,16 +380,14 @@ public class NordeaBaseApiClient implements TokenInterface {
                     date,
                     body,
                     contentType,
-                    eidasProxyConfiguration,
-                    eidasIdentity);
+                    qsealcSigner);
         } else {
             return SignatureUtil.createGetSignature(
                     getConfiguration().getClientId(),
                     httpMethod,
                     requestUrl.toUri(),
                     date,
-                    eidasProxyConfiguration,
-                    eidasIdentity);
+                    qsealcSigner);
         }
     }
 

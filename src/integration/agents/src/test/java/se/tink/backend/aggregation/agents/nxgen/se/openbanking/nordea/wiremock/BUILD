@@ -1,20 +1,17 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "manual",
+    name = "wiremock",
     srcs = glob(["*.java"]),
     data = [
         "//:agent_test_data",
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/nordea/wireMock/resources",
-    ],
-    tags = [
-        "external",
-        "manual",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/nordea/wiremock/resources",
     ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/nordea",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/nordeabase",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/nordea/wiremock/module",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
