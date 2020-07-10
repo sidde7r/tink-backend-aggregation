@@ -19,10 +19,6 @@ public class RemittanceInformation {
         this.reference = reference.getValue();
     }
 
-    public RemittanceInformation(Reference reference) {
-        this("", reference);
-    }
-
     public String getReference() {
         return reference;
     }
