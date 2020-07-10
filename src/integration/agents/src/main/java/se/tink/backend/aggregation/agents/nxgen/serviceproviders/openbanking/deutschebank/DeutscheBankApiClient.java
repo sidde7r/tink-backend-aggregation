@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 import com.google.common.base.Strings;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryValues;
@@ -66,7 +67,7 @@ public class DeutscheBankApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_ID_TYPE, configuration.getPsuIdType())
                 .header(HeaderKeys.PSU_ID, psuId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
@@ -80,7 +81,7 @@ public class DeutscheBankApiClient {
     public ConsentStatusResponse getConsentStatus(String consentStatusLink) {
         return createRequest(new URL(consentStatusLink))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
                 .get(ConsentStatusResponse.class);
     }
 

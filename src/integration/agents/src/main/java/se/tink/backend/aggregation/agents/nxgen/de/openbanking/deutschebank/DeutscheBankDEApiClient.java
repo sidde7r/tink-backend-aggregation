@@ -5,6 +5,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.deutschebank.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -44,7 +45,7 @@ public class DeutscheBankDEApiClient extends DeutscheBankApiClient {
                 .header(DeutscheBankConstants.HeaderKeys.PSU_ID, psuId)
                 .header(
                         DeutscheBankConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        configuration.getPsuIpAddress())
+                        Configuration.PSU_IP_ADDRESS)
                 .header(
                         DeutscheBankConstants.HeaderKeys.TPP_REDIRECT_URI,
                         new URL(redirectUrl)
