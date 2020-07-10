@@ -67,12 +67,7 @@ public class DemobankAppToAppAuthenticator
     @Override
     public ThirdPartyAppResponse<CreateTicketResponse> collect(CreateTicketResponse reference)
             throws AuthenticationException, AuthorizationException {
-
-        String token =
-                reference
-                        .getDeeplinkUrl()
-                        .substring(reference.getDeeplinkUrl().lastIndexOf('/') + 1);
-        CollectTicketResponse response = this.apiClient.collectAppToApp(token);
+        CollectTicketResponse response = this.apiClient.collectAppToApp(reference.getTicket());
         if (response.getStatus().equals("PENDING")) {
             return new ThirdPartyAppResponse<CreateTicketResponse>() {
                 @Override
