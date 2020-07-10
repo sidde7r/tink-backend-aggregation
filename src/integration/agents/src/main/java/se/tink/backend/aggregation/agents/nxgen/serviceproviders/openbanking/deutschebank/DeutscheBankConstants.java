@@ -106,4 +106,8 @@ public final class DeutscheBankConstants {
         public static final int MAX_POLLS_COUNTER = 50;
         public static final String CURRENCY_TYPE = "EUR";
     }
+
+    public static class Configuration {
+        public static final String PSU_IP_ADDRESS = "0.0.0.0";
+    }
 }
