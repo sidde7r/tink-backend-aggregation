@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.CmcicAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountFetcher;
@@ -86,11 +85,13 @@ public abstract class CmcicAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         return Optional.of(
-                new CmcicPaymentController(
-                        new CmcicPaymentExecutor(apiClient, sessionStorage, agentConfiguration),
-                        supplementalInformationHelper,
-                        sessionStorage,
-                        strongAuthenticationState));
+                new PaymentController(
+                        new CmcicPaymentExecutor(
+                                apiClient,
+                                sessionStorage,
+                                agentConfiguration,
+                                supplementalInformationHelper,
+                                strongAuthenticationState)));
     }
 
     @Override

@@ -31,6 +31,7 @@ java_library(
         "//src/libraries/metrics:collection",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
+        "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:io_dropwizard_dropwizard_metrics",
         "//third_party:javax_validation_validation_api",
