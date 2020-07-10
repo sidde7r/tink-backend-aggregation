@@ -1,0 +1,55 @@
+package se.tink.backend.aggregation.events;
+
+import com.google.protobuf.Any;
+import javax.inject.Inject;
+import javax.inject.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.eventproducerservice.events.grpc.AccountHoldersRefreshedEventProto;
+import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
+
+public class AccountHoldersRefreshedEventProducer {
+    private final EventProducerServiceClient eventProducerServiceClient;
+    private final boolean eventEnabled;
+    private static final Logger log =
+            LoggerFactory.getLogger(AccountHoldersRefreshedEventProducer.class);
+
+    @Inject
+    public AccountHoldersRefreshedEventProducer(
+            @Named("sendAccountHoldersRefreshedEvents") boolean eventEnabled,
+            EventProducerServiceClient eventProducerServiceClient) {
+        this.eventEnabled = eventEnabled;
+        this.eventProducerServiceClient = eventProducerServiceClient;
+    }
+
+    public void sendAccountHoldersRefreshedEvent(
+            String clusterId,
+            String appId,
+            String userId,
+            String providerName,
+            String correlationId,
+            String accountId,
+            String holderType,
+            int holdersCount) {
+        if (!eventEnabled) {
+            return;
+        }
+        AccountHoldersRefreshedEventProto.AccountHoldersRefreshedEvent event =
+                AccountHoldersRefreshedEventProto.AccountHoldersRefreshedEvent.newBuilder()
+                        .setClusterId(clusterId)
+                        .setAppId(appId)
+                        .setUserId(userId)
+                        .setProviderName(providerName)
+                        .setCorrelationId(correlationId)
+                        .setAccountId(accountId)
+                        .setHoldersCount(holdersCount)
+                        .setHolderType(holderType)
+                        .build();
+
+        try {
+            eventProducerServiceClient.postEventFireAndForget(Any.pack(event));
+        } catch (RuntimeException e) {
+            log.warn("could not produce event: AccountHoldersRefreshedEvent", e);
+        }
+    }
+}

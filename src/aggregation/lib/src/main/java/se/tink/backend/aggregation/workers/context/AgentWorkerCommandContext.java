@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
+import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -31,6 +34,7 @@ import se.tink.backend.aggregation.compliance.regulatory_restrictions.Regulatory
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.events.AccountHoldersRefreshedEventProducer;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -45,6 +49,7 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class AgentWorkerCommandContext extends AgentWorkerContext
         implements SetAccountsToAggregateContext {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
+    private final AccountHoldersRefreshedEventProducer accountHoldersRefreshedEventProducer;
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
 
@@ -82,7 +87,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
             String clusterId,
             String appId,
             String correlationId,
-            RegulatoryRestrictions regulatoryRestrictions) {
+            RegulatoryRestrictions regulatoryRestrictions,
+            AccountHoldersRefreshedEventProducer accountHoldersRefreshedEventProducer) {
         super(
                 request,
                 metricRegistry,
@@ -128,6 +134,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                                 .label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
+        this.accountHoldersRefreshedEventProducer = accountHoldersRefreshedEventProducer;
     }
 
     // TODO: We should do this some other way. This is a hack we can use for now.
@@ -230,7 +237,28 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
     public void sendAllCachedAccountsHoldersToUpdateService() {
 
-        updatedAccountsByTinkId.keySet().forEach(this::sendAccountHolderToUpdateService);
+        for (String tinkId : updatedAccountsByTinkId.keySet()) {
+            AccountHolder accountHolder = sendAccountHolderToUpdateService(tinkId);
+            sendAccountHoldersRefreshedEvent(tinkId, accountHolder);
+        }
+    }
+
+    private void sendAccountHoldersRefreshedEvent(String tinkId, AccountHolder accountHolder) {
+        accountHoldersRefreshedEventProducer.sendAccountHoldersRefreshedEvent(
+                getClusterId(),
+                getAppId(),
+                getRequest().getUser().getId(),
+                getRequest().getProvider().getName(),
+                correlationId,
+                tinkId,
+                Optional.ofNullable(accountHolder)
+                        .map(AccountHolder::getType)
+                        .map(AccountHolderType::name)
+                        .orElse(null),
+                Optional.ofNullable(accountHolder)
+                        .map(AccountHolder::getIdentities)
+                        .map(Collection::size)
+                        .orElse(0));
     }
 
     private void compareAccountsBeforeAndAfterUpdate() {
