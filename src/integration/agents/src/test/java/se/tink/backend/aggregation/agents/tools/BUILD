@@ -7,9 +7,6 @@ junit_test(
         "//data:aggregation_test",
         "//data:provider_configurations",
     ],
-    resources = [
-        "//src/integration/agents/src/main/resources:config-templates",
-    ],
     tags = ["manual"],
     visibility = ["//visibility:public"],
     runtime_deps = [

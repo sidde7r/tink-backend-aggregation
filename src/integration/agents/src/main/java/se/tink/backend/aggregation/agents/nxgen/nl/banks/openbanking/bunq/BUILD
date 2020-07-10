@@ -1,9 +1,6 @@
 java_library(
     name = "bunq",
     srcs = glob(["**/*.java"]),
-    resources = [
-        "//src/integration/agents/src/main/resources:config-templates",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bunq",

@@ -1,9 +1,0 @@
-baseUrl-example: |2
-    "https://openapi.kbc-group.com"
-
-psuIpAddress-description: |2
-    This is the corresponding HTTP request IP Address between PSU and TPP. If not available, the TPP will use the
-    IP Address used by the TPP when submitting the requests.
-
-psuIpAddress-example: |2
-    "0.0.0.0"

@@ -9,9 +9,6 @@ junit_test(
         "//etc:development",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26/wiremock/resources",
     ],
-    resources = [
-        "//src/integration/agents/src/main/resources:config-templates",
-    ],
     visibility = ["//visibility:public"],
     runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26"],
     deps = [
