@@ -50,6 +50,12 @@ message GetAllSecretsResponse {
     repeated TppSecret encryptedSecrets = 2;
     repeated string redirectUrls = 3;
     repeated string scopes = 4;
+    PlainCertificateEntity certificates = 5;
+}
+
+message PlainCertificateEntity {
+    string qwac = 1;
+    string qsealc = 2;
 }
 
 message QwacCertificateRequest {
