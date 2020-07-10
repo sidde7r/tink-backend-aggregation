@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.DateFormat;
@@ -190,6 +191,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                         "Payment authentication failed.", new PaymentRejectedException());
             case RJCT:
                 handleReject(paymentResponse.getPaymentRequest().getStatusReasonInformation());
+            case CANC:
+                handleCancel(paymentResponse.getPaymentRequest().getStatusReasonInformation());
                 break;
             default:
                 logger.error(
@@ -205,6 +208,14 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
         logger.error("Payment Rejected by the bank with error ={}", error);
         throw new PaymentRejectedException("The payment was rejected by the bank.");
+    }
+
+    private void handleCancel(StatusReasonInformationEntity rejectStatus)
+            throws PaymentAuthenticationException {
+        String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
+        logger.error("Authorisation of payment was cancelled with bank status={}", error);
+        throw new PaymentAuthenticationException(
+                "The payment was cancelled by the user.", new PaymentCancelledException());
     }
 
     private PaymentResponse getPaymentResponse(PaymentRequestResourceEntity payment) {

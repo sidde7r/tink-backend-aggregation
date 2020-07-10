@@ -13,6 +13,7 @@ public enum PaymentInformationStatusCodeEntity {
     PART("PART"),
     RCVD("RCVD"),
     PDNG("PDNG"),
+    CANC("CANC"),
     RJCT("RJCT");
 
     private String value;
