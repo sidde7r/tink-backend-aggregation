@@ -7,9 +7,9 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
-public class RegulatoryRestrictionsMetrics {
+class RegulatoryRestrictionsMetrics {
     private static final MetricId regulatoryRestriction =
-            MetricId.newId("aggregation_regulatory_restriction");
+            MetricId.newId("regulatory_restrictions_accounts");
     private final MetricRegistry metricRegistry;
 
     @Inject
@@ -17,14 +17,15 @@ public class RegulatoryRestrictionsMetrics {
         this.metricRegistry = metricRegistry;
     }
 
-    void regulatoryRestrictions(Provider provider, Account account, boolean isRestricted) {
+    void recordAccountRestrictionDecision(
+            Provider provider, Account account, boolean isRestricted) {
         metricRegistry
                 .meter(
                         regulatoryRestriction
-                                .label("provider", provider.toString())
+                                .label("provider", provider.getName())
                                 .label("market", provider.getMarket())
                                 .label("account_type", account.getType().name())
-                                .label("isRestricted", isRestricted))
+                                .label("is_restricted", isRestricted))
                 .inc();
     }
 }

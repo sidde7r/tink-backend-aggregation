@@ -27,7 +27,7 @@ public class RegulatoryRestrictions {
         try {
             boolean isRestricted =
                     shouldBeRestricted(request, account, paymentAccountClassification);
-            regulatoryRestrictionsMetrics.regulatoryRestrictions(
+            regulatoryRestrictionsMetrics.recordAccountRestrictionDecision(
                     request.getProvider(), account, isRestricted);
             return isRestricted;
         } catch (RuntimeException e) {
