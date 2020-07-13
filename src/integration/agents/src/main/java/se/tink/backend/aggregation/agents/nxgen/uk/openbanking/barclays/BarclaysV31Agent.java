@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.BarclaysConstants.Urls.V31;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.authenticator.BarclaysAuthenticator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
@@ -56,8 +55,7 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BarclaysAuthenticator authenticator = new BarclaysAuthenticator(apiClient);
-        return createOpenIdFlowWithAuthenticator(authenticator, null);
+        return super.constructAuthenticator(aisConfig);
     }
 
     @Override
