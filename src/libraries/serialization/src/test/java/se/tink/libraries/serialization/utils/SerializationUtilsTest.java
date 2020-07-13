@@ -23,5 +23,17 @@ public class SerializationUtilsTest {
         SerializationUtils.deserializeFromBinary(binary, TargetClass.class);
     }
 
-    static class TargetClass {}
+    @Test(expected = IOException.class)
+    public void Should_ThrowException_WhenSerializationIsFailed() throws IOException {
+        // Act & Assert
+        SerializationUtils.serializeToBinary(new TargetClass());
+    }
+
+    static class TargetClass {
+        TargetClass selfReference;
+
+        public TargetClass() {
+            this.selfReference = this;
+        }
+    }
 }
