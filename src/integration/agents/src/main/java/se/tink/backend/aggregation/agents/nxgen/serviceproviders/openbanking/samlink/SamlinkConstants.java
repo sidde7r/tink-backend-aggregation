@@ -13,12 +13,16 @@ public final class SamlinkConstants {
     }
 
     public static class Urls {
+        private Urls() {}
+
         public static final String TOKEN = "/samlink-api-sandbox/oauth/token";
         public static final String AUTH = "/samlink-api-sandbox/oauth/authorize";
 
         public static final String AIS_PRODUCT = "/psd2/v1";
         public static final String CONSENT = AIS_PRODUCT + "/consents";
         public static final String ACCOUNTS = AIS_PRODUCT + "/accounts";
+        public static final String TRANSACTIONS = ACCOUNTS + "/%s/transactions";
+        public static final String BALANCES = ACCOUNTS + "/%s/balances";
         public static final String CREATE_SEPA_PAYMENT =
                 AIS_PRODUCT + "/payments/sepa-credit-transfers";
         public static final String CREATE_FOREIGN_PAYMENT =
@@ -30,10 +34,26 @@ public final class SamlinkConstants {
     }
 
     public static class HeaderKeys {
+        private HeaderKeys() {}
+
         public static final String SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
+        public static final String DIGEST = "Digest";
+        public static final String SIGNATURE = "Signature";
+        public static final String API_KEY = "apikey";
+        public static final String DIGEST_PREFIX = "SHA-256=";
+        public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
     }
 
     public static class IdTags {
+        private IdTags() {}
+
         public static final String PAYMENT_ID = "paymentId";
+    }
+
+    public static final class BookingStatus {
+        private BookingStatus() {}
+
+        public static final String BOOKED = "booked";
+        public static final String PENDING = "pending";
     }
 }

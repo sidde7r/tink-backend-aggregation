@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sa
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class SamlinkTransactionFetcher extends BerlinGroupTransactionFetcher {
@@ -20,11 +20,8 @@ public class SamlinkTransactionFetcher extends BerlinGroupTransactionFetcher {
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             final TransactionalAccount account, final String nextUrl) {
 
-        return TransactionKeyPaginatorResponseImpl.createEmpty();
-
-        //        TODO: Uncomment it when endpoint is done by Samlink
-        //        return apiClient.fetchTransactions(
-        //                configuration.getBaseUrl()
-        //                        + String.format(Urls.TRANSACTIONS, account.getApiIdentifier()));
+        return apiClient.fetchTransactions(
+                configuration.getBaseUrl()
+                        + String.format(Urls.TRANSACTIONS, account.getApiIdentifier()));
     }
 }
