@@ -56,4 +56,17 @@ public class TransactionDetailsBaseEntityTest {
         // then
         assertThat(description).isEqualTo(CREDITOR_NAME);
     }
+
+    @Test
+    public void getDescriptionShouldReturnStringWithoutCarriegeReturnSigns() {
+        // given
+        TransactionDetailsBaseEntity transactionDetailsBaseEntity = new BookedTransactionEntity();
+        transactionDetailsBaseEntity.remittanceInformationUnstructured =
+                "\r\nremittanceInformationUnstructured\r\n";
+        // when
+        String description = transactionDetailsBaseEntity.getDescription();
+
+        // then
+        assertThat(description.trim()).isEqualTo(REMITTANCE_INFOMATION_UNSTRUCTURED);
+    }
 }
