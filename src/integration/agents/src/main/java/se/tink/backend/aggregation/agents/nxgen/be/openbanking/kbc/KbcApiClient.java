@@ -7,8 +7,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.OAuth;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.QueryValues;
@@ -47,7 +45,6 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
     private static final Pattern IBAN_PATTERN = Pattern.compile("BE[0-9]{14}");
-    private static final Logger logger = LoggerFactory.getLogger(KbcApiClient.class);
 
     private final Credentials credentials;
     private final PersistentStorage persistentStorage;
@@ -169,7 +166,6 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
     @Override
     public String getConsentId() {
         final String iban = credentials.getField(KbcConstants.CredentialKeys.IBAN);
-        logger.info(String.format("iban: %s", iban));
 
         validateIban(iban);
 
