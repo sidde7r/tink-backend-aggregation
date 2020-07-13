@@ -66,10 +66,11 @@ public class CaisseEpargneConstants {
     public static class HeaderValues {
         public static final String GET_ACCOUNTS =
                 "http://caisse-epargne.fr/webservices/GetSyntheseCpteAbonnement";
-        static final String GET_ACCOUNT_DETAILS = "http://caisse-epargne.fr/webservices/GetRice";
+        public static final String GET_ACCOUNT_DETAILS =
+                "http://caisse-epargne.fr/webservices/GetRice";
         public static final String GET_TRANSACTIONS =
                 "http://caisse-epargne.fr/webservices/GetHistoriqueOperationsByCompte";
-        static final String SSO_BAPI = "http://caisse-epargne.fr/webservices/sso_BAPI";
+        public static final String SSO_BAPI = "http://caisse-epargne.fr/webservices/sso_BAPI";
         static final String VERSION_WS_BAD_22 = "V22";
         static final String CAISSE_DARWIN = "CaisseEpargne/742 CFNetwork/978.0.7 Darwin/18.7.0";
     }
@@ -115,6 +116,7 @@ public class CaisseEpargneConstants {
         public static final int PAGE_SIZE = 100;
         public static final String TRANSACTION_REQUEST_TYPE_SUBSEQUENT = "S";
         public static final String TRANSACTION_REQUEST_TYPE_INITIAL = "D";
+        public static final String CAISSE_EPARGNE = "CAISSE_EPARGNE";
         static final String IT_ENTITY_02 = "02";
 
         public enum ValidationTypes {

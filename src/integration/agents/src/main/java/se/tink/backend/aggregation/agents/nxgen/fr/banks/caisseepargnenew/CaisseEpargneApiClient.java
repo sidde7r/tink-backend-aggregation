@@ -46,10 +46,13 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authen
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.rpc.OAuth2TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.rpc.OAuth2V2AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.rpc.SamlAuthnResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.rpc.SsoBapiRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.executor.beneficiary.rpc.CaisseEpargneCreateBeneficiaryRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.executor.beneficiary.rpc.CaisseEpargneCreateBeneficiaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -381,51 +384,51 @@ public class CaisseEpargneApiClient {
     public void soapActionSsoBapi(String bankId) {
         Optional<OAuth2Token> token = sessionStorage.get(StorageKeys.TOKEN, OAuth2Token.class);
         Optional<String> termId = sessionStorage.get(StorageKeys.TERM_ID, String.class);
+        SsoBapiRequest ssoBapiRequest =
+                new SsoBapiRequest(
+                        token.orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "No token found in storage."))
+                                .getAccessToken(),
+                        termId.orElseThrow(
+                                () -> new IllegalStateException("No term id found in storage.")));
         HttpResponse response =
                 httpClient
                         .request(Urls.WS_BAD)
-                        .header(HeaderKeys.SOAP_ACTION, HeaderValues.SSO_BAPI)
+                        .header(HeaderKeys.SOAP_ACTION, ssoBapiRequest.soapAction())
                         .header(HeaderKeys.VERSION_WS_BAD, HeaderValues.VERSION_WS_BAD_22)
                         .header(HeaderKeys.ESTABLISHMENT_ID, bankId)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.TEXT_XML)
                         .accept(MediaType.WILDCARD_TYPE)
-                        .body(
-                                SoapHelper.createSsoBapiRequest(
-                                        token.orElseThrow(
-                                                        () ->
-                                                                new IllegalStateException(
-                                                                        "No token found in storage."))
-                                                .getAccessToken(),
-                                        termId.orElseThrow(
-                                                () ->
-                                                        new IllegalStateException(
-                                                                "No term id found in storage."))))
+                        .body(SoapHelper.formRequest(ssoBapiRequest))
                         .post(HttpResponse.class);
         String xmlBody = response.getBody(String.class);
         instanceStorage.put(StorageKeys.FINAL_AUTH_RESPONSE, xmlBody);
     }
 
     public AccountsResponse getAccounts() {
+        AccountsRequest accountsRequest = new AccountsRequest();
         String accountsResponse =
                 httpClient
                         .request(Urls.WS_BAD)
-                        .header(HeaderKeys.SOAP_ACTION, HeaderValues.GET_ACCOUNTS)
+                        .header(HeaderKeys.SOAP_ACTION, accountsRequest.soapAction())
                         .accept(MediaType.WILDCARD_TYPE)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.TEXT_XML)
-                        .body(SoapHelper.createGetAccountsRequest())
+                        .body(SoapHelper.formRequest(accountsRequest))
                         .post(String.class);
         return SoapHelper.getAccounts(accountsResponse);
     }
 
     public AccountDetailsResponse getAccountDetails(String fullAccountNumber) {
-        String request = SoapHelper.createGetAccountDetailsRequest(fullAccountNumber);
+        AccountDetailsRequest accountDetailsRequest = new AccountDetailsRequest(fullAccountNumber);
         String accountDetailsResponse =
                 httpClient
                         .request(Urls.WS_BAD)
-                        .header(HeaderKeys.SOAP_ACTION, HeaderValues.GET_ACCOUNT_DETAILS)
+                        .header(HeaderKeys.SOAP_ACTION, accountDetailsRequest.soapAction())
                         .accept(MediaType.WILDCARD_TYPE)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.TEXT_XML)
-                        .body(request)
+                        .body(SoapHelper.formRequest(accountDetailsRequest))
                         .post(String.class);
         return SoapHelper.getAccountDetails(accountDetailsResponse);
     }
@@ -440,7 +443,7 @@ public class CaisseEpargneApiClient {
                         .request(Urls.WS_BAD)
                         .accept(MediaType.WILDCARD_TYPE)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.TEXT_XML)
-                        .header(HeaderKeys.SOAP_ACTION, HeaderValues.GET_TRANSACTIONS)
+                        .header(HeaderKeys.SOAP_ACTION, transactionsRequest.soapAction())
                         .body(request)
                         .post(String.class);
         return SoapHelper.getTransactions(transactionsResponse);

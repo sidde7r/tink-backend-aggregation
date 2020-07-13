@@ -31,7 +31,7 @@ public class TransactionsRequest extends GenericRequest {
     }
 
     @Override
-    public String action() {
+    public String soapAction() {
         return HeaderValues.GET_TRANSACTIONS;
     }
 

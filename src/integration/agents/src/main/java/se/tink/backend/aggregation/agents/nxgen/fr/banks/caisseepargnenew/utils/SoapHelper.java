@@ -25,50 +25,6 @@ public class SoapHelper {
     private static final XMLInputFactory inputFactory = XMLInputFactory.newFactory();
     private static final XmlMapper mapper = new XmlMapper();
 
-    public static String createSsoBapiRequest(String acessToken, String termId) {
-        return "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">"
-                + "<soap:Body>"
-                + "<sso_BAPI xmlns=\"http://caisse-epargne.fr/webservices/\">"
-                + "<modeALD>0</modeALD>"
-                + "<idTerminal>"
-                + termId
-                + "</idTerminal>"
-                + "<etablissement>CAISSE_EPARGNE</etablissement>"
-                + "<at>"
-                + acessToken
-                + "</at>"
-                + "</sso_BAPI>"
-                + "</soap:Body>"
-                + "</soap:Envelope>";
-    }
-
-    public static String createGetAccountsRequest() {
-        return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
-                + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-                + "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
-                + "<soap:Body>\n"
-                + "<GetSyntheseCpteAbonnement xmlns=\"http://caisse-epargne.fr/webservices/\"/>\n"
-                + "</soap:Body>\n"
-                + "</soap:Envelope>";
-    }
-
-    public static String createGetAccountDetailsRequest(String fullAccountNumber) {
-        return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
-                + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-                + "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
-                + "<soap:Body>\n"
-                + "<GetRice xmlns=\"http://caisse-epargne.fr/webservices/\">\n"
-                + "<cpt>"
-                + fullAccountNumber
-                + "</cpt>\n"
-                + "</GetRice>\n"
-                + "</soap:Body>\n"
-                + "</soap:Envelope>";
-    }
-
     private static Element parseSoapBody(String xml) {
         Node soapBody = SoapParser.getSoapBody(xml);
         Preconditions.checkState(
