@@ -12,6 +12,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -66,6 +67,10 @@ public class LoanEntity {
         return LoanAccount.nxBuilder()
                 .withLoanDetails(getLoanModule(loanType))
                 .withId(getIdModule())
+                .canWithdrawCash(Answer.NO)
+                .canPlaceFunds(Answer.UNKNOWN)
+                .canExecuteExternalTransfer(Answer.NO)
+                .canReceiveExternalTransfer(Answer.NO)
                 .build();
     }
 

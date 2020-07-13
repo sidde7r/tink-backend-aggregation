@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCard;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCardAccount;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -71,6 +73,46 @@ public class SEBAgentUtils {
         }
 
         return null;
+    }
+
+    static AccountCapabilities guessAccountCapabilities(
+            Integer accountTypeCode, String accountTypeDescription) {
+        final AccountCapabilities capabilities = AccountCapabilities.createDefault();
+        if (accountTypeCode.equals(SEBAccountType.PRIVATKONTO.getCode())
+                || accountTypeCode.equals(SEBAccountType.PERSONALLONEKONTO.getCode())) {
+            capabilities.setCanWithdrawCash(Answer.YES);
+            capabilities.setCanPlaceFunds(Answer.YES);
+            capabilities.setCanExecuteExternalTransfer(Answer.YES);
+            capabilities.setCanReceiveExternalTransfer(Answer.YES);
+        } else if (accountTypeCode.equals(SEBAccountType.ENKLA_SPARKONTOT.getCode())
+                || accountTypeCode.equals(SEBAccountType.ISK_KAPITALKONTO.getCode())) {
+            capabilities.setCanWithdrawCash(Answer.NO);
+            capabilities.setCanPlaceFunds(Answer.YES);
+            capabilities.setCanExecuteExternalTransfer(Answer.YES);
+            capabilities.setCanReceiveExternalTransfer(Answer.YES);
+        } else if (accountTypeCode.equals(SEBAccountType.SPECIALINLONEKONTO.getCode())
+                || accountTypeCode.equals(SEBAccountType.PLACERINGSKONTO.getCode())
+                || (accountTypeCode.equals(SEBAccountType.OTHER.getCode())
+                        && accountTypeDescription.equalsIgnoreCase("notariatkonto"))) {
+            capabilities.setCanWithdrawCash(Answer.NO);
+            capabilities.setCanPlaceFunds(Answer.YES);
+            capabilities.setCanExecuteExternalTransfer(Answer.NO);
+            capabilities.setCanReceiveExternalTransfer(Answer.NO);
+        } else if (accountTypeCode.equals(SEBAccountType.IPS.getCode())) {
+            capabilities.setCanWithdrawCash(Answer.NO);
+            capabilities.setCanPlaceFunds(Answer.YES);
+        }
+
+        return capabilities;
+    }
+
+    public static AccountCapabilities getLoanAccountCapabilities() {
+        final AccountCapabilities capabilities = AccountCapabilities.createDefault();
+        capabilities.setCanWithdrawCash(Answer.NO);
+        capabilities.setCanPlaceFunds(Answer.UNKNOWN);
+        capabilities.setCanExecuteExternalTransfer(Answer.NO);
+        capabilities.setCanReceiveExternalTransfer(Answer.NO);
+        return capabilities;
     }
 
     public static TransactionTypes getTransactionType(String transactionTypeCode) {

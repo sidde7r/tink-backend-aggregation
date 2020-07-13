@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
@@ -37,6 +38,7 @@ public class PCBW2582 {
         account.setName(KTOSLAG_TXT);
         account.setBalance(-StringUtils.parseAmount(SKULD));
         account.setType(AccountTypes.LOAN);
+        account.setCapabilities(SEBAgentUtils.getLoanAccountCapabilities());
 
         return account;
     }

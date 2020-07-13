@@ -1454,9 +1454,9 @@ public class SEBApiAgent extends AbstractAgent
         Integer accountTypeCode = accountEntity.KTOSLAG_KOD;
 
         AccountTypes type = SEBAgentUtils.guessAccountType(accountTypeCode);
+        String accountTypeDescription = accountEntity.KTOSLAG_TXT;
 
         if (type == null) {
-            String accountTypeDescription = accountEntity.KTOSLAG_TXT;
             log.warn(
                     "Unknown account-product type: "
                             + accountTypeCode
@@ -1469,6 +1469,8 @@ public class SEBApiAgent extends AbstractAgent
         if (SEBApiConstants.PSD2_Account_Types.contains(type)) {
             account.setFlags(ImmutableList.of(AccountFlag.PSD2_PAYMENT_ACCOUNT));
         }
+        account.setCapabilities(
+                SEBAgentUtils.guessAccountCapabilities(accountTypeCode, accountTypeDescription));
 
         return account;
     }

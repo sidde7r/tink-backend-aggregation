@@ -10,6 +10,7 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebPaymentAccountCapabilities;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -127,8 +128,8 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(String customerId) {
-        final Optional<AccountTypes> accountType = getAccountType();
-        Preconditions.checkState(accountType.isPresent());
+        final Optional<AccountTypes> tinkAccountType = getAccountType();
+        Preconditions.checkState(tinkAccountType.isPresent());
         Preconditions.checkNotNull(accountNumber);
         Preconditions.checkState(
                 accountNumber.matches(ACCOUNT_NUMBER_PATTERN),
@@ -145,7 +146,7 @@ public class AccountEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withType(
-                        TransactionalAccountType.from(accountType.get())
+                        TransactionalAccountType.from(tinkAccountType.get())
                                 .orElse(TransactionalAccountType.OTHER))
                 .withPaymentAccountFlag()
                 .withBalance(getBalanceModule())
@@ -153,6 +154,16 @@ public class AccountEntity {
                 .setApiIdentifier(accountNumber)
                 .addHolderName(getHolderName())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_CUSTOMER_ID, customerId)
+                .canWithdrawCash(
+                        SebPaymentAccountCapabilities.canWithdrawCash(accountType, accountTypeName))
+                .canPlaceFunds(
+                        SebPaymentAccountCapabilities.canPlaceFunds(accountType, accountTypeName))
+                .canExecuteExternalTransfer(
+                        SebPaymentAccountCapabilities.canExecuteExternalTransfer(
+                                accountType, accountTypeName))
+                .canReceiveExternalTransfer(
+                        SebPaymentAccountCapabilities.canReceiveExternalTransfer(
+                                accountType, accountTypeName))
                 .build();
     }
 }
