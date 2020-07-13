@@ -29,7 +29,7 @@ public abstract class TransactionDetailsBaseEntity {
     public abstract Transaction toTinkTransaction();
 
     public String getDescription() {
-        return Stream.of(debtorName, creditorName, remittanceInformationUnstructured)
+        return Stream.of(remittanceInformationUnstructured, debtorName, creditorName)
                 .filter(StringUtils::isNotBlank)
                 .findFirst()
                 .map(description -> description.replace("\r\n", " "))
