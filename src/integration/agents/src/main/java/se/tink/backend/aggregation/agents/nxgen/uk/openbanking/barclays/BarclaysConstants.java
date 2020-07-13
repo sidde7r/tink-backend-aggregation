@@ -1,11 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays;
 
 public final class BarclaysConstants {
-    public class AuthenticationQueryParameters {
-
-        public static final String AUTHONDEVICE = "authondevice";
-        public static final String YES = "YES";
-    }
 
     class Urls {
 

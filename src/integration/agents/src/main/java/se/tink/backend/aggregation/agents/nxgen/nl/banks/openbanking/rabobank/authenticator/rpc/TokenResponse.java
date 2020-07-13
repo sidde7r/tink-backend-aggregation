@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.a
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
@@ -61,7 +62,10 @@ public class TokenResponse {
     public OAuth2Token toOauthToken() {
 
         // TODO Temporary log below for debugging purpose
-        logger.info("Got new refresh token {} expires in {}", refreshToken, refreshTokenExpiresIn);
+        logger.info(
+                "Got new refresh token {} expires in {}",
+                Hash.sha256AsHex(refreshToken),
+                refreshTokenExpiresIn);
         return OAuth2Token.create(
                 getTokenType(),
                 getAccessToken(),
