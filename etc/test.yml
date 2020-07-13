@@ -1165,7 +1165,6 @@ agentsServiceConfiguration:
       tink:
         baseUrl: dummyBaseUrl
         redirectUrl: dummyRedirectUrl
-        psuIpAddress: 127.0.0.1
         psuIdType: BE_ONLB_DB
     9daf31b6c107590285b1426e22c52902:
       tink:
@@ -2286,7 +2285,6 @@ agentsServiceConfiguration:
       tink:
         baseUrl: https://xs2a.db.com/ais/DE/PFB
         psuIdType: DE_ONLB_DB
-        psuIpAddress: 127.0.0.1
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     djurslands:
       tink:
@@ -2459,7 +2457,6 @@ agentsServiceConfiguration:
       tink:
         baseUrl: ''
         psuIdType: ''
-        psuIpAddress: ''
         redirectUrl: dummyRedirectUrl
     entercard:
       tink:
@@ -2918,9 +2915,7 @@ agentsServiceConfiguration:
     norisbank:
       tink:
         baseUrl: https://xs2a.db.com/ais/DE/Noris
-        certificateId: Tink
         psuIdType: DE_ONLB_NORIS
-        psuIpAddress: 127.0.0.1
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     norwegian:
       tink:
@@ -2971,7 +2966,6 @@ agentsServiceConfiguration:
       tink:
         baseUrl: https://xs2a.db.com/ais/DE/Postbank
         psuIdType: DE_ONLB_POBA
-        psuIpAddress: 127.0.0.1
     rabobank:
       abnamro:
         baseUrl: https://api.rabobank.nl/openapi
