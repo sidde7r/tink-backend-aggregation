@@ -899,23 +899,33 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         createBeneficiaryMultiStepResponse.getBeneficiary().getStatus();
                 Assert.assertEquals(statusResult, CreateBeneficiaryStatus.CREATED);
                 Beneficiary beneficiary = createBeneficiary.getBeneficiary();
+
+                String ownerAccountNumber =
+                        Strings.isNullOrEmpty(createBeneficiary.getOwnerAccountNumber())
+                                ? ""
+                                : StringUtils.overlay(
+                                        createBeneficiary.getOwnerAccountNumber(),
+                                        StringUtils.repeat(
+                                                '*',
+                                                createBeneficiary.getOwnerAccountNumber().length()
+                                                        - 4),
+                                        0,
+                                        beneficiary.getAccountNumber().length() - 4);
+                String accountNumber =
+                        Strings.isNullOrEmpty(beneficiary.getAccountNumber())
+                                ? ""
+                                : StringUtils.overlay(
+                                        beneficiary.getAccountNumber(),
+                                        StringUtils.repeat(
+                                                '*', beneficiary.getAccountNumber().length() - 4),
+                                        0,
+                                        beneficiary.getAccountNumber().length() - 4);
                 log.info(
                         "Done with adding beneficiary, name: {}, type: {}, account number: {}, owner account number: {}",
                         beneficiary.getName(),
                         beneficiary.getAccountNumberType(),
-                        StringUtils.overlay(
-                                beneficiary.getAccountNumber(),
-                                StringUtils.repeat(
-                                        '*', beneficiary.getAccountNumber().length() - 4),
-                                0,
-                                beneficiary.getAccountNumber().length() - 4),
-                        StringUtils.overlay(
-                                createBeneficiary.getOwnerAccountNumber(),
-                                StringUtils.repeat(
-                                        '*',
-                                        createBeneficiary.getOwnerAccountNumber().length() - 4),
-                                0,
-                                beneficiary.getAccountNumber().length() - 4));
+                        accountNumber,
+                        ownerAccountNumber);
 
             } else {
                 throw new NotImplementedException(agent.getAgentClass().getSimpleName());
