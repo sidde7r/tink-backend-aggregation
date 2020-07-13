@@ -20,6 +20,16 @@ public class SamlinkConfiguration implements BerlinGroupConfiguration {
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @JsonProperty @Secret private String psuIpAddress;
+    @Secret private String keyId;
+    @Secret private String certificate;
+
+    public String getKeyId() {
+        return keyId;
+    }
+
+    public String getCertificate() {
+        return certificate;
+    }
 
     @Override
     public String getClientId() {
