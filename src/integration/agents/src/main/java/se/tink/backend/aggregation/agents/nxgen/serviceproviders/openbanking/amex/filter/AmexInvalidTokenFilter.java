@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RequiredArgsConstructor
-public class InvalidTokenFilter extends Filter {
+public class AmexInvalidTokenFilter extends Filter {
 
     private final HmacMultiTokenStorage hmacMultiTokenStorage;
 
