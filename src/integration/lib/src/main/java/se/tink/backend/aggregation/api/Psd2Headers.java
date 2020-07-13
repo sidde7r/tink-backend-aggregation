@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.api;
 
 import java.security.SecureRandom;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.UUID;
+import javax.security.auth.x500.X500Principal;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 
 public final class Psd2Headers {
@@ -62,5 +65,20 @@ public final class Psd2Headers {
 
     public static String calculateDigest(final String data) {
         return Base64.getEncoder().encodeToString(Hash.sha256(data));
+    }
+
+    public static String getBase64Certificate(X509Certificate certificate) {
+        try {
+            return Base64.getEncoder().encodeToString(certificate.getEncoded());
+        } catch (CertificateEncodingException e) {
+            throw new IllegalStateException("Could not encode signing certificate", e);
+        }
+    }
+
+    public static String getTppCertificateKeyId(X509Certificate certificate) {
+        return String.format(
+                "SN=%x,CA=%s",
+                certificate.getSerialNumber(),
+                certificate.getIssuerX500Principal().getName(X500Principal.RFC1779));
     }
 }
