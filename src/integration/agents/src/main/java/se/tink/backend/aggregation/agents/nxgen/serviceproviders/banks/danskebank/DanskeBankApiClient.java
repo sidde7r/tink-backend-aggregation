@@ -51,7 +51,7 @@ public class DanskeBankApiClient {
 
     protected DanskeBankApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration, Credentials credentials) {
-        /**
+        /*
          * By default we inject DanskeBankConstants object to use default endpoints. However for DK
          * we need to inject a custom constants object because we want to use a different host
          * (different endpoints). For this reason, we implemented a second constructor which allows
@@ -79,13 +79,17 @@ public class DanskeBankApiClient {
         return client.request(
                         String.format(
                                 constants.getDynamicJsAuthenticateUrl(), securitySystem, brand))
-                .header("Referer", configuration.getAppReferer())
+                .header(
+                        DanskeBankConstants.DanskeRequestHeaders.REFERRER,
+                        configuration.getAppReferer())
                 .get(HttpResponse.class);
     }
 
     protected <T> T postRequest(String url, Class<T> responseClazz, Object request) {
         return client.request(url)
-                .header("Referer", configuration.getAppReferer())
+                .header(
+                        DanskeBankConstants.DanskeRequestHeaders.REFERRER,
+                        configuration.getAppReferer())
                 .post(responseClazz, request);
     }
 
@@ -188,7 +192,9 @@ public class DanskeBankApiClient {
         String secSystem = configuration.getBindDeviceSecuritySystem().orElse("");
         RequestBuilder requestBuilder =
                 client.request(constants.getDeviceBindBindUrl(secSystem))
-                        .header("Referer", configuration.getAppReferer());
+                        .header(
+                                DanskeBankConstants.DanskeRequestHeaders.REFERRER,
+                                configuration.getAppReferer());
 
         if (!Strings.isNullOrEmpty(stepUpTokenValue)) {
             requestBuilder.header(
@@ -205,14 +211,18 @@ public class DanskeBankApiClient {
 
     public HttpResponse collectDynamicChallengeJavascript() {
         return client.request(constants.getDynamicJsAuthorizeUrl())
-                .header("Referer", configuration.getAppReferer())
+                .header(
+                        DanskeBankConstants.DanskeRequestHeaders.REFERRER,
+                        configuration.getAppReferer())
                 .get(HttpResponse.class);
     }
 
     public ListOtpResponse listOtpInformation(ListOtpRequest request) {
         String response =
                 client.request(constants.getDeviceListOtpUrl())
-                        .header("Referer", configuration.getAppReferer())
+                        .header(
+                                DanskeBankConstants.DanskeRequestHeaders.REFERRER,
+                                configuration.getAppReferer())
                         .post(String.class, request);
 
         return DanskeBankDeserializer.convertStringToObject(response, ListOtpResponse.class);
@@ -223,7 +233,9 @@ public class DanskeBankApiClient {
 
         String response =
                 client.request(constants.getDeviceInitOtpUrl())
-                        .header("Referer", configuration.getAppReferer())
+                        .header(
+                                DanskeBankConstants.DanskeRequestHeaders.REFERRER,
+                                configuration.getAppReferer())
                         .post(String.class, request);
 
         return DanskeBankDeserializer.convertStringToObject(response, InitOtpResponse.class);
@@ -233,7 +245,9 @@ public class DanskeBankApiClient {
             String deviceSerialNumberValue, String stepUpTokenValue) {
         RequestBuilder requestBuilder =
                 client.request(constants.getDeviceBindCheckUrl())
-                        .header("Referer", configuration.getAppReferer())
+                        .header(
+                                DanskeBankConstants.DanskeRequestHeaders.REFERRER,
+                                configuration.getAppReferer())
                         .header(configuration.getDeviceSerialNumberKey(), deviceSerialNumberValue);
 
         if (!Strings.isNullOrEmpty(stepUpTokenValue)) {
