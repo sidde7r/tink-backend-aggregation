@@ -50,7 +50,10 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+        UkOpenBankingV31Ais ukOpenBankingV31Ais =
+                new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+
+        return new BarclaysV31Ais(ukOpenBankingV31Ais, aisConfig);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class AccountV31FetcherTest {
 
     private AccountV31Fetcher accountFetcher;
     private AccountMapper accountMapper;
-    private IdentityDataV31Fetcher identityDataV31Fetcher;
+    private PartyDataV31Fetcher partyFetcher;
     private UkOpenBankingApiClient apiClient;
 
     @Before
@@ -44,12 +44,12 @@ public class AccountV31FetcherTest {
                 .thenReturn(Optional.of(mockedAccount));
         when(accountMapper.supportsAccountType(any())).thenReturn(true);
 
-        identityDataV31Fetcher = mock(IdentityDataV31Fetcher.class);
+        partyFetcher = mock(PartyDataV31Fetcher.class);
         apiClient = mock(UkOpenBankingApiClient.class);
 
         accountFetcher =
                 new AccountV31Fetcher(
-                        apiClient, identityDataV31Fetcher, new AccountTypeMapper(), accountMapper);
+                        apiClient, partyFetcher, new AccountTypeMapper(), accountMapper);
     }
 
     @Test
@@ -89,8 +89,7 @@ public class AccountV31FetcherTest {
         when(apiClient.fetchV31Accounts()).thenReturn(ImmutableList.of(account));
         when(apiClient.fetchV31AccountBalances(account.getAccountId()))
                 .thenReturn(ImmutableList.of(balance));
-        when(identityDataV31Fetcher.fetchAccountParties(account.getAccountId()))
-                .thenReturn(parties);
+        when(partyFetcher.fetchAccountParties(account)).thenReturn(parties);
 
         accountFetcher.fetchAccounts();
         // then

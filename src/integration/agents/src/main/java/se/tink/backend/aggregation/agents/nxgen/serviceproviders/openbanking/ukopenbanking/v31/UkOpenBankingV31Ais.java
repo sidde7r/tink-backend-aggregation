@@ -5,11 +5,13 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingUpcomingTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.IdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.AccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.CreditCardAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.IdentityDataV31Fetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.PartyDataV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.TransactionalAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.AccountMapper;
@@ -136,27 +138,32 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
     }
 
     @Override
-    public IdentityDataV31Fetcher makeIdentityDataFetcher(UkOpenBankingApiClient apiClient) {
-        return defaultPartyDataFetcher(apiClient, ukOpenBankingAisConfig);
+    public IdentityDataFetcher makeIdentityDataFetcher(UkOpenBankingApiClient apiClient) {
+        return defaultIdentityDataFetcher(apiClient, ukOpenBankingAisConfig);
     }
 
-    private static CreditCardAccountMapper defaultCreditCardAccountMapper() {
+    public static CreditCardAccountMapper defaultCreditCardAccountMapper() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         return new CreditCardAccountMapper(
                 new DefaultCreditCardBalanceMapper(valueExtractor),
                 new IdentifierMapper(valueExtractor));
     }
 
-    private static TransactionalAccountMapper defaultTransactionalAccountMapper() {
+    public static TransactionalAccountMapper defaultTransactionalAccountMapper() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         return new TransactionalAccountMapper(
                 new TransactionalAccountBalanceMapper(valueExtractor),
                 new IdentifierMapper(valueExtractor));
     }
 
-    private static IdentityDataV31Fetcher defaultPartyDataFetcher(
+    public static IdentityDataV31Fetcher defaultIdentityDataFetcher(
             UkOpenBankingApiClient apiClient, UkOpenBankingAisConfig ukOpenBankingAisConfig) {
         return new IdentityDataV31Fetcher(
                 apiClient, ukOpenBankingAisConfig, new IdentityDataMapper());
+    }
+
+    public static PartyDataV31Fetcher defaultPartyDataFetcher(
+            UkOpenBankingApiClient apiClient, UkOpenBankingAisConfig ukOpenBankingAisConfig) {
+        return new PartyDataV31Fetcher(apiClient, ukOpenBankingAisConfig);
     }
 }
