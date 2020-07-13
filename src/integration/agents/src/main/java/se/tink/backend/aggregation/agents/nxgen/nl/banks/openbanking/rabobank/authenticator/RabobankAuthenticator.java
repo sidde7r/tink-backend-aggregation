@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -91,7 +92,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(final String refreshToken)
             throws SessionException, BankServiceException {
-        logger.info("Got persist refresh token " + refreshToken);
+        logger.info("Got persist refresh token " + Hash.sha256AsHex(refreshToken));
 
         final Form request =
                 Form.builder()
