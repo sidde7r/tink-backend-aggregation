@@ -12,6 +12,13 @@ import se.tink.libraries.uuid.UUIDUtils;
 public class PaymentRequest {
     private Payment payment;
     private Storage storage;
+    private String endUserIp;
+
+    public PaymentRequest(Payment payment, String endUserIp) {
+        this.payment = payment;
+        this.storage = new Storage();
+        this.endUserIp = endUserIp;
+    }
 
     public PaymentRequest(Payment payment) {
         this.payment = payment;
@@ -53,7 +60,7 @@ public class PaymentRequest {
             paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
         }
 
-        return new PaymentRequest(paymentInRequestBuilder.build());
+        return new PaymentRequest(paymentInRequestBuilder.build(), transfer.getEndUserIp());
     }
 
     public Payment getPayment() {
@@ -62,5 +69,13 @@ public class PaymentRequest {
 
     public Storage getStorage() {
         return Storage.copyOf(storage);
+    }
+
+    public String getEndUserIp() {
+        return endUserIp;
+    }
+
+    public void setEndUserIp(String endUserIp) {
+        this.endUserIp = endUserIp;
     }
 }
