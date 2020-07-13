@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,10 +12,12 @@ import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.CaisseEpargneConstants.ResponseValues;
 import se.tink.libraries.streamutils.StreamUtils;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Step {
 
     @JsonProperty("phase")
@@ -43,6 +46,15 @@ public class Step {
     }
 
     public void throwIfFailedAuthentication() throws LoginException, AuthorizationException {
+        throwExeption();
+    }
+
+    public void throwBeneficiaryExceptionIfFailedAuthentication()
+            throws BeneficiaryException, LoginException {
+        throwExeption();
+    }
+
+    private void throwExeption() throws LoginException {
         if (Objects.isNull(phase)) {
             return;
         }

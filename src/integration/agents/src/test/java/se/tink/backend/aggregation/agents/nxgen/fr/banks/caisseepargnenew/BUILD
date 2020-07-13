@@ -22,6 +22,8 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/payment:rpc",
+        "//src/libraries/account_identifier",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_assertj_assertj_core",
     ],

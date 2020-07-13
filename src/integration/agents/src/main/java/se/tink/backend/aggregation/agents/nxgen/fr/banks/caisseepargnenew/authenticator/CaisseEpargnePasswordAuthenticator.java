@@ -42,10 +42,11 @@ public class CaisseEpargnePasswordAuthenticator implements PasswordAuthenticator
         if (!oAuth2V2AuthorizeResponse.isValid()) {
             throw new IllegalStateException("OAuth Authorize response was not valid.");
         }
-        SamlAuthnResponse samlAuthnResponse =
-                apiClient.samlAuthorize(
+        String samlTransactionPath =
+                apiClient.getSamlTransactionPath(
                         new URL(oAuth2V2AuthorizeResponse.getAction()),
                         oAuth2V2AuthorizeResponse.getSAMLRequest());
+        SamlAuthnResponse samlAuthnResponse = apiClient.samlAuthorize(samlTransactionPath);
         samlAuthnResponse.throwIfFailedAuthentication();
         String validationId =
                 samlAuthnResponse
@@ -66,7 +67,8 @@ public class CaisseEpargnePasswordAuthenticator implements PasswordAuthenticator
                 getPasswordString(identificationRoutingResponse, samlAuthnResponse, password);
 
         SamlAuthnResponse passwordResponse =
-                apiClient.submitPassword(validationId, validationUnitId, passwordString);
+                apiClient.submitPassword(
+                        validationId, validationUnitId, passwordString, samlTransactionPath);
         passwordResponse.throwIfFailedAuthentication();
         apiClient.oAuth2Consume(
                 passwordResponse

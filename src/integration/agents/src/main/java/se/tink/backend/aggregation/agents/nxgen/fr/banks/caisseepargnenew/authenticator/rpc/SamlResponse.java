@@ -6,6 +6,8 @@ import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.CaisseEpargneConstants.ResponseValues;
@@ -24,14 +26,29 @@ public class SamlResponse {
     private String unlockingDate;
 
     @JsonIgnore
-    public void throwIfFailedAuthentication() throws AuthorizationException, LoginException {
+    void throwIfFailedAuthentication() throws AuthorizationException, LoginException {
         if (isAuthenticationBlockedResponse()) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         } else if (isAuthenticationFailedResponse()) {
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
         }
         if (!isAuthenticationSuccessResponse()) {
-            throw LoginError.INVALIDATED_CREDENTIALS.exception();
+            throw AuthorizationError.UNAUTHORIZED.exception();
+        }
+    }
+
+    @JsonIgnore
+    void throwBeneficiaryExceptionIfFailedAuthentication()
+            throws BeneficiaryException, LoginException {
+        if (isAuthenticationBlockedResponse()) {
+            throw new BeneficiaryAuthorizationException(
+                    AuthorizationError.ACCOUNT_BLOCKED.userMessage().toString());
+        } else if (isAuthenticationFailedResponse()) {
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+        }
+        if (!isAuthenticationSuccessResponse()) {
+            throw new BeneficiaryAuthorizationException(
+                    AuthorizationError.UNAUTHORIZED.userMessage().toString());
         }
     }
 

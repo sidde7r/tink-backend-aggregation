@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class CaisseEpargneConstants {
     public static class Urls {
-
         static final String STEP_PATH = "/step";
         private static final URL AS_EX_ANO_BASE_URL =
                 new URL("https://www.as-ex-ano-groupe.caisse-epargne.fr");
@@ -23,16 +22,17 @@ public class CaisseEpargneConstants {
                 new URL("https://www.as-ex-ath-groupe.caisse-epargne.fr");
         private static final URL RS_EX_ATH_BASE_URL =
                 new URL("https://www.rs-ex-ath-groupe.caisse-epargne.fr");
-
         public static final URL ICG_AUTH_BASE = new URL("https://www.icgauth.caisse-epargne.fr");
         static final URL SOAP_BASE = new URL("https://www.s.caisse-epargne.fr");
+
         static final URL WS_BAD = SOAP_BASE.concat("/V22/WsBad/WsBad.asmx");
         static final URL IDENTIFICATION_ROUTING =
                 RS_EX_ANO_BASE_URL.concat("/bapi/user/v1/users/identificationRouting");
         static final URL OAUTH2_TOKEN = AS_EX_ANO_BASE_URL.concat("/api/oauth/token");
         static final URL OAUTH_V2_AUTHORIZE = AS_EX_ATH_BASE_URL.concat("/api/oauth/v2/authorize");
-        static final URL GET_BENEFICIARIES =
+        static final URL BENEFICIARIES =
                 RS_EX_ATH_BASE_URL.concat("/bapi/transfer/v2/transferCreditors");
+        public static final String SAML_TRANSACTION_PATH = "/dacsrest/api/v1u0/transaction";
     }
 
     public static class CookieKeys {}
@@ -41,6 +41,7 @@ public class CaisseEpargneConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
         public static final String GRANT_TYPE = "grant_type";
+        public static final String SAML_RESPONSE = "SAMLResponse";
         public static final String SAML_REQUEST = "SAMLRequest";
     }
 
@@ -52,7 +53,9 @@ public class CaisseEpargneConstants {
 
     public static class HeaderKeys {
         public static final String USER_AGENT = "User-Agent";
-        public static final String ESTABLISHMENT_ID = "ID_ETABLISSEMENT";
+        public static final String X_SECURE_PASS_TYPE = "X-SecurePass-Type";
+        static final String ESTABLISHMENT_ID = "ID_ETABLISSEMENT";
+        static final String X_STEP_UP_TOKEN = "X-StepUp-Token";
         static final String SOAP_ACTION = "SOAPAction";
         static final String VERSION_WS_BAD = "VersionWsbad";
         public static String CONTENT_TYPE = "Content-Type";
@@ -63,8 +66,7 @@ public class CaisseEpargneConstants {
     public static class HeaderValues {
         public static final String GET_ACCOUNTS =
                 "http://caisse-epargne.fr/webservices/GetSyntheseCpteAbonnement";
-        public static final String GET_ACCOUNT_DETAILS =
-                "http://caisse-epargne.fr/webservices/GetRice";
+        static final String GET_ACCOUNT_DETAILS = "http://caisse-epargne.fr/webservices/GetRice";
         public static final String GET_TRANSACTIONS =
                 "http://caisse-epargne.fr/webservices/GetHistoriqueOperationsByCompte";
         static final String SSO_BAPI = "http://caisse-epargne.fr/webservices/sso_BAPI";
@@ -82,6 +84,8 @@ public class CaisseEpargneConstants {
         public static final String TOKEN_TYPE = "token_type";
         public static final String EXPIRES_IN = "expires_in";
         public static final String ID_TOKEN = "id_token";
+        public static final String TRANSACTION_ID = "transactionID";
+        static final String ID_TOKEN_HINT = "id_token_hint";
         static final String LOGIN_HINT = "login_hint";
         static final String BPCESTA = "bpcesta";
         static final String CDETAB = "cdetab";
@@ -108,11 +112,24 @@ public class CaisseEpargneConstants {
     }
 
     public static class RequestValues {
-        public static final String PASSWORD = "PASSWORD";
         public static final int PAGE_SIZE = 100;
         public static final String TRANSACTION_REQUEST_TYPE_SUBSEQUENT = "S";
         public static final String TRANSACTION_REQUEST_TYPE_INITIAL = "D";
         static final String IT_ENTITY_02 = "02";
+
+        public enum ValidationTypes {
+            PASSWORD("PASSWORD"),
+            OTP("SMS");
+            private final String name;
+
+            ValidationTypes(String name) {
+                this.name = name;
+            }
+
+            public String getName() {
+                return name;
+            }
+        }
     }
 
     public static final Map<MembershipTypes, String> MEMBERSHIP_TYPES_TO_VALUE_MAP =
@@ -123,6 +140,8 @@ public class CaisseEpargneConstants {
 
     public static class StorageKeys {
         public static final String TOKEN = "token";
+        public static final String IDENTIFICATION_ROUTING_RESPONSE =
+                "identificationRoutingResponse";
         static final String TERM_ID = "termId";
         public static final String FINAL_AUTH_RESPONSE = "finalAuthResponse";
         static final String REDIRECT_LOCATION = "redirectLocation";
@@ -172,5 +191,22 @@ public class CaisseEpargneConstants {
         public static final String PREFIX =
                 "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><soap:Body>";
         public static final String SUFFIX = "</soap:Body></soap:Envelope>";
+    }
+
+    public static class Step {
+        public static final String AUTHORIZE = "AUTHORIZE";
+        public static final String CREATE_BENEFICIARY = "CREATE_BENEFICIARY";
+    }
+
+    public static class ErrorCodes {
+        public static final String INSUFFICIENT_AUTHENTICATION = "insufficientAuthLevel";
+        public static final String BENEFICIARY = "bpce.beneficiaire";
+    }
+
+    public static class ErrorMessages {
+        public static final String INSUFFICIENT_AUTHENTICATION =
+                "Niveau dauthentification insuffisant";
+        public static final String BENEFICIARY_ALREADY_EXISTS =
+                "Ajout impossible, cet IBAN existe déjà dans la liste de vos bénéficiaires.";
     }
 }

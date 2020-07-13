@@ -30,7 +30,8 @@ public class IdentificationRoutingResponse {
                 && Objects.nonNull(characteristics)
                 && !Strings.isNullOrEmpty(characteristics.getBankId())
                 && (Objects.nonNull(characteristics.getSubscribeTypeItems())
-                        && characteristics.getSubscribeTypeItems().size() == 1);
+                        && characteristics.getSubscribeTypeItems().size() == 1)
+                && !Strings.isNullOrEmpty(characteristics.getUserCode());
     }
 
     @JsonIgnore
@@ -73,5 +74,12 @@ public class IdentificationRoutingResponse {
             return "";
         }
         return characteristics.getBankId();
+    }
+
+    public String getUserCode() {
+        if (Objects.isNull(characteristics)) {
+            return "";
+        }
+        return characteristics.getUserCode();
     }
 }

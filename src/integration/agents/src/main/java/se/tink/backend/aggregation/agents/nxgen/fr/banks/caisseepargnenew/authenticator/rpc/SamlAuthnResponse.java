@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryException;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.CaisseEpargneConstants.ResponseValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.entities.Context;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.entities.Step;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authen
 import se.tink.libraries.streamutils.StreamUtils;
 
 @Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SamlAuthnResponse extends Step {
 
     @JsonProperty("context")
@@ -85,6 +88,17 @@ public class SamlAuthnResponse extends Step {
             return;
         }
         samlResponse.throwIfFailedAuthentication();
+    }
+
+    @JsonIgnore
+    @Override
+    public void throwBeneficiaryExceptionIfFailedAuthentication()
+            throws BeneficiaryException, LoginException {
+        super.throwBeneficiaryExceptionIfFailedAuthentication();
+        if (Objects.isNull(samlResponse)) {
+            return;
+        }
+        samlResponse.throwBeneficiaryExceptionIfFailedAuthentication();
     }
 
     @JsonIgnore

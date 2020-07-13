@@ -5,6 +5,6 @@ import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class SamlRequest extends AbstractForm {
     public SamlRequest(String samlRequest) {
-        this.put(FormKeys.SAML_REQUEST, samlRequest);
+        this.put(FormKeys.SAML_RESPONSE, samlRequest);
     }
 }

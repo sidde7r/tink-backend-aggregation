@@ -21,6 +21,9 @@ public class ValidationUnit {
     @JsonProperty("password")
     private String password;
 
+    @JsonProperty("otp_sms")
+    private String otpSms;
+
     @JsonProperty("virtualKeyboard")
     private VirtualKeyboard virtualKeyboard;
 

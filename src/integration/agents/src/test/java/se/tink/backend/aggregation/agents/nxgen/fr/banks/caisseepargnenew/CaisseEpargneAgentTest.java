@@ -7,7 +7,10 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.payment.rpc.Beneficiary;
+import se.tink.libraries.payment.rpc.CreateBeneficiary;
 
 public class CaisseEpargneAgentTest {
 
@@ -41,5 +44,31 @@ public class CaisseEpargneAgentTest {
                 .expectLoggedIn(false)
                 .build()
                 .testRefresh();
+    }
+
+    @Test
+    public void testCreateBeneficiary() throws Exception {
+        final String RED_CROSS = "CH6200240240C05735300";
+        final String BENEFICIARY_ACCOUNT = "FR7630056005020502000363678"; // Fondation de France
+        new AgentIntegrationTest.Builder("fr", "fr-caisseepargne-password-new")
+                .addCredentialField(
+                        Field.Key.USERNAME,
+                        usernamePasswordArgumentManager.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD,
+                        usernamePasswordArgumentManager.get(UsernamePasswordArgumentEnum.PASSWORD))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .expectLoggedIn(false)
+                .build()
+                .testCreateBeneficiary(
+                        CreateBeneficiary.builder()
+                                .beneficiary(
+                                        Beneficiary.builder()
+                                                .name("Tink RED CROSS")
+                                                .accountNumber(RED_CROSS)
+                                                .accountNumberType(Type.IBAN)
+                                                .build())
+                                .build());
     }
 }

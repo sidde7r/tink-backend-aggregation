@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew;
 
 import com.google.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -12,14 +13,17 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.CaisseEpargnePasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.executor.beneficiary.CaisseEpargneCreateBeneficiaryExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.CaisseEpargneTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.CaisseEpragneTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transferdestination.CaisseEpargneTransferDestinationsFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -55,7 +59,8 @@ public class CaisseEpargneAgent extends NextGenerationAgent
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new BankServiceInternalErrorFilter())
                 .addFilter(new GatewayTimeoutFilter())
-                .addFilter(new TimeoutFilter());
+                .addFilter(new TimeoutFilter())
+        /*.setDebugProxy("http://127.0.0.1:8888")*/ ;
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
@@ -119,5 +124,16 @@ public class CaisseEpargneAgent extends NextGenerationAgent
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    @Override
+    public Optional<CreateBeneficiaryController> constructCreateBeneficiaryController() {
+        return Optional.of(
+                new CreateBeneficiaryController(
+                        new CaisseEpargneCreateBeneficiaryExecutor(
+                                apiClient,
+                                new SupplementalInformationProviderImpl(
+                                        supplementalRequester, request),
+                                instanceStorage)));
     }
 }
