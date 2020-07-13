@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 public final class AccountV31Fetcher<T extends Account> implements AccountFetcher<T> {
 
     private final UkOpenBankingApiClient apiClient;
-    private final IdentityDataV31Fetcher identityFetcher;
+    private final PartyDataFetcher accountPartyFetcher;
     private final AccountTypeMapper accountTypeMapper;
     private final AccountMapper<T> accountMapper;
 
@@ -45,8 +45,7 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
     }
 
     private Single<List<IdentityDataV31Entity>> fetchParties(AccountEntity account) {
-        return Single.fromCallable(
-                        () -> identityFetcher.fetchAccountParties(account.getAccountId()))
+        return Single.fromCallable(() -> accountPartyFetcher.fetchAccountParties(account))
                 .subscribeOn(Schedulers.io());
     }
 
