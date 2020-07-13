@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.authenticator.AmexAccessTokenProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.authenticator.AmexThirdPartyAppRequestParamsProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.filter.AmexInvalidTokenFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.filter.AmexRetryFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.filter.InvalidTokenFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.macgenerator.AmexMacGenerator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.macgenerator.MacSignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.AmexCreditCardFetcher;
@@ -89,7 +89,7 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
         this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
 
         this.creditCardRefreshController = constructCreditCardController();
-        client.addFilter(new InvalidTokenFilter(hmacMultiTokenStorage));
+        client.addFilter(new AmexInvalidTokenFilter(hmacMultiTokenStorage));
         client.addFilter(
                 new AmexRetryFilter(
                         AmericanExpressConstants.HttpClient.MAX_ATTEMPTS,

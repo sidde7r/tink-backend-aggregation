@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RequiredArgsConstructor
-public class InvalidTokenFilter extends Filter {
+public class AmexInvalidTokenFilter extends Filter {
 
     private final HmacMultiTokenStorage hmacMultiTokenStorage;
 
@@ -28,14 +28,7 @@ public class InvalidTokenFilter extends Filter {
                     .orElseThrow(() -> new IllegalStateException("Could not translate error"))) {
                 hmacMultiTokenStorage.clearToken();
                 throw BankServiceError.CONSENT_REVOKED.exception();
-            } else if (AmericanExpressConstants.ErrorMessages.DATE_OUT_OF_RANGE.equalsIgnoreCase(
-                    errorResponseDto.getMessage())) {
-                // This fault is due to us trying to fetch data more than 90 days (during
-                // pagination). We allow this to slip through since it will be fetched and handled
-                // in the transactionFetcher.
-                return response;
             }
-            throw new IllegalStateException("Something went wrong when fetching data from Amex");
         }
         return response;
     }

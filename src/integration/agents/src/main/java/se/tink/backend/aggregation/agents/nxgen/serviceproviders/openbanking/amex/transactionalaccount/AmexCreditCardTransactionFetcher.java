@@ -51,10 +51,8 @@ public class AmexCreditCardTransactionFetcher
         } catch (HttpResponseException e) {
             ErrorResponseDto errorResponse = e.getResponse().getBody(ErrorResponseDto.class);
             if (errorResponse.getCode() == AmericanExpressConstants.ErrorCodes.DATE_OUT_OF_RANGE
-                    && errorResponse
-                            .getMessage()
-                            .equalsIgnoreCase(
-                                    AmericanExpressConstants.ErrorMessages.DATE_OUT_OF_RANGE)) {
+                    && AmericanExpressConstants.ErrorMessages.DATE_OUT_OF_RANGE.equalsIgnoreCase(
+                            errorResponse.getMessage())) {
                 return PaginatorResponseImpl.createEmpty(false);
             }
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
