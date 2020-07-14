@@ -1,6 +1,7 @@
 package se.tink.libraries.serialization.utils;
 
 import java.io.IOException;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class SerializationUtilsTest {
@@ -21,6 +22,16 @@ public class SerializationUtilsTest {
 
         // Act & Assert
         SerializationUtils.deserializeFromBinary(binary, TargetClass.class);
+    }
+
+    @Test
+    public void shouldSerializeToBinary() throws IOException {
+        // Act
+        byte[] testBinary = SerializationUtils.serializeToBinary("testString");
+
+        // Assert
+        Assert.assertNotNull(testBinary);
+        Assert.assertNotEquals(0, testBinary.length);
     }
 
     @Test(expected = IOException.class)
