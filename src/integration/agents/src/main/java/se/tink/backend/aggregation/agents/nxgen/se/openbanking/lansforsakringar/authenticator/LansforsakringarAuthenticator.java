@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator;
 
+import java.util.Map;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
@@ -57,5 +60,17 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         sessionStorage.put(LansforsakringarConstants.StorageKeys.ACCESS_TOKEN, accessToken);
+    }
+
+    @Override
+    public void handleSpecificCallbackDataError(Map<String, String> callbackData)
+            throws AuthenticationException {
+        // LF wont provide with an error parameter on a canceled callback. Instead they provide with
+        // an (empty) pickup callback parameter
+        final String callbackParameter =
+                callbackData.getOrDefault(LansforsakringarConstants.CallbackParam.PICKUP, null);
+        if (callbackParameter != null) {
+            throw ThirdPartyAppError.CANCELLED.exception();
+        }
     }
 }

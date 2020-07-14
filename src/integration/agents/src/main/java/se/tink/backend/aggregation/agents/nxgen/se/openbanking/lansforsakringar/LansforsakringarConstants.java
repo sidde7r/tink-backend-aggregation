@@ -92,6 +92,7 @@ public abstract class LansforsakringarConstants {
                 "TPP-Explicit-Authorisation-Preferred";
         public static final String CONTENT_TYPE = "Content-Type";
         public static final String CACHE_CONTROL = "Cache-Control";
+        public static final String TPP_NOK_REDIRECT_URI = "TPP-NOK-Redirect-URI";
     }
 
     public static class HeaderValues {
@@ -146,5 +147,13 @@ public abstract class LansforsakringarConstants {
 
     public class BodyValues {
         public static final String EMPTY_BODY = "{}";
+    }
+
+    public class CallbackParam {
+        private CallbackParam() {
+            throw new IllegalStateException("Utility class");
+        }
+
+        public static final String PICKUP = "pickup";
     }
 }
