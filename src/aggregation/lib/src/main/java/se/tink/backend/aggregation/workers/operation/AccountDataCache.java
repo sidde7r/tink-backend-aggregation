@@ -33,8 +33,7 @@ public class AccountDataCache {
     }
 
     private Optional<AccountData> getAccountData(String accountUniqueId) {
-        return Optional.ofNullable(
-                accountDataByAccountUniqueId.getOrDefault(accountUniqueId, null));
+        return Optional.ofNullable(accountDataByAccountUniqueId.get(accountUniqueId));
     }
 
     public void cacheAccount(Account account) {
