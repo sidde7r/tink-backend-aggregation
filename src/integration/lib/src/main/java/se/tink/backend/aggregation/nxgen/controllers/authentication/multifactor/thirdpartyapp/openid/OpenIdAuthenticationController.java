@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.BANK_SIDE_FAILURE;
+
 import com.google.common.base.Strings;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -276,7 +279,7 @@ public class OpenIdAuthenticationController
                                 TimeUnit.MINUTES)
                         .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
 
-        handleErrors(callbackData);
+        handleErrorCallback(callbackData);
 
         String code =
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.CODE)
@@ -348,8 +351,8 @@ public class OpenIdAuthenticationController
         return Optional.of(value);
     }
 
-    private void handleErrors(Map<String, String> callbackData)
-            throws AuthenticationException, AuthorizationException {
+    private void handleErrorCallback(Map<String, String> callbackData)
+            throws AuthenticationException {
         Optional<String> error =
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR);
         Optional<String> errorDescription =
@@ -360,22 +363,31 @@ public class OpenIdAuthenticationController
             return;
         }
 
-        String errorType = error.get();
+        handleError(
+                SerializationUtils.serializeToString(callbackData),
+                error.orElse(""),
+                errorDescription.orElse(""));
+    }
+
+    private void handleError(
+            String serializedCallbackData, String errorType, String errorDescription)
+            throws LoginException {
+
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
                 || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType)) {
-            logger.info(
-                    "OpenId {} callback: {}",
-                    errorType,
-                    SerializationUtils.serializeToString(callbackData));
+
+            logger.info("OpenId {} callback: {}", errorType, serializedCallbackData);
 
             // Store error information to make it possible for agent to determine cause and
             // give end user a proper error message.
-            apiClient.storeOpenIdError(OpenIdError.create(errorType, errorDescription.orElse("")));
+            apiClient.storeOpenIdError(OpenIdError.create(errorType, errorDescription));
 
             throw LoginError.INCORRECT_CREDENTIALS.exception();
+        } else if ("server_error".equalsIgnoreCase(errorType)) {
+            throw BANK_SIDE_FAILURE.exception(errorDescription);
         }
 
         throw new IllegalStateException(
-                String.format("Unknown error: %s:%s.", errorType, errorDescription.orElse("")));
+                String.format("Unknown error: %s:%s.", errorType, errorDescription));
     }
 }
