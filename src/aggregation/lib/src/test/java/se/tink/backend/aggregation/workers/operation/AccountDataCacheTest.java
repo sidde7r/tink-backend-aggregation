@@ -13,6 +13,18 @@ public class AccountDataCacheTest {
     private static final String DUMMY_ACCOUNT_ID_1 = "dummy1";
 
     @Test
+    public void testCacheSameAccount() {
+        AccountDataCache accountDataCache = new AccountDataCache();
+
+        Account account0 = mockAccount(DUMMY_ACCOUNT_ID_0);
+        accountDataCache.cacheAccount(account0);
+        Assert.assertEquals(accountDataCache.getCurrentAccounts().size(), 1);
+
+        accountDataCache.cacheAccount(account0);
+        Assert.assertEquals(accountDataCache.getCurrentAccounts().size(), 1);
+    }
+
+    @Test
     public void testNonFilteredCache() {
         AccountDataCache accountDataCache = new AccountDataCache();
 
