@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.workers.operation;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -35,10 +34,8 @@ public class AccountDataCacheTest {
         accountDataCache.cacheAccount(account1);
 
         Assert.assertEquals(accountDataCache.getCurrentAccounts().size(), 2);
-
-        List<Account> expectedCachedAccounts = Arrays.asList(account0, account1);
-
-        Assert.assertEquals(expectedCachedAccounts, accountDataCache.getCurrentAccounts());
+        assertThat(accountDataCache.getCurrentAccounts())
+                .containsExactlyInAnyOrder(account0, account1);
     }
 
     @Test
@@ -54,10 +51,7 @@ public class AccountDataCacheTest {
         accountDataCache.cacheAccount(account1);
 
         Assert.assertEquals(accountDataCache.getCurrentAccounts().size(), 1);
-
-        List<Account> expectedCachedAccounts = Collections.singletonList(account1);
-
-        Assert.assertEquals(expectedCachedAccounts, accountDataCache.getCurrentAccounts());
+        assertThat(accountDataCache.getCurrentAccounts()).containsExactlyInAnyOrder(account1);
     }
 
     @Test
