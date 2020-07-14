@@ -142,14 +142,43 @@ Vary: Accept-Encoding
 
 {"d":{"__type":"SEB_CS.SEBCSService","VODB":{"DEVID01":{"MANUFACTURER":"Apple","OS_VERSION":"12.0.1","APPLICATION_NAME":"MASP","OS_NAME":"iOS","APPLICATION_VERSION":"9.1.1","MODEL":"API_VERSION=2","SESSION_DURATION":570},"HWINFO01":null,"DBZV170":null,"DBZV160":null,"USRINF01":{"USER_NAME":"ALEXANDER PETTERSSON             ","SEB_KUND_NR":"77101200000009","BUNT_ANTAL_OSIGNERAD":0,"EFACTURA_ANTAL_OSIGN":3,"IMS_SHORT_USERID":"77A12141","LOGON_COMPLETED":"J","STATUS":"Success","UNIQUE_ID":"h1aYK1drlazzhm0QHjd0WoAv783LE9Mp1KVMNprSQ3w=","LOGIN_METHOD":"bankid","GENDER":"male","AGE":"43","SEB_BID_USERID12":"197710120000"},"CBEW501":null,"CBEW502":null,"PCBW024":{"ROW_ID":0,"VERIF_REQ":"N","CERTIFIKAT":null,"TIME_STAMP_OLD":null,"DATA1_TEXT":null,"DATA2_TEXT":null},"PCBWC011":null,"MESSAGE_INFO":null,"CUSTOMER_REVIEW":null},"ServiceInput":null,"ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":8011,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":225},"MiddlewareReport":{"HttpServer":"A3","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20061814:31:03.4023858"}}}
 
+
 REQUEST 15
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankLista01Uppdrag01.asmx/Execute
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Accept: application/json
+Content-Type: application/json
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[{"Condition":"EQ","VariableName":"USER_ID","VariableValue":"77A12141"},{"Condition":"EQ","VariableName":"UPPDRAG_TYP","VariableValue":"A"},{"Condition":"EQ","VariableName":"SORT_ORDER","VariableValue":""}]}}
+
+RESPONSE 15
+200
+content-length: 1190
+content-type: application/json; charset=utf-8
+date: Fri, 10 Jul 2020 11:29:20 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":"132920799008","SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":"AFADF311E6E4447CA780A19820E905EC","Language":"SV","CountryCode":null,"Channel":null,"InvoiceHint":null,"Brand":null,"ParentReqId":"132920799008","CurrentReqId":"1c85d09d-5f08-4020-a154-511124f97a68","ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":2,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":55,"ExecuteTime":2,"HostTime":5,"GateWayTime":16,"HTTPServerTime":12},"MiddlewareReport":{"HttpServer":"9074","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20071013:29:20.8118424"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW1241":null,"PCBW1242":null,"PCBW1243":null,"PCBW1244":null,"PCBW1245":null,"PCBW1246":null,"PCBW1247":null,"PCBW1248":null,"PCBW1249":null}}}
+
+
+REQUEST 17
 POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankLista01Konton_privat01.asmx/Execute
 User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
 Content-Type: application/json
 
 {"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[{"Condition":"EQ","VariableName":"KUND_ID","VariableValue":"77101200000009"}]}}
 
-RESPONSE 15 SET EXECUTE02
+RESPONSE 17 SET EXECUTE02
 200
 content-length: 1793
 content-type: application/json; charset=utf-8
