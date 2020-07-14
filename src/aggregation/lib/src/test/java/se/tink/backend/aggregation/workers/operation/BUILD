@@ -16,6 +16,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/regulatory_restrictions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
+        "//src/integration/models",
         "//src/libraries/pair",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_zookeeper_zookeeper",
