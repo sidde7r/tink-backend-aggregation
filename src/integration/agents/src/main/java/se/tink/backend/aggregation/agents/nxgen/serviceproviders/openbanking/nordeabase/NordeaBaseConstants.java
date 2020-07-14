@@ -33,6 +33,10 @@ public final class NordeaBaseConstants {
         public static final URL CONFIRM_PAYMENT = new URL(BASE_URL + ApiService.CONFIRM_PAYMENT);
         public static final URL GET_PAYMENT = new URL(BASE_URL + ApiService.GET_PAYMENT);
         public static final URL GET_PAYMENTS = new URL(BASE_URL + ApiService.GET_PAYMENTS);
+        public static final URL GET_CARDS = new URL(BASE_URL + ApiService.GET_CARDS);
+        public static final URL GET_CARD_TRANSACTIONS =
+                new URL(BASE_URL + ApiService.GET_CARD_TRANSACTIONS);
+        public static final URL GET_CARD_DETAILS = new URL(BASE_URL + ApiService.GET_CARD_DETAILS);
 
         public static final String BASE_CORPORATE_URL =
                 "https://api.nordeaopenbanking.com/xs2a-business";
@@ -53,6 +57,9 @@ public final class NordeaBaseConstants {
         public static final String GET_ACCOUNTS = VERSION + "/accounts";
         public static final String GET_TRANSACTIONS =
                 VERSION + "/accounts/{accountId}/transactions";
+        public static final String GET_CARDS = "/v4/cards";
+        public static final String GET_CARD_TRANSACTIONS = "/v4/cards/{cardId}/transactions";
+        public static final String GET_CARD_DETAILS = "/v4/cards/{cardId}";
         public static final String INITIATE_PAYMENT = VERSION + "/payments/{paymentType}";
         public static final String CONFIRM_PAYMENT =
                 VERSION + "/payments/{paymentType}/{paymentId}/confirm";
@@ -76,16 +83,17 @@ public final class NordeaBaseConstants {
         public static final String SCOPE = "scope";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String MAX_TX_HISTORY = "max_tx_history";
+        public static final String CONTINUATION_KEY = "continuation_key";
     }
 
     public static class QueryValues {
         public static final String DURATION_MINUTES = "129600";
         public static final String DEFAULT_LANGUAGE = "en";
         public static final String SCOPE_WITHOUT_PAYMENT =
-                "ACCOUNTS_BALANCES,ACCOUNTS_BASIC,ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS";
+                "ACCOUNTS_BALANCES,ACCOUNTS_BASIC,ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,CARDS_INFORMATION,CARDS_TRANSACTIONS";
         public static final String SCOPE =
                 "ACCOUNTS_BALANCES,ACCOUNTS_BASIC,"
-                        + "ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,PAYMENTS_MULTIPLE";
+                        + "ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,PAYMENTS_MULTIPLE,CARDS_INFORMATION,CARDS_TRANSACTIONS";
         public static final String FETCH_NUMBER_OF_MONTHS = "12";
     }
 
@@ -140,6 +148,7 @@ public final class NordeaBaseConstants {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAYMENT_ID = "paymentId";
         public static final String PAYMENT_TYPE = "paymentType";
+        public static final String CARD_ID = "cardId";
     }
 
     public static final class ErrorMessages {

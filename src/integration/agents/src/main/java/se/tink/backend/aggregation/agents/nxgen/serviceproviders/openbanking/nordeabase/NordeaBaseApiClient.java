@@ -35,6 +35,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.rpc.CreditCardResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.rpc.CreditCardTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideFailureFilter;
@@ -43,6 +45,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -200,6 +203,35 @@ public class NordeaBaseApiClient implements TokenInterface {
         RequestBuilder request = createRequestInSession(url, HttpMethod.GET, null);
 
         return requestRefreshableGet(request, responseClass);
+    }
+
+    public CreditCardResponse fetchCreditCards() {
+        return requestRefreshableGet(
+                createRequestInSession(Urls.GET_CARDS, HttpMethod.GET, null),
+                CreditCardResponse.class);
+    }
+
+    public CreditCardResponse fetchCreditCardDetails(String cardId) {
+        return requestRefreshableGet(
+                createRequestInSession(
+                        Urls.GET_CARD_DETAILS.parameter(NordeaBaseConstants.IdTags.CARD_ID, cardId),
+                        HttpMethod.GET,
+                        null),
+                CreditCardResponse.class);
+    }
+
+    public CreditCardTransactionResponse fetchCreditCardTransactions(
+            CreditCardAccount account, String page) {
+        return requestRefreshableGet(
+                createRequestInSession(
+                        Urls.GET_CARD_TRANSACTIONS
+                                .parameter(
+                                        NordeaBaseConstants.IdTags.CARD_ID,
+                                        account.getApiIdentifier())
+                                .queryParam(NordeaBaseConstants.QueryKeys.CONTINUATION_KEY, page),
+                        HttpMethod.GET,
+                        null),
+                CreditCardTransactionResponse.class);
     }
 
     @Override
