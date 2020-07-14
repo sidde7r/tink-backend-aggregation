@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.BuildSt
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithIdStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
+import se.tink.backend.aggregation.source_info.SourceInfo;
 import se.tink.libraries.account.enums.AccountFlag;
 
 public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B>>
@@ -28,6 +29,7 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     private final TemporaryStorage temporaryStorage = new TemporaryStorage();
     protected Map<String, String> payload = new HashMap<>();
     private AccountCapabilities capabilities = AccountCapabilities.createDefault();
+    private SourceInfo sourceInfo;
     private AccountHolderType holderType;
 
     protected abstract B buildStep();
@@ -119,6 +121,12 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
         return buildStep();
     }
 
+    @Override
+    public B sourceInformation(SourceInfo sourceInfo) {
+        this.sourceInfo = sourceInfo;
+        return buildStep();
+    }
+
     IdModule getIdModule() {
         return idModule;
     }
@@ -154,5 +162,9 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
 
     public AccountCapabilities getCapabilities() {
         return capabilities;
+    }
+
+    public SourceInfo getSourceInfo() {
+        return sourceInfo;
     }
 }

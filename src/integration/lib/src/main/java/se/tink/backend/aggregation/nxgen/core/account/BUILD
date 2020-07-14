@@ -10,6 +10,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/models",
         "//src/integration/user:rpc",
         "//src/libraries/account_identifier",

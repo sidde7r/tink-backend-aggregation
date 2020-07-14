@@ -10,6 +10,7 @@ java_library(
         "//src/integration/amount",
         "//src/integration/credentials:demo",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//src/libraries/strings",
