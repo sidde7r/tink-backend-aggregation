@@ -1111,7 +1111,6 @@ agentsServiceConfiguration:
     9695c4f3f68940d89ad68f6b17f78fbd:
       tink:
         baseUrl: https://api.unicredit.de
-        eidasQwac: Tink
         psuIdType: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     97388399a8444e0da6dd055831245c09:
@@ -3244,7 +3243,6 @@ agentsServiceConfiguration:
     unicredit-de:
       tink:
         baseUrl: https://api.unicredit.de
-        eidasQwac: Tink
         psuIdType: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     unicredit-hu:

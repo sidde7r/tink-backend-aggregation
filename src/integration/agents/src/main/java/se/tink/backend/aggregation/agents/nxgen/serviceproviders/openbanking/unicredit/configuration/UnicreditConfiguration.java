@@ -16,8 +16,6 @@ public class UnicreditConfiguration implements ClientConfiguration {
 
     private String clientKeyStorePassword;
 
-    @Secret private String eidasQwac;
-
     @Secret private String psuIdType;
 
     public String getBaseUrl() {
@@ -42,14 +40,6 @@ public class UnicreditConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Key Store Password"));
 
         return clientKeyStorePassword;
-    }
-
-    public String getEidasQwac() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasQwac),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "eIDAS QWAC"));
-
-        return eidasQwac;
     }
 
     public String getPsuIdType() {
