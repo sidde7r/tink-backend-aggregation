@@ -133,12 +133,12 @@ public class SerializationUtils {
         }
     }
 
-    public static <T> byte[] serializeToBinary(T value) {
+    public static <T> byte[] serializeToBinary(T value) throws IOException {
         try {
             return BINARY_MAPPER.writeValueAsBytes(value);
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             log.error("Could not serialize object", e);
-            return null;
+            throw e;
         }
     }
 

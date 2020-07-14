@@ -1,12 +1,13 @@
 package se.tink.libraries.serialization.utils;
 
 import java.io.IOException;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class SerializationUtilsTest {
 
     @Test(expected = NullPointerException.class)
-    public void Should_ThrowException_When_BinaryToDeserializeIsNull() throws IOException {
+    public void shouldThrowExceptionWhenBinaryToDeserializeIsNull() throws IOException {
         // Arrange
         byte[] binary = null;
 
@@ -15,7 +16,7 @@ public class SerializationUtilsTest {
     }
 
     @Test(expected = IOException.class)
-    public void Should_RethrowException_FromObjectMapper() throws IOException {
+    public void shouldRethrowExceptionFromObjectMapper() throws IOException {
         // Arrange
         byte[] binary = {0, 1, 2, 3, 4};
 
@@ -23,5 +24,27 @@ public class SerializationUtilsTest {
         SerializationUtils.deserializeFromBinary(binary, TargetClass.class);
     }
 
-    static class TargetClass {}
+    @Test
+    public void shouldSerializeToBinary() throws IOException {
+        // Act
+        byte[] testBinary = SerializationUtils.serializeToBinary("testString");
+
+        // Assert
+        Assert.assertNotNull(testBinary);
+        Assert.assertNotEquals(0, testBinary.length);
+    }
+
+    @Test(expected = IOException.class)
+    public void shouldThrowExceptionWhenSerializationIsFailed() throws IOException {
+        // Act & Assert
+        SerializationUtils.serializeToBinary(new TargetClass());
+    }
+
+    static class TargetClass {
+        TargetClass selfReference;
+
+        public TargetClass() {
+            this.selfReference = this;
+        }
+    }
 }
