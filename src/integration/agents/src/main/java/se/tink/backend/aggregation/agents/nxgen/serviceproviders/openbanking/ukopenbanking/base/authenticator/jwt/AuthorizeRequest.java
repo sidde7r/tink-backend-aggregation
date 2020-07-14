@@ -135,7 +135,7 @@ public class AuthorizeRequest {
                     .withClaim(PAYLOAD_CLAIMS.AUDIENCE, issuer)
                     .withClaim(
                             PublicClaims.EXPIRES_AT,
-                            Instant.now().plusSeconds(300).getEpochSecond())
+                            Instant.now().plusSeconds(599).getEpochSecond())
                     .withClaim(Params.RESPONSE_TYPE, responseTypes)
                     .withClaim(Params.CLIENT_ID, clientId)
                     .withClaim(Params.REDIRECT_URI, redirectUri)
