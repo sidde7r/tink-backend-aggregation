@@ -3,18 +3,22 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class NordeaBaseTransactionalAccountFetcher
+public class NordeaBaseTransactionalAccountFetcher<R extends GetTransactionsResponse<?>>
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, String> {
     private final NordeaBaseApiClient apiClient;
+    private Class<R> responseClass;
 
-    public NordeaBaseTransactionalAccountFetcher(NordeaBaseApiClient apiClient) {
+    public NordeaBaseTransactionalAccountFetcher(
+            NordeaBaseApiClient apiClient, Class<R> responseClass) {
         this.apiClient = apiClient;
+        this.responseClass = responseClass;
     }
 
     @Override
@@ -36,7 +40,7 @@ public class NordeaBaseTransactionalAccountFetcher
 
         switch (apiClient.getConfiguration().getAgentType()) {
             case PERSONAL:
-                return apiClient.getTransactions(account, key);
+                return apiClient.getTransactions(account, key, responseClass);
             case CORPORATE:
                 return apiClient.getCorporateTransactions(account, key);
             default:

@@ -1,18 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordea;
 
+import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordea.authenticator.NordeaDkAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordea.executor.payment.NordeaDkPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordea.fetcher.transactionalaccount.NordeaDkTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.BaseGetTransactionResponse;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -22,17 +26,17 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public final class NordeaDkAgent extends NordeaBaseAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public NordeaDkAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-        apiClient = new NordeaDkApiClient(client, persistentStorage);
+    @Inject
+    public NordeaDkAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
+        apiClient = new NordeaDkApiClient(client, persistentStorage, qsealcSigner);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -77,8 +81,9 @@ public final class NordeaDkAgent extends NordeaBaseAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        NordeaBaseTransactionalAccountFetcher accountFetcher =
-                new NordeaDkTransactionalAccountFetcher(apiClient);
+        NordeaBaseTransactionalAccountFetcher<BaseGetTransactionResponse> accountFetcher =
+                new NordeaDkTransactionalAccountFetcher<>(
+                        apiClient, BaseGetTransactionResponse.class);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

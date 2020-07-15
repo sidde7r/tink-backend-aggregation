@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
+import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -9,15 +10,18 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.NordeaSePaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.transactionalaccount.NordeaSeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.BaseGetTransactionResponse;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -28,8 +32,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public final class NordeaSeAgent extends NordeaBaseAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -37,11 +41,11 @@ public final class NordeaSeAgent extends NordeaBaseAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public NordeaSeAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public NordeaSeAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
 
-        apiClient = new NordeaSeApiClient(client, persistentStorage);
+        apiClient = new NordeaSeApiClient(client, persistentStorage, qsealcSigner);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -86,8 +90,9 @@ public final class NordeaSeAgent extends NordeaBaseAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        NordeaBaseTransactionalAccountFetcher accountFetcher =
-                new NordeaSeTransactionalAccountFetcher(apiClient);
+        NordeaBaseTransactionalAccountFetcher<BaseGetTransactionResponse> accountFetcher =
+                new NordeaSeTransactionalAccountFetcher<>(
+                        apiClient, BaseGetTransactionResponse.class);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -16,13 +17,15 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 
-public class NordeaSeTransactionalAccountFetcher extends NordeaBaseTransactionalAccountFetcher
+public class NordeaSeTransactionalAccountFetcher<R extends GetTransactionsResponse<?>>
+        extends NordeaBaseTransactionalAccountFetcher<R>
         implements AccountFetcher<TransactionalAccount> {
 
     NordeaBaseApiClient apiClient;
 
-    public NordeaSeTransactionalAccountFetcher(NordeaBaseApiClient apiClient) {
-        super(apiClient);
+    public NordeaSeTransactionalAccountFetcher(
+            NordeaBaseApiClient apiClient, Class<R> transactionResponseClass) {
+        super(apiClient, transactionResponseClass);
         this.apiClient = apiClient;
     }
 

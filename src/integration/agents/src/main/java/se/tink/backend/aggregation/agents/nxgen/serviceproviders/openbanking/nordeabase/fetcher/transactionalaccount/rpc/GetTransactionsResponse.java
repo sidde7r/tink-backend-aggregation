@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.TransactionsResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaBaseResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -10,10 +11,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class GetTransactionsResponse extends NordeaBaseResponse
+public class GetTransactionsResponse<T extends TransactionEntity> extends NordeaBaseResponse
         implements TransactionKeyPaginatorResponse<String> {
 
-    private TransactionsResponseEntity response;
+    private TransactionsResponseEntity<T> response;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {

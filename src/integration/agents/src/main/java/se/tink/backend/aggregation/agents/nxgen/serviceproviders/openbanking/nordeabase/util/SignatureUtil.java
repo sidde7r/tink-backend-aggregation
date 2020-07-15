@@ -4,10 +4,7 @@ import java.net.URI;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Signature;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public final class SignatureUtil {
 
@@ -24,15 +21,14 @@ public final class SignatureUtil {
             final String date,
             final String digest,
             final String contentType,
-            final EidasProxyConfiguration eidasProxyConf,
-            final EidasIdentity eidasIdentity) {
+            final QsealcSigner qsealcSigner) {
         String signatureEntity =
                 String.join(
                         Signature.DELIMITER_NEXT_LINE,
                         getBaseSignatureEntity(httpMethod, uri, date),
                         Signature.CONTENT_TYPE + contentType,
                         Signature.DIGEST + digest);
-        String signature = signAndEncode(signatureEntity, eidasProxyConf, eidasIdentity);
+        String signature = signAndEncode(signatureEntity, qsealcSigner);
 
         return String.join(
                 Signature.DELIMITER_COMMA,
@@ -47,10 +43,9 @@ public final class SignatureUtil {
             final String httpMethod,
             final URI uri,
             final String date,
-            final EidasProxyConfiguration eidasProxyConf,
-            final EidasIdentity eidasIdentity) {
+            final QsealcSigner qsealcSigner) {
         String signatureEntity = getBaseSignatureEntity(httpMethod, uri, date);
-        String signature = signAndEncode(signatureEntity, eidasProxyConf, eidasIdentity);
+        String signature = signAndEncode(signatureEntity, qsealcSigner);
 
         return String.join(
                 Signature.DELIMITER_COMMA,
@@ -73,14 +68,7 @@ public final class SignatureUtil {
                 Signature.ORIGINATING_DATE + date);
     }
 
-    private static String signAndEncode(
-            String signatureEntity,
-            EidasProxyConfiguration eidasProxyConf,
-            EidasIdentity eidasIdentity) {
-        return QsealcSignerImpl.build(
-                        eidasProxyConf.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity)
-                .getSignatureBase64(signatureEntity.getBytes());
+    private static String signAndEncode(String signatureEntity, QsealcSigner qsealcSigner) {
+        return qsealcSigner.getSignatureBase64(signatureEntity.getBytes());
     }
 }

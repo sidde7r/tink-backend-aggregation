@@ -37,8 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.util.SignatureUtil;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -58,15 +57,16 @@ public class NordeaBaseApiClient implements TokenInterface {
     protected final PersistentStorage persistentStorage;
     protected NordeaBaseConfiguration configuration;
     protected String redirectUrl;
-    private EidasProxyConfiguration eidasProxyConfiguration;
-    private EidasIdentity eidasIdentity;
+    private QsealcSigner qsealcSigner;
 
-    public NordeaBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public NordeaBaseApiClient(
+            TinkHttpClient client, PersistentStorage persistentStorage, QsealcSigner qsealcSigner) {
         this.client = client;
         this.persistentStorage = persistentStorage;
 
         this.client.addFilter(new BankSideFailureFilter());
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        this.qsealcSigner = qsealcSigner;
     }
 
     public NordeaBaseConfiguration getConfiguration() {
@@ -85,14 +85,9 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         NordeaBaseConstants.ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    public void setConfiguration(
-            AgentConfiguration<NordeaBaseConfiguration> agentConfiguration,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity) {
+    public void setConfiguration(AgentConfiguration<NordeaBaseConfiguration> agentConfiguration) {
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.eidasIdentity = eidasIdentity;
     }
 
     protected RequestBuilder createRequest(URL url, String httpMethod, String body) {
@@ -193,7 +188,7 @@ public class NordeaBaseApiClient implements TokenInterface {
         return createRequestInSession(url, HttpMethod.GET, null).get(GetTransactionsResponse.class);
     }
 
-    public GetTransactionsResponse getTransactions(TransactionalAccount account, String key) {
+    public <T> T getTransactions(TransactionalAccount account, String key, Class<T> responseClass) {
         URL url =
                 Optional.ofNullable(key)
                         .map(k -> new URL(NordeaBaseConstants.Urls.BASE_URL + k))
@@ -204,7 +199,7 @@ public class NordeaBaseApiClient implements TokenInterface {
 
         RequestBuilder request = createRequestInSession(url, HttpMethod.GET, null);
 
-        return requestRefreshableGet(request, GetTransactionsResponse.class);
+        return requestRefreshableGet(request, responseClass);
     }
 
     @Override
@@ -380,16 +375,14 @@ public class NordeaBaseApiClient implements TokenInterface {
                     date,
                     body,
                     contentType,
-                    eidasProxyConfiguration,
-                    eidasIdentity);
+                    qsealcSigner);
         } else {
             return SignatureUtil.createGetSignature(
                     getConfiguration().getClientId(),
                     httpMethod,
                     requestUrl.toUri(),
                     date,
-                    eidasProxyConfiguration,
-                    eidasIdentity);
+                    qsealcSigner);
         }
     }
 

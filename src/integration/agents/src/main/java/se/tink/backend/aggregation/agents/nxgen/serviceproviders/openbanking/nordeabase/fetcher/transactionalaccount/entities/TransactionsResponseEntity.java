@@ -10,16 +10,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class TransactionsResponseEntity {
+public class TransactionsResponseEntity<T extends TransactionEntity> {
 
     @JsonProperty("_links")
     private List<LinkEntity> links;
 
-    private List<TransactionEntity> transactions;
+    private List<T> transactions;
 
     public Collection<? extends Transaction> toTinkTransactions() {
         return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
-                .map(TransactionEntity::toTinkTransaction)
+                .map(T::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 
