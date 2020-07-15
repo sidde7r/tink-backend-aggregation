@@ -658,10 +658,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     @Deprecated // Use cacheTransactions instead
     public Account updateTransactions(final Account account, List<Transaction> transactions) {
-
+        // Ensure the account is cached before caching transactions.
         cacheAccount(account);
-        transactionsByAccountBankId.put(account.getBankId(), transactions);
-
+        cacheTransactions(account.getBankId(), transactions);
         return account;
     }
 
