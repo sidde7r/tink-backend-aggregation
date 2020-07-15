@@ -694,9 +694,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             Map<Account, List<TransferDestinationPattern>> transferDestinationPatterns) {
 
         transferDestinationPatterns.forEach(
-                (account, patterns) ->
-                        accountDataCache.cacheTransferDestinationPatterns(
-                                account.getBankId(), patterns));
+                (account, patterns) -> {
+                    accountDataCache.cacheAccount(account);
+                    accountDataCache.cacheTransferDestinationPatterns(
+                            account.getBankId(), patterns);
+                });
 
         for (Account account : transferDestinationPatterns.keySet()) {
             if (transferDestinationPatternsByAccount.containsKey(account)) {
