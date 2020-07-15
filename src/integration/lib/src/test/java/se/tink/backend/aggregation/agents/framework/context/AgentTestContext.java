@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -47,6 +48,7 @@ public class AgentTestContext extends AgentContext {
     private final ObjectMapper mapper;
     private final TinkHttpClient supplementalClient;
 
+    private final AccountDataCache accountDataCache;
     private Map<String, Account> accountsByBankId = Maps.newHashMap();
     private Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
     private Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount =
@@ -67,6 +69,7 @@ public class AgentTestContext extends AgentContext {
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"));
 
         this.credentials = credentials;
+        this.accountDataCache = new AccountDataCache();
 
         setClusterId(CLUSTER_ID_FOR_TESTING);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
@@ -75,6 +78,7 @@ public class AgentTestContext extends AgentContext {
     @Override
     public void clear() {
         super.clear();
+        accountDataCache.clear();
         accountsByBankId.clear();
         transactionsByAccountBankId.clear();
         transfers.clear();
@@ -189,6 +193,9 @@ public class AgentTestContext extends AgentContext {
         }
 
         accountsByBankId.put(account.getBankId(), account);
+
+        accountDataCache.cacheAccount(account);
+        accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
     }
 
     @Override
@@ -223,6 +230,11 @@ public class AgentTestContext extends AgentContext {
     public void updateTransferDestinationPatterns(
             Map<Account, List<TransferDestinationPattern>> transferDestinationPatterns) {
         log.info("Updating transfer destination patterns");
+
+        transferDestinationPatterns.forEach(
+                (account, patterns) ->
+                        accountDataCache.cacheTransferDestinationPatterns(
+                                account.getBankId(), patterns));
 
         for (Account account : transferDestinationPatterns.keySet()) {
             if (transferDestinationPatternsByAccount.containsKey(account)) {
@@ -277,6 +289,8 @@ public class AgentTestContext extends AgentContext {
 
         transactionsByAccountBankId.put(account.getBankId(), transactions);
 
+        accountDataCache.cacheTransactions(account.getBankId(), transactions);
+
         return account;
     }
 
@@ -285,6 +299,8 @@ public class AgentTestContext extends AgentContext {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
         transactionsByAccountBankId.put(accountUniqueId, transactions);
+
+        accountDataCache.cacheTransactions(accountUniqueId, transactions);
     }
 
     @Override
