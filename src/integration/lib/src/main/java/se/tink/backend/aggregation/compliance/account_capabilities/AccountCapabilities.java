@@ -64,7 +64,7 @@ public class AccountCapabilities {
      */
     private Answer canReceiveExternalTransfer;
 
-    private AccountCapabilities(
+    public AccountCapabilities(
             Answer canWithdrawCash,
             Answer canPlaceFunds,
             Answer canExecuteExternalTransfer,
