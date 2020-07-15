@@ -35,7 +35,8 @@ public class BarclaysPartyDataFetcherTest {
     public void shouldNotFetchDataForCreditCards() {
         // when
         when(accountTypeMapper.getAccountType(any())).thenReturn(AccountTypes.CREDIT_CARD);
-        when(accountTypeMapper.getAccountOwnershipType(any())).thenReturn(AccountOwnershipType.PERSONAL);
+        when(accountTypeMapper.getAccountOwnershipType(any()))
+                .thenReturn(AccountOwnershipType.PERSONAL);
         List<IdentityDataV31Entity> result =
                 barclaysPartyDataFetcher.fetchAccountParties(mock(AccountEntity.class));
 
@@ -48,9 +49,10 @@ public class BarclaysPartyDataFetcherTest {
     public void shouldNotFetchDataForBusinessAccounts() {
         // when
         when(accountTypeMapper.getAccountType(any())).thenReturn(AccountTypes.CHECKING);
-        when(accountTypeMapper.getAccountOwnershipType(any())).thenReturn(AccountOwnershipType.BUSINESS);
+        when(accountTypeMapper.getAccountOwnershipType(any()))
+                .thenReturn(AccountOwnershipType.BUSINESS);
         List<IdentityDataV31Entity> result =
-            barclaysPartyDataFetcher.fetchAccountParties(mock(AccountEntity.class));
+                barclaysPartyDataFetcher.fetchAccountParties(mock(AccountEntity.class));
 
         // then
         assertThat(result).isEmpty();
