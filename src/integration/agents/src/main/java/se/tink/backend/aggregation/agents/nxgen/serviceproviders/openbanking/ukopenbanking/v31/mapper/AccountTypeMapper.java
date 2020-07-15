@@ -16,6 +16,12 @@ public class AccountTypeMapper {
                     .ignoreKeys("ChargeCard", "EMoney", "PrePaidCard")
                     .build();
 
+    private static final TypeMapper<AccountOwnershipType> ACCOUNT_OWNERSHIP_MAPPER =
+            TypeMapper.<AccountOwnershipType>builder()
+                    .put(AccountOwnershipType.BUSINESS, "Business")
+                    .put(AccountOwnershipType.PERSONAL, "Personal")
+                    .build();
+
     public AccountTypes getAccountType(AccountEntity accountEntity) {
         String rawSubtype = accountEntity.getRawAccountSubType();
         return ACCOUNT_TYPE_MAPPER
@@ -23,6 +29,16 @@ public class AccountTypeMapper {
                 .orElseThrow(
                         () ->
                                 new IllegalArgumentException(
-                                        "Unexpected account type:" + rawSubtype));
+                                        "Unexpected account subType:" + rawSubtype));
+    }
+
+    public AccountOwnershipType getAccountOwnershipType(AccountEntity account) {
+        String rawAccountType = account.getRawAccountType();
+        return ACCOUNT_OWNERSHIP_MAPPER
+                .translate(rawAccountType)
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "Unexpected account type:" + rawAccountType));
     }
 }
