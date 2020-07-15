@@ -272,9 +272,7 @@ public final class NewAgentTestContext extends AgentContext {
             updatedTransaction.setUserId(updatedAccount.getUserId());
         }
 
-        transactionsByAccountBankId.put(updatedAccount.getBankId(), transactions);
-        accountDataCache.cacheTransactions(updatedAccount.getBankId(), transactions);
-
+        cacheTransactions(updatedAccount.getBankId(), transactions);
         return updatedAccount;
     }
 

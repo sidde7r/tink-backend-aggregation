@@ -287,10 +287,7 @@ public class AgentTestContext extends AgentContext {
             updatedTransaction.setUserId(account.getUserId());
         }
 
-        transactionsByAccountBankId.put(account.getBankId(), transactions);
-
-        accountDataCache.cacheTransactions(account.getBankId(), transactions);
-
+        cacheTransactions(account.getBankId(), transactions);
         return account;
     }
 
@@ -299,7 +296,6 @@ public class AgentTestContext extends AgentContext {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
         transactionsByAccountBankId.put(accountUniqueId, transactions);
-
         accountDataCache.cacheTransactions(accountUniqueId, transactions);
     }
 
