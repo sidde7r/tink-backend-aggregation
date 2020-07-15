@@ -95,6 +95,7 @@ public final class LansforsakringarApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
     }
 
