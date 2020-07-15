@@ -48,6 +48,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -61,6 +62,7 @@ public final class NewAgentTestContext extends AgentContext {
     public static final String TEST_CLUSTERID = "oxford-preprod";
     public static final String TEST_APPID = "5f98e87106384b2981c0354a33b51590";
 
+    private final AccountDataCache accountDataCache;
     private final Map<String, Account> accountsByBankId = new HashMap<>();
     private final Map<String, AccountFeatures> accountFeaturesByBankId = new HashMap<>();
     private final Map<String, List<Transaction>> transactionsByAccountBankId = new HashMap<>();
@@ -86,6 +88,7 @@ public final class NewAgentTestContext extends AgentContext {
             String appId,
             String clusterId,
             Provider provider) {
+        this.accountDataCache = new AccountDataCache();
         this.user = user;
         this.credential = credential;
         this.supplementalRequester = supplementalRequester;
@@ -109,6 +112,7 @@ public final class NewAgentTestContext extends AgentContext {
     public void clear() {
         super.clear();
 
+        accountDataCache.clear();
         accountsByBankId.clear();
         accountFeaturesByBankId.clear();
         transactionsByAccountBankId.clear();
@@ -170,6 +174,9 @@ public final class NewAgentTestContext extends AgentContext {
 
     @Override
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
+        accountDataCache.cacheAccount(account);
+        accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
+
         accountsByBankId.put(account.getBankId(), account);
 
         AccountFeatures accountFeaturesToCache = accountFeatures;
@@ -213,6 +220,11 @@ public final class NewAgentTestContext extends AgentContext {
     @Override
     public void updateTransferDestinationPatterns(
             Map<Account, List<TransferDestinationPattern>> transferDestinationPatterns) {
+
+        transferDestinationPatterns.forEach(
+                (account, patterns) ->
+                        accountDataCache.cacheTransferDestinationPatterns(
+                                account.getBankId(), patterns));
 
         for (Account account : transferDestinationPatterns.keySet()) {
             if (transferDestinationPatternsByAccountBankId.containsKey(account.getBankId())) {
@@ -261,6 +273,8 @@ public final class NewAgentTestContext extends AgentContext {
         }
 
         transactionsByAccountBankId.put(updatedAccount.getBankId(), transactions);
+        accountDataCache.cacheTransactions(updatedAccount.getBankId(), transactions);
+
         return updatedAccount;
     }
 
@@ -269,6 +283,7 @@ public final class NewAgentTestContext extends AgentContext {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
         transactionsByAccountBankId.put(accountUniqueId, transactions);
+        accountDataCache.cacheTransactions(accountUniqueId, transactions);
     }
 
     @Override
