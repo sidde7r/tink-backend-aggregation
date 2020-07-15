@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperP
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.AbnAmroSpecificCase;
+import se.tink.backend.aggregation.workers.commands.AccountWhitelistRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
@@ -278,6 +279,7 @@ public class AgentWorkerOperationFactory {
         // We need to reselect and send accounts to system
         if (shouldAddExtraCommands.test(request.getProvider())) {
             commands.add(new SelectAccountsToAggregateCommand(context, request));
+            commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
@@ -412,6 +414,7 @@ public class AgentWorkerOperationFactory {
         commands.addAll(
                 createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
+        commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
                         request, context, request.getItemsToRefresh()));
@@ -560,6 +563,7 @@ public class AgentWorkerOperationFactory {
                         createRefreshAccountsCommands(
                                 request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
                 commands.add(new SelectAccountsToAggregateCommand(context, request));
+                commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
                 commands.addAll(
                         createOrderedRefreshableItemsCommands(
                                 request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
@@ -1234,6 +1238,7 @@ public class AgentWorkerOperationFactory {
 
             // Update the accounts on system side
             commands.add(new SelectAccountsToAggregateCommand(context, request));
+            commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
