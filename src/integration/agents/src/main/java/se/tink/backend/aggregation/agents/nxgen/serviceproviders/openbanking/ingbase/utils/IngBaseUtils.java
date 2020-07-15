@@ -22,8 +22,7 @@ public final class IngBaseUtils {
                             Pem.parseCertificate(Base64.getDecoder().decode(encodedCertificate));
             return String.format("SN=%x", certificate.getSerialNumber());
         } catch (CertificateException | IllegalArgumentException e) {
-            throw new IllegalStateException(
-                    "Provided certificate is null or empty, make sure secrets are uploaded.");
+            throw new IllegalStateException("Could not parse given data as x509 certificate.");
         }
     }
 }
