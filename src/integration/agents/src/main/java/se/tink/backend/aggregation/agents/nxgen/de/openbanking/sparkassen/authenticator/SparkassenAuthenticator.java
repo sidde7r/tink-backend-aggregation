@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.AuthMethods;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
@@ -97,7 +99,8 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
         authorizeConsentWithOtp(
                 scaMethodDetails.getChosenScaMethod().getAuthenticationType(),
-                scaMethodDetails.getChallengeData().getOtpMaxLength());
+                scaMethodDetails.getChallengeData().getOtpMaxLength(),
+                scaMethodDetails.getChallengeData().getAdditionalInformation());
     }
 
     private void validateInput(Credentials credentials) throws LoginException {
@@ -154,12 +157,22 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         switch (initAuthorizationResponse.getScaStatus()) {
             case PSU_AUTHENTICATED:
                 return getScaMethodDetailsOutOfMultiplePossible(
-                        initAuthorizationResponse.getScaMethods());
+                        getSupportedScaMethods(initAuthorizationResponse));
             case SCA_METHOD_SELECTED:
                 return initAuthorizationResponse;
             default:
                 throw new IllegalStateException(ErrorMessages.MISSING_SCA_METHOD_DETAILS);
         }
+    }
+
+    private List<ScaMethodEntity> getSupportedScaMethods(
+            AuthenticationMethodResponse initAuthResponse) {
+        return initAuthResponse.getScaMethods().stream()
+                .filter(
+                        scaMethod ->
+                                !AuthMethods.UNSUPPORTED_AUTH_TYPES.contains(
+                                        scaMethod.getAuthenticationMethodId()))
+                .collect(Collectors.toList());
     }
 
     private AuthenticationMethodResponse getScaMethodDetailsOutOfMultiplePossible(
@@ -189,9 +202,10 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         return scaMethods.get(selectedIndex);
     }
 
-    private void authorizeConsentWithOtp(String otpType, int otpValueLength)
+    private void authorizeConsentWithOtp(
+            String otpType, int otpValueLength, String additionalInformation)
             throws AuthenticationException {
-        String otp = collectOtp(otpType, otpValueLength);
+        String otp = collectOtp(otpType, otpValueLength, additionalInformation);
         FinalizeAuthorizationResponse finalizeAuthorizationResponse =
                 apiClient.finalizeAuthorization(
                         persistentStorage.getConsentId(),
@@ -208,8 +222,9 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         }
     }
 
-    private String collectOtp(String otpType, int otpCodeLength) throws SupplementalInfoException {
-        Field otpField = fieldBuilder.getOtpField(otpType, otpCodeLength);
+    private String collectOtp(String otpType, int otpCodeLength, String additionalInformation)
+            throws SupplementalInfoException, LoginException {
+        Field otpField = fieldBuilder.getOtpField(otpType, otpCodeLength, additionalInformation);
         Map<String, String> supplementalInformation =
                 supplementalInformationHelper.askSupplementalInformation(otpField);
         return supplementalInformation.get(otpField.getName());
