@@ -7,7 +7,12 @@ public class AccountCapabilities {
     public enum Answer {
         YES,
         NO,
-        UNKNOWN;
+        UNKNOWN,
+        /**
+         * UNINITIALIZED - to mark that answer for account capability has not been provided. Note:
+         * agents should not set or use this value
+         */
+        UNINITIALIZED;
 
         public static Answer From(Boolean value) {
             return Optional.ofNullable(value)
@@ -72,7 +77,10 @@ public class AccountCapabilities {
 
     public static AccountCapabilities createDefault() {
         return new AccountCapabilities(
-                Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
+                Answer.UNINITIALIZED,
+                Answer.UNINITIALIZED,
+                Answer.UNINITIALIZED,
+                Answer.UNINITIALIZED);
     }
 
     public void setCanWithdrawCash(Answer canWithdrawCash) {
