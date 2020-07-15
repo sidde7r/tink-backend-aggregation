@@ -374,11 +374,11 @@ public class SEBAgentUtils {
     static {
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.PRIVATKONTO.getCode(),
-                (accountTypeDescription) ->
+                accountTypeDescription ->
                         new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES));
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.OTHER.getCode(),
-                (accountTypeDescription) -> {
+                accountTypeDescription -> {
                     if ("notariatkonto".equalsIgnoreCase(accountTypeDescription))
                         return new AccountCapabilities(
                                 Answer.NO, Answer.YES, Answer.NO, Answer.YES);
@@ -393,37 +393,37 @@ public class SEBAgentUtils {
                 });
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.PERSONALLONEKONTO.getCode(),
-                (accountTypeDescription) ->
+                accountTypeDescription ->
                         new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES));
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.ENKLA_SPARKONTOT_FORETAG.getCode(),
-                (accountTypeDescription) ->
+                accountTypeDescription ->
                         new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES));
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.ENKLA_SPARKONTOT.getCode(),
-                (accountTypeDescription) ->
+                accountTypeDescription ->
                         new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES));
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.SPECIALINLONEKONTO.getCode(),
-                (accountTypeDescription) ->
+                accountTypeDescription ->
                         new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.NO));
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.FUND.getCode(),
-                (accountTypeDescription) ->
+                accountTypeDescription ->
                         new AccountCapabilities(
                                 Answer.NO, Answer.YES, Answer.UNKNOWN, Answer.UNKNOWN));
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.IPS.getCode(),
-                (accountTypeDescription) ->
+                accountTypeDescription ->
                         new AccountCapabilities(
                                 Answer.NO, Answer.YES, Answer.UNKNOWN, Answer.UNKNOWN));
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.PLACERINGSKONTO.getCode(),
-                (accountTypeDescription) ->
+                accountTypeDescription ->
                         new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.NO));
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.ISK_KAPITALKONTO.getCode(),
-                (accountTypeDescription) ->
+                accountTypeDescription ->
                         new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES));
     }
 }
