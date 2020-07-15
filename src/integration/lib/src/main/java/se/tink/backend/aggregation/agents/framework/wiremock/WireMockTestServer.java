@@ -11,10 +11,13 @@ import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
 import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.CompareEntity;
@@ -117,7 +120,16 @@ public class WireMockTestServer {
     private void registerRequestResponsePairs(
             Set<Pair<HTTPRequest, HTTPResponse>> pairs,
             Map<HTTPRequest, HTTPResponse> registeredPairs) {
-        for (Pair<HTTPRequest, HTTPResponse> pair : pairs) {
+        /* Register requests with parameters last, to prevent mismatch when the same URL is registered with and without query parameters */
+        final List<Pair<HTTPRequest, HTTPResponse>> sortedPairs =
+                pairs.stream()
+                        .sorted(
+                                Comparator.comparingInt(
+                                        (Pair<HTTPRequest, HTTPResponse> p) ->
+                                                p.first.getQuery().size()))
+                        .collect(Collectors.toList());
+
+        for (Pair<HTTPRequest, HTTPResponse> pair : sortedPairs) {
 
             final HTTPRequest request = pair.first;
             final HTTPResponse response = pair.second;
