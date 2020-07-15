@@ -376,6 +376,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         requestSupplementalInformation(credentials, wait);
     }
 
+    public AccountDataCache getAccountDataCache() {
+        return accountDataCache;
+    }
+
     private boolean shouldAggregateDataForAccount(Account account) {
         try {
             // TODO: extend filtering by using payment classification information
