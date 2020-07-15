@@ -39,7 +39,7 @@ public class BnpParibasTransactionFetcher
     }
 
     private LocalDate getOldestDateForTransactionFetch() {
-        return LocalDate.now(clock).minusMonths(MAX_NUM_MONTHS_FOR_FETCH);
+        return LocalDate.now(clock).minusMonths(MAX_NUM_MONTHS_FOR_FETCH).plusDays(1L);
     }
 
     private LocalDate getLocalDateFromDate(Date date) {

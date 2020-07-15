@@ -44,7 +44,7 @@ public class BnpParibasTransactionFetcherTest {
     public void shouldGetTransactionsWithin13MonthsLimit() {
         // given
         final TransactionalAccount account = createAccountMock();
-        final LocalDate todayMinus13Months = TODAY.minusMonths(13L);
+        final LocalDate todayMinus13Months = TODAY.minusMonths(13L).plusDays(1L);
         final LocalDate todayMinus10Months = TODAY.minusMonths(10L);
         final TransactionsResponse expectedResponse = mock(TransactionsResponse.class);
 
@@ -67,7 +67,7 @@ public class BnpParibasTransactionFetcherTest {
         // given
         final TransactionalAccount account = createAccountMock();
         final LocalDate todayMinus14Months = TODAY.minusMonths(14L);
-        final LocalDate todayMinus13Months = TODAY.minusMonths(13L);
+        final LocalDate todayMinus13Months = TODAY.minusMonths(13L).plusDays(1L);
         final TransactionsResponse expectedResponse = mock(TransactionsResponse.class);
 
         when(apiClientMock.getTransactions(RESOURCE_ID, todayMinus13Months, todayMinus13Months))
