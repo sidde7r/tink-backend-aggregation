@@ -10,7 +10,8 @@ public class SecurityTokenChallengeRequest {
 
     private String response;
 
-    public static SecurityTokenChallengeRequest createFromChallenge(String challenge) {
-        return new SecurityTokenChallengeRequest(challenge);
+    public static SecurityTokenChallengeRequest createFromChallengeResponse(
+            String challengeResponse) {
+        return new SecurityTokenChallengeRequest(challengeResponse);
     }
 }

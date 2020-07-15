@@ -44,16 +44,18 @@ public class SwedbankTokenGeneratorAuthenticationController
         InitSecurityTokenChallengeResponse initSecurityTokenChallengeResponse =
                 initTokenGenerator(ssn);
 
-        String challenge = supplementalInformationHelper.waitForLoginInput();
-        if (Strings.isNullOrEmpty(challenge)
-                || challenge.length() != 8
-                || !challenge.matches("[0-9]+")) {
+        String challengeResponse = supplementalInformationHelper.waitForLoginInput();
+        if (Strings.isNullOrEmpty(challengeResponse)
+                || challengeResponse.length() != 8
+                || !challengeResponse.matches("[0-9]+")) {
             throw SupplementalInfoError.NO_VALID_CODE.exception();
         }
 
         SecurityTokenChallengeResponse securityTokenChallengeResponse =
-                apiClient.sendLoginChallenge(
-                        initSecurityTokenChallengeResponse.getLinks(), challenge);
+                apiClient.sendTokenChallengeResponse(
+                        initSecurityTokenChallengeResponse.getLinks().getNextOrThrow(),
+                        challengeResponse,
+                        SecurityTokenChallengeResponse.class);
         apiClient.completeAuthentication(
                 securityTokenChallengeResponse.getLinks().getNextOrThrow());
     }
