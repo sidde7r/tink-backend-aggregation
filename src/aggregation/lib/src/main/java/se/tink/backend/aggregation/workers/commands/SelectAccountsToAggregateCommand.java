@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -17,8 +15,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.enums.TinkFeature;
 
 public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
-    private static final Logger log =
-            LoggerFactory.getLogger(RequestUserOptInAccountsAgentWorkerCommand.class);
     private final SetAccountsToAggregateContext context;
     private final CredentialsRequest refreshInformationRequest;
 
