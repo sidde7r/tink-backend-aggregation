@@ -32,13 +32,17 @@ import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.GermanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.NorwegianIdentifier;
+import se.tink.libraries.account.identifiers.PaymPhoneNumberIdentifier;
+import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.PortugalBancoBpiIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
+import se.tink.libraries.account.identifiers.TinkIdentifier;
 
 /** Deterministic account generator based on user-name and provider */
 public class DemoAccountDefinitionGenerator {
@@ -60,6 +64,10 @@ public class DemoAccountDefinitionGenerator {
         map.put(Type.DK, DanishIdentifier.class);
         map.put(Type.NO, NorwegianIdentifier.class);
         map.put(Type.FI, FinnishIdentifier.class);
+        map.put(Type.SE_NDA_SSN, NDAPersonalNumberIdentifier.class);
+        map.put(Type.TINK, TinkIdentifier.class);
+        map.put(Type.PAYM_PHONE_NUMBER, PaymPhoneNumberIdentifier.class);
+        map.put(Type.PAYMENT_CARD_NUMBER, PaymentCardNumberIdentifier.class);
         identifiersForType = Collections.unmodifiableMap(map);
     }
 
