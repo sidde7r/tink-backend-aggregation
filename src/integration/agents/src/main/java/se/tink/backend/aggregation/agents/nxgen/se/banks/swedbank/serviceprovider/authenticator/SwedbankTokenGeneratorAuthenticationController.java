@@ -15,21 +15,17 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.i18n.Catalog;
 
 public class SwedbankTokenGeneratorAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
     private final SwedbankDefaultApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final Catalog catalog;
 
     public SwedbankTokenGeneratorAuthenticationController(
             SwedbankDefaultApiClient apiClient,
-            SupplementalInformationHelper supplementalInformationHelper,
-            Catalog catalog) {
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
-        this.catalog = catalog;
     }
 
     @Override
@@ -48,16 +44,18 @@ public class SwedbankTokenGeneratorAuthenticationController
         InitSecurityTokenChallengeResponse initSecurityTokenChallengeResponse =
                 initTokenGenerator(ssn);
 
-        String challenge = supplementalInformationHelper.waitForLoginInput();
-        if (Strings.isNullOrEmpty(challenge)
-                || challenge.length() != 8
-                || !challenge.matches("[0-9]+")) {
+        String challengeResponse = supplementalInformationHelper.waitForLoginInput();
+        if (Strings.isNullOrEmpty(challengeResponse)
+                || challengeResponse.length() != 8
+                || !challengeResponse.matches("[0-9]+")) {
             throw SupplementalInfoError.NO_VALID_CODE.exception();
         }
 
         SecurityTokenChallengeResponse securityTokenChallengeResponse =
-                apiClient.sendLoginChallenge(
-                        initSecurityTokenChallengeResponse.getLinks(), challenge);
+                apiClient.sendTokenChallengeResponse(
+                        initSecurityTokenChallengeResponse.getLinks().getNextOrThrow(),
+                        challengeResponse,
+                        SecurityTokenChallengeResponse.class);
         apiClient.completeAuthentication(
                 securityTokenChallengeResponse.getLinks().getNextOrThrow());
     }

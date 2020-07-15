@@ -309,17 +309,18 @@ public class SwedbankTransferHelper {
 
     private Optional<LinksEntity> collectTokenNewBeneficiary(
             InitiateSecurityTokenSignTransferResponse initiateSecurityTokenSignTransferResponse) {
-        Optional<String> supplementalAnswer =
+        Optional<String> challengeResponse =
                 requestSecurityTokenSignBeneficiaryChallengeSupplemental(
                         initiateSecurityTokenSignTransferResponse.getChallenge());
-        if (!supplementalAnswer.isPresent()) {
+        if (!challengeResponse.isPresent()) {
             return Optional.empty();
         }
         try {
             RegisterTransferResponse signNewRecipientResponse =
-                    apiClient.sendNewRecipientChallenge(
-                            initiateSecurityTokenSignTransferResponse.getLinks().getNext(),
-                            supplementalAnswer.get());
+                    apiClient.sendTokenChallengeResponse(
+                            initiateSecurityTokenSignTransferResponse.getLinks().getNextOrThrow(),
+                            challengeResponse.get(),
+                            RegisterTransferResponse.class);
             return Optional.ofNullable(signNewRecipientResponse.getLinks());
         } catch (SupplementalInfoException sie) {
             return Optional.empty();
@@ -368,9 +369,9 @@ public class SwedbankTransferHelper {
         InitiateSecurityTokenSignTransferResponse initiateSecurityTokenSignTransferResponse =
                 apiClient.signExternalTransferSecurityToken(links.getSignOrThrow());
         String challenge = initiateSecurityTokenSignTransferResponse.getChallenge();
-        Optional<String> userChallenge =
+        Optional<String> challengeResponse =
                 requestSecurityTokenSignTransferChallengeSupplemental(challenge);
-        if (!userChallenge.isPresent()) {
+        if (!challengeResponse.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage("No security token provided. Transfer failed.")
                     .setEndUserMessage(
@@ -382,9 +383,10 @@ public class SwedbankTransferHelper {
         RegisterTransferResponse registerTransferResponse;
         try {
             registerTransferResponse =
-                    apiClient.sendTransferChallenge(
-                            initiateSecurityTokenSignTransferResponse.getLinks().getNext(),
-                            userChallenge.get());
+                    apiClient.sendTokenChallengeResponse(
+                            initiateSecurityTokenSignTransferResponse.getLinks().getNextOrThrow(),
+                            challengeResponse.get(),
+                            RegisterTransferResponse.class);
         } catch (SupplementalInfoException sie) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage("Invalid security token provided. Transfer failed.")

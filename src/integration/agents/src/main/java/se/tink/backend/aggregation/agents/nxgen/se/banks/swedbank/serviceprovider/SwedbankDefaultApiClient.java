@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc.RegisterPayeeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc.RegisterRecipientResponse;
@@ -61,7 +60,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.MenuItemLinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.SelectedProfileResponse;
@@ -697,58 +695,14 @@ public class SwedbankDefaultApiClient {
         }
     }
 
-    public SecurityTokenChallengeResponse sendLoginChallenge(LinksEntity links, String challenge)
-            throws SupplementalInfoException {
-        try {
-            return makeRequest(
-                    links.getNext(),
-                    SecurityTokenChallengeRequest.createFromChallenge(challenge),
-                    SecurityTokenChallengeResponse.class,
-                    false,
-                    Retry.FIRST_ATTEMPT);
-        } catch (HttpResponseException hre) {
-            SwedbankApiErrors.handleTokenErrors(hre);
-            // unknown error: rethrow
-            throw hre;
-        } catch (HttpClientException hce) {
-            String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
-            if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(hce);
-            }
-            throw hce;
-        }
-    }
-
-    public RegisterTransferResponse sendTransferChallenge(LinkEntity linkEntity, String challenge)
+    public <T> T sendTokenChallengeResponse(
+            LinkEntity linkEntity, String challengeResponse, Class<T> responseClass)
             throws SupplementalInfoException {
         try {
             return makeRequest(
                     linkEntity,
-                    SecurityTokenChallengeRequest.createFromChallenge(challenge),
-                    RegisterTransferResponse.class,
-                    false,
-                    Retry.FIRST_ATTEMPT);
-        } catch (HttpResponseException hre) {
-            SwedbankApiErrors.handleTokenErrors(hre);
-            // unknown error: rethrow
-            throw hre;
-        } catch (HttpClientException hce) {
-            String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
-            if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(hce);
-            }
-
-            throw hce;
-        }
-    }
-
-    public RegisterTransferResponse sendNewRecipientChallenge(
-            LinkEntity linkEntity, String challenge) throws SupplementalInfoException {
-        try {
-            return makeRequest(
-                    linkEntity,
-                    SecurityTokenChallengeRequest.createFromChallenge(challenge),
-                    RegisterTransferResponse.class,
+                    SecurityTokenChallengeRequest.createFromChallengeResponse(challengeResponse),
+                    responseClass,
                     false,
                     Retry.FIRST_ATTEMPT);
         } catch (HttpResponseException hre) {
