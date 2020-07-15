@@ -15,21 +15,17 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.i18n.Catalog;
 
 public class SwedbankTokenGeneratorAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
     private final SwedbankDefaultApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final Catalog catalog;
 
     public SwedbankTokenGeneratorAuthenticationController(
             SwedbankDefaultApiClient apiClient,
-            SupplementalInformationHelper supplementalInformationHelper,
-            Catalog catalog) {
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
-        this.catalog = catalog;
     }
 
     @Override
