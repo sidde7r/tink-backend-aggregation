@@ -37,9 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.util.SignatureUtil;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -87,10 +85,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         NordeaBaseConstants.ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    public void setConfiguration(
-            AgentConfiguration<NordeaBaseConfiguration> agentConfiguration,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity) {
+    public void setConfiguration(AgentConfiguration<NordeaBaseConfiguration> agentConfiguration) {
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }

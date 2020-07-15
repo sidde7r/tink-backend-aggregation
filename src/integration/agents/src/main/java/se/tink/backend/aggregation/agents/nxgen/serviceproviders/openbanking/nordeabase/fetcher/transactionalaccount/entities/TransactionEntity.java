@@ -62,6 +62,18 @@ public class TransactionEntity {
     @JsonProperty("value_date")
     private Date valueDate;
 
+    public String getCounterPartyName() {
+        return counterPartyName;
+    }
+
+    public String getNarrative() {
+        return narrative;
+    }
+
+    public String getTypeDescription() {
+        return typeDescription;
+    }
+
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
@@ -72,7 +84,7 @@ public class TransactionEntity {
                 .build();
     }
 
-    private String getDescription() {
+    public String getDescription() {
         return (narrative != null) ? narrative : typeDescription;
     }
 
