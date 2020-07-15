@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.enums.StatisticMode;

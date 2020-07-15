@@ -32,6 +32,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/models",
         "//src/integration/transfer:rpc",
+        "//src/libraries/account_data_cache",
         "//src/libraries/account_identifier",
         "//src/libraries/i18n",
         "//src/libraries/pair",
