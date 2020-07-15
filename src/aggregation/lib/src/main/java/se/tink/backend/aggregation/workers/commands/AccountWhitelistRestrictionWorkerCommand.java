@@ -23,11 +23,7 @@ public class AccountWhitelistRestrictionWorkerCommand extends AgentWorkerCommand
 
     // Remove any account that is flagged as excluded.
     private boolean filterExcludedAccounts(Account account) {
-        if (account.getAccountExclusion().excludedFeatures.contains(TinkFeature.AGGREGATION)) {
-            return false;
-        }
-
-        return true;
+        return !account.getAccountExclusion().excludedFeatures.contains(TinkFeature.AGGREGATION);
     }
 
     // Remove any account that was not present in the original refreshRequest (i.e. whitelisted).
@@ -37,13 +33,10 @@ public class AccountWhitelistRestrictionWorkerCommand extends AgentWorkerCommand
                         ? Lists.newArrayList()
                         : refreshInformationRequest.getAccounts();
 
-        if (accountsFromRequest.stream()
-                .noneMatch(
+        return accountsFromRequest.stream()
+                .anyMatch(
                         accountFromRequest ->
-                                accountFromRequest.getBankId().equals(account.getBankId()))) {
-            return false;
-        }
-        return true;
+                                accountFromRequest.getBankId().equals(account.getBankId()));
     }
 
     @Override
@@ -70,5 +63,7 @@ public class AccountWhitelistRestrictionWorkerCommand extends AgentWorkerCommand
     }
 
     @Override
-    public void postProcess() throws Exception {}
+    public void postProcess() throws Exception {
+        // Intentionally left empty.
+    }
 }
