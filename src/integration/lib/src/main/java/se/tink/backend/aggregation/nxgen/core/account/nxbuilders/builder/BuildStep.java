@@ -90,5 +90,5 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
 
     B canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer);
 
-    B sourceInformation(SourceInfo sourceInfo);
+    B sourceInfo(SourceInfo sourceInfo);
 }

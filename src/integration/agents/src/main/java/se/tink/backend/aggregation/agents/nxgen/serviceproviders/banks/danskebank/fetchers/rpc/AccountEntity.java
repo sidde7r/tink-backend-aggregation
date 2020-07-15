@@ -148,7 +148,7 @@ public class AccountEntity {
                         configuration.canReceiveExternalTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
                 .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
-                .sourceInformation(createSourceInfo())
+                .sourceInfo(createSourceInfo())
                 .build();
     }
 
@@ -166,7 +166,7 @@ public class AccountEntity {
                         configuration.canReceiveExternalTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
                 .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
-                .sourceInformation(createSourceInfo())
+                .sourceInfo(createSourceInfo())
                 .build();
     }
 
@@ -186,7 +186,7 @@ public class AccountEntity {
                 .canPlaceFunds(AccountCapabilities.Answer.YES)
                 .canWithdrawCash(AccountCapabilities.Answer.YES)
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                .sourceInformation(createSourceInfo())
+                .sourceInfo(createSourceInfo())
                 .build();
     }
 
@@ -204,7 +204,7 @@ public class AccountEntity {
                         configuration.canReceiveExternalTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
                 .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
-                .sourceInformation(createSourceInfo())
+                .sourceInfo(createSourceInfo())
                 .build();
     }
 

@@ -122,7 +122,7 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     }
 
     @Override
-    public B sourceInformation(SourceInfo sourceInfo) {
+    public B sourceInfo(SourceInfo sourceInfo) {
         this.sourceInfo = sourceInfo;
         return buildStep();
     }

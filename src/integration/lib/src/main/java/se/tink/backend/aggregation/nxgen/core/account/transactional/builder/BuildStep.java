@@ -83,7 +83,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
     B canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer);
 
     @Deprecated
-    B sourceInformation(SourceInfo sourceInfo);
+    B sourceInfo(SourceInfo sourceInfo);
 
     /**
      * Constructs an account from this builder.

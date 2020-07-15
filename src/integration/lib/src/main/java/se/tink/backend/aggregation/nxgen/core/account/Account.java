@@ -458,7 +458,7 @@ public abstract class Account {
         }
 
         @Override
-        public B sourceInformation(SourceInfo sourceInfo) {
+        public B sourceInfo(SourceInfo sourceInfo) {
             this.sourceInfo = sourceInfo;
             return buildStep();
         }
@@ -664,7 +664,7 @@ public abstract class Account {
             return self();
         }
 
-        public T sourceInformation(SourceInfo sourceInfo) {
+        public T sourceInfo(SourceInfo sourceInfo) {
             this.sourceInfo = sourceInfo;
             return self();
         }
