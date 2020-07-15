@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.PartyDataV31Fetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.AccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.fetcher.BarclaysPartyDataFetcher;
 
@@ -31,11 +32,25 @@ public class BarclaysPartyDataFetcherTest {
     }
 
     @Test
-    public void shouldNotFetchData_forCreditCards() {
+    public void shouldNotFetchDataForCreditCards() {
         // when
         when(accountTypeMapper.getAccountType(any())).thenReturn(AccountTypes.CREDIT_CARD);
+        when(accountTypeMapper.getAccountOwnershipType(any())).thenReturn(AccountOwnershipType.PERSONAL);
         List<IdentityDataV31Entity> result =
                 barclaysPartyDataFetcher.fetchAccountParties(mock(AccountEntity.class));
+
+        // then
+        assertThat(result).isEmpty();
+        verifyZeroInteractions(basePartyFetcher);
+    }
+
+    @Test
+    public void shouldNotFetchDataForBusinessAccounts() {
+        // when
+        when(accountTypeMapper.getAccountType(any())).thenReturn(AccountTypes.CHECKING);
+        when(accountTypeMapper.getAccountOwnershipType(any())).thenReturn(AccountOwnershipType.BUSINESS);
+        List<IdentityDataV31Entity> result =
+            barclaysPartyDataFetcher.fetchAccountParties(mock(AccountEntity.class));
 
         // then
         assertThat(result).isEmpty();
