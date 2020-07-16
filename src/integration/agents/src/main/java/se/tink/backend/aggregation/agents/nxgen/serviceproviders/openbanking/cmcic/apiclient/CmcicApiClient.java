@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.RefreshTokenTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.ConfirmationResourceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestCreation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentRequestResourceEntity;
@@ -261,6 +262,22 @@ public class CmcicApiClient implements FrAispApiClient {
                         baseUrl, basePath + Urls.PAYMENT_REQUESTS + "/" + uniqueId)
                 .type(MediaType.APPLICATION_JSON)
                 .get(HalPaymentRequestEntity.class);
+    }
+
+    public HalPaymentRequestEntity confirmPayment(
+            String uniqueId, ConfirmationResourceEntity confirmationResourceEntity) {
+        String baseUrl = configuration.getBaseUrl();
+        String basePath = configuration.getBasePath();
+        String body = SerializationUtils.serializeToString(confirmationResourceEntity);
+        return createPispRequestInSession(
+                        baseUrl,
+                        basePath
+                                + Urls.PAYMENT_REQUESTS
+                                + "/"
+                                + uniqueId
+                                + Urls.PIS_CONFIRMATION_PATH)
+                .type(MediaType.APPLICATION_JSON)
+                .post(HalPaymentRequestEntity.class, body);
     }
 
     private String getServerTime() {

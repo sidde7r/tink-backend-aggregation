@@ -24,6 +24,7 @@ public final class CmcicConstants {
         public static final String PAYMENT_REQUESTS = BASE_API_PATH + "/payment-requests";
         public static final String SUCCESS_REPORT_PATH = "?code=123&state=";
         public static final String BENEFICIARIES_PATH = "/trusted-beneficiaries";
+        public static final String PIS_CONFIRMATION_PATH = BASE_API_PATH + "/confirmation";
     }
 
     public static class StorageKeys {
@@ -32,6 +33,7 @@ public final class CmcicConstants {
         public static final String PISP_TOKEN = "PISP_TOKEN";
         public static final String STATE = "STATE";
         public static final String AUTH_URL = "AUTH_URL";
+        public static final String AUTH_FACTOR = "AUTH_FACTOR";
     }
 
     public static class QueryKeys {
@@ -90,5 +92,6 @@ public final class CmcicConstants {
 
     public static class PaymentSteps {
         public static final String POST_SIGN_STEP = "post_sign_state";
+        public static final String CONFIRM_PAYMENT_STEP = "confirm_payment_step";
     }
 }

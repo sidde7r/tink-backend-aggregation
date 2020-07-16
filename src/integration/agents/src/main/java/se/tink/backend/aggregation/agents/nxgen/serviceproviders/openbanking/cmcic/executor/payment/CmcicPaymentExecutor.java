@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment;
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Clock;
@@ -12,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
@@ -31,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.AccountIdentificationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.AmountTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.BeneficiaryEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.ConfirmationResourceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.CreditTransferTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestCreation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestEntity;
@@ -150,10 +153,20 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                 payment, PaymentSteps.POST_SIGN_STEP, new ArrayList<>());
                 break;
             case PaymentSteps.POST_SIGN_STEP:
-                HalPaymentRequestEntity paymentRequestEntity = apiClient.fetchPayment(paymentId);
+                HalPaymentRequestEntity getPaymentResponse = apiClient.fetchPayment(paymentId);
+                paymentMultiStepResponse =
+                        handleSignedPayment(getPaymentResponse, PaymentSteps.CONFIRM_PAYMENT_STEP);
+                break;
+            case PaymentSteps.CONFIRM_PAYMENT_STEP:
+                ConfirmationResourceEntity confirmationResourceEntity =
+                        new ConfirmationResourceEntity();
+                confirmationResourceEntity.setPsuAuthenticationFactor(
+                        sessionStorage.get(StorageKeys.AUTH_FACTOR));
+                HalPaymentRequestEntity paymentConfirmResponse =
+                        apiClient.confirmPayment(paymentId, confirmationResourceEntity);
                 paymentMultiStepResponse =
                         handleSignedPayment(
-                                paymentRequestEntity, AuthenticationStepConstants.STEP_FINALIZE);
+                                paymentConfirmResponse, AuthenticationStepConstants.STEP_FINALIZE);
                 break;
             default:
                 logger.error(
@@ -171,6 +184,21 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 paymentResponse.getPaymentRequest().getPaymentInformationStatus();
         switch (paymentStatus) {
             case ACCP:
+                if (nextStep.equals(AuthenticationStepConstants.STEP_FINALIZE)) {
+                    logger.error(
+                            "Payment confirmation failed, psuAuthenticationStatus={}",
+                            paymentStatus);
+                    throw new PaymentAuthenticationException(
+                            "An error occurred while confirming the payment.",
+                            new PaymentRejectedException());
+                } else {
+                    paymentMultiStepResponse =
+                            new PaymentMultiStepResponse(
+                                    getPaymentResponse(paymentResponse.getPaymentRequest()),
+                                    nextStep,
+                                    new ArrayList<>());
+                }
+                break;
             case PDNG:
             case ACSC:
             case ACSP:
@@ -191,6 +219,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                         "Payment authentication failed.", new PaymentRejectedException());
             case RJCT:
                 handleReject(paymentResponse.getPaymentRequest().getStatusReasonInformation());
+                break;
             case CANC:
                 handleCancel(paymentResponse.getPaymentRequest().getStatusReasonInformation());
                 break;
@@ -347,9 +376,26 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
-    private void waitForSupplementalInformation() {
-        this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES);
+    private void waitForSupplementalInformation() throws PaymentAuthenticationException {
+        Optional<Map<String, String>> information =
+                this.supplementalInformationHelper.waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES);
+
+        if (information.isPresent()) {
+            String psuAuthenticationFactor = information.get().get("psuAuthenticationFactor");
+            if (Strings.isNullOrEmpty(psuAuthenticationFactor)) {
+                handelAuthFactorError();
+            }
+            sessionStorage.put(StorageKeys.AUTH_FACTOR, psuAuthenticationFactor);
+        } else {
+            handelAuthFactorError();
+        }
+    }
+
+    private void handelAuthFactorError() throws PaymentAuthenticationException {
+        logger.error("Payment authorization failed. There is no psuAuthenticationFactor!");
+        throw new PaymentAuthenticationException(
+                "Payment authentication failed.", new PaymentRejectedException());
     }
 
     @Override
