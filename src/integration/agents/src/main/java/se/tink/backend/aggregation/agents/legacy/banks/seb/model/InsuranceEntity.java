@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants.PortfolioType;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.source_info.SourceInfo;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -52,7 +52,7 @@ public class InsuranceEntity {
         account.setName(StringUtils.firstLetterUppercaseFormatting(type.trim()));
         account.setType(AccountTypes.INVESTMENT);
         account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
-        account.setSourceInfo(SourceInfo.builder().bankProductName(type).build());
+        account.setAccountSourceInfo(AccountSourceInfo.builder().bankProductName(type).build());
 
         return account;
     }

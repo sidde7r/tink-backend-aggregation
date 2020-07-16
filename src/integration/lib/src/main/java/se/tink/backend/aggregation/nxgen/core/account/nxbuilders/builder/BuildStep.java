@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabi
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
-import se.tink.backend.aggregation.source_info.SourceInfo;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.enums.AccountFlag;
 
 public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
@@ -90,5 +90,5 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
 
     B canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer);
 
-    B sourceInfo(SourceInfo sourceInfo);
+    B sourceInfo(AccountSourceInfo accountSourceInfo);
 }

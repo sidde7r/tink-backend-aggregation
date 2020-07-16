@@ -8,7 +8,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.source_info.SourceInfo;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -126,8 +126,8 @@ public class DepotEntity {
         account.setName(StringUtils.firstLetterUppercaseFormatting(getType().trim()));
         account.setType(AccountTypes.INVESTMENT);
         account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
-        account.setSourceInfo(
-                SourceInfo.builder()
+        account.setAccountSourceInfo(
+                AccountSourceInfo.builder()
                         .bankAccountType(getType())
                         .bankProductCode(getName())
                         .bankProductCode(String.format("%d", getDepotTypeCode()))

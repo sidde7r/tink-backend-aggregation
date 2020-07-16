@@ -21,7 +21,9 @@ public class CoreAccountMapperTest {
                 .addMappings(
                         mapper -> mapper.skip(se.tink.backend.agents.rpc.Account::setCapabilities))
                 .addMappings(
-                        mapper -> mapper.skip(se.tink.backend.agents.rpc.Account::setSourceInfo))
+                        mapper ->
+                                mapper.skip(
+                                        se.tink.backend.agents.rpc.Account::setAccountSourceInfo))
                 .addMappings(
                         mapper -> mapper.skip(se.tink.backend.agents.rpc.Account::setAccountHolder))
                 .validate();

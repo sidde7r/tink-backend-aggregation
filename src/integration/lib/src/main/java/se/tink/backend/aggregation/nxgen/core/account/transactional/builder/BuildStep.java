@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.account.transactional.builder;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.backend.aggregation.source_info.SourceInfo;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 
@@ -83,7 +83,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
     B canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer);
 
     @Deprecated
-    B sourceInfo(SourceInfo sourceInfo);
+    B sourceInfo(AccountSourceInfo accountSourceInfo);
 
     /**
      * Constructs an account from this builder.

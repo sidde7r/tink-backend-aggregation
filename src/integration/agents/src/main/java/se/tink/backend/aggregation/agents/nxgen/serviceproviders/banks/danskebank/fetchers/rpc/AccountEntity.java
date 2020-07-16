@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.source_info.SourceInfo;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -148,7 +148,7 @@ public class AccountEntity {
                         configuration.canReceiveExternalTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
                 .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
-                .sourceInfo(createSourceInfo())
+                .sourceInfo(createAccountSourceInfo())
                 .build();
     }
 
@@ -166,7 +166,7 @@ public class AccountEntity {
                         configuration.canReceiveExternalTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
                 .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
-                .sourceInfo(createSourceInfo())
+                .sourceInfo(createAccountSourceInfo())
                 .build();
     }
 
@@ -186,7 +186,7 @@ public class AccountEntity {
                 .canPlaceFunds(AccountCapabilities.Answer.YES)
                 .canWithdrawCash(AccountCapabilities.Answer.YES)
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                .sourceInfo(createSourceInfo())
+                .sourceInfo(createAccountSourceInfo())
                 .build();
     }
 
@@ -204,12 +204,12 @@ public class AccountEntity {
                         configuration.canReceiveExternalTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
                 .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
-                .sourceInfo(createSourceInfo())
+                .sourceInfo(createAccountSourceInfo())
                 .build();
     }
 
-    private SourceInfo createSourceInfo() {
-        return SourceInfo.builder()
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
                 .bankProductCode(accountProduct)
                 .bankAccountType(accountType)
                 .build();
