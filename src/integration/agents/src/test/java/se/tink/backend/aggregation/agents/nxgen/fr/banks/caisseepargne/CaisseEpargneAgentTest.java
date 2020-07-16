@@ -30,7 +30,7 @@ public class CaisseEpargneAgentTest {
     @Test
     public void testLoginRefresh() throws Exception {
 
-        new AgentIntegrationTest.Builder("fr", "fr-caisseepargne-password-new")
+        new AgentIntegrationTest.Builder("fr", "fr-caisseepargne-password")
                 .addCredentialField(
                         Field.Key.USERNAME,
                         usernamePasswordArgumentManager.get(UsernamePasswordArgumentEnum.USERNAME))
@@ -50,7 +50,7 @@ public class CaisseEpargneAgentTest {
     public void testCreateBeneficiary() throws Exception {
         final String RED_CROSS = "CH6200240240C05735300";
         final String BENEFICIARY_ACCOUNT = "FR7630056005020502000363678"; // Fondation de France
-        new AgentIntegrationTest.Builder("fr", "fr-caisseepargne-password-new")
+        new AgentIntegrationTest.Builder("fr", "fr-caisseepargne-password")
                 .addCredentialField(
                         Field.Key.USERNAME,
                         usernamePasswordArgumentManager.get(UsernamePasswordArgumentEnum.USERNAME))
