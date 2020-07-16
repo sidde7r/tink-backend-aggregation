@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeResponse;
@@ -68,14 +67,13 @@ public class SwedbankTokenGeneratorAuthenticationController
         if (Strings.isNullOrEmpty(challengeResponse)
                 || challengeResponse.length() != 8
                 || !challengeResponse.matches("[0-9]+")) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception();
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
         }
 
         SecurityTokenChallengeResponse securityTokenChallengeResponse =
-                apiClient.sendTokenChallengeResponse(
+                apiClient.sendLoginTokenChallengeResponse(
                         initSecurityTokenChallengeResponse.getLinks().getNextOrThrow(),
-                        challengeResponse,
-                        SecurityTokenChallengeResponse.class);
+                        challengeResponse);
         apiClient.completeAuthentication(
                 securityTokenChallengeResponse.getLinks().getNextOrThrow());
     }
