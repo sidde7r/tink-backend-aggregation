@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc.RegisterPayeeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc.RegisterRecipientResponse;
@@ -692,6 +694,21 @@ public class SwedbankDefaultApiClient {
             }
 
             throw hce;
+        }
+    }
+
+    public SecurityTokenChallengeResponse sendLoginTokenChallengeResponse(
+            LinkEntity linkEntity, String challengeResponse)
+            throws SupplementalInfoException, LoginException {
+        try {
+            return sendTokenChallengeResponse(
+                    linkEntity, challengeResponse, SecurityTokenChallengeResponse.class);
+        } catch (HttpResponseException hre) {
+            if (SwedbankApiErrors.isLoginSecurityTokenInvalid(hre)) {
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(hre);
+            }
+
+            throw hre;
         }
     }
 

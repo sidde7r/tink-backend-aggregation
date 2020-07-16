@@ -39,7 +39,7 @@ public class SwedbankApiErrors {
         return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.NOT_ALLOWED);
     }
 
-    private static boolean isLoginSecurityTokenInvalid(HttpResponseException hre) {
+    static boolean isLoginSecurityTokenInvalid(HttpResponseException hre) {
         // This method expects an response with the following characteristics:
         // - Http status: 401
         // - Http body: `ErrorResponse` with error field of "LOGIN_FAILED"
@@ -73,9 +73,6 @@ public class SwedbankApiErrors {
             throw SupplementalInfoError.NO_VALID_CODE.exception(hre);
         }
         if (isSecurityTokenTooOld(hre)) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception(hre);
-        }
-        if (isLoginSecurityTokenInvalid(hre)) {
             throw SupplementalInfoError.NO_VALID_CODE.exception(hre);
         }
         if (isAuthorizationSecurityTokenInvalid(hre)) {
