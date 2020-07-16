@@ -1,0 +1,47 @@
+{
+  "actions": [],
+  "operations": [
+    {
+      "accountKey": "adff0acfcefa80ae849065f2076ecaac",
+      "amount": 300,
+      "category": {
+        "color": "#0DA960",
+        "distributionColor": "#0DA960",
+        "iconId": "banque",
+        "id": 1003,
+        "label": "Virements reçus",
+        "parentLabel": "Virements reçus"
+      },
+      "comments": [],
+      "currency": "EUR",
+      "dates": [
+        {
+          "date": "2017-09-05",
+          "label": "Effectué le",
+          "type": "operation_date"
+        },
+        {
+          "date": "2017-09-05",
+          "label": "Valorisé le",
+          "type": "value_date"
+        }
+      ],
+      "flags": [
+        "SPLIT_CHILD_REMAINING"
+      ],
+      "id": "59af9b3f6b46af7ec89aaaac",
+      "labels": [
+        {
+          "body": "VIR VIREMENT CREATION COMPTE",
+          "type": "operation_label"
+        }
+      ],
+      "relatedOperations": [],
+      "status": {
+        "id": "accounted",
+        "label": "Comptabilisée"
+      },
+      "tags": []
+    }
+  ]
+}

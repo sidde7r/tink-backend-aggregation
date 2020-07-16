@@ -31,7 +31,7 @@ public class BoursoramaAuthenticator implements PasswordAuthenticator {
             throws AuthenticationException, AuthorizationException {
         GenerateMatrixResponse generateMatrixResponse = apiClient.generateMatrix();
         BoursoramaImageMapper imageMapper =
-                new BoursoramaImageMapper(generateMatrixResponse.getKeys());
+                new BoursoramaImageMapper(generateMatrixResponse.getKeymap().getKeys());
         if (!StringUtils.isNumeric(username) || !StringUtils.isNumeric(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }

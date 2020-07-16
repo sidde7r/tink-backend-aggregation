@@ -8,18 +8,11 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class OperationsEntity {
-    private String accountKey;
+
     private double amount;
-    private CategoryEntity category;
-    private List<Object> comments;
     private String currency;
     private List<DatesEntity> dates;
-    private List<Object> flags;
-    private String id;
     private List<LabelsEntity> labels;
-    private List<Object> relatedOperations;
-    private AccountStatusEntity status;
-    private List<Object> tags;
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()

@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CategoriesEntity {
     private List<BanksEntity> banks;
     private String id;
-    private String label;
 
     public List<BanksEntity> getBanks() {
         return banks;

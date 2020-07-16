@@ -19,11 +19,7 @@ public class DatesEntity {
         return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-    public boolean isPerformedOnDate() {
+    boolean isPerformedOnDate() {
         return type.equals(BoursoramaConstants.Transaction.PERFORMED_ON_LABEL);
-    }
-
-    public boolean isValuedDate() {
-        return type.equals(BoursoramaConstants.Transaction.VALUED_ON_LABEL);
     }
 }
