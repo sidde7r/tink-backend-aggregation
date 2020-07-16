@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
-import java.util.UUID;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
@@ -107,12 +106,8 @@ public class TransferDestinationsResponseTest {
     }
 
     private static TransferDestinationPattern createTransferDestinationPattern(int pattern) {
-        TransferDestinationPattern destination =
-                TransferDestinationPattern.createForMultiMatch(
-                        AccountIdentifier.Type.SE, "" + pattern);
-        destination.setUserId(UUID.randomUUID());
-        destination.setAccountId(UUID.randomUUID());
-        return destination;
+        return TransferDestinationPattern.createForMultiMatch(
+                AccountIdentifier.Type.SE, "" + pattern);
     }
 
     private static Account createAccountWithBankId(String bankId) {

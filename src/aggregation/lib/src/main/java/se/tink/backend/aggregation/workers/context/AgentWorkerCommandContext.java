@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -239,6 +240,34 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         compareOldAndNewAccountDataCache();
     }
 
+    private boolean areTransferDestinationPatternsEqual(
+            Map<Account, List<TransferDestinationPattern>> first,
+            Map<Account, List<TransferDestinationPattern>> second) {
+        if (first.size() != second.size()) {
+            return false;
+        }
+
+        return first.entrySet().stream()
+                .allMatch(
+                        e -> {
+                            List<TransferDestinationPattern> firstList = e.getValue();
+                            List<TransferDestinationPattern> secondList = second.get(e.getKey());
+                            if (Objects.isNull(firstList) || Objects.isNull(secondList)) {
+                                log.warn(
+                                        "[compareOldAndNewAccountDataCache] One or both TransferDestinationPatterns are null ({}, {})",
+                                        Objects.isNull(firstList),
+                                        Objects.isNull(secondList));
+                                return false;
+                            }
+
+                            if (firstList.size() != secondList.size()) {
+                                return false;
+                            }
+
+                            return firstList.containsAll(secondList);
+                        });
+    }
+
     // Purely for initial verification. Will be removed shortly.
     private void compareOldAndNewAccountDataCache() {
         log.info("[compareOldAndNewAccountDataCache] Comparing old and new account data cache!");
@@ -265,7 +294,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
             }
 
             // Only compare transfer destinations if there are the same amount of accounts.
-            if (!transferDestinationPatternsByAccount.equals(newTransferDestinationPatterns)) {
+            if (!areTransferDestinationPatternsEqual(
+                    transferDestinationPatternsByAccount, newTransferDestinationPatterns)) {
                 log.warn(
                         "[compareOldAndNewAccountDataCache] The two transfDestPatterns are not equal!");
             }
