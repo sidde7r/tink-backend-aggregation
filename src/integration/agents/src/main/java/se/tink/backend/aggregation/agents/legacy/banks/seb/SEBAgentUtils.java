@@ -94,12 +94,6 @@ public class SEBAgentUtils {
                 accountTypeCode,
                 accountTypeDescription,
                 tinkAccountType);
-        if (tinkAccountType == AccountTypes.LOAN) {
-            return getLoanAccountCapabilities();
-        }
-        if (tinkAccountType == AccountTypes.INVESTMENT) {
-            return getInvestmentAccountCapabilities();
-        }
 
         return new AccountCapabilities(
                 Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
