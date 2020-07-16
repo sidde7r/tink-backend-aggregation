@@ -91,7 +91,7 @@ public class CaisseEpargneConstants {
         static final String BPCESTA = "bpcesta";
         static final String CDETAB = "cdetab";
         static final String CLAIMS = "claims";
-        static final String SECRED_IT = "secret_id";
+        static final String SECRET_IT = "secret_id";
         static final String DISPLAY = "display";
     }
 
