@@ -7,21 +7,22 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.eventproducerservice.events.grpc.AccountHoldersRefreshedEventProto;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
 import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
 
-public class AccountHoldersRefreshedEventProducer {
+public class AccountInformationServiceEventsProducer {
     private final EventProducerServiceClient eventProducerServiceClient;
-    private final boolean eventEnabled;
+    private final boolean eventsEnabled;
     private static final Logger log =
-            LoggerFactory.getLogger(AccountHoldersRefreshedEventProducer.class);
+            LoggerFactory.getLogger(AccountInformationServiceEventsProducer.class);
 
     @Inject
-    public AccountHoldersRefreshedEventProducer(
-            @Named("sendAccountHoldersRefreshedEvents") boolean eventEnabled,
+    public AccountInformationServiceEventsProducer(
+            @Named("accountInformationServiceEvents") boolean eventsEnabled,
             EventProducerServiceClient eventProducerServiceClient) {
-        this.eventEnabled = eventEnabled;
+        this.eventsEnabled = eventsEnabled;
         this.eventProducerServiceClient = eventProducerServiceClient;
     }
 
@@ -34,7 +35,7 @@ public class AccountHoldersRefreshedEventProducer {
             String accountId,
             String holderType,
             int holdersCount) {
-        if (!eventEnabled) {
+        if (!eventsEnabled) {
             return;
         }
         try {
@@ -55,7 +56,22 @@ public class AccountHoldersRefreshedEventProducer {
 
             eventProducerServiceClient.postEventFireAndForget(Any.pack(event));
         } catch (RuntimeException e) {
-            log.warn("could not produce event: AccountHoldersRefreshedEvent", e);
+            log.warn("Could not produce event: AccountHoldersRefreshedEvent", e);
         }
+    }
+
+    public void sendPsd2PaymentAccountClassificationEvent(
+            String clusterId,
+            String appId,
+            String userId,
+            String providerName,
+            String marketCode,
+            String correlationId,
+            String credentialsId,
+            String accountId,
+            String accountType,
+            String classificationResult,
+            AccountCapabilities accountCapabilities) {
+        // will be finished once https://github.com/tink-ab/tink-grpc/pull/698 is merged
     }
 }

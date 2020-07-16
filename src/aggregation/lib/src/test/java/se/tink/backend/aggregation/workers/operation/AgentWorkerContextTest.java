@@ -64,6 +64,7 @@ public class AgentWorkerContextTest {
                 controllerWrapper,
                 "test",
                 "two",
+                "correlationId1234",
                 regulatoryRestrictions);
     }
 
