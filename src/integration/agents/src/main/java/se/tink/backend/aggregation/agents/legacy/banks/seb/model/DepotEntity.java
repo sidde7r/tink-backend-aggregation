@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.source_info.SourceInfo;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -123,6 +125,13 @@ public class DepotEntity {
         account.setBankId(accountNumber);
         account.setName(StringUtils.firstLetterUppercaseFormatting(getType().trim()));
         account.setType(AccountTypes.INVESTMENT);
+        account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
+        account.setSourceInfo(
+                SourceInfo.builder()
+                        .bankAccountType(getType())
+                        .bankProductCode(getName())
+                        .bankProductCode(String.format("%d", getDepotTypeCode()))
+                        .build());
 
         return account;
     }

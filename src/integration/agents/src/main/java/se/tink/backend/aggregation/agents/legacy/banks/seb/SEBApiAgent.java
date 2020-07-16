@@ -154,6 +154,7 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
+import se.tink.backend.aggregation.source_info.SourceInfo;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
@@ -1469,8 +1470,15 @@ public class SEBApiAgent extends AbstractAgent
         if (SEBApiConstants.PSD2_Account_Types.contains(type)) {
             account.setFlags(ImmutableList.of(AccountFlag.PSD2_PAYMENT_ACCOUNT));
         }
+
         account.setCapabilities(
-                SEBAgentUtils.guessAccountCapabilities(accountTypeCode, accountTypeDescription));
+                SEBAgentUtils.determineAccountCapabilities(
+                        accountTypeCode, accountTypeDescription, type));
+        account.setSourceInfo(
+                SourceInfo.builder()
+                        .bankAccountType(String.format("%d", accountTypeCode))
+                        .bankProductName(accountTypeDescription)
+                        .build());
 
         return account;
     }
@@ -1529,11 +1537,18 @@ public class SEBApiAgent extends AbstractAgent
     private Pair<Account, List<Transaction>> updateCreditCardAccountInformation(
             CredentialsRequest request, SebCreditCardAccount accountEntity) {
 
+        String name = SEBAgentUtils.getCreditCardAccountName(accountEntity);
+
         Account account = new Account();
         account.setType(AccountTypes.CREDIT_CARD);
-        account.setName(SEBAgentUtils.getCreditCardAccountName(accountEntity));
+        account.setName(name);
         account.setBalance(accountEntity.SALDO_BELOPP != 0 ? -accountEntity.SALDO_BELOPP : 0);
         account.setAvailableCredit(accountEntity.LIMIT_BELOPP - accountEntity.SALDO_BELOPP);
+        account.setSourceInfo(
+                SourceInfo.builder()
+                        .bankProductName(name)
+                        .bankProductCode(accountEntity.PRODUKT_NAMN)
+                        .build());
 
         String handle = accountEntity.BILL_UNIT_HDL;
 

@@ -5,9 +5,14 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCard;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCardAccount;
@@ -21,6 +26,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
 
 public class SEBAgentUtils {
+    private static final Logger logger = LoggerFactory.getLogger(SEBAgentUtils.class);
 
     protected enum SEBAccountType {
         PRIVATKONTO(1),
@@ -44,6 +50,9 @@ public class SEBAgentUtils {
             return code;
         }
     }
+
+    private static final Map<Integer, Function<String, AccountCapabilities>>
+            ACCOUNT_CAPABILITIES_MAP = new HashMap<>();
 
     public static boolean trimmedDashAgnosticEquals(String str1, String str2) {
         return str1.replace("-", "").trim().equalsIgnoreCase(str2.replace("-", "").trim());
@@ -75,44 +84,27 @@ public class SEBAgentUtils {
         return null;
     }
 
-    static AccountCapabilities guessAccountCapabilities(
-            Integer accountTypeCode, String accountTypeDescription) {
-        final AccountCapabilities capabilities = AccountCapabilities.createDefault();
-        if (accountTypeCode.equals(SEBAccountType.PRIVATKONTO.getCode())
-                || accountTypeCode.equals(SEBAccountType.PERSONALLONEKONTO.getCode())) {
-            capabilities.setCanWithdrawCash(Answer.YES);
-            capabilities.setCanPlaceFunds(Answer.YES);
-            capabilities.setCanExecuteExternalTransfer(Answer.YES);
-            capabilities.setCanReceiveExternalTransfer(Answer.YES);
-        } else if (accountTypeCode.equals(SEBAccountType.ENKLA_SPARKONTOT.getCode())
-                || accountTypeCode.equals(SEBAccountType.ISK_KAPITALKONTO.getCode())) {
-            capabilities.setCanWithdrawCash(Answer.NO);
-            capabilities.setCanPlaceFunds(Answer.YES);
-            capabilities.setCanExecuteExternalTransfer(Answer.YES);
-            capabilities.setCanReceiveExternalTransfer(Answer.YES);
-        } else if (accountTypeCode.equals(SEBAccountType.SPECIALINLONEKONTO.getCode())
-                || accountTypeCode.equals(SEBAccountType.PLACERINGSKONTO.getCode())
-                || (accountTypeCode.equals(SEBAccountType.OTHER.getCode())
-                        && accountTypeDescription.equalsIgnoreCase("notariatkonto"))) {
-            capabilities.setCanWithdrawCash(Answer.NO);
-            capabilities.setCanPlaceFunds(Answer.YES);
-            capabilities.setCanExecuteExternalTransfer(Answer.NO);
-            capabilities.setCanReceiveExternalTransfer(Answer.NO);
-        } else if (accountTypeCode.equals(SEBAccountType.IPS.getCode())) {
-            capabilities.setCanWithdrawCash(Answer.NO);
-            capabilities.setCanPlaceFunds(Answer.YES);
+    public static AccountCapabilities determineAccountCapabilities(
+            Integer accountTypeCode, String accountTypeDescription, AccountTypes tinkAccountType) {
+        if (ACCOUNT_CAPABILITIES_MAP.containsKey(accountTypeCode)) {
+            return ACCOUNT_CAPABILITIES_MAP.get(accountTypeCode).apply(accountTypeDescription);
         }
+        logger.info(
+                "[SEB-capabilities] No mapper registered for (accountTypeCode, accountTypeDescription): ({}, {}); tinkAccountType: {}",
+                accountTypeCode,
+                accountTypeDescription,
+                tinkAccountType);
 
-        return capabilities;
+        return new AccountCapabilities(
+                Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
     }
 
     public static AccountCapabilities getLoanAccountCapabilities() {
-        final AccountCapabilities capabilities = AccountCapabilities.createDefault();
-        capabilities.setCanWithdrawCash(Answer.NO);
-        capabilities.setCanPlaceFunds(Answer.UNKNOWN);
-        capabilities.setCanExecuteExternalTransfer(Answer.NO);
-        capabilities.setCanReceiveExternalTransfer(Answer.NO);
-        return capabilities;
+        return new AccountCapabilities(Answer.NO, Answer.UNKNOWN, Answer.NO, Answer.NO);
+    }
+
+    public static AccountCapabilities getInvestmentAccountCapabilities() {
+        return new AccountCapabilities(Answer.NO, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
     }
 
     public static TransactionTypes getTransactionType(String transactionTypeCode) {
@@ -343,5 +335,61 @@ public class SEBAgentUtils {
             }
         }
         return null;
+    }
+
+    static {
+        ACCOUNT_CAPABILITIES_MAP.put(
+                SEBAccountType.PRIVATKONTO.getCode(),
+                accountTypeDescription ->
+                        new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES));
+        ACCOUNT_CAPABILITIES_MAP.put(
+                SEBAccountType.OTHER.getCode(),
+                accountTypeDescription -> {
+                    if ("notariatkonto".equalsIgnoreCase(accountTypeDescription))
+                        return new AccountCapabilities(
+                                Answer.NO, Answer.YES, Answer.NO, Answer.YES);
+                    if ("företagskonto".equalsIgnoreCase(accountTypeDescription))
+                        return new AccountCapabilities(
+                                Answer.YES, Answer.YES, Answer.YES, Answer.YES);
+                    if ("skogskonto".equalsIgnoreCase(accountTypeDescription))
+                        return new AccountCapabilities(
+                                Answer.NO, Answer.YES, Answer.UNKNOWN, Answer.UNKNOWN);
+                    return new AccountCapabilities(
+                            Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
+                });
+        ACCOUNT_CAPABILITIES_MAP.put(
+                SEBAccountType.PERSONALLONEKONTO.getCode(),
+                accountTypeDescription ->
+                        new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES));
+        ACCOUNT_CAPABILITIES_MAP.put(
+                SEBAccountType.ENKLA_SPARKONTOT_FORETAG.getCode(),
+                accountTypeDescription ->
+                        new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES));
+        ACCOUNT_CAPABILITIES_MAP.put(
+                SEBAccountType.ENKLA_SPARKONTOT.getCode(),
+                accountTypeDescription ->
+                        new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES));
+        ACCOUNT_CAPABILITIES_MAP.put(
+                SEBAccountType.SPECIALINLONEKONTO.getCode(),
+                accountTypeDescription ->
+                        new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.NO));
+        ACCOUNT_CAPABILITIES_MAP.put(
+                SEBAccountType.FUND.getCode(),
+                accountTypeDescription ->
+                        new AccountCapabilities(
+                                Answer.NO, Answer.YES, Answer.UNKNOWN, Answer.UNKNOWN));
+        ACCOUNT_CAPABILITIES_MAP.put(
+                SEBAccountType.IPS.getCode(),
+                accountTypeDescription ->
+                        new AccountCapabilities(
+                                Answer.NO, Answer.YES, Answer.UNKNOWN, Answer.UNKNOWN));
+        ACCOUNT_CAPABILITIES_MAP.put(
+                SEBAccountType.PLACERINGSKONTO.getCode(),
+                accountTypeDescription ->
+                        new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.NO));
+        ACCOUNT_CAPABILITIES_MAP.put(
+                SEBAccountType.ISK_KAPITALKONTO.getCode(),
+                accountTypeDescription ->
+                        new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES));
     }
 }

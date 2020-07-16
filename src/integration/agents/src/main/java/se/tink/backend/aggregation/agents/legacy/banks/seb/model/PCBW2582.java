@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.source_info.SourceInfo;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
 
@@ -39,6 +40,7 @@ public class PCBW2582 {
         account.setBalance(-StringUtils.parseAmount(SKULD));
         account.setType(AccountTypes.LOAN);
         account.setCapabilities(SEBAgentUtils.getLoanAccountCapabilities());
+        account.setSourceInfo(SourceInfo.builder().bankProductName(KTOSLAG_TXT).build());
 
         return account;
     }
