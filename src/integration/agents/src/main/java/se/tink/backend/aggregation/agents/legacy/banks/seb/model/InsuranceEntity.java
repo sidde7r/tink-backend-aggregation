@@ -7,9 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants.PortfolioType;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.source_info.SourceInfo;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -49,6 +51,8 @@ public class InsuranceEntity {
         account.setBankId(insuranceNumber);
         account.setName(StringUtils.firstLetterUppercaseFormatting(type.trim()));
         account.setType(AccountTypes.INVESTMENT);
+        account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
+        account.setSourceInfo(SourceInfo.builder().bankProductName(type).build());
 
         return account;
     }

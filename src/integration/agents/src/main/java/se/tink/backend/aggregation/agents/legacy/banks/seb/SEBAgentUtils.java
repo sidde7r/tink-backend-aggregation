@@ -95,50 +95,22 @@ public class SEBAgentUtils {
                 accountTypeDescription,
                 tinkAccountType);
         if (tinkAccountType == AccountTypes.LOAN) {
-            return new AccountCapabilities(Answer.NO, Answer.UNKNOWN, Answer.NO, Answer.NO);
+            return getLoanAccountCapabilities();
         }
         if (tinkAccountType == AccountTypes.INVESTMENT) {
-            return new AccountCapabilities(
-                    Answer.NO, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
+            return getInvestmentAccountCapabilities();
         }
 
         return new AccountCapabilities(
                 Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
     }
 
-    static AccountCapabilities guessAccountCapabilities(
-            Integer accountTypeCode, String accountTypeDescription) {
-        final AccountCapabilities capabilities = AccountCapabilities.createDefault();
-        if (accountTypeCode.equals(SEBAccountType.PRIVATKONTO.getCode())
-                || accountTypeCode.equals(SEBAccountType.PERSONALLONEKONTO.getCode())) {
-            capabilities.setCanWithdrawCash(Answer.YES);
-            capabilities.setCanPlaceFunds(Answer.YES);
-            capabilities.setCanExecuteExternalTransfer(Answer.YES);
-            capabilities.setCanReceiveExternalTransfer(Answer.YES);
-        } else if (accountTypeCode.equals(SEBAccountType.ENKLA_SPARKONTOT.getCode())
-                || accountTypeCode.equals(SEBAccountType.ISK_KAPITALKONTO.getCode())) {
-            capabilities.setCanWithdrawCash(Answer.NO);
-            capabilities.setCanPlaceFunds(Answer.YES);
-            capabilities.setCanExecuteExternalTransfer(Answer.YES);
-            capabilities.setCanReceiveExternalTransfer(Answer.YES);
-        } else if (accountTypeCode.equals(SEBAccountType.SPECIALINLONEKONTO.getCode())
-                || accountTypeCode.equals(SEBAccountType.PLACERINGSKONTO.getCode())
-                || (accountTypeCode.equals(SEBAccountType.OTHER.getCode())
-                        && accountTypeDescription.equalsIgnoreCase("notariatkonto"))) {
-            capabilities.setCanWithdrawCash(Answer.NO);
-            capabilities.setCanPlaceFunds(Answer.YES);
-            capabilities.setCanExecuteExternalTransfer(Answer.NO);
-            capabilities.setCanReceiveExternalTransfer(Answer.NO);
-        } else if (accountTypeCode.equals(SEBAccountType.IPS.getCode())) {
-            capabilities.setCanWithdrawCash(Answer.NO);
-            capabilities.setCanPlaceFunds(Answer.YES);
-        }
-
-        return capabilities;
-    }
-
     public static AccountCapabilities getLoanAccountCapabilities() {
         return new AccountCapabilities(Answer.NO, Answer.UNKNOWN, Answer.NO, Answer.NO);
+    }
+
+    public static AccountCapabilities getInvestmentAccountCapabilities() {
+        return new AccountCapabilities(Answer.NO, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
     }
 
     public static TransactionTypes getTransactionType(String transactionTypeCode) {
@@ -382,7 +354,7 @@ public class SEBAgentUtils {
                     if ("notariatkonto".equalsIgnoreCase(accountTypeDescription))
                         return new AccountCapabilities(
                                 Answer.NO, Answer.YES, Answer.NO, Answer.YES);
-                    if ("foretagskonto".equalsIgnoreCase(accountTypeDescription))
+                    if ("företagskonto".equalsIgnoreCase(accountTypeDescription))
                         return new AccountCapabilities(
                                 Answer.YES, Answer.YES, Answer.YES, Answer.YES);
                     if ("skogskonto".equalsIgnoreCase(accountTypeDescription))

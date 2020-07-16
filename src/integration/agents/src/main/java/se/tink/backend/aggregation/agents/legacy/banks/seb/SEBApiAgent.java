@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.seb;
 
-import static se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants.HeaderKeys.X_SEB_CSRF;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
@@ -23,31 +21,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ClientConnectionManager;
@@ -181,6 +154,34 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants.HeaderKeys.X_SEB_CSRF;
 
 @AgentDependencyModulesForProductionMode(modules = LegacyAgentProductionStrategyModule.class)
 @AgentDependencyModulesForDecoupledMode(modules = LegacyAgentWiremockStrategyModule.class)
@@ -1547,7 +1548,7 @@ public class SEBApiAgent extends AbstractAgent
         account.setSourceInfo(
                 SourceInfo.builder()
                         .bankProductName(name)
-                        .bankProductCode(accountEntity.KORT_TYP)
+                        .bankProductCode(accountEntity.PRODUKT_NAMN)
                         .build());
 
         String handle = accountEntity.BILL_UNIT_HDL;
