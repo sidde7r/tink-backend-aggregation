@@ -249,9 +249,23 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         return first.entrySet().stream()
                 .allMatch(
-                        e ->
-                                Objects.nonNull(e.getValue())
-                                        && e.getValue().containsAll(second.get(e.getKey())));
+                        e -> {
+                            List<TransferDestinationPattern> firstList = e.getValue();
+                            List<TransferDestinationPattern> secondList = second.get(e.getKey());
+                            if (Objects.isNull(firstList) || Objects.isNull(secondList)) {
+                                log.warn(
+                                        "[compareOldAndNewAccountDataCache] One or both TransferDestinationPatterns are null ({}, {})",
+                                        Objects.isNull(firstList),
+                                        Objects.isNull(secondList));
+                                return false;
+                            }
+
+                            if (firstList.size() != secondList.size()) {
+                                return false;
+                            }
+
+                            return firstList.containsAll(secondList);
+                        });
     }
 
     // Purely for initial verification. Will be removed shortly.
