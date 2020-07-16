@@ -1116,6 +1116,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         regulatoryRestrictions,
                         accountHoldersRefreshedEventProducer);
+        context.setWhitelistRefresh(true);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(
