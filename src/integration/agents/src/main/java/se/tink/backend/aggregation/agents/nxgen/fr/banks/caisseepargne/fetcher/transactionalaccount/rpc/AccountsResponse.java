@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.rpc.GenericResponse;
 
 public class AccountsResponse extends GenericResponse<AccountsResultsEntity> {
-
     public Stream<AccountEntity> stream() {
         return results.stream();
     }

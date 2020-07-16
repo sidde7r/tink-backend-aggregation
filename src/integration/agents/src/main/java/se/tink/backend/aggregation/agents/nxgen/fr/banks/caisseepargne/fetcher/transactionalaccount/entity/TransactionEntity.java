@@ -4,7 +4,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.ResponseValue;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -49,14 +49,9 @@ public class TransactionEntity {
     }
 
     private ExactCurrencyAmount getExactCurrencyAmount() {
-        // Seems odd/reversed...
-        if (CaisseEpargneConstants.ResponseValue.TRANSACTION_TYPE_INCOME.equalsIgnoreCase(
-                codeTypeWritten)) {
-            // Revenus (income)
-            return ExactCurrencyAmount.of(BigDecimal.valueOf(-unscaledAmount, 2), currency);
-        } else {
-            // Dépenses (spending)
+        if (ResponseValue.TRANSACTION_TYPE_INCOME.equalsIgnoreCase(meaningOfOprt)) {
             return ExactCurrencyAmount.of(BigDecimal.valueOf(unscaledAmount, 2), currency);
         }
+        return ExactCurrencyAmount.of(BigDecimal.valueOf(-unscaledAmount, 2), currency);
     }
 }

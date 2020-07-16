@@ -1,16 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.rpc.GenericRequest;
-import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonObject
 @JacksonXmlRootElement(localName = "GetSyntheseCpteAbonnement")
+@JsonPropertyOrder
 public class AccountsRequest extends GenericRequest {
 
+    @JacksonXmlProperty(isAttribute = true)
+    private String xmlns = "http://caisse-epargne.fr/webservices/";
+
     @Override
-    public String action() {
-        return CaisseEpargneConstants.SoapAction.GET_SYNTHESE_CPTE_ABONNEMENT;
+    @JsonIgnore
+    public String soapAction() {
+        return HeaderValues.GET_ACCOUNTS;
     }
 }
