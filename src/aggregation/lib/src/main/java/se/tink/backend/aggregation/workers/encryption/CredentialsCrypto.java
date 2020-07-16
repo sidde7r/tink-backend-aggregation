@@ -4,12 +4,14 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.workers.encryption.models.EncryptedCredentials;
 import se.tink.backend.aggregation.workers.encryption.models.EncryptedCredentialsV1;
+import se.tink.backend.aggregation.workers.encryption.models.VersionDeserializer;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;
@@ -61,28 +63,27 @@ public class CredentialsCrypto {
         Preconditions.checkState(
                 !Strings.isNullOrEmpty(sensitiveData), "Sensitive data was not set.");
 
-        // Decrypt
-        EncryptedCredentials encryptedCredentials =
-                Preconditions.checkNotNull(
-                        SerializationUtils.deserializeFromString(
-                                sensitiveData, EncryptedCredentials.class));
+        AtomicBoolean success = new AtomicBoolean(false);
 
-        byte[] key = cryptoWrapper.getCryptoKeyByKeyId(encryptedCredentials.getKeyId());
+        // Deserialize & Decrypt using right version
+        new VersionDeserializer()
+                .addDefaultHandler(
+                        head -> {
+                            logger.error(
+                                    String.format(
+                                            "EncryptedCredentials version not recognized: %d",
+                                            head.getVersion()));
+                            success.set(false);
+                        })
+                .addVersion1Handler(
+                        v1 -> {
+                            byte[] key = cryptoWrapper.getCryptoKeyByKeyId(v1.getKeyId());
+                            CredentialsCryptoV1.decryptCredential(key, credentials, v1);
+                            success.set(true);
+                        })
+                .handle(sensitiveData);
 
-        switch (encryptedCredentials.getVersion()) {
-            case EncryptedCredentialsV1.VERSION:
-                CredentialsCryptoV1.decryptCredential(key, credentials, sensitiveData);
-                break;
-            default:
-                // NYI.
-                logger.error(
-                        String.format(
-                                "EncryptedCredentials version not recognized: %d",
-                                encryptedCredentials.getVersion()));
-                return false;
-        }
-
-        return true;
+        return success.get();
     }
 
     public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {

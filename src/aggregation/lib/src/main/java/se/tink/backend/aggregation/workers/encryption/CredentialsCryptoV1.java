@@ -18,7 +18,6 @@ import javax.crypto.spec.SecretKeySpec;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.workers.encryption.models.AesEncryptedData;
 import se.tink.backend.aggregation.workers.encryption.models.EncryptedCredentialsV1;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsCryptoV1 {
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -61,11 +60,8 @@ public class CredentialsCryptoV1 {
         return encryptedCredentialsV1;
     }
 
-    public static void decryptCredential(byte[] key, Credentials credential, String sensitiveData) {
-        EncryptedCredentialsV1 encryptedCredentialsV1 =
-                SerializationUtils.deserializeFromString(
-                        sensitiveData, EncryptedCredentialsV1.class);
-
+    public static void decryptCredential(
+            byte[] key, Credentials credential, EncryptedCredentialsV1 encryptedCredentialsV1) {
         String decryptedFields = CredentialsCryptoV1.decryptFields(key, encryptedCredentialsV1);
         if (!Strings.isNullOrEmpty(decryptedFields)) {
             credential.addSerializedFields(decryptedFields);
