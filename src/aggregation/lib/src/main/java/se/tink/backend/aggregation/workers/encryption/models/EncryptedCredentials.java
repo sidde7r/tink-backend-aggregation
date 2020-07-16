@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers.encryption;
+package se.tink.backend.aggregation.workers.encryption.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

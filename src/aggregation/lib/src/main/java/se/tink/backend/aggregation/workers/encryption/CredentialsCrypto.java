@@ -8,6 +8,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
+import se.tink.backend.aggregation.workers.encryption.models.EncryptedCredentials;
+import se.tink.backend.aggregation.workers.encryption.models.EncryptedCredentialsV1;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;

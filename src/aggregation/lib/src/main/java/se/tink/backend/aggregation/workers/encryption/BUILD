@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/encryption/models",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/wrappers",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
