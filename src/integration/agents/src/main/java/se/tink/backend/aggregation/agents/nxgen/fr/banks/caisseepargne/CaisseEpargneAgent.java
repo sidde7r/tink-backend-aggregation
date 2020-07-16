@@ -59,8 +59,7 @@ public class CaisseEpargneAgent extends NextGenerationAgent
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new BankServiceInternalErrorFilter())
                 .addFilter(new GatewayTimeoutFilter())
-                .addFilter(new TimeoutFilter())
-        /*.setDebugProxy("http://127.0.0.1:8888")*/ ;
+                .addFilter(new TimeoutFilter());
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
