@@ -23,9 +23,7 @@ public class AggregationLoggerRequestFilter implements ContainerRequestFilter {
     private static final Logger logger =
             LoggerFactory.getLogger(AggregationLoggerRequestFilter.class);
     private static final String APP_ID_HEADER_KEY = "X-Tink-App-Id";
-    // Changes to these keys MUST be mirrored in:
-    // - tink-infrastructure/states/tink/aggregation/aggregation-server.yml
-    // - tink-infrastructure/states/infrastructure/elk/logstash/conf.d/04-tink-log-filter.conf
+
     private static final String CLUSTER_ID_MDC_KEY = "clusterId";
     private static final String CREDENTIALS_ID_MDC_KEY = "credentialsId";
     private static final String USER_ID_MDC_KEY = "userId";
