@@ -31,6 +31,7 @@ public class DefaultSwiftTransactionMapper implements TransactionMapper {
     private static final String MT940_HEADER_FIELD = ":61:";
     private static final String MT940_DETAILS_FIELD = ":86:";
     private static final String MT940_TRANSACTION_TYPE_SUBFIELD = "00";
+    private static final String UNUSED_KEY = "?23";
 
     public List<AggregationTransaction> parse(String rawMT940) {
         List<RawMT940Transaction> rawTransactions = extractRawTransactions(rawMT940);
@@ -131,7 +132,9 @@ public class DefaultSwiftTransactionMapper implements TransactionMapper {
 
     protected Map<String, String> getRawDetails(RawMT940Transaction rawMT940Transaction) {
         Map<String, String> result = new TreeMap<>();
-        String[] elements = rawMT940Transaction.details.split("\\?");
+
+        String details = cleanFromUnusedKeys(rawMT940Transaction.details);
+        String[] elements = details.split("\\?");
 
         for (String s : elements) {
             if (s.length() < 2) {
@@ -143,5 +146,9 @@ public class DefaultSwiftTransactionMapper implements TransactionMapper {
         }
 
         return result;
+    }
+
+    private String cleanFromUnusedKeys(String details) {
+        return details.replace(UNUSED_KEY, "");
     }
 }
