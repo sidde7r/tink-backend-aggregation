@@ -36,6 +36,8 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountHoldersRefreshedEventProducer;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
+import se.tink.libraries.account_data_cache.AccountData;
+import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.identitydata.IdentityData;
@@ -232,6 +234,62 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         compareAccountsBeforeAndAfterUpdate();
         for (String uniqueId : allAvailableAccountsByUniqueId.keySet()) {
             sendAccountToUpdateService(uniqueId);
+        }
+
+        compareOldAndNewAccountDataCache();
+    }
+
+    // Purely for initial verification. Will be removed shortly.
+    private void compareOldAndNewAccountDataCache() {
+        log.info("[compareOldAndNewAccountDataCache] Comparing old and new account data cache!");
+
+        AccountDataCache accountDataCache = this.getAccountDataCache();
+
+        Map<Account, List<TransferDestinationPattern>> newTransferDestinationPatterns =
+                accountDataCache.getAllAccountData().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        AccountData::getAccount,
+                                        AccountData::getTransferDestinationPatterns));
+
+        List<Account> newAccountCache = accountDataCache.getAllAccounts();
+        List<Account> oldAccountCache =
+                allAvailableAccountsByUniqueId.values().stream()
+                        .map(pair -> pair.first)
+                        .collect(Collectors.toList());
+
+        if (newAccountCache.size() == oldAccountCache.size()) {
+            if (!newAccountCache.containsAll(oldAccountCache)) {
+                log.warn(
+                        "[compareOldAndNewAccountDataCache/all] The two account caches are not equal!");
+            }
+
+            // Only compare transfer destinations if there are the same amount of accounts.
+            if (!transferDestinationPatternsByAccount.equals(newTransferDestinationPatterns)) {
+                log.warn(
+                        "[compareOldAndNewAccountDataCache] The two transfDestPatterns are not equal!");
+            }
+        } else {
+            log.warn(
+                    "[compareOldAndNewAccountDataCache/all] Number of accounts differ. Old: {}, New: {}",
+                    oldAccountCache.size(),
+                    newAccountCache.size());
+        }
+
+        // Compare the filtered lists.
+        List<Account> newCurrentAccountCache = accountDataCache.getCurrentAccounts();
+        List<Account> oldCurrentAccountCache = new ArrayList<>(updatedAccountsByTinkId.values());
+
+        if (newCurrentAccountCache.size() == oldCurrentAccountCache.size()) {
+            if (!newCurrentAccountCache.containsAll(oldCurrentAccountCache)) {
+                log.warn(
+                        "[compareOldAndNewAccountDataCache/filtered] The two account caches are not equal!");
+            }
+        } else {
+            log.warn(
+                    "[compareOldAndNewAccountDataCache/filtered] Number of accounts differ. Old: {}, New: {}",
+                    oldAccountCache.size(),
+                    newAccountCache.size());
         }
     }
 

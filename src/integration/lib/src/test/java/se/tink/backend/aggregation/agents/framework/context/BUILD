@@ -21,6 +21,7 @@ java_library(
         "//src/integration/models",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
+        "//src/libraries/account_data_cache",
         "//src/libraries/account_identifier",
         "//src/libraries/i18n",
         "//third_party:com_fasterxml_jackson_core_jackson_core",

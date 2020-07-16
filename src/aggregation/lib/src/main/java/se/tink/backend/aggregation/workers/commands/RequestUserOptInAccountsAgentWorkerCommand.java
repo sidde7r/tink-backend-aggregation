@@ -89,6 +89,12 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     @Override
     public void postProcess() {}
 
+    private void filterOptInAccounts(List<String> optInAccountUniqueIds) {
+        this.context
+                .getAccountDataCache()
+                .addFilter(account -> optInAccountUniqueIds.contains(account.getBankId()));
+    }
+
     private AgentWorkerCommandResult handleEmptyRequestAccountsCase(
             List<Pair<Account, AccountFeatures>> accountsInContext)
             throws SupplementalInfoException {
@@ -105,11 +111,15 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         // Add the optIn account id:s to the context to use them when doing the refresh and
         // processing.
-        context.addOptInAccountUniqueId(
+        List<String> optInAccounts =
                 supplementalInformation.entrySet().stream()
                         .filter(e -> Objects.equals(e.getValue(), "true"))
                         .map(Map.Entry::getKey)
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
+
+        context.addOptInAccountUniqueId(optInAccounts);
+
+        filterOptInAccounts(optInAccounts);
 
         return AgentWorkerCommandResult.CONTINUE;
     }
@@ -193,6 +203,8 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         // Add the optIn account id:s to the context to use them when doing the refresh and
         // processing.
         context.addOptInAccountUniqueId(optInAccounts);
+
+        filterOptInAccounts(optInAccounts);
 
         // From the optIn accounts get the optOut accounts
         List<String> optOutAccounts =

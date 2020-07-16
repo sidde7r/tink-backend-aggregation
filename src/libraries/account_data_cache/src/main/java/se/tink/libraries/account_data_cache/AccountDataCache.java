@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers.operation;
+package se.tink.libraries.account_data_cache;
 
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
@@ -76,7 +76,17 @@ public class AccountDataCache {
         return getFilteredAccountData().collect(Collectors.toList());
     }
 
+    public List<AccountData> getAllAccountData() {
+        return new ArrayList<>(accountDataByAccountUniqueId.values());
+    }
+
     public List<Account> getCurrentAccounts() {
         return getFilteredAccountData().map(AccountData::getAccount).collect(Collectors.toList());
+    }
+
+    public List<Account> getAllAccounts() {
+        return accountDataByAccountUniqueId.values().stream()
+                .map(AccountData::getAccount)
+                .collect(Collectors.toList());
     }
 }

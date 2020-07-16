@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.enums.StatisticMode;
@@ -63,6 +64,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private Catalog catalog;
     protected CuratorFramework coordinationClient;
     protected CredentialsRequest request;
+    private final AccountDataCache accountDataCache;
+
     private Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
     protected Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount =
             Maps.newHashMap();
@@ -101,6 +104,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             metricRegistry.histogram(histogram, buckets).update(duration);
         }
     }
+
     // Cached accounts have not been sent to system side yet.
     protected Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
     // Updated accounts have been sent to System side and has been updated with their stored Tink Id
@@ -131,6 +135,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             String appId,
             RegulatoryRestrictions regulatoryRestrictions) {
 
+        this.accountDataCache = new AccountDataCache();
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
         this.updatedAccountUniqueIds = Sets.newHashSet();
@@ -163,6 +168,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public void clear() {
+        accountDataCache.clear();
         transactionsByAccountBankId.clear();
         allAvailableAccountsByUniqueId.clear();
     }
@@ -370,6 +376,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         requestSupplementalInformation(credentials, wait);
     }
 
+    public AccountDataCache getAccountDataCache() {
+        return accountDataCache;
+    }
+
     private boolean shouldAggregateDataForAccount(Account account) {
         try {
             // TODO: extend filtering by using payment classification information
@@ -401,6 +411,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
+        accountDataCache.cacheAccount(account);
+        accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
+
         AccountFeatures accountFeaturesToCache = accountFeatures;
 
         if (allAvailableAccountsByUniqueId.containsKey(account.getBankId())) {
@@ -658,10 +671,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     @Deprecated // Use cacheTransactions instead
     public Account updateTransactions(final Account account, List<Transaction> transactions) {
-
+        // Ensure the account is cached before caching transactions.
         cacheAccount(account);
-        transactionsByAccountBankId.put(account.getBankId(), transactions);
-
+        cacheTransactions(account.getBankId(), transactions);
         return account;
     }
 
@@ -673,11 +685,20 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         // cache Transactions
         Preconditions.checkArgument(allAvailableAccountsByUniqueId.containsKey(accountUniqueId));
         transactionsByAccountBankId.put(accountUniqueId, transactions);
+
+        accountDataCache.cacheTransactions(accountUniqueId, transactions);
     }
 
     @Override
     public void updateTransferDestinationPatterns(
             Map<Account, List<TransferDestinationPattern>> transferDestinationPatterns) {
+
+        transferDestinationPatterns.forEach(
+                (account, patterns) -> {
+                    accountDataCache.cacheAccount(account);
+                    accountDataCache.cacheTransferDestinationPatterns(
+                            account.getBankId(), patterns);
+                });
 
         for (Account account : transferDestinationPatterns.keySet()) {
             if (transferDestinationPatternsByAccount.containsKey(account)) {
