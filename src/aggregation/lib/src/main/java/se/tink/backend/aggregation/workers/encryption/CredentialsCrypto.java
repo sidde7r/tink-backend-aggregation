@@ -108,7 +108,8 @@ public class CredentialsCrypto {
                 CredentialsCryptoV1.encryptCredential(
                         clusterKeyId, clusterKey, sensitiveInformationCredentials);
 
-        String serializedEncryptedCredentials = encryptedCredentials.asSerialized();
+        String serializedEncryptedCredentials =
+                SerializationUtils.serializeToString(encryptedCredentials);
 
         // Put the `serializedEncryptedCredentials` on the credential so that it can be passed back
         // to the database

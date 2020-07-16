@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.workers.encryption.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EncryptedCredentials {
@@ -33,10 +31,5 @@ public class EncryptedCredentials {
 
     public void setKeyId(int keyId) {
         this.keyId = keyId;
-    }
-
-    @JsonIgnore
-    public String asSerialized() {
-        return SerializationUtils.serializeToString(this);
     }
 }
