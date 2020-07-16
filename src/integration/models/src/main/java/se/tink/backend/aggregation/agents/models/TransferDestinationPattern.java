@@ -4,7 +4,6 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import java.util.Optional;
-import java.util.UUID;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
@@ -13,29 +12,11 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
 
     public static final String ALL = ".+";
 
-    private UUID userId;
-    private UUID accountId;
     private String type;
     private String pattern;
     private boolean matchesMultiple;
     private String name;
     private String bank;
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public UUID getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(UUID accountId) {
-        this.accountId = accountId;
-    }
 
     public AccountIdentifier.Type getType() {
         if (type == null) {
@@ -137,8 +118,6 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
         }
 
         return ComparisonChain.start()
-                .compare(this.getUserId(), other.getUserId())
-                .compare(this.getAccountId(), other.getAccountId())
                 .compare(this.getType().toString(), other.getType().toString())
                 .compare(this.getPattern(), other.getPattern())
                 .compare(this.getName(), other.getName(), Ordering.natural().nullsFirst())
