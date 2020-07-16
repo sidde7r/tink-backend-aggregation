@@ -15,7 +15,7 @@ public class PfmTransactionsEntityTest {
                     + "        \"currency\": \"DKK\"\n"
                     + "    },\n"
                     + "    \"date\": \"2020-04-30\",\n"
-                    + "    \"text\": \"__TEXT__\",\n"
+                    + "    \"originalText\": \"__TEXT__\",\n"
                     + "    \"uncleared\": true\n"
                     + "}";
 
