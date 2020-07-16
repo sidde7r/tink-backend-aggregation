@@ -76,6 +76,10 @@ public class AccountDataCache {
         return getFilteredAccountData().collect(Collectors.toList());
     }
 
+    public List<AccountData> getAllAccountData() {
+        return new ArrayList<>(accountDataByAccountUniqueId.values());
+    }
+
     public List<Account> getCurrentAccounts() {
         return getFilteredAccountData().map(AccountData::getAccount).collect(Collectors.toList());
     }
