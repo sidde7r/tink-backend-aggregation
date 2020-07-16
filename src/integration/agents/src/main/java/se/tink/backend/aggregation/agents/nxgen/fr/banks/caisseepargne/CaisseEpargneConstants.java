@@ -35,8 +35,6 @@ public class CaisseEpargneConstants {
         public static final String SAML_TRANSACTION_PATH = "/dacsrest/api/v1u0/transaction";
     }
 
-    public static class CookieKeys {}
-
     public static class FormKeys {
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
