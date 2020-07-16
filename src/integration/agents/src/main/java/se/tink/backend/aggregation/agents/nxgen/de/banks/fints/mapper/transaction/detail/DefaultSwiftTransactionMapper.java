@@ -32,6 +32,9 @@ public class DefaultSwiftTransactionMapper implements TransactionMapper {
     private static final String MT940_DETAILS_FIELD = ":86:";
     private static final String MT940_TRANSACTION_TYPE_SUBFIELD = "00";
 
+    // Key ?23 causes additional not wanted space in description. It's simply sign of CR
+    private static final String CARRIAGE_RETURN_KEY = "?23";
+
     public List<AggregationTransaction> parse(String rawMT940) {
         List<RawMT940Transaction> rawTransactions = extractRawTransactions(rawMT940);
         return rawTransactions.stream().map(this::toTinkTransaction).collect(Collectors.toList());
@@ -131,7 +134,9 @@ public class DefaultSwiftTransactionMapper implements TransactionMapper {
 
     protected Map<String, String> getRawDetails(RawMT940Transaction rawMT940Transaction) {
         Map<String, String> result = new TreeMap<>();
-        String[] elements = rawMT940Transaction.details.split("\\?");
+
+        String details = cleanFromUnusedKeys(rawMT940Transaction.details);
+        String[] elements = details.split("\\?");
 
         for (String s : elements) {
             if (s.length() < 2) {
@@ -143,5 +148,9 @@ public class DefaultSwiftTransactionMapper implements TransactionMapper {
         }
 
         return result;
+    }
+
+    private String cleanFromUnusedKeys(String details) {
+        return details.replace(CARRIAGE_RETURN_KEY, "");
     }
 }
