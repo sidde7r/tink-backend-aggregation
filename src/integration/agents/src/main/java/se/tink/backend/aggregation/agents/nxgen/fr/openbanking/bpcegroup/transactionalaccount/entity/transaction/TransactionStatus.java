@@ -2,5 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transa
 
 public enum TransactionStatus {
     PDNG,
-    BOOK
+    BOOK,
+    OTHR
 }
