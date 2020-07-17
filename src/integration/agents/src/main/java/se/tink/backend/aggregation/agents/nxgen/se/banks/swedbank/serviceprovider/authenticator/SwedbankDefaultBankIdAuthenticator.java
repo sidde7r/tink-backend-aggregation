@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator;
 
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,6 +143,8 @@ public class SwedbankDefaultBankIdAuthenticator
 
     private void completeBankIdLogin(CollectBankIdResponse collectBankIdResponse)
             throws AuthenticationException {
+        // theory: if we request too soon, we might get SESSION_INVALIDATED
+        Uninterruptibles.sleepUninterruptibly(500, TimeUnit.MILLISECONDS);
         apiClient.completeAuthentication(collectBankIdResponse.getLinks().getNextOrThrow());
     }
 
