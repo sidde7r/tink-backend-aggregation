@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class HandelsbankenBaseCreditCardFetcher
@@ -37,17 +36,13 @@ public class HandelsbankenBaseCreditCardFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             CreditCardAccount account, Date fromDate, Date toDate) {
-        fromDate = checkMaxDate(fromDate);
 
-        try {
-            return apiClient.getCreditTransactions(account.getApiIdentifier(), fromDate, toDate);
-        } catch (HttpResponseException e) {
-            String exceptionMessage = e.getResponse().getBody(String.class);
-            if (exceptionMessage.contains("Invalid time interval")) {
-                return PaginatorResponseImpl.createEmpty(false);
-            }
-            throw e;
+        fromDate = checkMaxDate(fromDate);
+        if (fromDate.compareTo(toDate) >= 0) {
+            return PaginatorResponseImpl.createEmpty();
         }
+
+        return apiClient.getCreditTransactions(account.getApiIdentifier(), fromDate, toDate);
     }
 
     private Date checkMaxDate(Date fromDate) {

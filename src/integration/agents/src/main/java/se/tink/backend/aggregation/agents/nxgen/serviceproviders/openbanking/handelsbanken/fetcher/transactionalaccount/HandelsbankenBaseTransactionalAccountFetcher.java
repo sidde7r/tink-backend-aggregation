@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class HandelsbankenBaseTransactionalAccountFetcher
@@ -70,16 +69,11 @@ public class HandelsbankenBaseTransactionalAccountFetcher
             TransactionalAccount account, Date fromDate, Date toDate) {
 
         fromDate = checkMaxDate(fromDate);
-
-        try {
-            return apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
-        } catch (HttpResponseException e) {
-            String exceptionMessage = e.getResponse().getBody(String.class);
-            if (exceptionMessage.contains("Invalid time interval")) {
-                return PaginatorResponseImpl.createEmpty(false);
-            }
-            throw e;
+        if (fromDate.compareTo(toDate) >= 0) {
+            return PaginatorResponseImpl.createEmpty();
         }
+
+        return apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
     }
 
     private Date checkMaxDate(Date fromDate) {
