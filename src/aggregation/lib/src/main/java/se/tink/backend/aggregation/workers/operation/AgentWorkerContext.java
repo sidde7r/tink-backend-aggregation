@@ -74,6 +74,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private SupplementalInformationController supplementalInformationController;
     private ProviderSessionCacheController providerSessionCacheController;
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
+    protected final String correlationId;
 
     private static class SupplementalInformationMetrics {
         private static final String CLUSTER_LABEL = "client_cluster";
@@ -133,6 +134,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             ControllerWrapper controllerWrapper,
             String clusterId,
             String appId,
+            String correlationId,
             RegulatoryRestrictions regulatoryRestrictions) {
 
         this.accountDataCache = new AccountDataCache();
@@ -142,6 +144,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.accountsToAggregate = Lists.newArrayList();
         this.psd2PaymentAccountClassifier =
                 Psd2PaymentAccountClassifier.createWithMetrics(metricRegistry);
+        this.correlationId = correlationId;
 
         this.request = request;
 
@@ -825,5 +828,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 request.getProvider().getFinancialInstitutionId(),
                 value,
                 expiredTimeInSeconds);
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
     }
 }

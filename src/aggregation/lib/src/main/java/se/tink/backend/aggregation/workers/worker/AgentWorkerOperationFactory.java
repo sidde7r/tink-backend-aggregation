@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
-import se.tink.backend.aggregation.events.AccountHoldersRefreshedEventProducer;
+import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
@@ -128,7 +128,7 @@ public class AgentWorkerOperationFactory {
     private AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private TppSecretsServiceClient tppSecretsServiceClient;
     private InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
-    private final AccountHoldersRefreshedEventProducer accountHoldersRefreshedEventProducer;
+    private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
 
     private RegulatoryRestrictions regulatoryRestrictions;
 
@@ -161,7 +161,7 @@ public class AgentWorkerOperationFactory {
             ProviderTierConfiguration providerTierConfiguration,
             @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands,
             @Nullable RegulatoryRestrictions regulatoryRestrictions,
-            AccountHoldersRefreshedEventProducer accountHoldersRefreshedEventProducer) {
+            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
         this.cacheClient = cacheClient;
 
         this.cryptoConfigurationDao = cryptoConfigurationDao;
@@ -192,7 +192,7 @@ public class AgentWorkerOperationFactory {
         this.providerTierConfiguration = providerTierConfiguration;
         this.shouldAddExtraCommands = shouldAddExtraCommands;
         this.regulatoryRestrictions = regulatoryRestrictions;
-        this.accountHoldersRefreshedEventProducer = accountHoldersRefreshedEventProducer;
+        this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(CredentialsRequest request) {
@@ -329,7 +329,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -451,7 +451,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -537,7 +537,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         String operationName;
         List<AgentWorkerCommand> commands;
 
@@ -605,7 +605,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         context.setWhitelistRefresh(true);
 
         String operationName = "execute-whitelisted-transfer";
@@ -769,7 +769,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -810,7 +810,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -850,7 +850,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -909,7 +909,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -990,7 +990,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         context.setWhitelistRefresh(true);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -1115,7 +1115,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         context.setWhitelistRefresh(true);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -1304,7 +1304,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer);
+                        accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -1369,7 +1369,7 @@ public class AgentWorkerOperationFactory {
                         agentWorkerOperationState,
                         this.providerTierConfiguration,
                         regulatoryRestrictions,
-                        accountHoldersRefreshedEventProducer));
+                        accountInformationServiceEventsProducer));
     }
 
     private static String generateOrGetCorrelationId(String correlationId) {

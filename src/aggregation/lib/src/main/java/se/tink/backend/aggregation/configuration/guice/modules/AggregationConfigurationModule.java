@@ -53,10 +53,9 @@ public class AggregationConfigurationModule extends AbstractModule {
         bindConstant()
                 .annotatedWith(Names.named("sendAgentRefreshEvents"))
                 .to(configuration.isSendAgentRefreshEvents());
-
         bindConstant()
-                .annotatedWith(Names.named("sendAccountHoldersRefreshedEvents"))
-                .to(configuration.isSendAccountHoldersRefreshedEvents());
+                .annotatedWith(Names.named("accountInformationServiceEvents"))
+                .to(configuration.isSendAccountInformationServiceEvents());
 
         bind(CacheConfiguration.class)
                 .toProvider(Providers.of(configuration.getCacheConfiguration()));

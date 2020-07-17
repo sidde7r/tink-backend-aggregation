@@ -35,7 +35,7 @@ import se.tink.backend.aggregation.compliance.regulatory_restrictions.Regulatory
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
-import se.tink.backend.aggregation.events.AccountHoldersRefreshedEventProducer;
+import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
@@ -52,7 +52,7 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class AgentWorkerCommandContext extends AgentWorkerContext
         implements SetAccountsToAggregateContext {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
-    private final AccountHoldersRefreshedEventProducer accountHoldersRefreshedEventProducer;
+    private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
 
@@ -76,7 +76,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     protected long timePutOnQueue;
     protected AgentsServiceConfiguration agentsServiceConfiguration;
     protected List<String> uniqueIdOfUserSelectedAccounts;
-    protected final String correlationId;
 
     public AgentWorkerCommandContext(
             CredentialsRequest request,
@@ -91,7 +90,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
             String appId,
             String correlationId,
             RegulatoryRestrictions regulatoryRestrictions,
-            AccountHoldersRefreshedEventProducer accountHoldersRefreshedEventProducer) {
+            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
         super(
                 request,
                 metricRegistry,
@@ -102,11 +101,11 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                 controllerWrapper,
                 clusterId,
                 appId,
+                correlationId,
                 regulatoryRestrictions);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
-        this.correlationId = correlationId;
 
         Provider provider = request.getProvider();
 
@@ -137,7 +136,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                                 .label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
-        this.accountHoldersRefreshedEventProducer = accountHoldersRefreshedEventProducer;
+        this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
     }
 
     // TODO: We should do this some other way. This is a hack we can use for now.
@@ -196,10 +195,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         processAccountsRequest.setUserId(request.getUser().getId());
 
         controllerWrapper.processAccounts(processAccountsRequest);
-    }
-
-    public String getCorrelationId() {
-        return correlationId;
     }
 
     public CuratorFramework getCoordinationClient() {
@@ -355,7 +350,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     }
 
     private void sendAccountHoldersRefreshedEvent(String tinkId, AccountHolder accountHolder) {
-        accountHoldersRefreshedEventProducer.sendAccountHoldersRefreshedEvent(
+        accountInformationServiceEventsProducer.sendAccountHoldersRefreshedEvent(
                 getClusterId(),
                 getAppId(),
                 getRequest().getUser().getId(),
