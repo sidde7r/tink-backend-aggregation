@@ -78,7 +78,7 @@ public final class CmcicConstants {
 
     public static class FormValues {
         public static final String BENEFICIARY_NAME = "Payment Receiver";
-        public static final String INSTRUCTION_ID = "MyInstrId";
+        public static final String CREDITOR_NAME = "Payment Initiator";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String CLIENT_CREDENTIALS = "client_credentials";

@@ -304,8 +304,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         Payment payment = paymentRequest.getPayment();
 
         PartyIdentificationEntity initiatingParty =
-                new PartyIdentificationEntity(
-                        payment.getDebtor().getAccountNumber(), null, null, null);
+                new PartyIdentificationEntity(FormValues.CREDITOR_NAME, null, null, null);
 
         PaymentTypeInformationEntity paymentTypeInformation =
                 new PaymentTypeInformationEntity(null, ServiceLevelCodeEntity.SEPA, null, null);
