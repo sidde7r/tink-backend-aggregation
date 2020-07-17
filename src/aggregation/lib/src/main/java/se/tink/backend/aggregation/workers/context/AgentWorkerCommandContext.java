@@ -312,11 +312,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
             Account account = accountOpt.get();
             List<Transaction> accountTransactions = transactionsByAccountBankId.get(bankId);
-            if (Objects.isNull(accountTransactions) || accountTransactions.isEmpty()) {
-                // Discard null (should not happen) and empty lists.
-                continue;
+            // Discard null (should not happen) and empty lists.
+            if (Objects.nonNull(accountTransactions) && !accountTransactions.isEmpty()) {
+                result.put(account, accountTransactions);
             }
-            result.put(account, accountTransactions);
         }
 
         return result;
