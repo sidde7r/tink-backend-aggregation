@@ -1,5 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -13,12 +14,22 @@ public class PendingEntity {
     private String remittanceInformationUnstructured;
     private BalanceAmountEntity transactionAmount;
     private Date transactionDate;
+    private String merchantName;
+    private String text;
+
+    @JsonIgnore
+    private String getDescription() {
+        if (remittanceInformationUnstructured != null) {
+            return remittanceInformationUnstructured;
+        }
+        return merchantName != null ? merchantName : text;
+    }
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(transactionAmount.toAmount())
+                .setAmount(transactionAmount.getAmount())
                 .setDate(transactionDate)
-                .setDescription(remittanceInformationUnstructured)
+                .setDescription(getDescription())
                 .setPending(true)
                 .build();
     }
