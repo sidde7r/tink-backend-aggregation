@@ -244,6 +244,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
             Map<Account, List<TransferDestinationPattern>> first,
             Map<Account, List<TransferDestinationPattern>> second) {
         if (first.size() != second.size()) {
+            log.warn(
+                    "[compareOldAndNewAccountDataCache] TransferDestinationPatterns maps are not the same len ({}, {})",
+                    first.size(),
+                    second.size());
             return false;
         }
 
@@ -261,10 +265,29 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                             }
 
                             if (firstList.size() != secondList.size()) {
+                                log.warn(
+                                        "[compareOldAndNewAccountDataCache] TransferDestinationPatterns are not the same len ({}, {})",
+                                        firstList.size(),
+                                        secondList.size());
                                 return false;
                             }
 
-                            return firstList.containsAll(secondList);
+                            return firstList.stream()
+                                    .allMatch(
+                                            pattern -> {
+                                                if (Objects.isNull(pattern)) {
+                                                    log.warn(
+                                                            "[compareOldAndNewAccountDataCache] Pattern is null!");
+                                                    return false;
+                                                }
+                                                if (!secondList.contains(pattern)) {
+                                                    log.warn(
+                                                            "[compareOldAndNewAccountDataCache] Pattern '{}' does not exist!",
+                                                            pattern);
+                                                    return false;
+                                                }
+                                                return true;
+                                            });
                         });
     }
 
