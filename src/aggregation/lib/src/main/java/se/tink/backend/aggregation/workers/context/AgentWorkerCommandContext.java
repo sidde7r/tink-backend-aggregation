@@ -261,10 +261,29 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                             }
 
                             if (firstList.size() != secondList.size()) {
+                                log.warn(
+                                        "[compareOldAndNewAccountDataCache] TransferDestinationPatterns not the same len ({}, {})",
+                                        firstList.size(),
+                                        secondList.size());
                                 return false;
                             }
 
-                            return firstList.containsAll(secondList);
+                            return firstList.stream()
+                                    .allMatch(
+                                            pattern -> {
+                                                if (Objects.isNull(pattern)) {
+                                                    log.warn(
+                                                            "[compareOldAndNewAccountDataCache] Pattern is null!");
+                                                    return false;
+                                                }
+                                                if (!secondList.contains(pattern)) {
+                                                    log.warn(
+                                                            "[compareOldAndNewAccountDataCache] Pattern '{}' does not exist!",
+                                                            pattern);
+                                                    return false;
+                                                }
+                                                return true;
+                                            });
                         });
     }
 
