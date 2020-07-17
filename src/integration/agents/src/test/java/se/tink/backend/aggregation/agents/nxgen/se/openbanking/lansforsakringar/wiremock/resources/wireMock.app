@@ -82,7 +82,7 @@ Content-Length: 2006
 {"accounts":[{"resourceId":"resourceId","bban":"90200044000","name":"Sparkonto","product":"Sparkonto","balances":[{"balanceAmount":{"amount":5.00,"currency":"SEK"},"balanceType":"AUTHORIZED"},{"balanceAmount":{"amount":5.00,"currency":"SEK"},"balanceType":"EXPECTED"}],"currency":"SEK","allowedTransactionTypes":["DOMESTIC_CREDIT_TRANSFERS"],"_links":{"account":{"href":"/openbanking/ais/v1/accounts/resourceId"},"transactions":{"href":"/openbanking/ais/v1/accounts/resourceId/transactions"},"balances":{"href":"/openbanking/ais/v1/accounts/resourceId/balances"}}},{"resourceId":"resourceId_2","bban":"90000670000","name":"Privatkonto","product":"Privatkonto","balances":[{"balanceAmount":{"amount":6098.39,"currency":"SEK"},"balanceType":"AUTHORIZED"},{"balanceAmount":{"amount":6098.39,"currency":"SEK"},"balanceType":"EXPECTED"}],"currency":"SEK","allowedTransactionTypes":["DOMESTIC_CREDIT_TRANSFERS","DOMESTIC_GIROS","CROSS_BORDER_CREDIT_TRANSFERS"],"_links":{"account":{"href":"/openbanking/ais/v1/accounts/resourceId_2"},"transactions":{"href":"/openbanking/ais/v1/accounts/resourceId_2/transactions"},"balances":{"href":"/openbanking/ais/v1/accounts/resourceId_2/balances"}}},{"resourceId":"resourceId_3","bban":"000000","pan":["****1111"],"product":"Kreditkort Privat","balances":[{"balanceAmount":{"amount":28335.45,"currency":"SEK"},"balanceType":"AUTHORIZED"}],"currency":"SEK","_links":{"account":{"href":"/openbanking/ais/v1/accounts/resourceId_3"},"transactions":{"href":"/openbanking/ais/v1/accounts/resourceId_3/transactions"},"balances":{"href":"/openbanking/ais/v1/accounts/resourceId_3/balances"}}}]}
 
 REQUEST 6 MATCH A_2
-GET https://api.bank.lansforsakringar.se:443/openbanking/ais/v1/accounts/resourceId/transactions?dateFrom=1991-03-10Z&bookingStatus=both
+GET https://api.bank.lansforsakringar.se:443/openbanking/ais/v1/accounts/resourceId/transactions?dateFrom=1991-03-10&bookingStatus=both
 Accept: application/json
 Content-Type: application/json
 PSU-IP-Address: 127.0.0.1
@@ -118,7 +118,7 @@ Cache-Control: no-cache, no-store, private, proxy-revalidate
 
 
 REQUEST 8
-GET https://api.bank.lansforsakringar.se:443/openbanking/ais/v1/accounts/resourceId_2/transactions?dateFrom=1991-03-10Z&bookingStatus=both
+GET https://api.bank.lansforsakringar.se:443/openbanking/ais/v1/accounts/resourceId_2/transactions?dateFrom=1991-03-10&bookingStatus=both
 Accept: application/json
 Content-Type: application/json
 PSU-IP-Address: 127.0.0.1
@@ -137,7 +137,7 @@ Content-Length: 7156
 
 
 REQUEST 10
-GET https://api.bank.lansforsakringar.se:443/openbanking/ais/v1/accounts/resourceId_3/transactions?dateFrom=1991-03-10Z&bookingStatus=both
+GET https://api.bank.lansforsakringar.se:443/openbanking/ais/v1/accounts/resourceId_3/transactions?dateFrom=1991-03-10&bookingStatus=both
 Accept: application/json
 Content-Type: application/json
 PSU-IP-Address: 127.0.0.1

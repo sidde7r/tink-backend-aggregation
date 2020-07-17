@@ -125,8 +125,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
                 new LansforsakringarTransactionalAccountFetcher(apiClient);
 
         final LansforsakringarTransactionFetcher<TransactionalAccount> transactionFetcher =
-                new LansforsakringarTransactionFetcher<TransactionalAccount>(
-                        apiClient, localDateTimeSource);
+                new LansforsakringarTransactionFetcher<>(apiClient, localDateTimeSource);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

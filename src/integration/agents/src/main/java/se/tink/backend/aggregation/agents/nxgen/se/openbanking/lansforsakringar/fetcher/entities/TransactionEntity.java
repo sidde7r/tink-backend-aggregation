@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class PendingEntity {
+public class TransactionEntity {
 
     private String bookingDate;
     private DebtorAccountEntity debtorAccount;
@@ -17,6 +17,38 @@ public class PendingEntity {
     private String merchantName;
     private String text;
 
+    public String getRemittanceInformationUnstructured() {
+        return remittanceInformationUnstructured;
+    }
+
+    public BalanceAmountEntity getTransactionAmount() {
+        return transactionAmount;
+    }
+
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getBookingDate() {
+        return bookingDate;
+    }
+
+    public DebtorAccountEntity getDebtorAccount() {
+        return debtorAccount;
+    }
+
+    public String getEntryReference() {
+        return entryReference;
+    }
+
     @JsonIgnore
     private String getDescription() {
         if (remittanceInformationUnstructured != null) {
@@ -25,12 +57,23 @@ public class PendingEntity {
         return merchantName != null ? merchantName : text;
     }
 
-    public Transaction toTinkTransaction() {
+    @JsonIgnore
+    public Transaction toTinkTransaction(boolean pending) {
         return Transaction.builder()
                 .setAmount(transactionAmount.getAmount())
                 .setDate(transactionDate)
                 .setDescription(getDescription())
-                .setPending(true)
+                .setPending(pending)
                 .build();
+    }
+
+    @JsonIgnore
+    public Transaction toBookedTinkTransaction() {
+        return toTinkTransaction(false);
+    }
+
+    @JsonIgnore
+    public Transaction toPendinginkTransaction() {
+        return toTinkTransaction(true);
     }
 }

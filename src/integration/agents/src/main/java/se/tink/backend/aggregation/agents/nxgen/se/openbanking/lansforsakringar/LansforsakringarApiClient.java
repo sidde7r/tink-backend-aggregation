@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar;
 
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -220,14 +218,16 @@ public final class LansforsakringarApiClient {
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .queryParam(
                         QueryKeys.DATE_FROM,
-                        DateTimeFormatter.ISO_OFFSET_DATE.format(
-                                localDateTimeSource.now().minusMonths(13).atOffset(ZoneOffset.UTC)))
+                        localDateTimeSource
+                                .now()
+                                .minusMonths(LansforsakringarConstants.MONTHS_TO_FETCH)
+                                .toLocalDate()
+                                .toString())
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
     }
 
-    public <T extends Account> PaginatorResponse getTransactions(
-            T account, Date fromDate, Date toDate) {
+    public <T extends Account> PaginatorResponse getTransactions(T account, Date fromDate) {
         final URL url =
                 new URL(Urls.GET_TRANSACTIONS)
                         .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());

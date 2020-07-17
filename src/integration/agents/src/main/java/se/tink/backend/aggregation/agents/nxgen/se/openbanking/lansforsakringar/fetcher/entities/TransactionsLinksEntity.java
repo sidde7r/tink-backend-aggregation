@@ -8,6 +8,10 @@ public class TransactionsLinksEntity {
     private LinksDetailsEntity first;
     private LinksDetailsEntity next;
 
+    public LinksDetailsEntity getFirst() {
+        return first;
+    }
+
     public LinksDetailsEntity getNext() {
         return next;
     }

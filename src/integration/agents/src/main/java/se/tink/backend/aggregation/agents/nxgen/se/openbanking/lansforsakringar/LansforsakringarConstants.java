@@ -9,6 +9,8 @@ import se.tink.libraries.payment.enums.PaymentType;
 
 public abstract class LansforsakringarConstants {
 
+    public static final int MONTHS_TO_FETCH = 13;
+
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
             TypeMapper.<PaymentStatus>builder().put(PaymentStatus.PENDING, "PDNG", "ACTC").build();
 

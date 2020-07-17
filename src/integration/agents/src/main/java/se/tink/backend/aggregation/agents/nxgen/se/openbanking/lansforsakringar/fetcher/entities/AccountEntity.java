@@ -23,14 +23,28 @@ public class AccountEntity {
     private LinksEntity links;
 
     private List<String> pan;
+
     private List<String> allowedTransactionTypes;
+    private String href;
     private List<BalanceEntity> balances;
     private String bban;
     private String currency;
-    private String href;
     private String name;
     private String product;
     private String resourceId;
+
+    @JsonIgnore
+    public LinksEntity getLinks() {
+        return links;
+    }
+
+    public List<String> getAllowedTransactionTypes() {
+        return allowedTransactionTypes;
+    }
+
+    public String getHref() {
+        return href;
+    }
 
     private String getPan() {
         return pan.stream()
@@ -45,6 +59,10 @@ public class AccountEntity {
                 .orElseThrow(() -> new IllegalStateException("No balance found in the response"));
     }
 
+    private String getName() {
+        return Strings.isNullOrEmpty(name) ? bban : name;
+    }
+
     @JsonIgnore
     public boolean isCreditCardAccount() {
         return "Kreditkort Privat".equalsIgnoreCase(product);
@@ -55,6 +73,7 @@ public class AccountEntity {
         return !(isCreditCardAccount());
     }
 
+    @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return CheckingAccount.builder()
                 // There is no clearing number
@@ -68,16 +87,12 @@ public class AccountEntity {
                 .build();
     }
 
-    private String getName() {
-        return Strings.isNullOrEmpty(name) ? bban : name;
-    }
-
     private Amount getAvailableBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(BalanceEntity::isAvailableBalance)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .orElse(BalanceEntity.Default);
+                .orElse(BalanceEntity.DEFAULT);
     }
 
     public CreditCardAccount toTinkCreditCardAccount() {
