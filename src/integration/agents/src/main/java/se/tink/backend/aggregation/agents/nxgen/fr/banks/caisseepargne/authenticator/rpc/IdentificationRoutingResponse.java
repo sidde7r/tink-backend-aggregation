@@ -76,6 +76,7 @@ public class IdentificationRoutingResponse {
         return characteristics.getBankId();
     }
 
+    @JsonIgnore
     public String getUserCode() {
         if (Objects.isNull(characteristics)) {
             return "";

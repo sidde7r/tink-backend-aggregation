@@ -30,6 +30,7 @@ public class OAuth2V2AuthorizeResponse {
                 && !Strings.isNullOrEmpty(parameters.getSAMLRequest());
     }
 
+    @JsonIgnore
     public String getSAMLRequest() {
         if (!isValid()) {
             return "";
