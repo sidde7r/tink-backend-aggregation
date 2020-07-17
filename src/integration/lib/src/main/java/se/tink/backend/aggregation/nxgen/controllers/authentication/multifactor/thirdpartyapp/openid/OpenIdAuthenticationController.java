@@ -6,7 +6,6 @@ import com.google.common.base.Strings;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -124,18 +123,6 @@ public class OpenIdAuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-
-        // added to force users to relogin to fetch IdentityData for UKOB
-        persistentStorage
-                .get(PersistentStorageKeys.AIS_ACCOUNT_PERMISSIONS_GRANTED, List.class)
-                .orElseThrow(
-                        () -> {
-                            logger.warn(
-                                    "Failed to retrieve identity data permission from "
-                                            + "persistent storage. So forcing user to authenticate again");
-                            return SessionError.SESSION_EXPIRED.exception();
-                        });
-
         OAuth2Token oAuth2Token =
                 persistentStorage
                         .get(
@@ -150,71 +137,63 @@ public class OpenIdAuthenticationController
 
         if (oAuth2Token.hasAccessExpired()) {
             if (!oAuth2Token.canRefresh()) {
-                logger.info("Access and refresh token expired.");
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-
-            logger.info(
-                    String.format(
-                            "Trying to refresh access token. Issued: [%s] Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
-                            new Date(oAuth2Token.getIssuedAt() * 1000),
-                            new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
-                            !oAuth2Token.isRefreshNullOrEmpty(),
-                            oAuth2Token.hasRefreshExpire()
-                                    ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
-                                    : "N/A"));
-
-            // Refresh token is not always present, if it's absent we fall back to the manual
-            // authentication again.
-            String refreshToken =
-                    oAuth2Token
-                            .getRefreshToken()
-                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-
-            try {
-
-                OAuth2Token refreshedOAuth2Token =
-                        apiClient.refreshAccessToken(
-                                refreshToken, authenticator.getClientCredentialScope());
-
-                if (!refreshedOAuth2Token.isValid()) {
-                    throw SessionError.SESSION_EXPIRED.exception();
-                }
-
-                if (refreshedOAuth2Token.hasRefreshExpire()) {
-                    credentials.setSessionExpiryDate(
-                            OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                                    refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
-                }
-
-                oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
-
-            } catch (HttpResponseException e) {
-
                 logger.info(
-                        String.format("Refresh failed: %s", e.getResponse().getBody(String.class)));
-                // This will "fix" the invalid_grant error temporarily while waiting for more log
-                // data. It might also filter some other errors.
+                        "Access token has expired and refreshing impossible. Expiring the session.");
                 throw SessionError.SESSION_EXPIRED.exception();
+            } else {
+                OAuth2Token refreshedToken = refreshAccessToken(oAuth2Token);
+                saveAccessToken(refreshedToken);
             }
-
-            logger.info(
-                    String.format(
-                            "Refresh success. New token: Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
-                            new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
-                            !oAuth2Token.isRefreshNullOrEmpty(),
-                            oAuth2Token.hasRefreshExpire()
-                                    ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
-                                    : "N/A"));
-
-            // Store the new accessToken on the persistent storage again.
-            saveAccessToken(oAuth2Token);
-
-            // fall through.
         }
 
         // as AutoAuthenticate will only happen in case of Ais so need to instantiate Ais filter
         apiClient.instantiateAisAuthFilter(oAuth2Token);
+    }
+
+    private OAuth2Token refreshAccessToken(OAuth2Token oAuth2Token) throws SessionException {
+        logger.info(
+                "Trying to refresh access token. Issued: [{}] Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
+                new Date(oAuth2Token.getIssuedAt() * 1000),
+                new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
+                !oAuth2Token.isRefreshNullOrEmpty(),
+                oAuth2Token.hasRefreshExpire()
+                        ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
+                        : "N/A");
+
+        String refreshToken = oAuth2Token.getRefreshToken().get();
+        try {
+            OAuth2Token refreshedOAuth2Token =
+                    apiClient.refreshAccessToken(
+                            refreshToken, authenticator.getClientCredentialScope());
+
+            if (!refreshedOAuth2Token.isValid()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
+            if (refreshedOAuth2Token.hasRefreshExpire()) {
+                credentials.setSessionExpiryDate(
+                        OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                                refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
+            }
+
+            oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
+
+        } catch (HttpResponseException e) {
+
+            logger.error("Refresh failed: {}", e.getResponse().getBody(String.class));
+            // This will "fix" the invalid_grant error temporarily while waiting for more log
+            // data. It might also filter some other errors.
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        logger.info(
+                "Refresh success. New token: Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
+                new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
+                !oAuth2Token.isRefreshNullOrEmpty(),
+                oAuth2Token.hasRefreshExpire()
+                        ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
+                        : "N/A");
+        return oAuth2Token;
     }
 
     @Override
@@ -279,14 +258,18 @@ public class OpenIdAuthenticationController
                                 TimeUnit.MINUTES)
                         .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
 
-        handleErrorCallback(callbackData);
+        handlePossibleErrors(callbackData);
 
         String code =
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.CODE)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "callbackData did not contain code."));
+                        .orElseGet(
+                                () -> {
+                                    logger.error(
+                                            "callbackData did not contain code. Data received: {}",
+                                            SerializationUtils.serializeToString(callbackData));
+                                    throw new IllegalStateException(
+                                            "callbackData did not contain code.");
+                                });
 
         // todo: verify idToken{s_hash, c_hash}
         // TODO: Right now many banks don't give us idToken to verify, enable when this standard is
@@ -351,7 +334,7 @@ public class OpenIdAuthenticationController
         return Optional.of(value);
     }
 
-    private void handleErrorCallback(Map<String, String> callbackData)
+    private void handlePossibleErrors(Map<String, String> callbackData)
             throws AuthenticationException {
         Optional<String> error =
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR);
@@ -376,7 +359,7 @@ public class OpenIdAuthenticationController
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
                 || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType)) {
 
-            logger.info("OpenId {} callback: {}", errorType, serializedCallbackData);
+            logger.error("OpenId {} callback: {}", errorType, serializedCallbackData);
 
             // Store error information to make it possible for agent to determine cause and
             // give end user a proper error message.
