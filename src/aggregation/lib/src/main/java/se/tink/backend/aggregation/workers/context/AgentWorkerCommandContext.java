@@ -244,6 +244,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
             Map<Account, List<TransferDestinationPattern>> first,
             Map<Account, List<TransferDestinationPattern>> second) {
         if (first.size() != second.size()) {
+            log.warn(
+                    "[compareOldAndNewAccountDataCache] TransferDestinationPatterns maps are not the same len ({}, {})",
+                    first.size(),
+                    second.size());
             return false;
         }
 
@@ -262,7 +266,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
                             if (firstList.size() != secondList.size()) {
                                 log.warn(
-                                        "[compareOldAndNewAccountDataCache] TransferDestinationPatterns not the same len ({}, {})",
+                                        "[compareOldAndNewAccountDataCache] TransferDestinationPatterns are not the same len ({}, {})",
                                         firstList.size(),
                                         secondList.size());
                                 return false;
