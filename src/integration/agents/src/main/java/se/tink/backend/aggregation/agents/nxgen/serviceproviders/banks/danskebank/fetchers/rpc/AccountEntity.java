@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.models.Loan.Type;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -149,7 +151,20 @@ public class AccountEntity {
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
                 .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
                 .sourceInfo(createAccountSourceInfo())
+                .setDetails(
+                        isMortgage(configuration)
+                                ? LoanDetails.builder(LoanDetails.Type.MORTGAGE)
+                                        .setLoanNumber(accountNoExt)
+                                        .build()
+                                : null)
                 .build();
+    }
+
+    private boolean isMortgage(final DanskeBankConfiguration configuration) {
+        return configuration
+                .getLoanAccountTypes()
+                .getOrDefault(accountProduct, Type.OTHER)
+                .equals(Type.MORTGAGE);
     }
 
     public CreditCardAccount toCreditCardAccount(DanskeBankConfiguration configuration) {
