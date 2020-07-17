@@ -61,6 +61,7 @@ public abstract class LansforsakringarConstants {
         public static final String ACCESS_TOKEN = "access-token";
         public static final String AUTHORIZATION_ID = "authorisationId";
         public static final String CONSENT_ID = "consentId";
+        public static final String ACCOUNTS = "accounts";
     }
 
     public static class QueryKeys {

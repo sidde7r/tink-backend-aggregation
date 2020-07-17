@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar;
 
-import java.util.Collection;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,11 +34,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetCrossBorderPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetDomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetPaymentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.rpc.GetAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -191,14 +194,13 @@ public final class LansforsakringarApiClient {
                 .toTinkToken();
     }
 
-    public Collection<TransactionalAccount> getAccounts() {
+    public GetAccountsResponse getAccounts() {
         return createRequestInSession(Urls.GET_ACCOUNTS)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
-                .get(GetAccountsResponse.class)
-                .toTinkAccounts();
+                .get(GetAccountsResponse.class);
     }
 
     public TransactionKeyPaginatorResponse<String> getTransactionsForKey(String key) {
@@ -208,8 +210,8 @@ public final class LansforsakringarApiClient {
                 .get(GetTransactionsResponse.class);
     }
 
-    public TransactionKeyPaginatorResponse<String> getTransactionsForAccount(
-            TransactionalAccount account) {
+    public <T extends Account> TransactionKeyPaginatorResponse<String> getTransactionsForAccount(
+            T account, LocalDateTimeSource localDateTimeSource) {
         final URL url =
                 new URL(Urls.GET_TRANSACTIONS)
                         .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());
@@ -218,7 +220,22 @@ public final class LansforsakringarApiClient {
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .queryParam(
                         QueryKeys.DATE_FROM,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
+                        DateTimeFormatter.ISO_OFFSET_DATE.format(
+                                localDateTimeSource.now().minusMonths(13).atOffset(ZoneOffset.UTC)))
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
+                .get(GetTransactionsResponse.class);
+    }
+
+    public <T extends Account> PaginatorResponse getTransactions(
+            T account, Date fromDate, Date toDate) {
+        final URL url =
+                new URL(Urls.GET_TRANSACTIONS)
+                        .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());
+
+        return createRequestInSession(url)
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .queryParam(
+                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
     }
