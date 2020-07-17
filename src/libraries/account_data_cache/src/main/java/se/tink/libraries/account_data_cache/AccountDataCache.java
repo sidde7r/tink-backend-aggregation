@@ -89,4 +89,10 @@ public class AccountDataCache {
                 .map(AccountData::getAccount)
                 .collect(Collectors.toList());
     }
+
+    public Map<Account, List<Transaction>> getCurrentTransactions() {
+        return getFilteredAccountData()
+                .filter(accountData -> !accountData.getTransactions().isEmpty())
+                .collect(Collectors.toMap(AccountData::getAccount, AccountData::getTransactions));
+    }
 }
