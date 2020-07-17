@@ -108,6 +108,7 @@ public class CaisseEpargneConstants {
         public static final String RESPONSE_STATUS_SUCCESS = "0";
         public static final String AUTHENTICATION_LOCKED = "AUTHENTICATION_LOCKED";
         public static final String AUTHENTICATION_SUCCESS = "AUTHENTICATION_SUCCESS";
+        public static final String AUTHENTICATION = "AUTHENTICATION";
     }
 
     public static class RequestValues {
@@ -142,6 +143,10 @@ public class CaisseEpargneConstants {
         public static final String TOKEN = "token";
         public static final String IDENTIFICATION_ROUTING_RESPONSE =
                 "identificationRoutingResponse";
+        public static final String CREDENTIALS_RESPONSE = "credentialsResponse";
+        public static final String BANK_ID = "bankId";
+        public static final String SAML_TRANSACTION_PATH = "samlTransactionPath";
+        public static final String COULD_AUTO_AUTHENTICATE = "couldAutoAuthenticate";
         static final String TERM_ID = "termId";
         public static final String FINAL_AUTH_RESPONSE = "finalAuthResponse";
         static final String REDIRECT_LOCATION = "redirectLocation";

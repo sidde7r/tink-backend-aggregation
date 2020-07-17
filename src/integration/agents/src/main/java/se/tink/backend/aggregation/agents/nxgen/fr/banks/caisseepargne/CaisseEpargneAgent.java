@@ -12,17 +12,16 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.CaisseEpargnePasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.CaisseEpargneAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.executor.beneficiary.CaisseEpargneCreateBeneficiaryExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.CaisseEpargneTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.CaisseEpragneTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transferdestination.CaisseEpargneTransferDestinationsFetcher;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -35,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilte
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 
-public class CaisseEpargneAgent extends NextGenerationAgent
+public class CaisseEpargneAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -44,6 +43,7 @@ public class CaisseEpargneAgent extends NextGenerationAgent
     private final Storage instanceStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final SupplementalInformationProviderImpl supplementalInformationProvider;
 
     @Inject
     protected CaisseEpargneAgent(AgentComponentProvider componentProvider) {
@@ -54,6 +54,8 @@ public class CaisseEpargneAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+        this.supplementalInformationProvider =
+                new SupplementalInformationProviderImpl(supplementalRequester, request);
     }
 
     private void configureHttpClient(TinkHttpClient client) {
@@ -81,12 +83,6 @@ public class CaisseEpargneAgent extends NextGenerationAgent
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
                 metricRefreshController, new CaisseEpargneTransferDestinationsFetcher(apiClient));
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                new CaisseEpargnePasswordAuthenticator(apiClient));
     }
 
     @Override
@@ -130,9 +126,12 @@ public class CaisseEpargneAgent extends NextGenerationAgent
         return Optional.of(
                 new CreateBeneficiaryController(
                         new CaisseEpargneCreateBeneficiaryExecutor(
-                                apiClient,
-                                new SupplementalInformationProviderImpl(
-                                        supplementalRequester, request),
-                                instanceStorage)));
+                                apiClient, supplementalInformationProvider, instanceStorage)));
+    }
+
+    @Override
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        return new CaisseEpargneAuthenticator(
+                apiClient, instanceStorage, supplementalInformationProvider, persistentStorage);
     }
 }

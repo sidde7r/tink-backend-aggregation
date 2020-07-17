@@ -8,14 +8,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.ResponseValues;
-import se.tink.libraries.streamutils.StreamUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Step {
@@ -24,16 +21,7 @@ public class Step {
     private Phase phase;
 
     @JsonProperty("validationUnits")
-    private List<Map<String, List<ValidationUnit>>> validationUnits;
-
-    @JsonIgnore
-    public Optional<String> getValidationId() {
-        return Optional.ofNullable(
-                validationUnits.stream()
-                        .map(Map::keySet)
-                        .flatMap(Set::stream)
-                        .collect(StreamUtils.toSingleton()));
-    }
+    public List<Map<String, List<ValidationUnit>>> validationUnits;
 
     @JsonIgnore
     public List<ValidationUnit> getValidationUnits() {
@@ -45,15 +33,26 @@ public class Step {
         return virtualKeyboardValidationItems;
     }
 
+    @JsonIgnore
+    public boolean isStillAuthenticating() {
+        if (Objects.isNull(phase)) {
+            return false;
+        }
+        return ResponseValues.AUTHENTICATION.equalsIgnoreCase(phase.getState());
+    }
+
+    @JsonIgnore
     public void throwIfFailedAuthentication() throws LoginException, AuthorizationException {
         throwExeption();
     }
 
+    @JsonIgnore
     public void throwBeneficiaryExceptionIfFailedAuthentication()
             throws BeneficiaryException, LoginException {
         throwExeption();
     }
 
+    @JsonIgnore
     private void throwExeption() throws LoginException {
         if (Objects.isNull(phase)) {
             return;

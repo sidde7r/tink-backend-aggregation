@@ -1,34 +1,62 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.steps;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.awt.Color;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.MembershipTypes;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.RequestValues.ValidationTypes;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.entities.ValidationUnit;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.IdentificationRoutingResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.OAuth2V2AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.SamlAuthnResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AbstractAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.utils.ImageRecognizer;
+import se.tink.libraries.streamutils.StreamUtils;
 
-public class CaisseEpargnePasswordAuthenticator implements PasswordAuthenticator {
-
+public class PasswordLoginStep extends AbstractAuthenticationStep {
     private final CaisseEpargneApiClient apiClient;
+    private final Storage instanceStorage;
+    private final PersistentStorage persistentStorage;
+    public static final String STEP_ID = "passwordLoginStep";
 
-    public CaisseEpargnePasswordAuthenticator(CaisseEpargneApiClient apiClient) {
+    public PasswordLoginStep(
+            CaisseEpargneApiClient apiClient,
+            Storage instanceStorage,
+            PersistentStorage persistentStorage) {
+        super(STEP_ID);
         this.apiClient = apiClient;
+        this.instanceStorage = instanceStorage;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
-    public void authenticate(String username, String password)
+    public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
+        final String password =
+                Strings.emptyToNull(request.getCredentials().getField(Field.Key.PASSWORD));
+        final String username =
+                Strings.emptyToNull(request.getCredentials().getField(Key.USERNAME));
+        Preconditions.checkNotNull(username);
+        Preconditions.checkNotNull(password);
+
         apiClient.getOAuth2Token();
         IdentificationRoutingResponse identificationRoutingResponse =
                 apiClient.identificationRouting(username);
@@ -36,6 +64,7 @@ public class CaisseEpargnePasswordAuthenticator implements PasswordAuthenticator
             throw new IllegalStateException("Invalid routing response");
         }
         String bankId = identificationRoutingResponse.getBankId();
+        instanceStorage.put(StorageKeys.BANK_ID, bankId);
         OAuth2V2AuthorizeResponse oAuth2V2AuthorizeResponse =
                 apiClient.oAuth2Authorize(
                         username, bankId, identificationRoutingResponse.getMembershipTypeValue());
@@ -48,6 +77,7 @@ public class CaisseEpargnePasswordAuthenticator implements PasswordAuthenticator
                         oAuth2V2AuthorizeResponse.getSAMLRequest());
         SamlAuthnResponse samlAuthnResponse = apiClient.samlAuthorize(samlTransactionPath);
         samlAuthnResponse.throwIfFailedAuthentication();
+        instanceStorage.put(StorageKeys.SAML_TRANSACTION_PATH, samlTransactionPath);
         String validationId =
                 samlAuthnResponse
                         .getValidationId()
@@ -70,16 +100,48 @@ public class CaisseEpargnePasswordAuthenticator implements PasswordAuthenticator
                 apiClient.submitPassword(
                         validationId, validationUnitId, passwordString, samlTransactionPath);
         passwordResponse.throwIfFailedAuthentication();
-        apiClient.oAuth2Consume(
-                passwordResponse
-                        .getSaml2PostAction()
-                        .orElseThrow(
-                                () -> new IllegalStateException("SAML action URL is missing.")),
-                passwordResponse
-                        .getSamlResponseValue()
-                        .orElseThrow(() -> new IllegalStateException("SAML response missing.")));
+        instanceStorage.put(StorageKeys.CREDENTIALS_RESPONSE, passwordResponse);
+        if (passwordResponse.isStillAuthenticating()) {
+            persistentStorage.put(StorageKeys.COULD_AUTO_AUTHENTICATE, false);
+            String type =
+                    Strings.nullToEmpty(
+                            passwordResponse.getValidationUnits().stream()
+                                    .map(ValidationUnit::getType)
+                                    .collect(StreamUtils.toSingleton()));
+            if (ValidationTypes.OTP.getName().equalsIgnoreCase(type)) {
+                return AuthenticationStepResponse.executeStepWithId(SmsOtpStep.STEP_ID);
+            } else {
+                throw LoginError.NOT_SUPPORTED.exception();
+            }
+        }
+        persistentStorage.put(StorageKeys.COULD_AUTO_AUTHENTICATE, true);
+        return AuthenticationStepResponse.executeStepWithId(FinalizeAuthStep.STEP_ID);
+    }
 
-        apiClient.soapActionSsoBapi(bankId);
+    private String getPasswordString(
+            IdentificationRoutingResponse identificationRoutingResponse,
+            SamlAuthnResponse samlAuthnResponse,
+            String password) {
+        String passwordString;
+        if (MembershipTypes.PRO.equals(identificationRoutingResponse.getMembershipType())) {
+            String imagesUrl =
+                    samlAuthnResponse
+                            .getKeyboardImagesUrl()
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    "Path to keyboard images could not be determined."));
+            passwordString = getVirtualKeyboardPassword(password, imagesUrl);
+        } else if (MembershipTypes.PART.equals(identificationRoutingResponse.getMembershipType())) {
+            passwordString = password;
+        } else {
+            throw new IllegalStateException(
+                    "Could not determine authentication method for membership type: "
+                            + identificationRoutingResponse.getMembershipTypeLabel()
+                            + ", code: "
+                            + identificationRoutingResponse.getMembershipTypeCode());
+        }
+        return passwordString;
     }
 
     private String getVirtualKeyboardPassword(String password, String imagesUrl) {
@@ -107,31 +169,5 @@ public class CaisseEpargnePasswordAuthenticator implements PasswordAuthenticator
                         .map(Character::getNumericValue)
                         .collect(Collectors.toList());
         return passwordDigits.stream().map(digitToKeyMap::get).collect(Collectors.joining(" "));
-    }
-
-    private String getPasswordString(
-            IdentificationRoutingResponse identificationRoutingResponse,
-            SamlAuthnResponse samlAuthnResponse,
-            String password) {
-        String passwordString;
-        if (MembershipTypes.PRO.equals(identificationRoutingResponse.getMembershipType())) {
-            String imagesUrl =
-                    samlAuthnResponse
-                            .getKeyboardImagesUrl()
-                            .orElseThrow(
-                                    () ->
-                                            new IllegalStateException(
-                                                    "Path to keyboard images could not be determined."));
-            passwordString = getVirtualKeyboardPassword(password, imagesUrl);
-        } else if (MembershipTypes.PART.equals(identificationRoutingResponse.getMembershipType())) {
-            passwordString = password;
-        } else {
-            throw new IllegalStateException(
-                    "Could not determine authentication method for membership type: "
-                            + identificationRoutingResponse.getMembershipTypeLabel()
-                            + ", code: "
-                            + identificationRoutingResponse.getMembershipTypeCode());
-        }
-        return passwordString;
     }
 }

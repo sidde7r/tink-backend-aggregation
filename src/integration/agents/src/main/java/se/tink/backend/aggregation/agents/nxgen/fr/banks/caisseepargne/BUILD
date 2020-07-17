@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
@@ -21,6 +22,7 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//src/libraries/streamutils",
+        "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
