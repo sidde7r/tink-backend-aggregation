@@ -299,6 +299,9 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         Map<Account, List<TransferDestinationPattern>> newTransferDestinationPatterns =
                 accountDataCache.getAllAccountData().stream()
+                        .filter(
+                                accountData ->
+                                        !accountData.getTransferDestinationPatterns().isEmpty())
                         .collect(
                                 Collectors.toMap(
                                         AccountData::getAccount,
