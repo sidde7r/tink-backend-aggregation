@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.DateFormat;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.PaymentSteps;
@@ -115,7 +116,10 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                     logger.error(
                                             "Payment authorization failed. There is no authentication url!");
                                     return new PaymentAuthorizationException(
-                                            "Payment authorization failed.",
+                                            TransferExecutionException.EndUserMessage
+                                                    .PAYMENT_AUTHORIZATION_FAILED
+                                                    .getKey()
+                                                    .get(),
                                             new PaymentRejectedException());
                                 });
 
@@ -172,7 +176,10 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 logger.error(
                         "Payment failed due to unknown sign step{} ",
                         paymentMultiStepRequest.getStep());
-                throw new PaymentException("Payment failed.");
+                throw new PaymentException(
+                        TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
+                                .getKey()
+                                .get());
         }
         return paymentMultiStepResponse;
     }
@@ -189,7 +196,9 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                             "Payment confirmation failed, psuAuthenticationStatus={}",
                             paymentStatus);
                     throw new PaymentAuthenticationException(
-                            "An error occurred while confirming the payment.",
+                            TransferExecutionException.EndUserMessage.PAYMENT_CONFIRMATION_FAILED
+                                    .getKey()
+                                    .get(),
                             new PaymentRejectedException());
                 } else {
                     paymentMultiStepResponse =
@@ -216,7 +225,10 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 logger.error(
                         "PSU Authentication failed, psuAuthenticationStatus={}", paymentStatus);
                 throw new PaymentAuthenticationException(
-                        "Payment authentication failed.", new PaymentRejectedException());
+                        TransferExecutionException.EndUserMessage.PAYMENT_AUTHENTICATION_FAILED
+                                .getKey()
+                                .get(),
+                        new PaymentRejectedException());
             case RJCT:
                 handleReject(paymentResponse.getPaymentRequest().getStatusReasonInformation());
                 break;
@@ -227,7 +239,10 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 logger.error(
                         "Payment failed. Invalid Payment status returned by Societe Generale Bank,Status={}",
                         paymentStatus);
-                throw new PaymentException("Payment failed.");
+                throw new PaymentException(
+                        TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
+                                .getKey()
+                                .get());
         }
         return paymentMultiStepResponse;
     }
@@ -236,7 +251,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             throws PaymentRejectedException {
         String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
         logger.error("Payment Rejected by the bank with error ={}", error);
-        throw new PaymentRejectedException("The payment was rejected by the bank.");
+        throw new PaymentRejectedException(
+                TransferExecutionException.EndUserMessage.PAYMENT_REJECTED.getKey().get());
     }
 
     private void handleCancel(StatusReasonInformationEntity rejectStatus)
@@ -244,7 +260,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
         logger.error("Authorisation of payment was cancelled with bank status={}", error);
         throw new PaymentAuthenticationException(
-                "The payment was cancelled by the user.", new PaymentCancelledException());
+                TransferExecutionException.EndUserMessage.PAYMENT_CANCELLED.getKey().get(),
+                new PaymentCancelledException());
     }
 
     private PaymentResponse getPaymentResponse(PaymentRequestResourceEntity payment) {
@@ -395,7 +412,10 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     private void handelAuthFactorError() throws PaymentAuthenticationException {
         logger.error("Payment authorization failed. There is no psuAuthenticationFactor!");
         throw new PaymentAuthenticationException(
-                "Payment authentication failed.", new PaymentRejectedException());
+                TransferExecutionException.EndUserMessage.PAYMENT_AUTHENTICATION_FAILED
+                        .getKey()
+                        .get(),
+                new PaymentRejectedException());
     }
 
     @Override

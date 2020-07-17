@@ -271,11 +271,13 @@ public class CmcicApiClient implements FrAispApiClient {
         String body = SerializationUtils.serializeToString(confirmationResourceEntity);
         return createPispRequestInSession(
                         baseUrl,
-                        basePath
-                                + Urls.PAYMENT_REQUESTS
-                                + "/"
-                                + uniqueId
-                                + Urls.PIS_CONFIRMATION_PATH)
+                        String.format(
+                                "%s%s%s%s%s",
+                                basePath,
+                                Urls.PAYMENT_REQUESTS,
+                                "/",
+                                uniqueId,
+                                Urls.PIS_CONFIRMATION_PATH))
                 .type(MediaType.APPLICATION_JSON)
                 .post(HalPaymentRequestEntity.class, body);
     }
