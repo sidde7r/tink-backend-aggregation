@@ -34,9 +34,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.creditcard.rpc.CreditAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.rpc.HandelsbankenErrorResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -141,6 +142,24 @@ public class HandelsbankenBaseApiClient {
     public TransactionResponse getTransactions(String accountId, Date dateFrom, Date dateTo) {
         RequestBuilder request =
                 createRequest(Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParams.ACCOUNT_ID, accountId))
+                        .queryParam(
+                                QueryKeys.DATE_FROM,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom))
+                        .queryParam(
+                                QueryKeys.DATE_TO,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo));
+
+        return requestRefreshableGet(request, TransactionResponse.class);
+    }
+
+    public CreditAccountResponse getCreditAccounts() {
+        return requestRefreshableGet(
+                createRequest(Urls.CARD_ACCOUNTS), CreditAccountResponse.class);
+    }
+
+    public TransactionResponse getCreditTransactions(String accountId, Date dateFrom, Date dateTo) {
+        RequestBuilder request =
+                createRequest(Urls.CARD_TRANSACTIONS.parameter(UrlParams.ACCOUNT_ID, accountId))
                         .queryParam(
                                 QueryKeys.DATE_FROM,
                                 ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom))

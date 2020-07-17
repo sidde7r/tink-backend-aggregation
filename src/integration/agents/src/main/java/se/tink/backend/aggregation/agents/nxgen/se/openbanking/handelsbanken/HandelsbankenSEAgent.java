@@ -6,7 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.executor.payment.HandelsbankenSEPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
@@ -23,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.account.AccountIdentifier;
 
 public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
-        implements RefreshTransferDestinationExecutor {
+        implements RefreshTransferDestinationExecutor, RefreshCreditCardAccountsExecutor {
 
     private final HandelsbankenAccountConverter accountConverter;
 
@@ -33,6 +36,7 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
         this.accountConverter = new HandelsbankenAccountConverter();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        creditCardRefreshController = getCreditCardRefreshController();
     }
 
     @Override
@@ -86,5 +90,15 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
                 AccountIdentifier.Type.SE,
                 AccountIdentifier.Type.SE_PG,
                 AccountIdentifier.Type.SE_BG);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
     }
 }

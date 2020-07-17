@@ -1,13 +1,12 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.entity;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.time.DateTimeException;
 import java.util.Date;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,9 +17,8 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 @JsonObject
 public class TransactionsItemEntity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionsItemEntity.class);
-
     @JsonProperty("amount")
+    @JsonAlias("transactionAmount")
     private TransactionAmountEntity transactionAmountEntity;
 
     private String ledgerDate;
@@ -29,6 +27,7 @@ public class TransactionsItemEntity {
 
     private BalanceEntity balanceEntity;
 
+    @JsonAlias("transactionDetails")
     private String remittanceInformation;
 
     private String bookingDate;

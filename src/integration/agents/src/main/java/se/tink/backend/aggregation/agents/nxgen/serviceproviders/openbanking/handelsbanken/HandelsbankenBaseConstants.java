@@ -28,6 +28,14 @@ public final class HandelsbankenBaseConstants {
                                 + "/accounts/{"
                                 + UrlParams.ACCOUNT_ID
                                 + "}/transactions");
+        public static final URL CARD_ACCOUNTS = new URL(BASE_URL + SUFFIX_V1 + "/card-accounts");
+        public static final URL CARD_TRANSACTIONS =
+                new URL(
+                        BASE_URL
+                                + SUFFIX_V1
+                                + "/card-accounts/{"
+                                + UrlParams.ACCOUNT_ID
+                                + "}/transactions");
 
         public static final String INITIATE_PAYMENT =
                 BASE_URL + SUFFIX_V1 + "/payments/{paymentProduct}";
