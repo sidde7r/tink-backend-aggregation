@@ -258,9 +258,13 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                         e -> {
                             List<TransferDestinationPattern> firstList = e.getValue();
                             List<TransferDestinationPattern> secondList = second.get(e.getKey());
+                            if (Objects.isNull(firstList) && Objects.isNull(secondList)) {
+                                return true;
+                            }
+
                             if (Objects.isNull(firstList) || Objects.isNull(secondList)) {
                                 log.warn(
-                                        "[compareOldAndNewAccountDataCache] One or both TransferDestinationPatterns are null ({}, {})",
+                                        "[compareOldAndNewAccountDataCache] One TransferDestinationPatterns is null ({}, {})",
                                         Objects.isNull(firstList),
                                         Objects.isNull(secondList));
                                 return false;
@@ -333,9 +337,13 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                         e -> {
                             List<Transaction> firstList = e.getValue();
                             List<Transaction> secondList = second.get(e.getKey());
+                            if (Objects.isNull(firstList) && Objects.isNull(secondList)) {
+                                return true;
+                            }
+
                             if (Objects.isNull(firstList) || Objects.isNull(secondList)) {
                                 log.warn(
-                                        "[compareOldAndNewAccountDataCache] One or both Transaction lists are null ({}, {})",
+                                        "[compareOldAndNewAccountDataCache] One Transaction lists is null ({}, {})",
                                         Objects.isNull(firstList),
                                         Objects.isNull(secondList));
                                 return false;
