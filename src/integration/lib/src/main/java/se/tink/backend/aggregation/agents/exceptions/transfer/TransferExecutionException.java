@@ -239,6 +239,12 @@ public class TransferExecutionException extends RuntimeException {
         PAYMENT_UPDATE_SOURCE_MESSAGE(
                 new LocalizableKey(
                         "It's not possible to modify the source message of this payment")),
+        PAYMENT_AUTHORIZATION_FAILED(new LocalizableKey("Payment authorization failed.")),
+        PAYMENT_AUTHENTICATION_FAILED(new LocalizableKey("Payment authentication failed.")),
+        PAYMENT_CONFIRMATION_FAILED(
+                new LocalizableKey("An error occurred while confirming the payment.")),
+        PAYMENT_REJECTED(new LocalizableKey("The payment was rejected by the bank.")),
+        PAYMENT_CANCELLED(new LocalizableKey("The payment was cancelled by the user.")),
         MISSING_MESSAGE_TYPE(new LocalizableKey("Missing message type")),
         INVALID_STRUCTURED_MESSAGE(new LocalizableKey("The entered structured message is invalid")),
         END_USER_WRONG_PAYMENT_TYPE(
