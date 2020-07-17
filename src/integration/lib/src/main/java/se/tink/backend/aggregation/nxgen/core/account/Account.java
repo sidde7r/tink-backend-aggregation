@@ -34,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.backend.aggregation.source_info.SourceInfo;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
@@ -62,7 +62,7 @@ public abstract class Account {
     protected ExactCurrencyAmount exactCreditLimit;
     protected Map<String, String> payload;
     protected AccountCapabilities capabilities;
-    protected SourceInfo sourceInfo;
+    protected AccountSourceInfo sourceInfo;
     protected final List<Holder> holders;
     protected AccountHolderType holderType;
 
@@ -354,7 +354,7 @@ public abstract class Account {
         private String alias;
         private String productName;
         private AccountCapabilities capabilities = AccountCapabilities.createDefault();
-        private SourceInfo sourceInfo;
+        private AccountSourceInfo sourceInfo;
 
         protected final void applyUniqueIdentifier(@Nonnull String uniqueIdentifier) {
             Preconditions.checkArgument(
@@ -458,7 +458,7 @@ public abstract class Account {
         }
 
         @Override
-        public B sourceInfo(SourceInfo sourceInfo) {
+        public B sourceInfo(AccountSourceInfo sourceInfo) {
             this.sourceInfo = sourceInfo;
             return buildStep();
         }
@@ -509,7 +509,7 @@ public abstract class Account {
             return capabilities;
         }
 
-        public SourceInfo getSourceInfo() {
+        public AccountSourceInfo getSourceInfo() {
             return sourceInfo;
         }
     }
@@ -529,7 +529,7 @@ public abstract class Account {
         protected ExactCurrencyAmount exactBalance;
         protected ExactCurrencyAmount exactAvailableCredit;
         private AccountCapabilities capabilities = AccountCapabilities.createDefault();
-        private SourceInfo sourceInfo;
+        private AccountSourceInfo sourceInfo;
         private T thisObj;
 
         @Deprecated
@@ -664,7 +664,7 @@ public abstract class Account {
             return self();
         }
 
-        public T sourceInfo(SourceInfo sourceInfo) {
+        public T sourceInfo(AccountSourceInfo sourceInfo) {
             this.sourceInfo = sourceInfo;
             return self();
         }
@@ -673,7 +673,7 @@ public abstract class Account {
             return capabilities;
         }
 
-        public SourceInfo getSourceInfo() {
+        public AccountSourceInfo getSourceInfo() {
             return sourceInfo;
         }
     }

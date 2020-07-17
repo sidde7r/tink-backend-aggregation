@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
-import se.tink.backend.aggregation.source_info.SourceInfo;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountExclusion;
@@ -85,7 +85,7 @@ public class Account implements Cloneable {
     @JsonIgnore
     // Should not be mapped using
     // se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper#fromAggregation
-    private SourceInfo sourceInfo;
+    private AccountSourceInfo sourceInfo;
 
     public Account() {
         this.id = UUIDUtils.generateUUID();
@@ -636,11 +636,11 @@ public class Account implements Cloneable {
         this.capabilities = capabilities;
     }
 
-    public SourceInfo getSourceInfo() {
+    public AccountSourceInfo getSourceInfo() {
         return sourceInfo;
     }
 
-    public void setSourceInfo(SourceInfo sourceInfo) {
+    public void setSourceInfo(AccountSourceInfo sourceInfo) {
         this.sourceInfo = sourceInfo;
     }
 

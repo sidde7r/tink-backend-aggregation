@@ -15,7 +15,7 @@ import lombok.Getter;
  */
 @Builder
 @Getter
-public class SourceInfo {
+public class AccountSourceInfo {
     private String bankProductCode;
     private String bankProductName;
     private String bankAccountType;

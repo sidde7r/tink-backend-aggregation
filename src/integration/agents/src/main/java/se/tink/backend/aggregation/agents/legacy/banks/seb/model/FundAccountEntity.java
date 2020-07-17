@@ -8,7 +8,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
-import se.tink.backend.aggregation.source_info.SourceInfo;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FundAccountEntity {
@@ -165,7 +165,7 @@ public class FundAccountEntity {
         account.setType(AccountTypes.INVESTMENT);
         account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
         account.setSourceInfo(
-                SourceInfo.builder()
+                AccountSourceInfo.builder()
                         .bankAccountType(getAccountType())
                         .bankProductCode(getName())
                         .build());
