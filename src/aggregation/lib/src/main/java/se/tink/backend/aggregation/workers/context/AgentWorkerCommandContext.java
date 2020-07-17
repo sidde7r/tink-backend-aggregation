@@ -6,6 +6,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -251,9 +253,13 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                         e -> {
                             List<TransferDestinationPattern> firstList = e.getValue();
                             List<TransferDestinationPattern> secondList = second.get(e.getKey());
+                            if (Objects.isNull(firstList) && Objects.isNull(secondList)) {
+                                return true;
+                            }
+
                             if (Objects.isNull(firstList) || Objects.isNull(secondList)) {
                                 log.warn(
-                                        "[compareOldAndNewAccountDataCache] One or both TransferDestinationPatterns are null ({}, {})",
+                                        "[compareOldAndNewAccountDataCache] One TransferDestinationPatterns is null ({}, {})",
                                         Objects.isNull(firstList),
                                         Objects.isNull(secondList));
                                 return false;
@@ -286,6 +292,83 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                         });
     }
 
+    private Map<Account, List<Transaction>> collectOldTransactionsPerAccount() {
+        Map<Account, List<Transaction>> result = new HashMap<>();
+
+        // Mimic the code in `AgentWorkerContext::processTransactions()`.
+        for (String bankId : transactionsByAccountBankId.keySet()) {
+            Optional<Account> accountOpt =
+                    getUpdatedAccounts().stream()
+                            .filter(a -> Objects.equals(a.getBankId(), bankId))
+                            .findFirst();
+            if (!accountOpt.isPresent()) {
+                continue;
+            }
+
+            Account account = accountOpt.get();
+            List<Transaction> accountTransactions = transactionsByAccountBankId.get(bankId);
+            // Discard null (should not happen) and empty lists.
+            if (Objects.nonNull(accountTransactions) && !accountTransactions.isEmpty()) {
+                result.put(account, accountTransactions);
+            }
+        }
+
+        return result;
+    }
+
+    private boolean areTransactionsEqual(
+            Map<Account, List<Transaction>> first, Map<Account, List<Transaction>> second) {
+        if (first.size() != second.size()) {
+            log.warn(
+                    "[compareOldAndNewAccountDataCache] Transactions maps are not the same len ({}, {})",
+                    first.size(),
+                    second.size());
+            return false;
+        }
+
+        return first.entrySet().stream()
+                .allMatch(
+                        e -> {
+                            List<Transaction> firstList = e.getValue();
+                            List<Transaction> secondList = second.get(e.getKey());
+                            if (Objects.isNull(firstList) && Objects.isNull(secondList)) {
+                                return true;
+                            }
+
+                            if (Objects.isNull(firstList) || Objects.isNull(secondList)) {
+                                log.warn(
+                                        "[compareOldAndNewAccountDataCache] One Transaction lists is null ({}, {})",
+                                        Objects.isNull(firstList),
+                                        Objects.isNull(secondList));
+                                return false;
+                            }
+
+                            if (firstList.size() != secondList.size()) {
+                                log.warn(
+                                        "[compareOldAndNewAccountDataCache] Transaction lists are not the same len ({}, {})",
+                                        firstList.size(),
+                                        secondList.size());
+                                return false;
+                            }
+
+                            return firstList.stream()
+                                    .allMatch(
+                                            transaction -> {
+                                                if (Objects.isNull(transaction)) {
+                                                    log.warn(
+                                                            "[compareOldAndNewAccountDataCache] Transaction is null!");
+                                                    return false;
+                                                }
+                                                if (!secondList.contains(transaction)) {
+                                                    log.warn(
+                                                            "[compareOldAndNewAccountDataCache] Transaction does not exist!");
+                                                    return false;
+                                                }
+                                                return true;
+                                            });
+                        });
+    }
+
     // Purely for initial verification. Will be removed shortly.
     private void compareOldAndNewAccountDataCache() {
         log.info("[compareOldAndNewAccountDataCache] Comparing old and new account data cache!");
@@ -294,6 +377,9 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         Map<Account, List<TransferDestinationPattern>> newTransferDestinationPatterns =
                 accountDataCache.getAllAccountData().stream()
+                        .filter(
+                                accountData ->
+                                        !accountData.getTransferDestinationPatterns().isEmpty())
                         .collect(
                                 Collectors.toMap(
                                         AccountData::getAccount,
@@ -338,6 +424,15 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                     "[compareOldAndNewAccountDataCache/filtered] Number of accounts differ. Old: {}, New: {}",
                     oldAccountCache.size(),
                     newAccountCache.size());
+        }
+
+        // Compare transactions.
+        Map<Account, List<Transaction>> newTransactionCache =
+                accountDataCache.getCurrentTransactions();
+        Map<Account, List<Transaction>> oldTransactionCache = collectOldTransactionsPerAccount();
+
+        if (!areTransactionsEqual(oldTransactionCache, newTransactionCache)) {
+            log.warn("[compareOldAndNewAccountDataCache] The transactions are not equal!");
         }
     }
 
