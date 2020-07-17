@@ -126,7 +126,7 @@ public class DepotEntity {
         account.setName(StringUtils.firstLetterUppercaseFormatting(getType().trim()));
         account.setType(AccountTypes.INVESTMENT);
         account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
-        account.setAccountSourceInfo(
+        account.setSourceInfo(
                 AccountSourceInfo.builder()
                         .bankAccountType(getType())
                         .bankProductCode(getName())

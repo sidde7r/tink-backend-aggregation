@@ -62,7 +62,7 @@ public abstract class Account {
     protected ExactCurrencyAmount exactCreditLimit;
     protected Map<String, String> payload;
     protected AccountCapabilities capabilities;
-    protected AccountSourceInfo accountSourceInfo;
+    protected AccountSourceInfo sourceInfo;
     protected final List<Holder> holders;
     protected AccountHolderType holderType;
 
@@ -94,7 +94,7 @@ public abstract class Account {
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
         this.payload = builder.getPayload();
         this.capabilities = builder.getCapabilities();
-        this.accountSourceInfo = builder.getAccountSourceInfo();
+        this.sourceInfo = builder.getSourceInfo();
     }
 
     // This will be removed as part of the improved step builder + agent builder refactoring project
@@ -117,7 +117,7 @@ public abstract class Account {
                 Optional.ofNullable(builder.getExactAvailableCredit()).orElse(null);
         this.payload = Maps.newHashMap();
         this.capabilities = builder.getCapabilities();
-        this.accountSourceInfo = builder.getAccountSourceInfo();
+        this.sourceInfo = builder.getSourceInfo();
         // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or
         // '-').
         Preconditions.checkState(
@@ -136,7 +136,7 @@ public abstract class Account {
         this.productName = builder.getProductName();
         this.payload = Maps.newHashMap();
         this.capabilities = builder.getCapabilities();
-        this.accountSourceInfo = builder.getAccountSourceInfo();
+        this.sourceInfo = builder.getSourceInfo();
 
         if (Strings.isNullOrEmpty(builder.getAlias())) {
             // Fallback in case the received alias happened to be null at run-time.
@@ -276,7 +276,7 @@ public abstract class Account {
         account.setAvailableBalance(this.exactAvailableBalance);
         account.setCreditLimit(this.exactCreditLimit);
         account.setCapabilities(this.capabilities);
-        account.setAccountSourceInfo(this.accountSourceInfo);
+        account.setSourceInfo(this.sourceInfo);
 
         if (holders.size() > 0 || java.util.Objects.nonNull(holderType)) {
             AccountHolder accountHolder = new AccountHolder();
@@ -354,7 +354,7 @@ public abstract class Account {
         private String alias;
         private String productName;
         private AccountCapabilities capabilities = AccountCapabilities.createDefault();
-        private AccountSourceInfo accountSourceInfo;
+        private AccountSourceInfo sourceInfo;
 
         protected final void applyUniqueIdentifier(@Nonnull String uniqueIdentifier) {
             Preconditions.checkArgument(
@@ -458,8 +458,8 @@ public abstract class Account {
         }
 
         @Override
-        public B sourceInfo(AccountSourceInfo accountSourceInfo) {
-            this.accountSourceInfo = accountSourceInfo;
+        public B sourceInfo(AccountSourceInfo sourceInfo) {
+            this.sourceInfo = sourceInfo;
             return buildStep();
         }
 
@@ -509,8 +509,8 @@ public abstract class Account {
             return capabilities;
         }
 
-        public AccountSourceInfo getAccountSourceInfo() {
-            return accountSourceInfo;
+        public AccountSourceInfo getSourceInfo() {
+            return sourceInfo;
         }
     }
 
@@ -529,7 +529,7 @@ public abstract class Account {
         protected ExactCurrencyAmount exactBalance;
         protected ExactCurrencyAmount exactAvailableCredit;
         private AccountCapabilities capabilities = AccountCapabilities.createDefault();
-        private AccountSourceInfo accountSourceInfo;
+        private AccountSourceInfo sourceInfo;
         private T thisObj;
 
         @Deprecated
@@ -664,8 +664,8 @@ public abstract class Account {
             return self();
         }
 
-        public T sourceInfo(AccountSourceInfo accountSourceInfo) {
-            this.accountSourceInfo = accountSourceInfo;
+        public T sourceInfo(AccountSourceInfo sourceInfo) {
+            this.sourceInfo = sourceInfo;
             return self();
         }
 
@@ -673,8 +673,8 @@ public abstract class Account {
             return capabilities;
         }
 
-        public AccountSourceInfo getAccountSourceInfo() {
-            return accountSourceInfo;
+        public AccountSourceInfo getSourceInfo() {
+            return sourceInfo;
         }
     }
 }

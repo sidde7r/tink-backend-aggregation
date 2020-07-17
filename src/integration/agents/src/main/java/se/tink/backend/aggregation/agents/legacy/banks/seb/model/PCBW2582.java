@@ -40,8 +40,7 @@ public class PCBW2582 {
         account.setBalance(-StringUtils.parseAmount(SKULD));
         account.setType(AccountTypes.LOAN);
         account.setCapabilities(SEBAgentUtils.getLoanAccountCapabilities());
-        account.setAccountSourceInfo(
-                AccountSourceInfo.builder().bankProductName(KTOSLAG_TXT).build());
+        account.setSourceInfo(AccountSourceInfo.builder().bankProductName(KTOSLAG_TXT).build());
 
         return account;
     }

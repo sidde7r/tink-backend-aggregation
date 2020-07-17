@@ -29,7 +29,7 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     private final TemporaryStorage temporaryStorage = new TemporaryStorage();
     protected Map<String, String> payload = new HashMap<>();
     private AccountCapabilities capabilities = AccountCapabilities.createDefault();
-    private AccountSourceInfo accountSourceInfo;
+    private AccountSourceInfo sourceInfo;
     private AccountHolderType holderType;
 
     protected abstract B buildStep();
@@ -122,8 +122,8 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     }
 
     @Override
-    public B sourceInfo(AccountSourceInfo accountSourceInfo) {
-        this.accountSourceInfo = accountSourceInfo;
+    public B sourceInfo(AccountSourceInfo sourceInfo) {
+        this.sourceInfo = sourceInfo;
         return buildStep();
     }
 
@@ -164,7 +164,7 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
         return capabilities;
     }
 
-    public AccountSourceInfo getAccountSourceInfo() {
-        return accountSourceInfo;
+    public AccountSourceInfo getSourceInfo() {
+        return sourceInfo;
     }
 }

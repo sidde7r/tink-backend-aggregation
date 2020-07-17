@@ -164,7 +164,7 @@ public class FundAccountEntity {
         account.setName(getAccountType());
         account.setType(AccountTypes.INVESTMENT);
         account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
-        account.setAccountSourceInfo(
+        account.setSourceInfo(
                 AccountSourceInfo.builder()
                         .bankAccountType(getAccountType())
                         .bankProductCode(getName())

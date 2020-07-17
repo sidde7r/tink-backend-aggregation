@@ -52,7 +52,7 @@ public class InsuranceEntity {
         account.setName(StringUtils.firstLetterUppercaseFormatting(type.trim()));
         account.setType(AccountTypes.INVESTMENT);
         account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
-        account.setAccountSourceInfo(AccountSourceInfo.builder().bankProductName(type).build());
+        account.setSourceInfo(AccountSourceInfo.builder().bankProductName(type).build());
 
         return account;
     }

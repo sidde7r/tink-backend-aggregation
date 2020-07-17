@@ -118,8 +118,7 @@ public class PCBW2581 {
         account.setBalance(getCurrentDebt());
         account.setType(AccountTypes.LOAN);
         account.setCapabilities(SEBAgentUtils.getLoanAccountCapabilities());
-        account.setAccountSourceInfo(
-                AccountSourceInfo.builder().bankProductName(getLoanName()).build());
+        account.setSourceInfo(AccountSourceInfo.builder().bankProductName(getLoanName()).build());
 
         return account;
     }

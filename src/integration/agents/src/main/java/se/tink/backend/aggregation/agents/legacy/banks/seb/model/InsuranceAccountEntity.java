@@ -83,7 +83,7 @@ public class InsuranceAccountEntity {
         account.setName(getInsuranceName());
         account.setType(AccountTypes.INVESTMENT);
         account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
-        account.setAccountSourceInfo(
+        account.setSourceInfo(
                 AccountSourceInfo.builder()
                         .bankProductName(insureanceTypeName)
                         .bankProductCode(insuranceType)

@@ -85,7 +85,7 @@ public class Account implements Cloneable {
     @JsonIgnore
     // Should not be mapped using
     // se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper#fromAggregation
-    private AccountSourceInfo accountSourceInfo;
+    private AccountSourceInfo sourceInfo;
 
     public Account() {
         this.id = UUIDUtils.generateUUID();
@@ -636,12 +636,12 @@ public class Account implements Cloneable {
         this.capabilities = capabilities;
     }
 
-    public AccountSourceInfo getAccountSourceInfo() {
-        return accountSourceInfo;
+    public AccountSourceInfo getSourceInfo() {
+        return sourceInfo;
     }
 
-    public void setAccountSourceInfo(AccountSourceInfo accountSourceInfo) {
-        this.accountSourceInfo = accountSourceInfo;
+    public void setSourceInfo(AccountSourceInfo sourceInfo) {
+        this.sourceInfo = sourceInfo;
     }
 
     public AccountHolder getAccountHolder() {

@@ -1474,7 +1474,7 @@ public class SEBApiAgent extends AbstractAgent
         account.setCapabilities(
                 SEBAgentUtils.determineAccountCapabilities(
                         accountTypeCode, accountTypeDescription, type));
-        account.setAccountSourceInfo(
+        account.setSourceInfo(
                 AccountSourceInfo.builder()
                         .bankAccountType(String.format("%d", accountTypeCode))
                         .bankProductName(accountTypeDescription)
@@ -1544,7 +1544,7 @@ public class SEBApiAgent extends AbstractAgent
         account.setName(name);
         account.setBalance(accountEntity.SALDO_BELOPP != 0 ? -accountEntity.SALDO_BELOPP : 0);
         account.setAvailableCredit(accountEntity.LIMIT_BELOPP - accountEntity.SALDO_BELOPP);
-        account.setAccountSourceInfo(
+        account.setSourceInfo(
                 AccountSourceInfo.builder()
                         .bankProductName(name)
                         .bankProductCode(accountEntity.PRODUKT_NAMN)
