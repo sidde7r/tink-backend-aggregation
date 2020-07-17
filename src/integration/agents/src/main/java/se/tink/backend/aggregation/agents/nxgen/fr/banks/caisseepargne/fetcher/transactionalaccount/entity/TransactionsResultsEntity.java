@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Strings;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,7 +43,7 @@ public class TransactionsResultsEntity implements TransactionKeyPaginatorRespons
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions.stream()
+        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

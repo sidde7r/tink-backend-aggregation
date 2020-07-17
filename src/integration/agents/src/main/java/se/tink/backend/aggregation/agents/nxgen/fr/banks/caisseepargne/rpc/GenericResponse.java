@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.ResponseValue;
 
 @Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GenericResponse<T> {
     @JacksonXmlProperty(localName = "Resultat")
     protected T results;

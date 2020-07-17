@@ -31,7 +31,7 @@ public class AccountEntity {
     private String productTypeLabel;
 
     @JacksonXmlProperty(localName = "MontantSoldeCompte")
-    private BigDecimal amountBalanceAccount;
+    private String amountBalanceAccount;
 
     @JacksonXmlProperty(localName = "CodeDevise")
     private String currencyCode;
@@ -89,7 +89,8 @@ public class AccountEntity {
     @JsonIgnore
     private ExactCurrencyAmount getBalance() {
         BigDecimal amount =
-                amountBalanceAccount.divide(BigDecimal.valueOf(100), 2, RoundingMode.UNNECESSARY);
+                new BigDecimal(amountBalanceAccount.isEmpty() ? "0" : amountBalanceAccount);
+        amount = amount.divide(BigDecimal.valueOf(100), 2, RoundingMode.UNNECESSARY);
         return ExactCurrencyAmount.of(amount, "EUR");
     }
 

@@ -258,6 +258,84 @@ public class SoapHelperTest {
                     + "  </soap:Body>\n"
                     + "</soap:Envelope>\n";
 
+    private final String data =
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <GetSyntheseCpteAbonnementResponse xmlns=\"http://caisse-epargne.fr/webservices/\">\n"
+                    + "      <GetSyntheseCpteAbonnementResult>\n"
+                    + "        <CodeRetour>0000</CodeRetour>\n"
+                    + "        <LibelleRetour>La requ?te s'est bien d?roul?e (0000).</LibelleRetour>\n"
+                    + "        <Resultat xsi:type=\"SyntheseCompteInterne\">\n"
+                    + "          <Resultat>0000</Resultat><Message/>\n"
+                    + "          <NumeroAbonne>750825454</NumeroAbonne>\n"
+                    + "          <lstComptesInternesTit>\n"
+                    + "            <CompteInterneSynt>\n"
+                    + "              <NumeroRib>12312312312312312312312</NumeroRib>\n"
+                    + "              <NumeroCompteReduit>12312312312</NumeroCompteReduit>\n"
+                    + "              <LibelleTypeProduit>NUANCES 3D</LibelleTypeProduit><MontantSoldeCompte xsi:nil=\"true\"/><IntituleProduit/>\n"
+                    + "              <LibelleAbregeTypeProduit>NUAN. 3D</LibelleAbregeTypeProduit>\n"
+                    + "              <IsClicable>true</IsClicable>\n"
+                    + "              <MontantDecouvert>0</MontantDecouvert>\n"
+                    + "              <CodeSensDecouvert>C</CodeSensDecouvert>\n"
+                    + "              <CodeProduit>AS</CodeProduit>\n"
+                    + "              <CodeCategorieProduit>C</CodeCategorieProduit><NumeroRibCompteLie/>\n"
+                    + "              <IndicateurChequierRice>N</IndicateurChequierRice>\n"
+                    + "              <Personnalise>false</Personnalise>\n"
+                    + "              <SeuilMin>0</SeuilMin>\n"
+                    + "              <SeuilMax>0</SeuilMax><NvAutoCpt/></CompteInterneSynt>\n"
+                    + "            <CompteInterneSynt>\n"
+                    + "              <NumeroRib>12312312312312312312312</NumeroRib>\n"
+                    + "              <NumeroCompteReduit>12312312312</NumeroCompteReduit>\n"
+                    + "              <LibelleTypeProduit>CPT DEPOT PART.</LibelleTypeProduit>\n"
+                    + "              <MontantSoldeCompte>64.00</MontantSoldeCompte>\n"
+                    + "              <CodeDevise>EUR</CodeDevise>\n"
+                    + "              <IntituleProduit>MLLE SURNAME NAME</IntituleProduit>\n"
+                    + "              <LibelleAbregeTypeProduit>C.CHEQUE</LibelleAbregeTypeProduit>\n"
+                    + "              <IsClicable>true</IsClicable>\n"
+                    + "              <CodeSens>C</CodeSens>\n"
+                    + "              <MontantDecouvert>20000</MontantDecouvert>\n"
+                    + "              <CodeDeviseDecouvert>EUR</CodeDeviseDecouvert>\n"
+                    + "              <CodeSensDecouvert>C</CodeSensDecouvert>\n"
+                    + "              <CodeProduit>04</CodeProduit>\n"
+                    + "              <CodeCategorieProduit>A</CodeCategorieProduit><NumeroRibCompteLie/>\n"
+                    + "              <IndicateurChequierRice>R</IndicateurChequierRice>\n"
+                    + "              <Personnalise>false</Personnalise>\n"
+                    + "              <SeuilMin>0</SeuilMin>\n"
+                    + "              <SeuilMax>0</SeuilMax><NvAutoCpt/></CompteInterneSynt>\n"
+                    + "          </lstComptesInternesTit><lstComptesInternesAutre/></Resultat>\n"
+                    + "      </GetSyntheseCpteAbonnementResult>\n"
+                    + "    </GetSyntheseCpteAbonnementResponse>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>";
+
+    @Test
+    public void testMoreAccounts() {
+        AccountsResponse resp = SoapHelper.getAccounts(data);
+        resp.stream()
+                .forEach(
+                        accountEntity ->
+                                accountEntity.setIban(
+                                        getIban(accountEntity.getFullAccountNumber())));
+        Collection<TransactionalAccount> accounts =
+                resp.stream()
+                        .map(AccountEntity::toTinkAccount)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
+        Optional<TransactionalAccount> checking =
+                accounts.stream()
+                        .filter(account -> account.getType().equals(AccountTypes.CHECKING))
+                        .findFirst();
+        assertThat(checking.isPresent()).isTrue();
+        assertThat(checking.get().getAccountNumber()).isEqualTo("12312312312");
+        assertThat(checking.get().getIdentifiers().get(0).getIdentifier())
+                .isEqualTo("FR4820041010050014391645720");
+        assertThat(checking.get().getHolderName().toString()).isEqualTo("MLLE SURNAME NAME");
+        assertThat(checking.get().getExactBalance().compareTo(BigDecimal.valueOf(0.64)))
+                .isEqualTo(0);
+    }
+
     @Test
     public void getAccounts() {
         AccountsResponse response = SoapHelper.getAccounts(accountsData);

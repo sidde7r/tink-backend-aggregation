@@ -9,7 +9,9 @@ public class CaisseEpargneAccountTypeMapper {
     private static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
                     .put(TransactionalAccountType.CHECKING, "02", "04")
-                    .put(TransactionalAccountType.SAVINGS, "10")
+                    .put(TransactionalAccountType.SAVINGS, "10", "01", "06")
+                    // AS is life insurance, 37 is investments
+                    .ignoreKeys("AS", "37")
                     .build();
 
     public static Optional<TransactionalAccountType> getAccountType(String rawAccountType) {
