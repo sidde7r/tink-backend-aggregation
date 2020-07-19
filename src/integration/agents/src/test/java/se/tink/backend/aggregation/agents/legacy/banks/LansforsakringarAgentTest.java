@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.banks;
 
-import com.google.common.collect.Maps;
 import java.util.List;
-import java.util.Map;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -176,25 +174,5 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
                 throw assertionError.getCause();
             }
         }
-    }
-
-    private Map<String, Object> generateSupplementalInformation() {
-
-        Map<String, Object> result = Maps.newHashMap();
-
-        result.put("OCCUPATION", "Anställd");
-        result.put("SALARY", 20000);
-        result.put(
-                "PURPOSE_OPENING_ACCOUNT",
-                "Ekonomisk trygghet och sparande (ha en buffert om något händer)");
-        result.put("MONEY_SOURCE", "Lön/pension/bidrag/");
-        result.put("OTHER_MONEY_SOURCE_DESCRIPTION", null);
-        result.put("YEARLY_DEPOSIT", "Upp till 100.000 kronor");
-        result.put("OTHER_TAX_COUNTRY_LOCK", "false");
-        result.put("OTHER_TAX_COUNTRY", null);
-        result.put("COUNTRY_OF_BIRTH", "Sverige");
-        result.put("ACCEPT_TERMS", "true");
-
-        return result;
     }
 }
