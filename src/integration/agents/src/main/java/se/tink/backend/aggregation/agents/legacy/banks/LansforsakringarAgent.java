@@ -261,7 +261,7 @@ public class LansforsakringarAgent extends AbstractAgent
 
     private static Optional<BankEntity> findBankForAccountNumber(
             String destinationAccount, List<BankEntity> banks) {
-        final Integer accountClearingNumber = Integer.parseInt(destinationAccount.substring(0, 4));
+        final int accountClearingNumber = Integer.parseInt(destinationAccount.substring(0, 4));
 
         return banks.stream()
                 .filter(
