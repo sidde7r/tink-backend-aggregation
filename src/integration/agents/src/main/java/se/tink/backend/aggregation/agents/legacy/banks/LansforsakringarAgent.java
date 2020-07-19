@@ -661,7 +661,7 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     private void approveEInvoice(final Transfer transfer) throws Exception {
-        validateUpdateIsPermitted(catalog, transfer);
+        validateUpdateIsPermitted(transfer);
         AccountEntity sourceAccount = validatePaymentSourceAccount(transfer.getSource());
         EInvoice eInvoice = validateEInvoice(transfer);
         validateNumberOfOutstandingPaymentEntities(0);
@@ -670,7 +670,7 @@ public class LansforsakringarAgent extends AbstractAgent
         signEInvoice(paymentEntityToSign);
     }
 
-    private void validateUpdateIsPermitted(Catalog catalog, Transfer transfer) {
+    private void validateUpdateIsPermitted(Transfer transfer) {
         Transfer originalTransfer = transfer.getOriginalTransfer().get();
 
         if (!Objects.equal(
