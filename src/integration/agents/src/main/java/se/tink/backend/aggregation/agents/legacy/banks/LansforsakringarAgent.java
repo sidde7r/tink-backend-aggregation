@@ -320,7 +320,7 @@ public class LansforsakringarAgent extends AbstractAgent
         client.addFilter(
                 new ClientFilter() {
                     @Override
-                    public ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
+                    public ClientResponse handle(ClientRequest cr) {
                         try {
                             return getNext().handle(cr);
                         } catch (ClientHandlerException e) {
