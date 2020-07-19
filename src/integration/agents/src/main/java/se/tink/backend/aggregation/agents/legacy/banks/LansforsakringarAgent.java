@@ -1139,7 +1139,8 @@ public class LansforsakringarAgent extends AbstractAgent
         return createGetRequest(FETCH_TRANSFER_SOURCE_ACCOUNTS, TransferrableResponse.class);
     }
 
-    private void executeBankTransfer(final Transfer transfer) throws Exception {
+    private void executeBankTransfer(final Transfer transfer)
+            throws HttpStatusCodeErrorException, BankIdException {
         AccountIdentifier source = transfer.getSource();
         AccountIdentifier destination = transfer.getDestination();
 
@@ -1181,7 +1182,8 @@ public class LansforsakringarAgent extends AbstractAgent
         }
     }
 
-    private void executeExternalBankTransfer(TransferRequest transferRequest) throws Exception {
+    private void executeExternalBankTransfer(TransferRequest transferRequest)
+            throws BankIdException {
         ClientResponse createTransferResponse =
                 createPostRequest(CREATE_BANKID_REFERENCE_URL, transferRequest);
 
