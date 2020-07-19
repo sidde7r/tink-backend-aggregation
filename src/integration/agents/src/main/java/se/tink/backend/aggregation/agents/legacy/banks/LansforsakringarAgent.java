@@ -5,7 +5,6 @@ import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_TRA
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_ACCOUNTS;
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_TRANSACTIONS;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -184,8 +183,6 @@ public class LansforsakringarAgent extends AbstractAgent
             new DefaultAccountIdentifierFormatter();
     private static final DisplayAccountIdentifierFormatter GIRO_FORMATTER =
             new DisplayAccountIdentifierFormatter();
-    private static final TypeReference<HashMap<String, Object>> TYPE_MAP_REF =
-            new TypeReference<HashMap<String, Object>>() {};
     private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
             TransferMessageLengthConfig.createWithMaxLength(30, 14);
     private static final int MAX_ATTEMPTS = 80;
