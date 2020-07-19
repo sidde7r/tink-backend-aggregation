@@ -901,7 +901,7 @@ public class LansforsakringarAgent extends AbstractAgent
         return recipientNameClientResponse;
     }
 
-    private boolean deleteSignedTransaction(Object deleteRequest) throws Exception {
+    private boolean deleteSignedTransaction(Object deleteRequest) {
         if (deleteRequest instanceof PaymentRequest) {
             PaymentRequest paymentRequest = (PaymentRequest) deleteRequest;
             Optional<String> uniqueId = findFailedPaymentInSignedList(paymentRequest);
@@ -964,8 +964,7 @@ public class LansforsakringarAgent extends AbstractAgent
         return request;
     }
 
-    private Optional<String> findFailedPaymentInSignedList(PaymentRequest paymentRequest)
-            throws Exception {
+    private Optional<String> findFailedPaymentInSignedList(PaymentRequest paymentRequest) {
         for (UpcomingTransactionEntity transaction :
                 fetchUpcomingTransactions(paymentRequest.getFromAccount())) {
             if (LFUtils.isSamePayment(paymentRequest, transaction)) {
@@ -976,8 +975,7 @@ public class LansforsakringarAgent extends AbstractAgent
         return Optional.empty();
     }
 
-    private Optional<String> findFailedTransferInSignedList(TransferRequest transferRequest)
-            throws Exception {
+    private Optional<String> findFailedTransferInSignedList(TransferRequest transferRequest) {
         for (UpcomingTransactionEntity transaction :
                 fetchUpcomingTransactions(transferRequest.getFromAccount())) {
             if (LFUtils.isSameTransfer(transferRequest, transaction)) {
