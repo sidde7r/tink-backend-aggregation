@@ -22,10 +22,8 @@ public class DanskebankV31Agent extends UkOpenBankingBaseAgent {
 
     static {
         aisConfig =
-                new DanskebankAisConfiguration.Builder()
-                        .withApiBaseURL(V31.AIS_BASE)
+                new DanskebankAisConfiguration.Builder(V31.AIS_BASE, MarketCode.SE)
                         .withWellKnownURL(V31.getWellKnownUrl(MarketCode.SE))
-                        .onMarket(MarketCode.SE)
                         .build();
     }
 

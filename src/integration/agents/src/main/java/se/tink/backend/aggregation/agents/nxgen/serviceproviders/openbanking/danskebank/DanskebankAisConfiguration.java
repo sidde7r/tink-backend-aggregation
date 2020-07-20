@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.enums.MarketCode;
 
 public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
-    protected final URL apiBaseURL;
+    private final URL apiBaseURL;
     private final URL wellKnownURL;
     private final URL identityDataURL;
     private final URL appToAppURL;
@@ -145,23 +145,17 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
 
     public static final class Builder {
 
-        protected URL apiBaseURL;
-        protected URL wellKnownURL;
-        protected URL identityDataURL;
-        protected URL appToAppURL;
-        private MarketCode market;
-        protected List<String> additionalPermissions;
+        private final URL apiBaseURL;
+        private URL wellKnownURL;
+        private URL identityDataURL;
+        private URL appToAppURL;
+        private final MarketCode market;
+        private List<String> additionalPermissions;
         private boolean partyEndpointEnabled = true;
 
-        public Builder() {}
-
-        public static DanskebankAisConfiguration.Builder builder() {
-            return new DanskebankAisConfiguration.Builder();
-        }
-
-        public DanskebankAisConfiguration.Builder withApiBaseURL(final String apiBaseURL) {
-            this.apiBaseURL = new URL(apiBaseURL);
-            return this;
+        public Builder(final String apiBaseUrl, final MarketCode market) {
+            this.apiBaseURL = new URL(apiBaseUrl);
+            this.market = market;
         }
 
         public DanskebankAisConfiguration.Builder withWellKnownURL(final URL wellKnownURL) {
@@ -175,12 +169,7 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
             return this;
         }
 
-        public DanskebankAisConfiguration.Builder onMarket(@Nonnull MarketCode market) {
-            this.market = market;
-            return this;
-        }
-
-        public DanskebankAisConfiguration.Builder withAppToAppURL(final String appToAppURL) {
+        DanskebankAisConfiguration.Builder withAppToAppURL(final String appToAppURL) {
             this.appToAppURL = new URL(appToAppURL);
             return this;
         }
