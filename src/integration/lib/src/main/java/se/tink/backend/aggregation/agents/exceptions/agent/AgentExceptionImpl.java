@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.exceptions.agent;
 import java.util.Objects;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public abstract class AgentExceptionImpl extends Exception implements AgentException {
+public abstract class AgentExceptionImpl extends RuntimeException implements AgentException {
     private final LocalizableKey userMessage;
     private final AgentError error;
 
