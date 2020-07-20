@@ -19,7 +19,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "CompteInterneSynt")
 public class AccountEntity {
-    // private static final Logger logger = LoggerFactory.getLogger(AccountEntity.class);
 
     @JacksonXmlProperty(localName = "NumeroRib")
     private String fullAccountNumber;
@@ -102,7 +101,7 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType().get())
                 .withoutFlags()
-                // TODO make sure balance is right sign. Currently there is no way of knowing
+                // make sure balance is right sign. Currently there is no way of knowing
                 // positive/negative balance difference from the response.
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(

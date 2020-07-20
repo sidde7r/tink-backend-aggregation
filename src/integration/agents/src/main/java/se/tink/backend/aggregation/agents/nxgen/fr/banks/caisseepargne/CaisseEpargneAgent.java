@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.CaisseEpargneAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.executor.beneficiary.CaisseEpargneCreateBeneficiaryExecutor;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.identitydata.IdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.identitydata.CaisseEpargneIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.CaisseEpargneTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.CaisseEpragneTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transferdestination.CaisseEpargneTransferDestinationsFetcher;
@@ -93,7 +93,7 @@ public class CaisseEpargneAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return new FetchIdentityDataResponse(
-                new IdentityDataFetcher(instanceStorage).fetchIdentityData());
+                new CaisseEpargneIdentityDataFetcher(instanceStorage).fetchIdentityData());
     }
 
     @Override

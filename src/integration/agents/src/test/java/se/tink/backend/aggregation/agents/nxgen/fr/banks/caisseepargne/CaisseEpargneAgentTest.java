@@ -48,8 +48,7 @@ public class CaisseEpargneAgentTest {
 
     @Test
     public void testCreateBeneficiary() throws Exception {
-        final String RED_CROSS = "CH6200240240C05735300";
-        final String BENEFICIARY_ACCOUNT = "FR7630056005020502000363678"; // Fondation de France
+        final String redCrossIban = "CH6200240240C05735300";
         new AgentIntegrationTest.Builder("fr", "fr-caisseepargne-password")
                 .addCredentialField(
                         Field.Key.USERNAME,
@@ -66,7 +65,7 @@ public class CaisseEpargneAgentTest {
                                 .beneficiary(
                                         Beneficiary.builder()
                                                 .name("Tink RED CROSS")
-                                                .accountNumber(RED_CROSS)
+                                                .accountNumber(redCrossIban)
                                                 .accountNumberType(Type.IBAN)
                                                 .build())
                                 .build());

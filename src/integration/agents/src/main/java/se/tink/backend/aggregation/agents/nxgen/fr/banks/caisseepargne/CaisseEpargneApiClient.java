@@ -5,18 +5,18 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Stack;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.lang3.Range;
 import org.apache.http.HttpStatus;
 import org.apache.http.cookie.Cookie;
@@ -71,6 +71,8 @@ import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CaisseEpargneApiClient {
+
+    public static final String EXPECTED_REDIRECT_GOT = "Expected redirect, got: ";
     private final TinkHttpClient httpClient;
     private final TinkHttpClient notRedirectFollowingHttpClient;
     private final SessionStorage sessionStorage;
@@ -154,7 +156,7 @@ public class CaisseEpargneApiClient {
                                 idTokenHint)
                         .get(HttpResponse.class);
         if (!Range.between(300, 399).contains(httpResponse.getStatus())) {
-            throw new IllegalStateException("Expected redirect, got: " + httpResponse.getStatus());
+            throw new IllegalStateException(EXPECTED_REDIRECT_GOT + httpResponse.getStatus());
         }
         httpResponse =
                 notRedirectFollowingHttpClient
@@ -219,7 +221,7 @@ public class CaisseEpargneApiClient {
                             .body(requestBody)
                             .post(HttpResponse.class);
             if (redirect.getStatus() != HttpStatus.SC_SEE_OTHER) {
-                throw new IllegalStateException("Expected redirect, got: " + redirect.getStatus());
+                throw new IllegalStateException(EXPECTED_REDIRECT_GOT + redirect.getStatus());
             }
             return redirect.getLocation().toString();
         } catch (UnsupportedEncodingException e) {
@@ -243,7 +245,6 @@ public class CaisseEpargneApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(HeaderKeys.USER_AGENT, HeaderValues.CAISSE_DARWIN)
                         .get(HttpResponse.class);
-        MultivaluedMap<String, String> a = imagesResponse.getHeaders();
         List<String> collect =
                 imagesResponse.getHeaders().entrySet().stream()
                         .filter(entry -> HeaderKeys.SET_COOKIE.equals(entry.getKey()))
@@ -256,7 +257,7 @@ public class CaisseEpargneApiClient {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList());
-        Stack<Cookie> actualCookies = new Stack<>();
+        Deque<Cookie> actualCookies = new ArrayDeque<>();
         List<Cookie> oldCookies = httpClient.getCookies();
         httpClient.clearCookies();
         newCookies.forEach(
@@ -325,7 +326,7 @@ public class CaisseEpargneApiClient {
                 .post(SamlAuthnResponse.class);
     }
 
-    private Entry<String, byte[]> getImage(ImageItem imageItem, List<Cookie> cookies) {
+    private Entry<String, byte[]> getImage(ImageItem imageItem, Deque<Cookie> cookies) {
         String cookieHeader =
                 cookies.stream()
                         .map(c -> String.join("=", c.getName(), c.getValue()))
@@ -369,7 +370,7 @@ public class CaisseEpargneApiClient {
                             .body(requestBody)
                             .post(HttpResponse.class);
             if (redirect.getStatus() != HttpStatus.SC_MOVED_TEMPORARILY) {
-                throw new IllegalStateException("Expected redirect, got: " + redirect.getStatus());
+                throw new IllegalStateException(EXPECTED_REDIRECT_GOT + redirect.getStatus());
             }
             TokenFromLocation token = TokenFromLocation.of(redirect.getLocation().toString());
             if (!token.isValidBearerToken()) {

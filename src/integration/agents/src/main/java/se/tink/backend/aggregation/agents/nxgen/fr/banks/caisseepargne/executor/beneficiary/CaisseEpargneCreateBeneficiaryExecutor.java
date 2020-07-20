@@ -35,7 +35,6 @@ public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiary
             LoggerFactory.getLogger(CaisseEpargneCreateBeneficiaryExecutor.class);
 
     private final CaisseEpargneApiClient apiClient;
-    private CreateBeneficiaryResponse createBeneficiaryResponse;
     private final SupplementalInformationProvider supplementalInformationProvider;
     private CaisseEpargneCreateBeneficiaryResponse apiResponse;
     private final Storage instanceStorage;
@@ -61,7 +60,7 @@ public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiary
                                                 new BeneficiaryInvalidAccountTypeException(
                                                         Type.IBAN)));
 
-        createBeneficiaryResponse =
+        CreateBeneficiaryResponse createBeneficiaryResponse =
                 new CreateBeneficiaryResponse(createBeneficiaryRequest.getBeneficiary());
         if (apiResponse.isNeedExtendedAuthenticationError()) {
             createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.INITIATED);

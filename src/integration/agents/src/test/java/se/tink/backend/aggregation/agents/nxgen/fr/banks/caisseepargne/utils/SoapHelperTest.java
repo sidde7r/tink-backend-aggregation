@@ -19,7 +19,7 @@ import se.tink.libraries.identitydata.IdentityData;
 
 public class SoapHelperTest {
 
-    private static final String xmlData =
+    private static final String XML_DATA =
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                     + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
                     + "  <soap:Body>\n"
@@ -92,11 +92,11 @@ public class SoapHelperTest {
 
     @Test
     public void getIdentityData() {
-        IdentityData data = SoapHelper.getIdentityData(xmlData);
+        IdentityData data = SoapHelper.getIdentityData(XML_DATA);
         assertThat(data.getFullName()).isEqualTo("FIRSTNAME SURNAME");
     }
 
-    private static final String accountsData =
+    private static final String ACCOUNTS_DATA =
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                     + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
                     + "  <soap:Body>\n"
@@ -172,7 +172,7 @@ public class SoapHelperTest {
                     + "  </soap:Body>\n"
                     + "</soap:Envelope>";
 
-    private static final String accountDetailsData =
+    private static final String ACCOUNT_DETAILS_DATA =
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                     + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
                     + "  <soap:Body>\n"
@@ -214,7 +214,7 @@ public class SoapHelperTest {
                     + "  </soap:Body>\n"
                     + "</soap:Envelope>";
 
-    private static final String transactionsData =
+    private static final String TRANSACTIONS_DATA =
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                     + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
                     + "  <soap:Body>\n"
@@ -258,7 +258,7 @@ public class SoapHelperTest {
                     + "  </soap:Body>\n"
                     + "</soap:Envelope>\n";
 
-    private final String data =
+    private static final String NULL_ACCOUNT_BALANCE_ACCOUNTS_DATA =
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                     + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
                     + "  <soap:Body>\n"
@@ -309,9 +309,16 @@ public class SoapHelperTest {
                     + "  </soap:Body>\n"
                     + "</soap:Envelope>";
 
+    private static final String IBAN = "FR4820041010050014391645720";
+    private static final String IBAN_B = "FR6720041010050008697430710";
+    private static final String SHORT_ACC_NR = "12312312312";
+    private static final String LONG_ACC_NR = "12312312312312312312312";
+    private static final String LONG_ACC_NR_B = "32132132132132132132132";
+    private static final String FAKE_NAME = "MLLE SURNAME NAME";
+
     @Test
     public void testMoreAccounts() {
-        AccountsResponse resp = SoapHelper.getAccounts(data);
+        AccountsResponse resp = SoapHelper.getAccounts(NULL_ACCOUNT_BALANCE_ACCOUNTS_DATA);
         resp.stream()
                 .forEach(
                         accountEntity ->
@@ -328,17 +335,16 @@ public class SoapHelperTest {
                         .filter(account -> account.getType().equals(AccountTypes.CHECKING))
                         .findFirst();
         assertThat(checking.isPresent()).isTrue();
-        assertThat(checking.get().getAccountNumber()).isEqualTo("12312312312");
-        assertThat(checking.get().getIdentifiers().get(0).getIdentifier())
-                .isEqualTo("FR4820041010050014391645720");
-        assertThat(checking.get().getHolderName().toString()).isEqualTo("MLLE SURNAME NAME");
+        assertThat(checking.get().getAccountNumber()).isEqualTo(SHORT_ACC_NR);
+        assertThat(checking.get().getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN);
+        assertThat(checking.get().getHolderName().toString()).isEqualTo(FAKE_NAME);
         assertThat(checking.get().getExactBalance().compareTo(BigDecimal.valueOf(0.64)))
                 .isEqualTo(0);
     }
 
     @Test
     public void getAccounts() {
-        AccountsResponse response = SoapHelper.getAccounts(accountsData);
+        AccountsResponse response = SoapHelper.getAccounts(ACCOUNTS_DATA);
         response.stream()
                 .forEach(
                         accountEntity ->
@@ -356,10 +362,9 @@ public class SoapHelperTest {
                         .filter(account -> account.getType().equals(AccountTypes.CHECKING))
                         .findFirst();
         assertThat(checking.isPresent()).isTrue();
-        assertThat(checking.get().getAccountNumber()).isEqualTo("12312312312");
-        assertThat(checking.get().getIdentifiers().get(0).getIdentifier())
-                .isEqualTo("FR4820041010050014391645720");
-        assertThat(checking.get().getHolderName().toString()).isEqualTo("MLLE SURNAME NAME");
+        assertThat(checking.get().getAccountNumber()).isEqualTo(SHORT_ACC_NR);
+        assertThat(checking.get().getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN);
+        assertThat(checking.get().getHolderName().toString()).isEqualTo(FAKE_NAME);
         assertThat(checking.get().getExactBalance().compareTo(BigDecimal.valueOf(59.23)))
                 .isEqualTo(0);
         Optional<TransactionalAccount> savings =
@@ -367,31 +372,30 @@ public class SoapHelperTest {
                         .filter(account -> account.getType().equals(AccountTypes.SAVINGS))
                         .findFirst();
         assertThat(savings.isPresent()).isTrue();
-        assertThat(savings.get().getHolderName().toString()).isEqualTo("MLLE SURNAME NAME");
-        assertThat(savings.get().getIdentifiers().get(0).getIdentifier())
-                .isEqualTo("FR6720041010050008697430710");
+        assertThat(savings.get().getHolderName().toString()).isEqualTo(FAKE_NAME);
+        assertThat(savings.get().getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN_B);
         assertThat(savings.get().getExactBalance().compareTo(BigDecimal.valueOf(10))).isEqualTo(0);
     }
 
     private String getIban(String fullAccountNumber) {
-        if (fullAccountNumber.equals("12312312312312312312312")) {
-            return "FR4820041010050014391645720";
-        } else if (fullAccountNumber.equals("32132132132132132132132")) {
-            return "FR6720041010050008697430710";
+        if (fullAccountNumber.equals(LONG_ACC_NR)) {
+            return IBAN;
+        } else if (fullAccountNumber.equals(LONG_ACC_NR_B)) {
+            return IBAN_B;
         }
         return "";
     }
 
     @Test
     public void getAccountDetails() {
-        AccountDetailsResponse response2 = SoapHelper.getAccountDetails(accountDetailsData);
+        AccountDetailsResponse response2 = SoapHelper.getAccountDetails(ACCOUNT_DETAILS_DATA);
         AccountDetailsResultEntity a = response2.getResult();
         assertThat(a.getIban()).isEqualTo("FR1231231231231231231231231");
     }
 
     @Test
     public void getTransactions() {
-        TransactionsResponse response = SoapHelper.getTransactions(transactionsData);
+        TransactionsResponse response = SoapHelper.getTransactions(TRANSACTIONS_DATA);
         Collection<? extends Transaction> transactions = response.getTinkTransactions();
         assertThat(transactions.size()).isEqualTo(2);
         Optional<? extends Transaction> negativeTransaction =

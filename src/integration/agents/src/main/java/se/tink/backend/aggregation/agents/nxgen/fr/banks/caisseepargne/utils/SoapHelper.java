@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Objects;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import org.w3c.dom.Element;
@@ -77,7 +78,7 @@ public class SoapHelper {
             XMLStreamReader xmlReader = inputFactory.createXMLStreamReader(stringReader);
             while (xmlReader.hasNext()) {
                 int eventType = xmlReader.next();
-                if (eventType == XMLStreamReader.START_ELEMENT
+                if (eventType == XMLStreamConstants.START_ELEMENT
                         && xmlReader.getLocalName().equals(xmlElementKey)) {
                     break;
                 }
