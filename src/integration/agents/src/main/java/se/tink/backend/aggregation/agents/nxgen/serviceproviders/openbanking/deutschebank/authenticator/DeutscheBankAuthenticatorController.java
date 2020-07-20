@@ -48,6 +48,7 @@ public class DeutscheBankAuthenticatorController
                 ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                 TimeUnit.MINUTES);
 
+        authenticator.confirmAuthentication();
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
