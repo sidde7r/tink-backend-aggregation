@@ -179,7 +179,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     // General Payments Interface
 
-    private RequestBuilder createPISRequest(URL url) {
+    private RequestBuilder createPisRequest(URL url) {
         return httpClient
                 .request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -190,7 +190,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                         randomValueGenerator.generateRandomHexEncoded(8));
     }
 
-    private RequestBuilder createPISRequestWithJWSHeader(URL url, Object request) {
+    private RequestBuilder createPisRequestWithJwsHeader(URL url, Object request) {
         return httpClient
                 .request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -292,60 +292,60 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public <T> T createDomesticPaymentConsent(
             UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createPISRequestWithJWSHeader(pisConfig.createDomesticPaymentConsentURL(), request)
+        return createPisRequestWithJwsHeader(pisConfig.createDomesticPaymentConsentURL(), request)
                 .post(responseType, request);
     }
 
     public <T> T getDomesticPaymentConsent(
             UkOpenBankingPisConfig pisConfig, String consentId, Class<T> responseType) {
-        return createPISRequest(pisConfig.getDomesticPaymentConsentURL(consentId))
+        return createPisRequest(pisConfig.getDomesticPaymentConsentURL(consentId))
                 .get(responseType);
     }
 
     public <T> T executeDomesticPayment(
             UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createPISRequestWithJWSHeader(pisConfig.createDomesticPaymentURL(), request)
+        return createPisRequestWithJwsHeader(pisConfig.createDomesticPaymentURL(), request)
                 .post(responseType, request);
     }
 
     public <T> T getDomesticFundsConfirmation(
             UkOpenBankingPisConfig pisConfig, String consentId, Class<T> responseType) {
-        return createPISRequest(pisConfig.getDomesticFundsConfirmationURL(consentId))
+        return createPisRequest(pisConfig.getDomesticFundsConfirmationURL(consentId))
                 .get(responseType);
     }
 
     public <T> T getDomesticPayment(
             UkOpenBankingPisConfig pisConfig, String paymentId, Class<T> responseType) {
-        return createPISRequest(pisConfig.getDomesticPayment(paymentId)).get(responseType);
+        return createPisRequest(pisConfig.getDomesticPayment(paymentId)).get(responseType);
     }
 
     public <T> T createInternationalPaymentConsent(
             UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createPISRequest(pisConfig.createInternationalPaymentConsentURL())
+        return createPisRequest(pisConfig.createInternationalPaymentConsentURL())
                 .post(responseType, request);
     }
 
     public <T> T getInternationalPaymentConsent(
             UkOpenBankingPisConfig pisConfig, String consentId, Class<T> responseType) {
-        return createPISRequest(pisConfig.getInternationalPaymentConsentURL(consentId))
+        return createPisRequest(pisConfig.getInternationalPaymentConsentURL(consentId))
                 .get(responseType);
     }
 
     public <T> T getInternationalPayment(
             UkOpenBankingPisConfig pisConfig, String consentId, Class<T> responseType) {
-        return createPISRequest(pisConfig.getInternationalPayment(consentId))
+        return createPisRequest(pisConfig.getInternationalPayment(consentId))
                 .post(responseType, consentId);
     }
 
     public <T> T getInternationalFundsConfirmation(
             UkOpenBankingPisConfig pisConfig, String consentId, Class<T> responseType) {
-        return createPISRequest(pisConfig.getInternationalFundsConfirmationURL(consentId))
+        return createPisRequest(pisConfig.getInternationalFundsConfirmationURL(consentId))
                 .get(responseType);
     }
 
     public <T> T executeInternationalPayment(
             UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createPISRequest(pisConfig.createInternationalPaymentURL())
+        return createPisRequest(pisConfig.createInternationalPaymentURL())
                 .post(responseType, request);
     }
 }
