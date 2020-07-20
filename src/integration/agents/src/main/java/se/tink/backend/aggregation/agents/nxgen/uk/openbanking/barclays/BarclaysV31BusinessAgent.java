@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingLocalKeySignerModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
+public class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingPisConfig pisConfig;
@@ -33,7 +33,7 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 new UKOpenBankingAis.Builder()
                         .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.PERSONAL_WELL_KNOWN_URL)
+                        .withWellKnownURL(V31.BUSINESS_WELL_KNOWN_URL)
                         .withIdentityDataURL(
                                 PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
                         .withAdditionalPermission(
@@ -43,7 +43,7 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
     }
 
     @Inject
-    public BarclaysV31Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
+    public BarclaysV31BusinessAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(componentProvider, jwtSigner, aisConfig, true);
         pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
     }

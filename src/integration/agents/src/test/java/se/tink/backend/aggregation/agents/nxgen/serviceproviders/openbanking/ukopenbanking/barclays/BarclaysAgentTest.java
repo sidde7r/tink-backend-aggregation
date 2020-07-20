@@ -14,20 +14,21 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
-// @Ignore
 public class BarclaysAgentTest {
 
     private final String SOURCE_IDENTIFIER = "";
     private final String DESTINATION_IDENTIFIER = "";
+    private static final String BARCLAYS_FINANCIAL_INSTITUTION_ID =
+            "0ee1cda5943e4662bb9775c34de291d6";
 
     @Test
-    public void test() throws Exception {
+    public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-barclays-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setAppId("tink")
-                .setFinancialInstitutionId("barclays")
+                .setFinancialInstitutionId(BARCLAYS_FINANCIAL_INSTITUTION_ID)
                 .build()
                 .testRefresh();
     }
@@ -40,7 +41,7 @@ public class BarclaysAgentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setAppId("tink")
-                        .setFinancialInstitutionId("barclays");
+                        .setFinancialInstitutionId(BARCLAYS_FINANCIAL_INSTITUTION_ID);
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

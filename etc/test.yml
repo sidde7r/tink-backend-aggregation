@@ -2591,6 +2591,36 @@ agentsServiceConfiguration:
         psuIpAddress: ''
         redirectUrl: dummyRedirectUrl
         subscriptionKey: ''
+    7ec2ca5411f645ecad992932e17e0593:
+      tink:
+        baseUrl: https://sml-prod-psd2.azure-api.net
+        clientId: '471808804456205'
+        clientSecret: bzUjt-BJfJj-NevJD-USAlM
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        subscriptionKey: 2ce68d55316f410bae8737deee66b081
+        apiKey: 2ce68d55316f410bae8737deee66b081
+        certificate: ""
+        keyId: "SN=6A3616CCA87DC6204F498A3223E59C09,CA=CN=MULTICERT Trust Services Certification Authority 002,OU=Certification Authority,O=MULTICERT - Serviços de Certificação Electrónica S.A.,C=PT"
+    c1746bbd12204b5d959424d2c598cddc:
+      tink:
+        baseUrl: https://sml-prod-psd2.azure-api.net
+        clientId: '471808804456205'
+        clientSecret: bzUjt-BJfJj-NevJD-USAlM
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        subscriptionKey: 2ce68d55316f410bae8737deee66b081
+        apiKey: 2ce68d55316f410bae8737deee66b081
+        certificate: ""
+        keyId: "SN=6A3616CCA87DC6204F498A3223E59C09,CA=CN=MULTICERT Trust Services Certification Authority 002,OU=Certification Authority,O=MULTICERT - Serviços de Certificação Electrónica S.A.,C=PT"
+    5bb26ebf745d4098bed2b353389881a1:
+      tink:
+        baseUrl: https://sml-prod-psd2.azure-api.net
+        clientId: '471808804456205'
+        clientSecret: bzUjt-BJfJj-NevJD-USAlM
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        subscriptionKey: 2ce68d55316f410bae8737deee66b081
+        apiKey: 2ce68d55316f410bae8737deee66b081
+        certificate: ""
+        keyId: "SN=6A3616CCA87DC6204F498A3223E59C09,CA=CN=MULTICERT Trust Services Certification Authority 002,OU=Certification Authority,O=MULTICERT - Serviços de Certificação Electrónica S.A.,C=PT"
     f9d208c4711741fdafc6df4dc114d5a0:
       tink:
         apiKey: dummyApiKey
