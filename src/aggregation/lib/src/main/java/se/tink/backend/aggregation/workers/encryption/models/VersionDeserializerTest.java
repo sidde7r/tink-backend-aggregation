@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.encryption.models;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,11 +41,18 @@ public class VersionDeserializerTest {
                         + "  }\n"
                         + "}";
 
+        AtomicBoolean rightHandlerCalled = new AtomicBoolean(false);
+
         new VersionDeserializer()
                 .setDefaultHandler(head -> Assert.fail("defualt handler should not be called"))
                 .setVersion1Handler(
-                        v1 -> Assert.assertEquals(1593186921015L, v1.getTimestamp().getTime()))
+                        v1 -> {
+                            Assert.assertEquals(1593186921015L, v1.getTimestamp().getTime());
+                            rightHandlerCalled.set(true);
+                        })
                 .handle(input);
+
+        Assert.assertTrue(rightHandlerCalled.get());
     }
 
     @Test
@@ -64,10 +72,18 @@ public class VersionDeserializerTest {
                         + "  }\n"
                         + "}";
 
+        AtomicBoolean rightHandlerCalled = new AtomicBoolean(false);
+
         new VersionDeserializer()
-                .setDefaultHandler(head -> Assert.assertEquals(99999, head.getVersion()))
+                .setDefaultHandler(
+                        head -> {
+                            Assert.assertEquals(99999, head.getVersion());
+                            rightHandlerCalled.set(true);
+                        })
                 .setVersion1Handler(v1 -> Assert.fail("version1 handler should not be called"))
                 .handle(input);
+
+        Assert.assertTrue(rightHandlerCalled.get());
     }
 
     @Test
