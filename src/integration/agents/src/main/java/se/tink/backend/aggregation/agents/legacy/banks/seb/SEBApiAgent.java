@@ -2145,8 +2145,10 @@ public class SEBApiAgent extends AbstractAgent
         switch (validationResult.getAllowedType()) {
             case MESSAGE:
                 remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+                break;
             case OCR:
                 remittanceInformation.setType(RemittanceInformationType.OCR);
+                break;
             default:
                 // TODO: What to do if we have both a valid message and valid OCR in
                 // validationResult? We just prioritize OCR for now, and if not present use message
