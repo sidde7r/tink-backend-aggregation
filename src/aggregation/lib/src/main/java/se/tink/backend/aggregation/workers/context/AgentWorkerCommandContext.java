@@ -428,7 +428,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         // Compare transactions.
         Map<Account, List<Transaction>> newTransactionCache =
-                accountDataCache.getFilteredTransactions();
+                accountDataCache.getTransactionsToBeProcessed();
         Map<Account, List<Transaction>> oldTransactionCache = collectOldTransactionsPerAccount();
 
         if (!areTransactionsEqual(oldTransactionCache, newTransactionCache)) {

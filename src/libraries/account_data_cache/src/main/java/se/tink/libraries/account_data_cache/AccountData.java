@@ -1,5 +1,6 @@
 package se.tink.libraries.account_data_cache;
 
+import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.agents.rpc.Account;
@@ -57,6 +58,18 @@ public class AccountData {
 
     public AccountFeatures getAccountFeatures() {
         return accountFeatures;
+    }
+
+    public boolean hasTransactions() {
+        return !transactions.isEmpty();
+    }
+
+    public void updateTransactionsAccountId() {
+        Preconditions.checkState(
+                this.isProcessed,
+                "The AccountData must be processed before we can update the transactions' accountId.");
+        String tinkAccountId = account.getId();
+        transactions.forEach(transaction -> transaction.setAccountId(tinkAccountId));
     }
 
     public List<Transaction> getTransactions() {

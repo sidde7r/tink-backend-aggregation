@@ -84,6 +84,10 @@ public class AccountDataCache {
         return getFilteredAccountDataStream().collect(Collectors.toList());
     }
 
+    private Stream<AccountData> getProcessedAccountDataStream() {
+        return getFilteredAccountDataStream().filter(AccountData::isProcessed);
+    }
+
     public List<AccountData> getAllAccountData() {
         return new ArrayList<>(accountDataByAccountUniqueId.values());
     }
@@ -94,15 +98,22 @@ public class AccountDataCache {
                 .collect(Collectors.toList());
     }
 
+    public List<Account> getProcessedAccounts() {
+        return getProcessedAccountDataStream()
+                .map(AccountData::getAccount)
+                .collect(Collectors.toList());
+    }
+
     public List<Account> getAllAccounts() {
         return accountDataByAccountUniqueId.values().stream()
                 .map(AccountData::getAccount)
                 .collect(Collectors.toList());
     }
 
-    public Map<Account, List<Transaction>> getFilteredTransactions() {
-        return getFilteredAccountDataStream()
-                .filter(accountData -> !accountData.getTransactions().isEmpty())
+    public Map<Account, List<Transaction>> getTransactionsToBeProcessed() {
+        return getProcessedAccountDataStream()
+                .filter(AccountData::hasTransactions)
+                .peek(AccountData::updateTransactionsAccountId)
                 .collect(Collectors.toMap(AccountData::getAccount, AccountData::getTransactions));
     }
 
