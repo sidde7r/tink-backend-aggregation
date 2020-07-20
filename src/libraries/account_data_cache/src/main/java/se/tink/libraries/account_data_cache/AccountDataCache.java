@@ -36,6 +36,14 @@ public class AccountDataCache {
         return Optional.ofNullable(accountDataByAccountUniqueId.get(accountUniqueId));
     }
 
+    // We will be given a tinkAccountId from system when it has processed an account.
+    // This id is needed for other account data to be properly set in order to send
+    // it to system for processing (e.g. transactions).
+    public void processAccount(String accountUniqueId, String tinkAccountId) {
+        getAccountData(accountUniqueId)
+                .ifPresent(accountData -> accountData.processAccount(tinkAccountId));
+    }
+
     public void cacheAccount(Account account) {
         String accountUniqueId = account.getBankId();
         if (accountDataByAccountUniqueId.containsKey(accountUniqueId)) {

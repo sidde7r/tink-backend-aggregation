@@ -9,15 +9,26 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 
 public class AccountData {
     private final Account account;
+    private boolean isProcessed;
     private AccountFeatures accountFeatures;
     private List<Transaction> transactions;
     private List<TransferDestinationPattern> transferDestinationPatterns;
 
     public AccountData(Account account) {
         this.account = account;
+        this.isProcessed = false;
         this.accountFeatures = AccountFeatures.createEmpty();
         this.transactions = new ArrayList<>();
         this.transferDestinationPatterns = new ArrayList<>();
+    }
+
+    public void processAccount(String tinkAccountId) {
+        this.account.setId(tinkAccountId);
+        this.isProcessed = true;
+    }
+
+    public boolean isProcessed() {
+        return isProcessed;
     }
 
     public void updateAccountFeatures(AccountFeatures accountFeatures) {
