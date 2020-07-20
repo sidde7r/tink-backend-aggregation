@@ -16,9 +16,6 @@ public class TransactionEntity {
     private String valueDate;
     private TransactionAmountEntity transactionAmount;
     private String remittanceInformationUnstructured;
-    private String remittanceInformationStructured;
-    private String transactionId;
-    private String creditorName;
 
     public ExactCurrencyAmount getTransactionAmount() {
         return transactionAmount.toTinkAmount();

@@ -6,8 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class Links {
 
-    private Href startAuthorisation;
-
     private Href scaStatus;
 
     private Href scaRedirect;

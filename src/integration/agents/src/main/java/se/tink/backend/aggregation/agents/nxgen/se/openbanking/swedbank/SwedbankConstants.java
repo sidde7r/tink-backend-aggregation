@@ -10,12 +10,10 @@ public final class SwedbankConstants {
 
     public static final String INTEGRATION_NAME = "swedbank";
     public static final int TRANSACTIONS_DOWNLOAD_RETRY_COUNT = 3;
-    private static final String SANDBOX = "/sandbox";
 
     public static class Format {
         public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
         public static final String HEADER_TIMESTAMP = "E, dd MMM yyyy HH:mm:ss z";
-        public static final String CONSENT_VALIDITY_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ss.SSS";
     }
 
     public static class Urls {
@@ -39,12 +37,10 @@ public final class SwedbankConstants {
     public static class Endpoints {
         public static final String AUTHORIZATION = "/psd2/v3/authorize-decoupled";
         public static final String TOKEN = "/psd2/token";
-        public static final String ACCOUNTS = SANDBOX + "/v3/accounts";
-        public static final String ACCOUNT_BALANCES =
-                SANDBOX + "/v3/accounts/{account-id}/balances";
-        public static final String ACCOUNT_TRANSACTIONS =
-                SANDBOX + "/v3/accounts/{account-id}/transactions";
-        public static final String CONSENTS = SANDBOX + "/v3/consents";
+        public static final String ACCOUNTS = "/v3/accounts";
+        public static final String ACCOUNT_BALANCES = "/v3/accounts/{account-id}/balances";
+        public static final String ACCOUNT_TRANSACTIONS = "/v3/accounts/{account-id}/transactions";
+        public static final String CONSENTS = "/v3/consents";
         public static final String CONSENT_STATUS = CONSENTS + "/{consent-id}/status";
         public static final String INITIATE_PAYMENT = "/v2/payments/{paymentType}";
         public static final String GET_PAYMENT = "/v2/payments/{paymentId}";
@@ -112,27 +108,21 @@ public final class SwedbankConstants {
 
     public static class HeaderValues {
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
-        public static final String PSU_USER_AGENT =
-                "Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1";
+        public static final String PSU_USER_AGENT = "Tink";
         public static final String SIGNATURE_HEADER =
                 "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
         public static final String DATE_PATTERN = "EEE, dd MMM yyyy k:m:s zzz";
-        public static final String OLD_CERT_ID = "Tink";
         public static final String TPP_REDIRECT_PREFERRED = "false";
     }
 
     public static class RequestValues {
         public static final String SWEDBANK_BANKID = "08999";
-        // temp for sandbox remove when production environment has been enabled
-        public static final String PSD2 = "PSD2sandbox";
-        // public static final String PSD2 = "PSD2";
+        public static final String PSD2 = "PSD2";
         public static final String MOBILE_ID = "MOBILE_ID";
     }
 
     public static class BICProduction {
-        // temp for sandbox remove when production environment has been enabled
-        public static final String SWEDEN = "SANDSESS";
-        // public static final String SWEDEN = "SWEDSESS";
+        public static final String SWEDEN = "SWEDSESS";
     }
 
     public static class AuthStatus {
