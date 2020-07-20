@@ -1,51 +1,39 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays;
 
 import com.google.inject.Inject;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.BarclaysConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingLocalKeySignerModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
+public class BarclaysV31CorporateAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final UkOpenBankingPisConfig pisConfig;
 
     static {
         aisConfig =
                 new UKOpenBankingAis.Builder()
                         .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.PERSONAL_WELL_KNOWN_URL)
-                        .withIdentityDataURL(
-                                PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
-                        .withAdditionalPermission(
-                                PartyEndpoints.partyEndpointsPermissionMap.get(
-                                        PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES))
+                        .withWellKnownURL(V31.CORPORATE_WELL_KNOWN_URL)
                         .build();
     }
 
     @Inject
-    public BarclaysV31Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
+    public BarclaysV31CorporateAgent(
+            AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(componentProvider, jwtSigner, aisConfig, true);
-        pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
     }
 
     @Override
@@ -58,21 +46,5 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return super.constructAuthenticator(aisConfig);
-    }
-
-    @Override
-    public Optional<PaymentController> constructPaymentController() {
-        UKOpenbankingV31Executor ukOpenbankingV31Executor =
-                new UKOpenbankingV31Executor(
-                        pisConfig,
-                        softwareStatement,
-                        providerConfiguration,
-                        apiClient,
-                        supplementalInformationHelper,
-                        credentials,
-                        strongAuthenticationState,
-                        randomValueGenerator);
-        return Optional.of(
-                new PaymentController(ukOpenbankingV31Executor, ukOpenbankingV31Executor));
     }
 }

@@ -9,8 +9,12 @@ public final class BarclaysConstants {
                     "https://telesto.api.barclays:443/open-banking/v3.1/aisp";
             public static final String PIS_API_URL =
                     "https://telesto.api.barclays:443/open-banking/v3.1/pisp";
-            public static final String WELL_KNOWN_URL =
+            public static final String PERSONAL_WELL_KNOWN_URL =
                     "https://oauth.tiaa.barclays.com/BarclaysPersonal/.well-known/openid-configuration";
+            public static final String BUSINESS_WELL_KNOWN_URL =
+                    "https://oauth.tiaa.barclays.com/BarclaysBusiness/.well-known/openid-configuration";
+            public static final String CORPORATE_WELL_KNOWN_URL =
+                    "https://oauth.tiaa.barclays.com/BarclaysCorporate/.well-known/openid-configuration";
         }
     }
 }

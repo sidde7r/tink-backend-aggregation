@@ -74,6 +74,8 @@ ignoredAgentsForCapabilityTest:
   - nxgen.se.openbanking.business.seb.SebCorporateAgent
   - nxgen.se.openbanking.danskebank.DanskebankV31Agent
   - nxgen.se.openbanking.handelsbanken.HandelsbankenSEAgent
+  - nxgen.se.openbanking.icabanken.IcaBankenAgent
+  - nxgen.se.openbanking.lansforsakringar.LansforsakringarAgent
   - nxgen.se.openbanking.resursbank.ResursBankAgent
   - nxgen.se.openbanking.sbab.SbabAgent
   - nxgen.se.openbanking.sebopenbanking.SebAgent
@@ -91,6 +93,8 @@ ignoredAgentsForCapabilityTest:
   - nxgen.serviceproviders.openbanking.sdc.SdcAgent
   - nxgen.serviceproviders.openbanking.sparebank.SparebankAgent
   - nxgen.uk.openbanking.barclays.BarclaysV31Agent
+  - nxgen.uk.openbanking.barclays.BarclaysV31BusinessAgent
+  - nxgen.uk.openbanking.barclays.BarclaysV31CorporateAgent
   - nxgen.uk.openbanking.revolut.RevolutV31Agent
   - nxgen.uk.openbanking.starling.StarlingAgent
   - nxgen.se.brokers.nordnet.NordnetAgent
