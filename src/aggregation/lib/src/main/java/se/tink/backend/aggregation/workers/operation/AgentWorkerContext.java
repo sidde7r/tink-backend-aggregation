@@ -8,16 +8,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.agents.rpc.Account;
@@ -58,6 +48,17 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.transfer.rpc.Transfer;
+
+import javax.annotation.Nonnull;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
@@ -425,7 +426,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                                         request.getProvider().getMarket(),
                                         correlationId,
                                         request.getCredentials().getId(),
-                                        account.getBankId(),
+                                        account.getId(),
                                         account.getType().name(),
                                         classification.name(),
                                         account.getCapabilities()));
@@ -443,7 +444,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 request.getProvider().getMarket(),
                 correlationId,
                 request.getCredentials().getId(),
-                account.getBankId(),
+                account.getId(),
                 account.getSourceInfo());
     }
 
