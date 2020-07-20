@@ -10,6 +10,7 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/tpp_secrets_service/client",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
