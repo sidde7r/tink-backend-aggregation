@@ -80,28 +80,6 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         this.aisConfig = aisConfig;
     }
 
-    public <T> T createPaymentIntentId(
-            UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createPisRequest(pisConfig.createPaymentsURL())
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .header(
-                        UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
-                        randomValueGenerator.generateRandomHexEncoded(8))
-                .body(request)
-                .post(responseType);
-    }
-
-    public <T> T submitPayment(
-            UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createPisRequest(pisConfig.createPaymentSubmissionURL())
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .header(
-                        UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
-                        randomValueGenerator.generateRandomHexEncoded(8))
-                .body(request)
-                .post(responseType);
-    }
-
     private <T extends AccountPermissionResponse> T createAccountIntentId(Class<T> responseType) {
         // Account Permissions are added to persistentStorage
         List<String> accountPermissions = new ArrayList<>(ACCOUNT_PERMISSIONS);
