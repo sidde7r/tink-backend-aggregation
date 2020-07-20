@@ -23,6 +23,7 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     private final String market;
     private IdentityDataEntity identityData;
     private String holderName;
+    private boolean partyEndpointEnabled;
 
     private DanskebankAisConfiguration(
             URL apiBaseURL,
@@ -30,13 +31,15 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
             URL identityDataURL,
             URL appToAppURL,
             List<String> additionalPermissions,
-            @Nonnull MarketCode market) {
+            @Nonnull MarketCode market,
+            boolean partyEndpointEnabled) {
         this.apiBaseURL = apiBaseURL;
         this.wellKnownURL = wellKnownURL;
         this.identityDataURL = identityDataURL;
         this.appToAppURL = appToAppURL;
         this.additionalPermissions = additionalPermissions;
         this.market = market.name().toLowerCase();
+        this.partyEndpointEnabled = partyEndpointEnabled;
     }
 
     public URL getWellKnownURL() {
@@ -49,7 +52,7 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
 
     @Override
     public boolean isPartyEndpointEnabled() {
-        return true;
+        return partyEndpointEnabled;
     }
 
     @Override
@@ -148,6 +151,7 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
         protected URL appToAppURL;
         private MarketCode market;
         protected List<String> additionalPermissions;
+        private boolean partyEndpointEnabled = true;
 
         public Builder() {}
 
@@ -199,6 +203,12 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
             return this;
         }
 
+        public DanskebankAisConfiguration.Builder partyEndpointEnabled(
+                final boolean partyEndpointEnabled) {
+            this.partyEndpointEnabled = partyEndpointEnabled;
+            return this;
+        }
+
         public DanskebankAisConfiguration build() {
             Preconditions.checkNotNull(apiBaseURL);
             return new DanskebankAisConfiguration(
@@ -207,7 +217,8 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
                     identityDataURL,
                     appToAppURL,
                     additionalPermissions,
-                    market);
+                    market,
+                    partyEndpointEnabled);
         }
     }
 }

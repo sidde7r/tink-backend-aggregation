@@ -26,6 +26,7 @@ public class DanskebankV31Agent extends UkOpenBankingBaseAgent {
                         .withApiBaseURL(V31.AIS_BASE)
                         .withWellKnownURL(V31.getWellKnownUrl(MarketCode.DK))
                         .onMarket(MarketCode.DK)
+                        .partyEndpointEnabled(false)
                         .build();
     }
 
