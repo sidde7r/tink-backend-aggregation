@@ -18,10 +18,7 @@ public class DanskebankAisConfigurationTest {
 
     @Before
     public void setUp() {
-        builder =
-                DanskebankAisConfiguration.Builder.builder()
-                        .withApiBaseURL(API_BASE_URL)
-                        .onMarket(MarketCode.DK);
+        builder = new DanskebankAisConfiguration.Builder(API_BASE_URL, MarketCode.DK);
     }
 
     @Test
