@@ -165,13 +165,6 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         }
     }
 
-    protected RequestBuilder createPisRequest(URL url) {
-        return httpClient
-                .request(url)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .addFilter(getPisAuthFilter());
-    }
-
     public RequestBuilder createAisRequest(URL url) {
         return httpClient
                 .request(url)
@@ -187,7 +180,10 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     // General Payments Interface
 
     private RequestBuilder createPISRequest(URL url) {
-        return createPisRequest(url)
+        return httpClient
+                .request(url)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .addFilter(getPisAuthFilter())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
@@ -195,7 +191,10 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     private RequestBuilder createPISRequestWithJWSHeader(URL url, Object request) {
-        return createPisRequest(url)
+        return httpClient
+                .request(url)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .addFilter(getPisAuthFilter())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
