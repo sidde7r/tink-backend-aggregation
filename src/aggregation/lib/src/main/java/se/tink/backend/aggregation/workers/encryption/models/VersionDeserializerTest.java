@@ -12,15 +12,16 @@ public class VersionDeserializerTest {
 
     @Test
     public void handleIsCalledWithoutDefaultHandlerThrowsIllegalStateException() {
-        Throwable thrown = catchThrowable(() -> new VersionDeserializer().handle("{}"));
-        assertThat(thrown).isInstanceOf(IllegalStateException.class);
+        Throwable thrown =
+                catchThrowable(() -> VersionDeserializer.withDefaultHandler(null).handle("{}"));
+        assertThat(thrown).isInstanceOf(NullPointerException.class);
     }
 
     @Test
     public void handleIsCalledWithNullInputThrowsNullPointerException() {
         Throwable thrown =
                 catchThrowable(
-                        () -> new VersionDeserializer().setDefaultHandler(head -> {}).handle(null));
+                        () -> VersionDeserializer.withDefaultHandler(head -> {}).handle(null));
         assertThat(thrown).isInstanceOf(NullPointerException.class);
     }
 
@@ -43,8 +44,8 @@ public class VersionDeserializerTest {
 
         AtomicBoolean rightHandlerCalled = new AtomicBoolean(false);
 
-        new VersionDeserializer()
-                .setDefaultHandler(head -> Assert.fail("defualt handler should not be called"))
+        VersionDeserializer.withDefaultHandler(
+                        head -> Assert.fail("defualt handler should not be called"))
                 .setVersion1Handler(
                         v1 -> {
                             Assert.assertEquals(1593186921015L, v1.getTimestamp().getTime());
@@ -74,8 +75,7 @@ public class VersionDeserializerTest {
 
         AtomicBoolean rightHandlerCalled = new AtomicBoolean(false);
 
-        new VersionDeserializer()
-                .setDefaultHandler(
+        VersionDeserializer.withDefaultHandler(
                         head -> {
                             Assert.assertEquals(99999, head.getVersion());
                             rightHandlerCalled.set(true);
@@ -99,8 +99,7 @@ public class VersionDeserializerTest {
 
         incrementor.set(1);
 
-        new VersionDeserializer()
-                .setDefaultHandler(
+        VersionDeserializer.withDefaultHandler(
                         head -> {
                             try {
                                 Thread.sleep(3000);

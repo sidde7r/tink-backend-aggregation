@@ -66,8 +66,7 @@ public class CredentialsCrypto {
         AtomicBoolean success = new AtomicBoolean(false);
 
         // Deserialize & Decrypt using right version
-        new VersionDeserializer()
-                .setDefaultHandler(
+        VersionDeserializer.withDefaultHandler(
                         head -> {
                             logger.error(
                                     String.format(

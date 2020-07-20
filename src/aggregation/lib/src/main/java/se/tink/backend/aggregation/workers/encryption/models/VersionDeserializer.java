@@ -9,24 +9,28 @@ public class VersionDeserializer {
     private static final ObjectMapper mapper =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    private Consumer<EncryptedCredentials> handlerDefault;
+    private final Consumer<EncryptedCredentials> handlerDefault;
     private Consumer<EncryptedCredentialsV1> handlerV1;
     // Add new versions here
+
+    public VersionDeserializer(Consumer<EncryptedCredentials> handler) {
+        if (handler == null) {
+            throw new NullPointerException("DefaultHandler must be non-null.");
+        }
+
+        this.handlerDefault = handler;
+    }
+
+    public static VersionDeserializer withDefaultHandler(Consumer<EncryptedCredentials> handler) {
+        return new VersionDeserializer(handler);
+    }
 
     public VersionDeserializer setVersion1Handler(Consumer<EncryptedCredentialsV1> handler) {
         handlerV1 = handler;
         return this;
     }
 
-    public VersionDeserializer setDefaultHandler(Consumer<EncryptedCredentials> handler) {
-        handlerDefault = handler;
-        return this;
-    }
-
     public void handle(String input) {
-        if (handlerDefault == null) {
-            throw new IllegalStateException("Deserialization started without default handler.");
-        }
         if (input == null) {
             throw new NullPointerException();
         }
