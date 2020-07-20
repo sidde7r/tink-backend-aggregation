@@ -12,6 +12,7 @@ java_library(
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/rpc",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/events",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/metrics",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation/type",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",

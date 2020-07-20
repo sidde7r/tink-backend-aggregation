@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.compliance.account_classification.psd2_paymen
 import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
@@ -75,6 +76,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private ProviderSessionCacheController providerSessionCacheController;
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     protected final String correlationId;
+    protected final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
 
     private static class SupplementalInformationMetrics {
         private static final String CLUSTER_LABEL = "client_cluster";
@@ -135,7 +137,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             String clusterId,
             String appId,
             String correlationId,
-            RegulatoryRestrictions regulatoryRestrictions) {
+            RegulatoryRestrictions regulatoryRestrictions,
+            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
 
         this.accountDataCache = new AccountDataCache();
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
@@ -151,6 +154,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         // _Not_ instanciating a SystemService from the ServiceFactory here.
         this.coordinationClient = coordinationClient;
         this.regulatoryRestrictions = regulatoryRestrictions;
+        this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
 
         setClusterId(clusterId);
         setAggregatorInfo(aggregatorInfo);
@@ -391,6 +395,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     psd2PaymentAccountClassifier.classify(request.getProvider(), account);
             regulatoryRestrictions.shouldAccountBeRestricted(
                     request, account, paymentAccountClassification);
+            // Calling the following 2 methods is a temporary solution to get metrics running.
+            // This will be replaced shortly after the refactor of AgentWorkerContext is finished.
+            sendPsd2PaymentAccountClassificationEvent(account, paymentAccountClassification);
+            sendAccountSourceInfoEvent(account);
         } catch (RuntimeException e) {
             log.error("[classifyAsPaymentAccount] Unexpected exception occurred", e);
         }
@@ -398,6 +406,45 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 .map(Account::getBankId)
                 .collect(Collectors.toList())
                 .contains(account.getBankId());
+    }
+
+    private void sendPsd2PaymentAccountClassificationEvent(
+            Account account,
+            Optional<Psd2PaymentAccountClassificationResult> paymentAccountClassification) {
+        if (request.getProvider() == null) {
+            return;
+        }
+        paymentAccountClassification.ifPresent(
+                classification ->
+                        accountInformationServiceEventsProducer
+                                .sendPsd2PaymentAccountClassificationEvent(
+                                        getClusterId(),
+                                        getAppId(),
+                                        getRequest().getUser().getId(),
+                                        request.getProvider().getName(),
+                                        request.getProvider().getMarket(),
+                                        correlationId,
+                                        request.getCredentials().getId(),
+                                        account.getBankId(),
+                                        account.getType().name(),
+                                        classification.name(),
+                                        account.getCapabilities()));
+    }
+
+    private void sendAccountSourceInfoEvent(Account account) {
+        if (request.getProvider() == null) {
+            return;
+        }
+        accountInformationServiceEventsProducer.sendAccountSourceInfoEvent(
+                getClusterId(),
+                getAppId(),
+                getRequest().getUser().getId(),
+                request.getProvider().getName(),
+                request.getProvider().getMarket(),
+                correlationId,
+                request.getCredentials().getId(),
+                account.getBankId(),
+                account.getSourceInfo());
     }
 
     public CredentialsRequest getRequest() {

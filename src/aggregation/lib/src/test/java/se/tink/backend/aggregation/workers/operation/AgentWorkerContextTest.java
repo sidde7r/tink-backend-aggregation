@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -38,6 +39,7 @@ public class AgentWorkerContextTest {
     private ProviderSessionCacheController providerSessionCacheController;
     private ControllerWrapper controllerWrapper;
     private RegulatoryRestrictions regulatoryRestrictions;
+    private AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
 
     @Before
     public void setUp() {
@@ -51,6 +53,8 @@ public class AgentWorkerContextTest {
         this.regulatoryRestrictions = Mockito.mock(RegulatoryRestrictions.class);
         Mockito.when(regulatoryRestrictions.shouldAccountBeRestricted(any(), any(), any()))
                 .thenReturn(true);
+        this.accountInformationServiceEventsProducer =
+                Mockito.mock(AccountInformationServiceEventsProducer.class);
     }
 
     private AgentWorkerContext buildAgentWorkerContext(CredentialsRequest request) {
@@ -65,7 +69,8 @@ public class AgentWorkerContextTest {
                 "test",
                 "two",
                 "correlationId1234",
-                regulatoryRestrictions);
+                regulatoryRestrictions,
+                accountInformationServiceEventsProducer);
     }
 
     @Test
