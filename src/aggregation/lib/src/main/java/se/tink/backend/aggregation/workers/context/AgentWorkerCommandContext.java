@@ -54,7 +54,6 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class AgentWorkerCommandContext extends AgentWorkerContext
         implements SetAccountsToAggregateContext {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
-    private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
 
@@ -104,7 +103,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                 clusterId,
                 appId,
                 correlationId,
-                regulatoryRestrictions);
+                regulatoryRestrictions,
+                accountInformationServiceEventsProducer);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
@@ -138,7 +138,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                                 .label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
-        this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
     }
 
     // TODO: We should do this some other way. This is a hack we can use for now.
