@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
-import io.prometheus.client.Counter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
@@ -51,29 +49,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         implements MetricsCommand {
     private static final AggregationLogger log =
             new AggregationLogger(TransferAgentWorkerCommand.class);
-    // These are two experimental metrics
-    private static final Counter experimentNoLabel =
-            Counter.build()
-                    .namespace("tink")
-                    .subsystem("payments")
-                    .name("experiment_no_label_total")
-                    .help("Payments experiment no labels")
-                    .register();
-    private static final Counter experimentWithLabel =
-            Counter.build()
-                    .namespace("tink")
-                    .subsystem("payments")
-                    .name("experiment_with_label_total")
-                    .help("Payments experiment with labels")
-                    .labelNames("market", "provider")
-                    .register();
-    private static final Counter experimentWithNoIncrement =
-            Counter.build()
-                    .namespace("tink")
-                    .subsystem("payments")
-                    .name("experiment_no_increment_total")
-                    .help("Payments experiment with no increments")
-                    .register();
 
     private final TransferRequest transferRequest;
     private final AgentWorkerCommandMetricState metrics;
@@ -89,10 +64,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
     @Override
     public AgentWorkerCommandResult execute() {
-        experimentNoLabel.inc();
-        Provider provider = transferRequest.getProvider();
-        experimentWithLabel.labels(provider.getMarket(), provider.getName()).inc();
-
         Agent agent = context.getAgent();
         Catalog catalog = context.getCatalog();
 
