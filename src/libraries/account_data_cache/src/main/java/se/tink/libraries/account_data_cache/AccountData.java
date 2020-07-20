@@ -76,6 +76,10 @@ public class AccountData {
         return transactions;
     }
 
+    public boolean hasTransferDestinationPatterns() {
+        return !transferDestinationPatterns.isEmpty();
+    }
+
     public List<TransferDestinationPattern> getTransferDestinationPatterns() {
         return transferDestinationPatterns;
     }

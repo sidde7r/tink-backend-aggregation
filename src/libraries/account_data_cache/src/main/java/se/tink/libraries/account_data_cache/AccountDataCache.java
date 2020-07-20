@@ -117,9 +117,10 @@ public class AccountDataCache {
                 .collect(Collectors.toMap(AccountData::getAccount, AccountData::getTransactions));
     }
 
-    public Map<Account, List<TransferDestinationPattern>> getFilteredTransferDestinationPatterns() {
-        return getFilteredAccountDataStream()
-                .filter(accountData -> !accountData.getTransferDestinationPatterns().isEmpty())
+    public Map<Account, List<TransferDestinationPattern>>
+            getTransferDestinationPatternsToBeProcessed() {
+        return getProcessedAccountDataStream()
+                .filter(AccountData::hasTransferDestinationPatterns)
                 .collect(
                         Collectors.toMap(
                                 AccountData::getAccount,
