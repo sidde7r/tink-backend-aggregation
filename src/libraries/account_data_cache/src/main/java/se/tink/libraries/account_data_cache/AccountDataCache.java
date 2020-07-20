@@ -72,7 +72,7 @@ public class AccountDataCache {
                 .ifPresent(cacheItem -> cacheItem.updateTransferDestinationPatterns(patterns));
     }
 
-    private Stream<AccountData> getFilteredAccountData() {
+    private Stream<AccountData> getFilteredAccountDataStream() {
         return accountDataByAccountUniqueId.values().stream()
                 .filter(
                         accountData ->
@@ -80,16 +80,18 @@ public class AccountDataCache {
                                         .allMatch(filter -> filter.test(accountData.getAccount())));
     }
 
-    public List<AccountData> getCurrentAccountData() {
-        return getFilteredAccountData().collect(Collectors.toList());
+    public List<AccountData> getFilteredAccountData() {
+        return getFilteredAccountDataStream().collect(Collectors.toList());
     }
 
     public List<AccountData> getAllAccountData() {
         return new ArrayList<>(accountDataByAccountUniqueId.values());
     }
 
-    public List<Account> getCurrentAccounts() {
-        return getFilteredAccountData().map(AccountData::getAccount).collect(Collectors.toList());
+    public List<Account> getFilteredAccounts() {
+        return getFilteredAccountDataStream()
+                .map(AccountData::getAccount)
+                .collect(Collectors.toList());
     }
 
     public List<Account> getAllAccounts() {
@@ -98,14 +100,14 @@ public class AccountDataCache {
                 .collect(Collectors.toList());
     }
 
-    public Map<Account, List<Transaction>> getCurrentTransactions() {
-        return getFilteredAccountData()
+    public Map<Account, List<Transaction>> getFilteredTransactions() {
+        return getFilteredAccountDataStream()
                 .filter(accountData -> !accountData.getTransactions().isEmpty())
                 .collect(Collectors.toMap(AccountData::getAccount, AccountData::getTransactions));
     }
 
-    public Map<Account, List<TransferDestinationPattern>> getCurrentTransferDestinationPatterns() {
-        return getFilteredAccountData()
+    public Map<Account, List<TransferDestinationPattern>> getFilteredTransferDestinationPatterns() {
+        return getFilteredAccountDataStream()
                 .filter(accountData -> !accountData.getTransferDestinationPatterns().isEmpty())
                 .collect(
                         Collectors.toMap(

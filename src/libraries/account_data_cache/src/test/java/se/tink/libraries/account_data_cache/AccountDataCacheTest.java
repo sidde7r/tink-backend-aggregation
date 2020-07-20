@@ -17,10 +17,10 @@ public class AccountDataCacheTest {
 
         Account account0 = mockAccount(DUMMY_ACCOUNT_ID_0);
         accountDataCache.cacheAccount(account0);
-        Assert.assertEquals(accountDataCache.getCurrentAccounts().size(), 1);
+        Assert.assertEquals(accountDataCache.getFilteredAccounts().size(), 1);
 
         accountDataCache.cacheAccount(account0);
-        Assert.assertEquals(accountDataCache.getCurrentAccounts().size(), 1);
+        Assert.assertEquals(accountDataCache.getFilteredAccounts().size(), 1);
     }
 
     @Test
@@ -33,8 +33,8 @@ public class AccountDataCacheTest {
         accountDataCache.cacheAccount(account0);
         accountDataCache.cacheAccount(account1);
 
-        Assert.assertEquals(accountDataCache.getCurrentAccounts().size(), 2);
-        assertThat(accountDataCache.getCurrentAccounts())
+        Assert.assertEquals(accountDataCache.getFilteredAccounts().size(), 2);
+        assertThat(accountDataCache.getFilteredAccounts())
                 .containsExactlyInAnyOrder(account0, account1);
     }
 
@@ -50,8 +50,8 @@ public class AccountDataCacheTest {
         accountDataCache.cacheAccount(account0);
         accountDataCache.cacheAccount(account1);
 
-        Assert.assertEquals(accountDataCache.getCurrentAccounts().size(), 1);
-        assertThat(accountDataCache.getCurrentAccounts()).containsExactlyInAnyOrder(account1);
+        Assert.assertEquals(accountDataCache.getFilteredAccounts().size(), 1);
+        assertThat(accountDataCache.getFilteredAccounts()).containsExactlyInAnyOrder(account1);
     }
 
     @Test
@@ -61,10 +61,10 @@ public class AccountDataCacheTest {
         accountDataCache.cacheAccount(mockAccount(DUMMY_ACCOUNT_ID_0));
         accountDataCache.cacheAccount(mockAccount(DUMMY_ACCOUNT_ID_1));
 
-        Assert.assertEquals(accountDataCache.getCurrentAccounts().size(), 2);
+        Assert.assertEquals(accountDataCache.getFilteredAccounts().size(), 2);
 
         accountDataCache.clear();
-        Assert.assertEquals(accountDataCache.getCurrentAccounts().size(), 0);
+        Assert.assertEquals(accountDataCache.getFilteredAccounts().size(), 0);
     }
 
     private boolean restrictDummyAccount0(Account account) {

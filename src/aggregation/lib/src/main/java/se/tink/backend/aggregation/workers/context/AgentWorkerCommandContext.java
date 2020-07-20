@@ -411,11 +411,11 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         }
 
         // Compare the filtered lists.
-        List<Account> newCurrentAccountCache = accountDataCache.getCurrentAccounts();
-        List<Account> oldCurrentAccountCache = new ArrayList<>(updatedAccountsByTinkId.values());
+        List<Account> newFilteredAccountCache = accountDataCache.getFilteredAccounts();
+        List<Account> oldFilteredAccountCache = new ArrayList<>(updatedAccountsByTinkId.values());
 
-        if (newCurrentAccountCache.size() == oldCurrentAccountCache.size()) {
-            if (!newCurrentAccountCache.containsAll(oldCurrentAccountCache)) {
+        if (newFilteredAccountCache.size() == oldFilteredAccountCache.size()) {
+            if (!newFilteredAccountCache.containsAll(oldFilteredAccountCache)) {
                 log.warn(
                         "[compareOldAndNewAccountDataCache/filtered] The two account caches are not equal!");
             }
@@ -428,7 +428,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         // Compare transactions.
         Map<Account, List<Transaction>> newTransactionCache =
-                accountDataCache.getCurrentTransactions();
+                accountDataCache.getFilteredTransactions();
         Map<Account, List<Transaction>> oldTransactionCache = collectOldTransactionsPerAccount();
 
         if (!areTransactionsEqual(oldTransactionCache, newTransactionCache)) {
