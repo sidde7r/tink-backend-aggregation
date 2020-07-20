@@ -34,26 +34,10 @@ public class AggregationDevelopmentConfiguration {
     }
 
     public boolean isValid() {
-        if (this.clusterConfiguration == null) {
-            return false;
-        }
-
-        if (this.clientConfiguration == null) {
-            return false;
-        }
-
-        if (this.cryptoConfiguration == null) {
-            return false;
-        }
-
-        if (this.aggregatorConfiguration == null) {
-            return false;
-        }
-
-        if (this.aggregationControllerClientConfiguration == null) {
-            return false;
-        }
-
-        return true;
+        return clusterConfiguration != null
+                && clientConfiguration != null
+                && cryptoConfiguration != null
+                && aggregatorConfiguration != null
+                && aggregationControllerClientConfiguration != null;
     }
 }
