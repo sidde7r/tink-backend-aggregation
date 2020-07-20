@@ -35,11 +35,11 @@ public class AgentConfiguration<T> implements ClientConfiguration {
     }
 
     public boolean isProviderSpecificConfigurationNull() {
-        return providerSpecificConfiguration == null ? true : false;
+        return providerSpecificConfiguration == null;
     }
 
     public boolean isRedirectUrlNullOrEmpty() {
-        return Strings.emptyToNull(redirectUrl) == null ? true : false;
+        return Strings.emptyToNull(redirectUrl) == null;
     }
 
     public static class Builder<T> {
