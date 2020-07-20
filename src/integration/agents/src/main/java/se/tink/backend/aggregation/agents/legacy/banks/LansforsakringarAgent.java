@@ -5,7 +5,6 @@ import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_TRA
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_ACCOUNTS;
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_TRANSACTIONS;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -184,8 +183,6 @@ public class LansforsakringarAgent extends AbstractAgent
             new DefaultAccountIdentifierFormatter();
     private static final DisplayAccountIdentifierFormatter GIRO_FORMATTER =
             new DisplayAccountIdentifierFormatter();
-    private static final TypeReference<HashMap<String, Object>> TYPE_MAP_REF =
-            new TypeReference<HashMap<String, Object>>() {};
     private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
             TransferMessageLengthConfig.createWithMaxLength(30, 14);
     private static final int MAX_ATTEMPTS = 80;
@@ -264,7 +261,7 @@ public class LansforsakringarAgent extends AbstractAgent
 
     private static Optional<BankEntity> findBankForAccountNumber(
             String destinationAccount, List<BankEntity> banks) {
-        final Integer accountClearingNumber = Integer.parseInt(destinationAccount.substring(0, 4));
+        final int accountClearingNumber = Integer.parseInt(destinationAccount.substring(0, 4));
 
         return banks.stream()
                 .filter(
@@ -323,7 +320,7 @@ public class LansforsakringarAgent extends AbstractAgent
         client.addFilter(
                 new ClientFilter() {
                     @Override
-                    public ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
+                    public ClientResponse handle(ClientRequest cr) {
                         try {
                             return getNext().handle(cr);
                         } catch (ClientHandlerException e) {
@@ -664,7 +661,7 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     private void approveEInvoice(final Transfer transfer) throws Exception {
-        validateUpdateIsPermitted(catalog, transfer);
+        validateUpdateIsPermitted(transfer);
         AccountEntity sourceAccount = validatePaymentSourceAccount(transfer.getSource());
         EInvoice eInvoice = validateEInvoice(transfer);
         validateNumberOfOutstandingPaymentEntities(0);
@@ -673,7 +670,7 @@ public class LansforsakringarAgent extends AbstractAgent
         signEInvoice(paymentEntityToSign);
     }
 
-    private void validateUpdateIsPermitted(Catalog catalog, Transfer transfer) {
+    private void validateUpdateIsPermitted(Transfer transfer) {
         Transfer originalTransfer = transfer.getOriginalTransfer().get();
 
         if (!Objects.equal(
@@ -904,7 +901,7 @@ public class LansforsakringarAgent extends AbstractAgent
         return recipientNameClientResponse;
     }
 
-    private boolean deleteSignedTransaction(Object deleteRequest) throws Exception {
+    private boolean deleteSignedTransaction(Object deleteRequest) {
         if (deleteRequest instanceof PaymentRequest) {
             PaymentRequest paymentRequest = (PaymentRequest) deleteRequest;
             Optional<String> uniqueId = findFailedPaymentInSignedList(paymentRequest);
@@ -967,8 +964,7 @@ public class LansforsakringarAgent extends AbstractAgent
         return request;
     }
 
-    private Optional<String> findFailedPaymentInSignedList(PaymentRequest paymentRequest)
-            throws Exception {
+    private Optional<String> findFailedPaymentInSignedList(PaymentRequest paymentRequest) {
         for (UpcomingTransactionEntity transaction :
                 fetchUpcomingTransactions(paymentRequest.getFromAccount())) {
             if (LFUtils.isSamePayment(paymentRequest, transaction)) {
@@ -979,8 +975,7 @@ public class LansforsakringarAgent extends AbstractAgent
         return Optional.empty();
     }
 
-    private Optional<String> findFailedTransferInSignedList(TransferRequest transferRequest)
-            throws Exception {
+    private Optional<String> findFailedTransferInSignedList(TransferRequest transferRequest) {
         for (UpcomingTransactionEntity transaction :
                 fetchUpcomingTransactions(transferRequest.getFromAccount())) {
             if (LFUtils.isSameTransfer(transferRequest, transaction)) {
@@ -1144,7 +1139,8 @@ public class LansforsakringarAgent extends AbstractAgent
         return createGetRequest(FETCH_TRANSFER_SOURCE_ACCOUNTS, TransferrableResponse.class);
     }
 
-    private void executeBankTransfer(final Transfer transfer) throws Exception {
+    private void executeBankTransfer(final Transfer transfer)
+            throws HttpStatusCodeErrorException, BankIdException {
         AccountIdentifier source = transfer.getSource();
         AccountIdentifier destination = transfer.getDestination();
 
@@ -1186,7 +1182,8 @@ public class LansforsakringarAgent extends AbstractAgent
         }
     }
 
-    private void executeExternalBankTransfer(TransferRequest transferRequest) throws Exception {
+    private void executeExternalBankTransfer(TransferRequest transferRequest)
+            throws BankIdException {
         ClientResponse createTransferResponse =
                 createPostRequest(CREATE_BANKID_REFERENCE_URL, transferRequest);
 
