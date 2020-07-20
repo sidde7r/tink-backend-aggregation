@@ -13,12 +13,12 @@ public class VersionDeserializer {
     private Consumer<EncryptedCredentialsV1> handlerV1;
     // Add new versions here
 
-    public VersionDeserializer addVersion1Handler(Consumer<EncryptedCredentialsV1> handler) {
+    public VersionDeserializer setVersion1Handler(Consumer<EncryptedCredentialsV1> handler) {
         handlerV1 = handler;
         return this;
     }
 
-    public VersionDeserializer addDefaultHandler(Consumer<EncryptedCredentials> handler) {
+    public VersionDeserializer setDefaultHandler(Consumer<EncryptedCredentials> handler) {
         handlerDefault = handler;
         return this;
     }

@@ -67,7 +67,7 @@ public class CredentialsCrypto {
 
         // Deserialize & Decrypt using right version
         new VersionDeserializer()
-                .addDefaultHandler(
+                .setDefaultHandler(
                         head -> {
                             logger.error(
                                     String.format(
@@ -75,7 +75,7 @@ public class CredentialsCrypto {
                                             head.getVersion()));
                             success.set(false);
                         })
-                .addVersion1Handler(
+                .setVersion1Handler(
                         v1 -> {
                             byte[] key = cryptoWrapper.getCryptoKeyByKeyId(v1.getKeyId());
                             CredentialsCryptoV1.decryptCredential(key, credentials, v1);

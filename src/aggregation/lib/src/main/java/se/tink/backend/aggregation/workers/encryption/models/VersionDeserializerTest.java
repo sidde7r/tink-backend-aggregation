@@ -19,7 +19,7 @@ public class VersionDeserializerTest {
     public void handleIsCalledWithNullInputThrowsNullPointerException() {
         Throwable thrown =
                 catchThrowable(
-                        () -> new VersionDeserializer().addDefaultHandler(head -> {}).handle(null));
+                        () -> new VersionDeserializer().setDefaultHandler(head -> {}).handle(null));
         assertThat(thrown).isInstanceOf(NullPointerException.class);
     }
 
@@ -41,8 +41,8 @@ public class VersionDeserializerTest {
                         + "}";
 
         new VersionDeserializer()
-                .addDefaultHandler(head -> Assert.fail("defualt handler should not be called"))
-                .addVersion1Handler(
+                .setDefaultHandler(head -> Assert.fail("defualt handler should not be called"))
+                .setVersion1Handler(
                         v1 -> Assert.assertEquals(1593186921015L, v1.getTimestamp().getTime()))
                 .handle(input);
     }
@@ -65,8 +65,8 @@ public class VersionDeserializerTest {
                         + "}";
 
         new VersionDeserializer()
-                .addDefaultHandler(head -> Assert.assertEquals(99999, head.getVersion()))
-                .addVersion1Handler(v1 -> Assert.fail("defualt handler should not be called"))
+                .setDefaultHandler(head -> Assert.assertEquals(99999, head.getVersion()))
+                .setVersion1Handler(v1 -> Assert.fail("version1 handler should not be called"))
                 .handle(input);
     }
 
@@ -84,7 +84,7 @@ public class VersionDeserializerTest {
         incrementor.set(1);
 
         new VersionDeserializer()
-                .addDefaultHandler(
+                .setDefaultHandler(
                         head -> {
                             try {
                                 Thread.sleep(3000);
