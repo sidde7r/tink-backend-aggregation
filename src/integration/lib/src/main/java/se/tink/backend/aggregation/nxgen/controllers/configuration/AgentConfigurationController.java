@@ -53,6 +53,8 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private final Subject<Collection<String>> secretValuesSubject =
             BehaviorSubject.<Collection<String>>create().toSerialized();
     private static final String REDIRECT_URL_KEY = "redirectUrl";
+    private static final String QWAC_KEY = "qwac";
+    private static final String QSEALC_KEY = "qsealc";
 
     // Package private for testing purposes.
     AgentConfigurationController() {
@@ -169,6 +171,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
 
                 initRedirectUrl(allSecrets.getRedirectUrls());
                 initScopes(allSecrets.getScopes());
+                initCertsData(allSecrets.getQwac(), allSecrets.getQsealc());
             } catch (StatusRuntimeException e) {
                 Preconditions.checkNotNull(
                         e.getStatus(), "Status cannot be null for StatusRuntimeException: " + e);
@@ -185,6 +188,11 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                 }
             }
         }
+    }
+
+    private void initCertsData(String qwac, String qsealc) {
+        allSecretsMapObj.put(QWAC_KEY, Strings.nullToEmpty(qwac));
+        allSecretsMapObj.put(QSEALC_KEY, Strings.nullToEmpty(qsealc));
     }
 
     private void initRedirectUrl(List<String> redirectUrls) {
@@ -250,10 +258,34 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                         // TPP Secrets is not used
                         .orElse(null);
 
+        String qwac =
+                Optional.ofNullable(
+                                OBJECT_MAPPER.convertValue(
+                                        allSecretsMapObj, AgentConfiguration.class))
+                        .map(AgentConfiguration::getQwac)
+                        .orElse("");
+
+        String qsealc =
+                Optional.ofNullable(
+                                OBJECT_MAPPER.convertValue(
+                                        allSecretsMapObj, AgentConfiguration.class))
+                        .map(AgentConfiguration::getQsealc)
+                        .orElse("");
+
+        // TODO TPA608, remove the logger after this is finished.
+        log.info(
+                "Got qwac "
+                        + qwac
+                        + " qsealc "
+                        + qsealc
+                        + " from SS and put into agentConf object");
+
         AgentConfiguration<T> agentConfiguration =
                 new AgentConfiguration.Builder()
                         .setProviderSpecificConfiguration(clientConfig)
                         .setRedirectUrl(redirectUrl)
+                        .setQwac(qwac)
+                        .setQsealc(qsealc)
                         .build();
 
         return agentConfiguration;

@@ -64,6 +64,8 @@ class AllSecretsFetcher {
                                                         TppSecret::getKey, TppSecret::getValue)))
                         .setRedirectUrls(response.getRedirectUrlsList())
                         .setScopes(response.getScopesList())
+                        .setQwac(response.getCertificates().getQwac())
+                        .setQsealc(response.getCertificates().getQsealc())
                         .build());
     }
 
