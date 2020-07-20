@@ -3,17 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -53,9 +53,12 @@ public class AccountEntity {
                 .replace("*", "");
     }
 
-    private BalanceEntity getBalance() {
+    private ExactCurrencyAmount getBalance() {
         return balances.stream()
+                .filter(BalanceEntity::isAvailableBalance)
                 .findFirst()
+                .map(BalanceEntity::getBalanceAmount)
+                .map(BalanceAmountEntity::getAmount)
                 .orElseThrow(() -> new IllegalStateException("No balance found in the response"));
     }
 
@@ -65,7 +68,7 @@ public class AccountEntity {
 
     @JsonIgnore
     public boolean isCreditCardAccount() {
-        return "Kreditkort Privat".equalsIgnoreCase(product);
+        return pan != null;
     }
 
     @JsonIgnore
@@ -74,25 +77,30 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder()
-                // There is no clearing number
-                .setUniqueIdentifier(bban)
-                .setAccountNumber(bban)
-                .setBalance(getAvailableBalance())
-                .setAlias(getName())
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
-                .setProductName(product)
-                .setApiIdentifier(resourceId)
-                .build();
+    private TransactionalAccountType getAccountTyoe() {
+        return LansforsakringarConstants.ACCOUNT_TYPE_MAPPER
+                .translate(product)
+                .orElseThrow(() -> new IllegalStateException("Could not translate account type"));
     }
 
-    private Amount getAvailableBalance() {
-        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
-                .filter(BalanceEntity::isAvailableBalance)
-                .findFirst()
-                .map(BalanceEntity::toAmount)
-                .orElse(BalanceEntity.DEFAULT);
+    @JsonIgnore
+    public Optional<TransactionalAccount> toTinkAccount() {
+
+        return TransactionalAccount.nxBuilder()
+                .withType(getAccountTyoe())
+                .withoutFlags()
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(bban)
+                                .withAccountNumber(bban)
+                                .withAccountName(getName())
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
+                                .setProductName(product)
+                                .build())
+                .setApiIdentifier(resourceId)
+                .build();
     }
 
     public CreditCardAccount toTinkCreditCardAccount() {
@@ -101,7 +109,7 @@ public class AccountEntity {
                         CreditCardModule.builder()
                                 .withCardNumber(getPan())
                                 .withBalance(ExactCurrencyAmount.of(0d, currency))
-                                .withAvailableCredit(getBalance().getBalanceAmount().getAmount())
+                                .withAvailableCredit(getBalance())
                                 .withCardAlias(getName())
                                 .build())
                 .withPaymentAccountFlag()

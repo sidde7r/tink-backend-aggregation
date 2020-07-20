@@ -15,7 +15,7 @@
     "favored" : false,
     "name" : "Sparkonto",
     "ownership" : 1.0,
-    "type" : "CHECKING",
+    "type" : "SAVINGS",
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,

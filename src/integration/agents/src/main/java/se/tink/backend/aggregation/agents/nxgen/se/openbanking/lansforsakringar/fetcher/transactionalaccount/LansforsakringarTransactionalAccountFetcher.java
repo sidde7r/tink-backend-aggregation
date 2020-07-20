@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.entities.AccountEntity;
@@ -23,6 +24,8 @@ public class LansforsakringarTransactionalAccountFetcher
         return apiClient.getAccounts().getAccounts().stream()
                 .filter(AccountEntity::isNotCreditCardAccount)
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

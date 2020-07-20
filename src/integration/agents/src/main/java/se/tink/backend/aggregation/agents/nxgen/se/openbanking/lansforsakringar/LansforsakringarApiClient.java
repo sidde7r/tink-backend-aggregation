@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar;
 
-import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -36,7 +35,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -45,7 +43,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class LansforsakringarApiClient {
 
@@ -223,19 +220,6 @@ public final class LansforsakringarApiClient {
                                 .minusMonths(LansforsakringarConstants.MONTHS_TO_FETCH)
                                 .toLocalDate()
                                 .toString())
-                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                .get(GetTransactionsResponse.class);
-    }
-
-    public <T extends Account> PaginatorResponse getTransactions(T account, Date fromDate) {
-        final URL url =
-                new URL(Urls.GET_TRANSACTIONS)
-                        .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());
-
-        return createRequestInSession(url)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
-                .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
     }
