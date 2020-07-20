@@ -489,6 +489,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
 
         updatedAccountUniqueIds.add(uniqueId);
+        accountDataCache.processAccount(updatedAccount.getBankId(), updatedAccount.getId());
         updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
 
         return updatedAccount;
@@ -566,6 +567,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             throw e;
         }
 
+        accountDataCache.processAccount(updatedAccount.getBankId(), updatedAccount.getId());
         updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
 
         return updatedAccount;
