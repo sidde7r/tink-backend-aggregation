@@ -16,8 +16,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.workers.encryption.models.AesEncryptedData;
-import se.tink.backend.aggregation.workers.encryption.models.EncryptedCredentialsV1;
+import se.tink.libraries.encryptedpayload.AesEncryptedData;
+import se.tink.libraries.encryptedpayload.EncryptedPayloadV1;
 
 public class CredentialsCryptoV1 {
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -33,9 +33,9 @@ public class CredentialsCryptoV1 {
         return output;
     }
 
-    public static EncryptedCredentialsV1 encryptCredential(
+    public static EncryptedPayloadV1 encryptCredential(
             int keyId, byte[] key, Credentials credential) {
-        EncryptedCredentialsV1 encryptedCredentialsV1 = new EncryptedCredentialsV1();
+        EncryptedPayloadV1 encryptedCredentialsV1 = new EncryptedPayloadV1();
         encryptedCredentialsV1.setKeyId(keyId);
         encryptedCredentialsV1.setTimestamp(new Date());
 
@@ -61,7 +61,7 @@ public class CredentialsCryptoV1 {
     }
 
     public static void decryptCredential(
-            byte[] key, Credentials credential, EncryptedCredentialsV1 encryptedCredentialsV1) {
+            byte[] key, Credentials credential, EncryptedPayloadV1 encryptedCredentialsV1) {
         String decryptedFields = CredentialsCryptoV1.decryptFields(key, encryptedCredentialsV1);
         if (!Strings.isNullOrEmpty(decryptedFields)) {
             credential.addSerializedFields(decryptedFields);
@@ -73,21 +73,18 @@ public class CredentialsCryptoV1 {
         }
     }
 
-    private static String decryptFields(byte[] key, EncryptedCredentialsV1 encryptedCredentialsV1) {
+    private static String decryptFields(byte[] key, EncryptedPayloadV1 encryptedCredentialsV1) {
         return decryptAesEncryptedData(
                 key, encryptedCredentialsV1, encryptedCredentialsV1.getFields());
     }
 
-    private static String decryptPayload(
-            byte[] key, EncryptedCredentialsV1 encryptedCredentialsV1) {
+    private static String decryptPayload(byte[] key, EncryptedPayloadV1 encryptedCredentialsV1) {
         return decryptAesEncryptedData(
                 key, encryptedCredentialsV1, encryptedCredentialsV1.getPayload());
     }
 
     private static String decryptAesEncryptedData(
-            byte[] key,
-            EncryptedCredentialsV1 encryptedCredentialsV1,
-            AesEncryptedData encryptedData) {
+            byte[] key, EncryptedPayloadV1 encryptedCredentialsV1, AesEncryptedData encryptedData) {
 
         if (Objects.isNull(encryptedData.getData()) && Objects.isNull(encryptedData.getIv())) {
             // An empty data object means that it had nothing to encrypt. (see encrypt())

@@ -5,7 +5,6 @@ java_library(
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/encryption/models",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/wrappers",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
@@ -16,6 +15,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/tpp_secrets_service/client",
         "//src/libraries/cache",
+        "//src/libraries/encrypted-payload",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
         "//src/libraries/metrics:core",
