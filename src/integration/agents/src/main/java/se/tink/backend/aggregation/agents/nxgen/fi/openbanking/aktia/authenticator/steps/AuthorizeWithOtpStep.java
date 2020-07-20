@@ -64,7 +64,7 @@ public class AuthorizeWithOtpStep extends SupplementalFieldsAuthenticationStep {
                                                 "Otp Info not found in the storage."));
 
         return String.format(
-                "Please provide one time password from card %s with index %s",
+                "card %s with index %s",
                 otpInfoDto.getCurrentOtpCard(), otpInfoDto.getNextOtpIndex());
     }
 }
