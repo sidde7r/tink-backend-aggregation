@@ -51,10 +51,9 @@ public class CaisseEpargneAgent extends SubsequentProgressiveGenerationAgent
         configureHttpClient(client);
         instanceStorage = new Storage();
         apiClient = new CaisseEpargneApiClient(client, sessionStorage, instanceStorage);
-        this.transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController();
-        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
-        this.supplementalInformationProvider =
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        transferDestinationRefreshController = constructTransferDestinationRefreshController();
+        supplementalInformationProvider =
                 new SupplementalInformationProviderImpl(supplementalRequester, request);
     }
 
