@@ -183,7 +183,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         // Requires Accounts in list to have been "updated" towards System's UpdateService to get
         // their real stored id
-        List<String> accountIds = Lists.newArrayList(updatedAccountsByTinkId.keySet());
+        List<String> accountIds =
+                getAccountDataCache().getProcessedAccounts().stream()
+                        .map(Account::getId)
+                        .collect(Collectors.toList());
 
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest
                 processAccountsRequest =
