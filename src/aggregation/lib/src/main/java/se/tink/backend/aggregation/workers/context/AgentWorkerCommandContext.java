@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.workers.context;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,7 +22,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentEventListener;
-import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
@@ -45,8 +43,7 @@ import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
-public class AgentWorkerCommandContext extends AgentWorkerContext
-        implements SetAccountsToAggregateContext {
+public class AgentWorkerCommandContext extends AgentWorkerContext {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
@@ -262,14 +259,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         }
     }
 
-    @Override
-    public void setAccountsToAggregate(List<Account> accounts) {}
-
-    @Override
-    public List<Account> getCachedAccounts() {
-        return new ArrayList<>(getAccountDataCache().getFilteredAccounts());
-    }
-
     public List<Pair<Account, AccountFeatures>> getCachedAccountsWithFeatures() {
         return getAccountDataCache().getFilteredAccountData().stream()
                 .map(
@@ -281,11 +270,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
     public IdentityData getCachedIdentityData() {
         return identityData;
-    }
-
-    @Override
-    public List<String> getUniqueIdOfUserSelectedAccounts() {
-        return uniqueIdOfUserSelectedAccounts;
     }
 
     public void addOptInAccountUniqueId(List<String> optInAccountUniqueId) {
