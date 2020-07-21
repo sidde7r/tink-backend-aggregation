@@ -43,7 +43,7 @@ public class CaisseEpargneAuthenticator extends StatelessProgressiveAuthenticato
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
         return !persistentStorage
-                .get(StorageKeys.COULD_AUTO_AUTHENTICATE, boolean.class)
+                .get(StorageKeys.COULD_AUTO_AUTHENTICATE, Boolean.class)
                 .orElse(false);
     }
 }
