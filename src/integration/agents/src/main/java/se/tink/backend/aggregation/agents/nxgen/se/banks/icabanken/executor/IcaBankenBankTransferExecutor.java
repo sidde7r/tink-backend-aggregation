@@ -36,7 +36,7 @@ public class IcaBankenBankTransferExecutor implements BankTransferExecutor {
     @Override
     public Optional<String> executeTransfer(Transfer transfer) {
 
-        executorHelper.cleanUpOutbox(apiClient.fetchUnsignedTransfers());
+        executorHelper.checkForUnsigedTransfersAndCleanUpOutbox(apiClient.fetchUnsignedTransfers());
         executorHelper.validateNoUnsignedTransfers();
 
         Collection<AccountEntity> transferSourceAccounts =

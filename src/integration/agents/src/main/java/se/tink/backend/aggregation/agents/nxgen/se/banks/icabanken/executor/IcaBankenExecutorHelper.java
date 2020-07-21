@@ -252,7 +252,7 @@ public class IcaBankenExecutorHelper {
             poll(reference);
             assertSuccessfulSign(reference);
         } catch (Exception initialException) {
-            cleanUpOutbox(apiClient.fetchUnsignedTransfers());
+            checkForUnsigedTransfersAndCleanUpOutbox(apiClient.fetchUnsignedTransfers());
 
             if (!isTransferFailedButWasSuccessful(transfer, sourceAccount)) {
                 if (initialException.getCause() instanceof HttpResponseException) {
@@ -293,7 +293,7 @@ public class IcaBankenExecutorHelper {
                 .build();
     }
 
-    public void cleanUpOutbox(List<AssignmentEntity> unsignedTransfers) {
+    public void checkForUnsigedTransfersAndCleanUpOutbox(List<AssignmentEntity> unsignedTransfers) {
         try {
             if (!unsignedTransfers.isEmpty()) {
                 deleteUnsignedTransfers(unsignedTransfers);

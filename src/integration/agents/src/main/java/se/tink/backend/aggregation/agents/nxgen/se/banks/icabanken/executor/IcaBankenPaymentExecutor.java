@@ -22,7 +22,7 @@ public class IcaBankenPaymentExecutor implements PaymentExecutor {
 
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
-        executorHelper.cleanUpOutbox(apiClient.fetchUnsignedTransfers());
+        executorHelper.checkForUnsigedTransfersAndCleanUpOutbox(apiClient.fetchUnsignedTransfers());
         executorHelper.validateNoUnsignedTransfers();
 
         Collection<AccountEntity> transferSourceAccounts =
