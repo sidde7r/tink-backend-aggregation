@@ -277,21 +277,24 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     }
 
     public void sendAllCachedAccountsHoldersToUpdateService() {
-
-        for (String tinkId : updatedAccountsByTinkId.keySet()) {
-            AccountHolder accountHolder = sendAccountHolderToUpdateService(tinkId);
-            sendAccountHoldersRefreshedEvent(tinkId, accountHolder);
-        }
+        getAccountDataCache()
+                .getProcessedAccounts()
+                .forEach(
+                        account -> {
+                            AccountHolder accountHolder = sendAccountHolderToUpdateService(account);
+                            sendAccountHoldersRefreshedEvent(account.getId(), accountHolder);
+                        });
     }
 
-    private void sendAccountHoldersRefreshedEvent(String tinkId, AccountHolder accountHolder) {
+    private void sendAccountHoldersRefreshedEvent(
+            String tinkAccountId, AccountHolder accountHolder) {
         accountInformationServiceEventsProducer.sendAccountHoldersRefreshedEvent(
                 getClusterId(),
                 getAppId(),
                 getRequest().getUser().getId(),
                 getRequest().getProvider().getName(),
                 correlationId,
-                tinkId,
+                tinkAccountId,
                 Optional.ofNullable(accountHolder)
                         .map(AccountHolder::getType)
                         .map(AccountHolderType::name)

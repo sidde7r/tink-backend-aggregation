@@ -214,9 +214,9 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public AccountHolder sendAccountHolderToUpdateService(String tinkId) {
+    public AccountHolder sendAccountHolderToUpdateService(Account processedAccount) {
         return accountsByBankId.values().stream()
-                .filter(a -> Objects.equals(tinkId, a.getId()))
+                .filter(a -> Objects.equals(processedAccount.getId(), a.getId()))
                 .findFirst()
                 .map(Account::getAccountHolder)
                 .orElse(null);

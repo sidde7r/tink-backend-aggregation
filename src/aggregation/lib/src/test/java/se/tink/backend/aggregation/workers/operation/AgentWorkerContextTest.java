@@ -28,7 +28,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.collection.MetricCollector;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.pair.Pair;
 
 public class AgentWorkerContextTest {
 
@@ -138,11 +137,11 @@ public class AgentWorkerContextTest {
 
         AgentWorkerContext context =
                 buildAgentWorkerContext(Mockito.mock(RefreshInformationRequest.class));
-        context.updatedAccountsByTinkId.put(tinkId, account);
-        context.allAvailableAccountsByUniqueId.put(uniqueId, Pair.of(account, null));
+        context.getAccountDataCache().cacheAccount(account);
+        context.getAccountDataCache().setProcessedTinkAccountId(uniqueId, tinkId);
 
         // when
-        AccountHolder accountHolder = context.sendAccountHolderToUpdateService(tinkId);
+        AccountHolder accountHolder = context.sendAccountHolderToUpdateService(account);
 
         // then
         Assert.assertNull(accountHolder);
@@ -169,11 +168,12 @@ public class AgentWorkerContextTest {
         Mockito.when(credentialsRequest.getCredentials()).thenReturn(credentials);
 
         AgentWorkerContext context = buildAgentWorkerContext(credentialsRequest);
-        context.updatedAccountsByTinkId.put(tinkId, account);
-        context.allAvailableAccountsByUniqueId.put(uniqueId, Pair.of(account, null));
+
+        context.getAccountDataCache().cacheAccount(account);
+        context.getAccountDataCache().setProcessedTinkAccountId(uniqueId, tinkId);
 
         // when
-        AccountHolder accountHolder = context.sendAccountHolderToUpdateService(tinkId);
+        AccountHolder accountHolder = context.sendAccountHolderToUpdateService(account);
 
         // then
         Assert.assertNull(accountHolder);

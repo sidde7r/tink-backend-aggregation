@@ -15,7 +15,7 @@ public interface SystemUpdater {
 
     Account sendAccountToUpdateService(String uniqueId);
 
-    AccountHolder sendAccountHolderToUpdateService(String tinkId);
+    AccountHolder sendAccountHolderToUpdateService(Account processedAccount);
 
     Account updateAccount(String uniqueId);
 
