@@ -107,8 +107,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     // Cached accounts have not been sent to system side yet.
     protected Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
-    // Updated accounts have been sent to System side and has been updated with their stored Tink Id
-    protected Map<String, Account> updatedAccountsByTinkId;
     private Set<String> updatedAccountUniqueIds;
     // a collection of account to keep a record of what accounts we should aggregate data after
     // opt-in flow,
@@ -139,7 +137,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.accountDataCache = new AccountDataCache();
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
-        this.updatedAccountsByTinkId = Maps.newHashMap();
         this.updatedAccountUniqueIds = Sets.newHashSet();
         this.accountsToAggregate = Lists.newArrayList();
         this.psd2PaymentAccountClassifier =
@@ -501,7 +498,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updatedAccountUniqueIds.add(uniqueId);
         accountDataCache.setProcessedTinkAccountId(
                 updatedAccount.getBankId(), updatedAccount.getId());
-        updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
 
         return updatedAccount;
     }
@@ -575,7 +571,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         accountDataCache.setProcessedTinkAccountId(
                 updatedAccount.getBankId(), updatedAccount.getId());
-        updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
 
         return updatedAccount;
     }
