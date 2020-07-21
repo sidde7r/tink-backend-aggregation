@@ -23,7 +23,7 @@ public class AccountData {
         this.transferDestinationPatterns = new ArrayList<>();
     }
 
-    public void processAccount(String tinkAccountId) {
+    public void setProcessedTinkAccountId(String tinkAccountId) {
         this.account.setId(tinkAccountId);
         this.isProcessed = true;
     }
