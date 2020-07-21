@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustPinnedCertificateStrategy;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /*
@@ -40,6 +41,9 @@ public class SdcSeAgent extends SdcAgent
                 new SdcSeTransactionParser());
 
         creditCardRefreshController = constructCreditCardRefreshController();
+        this.client.loadTrustMaterial(
+                null,
+                TrustPinnedCertificateStrategy.forCertificate(SdcSeConstants.Secret.PUBLIC_CERT));
     }
 
     @Override
