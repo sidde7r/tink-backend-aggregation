@@ -269,14 +269,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         return identityData;
     }
 
-    public boolean isWhitelistRefresh() {
-        return isWhitelistRefresh;
-    }
-
-    public void setWhitelistRefresh(boolean whitelistRefresh) {
-        isWhitelistRefresh = whitelistRefresh;
-    }
-
     public AgentsServiceConfiguration getAgentsServiceConfiguration() {
         return agentsServiceConfiguration;
     }

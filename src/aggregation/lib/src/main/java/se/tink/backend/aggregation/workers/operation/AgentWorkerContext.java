@@ -104,7 +104,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
     // True or false if system has been requested to process transactions.
     protected boolean isSystemProcessingTransactions;
-    protected boolean isWhitelistRefresh;
     protected ControllerWrapper controllerWrapper;
 
     protected IdentityData identityData;

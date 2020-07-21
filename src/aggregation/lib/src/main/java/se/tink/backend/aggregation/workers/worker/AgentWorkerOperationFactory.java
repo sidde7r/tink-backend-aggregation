@@ -602,7 +602,6 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
-        context.setWhitelistRefresh(true);
 
         String operationName = "execute-whitelisted-transfer";
 
@@ -987,7 +986,6 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
-        context.setWhitelistRefresh(true);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1112,7 +1110,6 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
-        context.setWhitelistRefresh(true);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(
