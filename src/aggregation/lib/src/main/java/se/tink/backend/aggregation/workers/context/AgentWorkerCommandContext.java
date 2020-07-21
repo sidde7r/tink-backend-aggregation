@@ -269,13 +269,16 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
     @Override
     public List<Account> getCachedAccounts() {
-        return allAvailableAccountsByUniqueId.values().stream()
-                .map(p -> p.first)
-                .collect(Collectors.toList());
+        return new ArrayList<>(getAccountDataCache().getFilteredAccounts());
     }
 
     public List<Pair<Account, AccountFeatures>> getCachedAccountsWithFeatures() {
-        return new ArrayList<>(allAvailableAccountsByUniqueId.values());
+        return getAccountDataCache().getFilteredAccountData().stream()
+                .map(
+                        accountData ->
+                                new Pair<>(
+                                        accountData.getAccount(), accountData.getAccountFeatures()))
+                .collect(Collectors.toList());
     }
 
     public IdentityData getCachedIdentityData() {
