@@ -135,8 +135,6 @@ public class AuthorizeWithOtpStepTest {
     }
 
     private static String createSignDescription() {
-        return String.format(
-                "Please provide one time password from card %s with index %s",
-                CURRENT_OTP_CARD, NEXT_OTP_INDEX);
+        return String.format("card %s with index %s", CURRENT_OTP_CARD, NEXT_OTP_INDEX);
     }
 }
