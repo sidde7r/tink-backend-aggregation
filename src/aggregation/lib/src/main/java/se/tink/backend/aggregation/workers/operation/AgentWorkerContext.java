@@ -186,6 +186,29 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void processTransactions() {
         Credentials credentials = request.getCredentials();
+        if (credentials.getStatus() != CredentialsStatus.UPDATING) {
+            log.warn(
+                    String.format(
+                            "Status does not warrant transaction processing: %s",
+                            credentials.getStatus()));
+            return;
+        }
+
+        // If fraud credentials, update the statistics and activities.
+        if (credentials.getType() == CredentialsTypes.FRAUD) {
+            se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                            .GenerateStatisticsAndActivitiesRequest
+                    generateStatisticsReq =
+                            new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                    .GenerateStatisticsAndActivitiesRequest();
+            generateStatisticsReq.setUserId(request.getUser().getId());
+            generateStatisticsReq.setCredentialsId(credentials.getId());
+            generateStatisticsReq.setUserTriggered(request.isCreate());
+            generateStatisticsReq.setMode(StatisticMode.FULL); // To trigger refresh of residences.
+
+            controllerWrapper.generateStatisticsAndActivityAsynchronously(generateStatisticsReq);
+            return;
+        }
 
         List<Transaction> transactions = Lists.newArrayList();
 
@@ -231,31 +254,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             }
 
             transactions.addAll(accountTransactions);
-        }
-
-        if (credentials.getStatus() != CredentialsStatus.UPDATING) {
-            log.warn(
-                    String.format(
-                            "Status does not warrant transaction processing: %s",
-                            credentials.getStatus()));
-            return;
-        }
-
-        // If fraud credentials, update the statistics and activities.
-
-        if (credentials.getType() == CredentialsTypes.FRAUD) {
-            se.tink.backend.aggregation.aggregationcontroller.v1.rpc
-                            .GenerateStatisticsAndActivitiesRequest
-                    generateStatisticsReq =
-                            new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
-                                    .GenerateStatisticsAndActivitiesRequest();
-            generateStatisticsReq.setUserId(request.getUser().getId());
-            generateStatisticsReq.setCredentialsId(request.getCredentials().getId());
-            generateStatisticsReq.setUserTriggered(request.isCreate());
-            generateStatisticsReq.setMode(StatisticMode.FULL); // To trigger refresh of residences.
-
-            controllerWrapper.generateStatisticsAndActivityAsynchronously(generateStatisticsReq);
-            return;
         }
 
         // Don't update transactions if we didn't get any
