@@ -244,14 +244,14 @@ public class CaisseEpargneApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(HeaderKeys.USER_AGENT, HeaderValues.CAISSE_DARWIN)
                         .get(HttpResponse.class);
-        List<String> collect =
+        List<String> setCookies =
                 imagesResponse.getHeaders().entrySet().stream()
                         .filter(entry -> HeaderKeys.SET_COOKIE.equals(entry.getKey()))
                         .map(Entry::getValue)
                         .flatMap(List::stream)
                         .collect(Collectors.toList());
         List<Cookie> newCookies =
-                collect.stream()
+                setCookies.stream()
                         .map(CaisseEpargneUtils::parseRawCookie)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
