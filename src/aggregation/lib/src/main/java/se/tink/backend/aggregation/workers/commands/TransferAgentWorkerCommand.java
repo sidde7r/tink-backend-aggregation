@@ -192,6 +192,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             }
 
             signableOperation.setStatusMessage(catalog.getString(e.getUserMessage()));
+            signableOperation.setInternalStatus("BankId/" + e.getError().name());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
