@@ -128,7 +128,8 @@ public class FakeIntegrationArgumentsCreator {
                     }
 
                     @Override
-                    public AccountHolder sendAccountHolderToUpdateService(String tinkId) {
+                    public AccountHolder sendAccountHolderToUpdateService(
+                            Account processedAccount) {
                         return null;
                     }
 

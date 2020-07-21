@@ -506,19 +506,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return updatedAccount;
     }
 
-    public AccountHolder sendAccountHolderToUpdateService(String tinkId) {
-        AccountHolder accountHolder =
-                Optional.ofNullable(updatedAccountsByTinkId.get(tinkId))
-                        .map(account -> allAvailableAccountsByUniqueId.get(account.getBankId()))
-                        .map(account -> account.first)
-                        .map(Account::getAccountHolder)
-                        .orElse(null);
-
+    public AccountHolder sendAccountHolderToUpdateService(Account processedAccount) {
+        String tinkAccountId = processedAccount.getId();
+        AccountHolder accountHolder = processedAccount.getAccountHolder();
         if (Objects.isNull(accountHolder)) {
-            log.debug("account: " + tinkId + "has no account holder");
+            log.debug(String.format("tinkAccountId: %s has no account holder", tinkAccountId));
             return null;
         }
-        accountHolder.setAccountId(tinkId);
+        accountHolder.setAccountId(tinkAccountId);
         UpdateAccountHolderRequest updateAccountHolderRequest = new UpdateAccountHolderRequest();
         updateAccountHolderRequest.setAccountHolder(accountHolder);
         updateAccountHolderRequest.setAppId(this.getAppId());
