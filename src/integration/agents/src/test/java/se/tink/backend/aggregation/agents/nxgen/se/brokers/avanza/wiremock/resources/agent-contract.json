@@ -71,7 +71,7 @@
   "transactions" : [ {
     "amount" : 500.0,
     "date" : 1593079200000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -82,7 +82,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1593079200000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -93,7 +93,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1593079200000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -104,7 +104,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1593079200000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -115,7 +115,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1593079200000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -126,7 +126,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1590400800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -137,7 +137,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1590400800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -148,7 +148,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1590400800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -159,7 +159,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1590400800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -170,7 +170,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1590400800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -181,7 +181,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1587981600000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -192,7 +192,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1587981600000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -203,7 +203,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1587981600000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -214,7 +214,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1587981600000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -225,7 +225,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1587981600000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -236,7 +236,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1585134000000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -247,7 +247,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1585134000000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -258,7 +258,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1585134000000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -269,7 +269,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1585134000000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -280,7 +280,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1585134000000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -313,7 +313,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1582714800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -324,7 +324,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1582714800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -335,7 +335,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1582714800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -346,7 +346,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1582628400000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -357,7 +357,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1582628400000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -368,7 +368,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1580122800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -379,7 +379,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1580122800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -390,7 +390,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1580122800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -401,7 +401,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1580122800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -412,7 +412,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1580122800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -423,7 +423,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1577444400000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -434,7 +434,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1577444400000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -445,7 +445,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1577444400000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -456,7 +456,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1577444400000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -467,7 +467,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1577444400000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -478,7 +478,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1574766000000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -489,7 +489,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1574766000000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -500,7 +500,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1574679600000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -511,7 +511,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1574679600000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -522,7 +522,7 @@
   }, {
     "amount" : 1000.0,
     "date" : 1572260400000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -533,7 +533,7 @@
   }, {
     "amount" : 500.0,
     "date" : 1572260400000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -544,7 +544,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1571997600000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -555,7 +555,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1569492000000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -566,7 +566,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1566900000000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
@@ -577,7 +577,7 @@
   }, {
     "amount" : 2000.0,
     "date" : 1564048800000,
-    "description" : "Autogiroinsättning",
+    "description" : "Autogiro insert",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
