@@ -11,10 +11,8 @@ import java.util.Locale;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
-import org.apache.http.HttpResponse;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.protocol.HttpContext;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
@@ -40,14 +38,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
         this.wireMockServerHost = wireMockServerHost;
         this.tinkHttpClient.addRedirectHandler(
                 new RedirectHandler() {
-                    @Override
-                    public boolean allowRedirect(
-                            org.apache.http.HttpRequest request,
-                            HttpResponse response,
-                            HttpContext context) {
-                        return super.allowRedirect(request, response, context);
-                    }
-
                     @Override
                     public String modifyRedirectUri(String uri) {
                         try {
