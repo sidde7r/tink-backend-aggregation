@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
@@ -22,7 +23,7 @@ public class CaisseEpragneTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         AccountsResponse response = apiClient.getAccounts();
         if (!response.isResponseOK()) {
-            throw new IllegalStateException(
+            throw new AccountRefreshException(
                     "Error fetching accounts: "
                             + response.getReturnCode()
                             + " - "
