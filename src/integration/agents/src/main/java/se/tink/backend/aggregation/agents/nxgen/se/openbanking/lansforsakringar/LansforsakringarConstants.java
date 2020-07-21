@@ -2,12 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public abstract class LansforsakringarConstants {
+
+    public static final int MONTHS_TO_FETCH = 13;
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
             TypeMapper.<PaymentStatus>builder().put(PaymentStatus.PENDING, "PDNG", "ACTC").build();
@@ -16,6 +19,12 @@ public abstract class LansforsakringarConstants {
             GenericTypeMapper.<PaymentType, Pair<Type, Type>>genericBuilder()
                     .put(PaymentType.DOMESTIC, new Pair<>(Type.SE, Type.SE))
                     .put(PaymentType.SEPA, new Pair<>(Type.SE, Type.IBAN))
+                    .build();
+
+    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
+                    .put(TransactionalAccountType.SAVINGS, "sparkonto")
+                    .setDefaultTranslationValue(TransactionalAccountType.CHECKING)
                     .build();
 
     public static class Urls {
@@ -61,6 +70,7 @@ public abstract class LansforsakringarConstants {
         public static final String ACCESS_TOKEN = "access-token";
         public static final String AUTHORIZATION_ID = "authorisationId";
         public static final String CONSENT_ID = "consentId";
+        public static final String ACCOUNTS = "accounts";
     }
 
     public static class QueryKeys {

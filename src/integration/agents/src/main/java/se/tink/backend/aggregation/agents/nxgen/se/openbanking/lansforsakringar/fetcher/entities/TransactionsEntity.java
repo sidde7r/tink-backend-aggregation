@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
@@ -16,21 +16,21 @@ public class TransactionsEntity {
     @JsonProperty("_links")
     private TransactionsLinksEntity links;
 
-    private List<BookedEntity> booked;
-    private List<PendingEntity> pending;
+    private List<TransactionEntity> booked;
+    private List<TransactionEntity> pending;
 
     public TransactionsLinksEntity getLinks() {
         return links;
     }
 
-    public Collection<? extends Transaction> toTinkTransactions() {
+    public Collection<Transaction> toTinkTransactions() {
         final Stream<Transaction> bookedStream =
                 Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
-                        .map(BookedEntity::toTinkTransaction);
+                        .map(TransactionEntity::toBookedTinkTransaction);
 
         final Stream<Transaction> pendingStream =
                 Optional.ofNullable(pending).orElse(Collections.emptyList()).stream()
-                        .map(PendingEntity::toTinkTransaction);
+                        .map(TransactionEntity::toPendinginkTransaction);
 
         return Stream.concat(bookedStream, pendingStream).collect(Collectors.toList());
     }

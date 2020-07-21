@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.rpc;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.entities.TransactionsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;

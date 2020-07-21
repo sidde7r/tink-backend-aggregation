@@ -1,6 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.rpc;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.TppMessage;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
