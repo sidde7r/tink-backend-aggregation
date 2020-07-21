@@ -25,6 +25,7 @@ public final class LaBanquePostaleConstants {
     public static class HeaderKeys {
         public static final String SIGNATURE = "Signature";
         public static final String CONTENT_TYPE = "Content-Type";
+        public static final String PSU_DATE = "PSU-Date";
     }
 
     public static class HeaderValues {

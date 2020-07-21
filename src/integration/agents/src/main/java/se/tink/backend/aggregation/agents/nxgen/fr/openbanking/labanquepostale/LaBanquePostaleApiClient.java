@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -92,6 +93,7 @@ public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePosta
         final OAuth2Token token = getTokenFromSession(StorageKeys.OAUTH_TOKEN);
 
         return client.request(url)
+                .header(HeaderKeys.PSU_DATE, LocalDate.now().toString())
                 .header(HeaderKeys.SIGNATURE, getAuthorization(digest, requestId))
                 .addBearerToken(token)
                 .header(BerlinGroupConstants.HeaderKeys.X_REQUEST_ID, requestId);
