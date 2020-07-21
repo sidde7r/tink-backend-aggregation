@@ -117,8 +117,6 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                         .map(Map.Entry::getKey)
                         .collect(Collectors.toList());
 
-        context.addOptInAccountUniqueId(optInAccounts);
-
         filterOptInAccounts(optInAccounts);
 
         return AgentWorkerCommandResult.CONTINUE;
@@ -199,10 +197,6 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                         .filter(e -> Objects.equals(e.getValue(), "true"))
                         .map(Map.Entry::getKey)
                         .collect(Collectors.toList());
-
-        // Add the optIn account id:s to the context to use them when doing the refresh and
-        // processing.
-        context.addOptInAccountUniqueId(optInAccounts);
 
         filterOptInAccounts(optInAccounts);
 

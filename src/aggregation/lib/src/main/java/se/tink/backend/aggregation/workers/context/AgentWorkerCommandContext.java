@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers.context;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
@@ -65,7 +64,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
     protected long timeLeavingQueue;
     protected long timePutOnQueue;
     protected AgentsServiceConfiguration agentsServiceConfiguration;
-    protected List<String> uniqueIdOfUserSelectedAccounts;
 
     public AgentWorkerCommandContext(
             CredentialsRequest request,
@@ -96,7 +94,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 accountInformationServiceEventsProducer);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
-        this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
 
         Provider provider = request.getProvider();
 
@@ -270,10 +267,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
 
     public IdentityData getCachedIdentityData() {
         return identityData;
-    }
-
-    public void addOptInAccountUniqueId(List<String> optInAccountUniqueId) {
-        this.uniqueIdOfUserSelectedAccounts = optInAccountUniqueId;
     }
 
     public boolean isWhitelistRefresh() {
