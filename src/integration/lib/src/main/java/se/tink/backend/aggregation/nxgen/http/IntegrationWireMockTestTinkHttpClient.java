@@ -36,6 +36,19 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
             TinkHttpClient tinkHttpClient, final String wireMockServerHost) {
         this.tinkHttpClient = tinkHttpClient;
         this.wireMockServerHost = wireMockServerHost;
+        this.tinkHttpClient.addRedirectHandler(
+                new RedirectHandler() {
+                    @Override
+                    public String modifyRedirectUri(String uri) {
+                        try {
+                            URI currentUri = new URI(uri);
+                            URL fixedUrl = toWireMockHost(currentUri);
+                            return fixedUrl.toString();
+                        } catch (URISyntaxException e) {
+                            throw new IllegalArgumentException(e);
+                        }
+                    }
+                });
     }
 
     @Override
