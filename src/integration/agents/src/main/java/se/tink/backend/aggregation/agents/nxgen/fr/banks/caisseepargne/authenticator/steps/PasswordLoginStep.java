@@ -59,25 +59,9 @@ public class PasswordLoginStep extends AbstractAuthenticationStep {
 
         apiClient.getOAuth2Token();
         IdentificationRoutingResponse identificationRoutingResponse =
-                apiClient.identificationRouting(username);
-        if (!identificationRoutingResponse.isValid()) {
-            throw new IllegalStateException("Invalid routing response");
-        }
-        String bankId = identificationRoutingResponse.getBankId();
-        instanceStorage.put(StorageKeys.BANK_ID, bankId);
-        OAuth2V2AuthorizeResponse oAuth2V2AuthorizeResponse =
-                apiClient.oAuth2Authorize(
-                        username, bankId, identificationRoutingResponse.getMembershipTypeValue());
-        if (!oAuth2V2AuthorizeResponse.isValid()) {
-            throw new IllegalStateException("OAuth Authorize response was not valid.");
-        }
-        String samlTransactionPath =
-                apiClient.getSamlTransactionPath(
-                        new URL(oAuth2V2AuthorizeResponse.getAction()),
-                        oAuth2V2AuthorizeResponse.getSAMLRequest());
-        SamlAuthnResponse samlAuthnResponse = apiClient.samlAuthorize(samlTransactionPath);
-        samlAuthnResponse.throwIfFailedAuthentication();
-        instanceStorage.put(StorageKeys.SAML_TRANSACTION_PATH, samlTransactionPath);
+                identificationRouting(username);
+        SamlAuthnResponse samlAuthnResponse =
+                samlAuthorize(username, identificationRoutingResponse);
         String validationId =
                 samlAuthnResponse
                         .getValidationId()
@@ -98,7 +82,10 @@ public class PasswordLoginStep extends AbstractAuthenticationStep {
 
         SamlAuthnResponse passwordResponse =
                 apiClient.submitPassword(
-                        validationId, validationUnitId, passwordString, samlTransactionPath);
+                        validationId,
+                        validationUnitId,
+                        passwordString,
+                        instanceStorage.get(StorageKeys.SAML_TRANSACTION_PATH));
         passwordResponse.throwIfFailedAuthentication();
         instanceStorage.put(StorageKeys.CREDENTIALS_RESPONSE, passwordResponse);
         if (passwordResponse.isStillAuthenticating()) {
@@ -116,6 +103,37 @@ public class PasswordLoginStep extends AbstractAuthenticationStep {
         }
         persistentStorage.put(StorageKeys.COULD_AUTO_AUTHENTICATE, true);
         return AuthenticationStepResponse.executeStepWithId(FinalizeAuthStep.STEP_ID);
+    }
+
+    private SamlAuthnResponse samlAuthorize(
+            String username, IdentificationRoutingResponse identificationRoutingResponse) {
+        OAuth2V2AuthorizeResponse oAuth2V2AuthorizeResponse =
+                apiClient.oAuth2Authorize(
+                        username,
+                        instanceStorage.get(StorageKeys.BANK_ID),
+                        identificationRoutingResponse.getMembershipTypeValue());
+        if (!oAuth2V2AuthorizeResponse.isValid()) {
+            throw new IllegalStateException("OAuth Authorize response was not valid.");
+        }
+        String samlTransactionPath =
+                apiClient.getSamlTransactionPath(
+                        new URL(oAuth2V2AuthorizeResponse.getAction()),
+                        oAuth2V2AuthorizeResponse.getSAMLRequest());
+        SamlAuthnResponse samlAuthnResponse = apiClient.samlAuthorize(samlTransactionPath);
+        samlAuthnResponse.throwIfFailedAuthentication();
+        instanceStorage.put(StorageKeys.SAML_TRANSACTION_PATH, samlTransactionPath);
+        return samlAuthnResponse;
+    }
+
+    private IdentificationRoutingResponse identificationRouting(String username) {
+        IdentificationRoutingResponse identificationRoutingResponse =
+                apiClient.identificationRouting(username);
+        if (!identificationRoutingResponse.isValid()) {
+            throw new IllegalStateException("Invalid routing response");
+        }
+        String bankId = identificationRoutingResponse.getBankId();
+        instanceStorage.put(StorageKeys.BANK_ID, bankId);
+        return identificationRoutingResponse;
     }
 
     private String getPasswordString(
