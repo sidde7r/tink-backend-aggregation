@@ -2,6 +2,7 @@ package se.tink.libraries.account_data_cache;
 
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,11 +122,17 @@ public class AccountDataCache {
                 .collect(Collectors.toList());
     }
 
-    public Map<Account, List<Transaction>> getTransactionsToBeProcessed() {
+    public Map<Account, List<Transaction>> getTransactionsByAccountToBeProcessed() {
         return getProcessedAccountDataStream()
                 .filter(AccountData::hasTransactions)
                 .peek(AccountData::updateTransactionsAccountId)
                 .collect(Collectors.toMap(AccountData::getAccount, AccountData::getTransactions));
+    }
+
+    public List<Transaction> getTransactionsToBeProcessed() {
+        return getTransactionsByAccountToBeProcessed().values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     public Map<Account, List<TransferDestinationPattern>>
