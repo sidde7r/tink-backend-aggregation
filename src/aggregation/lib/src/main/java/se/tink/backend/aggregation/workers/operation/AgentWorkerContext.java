@@ -174,7 +174,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void clear() {
         accountDataCache.clear();
-        transactionsByAccountBankId.clear();
         allAvailableAccountsByUniqueId.clear();
     }
 
@@ -210,64 +209,33 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             return;
         }
 
-        List<Transaction> transactions = Lists.newArrayList();
-
-        for (String bankId : transactionsByAccountBankId.keySet()) {
-            Optional<Account> accountOpt =
-                    getUpdatedAccounts().stream()
-                            .filter(a -> Objects.equals(a.getBankId(), bankId))
-                            .findFirst();
-
-            if (!accountOpt.isPresent()) {
-                if (!isWhitelistRefresh) {
-                    log.error(
-                            "Account not found in updated Accounts list. "
-                                    + "This should not happen and might mean that Agent is not updating all Accounts separately.");
-                }
-
-                continue;
-            }
-
-            Account account = accountOpt.get();
-            if (!shouldAggregateDataForAccount(account)) {
-                // Account marked to not aggregate data from.
-                // Preferably we would not even download the data but this makes sure
-                // we don't process further or store the account's data.
-                continue;
-            }
-
-            List<Transaction> accountTransactions = transactionsByAccountBankId.get(bankId);
-
-            for (Transaction transaction : accountTransactions) {
-                transaction.setAccountId(account.getId());
-                transaction.setCredentialsId(request.getCredentials().getId());
-                transaction.setUserId(request.getCredentials().getUserId());
-
-                if (!Strings.isNullOrEmpty(transaction.getDescription())) {
-                    transaction.setDescription(
-                            transaction.getDescription().replace("<", "").replace(">", ""));
-                }
-
-                if (transaction.getType() == null) {
-                    transaction.setType(TransactionTypes.DEFAULT);
-                }
-            }
-
-            transactions.addAll(accountTransactions);
-        }
-
-        // Don't update transactions if we didn't get any
-        if (transactions.isEmpty()) {
+        List<Transaction> transactionsToProcess = accountDataCache.getTransactionsToBeProcessed();
+        if (transactionsToProcess.isEmpty()) {
+            // Don't update transactions if we don't have any.
             return;
         }
 
-        // Send the request to process the transactions that we've collected in this batch.
+        // Update each transaction with information about the credential and user as well as
+        // additional formatting.
+        transactionsToProcess.forEach(
+                transaction -> {
+                    transaction.setCredentialsId(credentials.getId());
+                    transaction.setUserId(credentials.getUserId());
+                    if (!Strings.isNullOrEmpty(transaction.getDescription())) {
+                        transaction.setDescription(
+                                transaction.getDescription().replace("<", "").replace(">", ""));
+                    }
+                    if (transaction.getType() == null) {
+                        transaction.setType(TransactionTypes.DEFAULT);
+                    }
+                });
 
+        // Send the request to process the transactions that we've collected in this batch.
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest
                 updateTransactionsRequest =
                         new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
                                 .UpdateTransactionsRequest();
-        updateTransactionsRequest.setTransactions(transactions);
+        updateTransactionsRequest.setTransactions(transactionsToProcess);
         updateTransactionsRequest.setUser(credentials.getUserId());
         updateTransactionsRequest.setCredentials(credentials.getId());
         updateTransactionsRequest.setCredentialsDataVersion(credentials.getDataVersion());
@@ -733,8 +701,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
         // This crashes if agent is implemented incorrectly. You have to cache Account before you
         // cache Transactions
-        Preconditions.checkArgument(allAvailableAccountsByUniqueId.containsKey(accountUniqueId));
-        transactionsByAccountBankId.put(accountUniqueId, transactions);
 
         accountDataCache.cacheTransactions(accountUniqueId, transactions);
     }
