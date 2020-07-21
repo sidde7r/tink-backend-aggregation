@@ -169,18 +169,21 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         // Metrics
         refreshTotal.inc();
-        TARGET_ACCOUNT_TYPES.forEach(
-                accountType -> {
-                    if (allAvailableAccountsByUniqueId.values().stream()
-                            .noneMatch(pair -> pair.first.getType() == accountType)) {
-                        getMetricRegistry()
-                                .meter(
-                                        MetricId.newId("no_accounts_fetched")
-                                                .label(defaultMetricLabels)
-                                                .label("type", accountType.toString()))
-                                .inc();
-                    }
-                });
+
+        List<Account> allCollectedAccounts = getAccountDataCache().getAllAccounts();
+        TARGET_ACCOUNT_TYPES.stream()
+                .filter(
+                        accountType ->
+                                allCollectedAccounts.stream()
+                                        .noneMatch(account -> account.getType() == accountType))
+                .forEach(
+                        accountType ->
+                                getMetricRegistry()
+                                        .meter(
+                                                MetricId.newId("no_accounts_fetched")
+                                                        .label(defaultMetricLabels)
+                                                        .label("type", accountType.toString()))
+                                        .inc());
 
         // Requires Accounts in list to have been "updated" towards System's UpdateService to get
         // their real stored id
