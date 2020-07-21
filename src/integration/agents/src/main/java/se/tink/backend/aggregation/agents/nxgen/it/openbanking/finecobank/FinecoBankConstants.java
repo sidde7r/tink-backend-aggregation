@@ -147,4 +147,8 @@ public final class FinecoBankConstants {
     public static class StatusValues {
         public static final String VALID = "valid";
     }
+
+    public static class Configuration {
+        public static final String PSU_IP_ADDRESS = "127.0.0.1";
+    }
 }
