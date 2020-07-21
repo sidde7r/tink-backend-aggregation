@@ -68,8 +68,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private final AccountDataCache accountDataCache;
 
     protected Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
-    protected Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount =
-            Maps.newHashMap();
     protected List<Transfer> transfers = Lists.newArrayList();
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;

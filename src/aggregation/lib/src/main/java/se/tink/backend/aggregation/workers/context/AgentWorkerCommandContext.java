@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
-import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -239,61 +238,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         compareOldAndNewAccountDataCache();
     }
 
-    private boolean areTransferDestinationPatternsEqual(
-            Map<Account, List<TransferDestinationPattern>> first,
-            Map<Account, List<TransferDestinationPattern>> second) {
-        if (first.size() != second.size()) {
-            log.warn(
-                    "[compareOldAndNewAccountDataCache] TransferDestinationPatterns maps are not the same len ({}, {})",
-                    first.size(),
-                    second.size());
-            return false;
-        }
-
-        return first.entrySet().stream()
-                .allMatch(
-                        e -> {
-                            List<TransferDestinationPattern> firstList = e.getValue();
-                            List<TransferDestinationPattern> secondList = second.get(e.getKey());
-                            if (Objects.isNull(firstList) && Objects.isNull(secondList)) {
-                                return true;
-                            }
-
-                            if (Objects.isNull(firstList) || Objects.isNull(secondList)) {
-                                log.warn(
-                                        "[compareOldAndNewAccountDataCache] One TransferDestinationPatterns is null ({}, {})",
-                                        Objects.isNull(firstList),
-                                        Objects.isNull(secondList));
-                                return false;
-                            }
-
-                            if (firstList.size() != secondList.size()) {
-                                log.warn(
-                                        "[compareOldAndNewAccountDataCache] TransferDestinationPatterns are not the same len ({}, {})",
-                                        firstList.size(),
-                                        secondList.size());
-                                return false;
-                            }
-
-                            return firstList.stream()
-                                    .allMatch(
-                                            pattern -> {
-                                                if (Objects.isNull(pattern)) {
-                                                    log.warn(
-                                                            "[compareOldAndNewAccountDataCache] Pattern is null!");
-                                                    return false;
-                                                }
-                                                if (!secondList.contains(pattern)) {
-                                                    log.warn(
-                                                            "[compareOldAndNewAccountDataCache] Pattern '{}' does not exist!",
-                                                            pattern);
-                                                    return false;
-                                                }
-                                                return true;
-                                            });
-                        });
-    }
-
     private Map<Account, List<Transaction>> collectOldTransactionsPerAccount() {
         Map<Account, List<Transaction>> result = new HashMap<>();
 
@@ -377,16 +321,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         AccountDataCache accountDataCache = this.getAccountDataCache();
 
-        Map<Account, List<TransferDestinationPattern>> newTransferDestinationPatterns =
-                accountDataCache.getAllAccountData().stream()
-                        .filter(
-                                accountData ->
-                                        !accountData.getTransferDestinationPatterns().isEmpty())
-                        .collect(
-                                Collectors.toMap(
-                                        AccountData::getAccount,
-                                        AccountData::getTransferDestinationPatterns));
-
         List<Account> newAccountCache = accountDataCache.getAllAccounts();
         List<Account> oldAccountCache =
                 allAvailableAccountsByUniqueId.values().stream()
@@ -397,13 +331,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
             if (!newAccountCache.containsAll(oldAccountCache)) {
                 log.warn(
                         "[compareOldAndNewAccountDataCache/all] The two account caches are not equal!");
-            }
-
-            // Only compare transfer destinations if there are the same amount of accounts.
-            if (!areTransferDestinationPatternsEqual(
-                    transferDestinationPatternsByAccount, newTransferDestinationPatterns)) {
-                log.warn(
-                        "[compareOldAndNewAccountDataCache] The two transfDestPatterns are not equal!");
             }
         } else {
             log.warn(
