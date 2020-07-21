@@ -183,7 +183,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         // Requires Accounts in list to have been "updated" towards System's UpdateService to get
         // their real stored id
-        List<String> accountIds = Lists.newArrayList(updatedAccountsByTinkId.keySet());
+        List<String> accountIds =
+                getAccountDataCache().getProcessedAccounts().stream()
+                        .map(Account::getId)
+                        .collect(Collectors.toList());
 
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest
                 processAccountsRequest =
@@ -255,22 +258,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         } else {
             log.warn(
                     "[compareOldAndNewAccountDataCache/all] Number of accounts differ. Old: {}, New: {}",
-                    oldAccountCache.size(),
-                    newAccountCache.size());
-        }
-
-        // Compare the filtered lists.
-        List<Account> newFilteredAccountCache = accountDataCache.getFilteredAccounts();
-        List<Account> oldFilteredAccountCache = new ArrayList<>(updatedAccountsByTinkId.values());
-
-        if (newFilteredAccountCache.size() == oldFilteredAccountCache.size()) {
-            if (!newFilteredAccountCache.containsAll(oldFilteredAccountCache)) {
-                log.warn(
-                        "[compareOldAndNewAccountDataCache/filtered] The two account caches are not equal!");
-            }
-        } else {
-            log.warn(
-                    "[compareOldAndNewAccountDataCache/filtered] Number of accounts differ. Old: {}, New: {}",
                     oldAccountCache.size(),
                     newAccountCache.size());
         }
