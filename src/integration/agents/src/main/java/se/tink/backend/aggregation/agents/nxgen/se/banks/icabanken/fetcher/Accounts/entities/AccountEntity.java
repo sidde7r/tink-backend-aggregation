@@ -80,7 +80,7 @@ public class AccountEntity implements GeneralAccountEntity {
                 TransactionalAccount.builder(
                                 accountType,
                                 accountNumber,
-                                ExactCurrencyAmount.inSEK(availableAmount))
+                                ExactCurrencyAmount.inSEK(currentAmount - outstandingAmount))
                         .setAccountNumber(accountNumber)
                         .setName(name)
                         .setHolderName(new HolderName(holder))
@@ -134,13 +134,7 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     private boolean isCheckingAccount() {
-        return IcaBankenConstants.AccountTypes.ICA_ACCOUNT.equalsIgnoreCase(type)
-                && !hasCreditLimit();
-    }
-
-    @JsonIgnore
-    private boolean hasCreditLimit() {
-        return creditLimit > 0;
+        return IcaBankenConstants.AccountTypes.ICA_ACCOUNT.equalsIgnoreCase(type);
     }
 
     @JsonIgnore
@@ -150,9 +144,7 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     public boolean isCreditCardAccount() {
-        return IcaBankenConstants.AccountTypes.CREDIT_CARD_ACCOUNT.equalsIgnoreCase(type)
-                || (IcaBankenConstants.AccountTypes.ICA_ACCOUNT.equalsIgnoreCase(type)
-                        && hasCreditLimit());
+        return IcaBankenConstants.AccountTypes.CREDIT_CARD_ACCOUNT.equalsIgnoreCase(type);
     }
 
     @JsonIgnore
