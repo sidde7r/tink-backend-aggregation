@@ -25,6 +25,7 @@ public class HandelsbankenFIConstants {
 
     public static final class Headers {
         public static final String APP_VERSION = "3.4:1.6";
+        public static final String DEVICE_MODEL = "IOS-13.5.1,2.8.0,iPhone10.4,FIPRIV";
     }
 
     public enum LoanType {
