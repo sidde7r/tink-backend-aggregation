@@ -37,7 +37,7 @@ public class HandelsbankenFIConfiguration implements HandelsbankenConfiguration 
 
     @Override
     public String getDeviceModel() {
-        return HandelsbankenFIConstants.Headers.APP_VERSION;
+        return HandelsbankenFIConstants.Headers.DEVICE_MODEL;
     }
 
     @Override
