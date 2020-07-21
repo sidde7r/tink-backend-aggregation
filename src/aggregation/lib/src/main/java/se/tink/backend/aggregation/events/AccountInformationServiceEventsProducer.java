@@ -145,9 +145,12 @@ public class AccountInformationServiceEventsProducer {
             Optional.ofNullable(sourceInfo)
                     .ifPresent(
                             info -> {
-                                builder.setBankAccountType(sourceInfo.getBankAccountType());
-                                builder.setBankProductCode(sourceInfo.getBankProductCode());
-                                builder.setBankProductName(sourceInfo.getBankProductName());
+                                Optional.ofNullable(sourceInfo.getBankAccountType())
+                                        .ifPresent(builder::setBankAccountType);
+                                Optional.ofNullable(sourceInfo.getBankProductCode())
+                                        .ifPresent(builder::setBankProductCode);
+                                Optional.ofNullable(sourceInfo.getBankProductName())
+                                        .ifPresent(builder::setBankProductName);
                             });
             eventProducerServiceClient.postEventFireAndForget(Any.pack(builder.build()));
 
