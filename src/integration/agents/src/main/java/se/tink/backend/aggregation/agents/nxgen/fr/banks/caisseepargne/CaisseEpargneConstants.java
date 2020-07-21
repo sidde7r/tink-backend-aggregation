@@ -114,6 +114,7 @@ public class CaisseEpargneConstants {
     public static class ResponseValues {
         private ResponseValues() {}
 
+        public static final String NEGATIVE_BALANCE = "D";
         public static final String AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
         public static final String FAILED_AUTHENTICATION = "FAILED_AUTHENTICATION";
         public static final String PASSWORD = "PASSWORD";

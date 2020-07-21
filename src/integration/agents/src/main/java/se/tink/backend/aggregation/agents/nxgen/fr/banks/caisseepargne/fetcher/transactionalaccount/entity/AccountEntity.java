@@ -8,6 +8,7 @@ import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.mapper.CaisseEpargneAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -90,6 +91,9 @@ public class AccountEntity {
         BigDecimal amount =
                 new BigDecimal(amountBalanceAccount.isEmpty() ? "0" : amountBalanceAccount);
         amount = amount.divide(BigDecimal.valueOf(100), 2, RoundingMode.UNNECESSARY);
+        if (CaisseEpargneConstants.ResponseValues.NEGATIVE_BALANCE.equalsIgnoreCase(codeMeaning)) {
+            amount = amount.negate();
+        }
         return ExactCurrencyAmount.of(amount, "EUR");
     }
 
@@ -101,8 +105,6 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType().get())
                 .withoutFlags()
-                // make sure balance is right sign. Currently there is no way of knowing
-                // positive/negative balance difference from the response.
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()
