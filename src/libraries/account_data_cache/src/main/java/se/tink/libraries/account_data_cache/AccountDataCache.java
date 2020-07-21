@@ -72,6 +72,10 @@ public class AccountDataCache {
                 .ifPresent(cacheItem -> cacheItem.updateTransferDestinationPatterns(patterns));
     }
 
+    // Return only AccountData that passes the added filter predicates.
+    // A filter predicate can for example be responsible for removing non-whitelisted accounts.
+    // It is therefore extremely important that general access of AccountData is done through this
+    // filtered method.
     private Stream<AccountData> getFilteredAccountDataStream() {
         return accountDataByBankAccountId.values().stream()
                 .filter(
@@ -84,6 +88,13 @@ public class AccountDataCache {
         return getFilteredAccountDataStream().collect(Collectors.toList());
     }
 
+    // Returns only AccountData that is both filtered and has been processed (see
+    // getFilteredAccountDataStream).
+    // Note: Only filtered AccountData can be processed!
+    // A processed AccountData means that the attached Account has been processed by System and been
+    // given a `TinkAccountId` (`Account.getId()`).
+    // A proper `TinkAccountId` is needed in order to process the other bits of AccountData, e.g.
+    // Transaction.
     private Stream<AccountData> getProcessedAccountDataStream() {
         return getFilteredAccountDataStream().filter(AccountData::isProcessed);
     }
