@@ -66,5 +66,6 @@ public final class HttpLoggingConstants {
                     "x-ratelimit-limit",
                     "x-ratelimit-remaining",
                     "x-request-id",
-                    "x-response-id");
+                    "x-response-id",
+                    "Set-Cookie");
 }

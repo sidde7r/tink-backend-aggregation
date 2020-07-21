@@ -1,22 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants;
-import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.mapper.CaisseEpargneAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-@JsonObject
-@JacksonXmlRootElement(localName = "SyntInternalAccountEntity")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JacksonXmlRootElement(localName = "CompteInterneSynt")
 public class AccountEntity {
-
-    private static final Logger logger = LoggerFactory.getLogger(AccountEntity.class);
 
     @JacksonXmlProperty(localName = "NumeroRib")
     private String fullAccountNumber;
@@ -28,7 +31,7 @@ public class AccountEntity {
     private String productTypeLabel;
 
     @JacksonXmlProperty(localName = "MontantSoldeCompte")
-    private double amountBalanceAccount;
+    private String amountBalanceAccount;
 
     @JacksonXmlProperty(localName = "CodeDevise")
     private String currencyCode;
@@ -81,45 +84,51 @@ public class AccountEntity {
     @JacksonXmlProperty(localName = "NvAutoCpt")
     private String nvAutoCpt;
 
+    @JsonIgnore private String iban;
+
+    @JsonIgnore
     private ExactCurrencyAmount getBalance() {
-        return ExactCurrencyAmount.of(
-                BigDecimal.valueOf(Math.round(amountBalanceAccount), 2), currencyCode);
-    }
-
-    public TransactionalAccount toTinkAccount() {
-
-        TransactionalAccount.Builder builder =
-                TransactionalAccount.builder(
-                                this.toTinkAccountType(), fullAccountNumber, this.getBalance())
-                        .setAccountNumber(reducedAccountNumber)
-                        .setName(productTypeLabel)
-                        .setBankIdentifier(fullAccountNumber);
-
-        return builder.build();
-    }
-
-    public boolean isTransactionalAccount() {
-        switch (this.toTinkAccountType()) {
-            case CHECKING:
-            case SAVINGS:
-                return true;
-            default:
-                return false;
+        BigDecimal amount =
+                new BigDecimal(amountBalanceAccount.isEmpty() ? "0" : amountBalanceAccount);
+        amount = amount.divide(BigDecimal.valueOf(100), 2, RoundingMode.UNNECESSARY);
+        if (CaisseEpargneConstants.ResponseValues.NEGATIVE_BALANCE.equalsIgnoreCase(codeMeaning)) {
+            amount = amount.negate();
         }
+        return ExactCurrencyAmount.of(amount, "EUR");
     }
 
-    private AccountTypes toTinkAccountType() {
-
-        Optional<AccountTypes> translated =
-                CaisseEpargneConstants.AccountType.translate(productCode);
-
-        if (!translated.isPresent()) {
-            logger.info(
-                    CaisseEpargneConstants.LogMessage.UNKNOWN_ACCOUNT_TYPE,
-                    CaisseEpargneConstants.LogTag.UNKNOWN_ACCOUNT_TYPE,
-                    productCode);
+    @JsonIgnore
+    public Optional<TransactionalAccount> toTinkAccount() {
+        if (!getAccountType().isPresent() || Strings.isNullOrEmpty(iban)) {
+            return Optional.empty();
         }
+        return TransactionalAccount.nxBuilder()
+                .withType(getAccountType().get())
+                .withoutFlags()
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(reducedAccountNumber)
+                                .withAccountName(productTypeLabel)
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .addHolderName(productTitle)
+                .setApiIdentifier(fullAccountNumber)
+                .build();
+    }
 
-        return translated.orElse(AccountTypes.OTHER);
+    @JsonIgnore
+    private Optional<TransactionalAccountType> getAccountType() {
+        return CaisseEpargneAccountTypeMapper.getAccountType(productCode);
+    }
+
+    public String getFullAccountNumber() {
+        return fullAccountNumber;
+    }
+
+    @JsonIgnore
+    public void setIban(String iban) {
+        this.iban = iban;
     }
 }
