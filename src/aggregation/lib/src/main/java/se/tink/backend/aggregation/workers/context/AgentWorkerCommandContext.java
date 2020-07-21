@@ -38,7 +38,6 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -56,8 +55,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     protected Agent agent;
 
     protected final Counter refreshTotal;
-    protected final Counter inconsistencyBetweelAccountsTotal;
-    protected final Counter zeroAccountsFoundDuringRefreshTotal;
     protected final MetricId.MetricLabels defaultMetricLabels;
 
     protected static final Set<AccountTypes> TARGET_ACCOUNT_TYPES =
@@ -122,16 +119,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         refreshTotal =
                 metricRegistry.meter(MetricId.newId("accounts_refresh").label(defaultMetricLabels));
-
-        inconsistencyBetweelAccountsTotal =
-                metricRegistry.meter(
-                        MetricId.newId("inconsistency_between_accounts")
-                                .label(defaultMetricLabels));
-
-        zeroAccountsFoundDuringRefreshTotal =
-                metricRegistry.meter(
-                        MetricId.newId("zero_accounts_found_during_refresh")
-                                .label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
     }
@@ -229,12 +216,9 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     }
 
     public void sendAllCachedAccountsToUpdateService() {
-
-        compareAccountsBeforeAndAfterUpdate();
         for (String uniqueId : allAvailableAccountsByUniqueId.keySet()) {
             sendAccountToUpdateService(uniqueId);
         }
-
         compareOldAndNewAccountDataCache();
     }
 
@@ -290,42 +274,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                         .map(AccountHolder::getIdentities)
                         .map(Collection::size)
                         .orElse(0));
-    }
-
-    private void compareAccountsBeforeAndAfterUpdate() {
-
-        if (!(request instanceof RefreshInformationRequest)) {
-            // If it's not a refresh it shouldn't get here, but good to return anyway
-            return;
-        }
-
-        List<Account> accountsBeforeRefresh = request.getAccounts();
-        List<Account> accountsFoundByAgent =
-                allAvailableAccountsByUniqueId.values().stream()
-                        .map(p -> p.first)
-                        .collect(Collectors.toList());
-
-        // If it was 0 before and 0 found something might be wrong (maybe not though)
-        // If it's 0 accounts before, it means that we are **probably** trying to refresh this
-        // credentials for the first time (but not 100% of the time).
-        if (accountsBeforeRefresh.size() == 0 && accountsFoundByAgent.size() == 0) {
-            zeroAccountsFoundDuringRefreshTotal.inc();
-            return;
-        }
-
-        // If the number of accounts sent to system are different than the accounts that we received
-        // in the request,
-        //      that might mean that the user has a new account in the credentials. (not a problem)
-        //      that an account on the credentials closed. (not a problem)
-        // But it's  not something that we expect happening on multiple users at the same time.
-        // (problem)
-        if (accountsFoundByAgent.size() != accountsBeforeRefresh.size()) {
-            inconsistencyBetweelAccountsTotal.inc();
-            return;
-        }
-
-        // TODO: Have 3 different metrics for ids, COMPLETE_MATCH, PARTIAL_MISMATCH,
-        // COMPLETE_MISMATCH, increment accordingly
     }
 
     public Agent getAgent() {
