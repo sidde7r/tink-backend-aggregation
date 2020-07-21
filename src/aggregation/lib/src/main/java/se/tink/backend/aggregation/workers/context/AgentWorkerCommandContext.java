@@ -263,9 +263,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     }
 
     @Override
-    public void setAccountsToAggregate(List<Account> accounts) {
-        accountsToAggregate = accounts;
-    }
+    public void setAccountsToAggregate(List<Account> accounts) {}
 
     @Override
     public List<Account> getCachedAccounts() {

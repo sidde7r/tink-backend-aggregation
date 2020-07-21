@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
@@ -102,10 +101,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
     }
 
-    // a collection of account to keep a record of what accounts we should aggregate data after
-    // opt-in flow,
-    // selecting white listed accounts and eliminating blacklisted accounts
-    protected List<Account> accountsToAggregate;
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
     // True or false if system has been requested to process transactions.
     protected boolean isSystemProcessingTransactions;
@@ -130,7 +125,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
 
         this.accountDataCache = new AccountDataCache();
-        this.accountsToAggregate = Lists.newArrayList();
         this.psd2PaymentAccountClassifier =
                 Psd2PaymentAccountClassifier.createWithMetrics(metricRegistry);
         this.correlationId = correlationId;
@@ -338,7 +332,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return accountDataCache;
     }
 
-    private boolean shouldAggregateDataForAccount(Account account) {
+    private void shouldAggregateDataForAccount(Account account) {
         try {
             // TODO: extend filtering by using payment classification information
             // (For now we discard the result as in the beginning we just want to collect metrics)
@@ -353,10 +347,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         } catch (RuntimeException e) {
             log.error("[classifyAsPaymentAccount] Unexpected exception occurred", e);
         }
-        return accountsToAggregate.stream()
-                .map(Account::getBankId)
-                .collect(Collectors.toList())
-                .contains(account.getBankId());
     }
 
     private void sendPsd2PaymentAccountClassificationEvent(
