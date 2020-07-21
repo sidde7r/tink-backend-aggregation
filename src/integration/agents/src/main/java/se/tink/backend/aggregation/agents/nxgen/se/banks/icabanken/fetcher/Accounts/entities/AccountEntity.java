@@ -90,6 +90,9 @@ public class AccountEntity implements GeneralAccountEntity {
         if (accountType == AccountTypes.CHECKING) {
             builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
         }
+        if (creditLimit != 0.0) {
+            builder.setExactAvailableCredit(getAvailableCredit());
+        }
         return builder.build();
     }
 
