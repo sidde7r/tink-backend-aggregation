@@ -588,21 +588,25 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     }
 
     public void processTransferDestinationPatterns() {
+        Map<Account, List<TransferDestinationPattern>> transferDestinationPatterns =
+                getAccountDataCache().getTransferDestinationPatternsToBeProcessed();
+        if (transferDestinationPatterns.isEmpty()) {
+            // Nothing to process.
+            return;
+        }
+
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc
                         .UpdateTransferDestinationPatternsRequest
                 updateRequest =
                         new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
                                 .UpdateTransferDestinationPatternsRequest();
 
-        updateRequest.setDestinationsBySouce(
-                destinationBySource(transferDestinationPatternsByAccount));
+        updateRequest.setDestinationsBySouce(destinationBySource(transferDestinationPatterns));
         updateRequest.setUserId(request.getUser().getId());
         updateRequest.setCredentialsId(request.getCredentials().getId());
         updateRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
 
-        if (!transferDestinationPatternsByAccount.isEmpty()) {
-            controllerWrapper.updateTransferDestinationPatterns(updateRequest);
-        }
+        controllerWrapper.updateTransferDestinationPatterns(updateRequest);
     }
 
     private Map<se.tink.libraries.account.rpc.Account, List<TransferDestinationPattern>>

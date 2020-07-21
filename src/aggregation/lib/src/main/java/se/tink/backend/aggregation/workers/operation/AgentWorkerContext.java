@@ -753,17 +753,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     accountDataCache.cacheTransferDestinationPatterns(
                             account.getBankId(), patterns);
                 });
-
-        for (Account account : transferDestinationPatterns.keySet()) {
-            if (transferDestinationPatternsByAccount.containsKey(account)) {
-                transferDestinationPatternsByAccount
-                        .get(account)
-                        .addAll(transferDestinationPatterns.get(account));
-            } else {
-                transferDestinationPatternsByAccount.put(
-                        account, transferDestinationPatterns.get(account));
-            }
-        }
     }
 
     @Override
