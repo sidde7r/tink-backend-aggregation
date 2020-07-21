@@ -4,8 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
 import java.time.LocalDate;
@@ -14,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -57,7 +54,6 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.pair.Pair;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
@@ -106,9 +102,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
     }
 
-    // Cached accounts have not been sent to system side yet.
-    protected Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
-    private Set<String> updatedAccountUniqueIds;
     // a collection of account to keep a record of what accounts we should aggregate data after
     // opt-in flow,
     // selecting white listed accounts and eliminating blacklisted accounts
@@ -137,8 +130,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
 
         this.accountDataCache = new AccountDataCache();
-        this.allAvailableAccountsByUniqueId = Maps.newHashMap();
-        this.updatedAccountUniqueIds = Sets.newHashSet();
         this.accountsToAggregate = Lists.newArrayList();
         this.psd2PaymentAccountClassifier =
                 Psd2PaymentAccountClassifier.createWithMetrics(metricRegistry);
@@ -171,7 +162,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void clear() {
         accountDataCache.clear();
-        allAvailableAccountsByUniqueId.clear();
     }
 
     @Override
