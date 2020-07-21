@@ -244,6 +244,19 @@ public class CaisseEpargneApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(HeaderKeys.USER_AGENT, HeaderValues.CAISSE_DARWIN)
                         .get(HttpResponse.class);
+
+        Deque<Cookie> actualCookies = arrangeCookies(imagesResponse);
+
+        List<ImageItem> imageItems = Arrays.asList(imagesResponse.getBody(ImageItem[].class));
+        Map<String, byte[]> images =
+                imageItems.stream()
+                        .map(imageItem -> getImage(imageItem, actualCookies))
+                        .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        actualCookies.forEach(httpClient::addCookie);
+        return images;
+    }
+
+    private Deque<Cookie> arrangeCookies(HttpResponse imagesResponse) {
         List<String> setCookies =
                 imagesResponse.getHeaders().entrySet().stream()
                         .filter(entry -> HeaderKeys.SET_COOKIE.equals(entry.getKey()))
@@ -269,14 +282,7 @@ public class CaisseEpargneApiClient {
                 });
         newCookies.forEach(actualCookies::push);
         oldCookies.forEach(actualCookies::push);
-
-        List<ImageItem> imageItems = Arrays.asList(imagesResponse.getBody(ImageItem[].class));
-        Map<String, byte[]> images =
-                imageItems.stream()
-                        .map(imageItem -> getImage(imageItem, actualCookies))
-                        .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-        actualCookies.forEach(httpClient::addCookie);
-        return images;
+        return actualCookies;
     }
 
     public SamlAuthnResponse submitPassword(
