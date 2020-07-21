@@ -193,7 +193,7 @@ public class CaisseEpargneApiClient {
                         .queryParam(QueryKeys.CLAIMS, createSerializedClaimsValue())
                         .queryParam(QueryKeys.CDETAB, bankIdentifier)
                         .queryParam(QueryKeys.NONCE, UUID.randomUUID().toString())
-                        .queryParam(QueryKeys.SECRET_IT, QueryValues.SECRET)
+                        .queryParam(QueryKeys.SECRET_ID, QueryValues.SECRET)
                         .queryParam(QueryKeys.DISPLAY, QueryValues.TOUCH)
                         .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.ID_TOKEN_TOKEN)
                         .queryParam(QueryKeys.CLIENT_ID, QueryValues.CLIENT_ID)
