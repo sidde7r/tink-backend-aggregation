@@ -1,0 +1,600 @@
+
+REQUEST 1
+POST https://www.avanza.se/_api/authentication/sessions/bankid
+Accept: application/json
+Content-Type: application/json
+
+{"identificationNumber":"psu"}
+
+RESPONSE 1 SET BANK_ID_1
+202
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:18 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"transactionId":"transactionId","expires":"2020-07-21T09:18:18.409","autostartToken":"autoStartToken"}
+
+REQUEST 2 MATCH BANK_ID_1
+GET https://www.avanza.se/_api/authentication/sessions/bankid/transactionId
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 2 SET BANK_ID_2
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alivef
+Date: Tue, 21 Jul 2020 07:15:18 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"transactionId":"transactionId","state":"OUTSTANDING_TRANSACTION"}
+
+REQUEST 3 MATCH BANK_ID_2
+GET https://www.avanza.se/_api/authentication/sessions/bankid/transactionId
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:24 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"name":"firstName","logins":[{"customerId":"2000004","username":"userName","accounts":[{"accountName":"1000000","accountType":"Investeringssparkonto"},{"accountName":"1000052","accountType":"Aktie- & fondkonto"}],"loginPath":"/_api/authentication/sessions/bankid/transactionId/2000004"}],"transactionId":"transactionId","recommendedTargetCustomers":[],"state":"COMPLETE"}
+
+REQUEST 4
+GET https://www.avanza.se/_api/authentication/sessions/bankid/transactionId/2000004?maxInactiveMinutes=60
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:24 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"authenticationSession":"authenticationSession","pushSubscriptionId":"pushSubscriptionId","customerId":"2000004","registrationComplete":true}
+
+REQUEST 5
+GET https://www.avanza.se/_mobile/account/overview
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:24 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"accounts":[{"accountType":"AktieFondkonto","interestRate":0.00,"depositable":true,"name":"1000052","active":true,"attorney":false,"accountId":"1000052","accountPartlyOwned":false,"tradable":true,"totalBalance":0.00,"totalBalanceDue":0.00,"ownCapital":0.00,"buyingPower":0.00,"totalProfitPercent":0.00,"performancePercent":0.0,"totalProfit":0.00,"performance":0.0},{"accountType":"Investeringssparkonto","interestRate":0.00,"depositable":true,"name":"1000000","active":true,"attorney":false,"accountId":"1000000","accountPartlyOwned":false,"tradable":true,"totalBalance":300005.87,"totalBalanceDue":0.00,"ownCapital":441878.63,"buyingPower":300005.87,"totalProfitPercent":3.75,"performancePercent":-12.556844397435418,"totalProfit":5124.93,"performance":-991.7599999999948}],"numberOfOrders":0,"numberOfDeals":0,"totalBalance":300005.87,"numberOfTransfers":0,"numberOfIntradayTransfers":0,"totalBuyingPower":300005.87,"totalOwnCapital":441878.63,"totalPerformance":-991.7599999999948,"totalPerformancePercent":-12.556844397435418}
+
+REQUEST 6
+GET https://www.avanza.se/_mobile/account/1000052/positions?autoPortfolio=1&sort=name
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:25 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"instrumentPositions":[],"totalBalance":0.00,"totalProfitPercent":0.00,"totalProfit":0.00,"totalOwnCapital":0.00,"totalBuyingPower":0.00,"otherAccountHasPosition":true,"accountName":"1000052","accountType":"AktieFondkonto","depositable":true,"withdrawable":true,"accountId":"1000052"}
+
+REQUEST 7
+GET https://www.avanza.se/_mobile/account/transactions/1000052/options?from=2000-01-01&includeInstrumentsWithNoOrderbook=1&to=2020-07-21
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:25 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"firstTransactionDate":"2020-07-21","orderbooks":[]}
+
+REQUEST 8
+GET https://www.avanza.se/_mobile/account/1000052/overview
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 8
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:25 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"courtageClass":"MINI","depositable":true,"accountType":"AktieFondkonto","withdrawable":true,"accountId":"1000052","accountTypeName":"Aktie- & fondkonto","clearingNumber":"9554","instrumentTransferPossible":true,"internalTransferPossible":true,"jointlyOwned":false,"interestRate":0.00,"numberOfOrders":0,"numberOfDeals":0,"performanceSinceOneWeek":0.0,"performanceSinceOneMonth":0.0,"performanceSinceThreeMonths":0.0,"performanceSinceSixMonths":0.0,"performanceSinceOneYear":0.0,"performanceSinceThreeYears":0.0,"performanceSinceOneWeekPercent":0.0,"performanceSinceOneMonthPercent":0.0,"performanceSinceThreeMonthsPercent":0.0,"performanceSinceSixMonthsPercent":0.0,"performanceSinceOneYearPercent":0.0,"performanceSinceThreeYearsPercent":0.0,"currencyAccounts":[{"currency":"SEK","balance":0.00}],"creditLimit":0.00,"forwardBalance":0.00,"reservedAmount":0.00,"totalCollateralValue":0.00,"totalPositionsValue":0.0000,"buyingPower":0.00,"totalProfitPercent":0.00,"allowMonthlySaving":true,"availableSuperLoanAmount":0.00,"totalProfit":0.00,"totalBalance":0.00,"ownCapital":0.00,"creditAfterInterest":0.00,"accruedInterest":0.00,"performance":0.0,"overMortgaged":false,"overdrawn":false,"performancePercent":0.0,"numberOfTransfers":0,"numberOfIntradayTransfers":0}
+
+REQUEST 9
+GET https://www.avanza.se/_mobile/account/1000000/positions?autoPortfolio=1&sort=name
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 9
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:25 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"instrumentPositions":[{"instrumentType":"AUTO_PORTFOLIO","positions":[{"autoPositionUrl":"https://www.avanza.se/ab/init-auto-position/788397/1000000","changePercentPeriod":0.13,"changePercentThreeMonths":3.68,"volume":717.8812,"averageAcquiredPrice":116.66915400,"profitPercent":-0.14,"acquiredValue":83754.5922765048,"profit":-121.43,"value":83633.16,"currency":"SEK","orderbookId":"788397","tradable":true,"lastPrice":116.50,"lastPriceUpdated":"2020-07-17T00:00:00.000+0200","change":0.15,"changePercent":0.13,"name":"Avanza Auto 3"},{"autoPositionUrl":"https://www.avanza.se/ab/init-auto-position/788394/1000000","changePercentPeriod":0.21,"changePercentThreeMonths":5.54,"volume":62.0738,"averageAcquiredPrice":128.93387500,"profitPercent":1.28,"acquiredValue":8003.4155699750,"profit":102.18,"value":8105.60,"currency":"SEK","orderbookId":"788394","tradable":true,"lastPrice":130.58,"lastPriceUpdated":"2020-07-17T00:00:00.000+0200","change":0.27,"changePercent":0.21,"name":"Avanza Auto 6"}],"totalValue":91738.7600,"totalProfitValue":-19.25,"totalProfitPercent":-0.02,"todaysProfitPercent":0.14},{"instrumentType":"FUND","positions":[{"changePercentPeriod":0.19,"changePercentThreeMonths":6.13,"volume":142.891749,"averageAcquiredPrice":209.94914100,"profitPercent":13.80,"acquiredValue":29999.999958537609,"profit":4139.70,"value":34139.70,"currency":"SEK","orderbookId":"143369","tradable":true,"lastPrice":238.92,"lastPriceUpdated":"2020-07-20T00:00:00.000+0200","change":0.45,"changePercent":0.19,"name":"AMF Aktiefond Asien Stilla havet"},{"changePercentPeriod":0.06,"changePercentThreeMonths":6.94,"volume":3.8317,"averageAcquiredPrice":156.56955100,"profitPercent":0.79,"acquiredValue":599.9275485667,"profit":4.71,"value":604.64,"currency":"SEK","orderbookId":"691673","tradable":true,"lastPrice":157.80,"lastPriceUpdated":"2020-07-17T00:00:00.000+0200","change":0.10,"changePercent":0.06,"name":"DNB Europa Indeks A"},{"changePercentPeriod":0.07,"changePercentThreeMonths":1.28,"volume":4.482,"averageAcquiredPrice":133.75289300,"profitPercent":0.60,"acquiredValue":599.480466426,"profit":3.62,"value":603.10,"currency":"SEK","orderbookId":"2075","tradable":true,"lastPrice":134.56,"lastPriceUpdated":"2020-07-20T00:00:00.000+0200","change":0.09,"changePercent":0.07,"name":"Nordea Obligationsfond icke-utd"},{"changePercentPeriod":0.18,"changePercentThreeMonths":9.42,"volume":4.53,"averageAcquiredPrice":156.97945300,"profitPercent":3.69,"acquiredValue":711.11692209,"profit":26.27,"value":737.39,"currency":"SEK","orderbookId":"70789","tradable":true,"lastPrice":162.78,"lastPriceUpdated":"2020-07-20T00:00:00.000+0200","change":0.29,"changePercent":0.18,"name":"Schroder ISF Glb Em Mkt Opps A Acc USD"},{"changePercentPeriod":1.08,"changePercentThreeMonths":20.08,"volume":13.1629,"averageAcquiredPrice":401.09997700,"profitPercent":14.21,"acquiredValue":5279.6388872533,"profit":750.42,"value":6030.06,"currency":"SEK","orderbookId":"325406","tradable":true,"lastPrice":458.11,"lastPriceUpdated":"2020-07-20T00:00:00.000+0200","change":4.89,"changePercent":1.08,"name":"Spiltan Aktiefond Investmentbolag"},{"changePercentPeriod":0.13,"changePercentThreeMonths":7.27,"volume":40.0148,"averageAcquiredPrice":112.45659400,"profitPercent":-0.49,"acquiredValue":4499.9281175912,"profit":-21.87,"value":4478.06,"currency":"SEK","orderbookId":"471796","tradable":true,"lastPrice":111.91,"lastPriceUpdated":"2020-07-20T00:00:00.000+0200","change":0.15,"changePercent":0.13,"name":"Spiltan Högräntefond"},{"changePercentPeriod":-0.09,"changePercentThreeMonths":4.85,"volume":5.4116,"averageAcquiredPrice":166.30046100,"profitPercent":2.65,"acquiredValue":899.9515747476,"profit":23.81,"value":923.76,"currency":"SEK","orderbookId":"652895","tradable":true,"lastPrice":170.70,"lastPriceUpdated":"2020-07-20T00:00:00.000+0200","change":-0.15,"changePercent":-0.09,"name":"SPP Global Plus A"},{"changePercentPeriod":1.14,"changePercentThreeMonths":14.18,"volume":3.3472,"averageAcquiredPrice":268.84906100,"profitPercent":9.02,"acquiredValue":899.8915769792,"profit":81.17,"value":981.06,"currency":"SEK","orderbookId":"375216","tradable":true,"lastPrice":293.10,"lastPriceUpdated":"2020-07-20T00:00:00.000+0200","change":3.30,"changePercent":1.14,"name":"SPP Global Solutions A"},{"changePercentPeriod":0.83,"changePercentThreeMonths":18.86,"volume":5.2778,"averageAcquiredPrice":136.40836000,"profitPercent":11.99,"acquiredValue":719.9360424080,"profit":86.30,"value":806.24,"currency":"SEK","orderbookId":"694153","tradable":true,"lastPrice":152.76,"lastPriceUpdated":"2020-07-20T00:00:00.000+0200","change":1.25,"changePercent":0.83,"name":"SPP Sverige Plus A"},{"changePercentPeriod":0.91,"changePercentThreeMonths":7.45,"volume":3.9106,"averageAcquiredPrice":199.44173700,"profitPercent":6.42,"acquiredValue":779.9368567122,"profit":50.05,"value":829.99,"currency":"SEK","orderbookId":"364655","tradable":true,"lastPrice":212.24,"lastPriceUpdated":"2020-07-17T00:00:00.000+0200","change":1.91,"changePercent":0.91,"name":"Öhman Etisk Emerging Markets A"}],"totalValue":50134.0000,"totalProfitValue":5144.18,"totalProfitPercent":11.43,"todaysProfitPercent":0.32}],"totalBalance":300005.87,"totalProfitPercent":3.75,"totalProfit":5124.93,"totalBuyingPower":300005.87,"totalOwnCapital":441878.63,"accountName":"1000000","accountType":"Investeringssparkonto","depositable":true,"withdrawable":true,"accountId":"1000000"}
+
+REQUEST 10
+GET https://www.avanza.se/_mobile/account/transactions/1000000/options?from=2000-01-01&includeInstrumentsWithNoOrderbook=1&to=2020-07-21
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 10
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:25 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"firstTransactionDate":"2019-06-13","orderbooks":[{"isin":"SE0002572313","name":"AMF Aktiefond Asien Stilla havet","currency":"SEK","id":"143369","type":"FUND"},{"isin":"SE0009779671","name":"Avanza Auto 3","currency":"SEK","id":"788397","type":"FUND"},{"isin":"SE0009779705","name":"Avanza Auto 6","currency":"SEK","id":"788394","type":"FUND"},{"isin":"NO0008001872","name":"DNB Europa Indeks A","currency":"SEK","id":"691673","type":"FUND"},{"isin":"LU0302296149","name":"DNB Fund Renewable Energy retail A","currency":"SEK","id":"96447","type":"FUND"},{"isin":"SE0000427825","name":"Nordea Obligationsfond icke-utd","currency":"SEK","id":"2075","type":"FUND"},{"isin":"LU0269904917","name":"Schroder ISF Glb Em Mkt Opps A Acc USD","currency":"SEK","id":"70789","type":"FUND"},{"isin":"SE0004297927","name":"Spiltan Aktiefond Investmentbolag","currency":"SEK","id":"325406","type":"FUND"},{"isin":"SE0005798329","name":"Spiltan Högräntefond","currency":"SEK","id":"471796","type":"FUND"},{"isin":"SE0008129985","name":"SPP Global Plus A","currency":"SEK","id":"652895","type":"FUND"},{"isin":"SE0004576452","name":"SPP Global Solutions A","currency":"SEK","id":"375216","type":"FUND"},{"isin":"SE0008964407","name":"SPP Sverige Plus A","currency":"SEK","id":"694153","type":"FUND"},{"isin":"SE0004578615","name":"Öhman Etisk Emerging Markets A","currency":"SEK","id":"364655","type":"FUND"}]}
+
+REQUEST 11
+GET https://www.avanza.se/_mobile/market/fund/788397
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 11
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:25 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"hasInvestmentFees":true,"administrators":"Anders Brommesson","buyable":true,"sellable":true,"riskLevel":"MIDDLE","description":"Avanza Auto 3 ingår i Avanza Auto-familjen, som består av sex specialfonder med olika risk och förväntad avkastning. Placeringsstrategin baseras på modern portföljteori och de underliggande fonderna ska ha låga kostnader och en bred marknadsexponering. Avanza Auto 3 placerar huvudsakligen i aktiefonder, räntefonder och alternativa investeringar, där den aktieexponerade delen normalt ligger mellan 50 och 75 procent.","startDate":"2017-09-25","domicile":"Sverige","risk":4,"isin":"SE0009779671","tradingCurrency":"SEK","managementFee":0.35,"prospectus":"http://doc.morningstar.com/document/286afc805381d5a52e5fc76e97d9c23b.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":503613193.00,"normanAmount":0.00,"sellFee":0.00,"loanFactor":70.00,"name":"Avanza Auto 3","id":"788397","NAV":116.50,"NAVLastUpdated":"2020-07-17T00:00:00.000+0200","changeSinceOneDay":0.13,"changeSinceOneWeek":0.05,"changeSinceOneMonth":0.58,"changeSinceThreeMonths":3.68,"changeSinceSixMonths":-4.97,"changeSinceTurnOfTheYear":-2.88,"changeSinceOneYear":1.33,"relatedFunds":[{"changeSinceOneYear":1.07,"name":"Avanza Auto 2","id":"788396"},{"changeSinceOneYear":0.42,"name":"Avanza Auto 1","id":"788395"},{"changeSinceOneYear":1.94,"name":"Avanza Auto 4","id":"788398"},{"changeSinceOneYear":-4.84,"name":"Länsförsäkringar Tillväxtmarknad Aktiv A","id":"2156"},{"changeSinceOneYear":2.11,"name":"Avanza Auto 5","id":"788393"}],"fundCompany":{"homePage":"","name":"Avanza"},"numberOfOwners":20150,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","autoPositionUrl":"https://www.avanza.se/ab/init-auto-position/788397/1000000","accountId":"1000000","profit":-121.43,"volume":717.8812,"averageAcquiredPrice":116.66915400,"profitPercent":-0.14,"acquiredValue":83754.5922765048,"value":83633.16}],"positionsTotalValue":83633.1600,"numberOfPriceAlerts":0,"autoPortfolio":true,"otherFees":"Förvaltningsavgifterna i underliggande fonder beräknas inte överstiga 0,15%","subCategory":"Blandfond - SEK, balanserad","type":"Blandfond"}
+
+REQUEST 12
+GET https://www.avanza.se/_mobile/market/fund/788394
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 12
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:25 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"hasInvestmentFees":true,"administrators":"Anders Brommesson","buyable":true,"sellable":true,"riskLevel":"MIDDLE","description":"Avanza Auto 6 ingår i Avanza Auto-familjen, som består av sex specialfonder med olika risk och förväntad avkastning. Placeringsstrategin baseras på modern portföljteori och de underliggande fonderna ska ha låga kostnader och en bred marknadsexponering. Avanza Auto 6 placerar huvudsakligen i aktiefonder och alternativa investeringar, där den aktieexponerade delen normalt ligger mellan 80 och 100 procent.","startDate":"2017-09-25","domicile":"Sverige","risk":5,"isin":"SE0009779705","tradingCurrency":"SEK","managementFee":0.35,"prospectus":"http://doc.morningstar.com/document/e6a84ace2e250aa63d5dfe9478b0e783.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":2075559777.00,"normanAmount":0.00,"sellFee":0.00,"loanFactor":70.00,"name":"Avanza Auto 6","id":"788394","NAV":130.58,"NAVLastUpdated":"2020-07-17T00:00:00.000+0200","changeSinceOneDay":0.21,"changeSinceOneWeek":0.22,"changeSinceOneMonth":0.45,"changeSinceThreeMonths":5.54,"changeSinceSixMonths":-8.12,"changeSinceTurnOfTheYear":-4.64,"changeSinceOneYear":2.75,"relatedFunds":[{"changeSinceOneYear":0.42,"name":"Avanza Auto 1","id":"788395"},{"changeSinceOneYear":1.94,"name":"Avanza Auto 4","id":"788398"},{"changeSinceOneYear":3.98,"name":"Avanza 100","id":"377805"},{"changeSinceOneYear":1.33,"name":"Avanza Auto 3","id":"788397"},{"changeSinceOneYear":2.11,"name":"Avanza Auto 5","id":"788393"}],"fundCompany":{"homePage":"","name":"Avanza"},"numberOfOwners":66566,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","autoPositionUrl":"https://www.avanza.se/ab/init-auto-position/788394/1000000","accountId":"1000000","profit":102.18,"volume":62.0738,"averageAcquiredPrice":128.93387500,"profitPercent":1.28,"acquiredValue":8003.4155699750,"value":8105.60}],"positionsTotalValue":8105.6000,"numberOfPriceAlerts":0,"autoPortfolio":true,"otherFees":"Förvaltningsavgifterna i underliggande fonder beräknas inte överstiga 0,15%","subCategory":"Global, mix bolag","type":"Aktiefond"}
+
+REQUEST 13
+GET https://www.avanza.se/_mobile/market/fund/143369
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 13
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:25 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"name":"AMF Aktiefond Asien Stilla havet","id":"143369","description":"Fonden är en aktiefond med en bred inriktning som placerar i Asien och Stillahavsområdet, varav en stor del i Japan. Fonden förvaltas aktivt. Fondens målsättning är att med god riskspridning på lång sikt uppnå en värdetillväxt som överstiger genomsnittet för de marknader som fonden kan placera på.","isin":"SE0002572313","risk":5,"domicile":"Sverige","sharpeRatio":0.79,"standardDeviation":13.22,"startDate":"2008-09-25","tradingCurrency":"SEK","managementFee":0.40,"prospectus":"http://doc.morningstar.com/document/8b9d59d2aa3d7f61aae3417af42809db.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":1307465399.00,"normanAmount":0.00,"rating":5,"sellFee":0.00,"loanFactor":70.00,"hasInvestmentFees":true,"buyable":true,"sellable":true,"riskLevel":"MIDDLE","administrators":"Henrik Oh","NAV":238.92,"NAVLastUpdated":"2020-07-20T00:00:00.000+0200","changeSinceOneDay":0.19,"changeSinceOneWeek":-2.23,"changeSinceOneMonth":1.38,"changeSinceThreeMonths":6.13,"changeSinceSixMonths":-4.75,"changeSinceTurnOfTheYear":-0.39,"changeSinceOneYear":8.29,"changeSinceThreeYears":33.00,"changeSinceFiveYears":44.08,"changeSinceTenYears":134.90,"relatedFunds":[{"name":"AMF Aktiefond Tillväxtmarknader","id":"1025148"},{"name":"SPP Korträntefond","id":"92827","changeSinceOneYear":0.10},{"name":"AMF Aktiefond Världen","id":"2300","changeSinceOneYear":6.37},{"name":"AMF Aktiefond Nordamerika","id":"96927","changeSinceOneYear":7.88},{"name":"Handelsbanken Norden Ind Crit (A1 SEK)","id":"791753","changeSinceOneYear":12.59}],"fundCompany":{"name":"AMF","homePage":""},"numberOfOwners":7918,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","value":34139.70,"accountId":"1000000","volume":142.891749,"averageAcquiredPrice":209.94914100,"profitPercent":13.80,"acquiredValue":29999.999958537609,"profit":4139.70}],"positionsTotalValue":34139.7000,"numberOfPriceAlerts":0,"autoPortfolio":false,"type":"Aktiefond","subCategory":"Asien","otherFees":""}
+
+REQUEST 14
+GET https://www.avanza.se/_mobile/market/fund/691673
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 14
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"hasInvestmentFees":true,"buyable":true,"sellable":true,"riskLevel":"MIDDLE","administrators":"Eirik Torbjørn Hauge","name":"DNB Europa Indeks A","id":"691673","description":"DNB Europa Indeks är en indexnära aktiefond. Fonden följer en så kallad passiv investeringsstrategi där investeringarna ska efterlikna sammansättningen av det europeiska aktieindexet MSCI Europe Index. Dock hålls företag som inte uppfyller DNBs etiska minimistandard utanför fondens investeringsområde.","isin":"NO0008001872","risk":5,"domicile":"Norge","sharpeRatio":0.41,"standardDeviation":14.84,"startDate":"1998-07-14","tradingCurrency":"SEK","managementFee":0.20,"prospectus":"http://doc.morningstar.com/document/3b4e4aa2ab7507b6e020318d66715e28.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":1028368402.42,"normanAmount":0.00,"rating":4,"sellFee":0.00,"loanFactor":0.00,"NAV":157.80,"NAVLastUpdated":"2020-07-17T00:00:00.000+0200","changeSinceOneDay":0.06,"changeSinceOneWeek":1.12,"changeSinceOneMonth":0.65,"changeSinceThreeMonths":6.94,"changeSinceSixMonths":-12.56,"changeSinceTurnOfTheYear":-10.38,"changeSinceOneYear":-3.52,"changeSinceThreeYears":15.67,"changeSinceFiveYears":13.37,"changeSinceTenYears":83.49,"relatedFunds":[{"name":"Fidelity European Growth A-Dis-EUR","id":"586","changeSinceOneYear":-8.51},{"name":"Skandia Global Exponering A","id":"429935","changeSinceOneYear":2.50},{"name":"Quesada Bond Opportunity A","id":"595175","changeSinceOneYear":-2.86},{"name":"JPM Emerging Markets Equity A (acc) USD","id":"114006","changeSinceOneYear":2.71},{"name":"Simplicity Sverige","id":"648075","changeSinceOneYear":4.91}],"fundCompany":{"name":"DNB","homePage":""},"numberOfOwners":32274,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","value":604.64,"accountId":"1000000","volume":3.8317,"averageAcquiredPrice":156.56955100,"profitPercent":0.79,"acquiredValue":599.9275485667,"profit":4.71}],"positionsTotalValue":604.6400,"numberOfPriceAlerts":0,"autoPortfolio":false,"otherFees":"","type":"Aktiefond","subCategory":"Europa, mix bolag"}
+
+REQUEST 15
+GET https://www.avanza.se/_mobile/market/fund/2075
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 15
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"hasInvestmentFees":true,"buyable":true,"sellable":true,"riskLevel":"MIDDLE","administrators":"Niclas Svennberg","description":"En räntefond som huvudsakligen placerar i svenska räntebärande värdepapper med lång räntebindningstid utgivna av svenska staten, kommuner, landsting, kreditinstitut samt företag med hög kreditvärdighet. Dessutom kan fonden placera en mindre del utgivna i svenska kronor av europeiska emittenter.","isin":"SE0000427825","risk":3,"domicile":"Sverige","sharpeRatio":0.85,"standardDeviation":2.70,"startDate":"1987-10-09","tradingCurrency":"SEK","managementFee":0.65,"prospectus":"http://doc.morningstar.com/document/b59cf28a90416afaedcd875f75c74d92.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":5868712414.00,"normanAmount":0.00,"rating":5,"sellFee":0.00,"loanFactor":90.00,"name":"Nordea Obligationsfond icke-utd","id":"2075","NAV":134.56,"NAVLastUpdated":"2020-07-20T00:00:00.000+0200","changeSinceOneDay":0.07,"changeSinceOneWeek":0.17,"changeSinceOneMonth":0.80,"changeSinceThreeMonths":1.28,"changeSinceSixMonths":1.39,"changeSinceTurnOfTheYear":1.43,"changeSinceOneYear":0.31,"changeSinceThreeYears":6.00,"changeSinceFiveYears":8.53,"changeSinceTenYears":31.16,"relatedFunds":[{"changeSinceOneYear":1.07,"name":"Nordea Stratega Ränta","id":"226949"},{"changeSinceOneYear":0.35,"name":"Carnegie Obligationsfond A","id":"2098"},{"changeSinceOneYear":-4.84,"name":"Länsförsäkringar Tillväxtmarknad Aktiv A","id":"2156"},{"changeSinceOneYear":2.50,"name":"Skandia Global Exponering A","id":"429935"},{"changeSinceOneYear":19.29,"name":"Swedbank Robur Europafond","id":"574"}],"fundCompany":{"homePage":"","name":"Nordea"},"numberOfOwners":19021,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","accountId":"1000000","volume":4.482,"averageAcquiredPrice":133.75289300,"profitPercent":0.60,"acquiredValue":599.480466426,"profit":3.62,"value":603.10}],"positionsTotalValue":603.1000,"numberOfPriceAlerts":0,"autoPortfolio":false,"otherFees":"","subCategory":"Ränte - SEK obligationer, långa","type":"Räntefond"}
+
+REQUEST 16
+GET https://www.avanza.se/_mobile/market/fund/70789
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 16
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"description":"Fonden investerar i aktier och räntepapper hemmahörande i eller utgivna av emmittenter hemmahörande i tillväxtmarknader. Fonden investerar i första hand i länder som ingår i MSCI Emerging Markets Gross TR index eller i JP Morgan EMBI Global Diversified index.","buyable":true,"sellable":true,"riskLevel":"HIGH","administrators":"Tom Wilson, Nicholas Field","hasInvestmentFees":true,"domicile":"Luxemburg","risk":6,"isin":"LU0269904917","sharpeRatio":0.51,"standardDeviation":17.57,"startDate":"2007-01-19","tradingCurrency":"USD","managementFee":1.50,"prospectus":"http://doc.morningstar.com/document/bbc5805a5a53659281fe962b2f6ea229.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":12183868019.33,"normanAmount":0.00,"rating":4,"sellFee":0.00,"loanFactor":70.00,"name":"Schroder ISF Glb Em Mkt Opps A Acc USD","id":"70789","NAV":162.78,"NAVLastUpdated":"2020-07-20T00:00:00.000+0200","changeSinceOneDay":0.18,"changeSinceOneWeek":-2.26,"changeSinceOneMonth":0.55,"changeSinceThreeMonths":9.42,"changeSinceSixMonths":-13.77,"changeSinceTurnOfTheYear":-8.66,"changeSinceOneYear":-1.39,"changeSinceThreeYears":23.95,"changeSinceFiveYears":45.29,"changeSinceTenYears":70.68,"relatedFunds":[{"changeSinceOneYear":6.76,"name":"GAM Star European Equity A EUR Acc","id":"644316"},{"changeSinceOneYear":-5.28,"name":"GAM Multistock EM Equity USD B","id":"650495"},{"changeSinceOneYear":0.14,"name":"Amundi Fds Glbl Eq Cnsrv A USD C","id":"439855"},{"changeSinceOneYear":-7.26,"name":"Templeton Euroland A (Acc) EUR","id":"735"},{"changeSinceOneYear":5.42,"name":"Stewart Investors Wldwd Sustbl A Acc GBP","id":"400485"}],"fundCompany":{"homePage":"","name":"Schroder"},"numberOfOwners":34407,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","accountId":"1000000","volume":4.53,"averageAcquiredPrice":156.97945300,"profitPercent":3.69,"acquiredValue":711.11692209,"profit":26.27,"value":737.39}],"positionsTotalValue":737.3900,"numberOfPriceAlerts":0,"autoPortfolio":false,"otherFees":"","subCategory":"Tillväxtmarknader","type":"Aktiefond"}
+
+REQUEST 17
+GET https://www.avanza.se/_mobile/market/fund/325406
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 17
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"hasInvestmentFees":true,"buyable":true,"sellable":true,"riskLevel":"HIGH","administrators":"Jörgen Wärmlöv, Erik Brändström","description":"Fonden är en aktiefond med inriktning på svenska investmentbolag. Fonden är ett lågkostnadsalternativ, med en avgift på 0,2 procent, som placerar i bolag som är aktiva ägare och långsiktiga ägare i andra bolag. Förvaltaren gör ett aktivt urval av vilka bolag som ska ingå i portföljen och vilken vikt de ska ha, men sedan kommer fonden att vara passivt förvaltad över tiden, därav den låga avgiften. Målet med fonden är att ge en bättre avkastning över tid än Stockholmsbörsen till en lägre kostnad än den genomsnittliga indexfonden.","isin":"SE0004297927","risk":6,"domicile":"Sverige","sharpeRatio":0.62,"standardDeviation":16.14,"startDate":"2011-11-30","tradingCurrency":"SEK","managementFee":0.20,"prospectus":"http://doc.morningstar.com/document/60dc89c668a4499db137c439e5145ac2.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":12128662070.00,"normanAmount":0.00,"rating":5,"sellFee":0.00,"loanFactor":70.00,"name":"Spiltan Aktiefond Investmentbolag","id":"325406","NAV":458.11,"NAVLastUpdated":"2020-07-20T00:00:00.000+0200","changeSinceOneDay":1.08,"changeSinceOneWeek":3.83,"changeSinceOneMonth":7.33,"changeSinceThreeMonths":20.08,"changeSinceSixMonths":5.36,"changeSinceTurnOfTheYear":8.74,"changeSinceOneYear":22.77,"changeSinceThreeYears":42.16,"changeSinceFiveYears":77.55,"relatedFunds":[{"changeSinceOneYear":4.91,"name":"Simplicity Sverige","id":"648075"},{"changeSinceOneYear":-2.88,"name":"Invesco Pan Eurp Struct Rspnb Eq AEURAcc","id":"70541"},{"changeSinceOneYear":0.31,"name":"Nordea Obligationsfond icke-utd","id":"2075"},{"changeSinceOneYear":-5.06,"name":"SEB Hållbarhetsfond Europa D (EUR)","id":"181269"},{"changeSinceOneYear":8.63,"name":"UBS European Opportunity Uncons EUR PAcc","id":"378656"}],"fundCompany":{"homePage":"","name":"Spiltan"},"numberOfOwners":309621,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","accountId":"1000000","volume":13.1629,"averageAcquiredPrice":401.09997700,"profitPercent":14.21,"acquiredValue":5279.6388872533,"profit":750.42,"value":6030.06}],"positionsTotalValue":6030.0600,"numberOfPriceAlerts":0,"autoPortfolio":false,"otherFees":"","subCategory":"Sverige","type":"Aktiefond"}
+
+REQUEST 18
+GET https://www.avanza.se/_mobile/market/fund/471796
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 18
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"name":"Spiltan Högräntefond","id":"471796","description":"Spiltan Högräntefond är aktivt förvaltad och placerar huvudsakligen i företagsobligationer men kan även investera i andra värdepapper med betydande ränteinslag. Fonden får placera i nordiska bolag men tar ingen valutarisk. Den genomsnittliga räntelöptiden för placeringarna, mätt på den totala fondförmögenheten, kan variera mellan noll till tio år. Fondens målsättning är att erbjuda dubbelt så hög avkastning som traditionella korträntefonder.","buyable":true,"sellable":true,"riskLevel":"MIDDLE","administrators":"Lars Lönnquist, Nicklas Segerdahl","domicile":"Sverige","isin":"SE0005798329","hasInvestmentFees":true,"risk":3,"sharpeRatio":0.18,"standardDeviation":8.41,"startDate":"2014-04-02","tradingCurrency":"SEK","managementFee":0.75,"prospectus":"http://doc.morningstar.com/document/5a2f82d159088aeafa37b7ce4c6a8153.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":9862641084.00,"normanAmount":0.00,"rating":3,"sellFee":0.00,"loanFactor":80.00,"NAV":111.91,"NAVLastUpdated":"2020-07-20T00:00:00.000+0200","changeSinceOneDay":0.13,"changeSinceOneWeek":0.24,"changeSinceOneMonth":0.49,"changeSinceThreeMonths":7.27,"changeSinceSixMonths":-5.25,"changeSinceTurnOfTheYear":-4.77,"changeSinceOneYear":-3.28,"changeSinceThreeYears":2.78,"changeSinceFiveYears":13.19,"relatedFunds":[{"name":"Quesada Bond Opportunity A","id":"595175","changeSinceOneYear":-2.86},{"name":"Cicero Nordic Corporate Bond A","id":"470457","changeSinceOneYear":-1.08},{"name":"Fidelity European Growth A-Dis-EUR","id":"586","changeSinceOneYear":-8.51},{"name":"Länsförsäkringar Tillväxtmarknad Aktiv A","id":"2156","changeSinceOneYear":-4.84},{"name":"Lannebo High Yield","id":"536695","changeSinceOneYear":-6.65}],"fundCompany":{"name":"Spiltan","homePage":""},"numberOfOwners":37579,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","value":4478.06,"accountId":"1000000","volume":40.0148,"averageAcquiredPrice":112.45659400,"profitPercent":-0.49,"acquiredValue":4499.9281175912,"profit":-21.87}],"positionsTotalValue":4478.0600,"numberOfPriceAlerts":0,"autoPortfolio":false,"type":"Räntefond","otherFees":"","subCategory":"Ränte - SEK obligationer,företag"}
+
+REQUEST 19
+GET https://www.avanza.se/_mobile/market/fund/652895
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 19
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"hasInvestmentFees":true,"buyable":true,"sellable":true,"riskLevel":"MIDDLE","administrators":"Henrik Wold Nilsen","description":"SPP Global Plus är en fossilfri, indexnära global aktiefond som investerar brett i olika branscher på de utvecklade marknaderna. Fonden har fokus på bolag med hög hållbarhet och kan investera upp till 10 procent av fondens medel i bolag med koncentration på hållbara lösningar, såsom bolag inom förnybar energi. Fonden följer vår standard för hållbara investeringar som bland annat innebär att vi avstår från att investera i bolag som bryter mot internationella normer och konventioner. Det omfattar mänskliga rättigheter, arbetsrätt och folkrätt, korruption och ekonomisk brottslighet, allvarlig klimat– och miljöskada och kontroversiella vapen (landminor, kluster- och kärnvapen). Vi exkluderar även bolag vars omsättning till mer än 5 procent kommer från produktion och/eller distribution av tobak, vapen, alkohol, spel, pornografi, cannabis, fossila bränslen samt bolag med stora fossilreserver.","isin":"SE0008129985","risk":5,"domicile":"Sverige","sharpeRatio":0.77,"standardDeviation":15.25,"startDate":"2016-04-18","tradingCurrency":"SEK","managementFee":0.40,"prospectus":"http://doc.morningstar.com/document/0c578653fdaf3cc6306690ddfe0c5f8f.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":15415030742.00,"normanAmount":0.00,"rating":5,"sellFee":0.00,"loanFactor":70.00,"name":"SPP Global Plus A","id":"652895","NAV":170.70,"NAVLastUpdated":"2020-07-20T00:00:00.000+0200","changeSinceOneDay":-0.09,"changeSinceOneWeek":-0.57,"changeSinceOneMonth":-0.11,"changeSinceThreeMonths":4.85,"changeSinceSixMonths":-7.75,"changeSinceTurnOfTheYear":-4.00,"changeSinceOneYear":4.81,"changeSinceThreeYears":38.03,"relatedFunds":[{"changeSinceOneYear":19.29,"name":"Swedbank Robur Europafond","id":"574"},{"changeSinceOneYear":-2.86,"name":"Quesada Bond Opportunity A","id":"595175"},{"changeSinceOneYear":32.60,"name":"Handelsbanken Sverige (A1 SEK)","id":"1959"},{"changeSinceOneYear":13.67,"name":"SPP Sverige Plus A","id":"694153"},{"changeSinceOneYear":0.31,"name":"Nordea Obligationsfond icke-utd","id":"2075"}],"fundCompany":{"homePage":"","name":"SPP"},"numberOfOwners":59600,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","accountId":"1000000","volume":5.4116,"averageAcquiredPrice":166.30046100,"profitPercent":2.65,"acquiredValue":899.9515747476,"profit":23.81,"value":923.76}],"positionsTotalValue":923.7600,"numberOfPriceAlerts":0,"autoPortfolio":false,"otherFees":"","subCategory":"Global, mix bolag","type":"Aktiefond"}
+
+REQUEST 20
+GET https://www.avanza.se/_mobile/market/fund/375216
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 20
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"hasInvestmentFees":true,"buyable":true,"sellable":true,"riskLevel":"HIGH","administrators":"Philip Ripman","name":"SPP Global Solutions A","id":"375216","description":"SPP Global Solutions är en fossilfri aktiefond med målsättning att uppnå långsiktig meravkastning genom att investera på de globala aktiemarknaderna inkl. tillväxtmarknader. Fonden investerar i hållbara bolag som ligger i linje med FNs globala hållbarhetsmål, bolag med lösningar på världens hållbarhetsutmaningar. Fonden kommer att kunna avvika betydligt från sitt jämförelseindex. Fonden följer vår standard för hållbara investeringar som bland annat innebär att vi avstår från att investera i bolag som bryter mot internationella normer och konventioner. Det omfattar mänskliga rättigheter, arbetsrätt och folkrätt, korruption och ekonomisk brottslighet, allvarlig klimat– och miljöskada och kontroversiella vapen (landminor, kluster- och kärnvapen). Vi exkluderar även bolag vars omsättning till mer än 5 procent kommer från produktion och/eller distribution av tobak, vapen, alkohol, spel, pornografi, cannabis, fossila bränslen samt bolag med stora fossilreserver.","isin":"SE0004576452","risk":6,"domicile":"Sverige","sharpeRatio":0.74,"standardDeviation":15.34,"startDate":"2012-10-01","tradingCurrency":"SEK","managementFee":0.75,"prospectus":"http://doc.morningstar.com/document/32ad12d6b4f42f067d32e475466ee387.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":3684184202.00,"normanAmount":0.00,"rating":4,"sellFee":0.00,"loanFactor":80.00,"NAV":293.10,"NAVLastUpdated":"2020-07-20T00:00:00.000+0200","changeSinceOneDay":1.14,"changeSinceOneWeek":1.38,"changeSinceOneMonth":4.34,"changeSinceThreeMonths":14.18,"changeSinceSixMonths":-2.00,"changeSinceTurnOfTheYear":2.61,"changeSinceOneYear":9.40,"changeSinceThreeYears":40.39,"changeSinceFiveYears":68.93,"relatedFunds":[{"name":"Fidelity European Growth A-Dis-EUR","id":"586","changeSinceOneYear":-8.51},{"name":"Fidelity European Growth A-Acc-EUR","id":"234109","changeSinceOneYear":-8.56},{"name":"SPP Sverige Plus A","id":"694153","changeSinceOneYear":13.67},{"name":"Schroder ISF Em Mkts A Acc USD","id":"2179","changeSinceOneYear":-2.33},{"name":"SEB Emerging Marketsfond","id":"2164","changeSinceOneYear":-11.75}],"fundCompany":{"name":"SPP","homePage":""},"numberOfOwners":22476,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","value":981.06,"accountId":"1000000","volume":3.3472,"averageAcquiredPrice":268.84906100,"profitPercent":9.02,"acquiredValue":899.8915769792,"profit":81.17}],"positionsTotalValue":981.0600,"numberOfPriceAlerts":0,"autoPortfolio":false,"otherFees":"","type":"Aktiefond","subCategory":"Global, mix bolag"}
+
+REQUEST 21
+GET https://www.avanza.se/_mobile/market/fund/694153
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 21
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"hasInvestmentFees":true,"administrators":"Andreas Poole","buyable":true,"sellable":true,"riskLevel":"HIGH","description":"SPP Sverige Plus är en fossilfri, indexnära aktiefond som huvudsakligen investerar i bolag noterade i Sverige. Fonden har fokus på bolag med hög hållbarhet och kan även investera upp till 10 procent av fondens medel i nordiska bolag med koncentration på hållbara lösningar, såsom bolag inom förnybar energi. Fonden följer vår standard för hållbara investeringar som bland annat innebär att vi avstår från att investera i bolag som bryter mot internationella normer och konventioner. Det omfattar mänskliga rättigheter, arbetsrätt och folkrätt, korruption och ekonomisk brottslighet, allvarlig klimat– och miljöskada och kontroversiella vapen (landminor, kluster- och kärnvapen). Vi exkluderar även bolag vars omsättning till mer än 5 procent kommer från produktion och/eller distribution av tobak, vapen, alkohol, spel, pornografi, cannabis, fossila bränslen samt bolag med stora fossilreserver.","startDate":"2016-09-26","domicile":"Sverige","risk":6,"isin":"SE0008964407","sharpeRatio":0.49,"standardDeviation":16.68,"tradingCurrency":"SEK","managementFee":0.30,"prospectus":"http://doc.morningstar.com/document/74d5501ef1fcb1166498270ff96fedfc.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":3116461140.00,"normanAmount":0.00,"rating":4,"sellFee":0.00,"loanFactor":80.00,"name":"SPP Sverige Plus A","id":"694153","NAV":152.76,"NAVLastUpdated":"2020-07-20T00:00:00.000+0200","changeSinceOneDay":0.83,"changeSinceOneWeek":2.21,"changeSinceOneMonth":6.28,"changeSinceThreeMonths":18.86,"changeSinceSixMonths":-1.48,"changeSinceTurnOfTheYear":2.07,"changeSinceOneYear":13.67,"changeSinceThreeYears":31.08,"relatedFunds":[{"changeSinceOneYear":-0.25,"name":"SPP Europa Plus A","id":"836873"},{"changeSinceOneYear":9.40,"name":"SPP Global Solutions A","id":"375216"},{"changeSinceOneYear":-0.44,"name":"Öhman FRN Hållbar A","id":"388595"},{"changeSinceOneYear":0.57,"name":"SPP Emerging Markets Plus A","id":"663195"},{"changeSinceOneYear":0.31,"name":"Nordea Obligationsfond icke-utd","id":"2075"}],"fundCompany":{"homePage":"","name":"SPP"},"numberOfOwners":7777,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","accountId":"1000000","profit":86.30,"volume":5.2778,"averageAcquiredPrice":136.40836000,"profitPercent":11.99,"acquiredValue":719.9360424080,"value":806.24}],"positionsTotalValue":806.2400,"numberOfPriceAlerts":0,"autoPortfolio":false,"otherFees":"","subCategory":"Sverige","type":"Aktiefond"}
+
+REQUEST 22
+GET https://www.avanza.se/_mobile/market/fund/364655
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 22
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"hasInvestmentFees":true,"buyable":true,"sellable":true,"riskLevel":"HIGH","administrators":"Björn Nylund, Martin Sandstedt","name":"Öhman Etisk Emerging Markets A","id":"364655","description":"Fonden är en aktiefond med målsättning att följa utvecklingen för de största bolagen på tillväxtmarknader. Fonden förvaltas indexnära och hållbart. Fonden består normalt av investeringar i 200 till 400 bolag fördelade på olika branscher. Fonden har specifika och uttalade kriterier för att välja in bolag utifrån miljö, sociala och affärsetiska frågor. Analys av bolagens hållbarhetsarbete är avgörande för valet av bolag i fonden. Fondens jämförelseindex är MSCI Emerging Markets Index.","isin":"SE0004578615","risk":6,"domicile":"Sverige","sharpeRatio":0.61,"standardDeviation":16.54,"startDate":"2012-07-11","tradingCurrency":"SEK","managementFee":0.90,"prospectus":"http://doc.morningstar.com/document/4c3fc4909e7ee6addca05a6f799fb42e.msdoc/?clientid=avanza&key=3728b8f503435715","buyFee":0.00,"capital":4764662234.00,"normanAmount":0.00,"rating":5,"sellFee":0.00,"loanFactor":70.00,"NAV":212.24,"NAVLastUpdated":"2020-07-17T00:00:00.000+0200","changeSinceOneDay":0.91,"changeSinceOneWeek":-2.77,"changeSinceOneMonth":4.04,"changeSinceThreeMonths":7.45,"changeSinceSixMonths":-6.71,"changeSinceTurnOfTheYear":-2.03,"changeSinceOneYear":6.51,"changeSinceThreeYears":29.23,"changeSinceFiveYears":54.47,"relatedFunds":[{"name":"SEB Hållbarhetsfond Europa D (EUR)","id":"181269","changeSinceOneYear":-5.06},{"name":"Swedbank Robur Europafond","id":"574","changeSinceOneYear":19.29},{"name":"Handelsbanken Sverige (A1 SEK)","id":"1959","changeSinceOneYear":32.60},{"name":"BGF Continental Eurp Flex A2 EUR","id":"84672","changeSinceOneYear":11.78},{"name":"Fidelity European Growth A-Dis-EUR","id":"586","changeSinceOneYear":-8.51}],"fundCompany":{"name":"Öhman","homePage":""},"numberOfOwners":49073,"positions":[{"accountName":"1000000","accountType":"Investeringssparkonto","value":829.99,"accountId":"1000000","volume":3.9106,"averageAcquiredPrice":199.44173700,"profitPercent":6.42,"acquiredValue":779.9368567122,"profit":50.05}],"positionsTotalValue":829.9900,"numberOfPriceAlerts":0,"autoPortfolio":false,"otherFees":"","type":"Aktiefond","subCategory":"Tillväxtmarknader"}
+
+REQUEST 23
+GET https://www.avanza.se/_mobile/account/1000000/overview
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 23
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"courtageClass":"MINI","depositable":true,"accountType":"Investeringssparkonto","withdrawable":true,"accountId":"1000000","accountTypeName":"Investeringssparkonto","clearingNumber":"9554","instrumentTransferPossible":true,"internalTransferPossible":true,"jointlyOwned":false,"interestRate":0.00,"numberOfOrders":0,"numberOfDeals":0,"performanceSinceOneWeek":-853.1500000000233,"performanceSinceOneMonth":1664.5599999999977,"performanceSinceThreeMonths":6993.900000000023,"performanceSinceSixMonths":-4363.7699999999895,"performanceSinceOneYear":4373.940000000017,"performanceSinceThreeYears":6460.180000000011,"performanceSinceOneWeekPercent":-0.19270154556735308,"performanceSinceOneMonthPercent":0.3771526951870774,"performanceSinceThreeMonthsPercent":1.617515983935136,"performanceSinceSixMonthsPercent":-15.071830381620654,"performanceSinceOneYearPercent":-7.923147340741599,"performanceSinceThreeYearsPercent":-5.288610409717032,"creditLimit":0.00,"currencyAccounts":[{"currency":"SEK","balance":300005.87}],"forwardBalance":0.00,"reservedAmount":0.00,"totalCollateralValue":0.00,"totalPositionsValue":141872.7600,"buyingPower":300005.87,"totalProfitPercent":3.75,"allowMonthlySaving":true,"availableSuperLoanAmount":0.00,"totalProfit":5124.93,"totalBalance":300005.87,"ownCapital":441878.63,"creditAfterInterest":300005.87,"accruedInterest":0.00,"performance":-991.7599999999948,"overMortgaged":false,"overdrawn":false,"performancePercent":-12.556844397435418,"numberOfTransfers":0,"numberOfIntradayTransfers":0,"sharpeRatio":-0.6509907253560315,"standardDeviation":11.463583375342756}
+
+REQUEST 24
+GET https://www.avanza.se/_mobile/account/transactions/1000052?from=2020-04-21&to=2020-07-21
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 24
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"transactions":[],"totalNumberOfTransactions":0}
+
+REQUEST 25
+GET https://www.avanza.se/_mobile/account/transactions/1000052?from=2020-01-20&to=2020-04-20
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 25
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"transactions":[],"totalNumberOfTransactions":0}
+
+REQUEST 26
+GET https://www.avanza.se/_mobile/account/transactions/1000052?from=2019-10-19&to=2020-01-19
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 26
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"transactions":[],"totalNumberOfTransactions":0}
+
+REQUEST 27
+GET https://www.avanza.se/_mobile/account/transactions/1000052?from=2019-07-18&to=2019-10-18
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 27
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"transactions":[],"totalNumberOfTransactions":0}
+
+REQUEST 28
+GET https://www.avanza.se/_mobile/account/transactions/1000000?from=2020-04-21&to=2020-07-21
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 28
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"transactions":[{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJMKRTRM","sum":1000.00,"verificationDate":"2020-07-01","id":"1922847257NOTGJMKRTRM2","currency":"SEK","description":"Köpt  7,821       st till kurs     127,87","volume":7.821000,"price":127.860887,"amount":-1000.00,"orderbook":{"isin":"SE0009779705","name":"Avanza Auto 6","currency":"SEK","id":"788394","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJMKRTPZ","sum":1999.99,"verificationDate":"2020-07-01","id":"1922847210NOTGJMKRTPZ2","currency":"SEK","description":"Köpt  17,4109     st till kurs     114,87","volume":17.410900,"price":114.869995,"amount":-1999.99,"orderbook":{"isin":"SE0009779671","name":"Avanza Auto 3","currency":"SEK","id":"788397","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJMKRTNQ","sum":99.99,"verificationDate":"2020-07-01","id":"1922847154NOTGJMKRTNQ2","currency":"SEK","description":"Köpt  0,6504      st till kurs     153,72","volume":0.650400,"price":153.736162,"amount":-99.99,"orderbook":{"isin":"NO0008001872","name":"DNB Europa Indeks A","currency":"SEK","id":"691673","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJMKRTMK","sum":129.99,"verificationDate":"2020-07-01","id":"1922847090NOTGJMKRTMK2","currency":"SEK","description":"Köpt  0,6344      st till kurs     204,91","volume":0.634400,"price":204.902270,"amount":-129.99,"orderbook":{"isin":"SE0004578615","name":"Öhman Etisk Emerging Markets A","currency":"SEK","id":"364655","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJLXTRNK","sum":499.99,"verificationDate":"2020-06-30","id":"1919269761NOTGJLXTRNK2","currency":"SEK","description":"Köpt  4,4814      st till kurs     111,57","volume":4.481400,"price":111.570045,"amount":-499.99,"orderbook":{"isin":"SE0005798329","name":"Spiltan Högräntefond","currency":"SEK","id":"471796","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJLXTRLS","sum":629.95,"verificationDate":"2020-06-30","id":"1919269706NOTGJLXTRLS2","currency":"SEK","description":"Köpt  1,4971      st till kurs     425,64","volume":1.497100,"price":420.780175,"amount":-629.95,"orderbook":{"isin":"SE0004297927","name":"Spiltan Aktiefond Investmentbolag","currency":"SEK","id":"325406","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJLXTRKN","sum":119.17,"verificationDate":"2020-06-30","id":"1919269664NOTGJLXTRKN2","currency":"SEK","description":"Köpt  0,76        st till kurs     156,79","volume":0.760000,"price":156.802632,"amount":-119.17,"orderbook":{"isin":"LU0269904917","name":"Schroder ISF Glb Em Mkt Opps A Acc USD","currency":"SEK","id":"70789","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJLPJBJT","sum":119.99,"verificationDate":"2020-06-29","id":"1917508410NOTGJLPJBJT2","currency":"SEK","description":"Köpt  0,8445      st till kurs     142,08","volume":0.844500,"price":142.084073,"amount":-119.99,"orderbook":{"isin":"SE0008964407","name":"SPP Sverige Plus A","currency":"SEK","id":"694153","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJLPJBJC","sum":149.99,"verificationDate":"2020-06-29","id":"1917508378NOTGJLPJBJC2","currency":"SEK","description":"Köpt  0,9099      st till kurs     164,84","volume":0.909900,"price":164.842290,"amount":-149.99,"orderbook":{"isin":"SE0008129985","name":"SPP Global Plus A","currency":"SEK","id":"652895","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJLPJBHJ","sum":149.98,"verificationDate":"2020-06-29","id":"1917508342NOTGJLPJBHJ2","currency":"SEK","description":"Köpt  0,5503      st till kurs     272,54","volume":0.550300,"price":272.542250,"amount":-149.98,"orderbook":{"isin":"SE0004576452","name":"SPP Global Solutions A","currency":"SEK","id":"375216","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJLPJBGJ","sum":99.90,"verificationDate":"2020-06-29","id":"1917508310NOTGJLPJBGJ2","currency":"SEK","description":"Köpt  0,745       st till kurs     134,09","volume":0.745000,"price":134.093960,"amount":-99.90,"orderbook":{"isin":"SE0000427825","name":"Nordea Obligationsfond icke-utd","currency":"SEK","id":"2075","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-06-25","id":"1911993956MSKHBDPDFDF1","currency":"SEK","description":"Autogiroinsättning","amount":500.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-06-25","id":"1911993955MSKHBDPDFDD1","currency":"SEK","description":"Autogiroinsättning","amount":1000.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-06-25","id":"1911993954MSKHBDPDFDC1","currency":"SEK","description":"Autogiroinsättning","amount":500.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-06-25","id":"1911993953MSKHBDPDFDB1","currency":"SEK","description":"Autogiroinsättning","amount":2000.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-06-25","id":"1911993952MSKHBDPDFCZ1","currency":"SEK","description":"Autogiroinsättning","amount":1000.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJFSPCFC","sum":99.99,"verificationDate":"2020-06-02","id":"1879489722NOTGJFSPCFC2","currency":"SEK","description":"Köpt  0,6666      st till kurs     150,00","volume":0.666600,"price":150.000000,"amount":-99.99,"orderbook":{"isin":"NO0008001872","name":"DNB Europa Indeks A","currency":"SEK","id":"691673","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJFHZXXM","sum":999.98,"verificationDate":"2020-06-01","id":"1876676947NOTGJFHZXXM2","currency":"SEK","description":"Köpt  7,996       st till kurs     125,31","volume":7.996000,"price":125.060030,"amount":-999.98,"orderbook":{"isin":"SE0009779705","name":"Avanza Auto 6","currency":"SEK","id":"788394","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJFHZXTX","sum":1999.99,"verificationDate":"2020-06-01","id":"1876676908NOTGJFHZXTX2","currency":"SEK","description":"Köpt  17,721      st till kurs     112,86","volume":17.721000,"price":112.859884,"amount":-1999.99,"orderbook":{"isin":"SE0009779671","name":"Avanza Auto 3","currency":"SEK","id":"788397","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJFHZXSX","sum":130.00,"verificationDate":"2020-06-01","id":"1876676863NOTGJFHZXSX2","currency":"SEK","description":"Köpt  0,6818      st till kurs     190,67","volume":0.681800,"price":190.671751,"amount":-130.00,"orderbook":{"isin":"SE0004578615","name":"Öhman Etisk Emerging Markets A","currency":"SEK","id":"364655","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJDWCBGN","sum":499.99,"verificationDate":"2020-05-29","id":"1873178237NOTGJDWCBGN2","currency":"SEK","description":"Köpt  4,6142      st till kurs     108,36","volume":4.614200,"price":108.358979,"amount":-499.99,"orderbook":{"isin":"SE0005798329","name":"Spiltan Högräntefond","currency":"SEK","id":"471796","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJDWCBFM","sum":629.94,"verificationDate":"2020-05-29","id":"1873178168NOTGJDWCBFM2","currency":"SEK","description":"Köpt  1,5127      st till kurs     417,17","volume":1.512700,"price":416.434191,"amount":-629.94,"orderbook":{"isin":"SE0004297927","name":"Spiltan Aktiefond Investmentbolag","currency":"SEK","id":"325406","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJDWCBDJ","sum":118.90,"verificationDate":"2020-05-29","id":"1873178094NOTGJDWCBDJ2","currency":"SEK","description":"Köpt  0,78        st till kurs     152,43","volume":0.780000,"price":152.435897,"amount":-118.90,"orderbook":{"isin":"LU0269904917","name":"Schroder ISF Glb Em Mkt Opps A Acc USD","currency":"SEK","id":"70789","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJDRJLPL","sum":120.00,"verificationDate":"2020-05-28","id":"1872522369NOTGJDRJLPL2","currency":"SEK","description":"Köpt  0,8582      st till kurs     139,82","volume":0.858200,"price":139.827546,"amount":-120.00,"orderbook":{"isin":"SE0008964407","name":"SPP Sverige Plus A","currency":"SEK","id":"694153","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJDRJLNP","sum":150.00,"verificationDate":"2020-05-28","id":"1872522337NOTGJDRJLNP2","currency":"SEK","description":"Köpt  0,8914      st till kurs     168,27","volume":0.891400,"price":168.274624,"amount":-150.00,"orderbook":{"isin":"SE0008129985","name":"SPP Global Plus A","currency":"SEK","id":"652895","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJDRJLMX","sum":150.00,"verificationDate":"2020-05-28","id":"1872522309NOTGJDRJLMX2","currency":"SEK","description":"Köpt  0,5512      st till kurs     272,12","volume":0.551200,"price":272.133527,"amount":-150.00,"orderbook":{"isin":"SE0004576452","name":"SPP Global Solutions A","currency":"SEK","id":"375216","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GJDRJLLX","sum":99.95,"verificationDate":"2020-05-28","id":"1872522277NOTGJDRJLLX2","currency":"SEK","description":"Köpt  0,75        st till kurs     133,26","volume":0.750000,"price":133.266667,"amount":-99.95,"orderbook":{"isin":"SE0000427825","name":"Nordea Obligationsfond icke-utd","currency":"SEK","id":"2075","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-05-25","id":"1863453399MSKHBDLTHBG1","currency":"SEK","description":"Autogiroinsättning","amount":500.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-05-25","id":"1863453398MSKHBDLTHBF1","currency":"SEK","description":"Autogiroinsättning","amount":2000.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-05-25","id":"1863453397MSKHBDLTHBD1","currency":"SEK","description":"Autogiroinsättning","amount":1000.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-05-25","id":"1863453396MSKHBDLTHBC1","currency":"SEK","description":"Autogiroinsättning","amount":500.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-05-25","id":"1863453395MSKHBDLTHBB1","currency":"SEK","description":"Autogiroinsättning","amount":1000.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHXHWJDJ","sum":99.99,"verificationDate":"2020-05-04","id":"1837764716NOTGHXHWJDJ2","currency":"SEK","description":"Köpt  0,6619      st till kurs     151,07","volume":0.661900,"price":151.065116,"amount":-99.99,"orderbook":{"isin":"NO0008001872","name":"DNB Europa Indeks A","currency":"SEK","id":"691673","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHWTRMJJ","sum":999.98,"verificationDate":"2020-04-30","id":"1834432697NOTGHWTRMJJ2","currency":"SEK","description":"Köpt  7,9948      st till kurs     125,31","volume":7.994800,"price":125.078801,"amount":-999.98,"orderbook":{"isin":"SE0009779705","name":"Avanza Auto 6","currency":"SEK","id":"788394","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHWTRMHJ","sum":1999.99,"verificationDate":"2020-04-30","id":"1834432627NOTGHWTRMHJ2","currency":"SEK","description":"Köpt  17,6975     st till kurs     113,01","volume":17.697500,"price":113.009747,"amount":-1999.99,"orderbook":{"isin":"SE0009779671","name":"Avanza Auto 3","currency":"SEK","id":"788397","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHWTRMGK","sum":130.00,"verificationDate":"2020-04-30","id":"1834432573NOTGHWTRMGK2","currency":"SEK","description":"Köpt  0,6543      st till kurs     198,68","volume":0.654300,"price":198.685618,"amount":-130.00,"orderbook":{"isin":"SE0004578615","name":"Öhman Etisk Emerging Markets A","currency":"SEK","id":"364655","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHWJLTJP","sum":499.99,"verificationDate":"2020-04-29","id":"1831060977NOTGHWJLTJP2","currency":"SEK","description":"Köpt  4,7523      st till kurs     105,21","volume":4.752300,"price":105.210109,"amount":-499.99,"orderbook":{"isin":"SE0005798329","name":"Spiltan Högräntefond","currency":"SEK","id":"471796","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHWJLTHS","sum":629.98,"verificationDate":"2020-04-29","id":"1831060921NOTGHWJLTHS2","currency":"SEK","description":"Köpt  1,6239      st till kurs     391,29","volume":1.623900,"price":387.942607,"amount":-629.98,"orderbook":{"isin":"SE0004297927","name":"Spiltan Aktiefond Investmentbolag","currency":"SEK","id":"325406","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHWJLTGX","sum":119.08,"verificationDate":"2020-04-29","id":"1831060878NOTGHWJLTGX2","currency":"SEK","description":"Köpt  0,79        st till kurs     150,73","volume":0.790000,"price":150.734177,"amount":-119.08,"orderbook":{"isin":"LU0269904917","name":"Schroder ISF Glb Em Mkt Opps A Acc USD","currency":"SEK","id":"70789","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHWJLTGC","sum":99.87,"verificationDate":"2020-04-29","id":"1831060815NOTGHWJLTGC2","currency":"SEK","description":"Köpt  0,749       st till kurs     133,33","volume":0.749000,"price":133.337784,"amount":-99.87,"orderbook":{"isin":"SE0000427825","name":"Nordea Obligationsfond icke-utd","currency":"SEK","id":"2075","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHWFKHBZ","sum":120.00,"verificationDate":"2020-04-28","id":"1830388722NOTGHWFKHBZ2","currency":"SEK","description":"Köpt  0,9121      st till kurs     131,56","volume":0.912100,"price":131.564521,"amount":-120.00,"orderbook":{"isin":"SE0008964407","name":"SPP Sverige Plus A","currency":"SEK","id":"694153","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHWFKHBB","sum":150.00,"verificationDate":"2020-04-28","id":"1830388686NOTGHWFKHBB2","currency":"SEK","description":"Köpt  0,9112      st till kurs     164,61","volume":0.911200,"price":164.618086,"amount":-150.00,"orderbook":{"isin":"SE0008129985","name":"SPP Global Plus A","currency":"SEK","id":"652895","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"BUY","noteId":"GHWFKGZG","sum":149.99,"verificationDate":"2020-04-28","id":"1830388654NOTGHWFKGZG2","currency":"SEK","description":"Köpt  0,5724      st till kurs     262,03","volume":0.572400,"price":262.037037,"amount":-149.99,"orderbook":{"isin":"SE0004576452","name":"SPP Global Solutions A","currency":"SEK","id":"375216","type":"FUND"}},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-04-27","id":"1826216016MSKHBDKNWWR1","currency":"SEK","description":"Autogiroinsättning","amount":2000.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-04-27","id":"1826216015MSKHBDKNWWQ1","currency":"SEK","description":"Autogiroinsättning","amount":500.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-04-27","id":"1826216014MSKHBDKNWWP1","currency":"SEK","description":"Autogiroinsättning","amount":1000.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-04-27","id":"1826216013MSKHBDKNWWN1","currency":"SEK","description":"Autogiroinsättning","amount":1000.00},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"transactionType":"DEPOSIT","verificationDate":"2020-04-27","id":"1826216012MSKHBDKNWWM1","currency":"SEK","description":"Autogiroinsättning","amount":500.00}],"totalNumberOfTransactions":48}
+
+REQUEST 29
+GET https://www.avanza.se/_mobile/account/transactions/1000000?from=2020-01-20&to=2020-04-20
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 29
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:26 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"transactions":[{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  18,7582     st till kurs     106,62","amount":-2000.00,"orderbook":{"isin":"SE0009779671","currency":"SEK","name":"Avanza Auto 3","id":"788397","type":"FUND"},"price":106.620038,"volume":18.758200,"transactionType":"BUY","noteId":"GHPSSNKT","sum":2000.00,"verificationDate":"2020-04-02","id":"1795718251NOTGHPSSNKT2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  8,6586      st till kurs     115,73","amount":-999.98,"orderbook":{"isin":"SE0009779705","currency":"SEK","name":"Avanza Auto 6","id":"788394","type":"FUND"},"price":115.489802,"volume":8.658600,"transactionType":"BUY","noteId":"GHPJRJHW","sum":999.98,"verificationDate":"2020-04-01","id":"1792830763NOTGHPJRJHW2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,689       st till kurs     145,11","amount":-99.99,"orderbook":{"isin":"NO0008001872","currency":"SEK","name":"DNB Europa Indeks A","id":"691673","type":"FUND"},"price":145.123367,"volume":0.689000,"transactionType":"BUY","noteId":"GHPJRJGS","sum":99.99,"verificationDate":"2020-04-01","id":"1792830711NOTGHPJRJGS2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  4,8899      st till kurs     102,25","amount":-499.99,"orderbook":{"isin":"SE0005798329","currency":"SEK","name":"Spiltan Högräntefond","id":"471796","type":"FUND"},"price":102.249535,"volume":4.889900,"transactionType":"BUY","noteId":"GHPJRJFQ","sum":499.99,"verificationDate":"2020-04-01","id":"1792830656NOTGHPJRJFQ2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,7048      st till kurs     184,43","amount":-129.99,"orderbook":{"isin":"SE0004578615","currency":"SEK","name":"Öhman Etisk Emerging Markets A","id":"364655","type":"FUND"},"price":184.435301,"volume":0.704800,"transactionType":"BUY","noteId":"GHPJRJDR","sum":129.99,"verificationDate":"2020-04-01","id":"1792830603NOTGHPJRJDR2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  1,7761      st till kurs     357,93","amount":-629.96,"orderbook":{"isin":"SE0004297927","currency":"SEK","name":"Spiltan Aktiefond Investmentbolag","id":"325406","type":"FUND"},"price":354.687236,"volume":1.776100,"transactionType":"BUY","noteId":"GHNTBHNH","sum":629.96,"verificationDate":"2020-03-31","id":"1788751704NOTGHNTBHNH2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,85        st till kurs     139,78","amount":-118.82,"orderbook":{"isin":"LU0269904917","currency":"SEK","name":"Schroder ISF Glb Em Mkt Opps A Acc USD","id":"70789","type":"FUND"},"price":139.788235,"volume":0.850000,"transactionType":"BUY","noteId":"GHNTBHMP","sum":118.82,"verificationDate":"2020-03-31","id":"1788751664NOTGHNTBHMP2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,748       st till kurs     133,54","amount":-99.89,"orderbook":{"isin":"SE0000427825","currency":"SEK","name":"Nordea Obligationsfond icke-utd","id":"2075","type":"FUND"},"price":133.542781,"volume":0.748000,"transactionType":"BUY","noteId":"GHNTBHLQ","sum":99.89,"verificationDate":"2020-03-31","id":"1788751617NOTGHNTBHLQ2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  1,0263      st till kurs     116,91","amount":-119.99,"orderbook":{"isin":"SE0008964407","currency":"SEK","name":"SPP Sverige Plus A","id":"694153","type":"FUND"},"price":116.915132,"volume":1.026300,"transactionType":"BUY","noteId":"GHNNLTPG","sum":119.99,"verificationDate":"2020-03-30","id":"1787663332NOTGHNNLTPG2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,9968      st till kurs     150,48","amount":-150.00,"orderbook":{"isin":"SE0008129985","currency":"SEK","name":"SPP Global Plus A","id":"652895","type":"FUND"},"price":150.481541,"volume":0.996800,"transactionType":"BUY","noteId":"GHNNLTNG","sum":150.00,"verificationDate":"2020-03-30","id":"1787663306NOTGHNNLTNG2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,6247      st till kurs     240,08","amount":-149.98,"orderbook":{"isin":"SE0004576452","currency":"SEK","name":"SPP Global Solutions A","id":"375216","type":"FUND"},"price":240.083240,"volume":0.624700,"transactionType":"BUY","noteId":"GHNNLTMG","sum":149.98,"verificationDate":"2020-03-30","id":"1787663260NOTGHNNLTMG2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2020-03-25","id":"1778689557MSKHBDGHTPQ1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":1000.00,"transactionType":"DEPOSIT","verificationDate":"2020-03-25","id":"1778689556MSKHBDGHTPP1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":1000.00,"transactionType":"DEPOSIT","verificationDate":"2020-03-25","id":"1778689555MSKHBDGHTPN1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":2000.00,"transactionType":"DEPOSIT","verificationDate":"2020-03-25","id":"1778689554MSKHBDGHTPM1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2020-03-25","id":"1778689553MSKHBDGHTPL1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"SANTANDER","amount":300000.00,"transactionType":"DEPOSIT","verificationDate":"2020-03-24","id":"1776825742MANEBQKSFCZ1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,0148      st till kurs     120,15","amount":-1.78,"orderbook":{"isin":"SE0009779705","currency":"SEK","name":"Avanza Auto 6","id":"788394","type":"FUND"},"price":120.270270,"volume":0.014800,"transactionType":"BUY","noteId":"GHJFSMNJ","sum":1.78,"verificationDate":"2020-03-11","id":"1754730550NOTGHJFSMNJ2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"T5","amount":1.00,"transactionType":"DEPOSIT","verificationDate":"2020-03-11","id":"1754061178MANEBQBTQLZ1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,3083      st till kurs     162,16","amount":-49.99,"orderbook":{"isin":"NO0008001872","currency":"SEK","name":"DNB Europa Indeks A","id":"691673","type":"FUND"},"price":162.147259,"volume":0.308300,"transactionType":"BUY","noteId":"GHGXKBJH","sum":49.99,"verificationDate":"2020-03-05","id":"1745108795NOTGHGXKBJH2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  3,8378      st till kurs     130,28","amount":-499.99,"orderbook":{"isin":"SE0009779705","currency":"SEK","name":"Avanza Auto 6","id":"788394","type":"FUND"},"price":130.280369,"volume":3.837800,"transactionType":"BUY","noteId":"GHGMWTJM","sum":499.99,"verificationDate":"2020-03-04","id":"1742648931NOTGHGMWTJM2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,3174      st till kurs     204,78","amount":-65.00,"orderbook":{"isin":"SE0004578615","currency":"SEK","name":"Öhman Etisk Emerging Markets A","id":"364655","type":"FUND"},"price":204.788910,"volume":0.317400,"transactionType":"BUY","noteId":"GHGMWTHN","sum":65.00,"verificationDate":"2020-03-04","id":"1742648910NOTGHGMWTHN2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  3,8998      st till kurs     128,21","amount":-499.99,"orderbook":{"isin":"SE0009779705","currency":"SEK","name":"Avanza Auto 6","id":"788394","type":"FUND"},"price":128.209139,"volume":3.899800,"transactionType":"BUY","noteId":"GHFZXXRX","sum":499.99,"verificationDate":"2020-03-03","id":"1739487987NOTGHFZXXRX2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  17,283      st till kurs     115,72","amount":-1999.99,"orderbook":{"isin":"SE0009779671","currency":"SEK","name":"Avanza Auto 3","id":"788397","type":"FUND"},"price":115.720072,"volume":17.283000,"transactionType":"BUY","noteId":"GHFZXXQZ","sum":1999.99,"verificationDate":"2020-03-03","id":"1739487953NOTGHFZXXQZ2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  4,2408      st till kurs     117,90","amount":-499.99,"orderbook":{"isin":"SE0005798329","currency":"SEK","name":"Spiltan Högräntefond","id":"471796","type":"FUND"},"price":117.899925,"volume":4.240800,"transactionType":"BUY","noteId":"GHFZXXQG","sum":499.99,"verificationDate":"2020-03-03","id":"1739487925NOTGHFZXXQG2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  1,4282      st till kurs     397,85","amount":-564.95,"orderbook":{"isin":"SE0004297927","currency":"SEK","name":"Spiltan Aktiefond Investmentbolag","id":"325406","type":"FUND"},"price":395.567848,"volume":1.428200,"transactionType":"BUY","noteId":"GHFZXXPC","sum":564.95,"verificationDate":"2020-03-03","id":"1739487892NOTGHFZXXPC2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,366       st till kurs     136,49","amount":-49.96,"orderbook":{"isin":"SE0000427825","currency":"SEK","name":"Nordea Obligationsfond icke-utd","id":"2075","type":"FUND"},"price":136.502732,"volume":0.366000,"transactionType":"BUY","noteId":"GHFZXXND","sum":49.96,"verificationDate":"2020-03-03","id":"1739487850NOTGHFZXXND2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,4268      st till kurs     140,55","amount":-59.99,"orderbook":{"isin":"SE0008964407","currency":"SEK","name":"SPP Sverige Plus A","id":"694153","type":"FUND"},"price":140.557638,"volume":0.426800,"transactionType":"BUY","noteId":"GHFLKSGM","sum":59.99,"verificationDate":"2020-03-02","id":"1735968031NOTGHFLKSGM2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,4469      st till kurs     167,81","amount":-75.00,"orderbook":{"isin":"SE0008129985","currency":"SEK","name":"SPP Global Plus A","id":"652895","type":"FUND"},"price":167.822779,"volume":0.446900,"transactionType":"BUY","noteId":"GHFLKSFT","sum":75.00,"verificationDate":"2020-03-02","id":"1735968013NOTGHFLKSFT2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,2675      st till kurs     280,31","amount":-74.98,"orderbook":{"isin":"SE0004576452","currency":"SEK","name":"SPP Global Solutions A","id":"375216","type":"FUND"},"price":280.299065,"volume":0.267500,"transactionType":"BUY","noteId":"GHFLKSDS","sum":74.98,"verificationDate":"2020-03-02","id":"1735967974NOTGHFLKSDS2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,35        st till kurs     167,11","amount":-58.49,"orderbook":{"isin":"LU0269904917","currency":"SEK","name":"Schroder ISF Glb Em Mkt Opps A Acc USD","id":"70789","type":"FUND"},"price":167.114286,"volume":0.350000,"transactionType":"BUY","noteId":"GHFLKSCZ","sum":58.49,"verificationDate":"2020-03-02","id":"1735967941NOTGHFLKSCZ2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":1000.00,"transactionType":"DEPOSIT","verificationDate":"2020-02-26","id":"1726506231MSKHBDFBFMJ1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2020-02-26","id":"1726506230MSKHBDFBFMH1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2020-02-26","id":"1726506229MSKHBDFBFMG1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":2000.00,"transactionType":"DEPOSIT","verificationDate":"2020-02-25","id":"1724149896MSKHBDCZXCZ1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2020-02-25","id":"1724149895MSKHBDCZXCX1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,0125      st till kurs     139,40","amount":-1.74,"orderbook":{"isin":"SE0009779705","currency":"SEK","name":"Avanza Auto 6","id":"788394","type":"FUND"},"price":139.200000,"volume":0.012500,"transactionType":"BUY","noteId":"GGXLWNLS","sum":1.74,"verificationDate":"2020-02-03","id":"1698935998NOTGGXLWNLS2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  3,5796      st till kurs     139,68","amount":-500.00,"orderbook":{"isin":"SE0009779705","currency":"SEK","name":"Avanza Auto 6","id":"788394","type":"FUND"},"price":139.680411,"volume":3.579600,"transactionType":"BUY","noteId":"GGXDLDMJ","sum":500.00,"verificationDate":"2020-01-31","id":"1696415657NOTGGXDLDMJ2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,2803      st till kurs     178,33","amount":-49.99,"orderbook":{"isin":"NO0008001872","currency":"SEK","name":"DNB Europa Indeks A","id":"691673","type":"FUND"},"price":178.344631,"volume":0.280300,"transactionType":"BUY","noteId":"GGXDLDMB","sum":49.99,"verificationDate":"2020-01-31","id":"1696415638NOTGGXDLDMB2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,3026      st till kurs     214,78","amount":-64.99,"orderbook":{"isin":"SE0004578615","currency":"SEK","name":"Öhman Etisk Emerging Markets A","id":"364655","type":"FUND"},"price":214.771976,"volume":0.302600,"transactionType":"BUY","noteId":"GGXDLDLF","sum":64.99,"verificationDate":"2020-01-31","id":"1696415613NOTGGXDLDLF2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  3,5594      st till kurs     140,47","amount":-499.99,"orderbook":{"isin":"SE0009779705","currency":"SEK","name":"Avanza Auto 6","id":"788394","type":"FUND"},"price":140.470304,"volume":3.559400,"transactionType":"BUY","noteId":"GGWRLFBN","sum":499.99,"verificationDate":"2020-01-30","id":"1693802693NOTGGWRLFBN2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  16,423      st till kurs     121,78","amount":-1999.99,"orderbook":{"isin":"SE0009779671","currency":"SEK","name":"Avanza Auto 3","id":"788397","type":"FUND"},"price":121.779821,"volume":16.423000,"transactionType":"BUY","noteId":"GGWRLFBC","sum":1999.99,"verificationDate":"2020-01-30","id":"1693802665NOTGGWRLFBC2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  4,2322      st till kurs     118,14","amount":-499.99,"orderbook":{"isin":"SE0005798329","currency":"SEK","name":"Spiltan Högräntefond","id":"471796","type":"FUND"},"price":118.139502,"volume":4.232200,"transactionType":"BUY","noteId":"GGWRLDZK","sum":499.99,"verificationDate":"2020-01-30","id":"1693802636NOTGGWRLDZK2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  1,3039      st till kurs     434,57","amount":-564.95,"orderbook":{"isin":"SE0004297927","currency":"SEK","name":"Spiltan Aktiefond Investmentbolag","id":"325406","type":"FUND"},"price":433.277092,"volume":1.303900,"transactionType":"BUY","noteId":"GGWRLDXG","sum":564.95,"verificationDate":"2020-01-30","id":"1693802607NOTGGWRLDXG2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,32        st till kurs     183,07","amount":-58.58,"orderbook":{"isin":"LU0269904917","currency":"SEK","name":"Schroder ISF Glb Em Mkt Opps A Acc USD","id":"70789","type":"FUND"},"price":183.062500,"volume":0.320000,"transactionType":"BUY","noteId":"GGWRLDWK","sum":58.58,"verificationDate":"2020-01-30","id":"1693802582NOTGGWRLDWK2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,373       st till kurs     133,90","amount":-49.95,"orderbook":{"isin":"SE0000427825","currency":"SEK","name":"Nordea Obligationsfond icke-utd","id":"2075","type":"FUND"},"price":133.914209,"volume":0.373000,"transactionType":"BUY","noteId":"GGWRLDTS","sum":49.95,"verificationDate":"2020-01-30","id":"1693802545NOTGGWRLDTS2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,3947      st till kurs     151,97","amount":-59.99,"orderbook":{"isin":"SE0008964407","currency":"SEK","name":"SPP Sverige Plus A","id":"694153","type":"FUND"},"price":151.988852,"volume":0.394700,"transactionType":"BUY","noteId":"GGWGMKNP","sum":59.99,"verificationDate":"2020-01-29","id":"1690727820NOTGGWGMKNP2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,4057      st till kurs     184,84","amount":-74.99,"orderbook":{"isin":"SE0008129985","currency":"SEK","name":"SPP Global Plus A","id":"652895","type":"FUND"},"price":184.841016,"volume":0.405700,"transactionType":"BUY","noteId":"GGWGMKMX","sum":74.99,"verificationDate":"2020-01-29","id":"1690727789NOTGGWGMKMX2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  0,2517      st till kurs     297,85","amount":-74.97,"orderbook":{"isin":"SE0004576452","currency":"SEK","name":"SPP Global Solutions A","id":"375216","type":"FUND"},"price":297.854589,"volume":0.251700,"transactionType":"BUY","noteId":"GGWGMKMC","sum":74.97,"verificationDate":"2020-01-29","id":"1690727752NOTGGWGMKMC2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":2000.00,"transactionType":"DEPOSIT","verificationDate":"2020-01-27","id":"1687221972MSKHBDBWQLS1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":1000.00,"transactionType":"DEPOSIT","verificationDate":"2020-01-27","id":"1687221971MSKHBDBWQLR1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2020-01-27","id":"1687221970MSKHBDBWQLQ1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2020-01-27","id":"1687221969MSKHBDBWQLP1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2020-01-27","id":"1687221968MSKHBDBWQLN1"}],"totalNumberOfTransactions":54}
+
+REQUEST 30
+GET https://www.avanza.se/_mobile/account/transactions/1000000?from=2019-10-19&to=2020-01-19
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 30
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"transactions":[{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1670794738NOTGGRPCQPR2","currency":"SEK","description":"Köpt  0,0165      st till kurs     120,69","amount":-1.99,"orderbook":{"isin":"SE0009779671","name":"Avanza Auto 3","currency":"SEK","id":"788397","type":"FUND"},"volume":0.016500,"price":120.606061,"transactionType":"BUY","noteId":"GGRPCQPR","sum":1.99,"verificationDate":"2020-01-09"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1667284004NOTGGRCPDNS2","currency":"SEK","description":"Köpt  0,282       st till kurs     177,26","amount":-49.99,"orderbook":{"isin":"NO0008001872","name":"DNB Europa Indeks A","currency":"SEK","id":"691673","type":"FUND"},"volume":0.282000,"price":177.269504,"transactionType":"BUY","noteId":"GGRCPDNS","sum":49.99,"verificationDate":"2020-01-07"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1664580067NOTGGQQHZMJ2","currency":"SEK","description":"Köpt  7,2432      st till kurs     138,12","amount":-1000.00,"orderbook":{"isin":"SE0009779705","name":"Avanza Auto 6","currency":"SEK","id":"788394","type":"FUND"},"volume":7.243200,"price":138.060526,"transactionType":"BUY","noteId":"GGQQHZMJ","sum":1000.00,"verificationDate":"2020-01-03"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1664580047NOTGGQQHZLX2","currency":"SEK","description":"Köpt  16,5988     st till kurs     120,49","amount":-1999.99,"orderbook":{"isin":"SE0009779671","name":"Avanza Auto 3","currency":"SEK","id":"788397","type":"FUND"},"volume":16.598800,"price":120.490035,"transactionType":"BUY","noteId":"GGQQHZLX","sum":1999.99,"verificationDate":"2020-01-03"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1664580035NOTGGQQHZLJ2","currency":"SEK","description":"Köpt  0,2966      st till kurs     219,11","amount":-64.99,"orderbook":{"isin":"SE0004578615","name":"Öhman Etisk Emerging Markets A","currency":"SEK","id":"364655","type":"FUND"},"volume":0.296600,"price":219.116655,"transactionType":"BUY","noteId":"GGQQHZLJ","sum":64.99,"verificationDate":"2020-01-03"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1662122158NOTGGQGXKPK2","currency":"SEK","description":"Köpt  4,2549      st till kurs     117,51","amount":-499.99,"orderbook":{"isin":"SE0005798329","name":"Spiltan Högräntefond","currency":"SEK","id":"471796","type":"FUND"},"volume":4.254900,"price":117.509225,"transactionType":"BUY","noteId":"GGQGXKPK","sum":499.99,"verificationDate":"2020-01-02"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1662122140NOTGGQGXKNR2","currency":"SEK","description":"Köpt  1,341       st till kurs     424,77","amount":-564.95,"orderbook":{"isin":"SE0004297927","name":"Spiltan Aktiefond Investmentbolag","currency":"SEK","id":"325406","type":"FUND"},"volume":1.341000,"price":421.290082,"transactionType":"BUY","noteId":"GGQGXKNR","sum":564.95,"verificationDate":"2020-01-02"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1662122118NOTGGQGXKNC2","currency":"SEK","description":"Köpt  0,377       st till kurs     132,57","amount":-49.98,"orderbook":{"isin":"SE0000427825","name":"Nordea Obligationsfond icke-utd","currency":"SEK","id":"2075","type":"FUND"},"volume":0.377000,"price":132.572944,"transactionType":"BUY","noteId":"GGQGXKNC","sum":49.98,"verificationDate":"2020-01-02"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1660783816NOTGGQDZKQD2","currency":"SEK","description":"Köpt  0,33        st till kurs     179,41","amount":-59.21,"orderbook":{"isin":"LU0269904917","name":"Schroder ISF Glb Em Mkt Opps A Acc USD","currency":"SEK","id":"70789","type":"FUND"},"volume":0.330000,"price":179.424242,"transactionType":"BUY","noteId":"GGQDZKQD","sum":59.21,"verificationDate":"2019-12-31"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1658818404NOTGGPTGMMQ2","currency":"SEK","description":"Köpt  0,3992      st till kurs     150,28","amount":-59.99,"orderbook":{"isin":"SE0008964407","name":"SPP Sverige Plus A","currency":"SEK","id":"694153","type":"FUND"},"volume":0.399200,"price":150.275551,"transactionType":"BUY","noteId":"GGPTGMMQ","sum":59.99,"verificationDate":"2019-12-30"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1658818381NOTGGPTGMMB2","currency":"SEK","description":"Köpt  0,4235      st till kurs     177,08","amount":-75.00,"orderbook":{"isin":"SE0008129985","name":"SPP Global Plus A","currency":"SEK","id":"652895","type":"FUND"},"volume":0.423500,"price":177.095632,"transactionType":"BUY","noteId":"GGPTGMMB","sum":75.00,"verificationDate":"2019-12-30"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1658818358NOTGGPTGMLP2","currency":"SEK","description":"Köpt  0,2628      st till kurs     285,36","amount":-74.99,"orderbook":{"isin":"SE0004576452","name":"SPP Global Solutions A","currency":"SEK","id":"375216","type":"FUND"},"volume":0.262800,"price":285.350076,"transactionType":"BUY","noteId":"GGPTGMLP","sum":74.99,"verificationDate":"2019-12-30"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1656790658MSKHBCXSHKK1","currency":"SEK","description":"Autogiroinsättning","amount":2000.00,"transactionType":"DEPOSIT","verificationDate":"2019-12-27"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1656790657MSKHBCXSHKJ1","currency":"SEK","description":"Autogiroinsättning","amount":1000.00,"transactionType":"DEPOSIT","verificationDate":"2019-12-27"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1656790656MSKHBCXSHKH1","currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2019-12-27"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1656790655MSKHBCXSHKG1","currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2019-12-27"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1656790654MSKHBCXSHKF1","currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2019-12-27"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1640660168NOTGGMKGDMB2","currency":"SEK","description":"Köpt  0,2932      st till kurs     170,52","amount":-50.00,"orderbook":{"isin":"NO0008001872","name":"DNB Europa Indeks A","currency":"SEK","id":"691673","type":"FUND"},"volume":0.293200,"price":170.532060,"transactionType":"BUY","noteId":"GGMKGDMB","sum":50.00,"verificationDate":"2019-12-03"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1640660147NOTGGMKGDLH2","currency":"SEK","description":"Köpt  0,3187      st till kurs     203,90","amount":-64.98,"orderbook":{"isin":"SE0004578615","name":"Öhman Etisk Emerging Markets A","currency":"SEK","id":"364655","type":"FUND"},"volume":0.318700,"price":203.890806,"transactionType":"BUY","noteId":"GGMKGDLH","sum":64.98,"verificationDate":"2019-12-03"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1638444404NOTGGMBFKNB2","currency":"SEK","description":"Köpt  3,713       st till kurs     134,66","amount":-499.99,"orderbook":{"isin":"SE0009779705","name":"Avanza Auto 6","currency":"SEK","id":"788394","type":"FUND"},"volume":3.713000,"price":134.659305,"transactionType":"BUY","noteId":"GGMBFKNB","sum":499.99,"verificationDate":"2019-12-02"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1638444382NOTGGMBFKMK2","currency":"SEK","description":"Köpt  16,8321     st till kurs     118,82","amount":-1999.99,"orderbook":{"isin":"SE0009779671","name":"Avanza Auto 3","currency":"SEK","id":"788397","type":"FUND"},"volume":16.832100,"price":118.819993,"transactionType":"BUY","noteId":"GGMBFKMK","sum":1999.99,"verificationDate":"2019-12-02"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1638444362NOTGGMBFKLT2","currency":"SEK","description":"Köpt  4,2683      st till kurs     117,14","amount":-499.99,"orderbook":{"isin":"SE0005798329","name":"Spiltan Högräntefond","currency":"SEK","id":"471796","type":"FUND"},"volume":4.268300,"price":117.140313,"transactionType":"BUY","noteId":"GGMBFKLT","sum":499.99,"verificationDate":"2019-12-02"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1638444338NOTGGMBFKLL2","currency":"SEK","description":"Köpt  1,3885      st till kurs     412,38","amount":-564.97,"orderbook":{"isin":"SE0004297927","name":"Spiltan Aktiefond Investmentbolag","currency":"SEK","id":"325406","type":"FUND"},"volume":1.388500,"price":406.892330,"transactionType":"BUY","noteId":"GGMBFKLL","sum":564.97,"verificationDate":"2019-12-02"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1638444314NOTGGMBFKKZ2","currency":"SEK","description":"Köpt  0,35        st till kurs     168,18","amount":-58.86,"orderbook":{"isin":"LU0269904917","name":"Schroder ISF Glb Em Mkt Opps A Acc USD","currency":"SEK","id":"70789","type":"FUND"},"volume":0.350000,"price":168.171429,"transactionType":"BUY","noteId":"GGMBFKKZ","sum":58.86,"verificationDate":"2019-12-02"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1635777187NOTGGLQFTSQ2","currency":"SEK","description":"Köpt  0,416       st till kurs     144,20","amount":-59.99,"orderbook":{"isin":"SE0008964407","name":"SPP Sverige Plus A","currency":"SEK","id":"694153","type":"FUND"},"volume":0.416000,"price":144.206731,"transactionType":"BUY","noteId":"GGLQFTSQ","sum":59.99,"verificationDate":"2019-11-29"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1635777170NOTGGLQFTSC2","currency":"SEK","description":"Köpt  0,4262      st till kurs     175,94","amount":-74.99,"orderbook":{"isin":"SE0008129985","name":"SPP Global Plus A","currency":"SEK","id":"652895","type":"FUND"},"volume":0.426200,"price":175.950258,"transactionType":"BUY","noteId":"GGLQFTSC","sum":74.99,"verificationDate":"2019-11-29"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1635777153NOTGGLQFTRH2","currency":"SEK","description":"Köpt  0,2666      st till kurs     281,29","amount":-74.99,"orderbook":{"isin":"SE0004576452","name":"SPP Global Solutions A","currency":"SEK","id":"375216","type":"FUND"},"volume":0.266600,"price":281.282821,"transactionType":"BUY","noteId":"GGLQFTRH","sum":74.99,"verificationDate":"2019-11-29"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1635777133NOTGGLQFTQR2","currency":"SEK","description":"Köpt  0,374       st till kurs     133,64","amount":-49.98,"orderbook":{"isin":"SE0000427825","name":"Nordea Obligationsfond icke-utd","currency":"SEK","id":"2075","type":"FUND"},"volume":0.374000,"price":133.636364,"transactionType":"BUY","noteId":"GGLQFTQR","sum":49.98,"verificationDate":"2019-11-29"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1632204477MSKHBCTNLSX1","currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2019-11-26"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1632204476MSKHBCTNLSW1","currency":"SEK","description":"Autogiroinsättning","amount":1000.00,"transactionType":"DEPOSIT","verificationDate":"2019-11-26"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1630929563MSKHBCSNGTK1","currency":"SEK","description":"Autogiroinsättning","amount":2000.00,"transactionType":"DEPOSIT","verificationDate":"2019-11-25"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1630929562MSKHBCSNGTJ1","currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2019-11-25"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1612205936NOTGGHNTTPM2","currency":"SEK","description":"Köpt  3,7433      st till kurs     133,57","amount":-499.99,"orderbook":{"isin":"SE0009779705","name":"Avanza Auto 6","currency":"SEK","id":"788394","type":"FUND"},"volume":3.743300,"price":133.569311,"transactionType":"BUY","noteId":"GGHNTTPM","sum":499.99,"verificationDate":"2019-10-31"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1610136659NOTGGHGLZNT2","currency":"SEK","description":"Köpt  16,8605     st till kurs     118,62","amount":-1999.99,"orderbook":{"isin":"SE0009779671","name":"Avanza Auto 3","currency":"SEK","id":"788397","type":"FUND"},"volume":16.860500,"price":118.619851,"transactionType":"BUY","noteId":"GGHGLZNT","sum":1999.99,"verificationDate":"2019-10-30"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1610136641NOTGGHGLZNF2","currency":"SEK","description":"Köpt  4,2808      st till kurs     116,80","amount":-500.00,"orderbook":{"isin":"SE0005798329","name":"Spiltan Högräntefond","currency":"SEK","id":"471796","type":"FUND"},"volume":4.280800,"price":116.800598,"transactionType":"BUY","noteId":"GGHGLZNF","sum":500.00,"verificationDate":"2019-10-30"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1610136621NOTGGHGLZMS2","currency":"SEK","description":"Köpt  1,2915      st till kurs     387,14","amount":-499.99,"orderbook":{"isin":"SE0004297927","name":"Spiltan Aktiefond Investmentbolag","currency":"SEK","id":"325406","type":"FUND"},"volume":1.291500,"price":387.138986,"transactionType":"BUY","noteId":"GGHGLZMS","sum":499.99,"verificationDate":"2019-10-30"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1606018662MSKHBCRTLSC1","currency":"SEK","description":"Autogiroinsättning","amount":1000.00,"transactionType":"DEPOSIT","verificationDate":"2019-10-28"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1606018661MSKHBCRTLSB1","currency":"SEK","description":"Autogiroinsättning","amount":500.00,"transactionType":"DEPOSIT","verificationDate":"2019-10-28"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"id":"1604526509MSKHBCQMNMX1","currency":"SEK","description":"Autogiroinsättning","amount":2000.00,"transactionType":"DEPOSIT","verificationDate":"2019-10-25"}],"totalNumberOfTransactions":39}
+
+REQUEST 31
+GET https://www.avanza.se/_mobile/account/transactions/1000000?from=2019-07-18&to=2019-10-18
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 31
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"transactions":[{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  16,9808     st till kurs     117,78","price":117.780081,"volume":16.980800,"amount":-2000.00,"orderbook":{"isin":"SE0009779671","currency":"SEK","name":"Avanza Auto 3","id":"788397","type":"FUND"},"transactionType":"BUY","noteId":"GGDDPCTL","sum":2000.00,"verificationDate":"2019-10-02","id":"1587523032NOTGGDDPCTL2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":2000.00,"transactionType":"DEPOSIT","verificationDate":"2019-09-26","id":"1580158217MSKHBCPMQBP1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  510,6631    st till kurs     117,01","price":117.010001,"volume":510.663100,"amount":-59752.69,"orderbook":{"isin":"SE0009779671","currency":"SEK","name":"Avanza Auto 3","id":"788397","type":"FUND"},"transactionType":"BUY","noteId":"GGBZTQZQ","sum":59752.69,"verificationDate":"2019-09-25","id":"1579240534NOTGGBZTQZQ2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Sålt  44,876515   st till kurs    1331,49","price":1331.491093,"volume":-44.876515,"amount":59752.68,"orderbook":{"isin":"LU0302296149","currency":"SEK","name":"DNB Fund Renewable Energy retail A","id":"96447","type":"FUND"},"transactionType":"SELL","noteId":"GGBPDDFS","sum":-59752.68,"verificationDate":"2019-09-20","id":"1576184254NOTGGBPDDFS2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  17,4064     st till kurs     114,90","price":114.900267,"volume":17.406400,"amount":-2000.00,"orderbook":{"isin":"SE0009779671","currency":"SEK","name":"Avanza Auto 3","id":"788397","type":"FUND"},"transactionType":"BUY","noteId":"GFXHPCCD","sum":2000.00,"verificationDate":"2019-08-30","id":"1559735953NOTGFXHPCCD2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":2000.00,"transactionType":"DEPOSIT","verificationDate":"2019-08-27","id":"1555661856MSKHBCMTLPW1"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Köpt  17,2294     st till kurs     116,08","price":116.080072,"volume":17.229400,"amount":-1999.99,"orderbook":{"isin":"SE0009779671","currency":"SEK","name":"Avanza Auto 3","id":"788397","type":"FUND"},"transactionType":"BUY","noteId":"GFSBRFSL","sum":1999.99,"verificationDate":"2019-07-31","id":"1535815920NOTGFSBRFSL2"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"Autogiroinsättning","amount":2000.00,"transactionType":"DEPOSIT","verificationDate":"2019-07-25","id":"1529444904MSKHBCJQFQQ1"}],"totalNumberOfTransactions":8}
+
+REQUEST 32
+GET https://www.avanza.se/_mobile/account/transactions/1000000?from=2019-04-17&to=2019-07-17
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 32
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"transactions":[{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"ÖVERFÖRING FRÅN ICA Banken","price":1337.002216,"volume":44.876515,"amount":0.00,"orderbook":{"isin":"LU0302296149","currency":"SEK","name":"DNB Fund Renewable Energy retail A","id":"96447","type":"FUND"},"transactionType":"UNKNOWN","sum":60000.00,"verificationDate":"2019-06-18","id":"1225164262NOTMBBKDQPD0"},{"account":{"type":"Investeringssparkonto","name":"1000000","id":"1000000"},"currency":"SEK","description":"ÖVERFÖRING FRÅN ICA Banken","price":209.949141,"volume":142.891749,"amount":0.00,"orderbook":{"isin":"SE0002572313","currency":"SEK","name":"AMF Aktiefond Asien Stilla havet","id":"143369","type":"FUND"},"transactionType":"UNKNOWN","sum":30000.00,"verificationDate":"2019-06-13","id":"1224127684NOTMBBKCXFG0"}],"totalNumberOfTransactions":2}
+
+REQUEST 33
+GET https://www.avanza.se/_mobile/account/transactions/1000000?from=2019-01-16&to=2019-04-16
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 33
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"transactions":[],"totalNumberOfTransactions":0}
+
+REQUEST 34
+GET https://www.avanza.se/_mobile/account/transactions/1000000?from=2018-10-15&to=2019-01-15
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 34
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"transactions":[],"totalNumberOfTransactions":0}
+
+REQUEST 35
+GET https://www.avanza.se/_mobile/account/transactions/1000000?from=2018-07-14&to=2018-10-14
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 35
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+
+{"transactions":[],"totalNumberOfTransactions":0}
+
