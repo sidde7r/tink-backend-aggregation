@@ -388,17 +388,16 @@ public class CaisseEpargneApiClient {
     }
 
     public void soapActionSsoBapi(String bankId) {
-        Optional<OAuth2Token> token = sessionStorage.get(StorageKeys.TOKEN, OAuth2Token.class);
-        Optional<String> termId = sessionStorage.get(StorageKeys.TERM_ID, String.class);
-        SsoBapiRequest ssoBapiRequest =
-                new SsoBapiRequest(
-                        token.orElseThrow(
-                                        () ->
-                                                new IllegalStateException(
-                                                        "No token found in storage."))
-                                .getAccessToken(),
-                        termId.orElseThrow(
-                                () -> new IllegalStateException("No term id found in storage.")));
+        OAuth2Token token =
+                sessionStorage
+                        .get(StorageKeys.TOKEN, OAuth2Token.class)
+                        .orElseThrow(() -> new IllegalStateException("No token found in storage."));
+        String termId =
+                sessionStorage
+                        .get(StorageKeys.TERM_ID, String.class)
+                        .orElseThrow(
+                                () -> new IllegalStateException("No term id found in storage."));
+        SsoBapiRequest ssoBapiRequest = new SsoBapiRequest(token.getAccessToken(), termId);
         HttpResponse response =
                 httpClient
                         .request(Urls.WS_BAD)
