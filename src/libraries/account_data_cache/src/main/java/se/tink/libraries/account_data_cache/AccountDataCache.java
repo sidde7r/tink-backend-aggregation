@@ -15,16 +15,16 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 
 public class AccountDataCache {
-    private final Map<String, AccountData> accountDataByAccountUniqueId;
+    private final Map<String, AccountData> accountDataByBankAccountId;
     private final List<Predicate<Account>> accountFilters;
 
     public AccountDataCache() {
-        this.accountDataByAccountUniqueId = new HashMap<>();
+        this.accountDataByBankAccountId = new HashMap<>();
         this.accountFilters = new ArrayList<>();
     }
 
     public void clear() {
-        this.accountDataByAccountUniqueId.clear();
+        this.accountDataByBankAccountId.clear();
         this.accountFilters.clear();
     }
 
@@ -32,73 +32,106 @@ public class AccountDataCache {
         accountFilters.add(predicate);
     }
 
-    private Optional<AccountData> getAccountData(String accountUniqueId) {
-        return Optional.ofNullable(accountDataByAccountUniqueId.get(accountUniqueId));
+    private Optional<AccountData> getAccountData(String bankAccountId) {
+        return Optional.ofNullable(accountDataByBankAccountId.get(bankAccountId));
+    }
+
+    // We will be given a `TinkAccountId` from system when it has processed an account.
+    // This id is needed for other account data to be properly set in order to send
+    // it to system for processing (e.g. transactions).
+    public void setProcessedTinkAccountId(String bankAccountId, String tinkAccountId) {
+        getAccountData(bankAccountId)
+                .ifPresent(accountData -> accountData.setProcessedTinkAccountId(tinkAccountId));
     }
 
     public void cacheAccount(Account account) {
-        String accountUniqueId = account.getBankId();
-        if (accountDataByAccountUniqueId.containsKey(accountUniqueId)) {
+        String bankAccountId = account.getBankId();
+        if (accountDataByBankAccountId.containsKey(bankAccountId)) {
             return;
         }
 
-        accountDataByAccountUniqueId.put(accountUniqueId, new AccountData(account));
+        accountDataByBankAccountId.put(bankAccountId, new AccountData(account));
     }
 
-    public void cacheAccountFeatures(String accountUniqueId, AccountFeatures accountFeatures) {
-        getAccountData(accountUniqueId)
+    public void cacheAccountFeatures(String bankAccountId, AccountFeatures accountFeatures) {
+        getAccountData(bankAccountId)
                 .ifPresent(cacheItem -> cacheItem.updateAccountFeatures(accountFeatures));
     }
 
-    public void cacheTransactions(String accountUniqueId, List<Transaction> transactions) {
+    public void cacheTransactions(String bankAccountId, List<Transaction> transactions) {
         // This crashes if agent is implemented incorrectly. You have to cache Account before you
         // cache Transactions.
-        Preconditions.checkArgument(accountDataByAccountUniqueId.containsKey(accountUniqueId));
-        getAccountData(accountUniqueId)
+        Preconditions.checkArgument(accountDataByBankAccountId.containsKey(bankAccountId));
+        getAccountData(bankAccountId)
                 .ifPresent(cacheItem -> cacheItem.updateTransactions(transactions));
     }
 
     public void cacheTransferDestinationPatterns(
-            String accountUniqueId, List<TransferDestinationPattern> patterns) {
-        getAccountData(accountUniqueId)
+            String bankAccountId, List<TransferDestinationPattern> patterns) {
+        getAccountData(bankAccountId)
                 .ifPresent(cacheItem -> cacheItem.updateTransferDestinationPatterns(patterns));
     }
 
-    private Stream<AccountData> getFilteredAccountData() {
-        return accountDataByAccountUniqueId.values().stream()
+    // Return only AccountData that passes the added filter predicates.
+    // A filter predicate can for example be responsible for removing non-whitelisted accounts.
+    // It is therefore extremely important that general access of AccountData is done through this
+    // filtered method.
+    private Stream<AccountData> getFilteredAccountDataStream() {
+        return accountDataByBankAccountId.values().stream()
                 .filter(
                         accountData ->
                                 accountFilters.stream()
                                         .allMatch(filter -> filter.test(accountData.getAccount())));
     }
 
-    public List<AccountData> getCurrentAccountData() {
-        return getFilteredAccountData().collect(Collectors.toList());
+    public List<AccountData> getFilteredAccountData() {
+        return getFilteredAccountDataStream().collect(Collectors.toList());
+    }
+
+    // Returns only AccountData that is both filtered and has been processed (see
+    // getFilteredAccountDataStream).
+    // Note: Only filtered AccountData can be processed!
+    // A processed AccountData means that the attached Account has been processed by System and been
+    // given a `TinkAccountId` (`Account.getId()`).
+    // A proper `TinkAccountId` is needed in order to process the other bits of AccountData, e.g.
+    // Transaction.
+    private Stream<AccountData> getProcessedAccountDataStream() {
+        return getFilteredAccountDataStream().filter(AccountData::isProcessed);
     }
 
     public List<AccountData> getAllAccountData() {
-        return new ArrayList<>(accountDataByAccountUniqueId.values());
+        return new ArrayList<>(accountDataByBankAccountId.values());
     }
 
-    public List<Account> getCurrentAccounts() {
-        return getFilteredAccountData().map(AccountData::getAccount).collect(Collectors.toList());
-    }
-
-    public List<Account> getAllAccounts() {
-        return accountDataByAccountUniqueId.values().stream()
+    public List<Account> getFilteredAccounts() {
+        return getFilteredAccountDataStream()
                 .map(AccountData::getAccount)
                 .collect(Collectors.toList());
     }
 
-    public Map<Account, List<Transaction>> getCurrentTransactions() {
-        return getFilteredAccountData()
-                .filter(accountData -> !accountData.getTransactions().isEmpty())
+    public List<Account> getProcessedAccounts() {
+        return getProcessedAccountDataStream()
+                .map(AccountData::getAccount)
+                .collect(Collectors.toList());
+    }
+
+    public List<Account> getAllAccounts() {
+        return accountDataByBankAccountId.values().stream()
+                .map(AccountData::getAccount)
+                .collect(Collectors.toList());
+    }
+
+    public Map<Account, List<Transaction>> getTransactionsToBeProcessed() {
+        return getProcessedAccountDataStream()
+                .filter(AccountData::hasTransactions)
+                .peek(AccountData::updateTransactionsAccountId)
                 .collect(Collectors.toMap(AccountData::getAccount, AccountData::getTransactions));
     }
 
-    public Map<Account, List<TransferDestinationPattern>> getCurrentTransferDestinationPatterns() {
-        return getFilteredAccountData()
-                .filter(accountData -> !accountData.getTransferDestinationPatterns().isEmpty())
+    public Map<Account, List<TransferDestinationPattern>>
+            getTransferDestinationPatternsToBeProcessed() {
+        return getProcessedAccountDataStream()
+                .filter(AccountData::hasTransferDestinationPatterns)
                 .collect(
                         Collectors.toMap(
                                 AccountData::getAccount,
