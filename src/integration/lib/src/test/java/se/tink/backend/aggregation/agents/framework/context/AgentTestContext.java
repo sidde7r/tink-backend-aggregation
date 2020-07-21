@@ -209,8 +209,8 @@ public class AgentTestContext extends AgentContext {
         }
     }
 
-    public Account sendAccountToUpdateService(String uniqueId) {
-        return accountsByBankId.get(uniqueId);
+    public Account sendAccountToUpdateService(String bankAccountId) {
+        return accountsByBankId.get(bankAccountId);
     }
 
     @Override

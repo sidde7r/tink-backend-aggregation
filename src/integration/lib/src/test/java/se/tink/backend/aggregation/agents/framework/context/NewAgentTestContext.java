@@ -200,8 +200,8 @@ public final class NewAgentTestContext extends AgentContext {
         accountFeaturesByBankId.put(account.getBankId(), accountFeaturesToCache);
     }
 
-    public Account sendAccountToUpdateService(String uniqueId) {
-        return accountsByBankId.get(uniqueId);
+    public Account sendAccountToUpdateService(String bankAccountId) {
+        return accountsByBankId.get(bankAccountId);
     }
 
     @Override

@@ -13,7 +13,7 @@ public interface SystemUpdater {
 
     void processTransactions();
 
-    Account sendAccountToUpdateService(String uniqueId);
+    Account sendAccountToUpdateService(String bankAccountId);
 
     AccountHolder sendAccountHolderToUpdateService(Account processedAccount);
 
