@@ -359,7 +359,7 @@ public class OpenIdAuthenticationController
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
                 || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType)) {
 
-            logger.error("OpenId {} callback: {}", errorType, serializedCallbackData);
+            logger.info("OpenId {} callback: {}", errorType, serializedCallbackData);
 
             // Store error information to make it possible for agent to determine cause and
             // give end user a proper error message.
