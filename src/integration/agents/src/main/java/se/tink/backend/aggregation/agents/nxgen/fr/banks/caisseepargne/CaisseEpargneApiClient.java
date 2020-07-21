@@ -458,10 +458,7 @@ public class CaisseEpargneApiClient {
         OAuth2Token bearerToken =
                 sessionStorage
                         .get(StorageKeys.TOKEN, OAuth2Token.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SessionError.SESSION_EXPIRED.exception()));
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         return httpClient
                 .request(Urls.BENEFICIARIES)
                 .addBearerToken(bearerToken)
@@ -474,10 +471,7 @@ public class CaisseEpargneApiClient {
         OAuth2Token bearerToken =
                 sessionStorage
                         .get(StorageKeys.TOKEN, OAuth2Token.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SessionError.SESSION_EXPIRED.exception()));
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         HttpResponse response;
         try {
             response =
