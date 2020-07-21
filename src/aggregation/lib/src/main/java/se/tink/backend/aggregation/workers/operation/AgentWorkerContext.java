@@ -719,7 +719,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public List<Account> getUpdatedAccounts() {
-        return Lists.newArrayList(updatedAccountsByTinkId.values());
+        return Lists.newArrayList(accountDataCache.getProcessedAccounts());
     }
 
     @Override
