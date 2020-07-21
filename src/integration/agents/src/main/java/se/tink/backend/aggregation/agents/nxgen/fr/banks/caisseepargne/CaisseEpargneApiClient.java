@@ -89,7 +89,7 @@ public class CaisseEpargneApiClient {
         this.instanceStorage = instanceStorage;
     }
 
-    public Optional<OAuth2Token> getOAuth2Token() {
+    public void getOAuth2Token() {
         Optional<OAuth2Token> token =
                 Optional.ofNullable(
                         httpClient
@@ -103,7 +103,6 @@ public class CaisseEpargneApiClient {
                                 .post(OAuth2TokenResponse.class)
                                 .toTinkToken());
         token.ifPresent(t -> sessionStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, t));
-        return token;
     }
 
     public IdentificationRoutingResponse identificationRouting(String userCode)
