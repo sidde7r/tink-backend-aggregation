@@ -166,11 +166,6 @@ public class FakeIntegrationArgumentsCreator {
                     }
 
                     @Override
-                    public Account updateAccount(String uniqueId) {
-                        return null;
-                    }
-
-                    @Override
                     public void sendIdentityToIdentityAggregatorService() {}
                 };
         return context;

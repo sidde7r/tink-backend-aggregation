@@ -222,10 +222,6 @@ public class AgentTestContext extends AgentContext {
                 .orElse(null);
     }
 
-    public Account updateAccount(String uniqueId) {
-        return accountsByBankId.get(uniqueId);
-    }
-
     @Override
     public void updateTransferDestinationPatterns(
             Map<Account, List<TransferDestinationPattern>> transferDestinationPatterns) {
