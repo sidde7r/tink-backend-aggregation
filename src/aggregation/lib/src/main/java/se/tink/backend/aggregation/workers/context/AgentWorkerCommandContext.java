@@ -36,7 +36,6 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
-import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
@@ -216,35 +215,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     }
 
     public void sendAllCachedAccountsToUpdateService() {
-        for (String uniqueId : allAvailableAccountsByUniqueId.keySet()) {
-            sendAccountToUpdateService(uniqueId);
-        }
-        compareOldAndNewAccountDataCache();
-    }
-
-    // Purely for initial verification. Will be removed shortly.
-    private void compareOldAndNewAccountDataCache() {
-        log.info("[compareOldAndNewAccountDataCache] Comparing old and new account data cache!");
-
-        AccountDataCache accountDataCache = this.getAccountDataCache();
-
-        List<Account> newAccountCache = accountDataCache.getAllAccounts();
-        List<Account> oldAccountCache =
-                allAvailableAccountsByUniqueId.values().stream()
-                        .map(pair -> pair.first)
-                        .collect(Collectors.toList());
-
-        if (newAccountCache.size() == oldAccountCache.size()) {
-            if (!newAccountCache.containsAll(oldAccountCache)) {
-                log.warn(
-                        "[compareOldAndNewAccountDataCache/all] The two account caches are not equal!");
-            }
-        } else {
-            log.warn(
-                    "[compareOldAndNewAccountDataCache/all] Number of accounts differ. Old: {}, New: {}",
-                    oldAccountCache.size(),
-                    newAccountCache.size());
-        }
+        getAccountDataCache()
+                .getFilteredAccounts()
+                .forEach(
+                        filteredAccount -> sendAccountToUpdateService(filteredAccount.getBankId()));
     }
 
     public void sendAllCachedAccountsHoldersToUpdateService() {

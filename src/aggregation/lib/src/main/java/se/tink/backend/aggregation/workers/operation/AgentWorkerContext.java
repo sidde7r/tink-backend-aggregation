@@ -48,6 +48,7 @@ import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -441,23 +442,23 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 account.getBankId(), new Pair<>(account, accountFeaturesToCache));
     }
 
-    public Account sendAccountToUpdateService(String uniqueId) {
-        Pair<Account, AccountFeatures> pair = allAvailableAccountsByUniqueId.get(uniqueId);
-
-        Account account = pair.first;
-        AccountFeatures accountFeatures = pair.second;
-
-        // Only send the accounts once
-        if (updatedAccountUniqueIds.contains(uniqueId)) {
-            return account;
+    public Account sendAccountToUpdateService(String bankAccountId) {
+        Optional<AccountData> optionalAccountData =
+                accountDataCache.getFilteredAccountDataByBankAccountId(bankAccountId);
+        if (!optionalAccountData.isPresent()) {
+            log.warn(
+                    "Trying to send a filtered or non-existent Account to update service! Agents should not do this on their own.");
+            return null;
         }
 
-        if (!shouldAggregateDataForAccount(account)) {
-            // Account marked to not aggregate data from.
-            // Preferably we would not even download the data but this makes sure
-            // we don't process further or store the account's data.
-            return account;
+        AccountData accountData = optionalAccountData.get();
+        if (accountData.isProcessed()) {
+            // Already updated/processed, do not do it twice.
+            return accountData.getAccount();
         }
+
+        Account account = accountData.getAccount();
+        AccountFeatures accountFeatures = accountData.getAccountFeatures();
 
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
@@ -495,7 +496,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             throw e;
         }
 
-        updatedAccountUniqueIds.add(uniqueId);
         accountDataCache.setProcessedTinkAccountId(
                 updatedAccount.getBankId(), updatedAccount.getId());
 
