@@ -72,7 +72,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CaisseEpargneApiClient {
 
-    public static final String EXPECTED_REDIRECT_GOT = "Expected redirect, got: ";
+    private static final String EXPECTED_REDIRECT_GOT = "Expected redirect, got: ";
     private final TinkHttpClient httpClient;
     private final TinkHttpClient notRedirectFollowingHttpClient;
     private final SessionStorage sessionStorage;
