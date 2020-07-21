@@ -214,7 +214,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             return;
         }
 
-        // Update each transaction with information about the credential and user as well as
+        // Update each transaction with information about the credentials and user as well as
         // additional formatting.
         transactionsToProcess.forEach(
                 transaction -> {
