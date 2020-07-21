@@ -9,13 +9,13 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
-import se.tink.backend.aggregation.workers.encryption.models.EncryptedCredentials;
-import se.tink.backend.aggregation.workers.encryption.models.EncryptedCredentialsV1;
-import se.tink.backend.aggregation.workers.encryption.models.VersionDeserializer;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.encryptedpayload.EncryptedPayloadHead;
+import se.tink.libraries.encryptedpayload.EncryptedPayloadV1;
+import se.tink.libraries.encryptedpayload.VersionDeserializer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsCrypto {
@@ -104,7 +104,7 @@ public class CredentialsCrypto {
         sensitiveInformationCredentials.onlySensitiveInformation(request.getProvider());
 
         // Always use the latest version, which is v1.
-        EncryptedCredentialsV1 encryptedCredentials =
+        EncryptedPayloadV1 encryptedCredentials =
                 CredentialsCryptoV1.encryptCredential(
                         clusterKeyId, clusterKey, sensitiveInformationCredentials);
 
@@ -153,11 +153,11 @@ public class CredentialsCrypto {
         }
 
         // Return the latest one if both are set.
-        EncryptedCredentials baseA =
-                SerializationUtils.deserializeFromString(a, EncryptedCredentials.class);
+        EncryptedPayloadHead baseA =
+                SerializationUtils.deserializeFromString(a, EncryptedPayloadHead.class);
 
-        EncryptedCredentials baseB =
-                SerializationUtils.deserializeFromString(b, EncryptedCredentials.class);
+        EncryptedPayloadHead baseB =
+                SerializationUtils.deserializeFromString(b, EncryptedPayloadHead.class);
 
         if (baseA.getTimestamp().after(baseB.getTimestamp())) {
             return a;
