@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.user.rpc.User;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class KeepAliveRequest extends CredentialsRequest {
 
     public KeepAliveRequest() {}
