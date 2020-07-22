@@ -252,7 +252,7 @@ public class IcaBankenExecutorHelper {
             poll(reference);
             assertSuccessfulSign(reference);
         } catch (Exception initialException) {
-            cleanUpOutbox();
+            checkForUnsigedTransfersAndCleanUpOutbox(apiClient.fetchUnsignedTransfers());
 
             if (!isTransferFailedButWasSuccessful(transfer, sourceAccount)) {
                 if (initialException.getCause() instanceof HttpResponseException) {
@@ -293,14 +293,14 @@ public class IcaBankenExecutorHelper {
                 .build();
     }
 
-    public void cleanUpOutbox() {
+    public void checkForUnsigedTransfersAndCleanUpOutbox(List<AssignmentEntity> unsignedTransfers) {
         try {
-            List<AssignmentEntity> unsignedTransfers = apiClient.fetchUnsignedTransfers();
-            deleteUnsignedTransfer(unsignedTransfers);
+            if (!unsignedTransfers.isEmpty()) {
+                deleteUnsignedTransfers(unsignedTransfers);
+            }
         } catch (Exception deleteException) {
             log.warn(
-                    "Could not delete transfer in outbox. "
-                            + "If unsigned transfers are left here, user could end up in a deadlock.",
+                    "Could not delete transfer in outbox. If unsigned transfers are left here, user could end up in a deadlock.",
                     deleteException);
         }
     }
@@ -395,11 +395,10 @@ public class IcaBankenExecutorHelper {
         }
     }
 
-    private void deleteUnsignedTransfer(List<AssignmentEntity> unsignedTransfers) {
-        if (unsignedTransfers.size() == 1) {
-            String transferId = unsignedTransfers.get(0).getRegistrationId();
-            apiClient.deleteUnsignedTransfer(transferId);
-        }
+    private void deleteUnsignedTransfers(List<AssignmentEntity> unsignedTransfers) {
+        unsignedTransfers.forEach(
+                unsignedTransfer ->
+                        apiClient.deleteUnsignedTransfer(unsignedTransfer.getRegistrationId()));
     }
 
     /**

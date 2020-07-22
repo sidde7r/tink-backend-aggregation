@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.workers.context;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,7 +21,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentEventListener;
-import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
@@ -36,9 +33,7 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
-import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -47,8 +42,7 @@ import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
-public class AgentWorkerCommandContext extends AgentWorkerContext
-        implements SetAccountsToAggregateContext {
+public class AgentWorkerCommandContext extends AgentWorkerContext {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
@@ -56,8 +50,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     protected Agent agent;
 
     protected final Counter refreshTotal;
-    protected final Counter inconsistencyBetweelAccountsTotal;
-    protected final Counter zeroAccountsFoundDuringRefreshTotal;
     protected final MetricId.MetricLabels defaultMetricLabels;
 
     protected static final Set<AccountTypes> TARGET_ACCOUNT_TYPES =
@@ -72,7 +64,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     protected long timeLeavingQueue;
     protected long timePutOnQueue;
     protected AgentsServiceConfiguration agentsServiceConfiguration;
-    protected List<String> uniqueIdOfUserSelectedAccounts;
 
     public AgentWorkerCommandContext(
             CredentialsRequest request,
@@ -103,7 +94,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                 accountInformationServiceEventsProducer);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
-        this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
 
         Provider provider = request.getProvider();
 
@@ -122,16 +112,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
         refreshTotal =
                 metricRegistry.meter(MetricId.newId("accounts_refresh").label(defaultMetricLabels));
-
-        inconsistencyBetweelAccountsTotal =
-                metricRegistry.meter(
-                        MetricId.newId("inconsistency_between_accounts")
-                                .label(defaultMetricLabels));
-
-        zeroAccountsFoundDuringRefreshTotal =
-                metricRegistry.meter(
-                        MetricId.newId("zero_accounts_found_during_refresh")
-                                .label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
     }
@@ -229,38 +209,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     }
 
     public void sendAllCachedAccountsToUpdateService() {
-
-        compareAccountsBeforeAndAfterUpdate();
-        for (String uniqueId : allAvailableAccountsByUniqueId.keySet()) {
-            sendAccountToUpdateService(uniqueId);
-        }
-
-        compareOldAndNewAccountDataCache();
-    }
-
-    // Purely for initial verification. Will be removed shortly.
-    private void compareOldAndNewAccountDataCache() {
-        log.info("[compareOldAndNewAccountDataCache] Comparing old and new account data cache!");
-
-        AccountDataCache accountDataCache = this.getAccountDataCache();
-
-        List<Account> newAccountCache = accountDataCache.getAllAccounts();
-        List<Account> oldAccountCache =
-                allAvailableAccountsByUniqueId.values().stream()
-                        .map(pair -> pair.first)
-                        .collect(Collectors.toList());
-
-        if (newAccountCache.size() == oldAccountCache.size()) {
-            if (!newAccountCache.containsAll(oldAccountCache)) {
-                log.warn(
-                        "[compareOldAndNewAccountDataCache/all] The two account caches are not equal!");
-            }
-        } else {
-            log.warn(
-                    "[compareOldAndNewAccountDataCache/all] Number of accounts differ. Old: {}, New: {}",
-                    oldAccountCache.size(),
-                    newAccountCache.size());
-        }
+        getAccountDataCache()
+                .getFilteredAccounts()
+                .forEach(
+                        filteredAccount -> sendAccountToUpdateService(filteredAccount.getBankId()));
     }
 
     public void sendAllCachedAccountsHoldersToUpdateService() {
@@ -292,42 +244,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                         .orElse(0));
     }
 
-    private void compareAccountsBeforeAndAfterUpdate() {
-
-        if (!(request instanceof RefreshInformationRequest)) {
-            // If it's not a refresh it shouldn't get here, but good to return anyway
-            return;
-        }
-
-        List<Account> accountsBeforeRefresh = request.getAccounts();
-        List<Account> accountsFoundByAgent =
-                allAvailableAccountsByUniqueId.values().stream()
-                        .map(p -> p.first)
-                        .collect(Collectors.toList());
-
-        // If it was 0 before and 0 found something might be wrong (maybe not though)
-        // If it's 0 accounts before, it means that we are **probably** trying to refresh this
-        // credentials for the first time (but not 100% of the time).
-        if (accountsBeforeRefresh.size() == 0 && accountsFoundByAgent.size() == 0) {
-            zeroAccountsFoundDuringRefreshTotal.inc();
-            return;
-        }
-
-        // If the number of accounts sent to system are different than the accounts that we received
-        // in the request,
-        //      that might mean that the user has a new account in the credentials. (not a problem)
-        //      that an account on the credentials closed. (not a problem)
-        // But it's  not something that we expect happening on multiple users at the same time.
-        // (problem)
-        if (accountsFoundByAgent.size() != accountsBeforeRefresh.size()) {
-            inconsistencyBetweelAccountsTotal.inc();
-            return;
-        }
-
-        // TODO: Have 3 different metrics for ids, COMPLETE_MATCH, PARTIAL_MISMATCH,
-        // COMPLETE_MISMATCH, increment accordingly
-    }
-
     public Agent getAgent() {
         return agent;
     }
@@ -340,41 +256,17 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         }
     }
 
-    @Override
-    public void setAccountsToAggregate(List<Account> accounts) {
-        accountsToAggregate = accounts;
-    }
-
-    @Override
-    public List<Account> getCachedAccounts() {
-        return allAvailableAccountsByUniqueId.values().stream()
-                .map(p -> p.first)
-                .collect(Collectors.toList());
-    }
-
     public List<Pair<Account, AccountFeatures>> getCachedAccountsWithFeatures() {
-        return new ArrayList<>(allAvailableAccountsByUniqueId.values());
+        return getAccountDataCache().getFilteredAccountData().stream()
+                .map(
+                        accountData ->
+                                new Pair<>(
+                                        accountData.getAccount(), accountData.getAccountFeatures()))
+                .collect(Collectors.toList());
     }
 
     public IdentityData getCachedIdentityData() {
         return identityData;
-    }
-
-    @Override
-    public List<String> getUniqueIdOfUserSelectedAccounts() {
-        return uniqueIdOfUserSelectedAccounts;
-    }
-
-    public void addOptInAccountUniqueId(List<String> optInAccountUniqueId) {
-        this.uniqueIdOfUserSelectedAccounts = optInAccountUniqueId;
-    }
-
-    public boolean isWhitelistRefresh() {
-        return isWhitelistRefresh;
-    }
-
-    public void setWhitelistRefresh(boolean whitelistRefresh) {
-        isWhitelistRefresh = whitelistRefresh;
     }
 
     public AgentsServiceConfiguration getAgentsServiceConfiguration() {

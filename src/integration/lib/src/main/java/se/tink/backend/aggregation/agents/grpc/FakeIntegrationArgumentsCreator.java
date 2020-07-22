@@ -123,7 +123,7 @@ public class FakeIntegrationArgumentsCreator {
                     public void processTransactions() {}
 
                     @Override
-                    public Account sendAccountToUpdateService(String uniqueId) {
+                    public Account sendAccountToUpdateService(String bankAccountId) {
                         return null;
                     }
 
@@ -163,11 +163,6 @@ public class FakeIntegrationArgumentsCreator {
                     @Override
                     public MetricRegistry getMetricRegistry() {
                         return metricRegistry;
-                    }
-
-                    @Override
-                    public Account updateAccount(String uniqueId) {
-                        return null;
                     }
 
                     @Override

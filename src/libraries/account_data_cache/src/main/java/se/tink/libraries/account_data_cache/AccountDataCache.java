@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -87,6 +88,15 @@ public class AccountDataCache {
 
     public List<AccountData> getFilteredAccountData() {
         return getFilteredAccountDataStream().collect(Collectors.toList());
+    }
+
+    public Optional<AccountData> getFilteredAccountDataByBankAccountId(String bankAccountId) {
+        return getFilteredAccountDataStream()
+                .filter(
+                        filteredAccount ->
+                                Objects.equals(
+                                        filteredAccount.getAccount().getBankId(), bankAccountId))
+                .findFirst();
     }
 
     // Returns only AccountData that is both filtered and has been processed (see

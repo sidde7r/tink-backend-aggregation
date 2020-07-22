@@ -4,8 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
 import java.time.LocalDate;
@@ -14,9 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
@@ -48,6 +44,7 @@ import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -56,7 +53,6 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.pair.Pair;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
@@ -105,17 +101,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
     }
 
-    // Cached accounts have not been sent to system side yet.
-    protected Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
-    private Set<String> updatedAccountUniqueIds;
-    // a collection of account to keep a record of what accounts we should aggregate data after
-    // opt-in flow,
-    // selecting white listed accounts and eliminating blacklisted accounts
-    protected List<Account> accountsToAggregate;
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
     // True or false if system has been requested to process transactions.
     protected boolean isSystemProcessingTransactions;
-    protected boolean isWhitelistRefresh;
     protected ControllerWrapper controllerWrapper;
 
     protected IdentityData identityData;
@@ -136,9 +124,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
 
         this.accountDataCache = new AccountDataCache();
-        this.allAvailableAccountsByUniqueId = Maps.newHashMap();
-        this.updatedAccountUniqueIds = Sets.newHashSet();
-        this.accountsToAggregate = Lists.newArrayList();
         this.psd2PaymentAccountClassifier =
                 Psd2PaymentAccountClassifier.createWithMetrics(metricRegistry);
         this.correlationId = correlationId;
@@ -170,7 +155,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void clear() {
         accountDataCache.clear();
-        allAvailableAccountsByUniqueId.clear();
     }
 
     @Override
@@ -347,7 +331,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return accountDataCache;
     }
 
-    private boolean shouldAggregateDataForAccount(Account account) {
+    private void sendPsd2PaymentAccountEvents(Account account) {
         try {
             // TODO: extend filtering by using payment classification information
             // (For now we discard the result as in the beginning we just want to collect metrics)
@@ -362,10 +346,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         } catch (RuntimeException e) {
             log.error("[classifyAsPaymentAccount] Unexpected exception occurred", e);
         }
-        return accountsToAggregate.stream()
-                .map(Account::getBankId)
-                .collect(Collectors.toList())
-                .contains(account.getBankId());
     }
 
     private void sendPsd2PaymentAccountClassificationEvent(
@@ -423,41 +403,25 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         accountDataCache.cacheAccount(account);
         accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
-
-        AccountFeatures accountFeaturesToCache = accountFeatures;
-
-        if (allAvailableAccountsByUniqueId.containsKey(account.getBankId())) {
-            // FIXME This whole if-case is a result of having Agents calling cacheAccounts multiple
-            // times. Sometimes
-            // FIXME with accountFeatures and sometimes without.
-            Pair<Account, AccountFeatures> pair =
-                    allAvailableAccountsByUniqueId.get(account.getBankId());
-            if (accountFeatures.isEmpty() && !pair.second.isEmpty()) {
-                accountFeaturesToCache = pair.second;
-            }
-        }
-
-        allAvailableAccountsByUniqueId.put(
-                account.getBankId(), new Pair<>(account, accountFeaturesToCache));
     }
 
-    public Account sendAccountToUpdateService(String uniqueId) {
-        Pair<Account, AccountFeatures> pair = allAvailableAccountsByUniqueId.get(uniqueId);
-
-        Account account = pair.first;
-        AccountFeatures accountFeatures = pair.second;
-
-        // Only send the accounts once
-        if (updatedAccountUniqueIds.contains(uniqueId)) {
-            return account;
+    public Account sendAccountToUpdateService(String bankAccountId) {
+        Optional<AccountData> optionalAccountData =
+                accountDataCache.getFilteredAccountDataByBankAccountId(bankAccountId);
+        if (!optionalAccountData.isPresent()) {
+            log.warn(
+                    "Trying to send a filtered or non-existent Account to update service! Agents should not do this on their own.");
+            return null;
         }
 
-        if (!shouldAggregateDataForAccount(account)) {
-            // Account marked to not aggregate data from.
-            // Preferably we would not even download the data but this makes sure
-            // we don't process further or store the account's data.
-            return account;
+        AccountData accountData = optionalAccountData.get();
+        if (accountData.isProcessed()) {
+            // Already updated/processed, do not do it twice.
+            return accountData.getAccount();
         }
+
+        Account account = accountData.getAccount();
+        AccountFeatures accountFeatures = accountData.getAccountFeatures();
 
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
@@ -495,9 +459,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             throw e;
         }
 
-        updatedAccountUniqueIds.add(uniqueId);
         accountDataCache.setProcessedTinkAccountId(
                 updatedAccount.getBankId(), updatedAccount.getId());
+
+        // This is temporary.
+        sendPsd2PaymentAccountEvents(account);
 
         return updatedAccount;
     }
@@ -524,55 +490,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                                     : ""));
             throw e;
         }
-    }
-
-    public Account updateAccount(String uniqueId) {
-        Pair<Account, AccountFeatures> pair = allAvailableAccountsByUniqueId.get(uniqueId);
-
-        Account account = pair.first;
-        AccountFeatures accountFeatures = pair.second;
-
-        if (!shouldAggregateDataForAccount(account)) {
-            // Account marked to not aggregate data from.
-            // Preferably we would not even download the data but this makes sure
-            // we don't process further or store the account's data.
-            return account;
-        }
-
-        account.setCredentialsId(request.getCredentials().getId());
-        account.setUserId(request.getCredentials().getUserId());
-        account.setFinancialInstitutionId(request.getProvider().getFinancialInstitutionId());
-
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest
-                updateAccountRequest =
-                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
-                                .UpdateAccountRequest();
-
-        updateAccountRequest.setUser(request.getCredentials().getUserId());
-        updateAccountRequest.setAccount(CoreAccountMapper.fromAggregation(account));
-        updateAccountRequest.setAccountFeatures(accountFeatures);
-        updateAccountRequest.setCredentialsId(request.getCredentials().getId());
-        updateAccountRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
-        updateAccountRequest.setAvailableBalance(account.getAvailableBalance());
-        updateAccountRequest.setCreditLimit(account.getCreditLimit());
-
-        Account updatedAccount;
-        try {
-            updatedAccount = controllerWrapper.updateAccount(updateAccountRequest);
-
-        } catch (UniformInterfaceException e) {
-            log.error(
-                    "Account update request failed, response: "
-                            + (e.getResponse().hasEntity()
-                                    ? e.getResponse().getEntity(String.class)
-                                    : ""));
-            throw e;
-        }
-
-        accountDataCache.setProcessedTinkAccountId(
-                updatedAccount.getBankId(), updatedAccount.getId());
-
-        return updatedAccount;
     }
 
     @Override

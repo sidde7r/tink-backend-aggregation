@@ -13,11 +13,9 @@ public interface SystemUpdater {
 
     void processTransactions();
 
-    Account sendAccountToUpdateService(String uniqueId);
+    Account sendAccountToUpdateService(String bankAccountId);
 
     AccountHolder sendAccountHolderToUpdateService(Account processedAccount);
-
-    Account updateAccount(String uniqueId);
 
     void updateTransferDestinationPatterns(Map<Account, List<TransferDestinationPattern>> map);
 
