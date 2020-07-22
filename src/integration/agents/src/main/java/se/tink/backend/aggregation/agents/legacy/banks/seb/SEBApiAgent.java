@@ -32,6 +32,7 @@ import java.security.Security;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -151,6 +152,7 @@ import se.tink.backend.aggregation.agents.modules.LegacyAgentWiremockStrategyMod
 import se.tink.backend.aggregation.agents.modules.providers.LegacyAgentStrategyInterface;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
@@ -339,25 +341,72 @@ public class SEBApiAgent extends AbstractAgent
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
-        return new FetchAccountsResponse(updateAccountsPerType(RefreshableItem.CHECKING_ACCOUNTS));
+        List<Account> accounts = updateAccountsPerType(RefreshableItem.CHECKING_ACCOUNTS);
+        logUninitializedCapabilities(accounts, "checking");
+        return new FetchAccountsResponse(accounts);
+    }
+
+    private void logUninitializedCapabilities(List<Account> accounts, String tag) {
+        try {
+            int accountsWithoutSetCapabilities =
+                    (int)
+                            accounts.stream()
+                                    .filter(
+                                            a -> {
+                                                AccountCapabilities capabilities =
+                                                        a.getCapabilities();
+                                                return capabilities.getCanExecuteExternalTransfer()
+                                                                == AccountCapabilities.Answer
+                                                                        .UNINITIALIZED
+                                                        || capabilities
+                                                                        .getCanReceiveExternalTransfer()
+                                                                == AccountCapabilities.Answer
+                                                                        .UNINITIALIZED
+                                                        || capabilities.getCanPlaceFunds()
+                                                                == AccountCapabilities.Answer
+                                                                        .UNINITIALIZED
+                                                        || capabilities.getCanWithdrawCash()
+                                                                == AccountCapabilities.Answer
+                                                                        .UNINITIALIZED;
+                                            })
+                                    .count();
+            if (accountsWithoutSetCapabilities > 0) {
+                log.warn(
+                        "Account Capabilities not set ["
+                                + tag
+                                + "] for accounts: "
+                                + accountsWithoutSetCapabilities);
+            } else {
+                log.info("Account Capabilities set  [" + tag + "] for all accounts");
+            }
+        } catch (RuntimeException e) {
+            log.warn("[Account Capabilities] Error while logging happened: ", e);
+        }
     }
 
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
-        return new FetchAccountsResponse(updateAccountsPerType(RefreshableItem.SAVING_ACCOUNTS));
+        List<Account> accounts = updateAccountsPerType(RefreshableItem.SAVING_ACCOUNTS);
+        logUninitializedCapabilities(accounts, "savings");
+        return new FetchAccountsResponse(accounts);
     }
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        return new FetchTransactionsResponse(
-                updateTransactionsPerAccountType(
-                        RefreshableItem.CHECKING_TRANSACTIONS, customerId));
+        Map<Account, List<Transaction>> transactions =
+                updateTransactionsPerAccountType(RefreshableItem.CHECKING_TRANSACTIONS, customerId);
+        logUninitializedCapabilities(
+                new ArrayList<>(transactions.keySet()), "checking transactions");
+        return new FetchTransactionsResponse(transactions);
     }
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
-        return new FetchTransactionsResponse(
-                updateTransactionsPerAccountType(RefreshableItem.SAVING_TRANSACTIONS, customerId));
+        Map<Account, List<Transaction>> transactions =
+                updateTransactionsPerAccountType(RefreshableItem.SAVING_TRANSACTIONS, customerId);
+        logUninitializedCapabilities(
+                new ArrayList<>(transactions.keySet()), "savings transactions");
+        return new FetchTransactionsResponse(transactions);
     }
 
     @Override
@@ -370,8 +419,11 @@ public class SEBApiAgent extends AbstractAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         try {
-            return new FetchTransactionsResponse(
-                    updateCreditCardAccountsAndTransactions(request, customerId));
+            Map<Account, List<Transaction>> transactions =
+                    updateCreditCardAccountsAndTransactions(request, customerId);
+            logUninitializedCapabilities(
+                    new ArrayList<>(transactions.keySet()), "creditCard transactions");
+            return new FetchTransactionsResponse(transactions);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -385,7 +437,9 @@ public class SEBApiAgent extends AbstractAgent
     @Override
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
         try {
-            return new FetchInvestmentAccountsResponse(updateInvestmentAccounts());
+            Map<Account, AccountFeatures> accounts = updateInvestmentAccounts();
+            logUninitializedCapabilities(new ArrayList<>(accounts.keySet()), "investment");
+            return new FetchInvestmentAccountsResponse(accounts);
         } catch (Exception e) {
             // Don't fail the whole refresh just because we failed updating investment data but log
             // error.
@@ -402,7 +456,9 @@ public class SEBApiAgent extends AbstractAgent
     @Override
     public FetchLoanAccountsResponse fetchLoanAccounts() {
         try {
-            return new FetchLoanAccountsResponse(updateLoans(customerId));
+            Map<Account, AccountFeatures> accounts = updateLoans(customerId);
+            logUninitializedCapabilities(new ArrayList<>(accounts.keySet()), "loan");
+            return new FetchLoanAccountsResponse(accounts);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -415,7 +471,11 @@ public class SEBApiAgent extends AbstractAgent
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        return new FetchTransferDestinationsResponse(updateTransferDestinations(accounts));
+        Map<Account, List<TransferDestinationPattern>> transferDestinations =
+                updateTransferDestinations(accounts);
+        logUninitializedCapabilities(
+                new ArrayList<>(transferDestinations.keySet()), "transfer destinations");
+        return new FetchTransferDestinationsResponse(transferDestinations);
     }
 
     static {
