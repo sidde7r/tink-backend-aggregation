@@ -22,6 +22,12 @@ import org.bouncycastle.openssl.PEMParser;
  */
 public class CertificateUtils {
 
+    private static final String ERROR_COULD_NOT_FIND_CERT = "Couldn't find a certificate.";
+
+    private CertificateUtils() {
+        throw new AssertionError();
+    }
+
     /**
      * From qcStatement extension, extract the business scopes (AIS and/or PIS) that the cert is
      * capable of.
@@ -34,8 +40,8 @@ public class CertificateUtils {
             String base64EncodedCertificates) throws IOException {
         ArrayList<X509CertificateHolder> x509CertificateHolder =
                 getCertificateHolderFromBase64EncodedCert(base64EncodedCertificates);
-        if (x509CertificateHolder.size() == 0) {
-            throw new IllegalStateException("Couldn't find a certificate.");
+        if (x509CertificateHolder.isEmpty()) {
+            throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
         }
         List<CertificateBusinessScope> result = new ArrayList<>(2);
         String extensionContainingScope = getScopeInfoExtension(x509CertificateHolder.get(0));
@@ -60,8 +66,8 @@ public class CertificateUtils {
             String base64EncodedCertificates) throws CertificateException {
         ArrayList<X509Certificate> certs =
                 getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
-        if (certs.size() == 0) {
-            throw new IllegalStateException("Couldn't find a certificate.");
+        if (certs.isEmpty()) {
+            throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
         }
         return Base64.getEncoder().encodeToString(certs.get(0).getEncoded());
     }
@@ -77,8 +83,8 @@ public class CertificateUtils {
             throws CertificateException {
         ArrayList<X509Certificate> certs =
                 getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
-        if (certs.size() == 0) {
-            throw new IllegalStateException("Couldn't find a certificate.");
+        if (certs.isEmpty()) {
+            throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
         }
         PublicKey key = certs.get(0).getPublicKey();
         return Base64.getEncoder().encodeToString(key.getEncoded());
@@ -96,8 +102,8 @@ public class CertificateUtils {
             throws CertificateException {
         ArrayList<X509Certificate> certs =
                 getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
-        if (certs.size() == 0) {
-            throw new IllegalStateException("Couldn't find a certificate.");
+        if (certs.isEmpty()) {
+            throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
         }
         return certs.get(0).getSerialNumber().toString(radix);
     }
@@ -125,7 +131,7 @@ public class CertificateUtils {
         while ((crt = (X509CertificateHolder) reader.readObject()) != null) {
             certs.add(crt);
         }
-        if (certs.size() == 0) {
+        if (certs.isEmpty()) {
             throw new IllegalStateException("Couldn't find a certificate in the specified file.");
         }
         return certs;
