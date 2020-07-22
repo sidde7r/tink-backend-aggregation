@@ -5,7 +5,9 @@ import static java.util.Base64.getUrlEncoder;
 import static java.util.Locale.US;
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.Configuration.LOCALHOST;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys.PSD_2_AUTHORIZATION_HEADER;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys.PSU_IP_ADDRESS;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.GET;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.POST;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.PUT;
@@ -43,6 +45,7 @@ public class DkbAuthRequestsFactory {
         return getRequestBuilder(config.getBaseUrl() + urlPath)
                 .accept(APPLICATION_JSON_TYPE)
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(PSU_IP_ADDRESS, LOCALHOST)
                 .acceptLanguage(US);
     }
 

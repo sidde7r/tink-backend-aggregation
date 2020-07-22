@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -27,6 +28,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class DkbAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
+    private static final int DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES = 4;
+    private static final int MAX_DAYS_TO_FETCH_TRANSACTIONS = 89;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final ModuleDependenciesRegistry dependencyRegistry;
 
@@ -99,7 +102,11 @@ public final class DkbAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController<>(
+                                accountFetcher,
+                                DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES,
+                                MAX_DAYS_TO_FETCH_TRANSACTIONS,
+                                ChronoUnit.DAYS)));
     }
 
     @Override

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator;
 
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.MAX_CONSENT_VALIDITY_DAYS;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.AuthResult.SML;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -45,10 +44,6 @@ public class DkbAuthenticator implements PasswordAuthenticator {
 
     private void authenticateUser(String username, String password) throws AuthenticationException {
         AuthResult result = authenticate1stFactor(username, password);
-        log.info(
-                "Authentication result returnCode [{}] and actionCode [{}]",
-                result.getReturnCode(),
-                result.getActionCode());
         result = authenticate2ndFactor(result);
         processAuthenticationResult(result);
     }
@@ -67,13 +62,13 @@ public class DkbAuthenticator implements PasswordAuthenticator {
 
     private AuthResult authenticate2ndFactor(AuthResult previousResult)
             throws AuthenticationException {
-        if (previousResult.isAuthenticationFinished()
-                && !SML.equals(previousResult.getAuthTypeSelected())) {
-            log.info(
-                    "Authentication process is finished with returnCode: [{}]",
-                    previousResult.getReturnCode());
+        if (previousResult.isAuthenticationFinished()) {
             return previousResult;
         }
+        log.info(
+                "Authentication process is not finished. Authentication result returnCode [{}] and actionCode [{}]",
+                previousResult.getReturnCode(),
+                previousResult.getActionCode());
         AuthResult result = select2ndFactorMethodIfNeeded(previousResult);
         return provide2ndFactorCode(result);
     }
@@ -94,8 +89,7 @@ public class DkbAuthenticator implements PasswordAuthenticator {
 
     private AuthResult provide2ndFactorCode(AuthResult previousResult)
             throws AuthenticationException {
-        if (previousResult.isAuthenticationFinished()
-                && !SML.equals(previousResult.getAuthTypeSelected())) {
+        if (previousResult.isAuthenticationFinished()) {
             log.info(
                     "Authentication process is finished. Authentication result returnCode [{}] and actionCode [{}]",
                     previousResult.getReturnCode(),
@@ -108,8 +102,7 @@ public class DkbAuthenticator implements PasswordAuthenticator {
 
     private String getTanByAuthTypeSelected(AuthResult previousResult)
             throws SupplementalInfoException {
-        if (SML.equals(previousResult.getAuthTypeSelected())
-                && previousResult.getChallenge().contains("#")) {
+        if (previousResult.getChallenge().contains("####")) {
             return previousResult
                     .getChallenge()
                     .substring(0, previousResult.getChallenge().indexOf("#"));
