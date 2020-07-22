@@ -169,7 +169,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     signableOperation,
                     e.getSignableOperationStatus(),
                     e.getUserMessage(),
-                    e.getInternalStatus());
+                    // This is temporary to check if we propagate internal status
+                    "testInternalStatus");
 
             return AgentWorkerCommandResult.ABORT;
 
