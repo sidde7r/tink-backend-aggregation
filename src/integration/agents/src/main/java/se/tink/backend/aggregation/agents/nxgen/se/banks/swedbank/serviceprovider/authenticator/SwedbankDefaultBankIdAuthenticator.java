@@ -143,9 +143,19 @@ public class SwedbankDefaultBankIdAuthenticator
 
     private void completeBankIdLogin(CollectBankIdResponse collectBankIdResponse)
             throws AuthenticationException {
-        // theory: if we request too soon, we might get SESSION_INVALIDATED
-        Uninterruptibles.sleepUninterruptibly(500, TimeUnit.MILLISECONDS);
-        apiClient.completeAuthentication(collectBankIdResponse.getLinks().getNextOrThrow());
+        final LinkEntity nextLink = collectBankIdResponse.getLinks().getNextOrThrow();
+        try {
+            apiClient.completeAuthentication(nextLink);
+        } catch (HttpResponseException hre) {
+            // wait and retry once on SESSION_INVALIDATED error
+            if (isSessionInvalidatedError(hre.getResponse())) {
+                log.warn("Got session invalidated, retrying.");
+                Uninterruptibles.sleepUninterruptibly(900, TimeUnit.MILLISECONDS);
+                apiClient.completeAuthentication(nextLink);
+                return;
+            }
+            throw hre;
+        }
     }
 
     private InitBankIdResponse initBankId(String ssn) throws BankIdException {
@@ -163,5 +173,11 @@ public class SwedbankDefaultBankIdAuthenticator
 
             throw hre;
         }
+    }
+
+    private boolean isSessionInvalidatedError(HttpResponse response) {
+        return response.getStatus() == HttpStatus.SC_UNAUTHORIZED
+                && response.getBody(ErrorResponse.class)
+                        .hasErrorCode(SwedbankBaseConstants.BankErrorMessage.SESSION_INVALIDATED);
     }
 }
