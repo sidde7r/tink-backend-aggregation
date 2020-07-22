@@ -11,11 +11,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.fetcher.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.fetcher.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.storage.N26Storage;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AllArgsConstructor
 public class N26ApiClient {
@@ -54,6 +58,16 @@ public class N26ApiClient {
                         .queryParam(PAGE_OFFSET, offset);
 
         return createRequestWithToken(url).get(AccountTransactionsResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
+        return createRequest(createUrl(Url.TRANSFERS))
+                .post(CreatePaymentResponse.class, SerializationUtils.serializeToString(request));
+    }
+
+    public GetPaymentResponse getPayment(String transferId) {
+        final URL url = createUrl(Url.TRANSFER_DETAILS).parameter(UrlParam.TRANSFER_ID, transferId);
+        return createRequest(url).get(GetPaymentResponse.class);
     }
 
     private RequestBuilder createRequestWithToken(URL url) {
