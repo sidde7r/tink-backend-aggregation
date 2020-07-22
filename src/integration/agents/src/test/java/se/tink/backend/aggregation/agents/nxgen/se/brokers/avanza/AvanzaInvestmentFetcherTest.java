@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.InvestmentAccountPortfolioResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.InvestmentTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountsOverviewResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -37,6 +38,7 @@ public class AvanzaInvestmentFetcherTest {
 
         AvanzaApiClient apiClient = mock(AvanzaApiClient.class);
         TemporaryStorage temporaryStorage = new TemporaryStorage();
+        LocalDateTimeSource localDateTimeSource = mock(LocalDateTimeSource.class);
         when(apiClient.fetchAccounts(eq(AUTH_SESSION_ID)))
                 .thenReturn(
                         loadTestResponse("account-overview.json", AccountsOverviewResponse.class));
@@ -49,7 +51,8 @@ public class AvanzaInvestmentFetcherTest {
                 .thenReturn(new InvestmentTransactionsResponse());
 
         AvanzaInvestmentFetcher fetcher =
-                new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage);
+                new AvanzaInvestmentFetcher(
+                        apiClient, authSessionStorage, temporaryStorage, localDateTimeSource);
         InvestmentAccount account = fetcher.fetchAccounts().iterator().next();
 
         assertThat(account.getExactBalance()).isEqualTo(449894.55);

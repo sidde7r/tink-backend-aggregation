@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 
 import com.google.inject.Inject;
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.session.AvanzaSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -46,6 +48,7 @@ public final class AvanzaAgent extends NextGenerationAgent
     private final InvestmentRefreshController investmentRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final LocalDateTimeSource localDateTimeSource;
 
     @Inject
     public AvanzaAgent(AgentComponentProvider componentProvider) {
@@ -56,7 +59,7 @@ public final class AvanzaAgent extends NextGenerationAgent
         this.authSessionStorage = new AvanzaAuthSessionStorage();
         this.apiClient = new AvanzaApiClient(client, authSessionStorage);
         this.temporaryStorage = new TemporaryStorage();
-
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.investmentRefreshController = constructInvestmentRefreshController();
 
         this.transactionalAccountRefreshController =
@@ -118,12 +121,14 @@ public final class AvanzaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController<>(
+                                accountFetcher, 3, 3, ChronoUnit.MONTHS, localDateTimeSource)));
     }
 
     private InvestmentRefreshController constructInvestmentRefreshController() {
         final AvanzaInvestmentFetcher investmentFetcher =
-                new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage);
+                new AvanzaInvestmentFetcher(
+                        apiClient, authSessionStorage, temporaryStorage, localDateTimeSource);
 
         return new InvestmentRefreshController(
                 metricRefreshController,
@@ -131,7 +136,8 @@ public final class AvanzaAgent extends NextGenerationAgent
                 investmentFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(investmentFetcher)));
+                        new TransactionDatePaginationController<>(
+                                investmentFetcher, 3, 3, ChronoUnit.MONTHS, localDateTimeSource)));
     }
 
     @Override
