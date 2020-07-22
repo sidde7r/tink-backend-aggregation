@@ -34,10 +34,6 @@ public class AgentConfiguration<T> implements ClientConfiguration {
         return redirectUrl;
     }
 
-    public boolean isProviderSpecificConfigurationNull() {
-        return providerSpecificConfiguration == null;
-    }
-
     public boolean isRedirectUrlNullOrEmpty() {
         return Strings.emptyToNull(redirectUrl) == null;
     }
@@ -50,22 +46,22 @@ public class AgentConfiguration<T> implements ClientConfiguration {
 
         public Builder() {}
 
-        public Builder setProviderSpecificConfiguration(T providerSpecificConfiguration) {
+        public Builder<T> setProviderSpecificConfiguration(T providerSpecificConfiguration) {
             this.providerSpecificConfiguration = providerSpecificConfiguration;
             return this;
         }
 
-        public Builder setRedirectUrl(String redirectUrl) {
+        public Builder<T> setRedirectUrl(String redirectUrl) {
             this.redirectUrl = redirectUrl;
             return this;
         }
 
-        public Builder setQwac(String qwac) {
+        public Builder<T> setQwac(String qwac) {
             this.qwac = qwac;
             return this;
         }
 
-        public Builder setQsealc(String qsealc) {
+        public Builder<T> setQsealc(String qsealc) {
             this.qsealc = qsealc;
             return this;
         }
