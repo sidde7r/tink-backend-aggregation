@@ -10,17 +10,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class UpcomingTransactionsEntity {
-    private String id;
     private String description;
     private BigDecimal amount;
     private String date;
-    private String type;
-    private String typeAsString;
-    private TransferInfoEntity transferInfo;
-    // `paymentInfo` is null - cannot define it!
-    // `loanInfo` is null - cannot define it
-    private DirectDebitInfoEntity directDebitInfo;
-    // `statusInfo` is null - cannot define it!
 
     public String getDate() {
         return date;

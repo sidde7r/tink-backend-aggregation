@@ -1,0 +1,261 @@
+
+REQUEST 1
+GET https://mobil.lansforsakringar.se/appoutlet/startpage/getengagements/4.0
+Accept: application/json
+
+RESPONSE 1 SET BANK_ID_POLL01
+401
+Date: Thu, 09 Apr 2020 12:27:59 GMT
+Error-Message: Tyv??rr har det uppst??tt ett tekniskt fel. F??rs??k igen och kontakta oss om problemet kvarst??r.
+Encoded-Error-Message: VHl2w6RyciBoYXIgZGV0IHVwcHN0w6V0dCBldHQgdGVrbmlza3QgZmVsLiBGw7Zyc8O2ayBpZ2VuIG9jaCBrb250YWt0YSBvc3Mgb20gcHJvYmxlbWV0IGt2YXJzdMOlci4=
+Error-Code: 4930
+Content-Type: application/json
+Content-Length: 27
+Connection: close
+
+{"encodederrorCode":"4930"}
+
+REQUEST 2
+POST https://mobil.lansforsakringar.se/appoutlet/security/user/bankid/authenticate
+Accept: application/json
+Content-Type: application/json
+
+{"ssn":"197101019876"}
+
+RESPONSE 2
+200
+Date: Thu, 09 Apr 2020 12:27:59 GMT
+Content-Type: application/json
+Content-Length: 52
+Connection: close
+
+{"reference":"6241dbfd-6b57-45b4-ab18-d1671531aefc"}
+
+REQUEST 3 MATCH BANK_ID_POLL01
+POST https://mobil.lansforsakringar.se/appoutlet/security/user/bankid/login/3.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"ssn":"197101019876","reference":"6241dbfd-6b57-45b4-ab18-d1671531aefc","acceptingUserTerms":false}
+
+RESPONSE 3 SET BANK_ID_POLL02
+401
+Date: Thu, 09 Apr 2020 12:28:00 GMT
+Error-Code: 00013
+Content-Type: text/html;charset=utf-8
+Content-Length: 1064
+Connection: close
+
+<html><head><title>JBoss Web/7.4.10.Final-redhat-1 - JBWEB000064: Error report</title><style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style> </head><body><h1>JBWEB000065: HTTP Status 401 - </h1><HR size="1" noshade="noshade"><p><b>JBWEB000309: type</b> JBWEB000067: Status report</p><p><b>JBWEB000068: message</b> <u></u></p><p><b>JBWEB000069: description</b> <u>JBWEB000121: This request requires HTTP authentication.</u></p><HR size="1" noshade="noshade"><h3>JBoss Web/7.4.10.Final-redhat-1</h3></body></html>
+
+REQUEST 6 MATCH BANK_ID_POLL02
+POST https://mobil.lansforsakringar.se/appoutlet/security/user/bankid/login/3.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"ssn":"197101019876","reference":"6241dbfd-6b57-45b4-ab18-d1671531aefc","acceptingUserTerms":false}
+
+RESPONSE 6 SET LOGGED_IN
+200
+Date: Thu, 09 Apr 2020 12:28:06 GMT
+Content-Type: application/json
+Content-Length: 287
+Connection: close
+
+{"session":{"ssn":"197101019876","name":"FirstName LastName","ticket":"38c5cf1a-cd12-4026-ba3d-1f4cd781f75c","lfCompanyBelonging":"28","ticketLifetime":1200000,"pinPadAvailable":false,"enterpriseServicesPrimarySession":"8ac9178b-af16-49e8-ae9f-adf3cc15bf6e.ulfpa317v20009"},"terms":null}
+
+REQUEST 7 MATCH LOGGED_IN
+GET https://mobil.lansforsakringar.se/appoutlet/startpage/getengagements/4.0
+Accept: application/json
+
+RESPONSE 7
+200
+Date: Thu, 09 Apr 2020 12:28:07 GMT
+Pragma: No-cache
+Cache-Control: no-cache
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Content-Length: 501
+Connection: close
+
+{"mainAndCoAccounts":[{"accountNumber":"123456","balance":1336.0,"accountName":"L?genhetskonto","clearingNumber":"0","savingsGoal":null,"isSelectedStartPageEngagement":true,"localAccount":false,"bankName":null,"type":"CHECKING","savedRecipient":false,"ledger":"DEPOSIT","savingsGoalAllowed":false,"fixedRateAccount":false,"accountInfoText":null,"relationToAccount":"CO_ACCOUNT_HOLDER","transferFrom":true,"transferTo":true,"youthAccount":false}],"dispositionAccounts":[],"cards":[],"errorMessages":[]}
+
+REQUEST 8
+GET https://mobil.lansforsakringar.se/appoutlet/card/list/5.0
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+Date: Thu, 09 Apr 2020 12:28:08 GMT
+Pragma: No-cache
+Cache-Control: no-cache
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Content-Length: 12
+Connection: close
+
+{"cards":[]}
+
+REQUEST 9
+GET https://mobil.lansforsakringar.se/appoutlet/loan/loans/withtotal
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 9
+400
+Date: Thu, 09 Apr 2020 12:28:08 GMT
+Pragma: No-cache
+Cache-Control: no-cache
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Error-Message: Det ??r f??r n??rvarande inte m??jligt att se l??n.
+Encoded-Error-Message: RGV0IMOkciBmw7ZyIG7DpHJ2YXJhbmRlIGludGUgbcO2amxpZ3QgYXR0IHNlIGzDpW4u
+Error-Code: 20221
+Content-Type: text/html;charset=utf-8
+Content-Length: 1081
+Connection: close
+
+<html><head><title>JBoss Web/7.4.10.Final-redhat-1 - JBWEB000064: Error report</title><style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style> </head><body><h1>JBWEB000065: HTTP Status 400 - </h1><HR size="1" noshade="noshade"><p><b>JBWEB000309: type</b> JBWEB000067: Status report</p><p><b>JBWEB000068: message</b> <u></u></p><p><b>JBWEB000069: description</b> <u>JBWEB000120: The request sent by the client was syntactically incorrect.</u></p><HR size="1" noshade="noshade"><h3>JBoss Web/7.4.10.Final-redhat-1</h3></body></html>
+
+REQUEST 10
+POST https://mobil.lansforsakringar.se/es/lifeinsurance/getengagements/1.0
+Accept: application/json
+Content-Type: application/json
+
+{"customerId":"197101019876","requestedView":"PENSION","responseControl":{"profile":{"profileType":"CUSTOMER"}}}
+
+RESPONSE 10
+200
+Date: Thu, 09 Apr 2020 12:28:08 GMT
+Server: N/A
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-cache, no-store, private, proxy-revalidate
+Pragma: no-cache, no-store, private, proxy-revalidate
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{"id":null,"response":{"hasSavingEngagement":null,"hasProtectionEngagement":null,"engagements":[],"livSystemOpen":true},"errors":null}
+
+REQUEST 11
+GET https://mobil.lansforsakringar.se/appoutlet/pension/overview/withtotal/2.0
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 11
+200
+Date: Thu, 09 Apr 2020 12:28:08 GMT
+Pragma: No-cache
+Cache-Control: no-cache
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Content-Length: 204
+Connection: close
+
+{"ipsPensionsResponseModel":{"ipsPensions":[],"error":null},"livPensionsResponseModel":{"privatePensions":[],"occupationalPensions":[],"capitalInsurances":[],"error":null},"footNotes":{},"totalValue":0.0}
+
+REQUEST 12
+POST https://mobil.lansforsakringar.se/es/payment/geteinvoices/1.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"responseControl":{"profile":{"profileType":"CUSTOMER","customerId":"197101019876"},"filter":{"includes":[{"invoiceType":null,"eInvoiceStatuses":["NEW"],"paymentType":null}]},"pager":{"startIndex":0,"size":20}},"customerId":"197101019876"}
+
+RESPONSE 12
+200
+Date: Thu, 09 Apr 2020 12:28:09 GMT
+Server: N/A
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-cache, no-store, private, proxy-revalidate
+Pragma: no-cache, no-store, private, proxy-revalidate
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{"id":null,"response":{"numberOfEInvoices":0,"eInvoices":[],"moreExists":false},"errors":null}
+
+REQUEST 13
+GET https://mobil.lansforsakringar.se/appoutlet/payment/paymentaccount
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 13
+400
+Date: Thu, 09 Apr 2020 12:28:09 GMT
+Pragma: No-cache
+Cache-Control: no-cache
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Error-Message: Du saknar den h??r tj??nsten. Kontakta oss f??r att f?? hj??lp att komma ig??ng.
+Encoded-Error-Message: RHUgc2FrbmFyIGRlbiBow6RyIHRqw6Ruc3Rlbi4gS29udGFrdGEgb3NzIGbDtnIgYXR0IGbDpSBoasOkbHAgYXR0IGtvbW1hIGlnw6VuZy4=
+Error-Code: 1209201
+Content-Type: text/html;charset=utf-8
+Content-Length: 1081
+Connection: close
+
+<html><head><title>JBoss Web/7.4.10.Final-redhat-1 - JBWEB000064: Error report</title><style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style> </head><body><h1>JBWEB000065: HTTP Status 400 - </h1><HR size="1" noshade="noshade"><p><b>JBWEB000309: type</b> JBWEB000067: Status report</p><p><b>JBWEB000068: message</b> <u></u></p><p><b>JBWEB000069: description</b> <u>JBWEB000120: The request sent by the client was syntactically incorrect.</u></p><HR size="1" noshade="noshade"><h3>JBoss Web/7.4.10.Final-redhat-1</h3></body></html>
+
+REQUEST 14
+GET https://mobil.lansforsakringar.se/appoutlet/account/transferrable/2.0?direction=from
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 14
+400
+Date: Thu, 09 Apr 2020 12:28:09 GMT
+Pragma: No-cache
+Cache-Control: no-cache
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Error-Message: Du saknar den h??r banktj??nsten. Kontakta oss eller logga in p?? lansforsakringar.se.
+Encoded-Error-Message: RHUgc2FrbmFyIGRlbiBow6RyIGJhbmt0asOkbnN0ZW4uIEtvbnRha3RhIG9zcyBlbGxlciBsb2dnYSBpbiBww6UgbGFuc2ZvcnNha3Jpbmdhci5zZS4=
+Error-Code: 506201
+Content-Type: text/html;charset=utf-8
+Content-Length: 1081
+Connection: close
+
+<html><head><title>JBoss Web/7.4.10.Final-redhat-1 - JBWEB000064: Error report</title><style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style> </head><body><h1>JBWEB000065: HTTP Status 400 - </h1><HR size="1" noshade="noshade"><p><b>JBWEB000309: type</b> JBWEB000067: Status report</p><p><b>JBWEB000068: message</b> <u></u></p><p><b>JBWEB000069: description</b> <u>JBWEB000120: The request sent by the client was syntactically incorrect.</u></p><HR size="1" noshade="noshade"><h3>JBoss Web/7.4.10.Final-redhat-1</h3></body></html>
+
+REQUEST 15
+POST https://mobil.lansforsakringar.se/appoutlet/account/upcoming/7.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+Content-Length: 26
+
+{"accountNumber":"123456"}
+
+RESPONSE 15
+200
+Content-Type: application/json
+Content-Length: 813
+Connection: close
+
+{"upcomingTransactions":[{"id":"232455503-25","description":"SKARPN?CKS","amount":-1478.0,"date":"2020-02-28","type":"PAYMENT","typeAsString":"BETALNING","directDebitInfo":null},{"id":"232455857-25","description":"ENERGIKUNDSERVICE SVERIGE","amount":-2235.0,"date":"2020-02-28","type":"PAYMENT","typeAsString":"BETALNING","directDebitInfo":null},{"id":"233161778-25","description":"desc","amount":-429.0,"date":"2020-02-28","type":"PAYMENT","typeAsString":"BETALNING","directDebitInfo":null},{"id":"221720580-25","description":"TR?NGSELSKATT","amount":-22.0,"date":"2020-03-02","type":"PAYMENT","typeAsString":"BETALNING","directDebitInfo":null}],"errorMessages":[],"sumOfUpcomingTransactions":-4164.0,"currentMonth":{"year":"2020","month":"Februari","sumUpcomingTransactions":-4142.0,"currentDate":"2020-02-13"}}
+
+REQUEST 16
+POST https://mobil.lansforsakringar.se/es/deposit/gettransactions/3.0
+Accept: application/json
+Content-Type: application/json
+Content-Length: 225
+
+
+{"responseControl":{"profile":{"profileType":"CUSTOMER","customerId":"197101019876"},"filter":{"includeFilter":{"transactionStatus":"BOOKED"}},"pager":{"size":0,"page":0}},"accountNumber":"123456","customerId":"197101019876"}
+
+RESPONSE 16
+200
+Content-Type: application/json
+Content-Length: 362
+X-Aggregator: Tink Testing
+Connection: close
+
+{"id":null,"response":{"moreExists":false,"transactions":[{"id":"200309042-1516","text":"Kortk?p","amount":{"currency":"SEK","value":-32.15},"accountingDate":"2020-02-11","transactionDate":"2020-02-10","currencyDate":"2020-02-11","unconstrainedText":"Amazon","balance":690.97,"marketingCode":null,"transactionType":"CAR","upcomingDeposit":false}]},"errors":null}
+
+REQUEST 17
+GET https://mobil.lansforsakringar.se/appoutlet/depot/investmentsavings/3.0
+Accept: application/json
+
+RESPONSE 17
+200
+Content-Type: application/json
+
+{}

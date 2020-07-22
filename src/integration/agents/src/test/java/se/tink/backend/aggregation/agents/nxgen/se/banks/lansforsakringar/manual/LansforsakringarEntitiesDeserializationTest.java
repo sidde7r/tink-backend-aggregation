@@ -1,14 +1,14 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual;
 
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarTestData.ACCOUNTS;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarTestData.CARDS_LIST;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarTestData.CARD_TRANSACTIONS;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarTestData.CREDIT_CARD_LIST;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarTestData.MORTGAGE_LOAN_WITH_CO_APPLICANT;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarTestData.PENSION_ENGAGEMENTS;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarTestData.PENSION_OVERVIEW;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarTestData.TRANSACTIONS;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarTestData.UPCOMING_TRANSACTIONS;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual.LansforsakringarTestData.ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual.LansforsakringarTestData.CARDS_LIST;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual.LansforsakringarTestData.CARD_TRANSACTIONS;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual.LansforsakringarTestData.CREDIT_CARD_LIST;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual.LansforsakringarTestData.MORTGAGE_LOAN_WITH_CO_APPLICANT;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual.LansforsakringarTestData.PENSION_ENGAGEMENTS;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual.LansforsakringarTestData.PENSION_OVERVIEW;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual.LansforsakringarTestData.TRANSACTIONS;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual.LansforsakringarTestData.UPCOMING_TRANSACTIONS;
 
 import java.math.BigDecimal;
 import java.util.stream.Collectors;
@@ -116,6 +116,6 @@ public class LansforsakringarEntitiesDeserializationTest {
                 SerializationUtils.deserializeFromString(
                         CARD_TRANSACTIONS, FetchCardTransactionsResponse.class);
         Transaction first = fctr.getTinkTransactions().stream().findFirst().get();
-        Assert.assertEquals(BigDecimal.valueOf(1023.0), first.getExactAmount().getExactValue());
+        Assert.assertEquals(BigDecimal.valueOf(-1023.0), first.getExactAmount().getExactValue());
     }
 }

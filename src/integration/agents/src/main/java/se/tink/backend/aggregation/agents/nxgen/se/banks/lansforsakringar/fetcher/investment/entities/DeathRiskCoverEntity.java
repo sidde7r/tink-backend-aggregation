@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class DeathRiskCoverEntity {
-    private AgeEntity paymentPeriod;
     private String paymentType;
     private double insuranceAmount;
     private String insuranceAmountType;

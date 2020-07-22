@@ -243,14 +243,12 @@ public class LansforsakringarApiClient {
                 .get(FetchInstrumentDetailsResponse.class);
     }
 
-    // TODO: consider accepting html response in case request fails but response status is 200
     public void executeValidateTransfer(DirectTransferRequest request) {
         getBaseRequest(Urls.EXECUTE_DIRECT_TRANSFER_VALIDATE)
                 .body(request, MediaType.APPLICATION_JSON_TYPE)
                 .post();
     }
 
-    // TODO: consider accepting html response in case request fails but response status is 200
     public void executeDirectTransfer(DirectTransferRequest request) {
         getBaseRequest(Urls.EXECUTE_DIRECT_TRANSFER)
                 .body(request, MediaType.APPLICATION_JSON_TYPE)

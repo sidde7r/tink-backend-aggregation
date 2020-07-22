@@ -51,7 +51,6 @@ public class TransferAccountsEntity implements GeneralAccountEntity {
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        // TODO: Should it consider localAccount?
         return new SwedishIdentifier(accountNumber);
     }
 
