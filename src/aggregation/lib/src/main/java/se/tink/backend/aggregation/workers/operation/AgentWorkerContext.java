@@ -331,7 +331,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return accountDataCache;
     }
 
-    private void shouldAggregateDataForAccount(Account account) {
+    private void sendPsd2PaymentAccountEvents(Account account) {
         try {
             // TODO: extend filtering by using payment classification information
             // (For now we discard the result as in the beginning we just want to collect metrics)
@@ -461,6 +461,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         accountDataCache.setProcessedTinkAccountId(
                 updatedAccount.getBankId(), updatedAccount.getId());
+
+        // This is temporary.
+        sendPsd2PaymentAccountEvents(account);
 
         return updatedAccount;
     }
