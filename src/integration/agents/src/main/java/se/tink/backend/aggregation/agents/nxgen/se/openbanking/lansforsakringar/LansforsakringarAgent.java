@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.creditcard.LansforsakringarCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.LansforsakringarRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.ServiceBlockedFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -67,6 +68,10 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new ServiceBlockedFilter(systemUpdater, credentials));
+        client.addFilter(
+                new LansforsakringarRetryFilter(
+                        LansforsakringarConstants.MAX_NUM_RETRIES,
+                        LansforsakringarConstants.RETRY_SLEEP_MILLIS_SECONDS));
     }
 
     @Override
