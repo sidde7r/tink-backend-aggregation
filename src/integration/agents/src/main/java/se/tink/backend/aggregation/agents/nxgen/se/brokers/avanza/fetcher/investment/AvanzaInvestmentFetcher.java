@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -24,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -39,14 +38,17 @@ public class AvanzaInvestmentFetcher
     private final AvanzaApiClient apiClient;
     private final AvanzaAuthSessionStorage authSessionStorage;
     private final TemporaryStorage temporaryStorage;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public AvanzaInvestmentFetcher(
             AvanzaApiClient apiClient,
             AvanzaAuthSessionStorage authSessionStorage,
-            TemporaryStorage temporaryStorage) {
+            TemporaryStorage temporaryStorage,
+            LocalDateTimeSource localDateTimeSource) {
         this.apiClient = apiClient;
         this.authSessionStorage = authSessionStorage;
         this.temporaryStorage = temporaryStorage;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     @Override
@@ -79,7 +81,7 @@ public class AvanzaInvestmentFetcher
             HolderName holder, SessionAccountPair sessionAccount) {
         final String authSession = sessionAccount.getAuthSession();
         final String account = sessionAccount.getAccountId();
-        final String date = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+        final String date = localDateTimeSource.now().toLocalDate().toString();
 
         PortfolioEntity portfolio =
                 apiClient.fetchInvestmentAccountPortfolio(account, authSession).getPortfolio();

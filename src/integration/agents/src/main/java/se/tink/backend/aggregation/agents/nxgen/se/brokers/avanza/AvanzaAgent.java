@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 
+import com.google.inject.Inject;
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -11,14 +13,14 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.AvanzaBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.AvanzaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.loan.AvanzaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.AvanzaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.session.AvanzaSessionHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -31,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 public final class AvanzaAgent extends NextGenerationAgent
@@ -47,17 +48,18 @@ public final class AvanzaAgent extends NextGenerationAgent
     private final InvestmentRefreshController investmentRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final LocalDateTimeSource localDateTimeSource;
 
-    public AvanzaAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public AvanzaAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
 
         configureHttpClient(client);
 
         this.authSessionStorage = new AvanzaAuthSessionStorage();
         this.apiClient = new AvanzaApiClient(client, authSessionStorage);
         this.temporaryStorage = new TemporaryStorage();
-
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.investmentRefreshController = constructInvestmentRefreshController();
 
         this.transactionalAccountRefreshController =
@@ -119,12 +121,14 @@ public final class AvanzaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController<>(
+                                accountFetcher, 3, 3, ChronoUnit.MONTHS, localDateTimeSource)));
     }
 
     private InvestmentRefreshController constructInvestmentRefreshController() {
         final AvanzaInvestmentFetcher investmentFetcher =
-                new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage);
+                new AvanzaInvestmentFetcher(
+                        apiClient, authSessionStorage, temporaryStorage, localDateTimeSource);
 
         return new InvestmentRefreshController(
                 metricRefreshController,
@@ -132,7 +136,8 @@ public final class AvanzaAgent extends NextGenerationAgent
                 investmentFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(investmentFetcher)));
+                        new TransactionDatePaginationController<>(
+                                investmentFetcher, 3, 3, ChronoUnit.MONTHS, localDateTimeSource)));
     }
 
     @Override
