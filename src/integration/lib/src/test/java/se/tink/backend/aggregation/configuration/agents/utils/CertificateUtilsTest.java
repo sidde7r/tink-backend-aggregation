@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.configuration.agents.utils;
 
 import static se.tink.backend.aggregation.configuration.agents.utils.CertificateBusinessScope.AIS;
 
+import java.io.IOException;
+import java.security.cert.CertificateException;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Assert;
@@ -49,7 +51,7 @@ public class CertificateUtilsTest {
                     + "Q2hvTlQyZXVQVCs0QnFmbVVEcnJzZEovS1c5VENMUT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0=";
 
     @Test
-    public void testGetPublicKey() throws Exception {
+    public void testGetPublicKey() throws CertificateException {
         final String EXPECTED_PUBLIC_KEY_PEM =
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq"
                         + "gyPie5X+WfyvoJM2rdMa175zA7lg/Y2hLLXEUTgTCkE1GkNtBNRQZ3j32WIF6lA8x42jI3RH3cGi3P2r5YwbGFDjsXV"
@@ -60,14 +62,14 @@ public class CertificateUtilsTest {
     }
 
     @Test
-    public void testGetScopes() throws Exception {
+    public void testGetScopes() throws IOException {
         List<CertificateBusinessScope> businessScopeFromFromCertificate =
                 CertificateUtils.getBusinessScopeFromCertificate(TEST_CERT);
         Assert.assertEquals(Collections.singletonList(AIS), businessScopeFromFromCertificate);
     }
 
     @Test
-    public void testGetDerBase64() throws Exception {
+    public void testGetDerBase64() throws CertificateException {
         final String expectedResult =
                 "MIIGKjCCBRKgAwIBAgIEWf+fTDANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQj"
                         + "EUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMjAwMzI1MT"
@@ -100,7 +102,7 @@ public class CertificateUtilsTest {
     }
 
     @Test
-    public void testGetSN() throws Exception {
+    public void testGetSN() throws CertificateException {
         final String expectedSn = "1509924684";
         final String expectedSnHex = "59ff9f4c";
         String sn = CertificateUtils.getSerialNumber(TEST_CERT, 10);
