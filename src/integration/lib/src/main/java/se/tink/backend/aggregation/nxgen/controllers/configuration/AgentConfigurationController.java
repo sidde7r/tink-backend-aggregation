@@ -272,7 +272,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                         .map(AgentConfiguration::getQsealc)
                         .orElse("");
 
-        // TODO TPA608, remove the logger after this is finished.
+        // TPA608, remove the logger after this is finished.
         log.info(
                 "Got qwac "
                         + qwac
