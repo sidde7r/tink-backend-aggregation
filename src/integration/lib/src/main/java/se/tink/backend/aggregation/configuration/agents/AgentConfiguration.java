@@ -10,6 +10,16 @@ public class AgentConfiguration<T> implements ClientConfiguration {
 
     private T providerSpecificConfiguration;
     @JsonProperty private String redirectUrl;
+    @JsonProperty private String qwac;
+    @JsonProperty private String qsealc;
+
+    public String getQwac() {
+        return qwac;
+    }
+
+    public String getQsealc() {
+        return qsealc;
+    }
 
     public T getProviderSpecificConfiguration() {
         Preconditions.checkNotNull(
@@ -24,27 +34,35 @@ public class AgentConfiguration<T> implements ClientConfiguration {
         return redirectUrl;
     }
 
-    public boolean isProviderSpecificConfigurationNull() {
-        return providerSpecificConfiguration == null ? true : false;
-    }
-
     public boolean isRedirectUrlNullOrEmpty() {
-        return Strings.emptyToNull(redirectUrl) == null ? true : false;
+        return Strings.emptyToNull(redirectUrl) == null;
     }
 
     public static class Builder<T> {
         private T providerSpecificConfiguration;
         private String redirectUrl;
+        private String qwac;
+        private String qsealc;
 
         public Builder() {}
 
-        public Builder setProviderSpecificConfiguration(T providerSpecificConfiguration) {
+        public Builder<T> setProviderSpecificConfiguration(T providerSpecificConfiguration) {
             this.providerSpecificConfiguration = providerSpecificConfiguration;
             return this;
         }
 
-        public Builder setRedirectUrl(String redirectUrl) {
+        public Builder<T> setRedirectUrl(String redirectUrl) {
             this.redirectUrl = redirectUrl;
+            return this;
+        }
+
+        public Builder<T> setQwac(String qwac) {
+            this.qwac = qwac;
+            return this;
+        }
+
+        public Builder<T> setQsealc(String qsealc) {
+            this.qsealc = qsealc;
             return this;
         }
 
@@ -52,6 +70,8 @@ public class AgentConfiguration<T> implements ClientConfiguration {
             AgentConfiguration<T> agentConfiguration = new AgentConfiguration<>();
             agentConfiguration.providerSpecificConfiguration = this.providerSpecificConfiguration;
             agentConfiguration.redirectUrl = this.redirectUrl;
+            agentConfiguration.qwac = this.qwac;
+            agentConfiguration.qsealc = this.qsealc;
             return agentConfiguration;
         }
     }

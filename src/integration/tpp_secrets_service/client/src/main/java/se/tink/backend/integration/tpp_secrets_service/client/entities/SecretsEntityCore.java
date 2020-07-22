@@ -8,6 +8,16 @@ public class SecretsEntityCore {
     private Map<String, String> secrets;
     private List<String> redirectUrls;
     private List<String> scopes;
+    private String qwac;
+    private String qsealc;
+
+    public String getQwac() {
+        return qwac;
+    }
+
+    public String getQsealc() {
+        return qsealc;
+    }
 
     public Map<String, String> getSecrets() {
         return secrets;
@@ -26,6 +36,8 @@ public class SecretsEntityCore {
         private Map<String, String> secrets;
         private List<String> redirectUrls;
         private List<String> scopes;
+        private String qwac;
+        private String qsealc;
 
         public Builder() {}
 
@@ -44,11 +56,23 @@ public class SecretsEntityCore {
             return this;
         }
 
+        public Builder setQwac(String qwac) {
+            this.qwac = qwac;
+            return this;
+        }
+
+        public Builder setQsealc(String qsealc) {
+            this.qsealc = qsealc;
+            return this;
+        }
+
         public SecretsEntityCore build() {
             SecretsEntityCore secretsEntityCore = new SecretsEntityCore();
             secretsEntityCore.secrets = this.secrets;
             secretsEntityCore.redirectUrls = this.redirectUrls;
             secretsEntityCore.scopes = this.scopes;
+            secretsEntityCore.qwac = this.qwac;
+            secretsEntityCore.qsealc = this.qsealc;
             return secretsEntityCore;
         }
     }
