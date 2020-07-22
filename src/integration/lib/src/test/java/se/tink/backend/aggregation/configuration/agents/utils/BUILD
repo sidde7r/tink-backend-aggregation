@@ -2,7 +2,7 @@ load("//tools/bzl:junit_old.bzl", "junit_test")
 
 junit_test(
     name = "configurationutils",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(["*.java"]),
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents/utils",
         "//src/libraries/cache",

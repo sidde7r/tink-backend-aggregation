@@ -18,7 +18,7 @@ import org.bouncycastle.openssl.PEMParser;
 
 /**
  * This is a utility class to extract various data from certificate retrieved from Secrets Service.
- * The expected input is always base64 encoded PEM that is got from Secrets Service.
+ * The expected input is always base64 encoded PEM.
  */
 public class CertificateUtils {
 
@@ -67,7 +67,7 @@ public class CertificateUtils {
     }
 
     /**
-     * Extract public key PEM from based64 encoded PEM
+     * Extract public key PEM from base64 encoded PEM
      *
      * @param base64EncodedCertificates base64 encoded PEM of an eIDAS certificate
      * @return Base64 encoded public key
