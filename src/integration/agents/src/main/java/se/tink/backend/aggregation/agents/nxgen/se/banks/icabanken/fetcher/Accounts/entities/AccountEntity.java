@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.acco
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,19 +39,19 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonDouble
     @JsonProperty("AvailableAmount")
-    private double availableAmount;
+    private BigDecimal availableAmount;
 
     @JsonDouble
     @JsonProperty("CurrentAmount")
-    private double currentAmount;
+    private BigDecimal currentAmount;
 
     @JsonDouble
     @JsonProperty("OutstandingAmount")
-    private double outstandingAmount;
+    private BigDecimal outstandingAmount;
 
     @JsonDouble
     @JsonProperty("CreditLimit")
-    private double creditLimit;
+    private BigDecimal creditLimit;
 
     @JsonProperty("ValidFor")
     private List<String> validFor;
@@ -77,10 +78,7 @@ public class AccountEntity implements GeneralAccountEntity {
     public TransactionalAccount toTinkTransactionalAccount() {
         AccountTypes accountType = getTinkAccountType();
         Builder builder =
-                TransactionalAccount.builder(
-                                accountType,
-                                accountNumber,
-                                ExactCurrencyAmount.inSEK(currentAmount - outstandingAmount))
+                TransactionalAccount.builder(accountType, accountNumber, getBalance())
                         .setAccountNumber(accountNumber)
                         .setName(name)
                         .setHolderName(new HolderName(holder))
@@ -90,7 +88,7 @@ public class AccountEntity implements GeneralAccountEntity {
         if (accountType == AccountTypes.CHECKING) {
             builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
         }
-        if (creditLimit != 0.0) {
+        if (!creditLimit.equals(BigDecimal.ZERO)) {
             builder.setExactAvailableCredit(getAvailableCredit());
         }
         return builder.build();
@@ -108,13 +106,15 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     private ExactCurrencyAmount getBalance() {
-        return ExactCurrencyAmount.inSEK(currentAmount - outstandingAmount);
+        return ExactCurrencyAmount.of(
+                currentAmount.subtract(outstandingAmount), IcaBankenConstants.CURRENCY);
     }
 
     @JsonIgnore
     private ExactCurrencyAmount getAvailableCredit() {
-        double availableCredit = Math.floor(creditLimit - (currentAmount + outstandingAmount));
-        return ExactCurrencyAmount.inSEK(availableCredit);
+        return ExactCurrencyAmount.of(
+                creditLimit.subtract(currentAmount.add(outstandingAmount)),
+                IcaBankenConstants.CURRENCY);
     }
 
     @JsonIgnore
@@ -196,22 +196,6 @@ public class AccountEntity implements GeneralAccountEntity {
 
     public String getName() {
         return name;
-    }
-
-    public double getAvailableAmount() {
-        return availableAmount;
-    }
-
-    public double getCurrentAmount() {
-        return currentAmount;
-    }
-
-    public double getOutstandingAmount() {
-        return outstandingAmount;
-    }
-
-    public double getCreditLimit() {
-        return creditLimit;
     }
 
     public List<String> getValidFor() {
