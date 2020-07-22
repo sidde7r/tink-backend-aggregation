@@ -13,6 +13,7 @@ public class UpdateCredentialsStatusRequest {
     private boolean isMigrationUpdate;
     private String refreshId;
     private CredentialsRequestType requestType;
+    private String operationId;
 
     public boolean isManual() {
         return isManual;
@@ -80,5 +81,13 @@ public class UpdateCredentialsStatusRequest {
 
     public CredentialsRequestType getRequestType() {
         return requestType;
+    }
+
+    public void setOperationId(String operationId) {
+        this.operationId = operationId;
+    }
+
+    public String getOperationId() {
+        return operationId;
     }
 }
