@@ -29,4 +29,8 @@ public class DeutscheBankAuthenticator {
         sessionStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
         return new URL(consent.getLinks().getScaRedirect().getHref());
     }
+
+    public void confirmAuthentication() {
+        apiClient.confirmAuthentication();
+    }
 }
