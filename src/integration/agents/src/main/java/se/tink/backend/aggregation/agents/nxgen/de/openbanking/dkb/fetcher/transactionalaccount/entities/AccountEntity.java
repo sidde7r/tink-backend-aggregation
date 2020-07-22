@@ -19,6 +19,7 @@ public class AccountEntity {
     private String name;
     private String resourceId;
     private List<BalanceEntity> balances;
+    private String ownerName;
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount() {
@@ -35,6 +36,7 @@ public class AccountEntity {
                                 .build())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)
+                .addHolderName(ownerName)
                 .build();
     }
 

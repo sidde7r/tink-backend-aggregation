@@ -23,6 +23,7 @@ public class AccountEntity {
     private String iban;
     private String resourceId;
     private List<BalanceEntity> balances;
+    private String ownerName;
 
     public String getResourceId() {
         return resourceId;
@@ -45,6 +46,7 @@ public class AccountEntity {
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .setApiIdentifier(resourceId)
+                .addHolderName(ownerName)
                 .build();
     }
 
