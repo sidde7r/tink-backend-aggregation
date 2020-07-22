@@ -16,12 +16,15 @@ public class N26Constants {
         static final String ACCOUNTS = "/accounts";
         static final String ACCOUNT_BALANCE = "/accounts/{accountId}/balance";
         static final String ACCOUNT_TRANSACTIONS = "/accounts/{accountId}/transactions";
+        static final String TRANSFERS = "/transfers";
+        static final String TRANSFER_DETAILS = "/transfers/{transferId}";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class UrlParam {
         static final String TOKEN_ID = "tokenId";
         static final String ACCOUNT_ID = "accountId";
+        static final String TRANSFER_ID = "transferId";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
