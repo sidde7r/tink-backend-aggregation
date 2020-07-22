@@ -4,9 +4,9 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 1,
-      "unscaledValue" : 5000,
-      "exactValue" : 500.0,
+      "scale" : 0,
+      "unscaledValue" : 500,
+      "exactValue" : 500,
       "doubleValue" : 500.0
     },
     "currencyCode" : "SEK",
@@ -38,9 +38,9 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 1,
-      "unscaledValue" : 75400,
-      "exactValue" : 7540.0,
+      "scale" : 0,
+      "unscaledValue" : 7540,
+      "exactValue" : 7540,
       "doubleValue" : 7540.0
     },
     "currencyCode" : "SEK",
@@ -72,8 +72,8 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 1,
-      "unscaledValue" : 8176,
+      "scale" : 2,
+      "unscaledValue" : 81760,
       "exactValue" : 817.6,
       "doubleValue" : 817.6
     },

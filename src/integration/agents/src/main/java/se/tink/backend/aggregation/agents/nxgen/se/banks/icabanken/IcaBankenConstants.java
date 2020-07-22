@@ -8,6 +8,8 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class IcaBankenConstants {
 
+    public static final String CURRENCY = "SEK";
+
     public static class Date {
         public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
         public static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
