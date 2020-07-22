@@ -66,7 +66,7 @@ public class Xs2aDevelopersAuthenticatorTest {
         storage = mock(PersistentStorage.class);
         configuration = mock(Xs2aDevelopersConfiguration.class);
         agentConfiguration =
-                new AgentConfiguration.Builder<>()
+                new AgentConfiguration.Builder<Xs2aDevelopersConfiguration>()
                         .setProviderSpecificConfiguration(configuration)
                         .setRedirectUrl(REDIRECT_URL)
                         .build();
