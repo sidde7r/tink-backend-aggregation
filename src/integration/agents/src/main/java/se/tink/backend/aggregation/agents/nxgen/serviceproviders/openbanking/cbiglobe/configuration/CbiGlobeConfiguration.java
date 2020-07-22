@@ -17,7 +17,6 @@ public class CbiGlobeConfiguration implements ClientConfiguration {
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @Secret private String aspspCode;
     @Secret private String aspspProductCode;
-    @Secret private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -49,12 +48,5 @@ public class CbiGlobeConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "ASPSP Product Code"));
 
         return aspspProductCode;
-    }
-
-    public String getEidasQwac() {
-        Preconditions.checkNotNull(
-                eidasQwac, String.format(ErrorMessages.INVALID_CONFIGURATION, "EIDAS QWAC"));
-
-        return eidasQwac;
     }
 }
