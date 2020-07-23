@@ -49,11 +49,10 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                 .getAccountDataCache()
                 .getFilteredAccountData()
                 .forEach(
-                        accountData -> {
-                            // currently we do not want to restrict anything - just see this command
-                            // running
-                            filterRestrictedAccount(accountData.getAccount());
-                        });
+                        accountData ->
+                                // currently we do not want to restrict anything - just see this
+                                // command running
+                                filterRestrictedAccount(accountData.getAccount()));
         return AgentWorkerCommandResult.CONTINUE;
     }
 
