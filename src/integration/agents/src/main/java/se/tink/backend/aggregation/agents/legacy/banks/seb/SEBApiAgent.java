@@ -1226,14 +1226,10 @@ public class SEBApiAgent extends AbstractAgent
     public boolean login() throws AuthenticationException, AuthorizationException {
 
         log.info(
-                String.format(
-                        "Credentials contain - supplemental Information: {}: %s",
-                        credentials.getSupplementalInformation()));
-        log.info(
-                String.format(
-                        "Credentials contain - status payload: {}: %s",
-                        credentials.getStatusPayload()));
-        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+                "Credentials contain - supplemental Information: {}",
+                credentials.getSupplementalInformation());
+        log.info("Credentials contain - status payload: {}", credentials.getStatusPayload());
+        log.info("Credentials contain - status: {}", credentials.getStatus());
 
         switch (credentials.getType()) {
             case MOBILE_BANKID:

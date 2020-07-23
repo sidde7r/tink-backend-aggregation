@@ -54,6 +54,10 @@ public class AggregationLogger {
         log.info(message);
     }
 
+    public void info(String message, Object... vars) {
+        log.info(message, vars);
+    }
+
     public void info(String message, Throwable e) {
         log.info(message, e);
     }
