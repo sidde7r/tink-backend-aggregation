@@ -441,6 +441,8 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                         .filter(config -> !config.isRedirectUrlNullOrEmpty())
                                         .map(AgentConfiguration::getRedirectUrl)
                                         .orElse(null))
+                        .setQwac(EIdasTinkCert.QWAC)
+                        .setQsealc(EIdasTinkCert.QSEALC)
                         .build();
 
         return agentConfiguration;
