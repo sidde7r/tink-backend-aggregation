@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import com.google.common.collect.ImmutableSet;
+import java.security.cert.CertificateException;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fi
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.filter.RabobankRetryFilter;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
@@ -69,6 +71,14 @@ public final class RabobankAgent
                 agentConfiguration.getProviderSpecificConfiguration();
         final String password = rabobankConfiguration.getClientSSLKeyPassword();
         final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
+        final String qsealPem;
+        try {
+            qsealPem =
+                    CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
+                            agentConfiguration.getQsealc());
+        } catch (CertificateException e) {
+            throw new IllegalStateException("Invalid qsealc detected");
+        }
 
         client.setSslClientCertificate(p12, password);
         EidasIdentity eidasIdentity =
@@ -79,6 +89,7 @@ public final class RabobankAgent
                         client,
                         persistentStorage,
                         rabobankConfiguration,
+                        qsealPem,
                         agentsConfiguration.getEidasProxy(),
                         eidasIdentity,
                         request.isManual());

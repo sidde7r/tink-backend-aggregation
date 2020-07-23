@@ -9,35 +9,23 @@ import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
-import se.tink.backend.aggregation.configuration.agents.QWACConfiguration;
 
 @JsonObject
 public class LansforsakringarConfiguration implements ClientConfiguration {
     @Secret @ClientIdConfiguration private String clientId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @Secret @QWACConfiguration private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
-
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "ClientId"));
         return clientId;
     }
 
     public String getClientSecret() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSecret),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
-
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "ClientSecret"));
         return clientSecret;
-    }
-
-    public String getEidasQwac() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasQwac),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
-
-        return eidasQwac;
     }
 }

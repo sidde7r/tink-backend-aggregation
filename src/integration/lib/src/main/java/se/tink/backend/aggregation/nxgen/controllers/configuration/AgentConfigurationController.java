@@ -272,14 +272,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                         .map(AgentConfiguration::getQsealc)
                         .orElse("");
 
-        // TPA608, remove the logger after this is finished.
-        log.info(
-                "Got qwac "
-                        + qwac
-                        + " qsealc "
-                        + qsealc
-                        + " from SS and put into agentConf object");
-
         AgentConfiguration<T> agentConfiguration =
                 new AgentConfiguration.Builder()
                         .setProviderSpecificConfiguration(clientConfig)

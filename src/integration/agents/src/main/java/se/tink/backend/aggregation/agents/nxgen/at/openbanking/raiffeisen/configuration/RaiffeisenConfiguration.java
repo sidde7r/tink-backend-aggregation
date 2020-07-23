@@ -17,7 +17,6 @@ public class RaiffeisenConfiguration implements ClientConfiguration {
     @Secret @ClientIdConfiguration private String clientId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @AgentConfigParam private String redirectUrl;
-    @Secret private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -41,12 +40,5 @@ public class RaiffeisenConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
-    }
-
-    public String getEidasQwac() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasQwac),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
-        return eidasQwac;
     }
 }
