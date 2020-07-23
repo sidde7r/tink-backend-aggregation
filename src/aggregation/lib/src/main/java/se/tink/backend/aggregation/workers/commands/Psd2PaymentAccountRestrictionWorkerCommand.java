@@ -21,11 +21,14 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
 
     public Psd2PaymentAccountRestrictionWorkerCommand(
-            AgentWorkerCommandContext context, CredentialsRequest request) {
+            AgentWorkerCommandContext context,
+            CredentialsRequest request,
+            RegulatoryRestrictions regulatoryRestrictions,
+            Psd2PaymentAccountClassifier psd2PaymentAccountClassifier) {
         this.context = context;
         this.refreshInformationRequest = request;
-        this.regulatoryRestrictions = context.getRegulatoryRestrictions();
-        this.psd2PaymentAccountClassifier = context.getPsd2PaymentAccountClassifier();
+        this.regulatoryRestrictions = regulatoryRestrictions;
+        this.psd2PaymentAccountClassifier = psd2PaymentAccountClassifier;
     }
 
     private boolean filterRestrictedAccount(Account account) {
