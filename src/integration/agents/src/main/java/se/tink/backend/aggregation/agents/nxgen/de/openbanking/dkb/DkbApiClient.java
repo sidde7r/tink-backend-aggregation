@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -69,9 +68,6 @@ public final class DkbApiClient {
     public GetTransactionsResponse getTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
-        if (fromDate.before(Date.from(ZonedDateTime.now().minusMonths(5).toInstant()))) {
-            return new GetTransactionsResponse();
-        }
         return createFetchingRequest(
                         Urls.GET_TRANSACTIONS.parameter(
                                 IdTags.ACCOUNT_ID, account.getApiIdentifier()))

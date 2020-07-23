@@ -49,6 +49,6 @@ public class DkbTransactionalAccountFetcher
         final GetTransactionsResponse transactions =
                 apiClient.getTransactions(account, fromDate, toDate);
 
-        return PaginatorResponseImpl.create(transactions.toTinkTransactions());
+        return PaginatorResponseImpl.create(transactions.toTinkTransactions(), false);
     }
 }

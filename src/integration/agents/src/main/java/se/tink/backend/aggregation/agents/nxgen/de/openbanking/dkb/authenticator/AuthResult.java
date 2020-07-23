@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 public class AuthResult {
     private static final String PROMPT_FOR_AUTH_METHOD_SELECTION =
             "PROMPT_FOR_AUTH_METHOD_SELECTION";
-    protected static final String SML = "SML";
     private static final Set<String> RETURN_CODES_POSITIVE = ImmutableSet.of("CORRECT");
     private static final Set<String> RETURN_CODES_NEGATIVE = ImmutableSet.of("FAILED");
 

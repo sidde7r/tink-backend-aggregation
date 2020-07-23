@@ -50,10 +50,14 @@ public class DkbSupplementalDataProvider {
     String selectAuthMethod(List<? extends SelectableMethod> methods)
             throws SupplementalInfoException {
         Map<String, String> supplementalInformation;
-        supplementalInformation =
-                supplementalInformationHelper.askSupplementalInformation(
-                        buildScaMethodsField(methods));
-        return getSelectedAuthMethodId(supplementalInformation, methods);
+
+        if (methods.size() > 1) {
+            supplementalInformation =
+                    supplementalInformationHelper.askSupplementalInformation(
+                            buildScaMethodsField(methods));
+            return getSelectedAuthMethodId(supplementalInformation, methods);
+        }
+        return methods.get(0).getIdentifier();
     }
 
     private String getSelectedAuthMethodId(

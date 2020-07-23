@@ -27,7 +27,7 @@ public final class DkbConstants {
     public static class Urls {
 
         public static final String BASE_URL = "https://api.dkb.de";
-        public static final String BASE_PSD2_URL = BASE_URL + "/psd2/1.3.2";
+        public static final String BASE_PSD2_URL = BASE_URL + "/psd2/1.3.6";
         private static final String PAYMENT_BASE = BASE_PSD2_URL + "/v1/payments";
 
         public static final URL TOKEN = new URL(BASE_URL + ApiService.TOKEN);
@@ -81,6 +81,12 @@ public final class DkbConstants {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+    }
+
+    @NoArgsConstructor(access = PRIVATE)
+    public static class Configuration {
+
+        public static final String LOCALHOST = "127.0.0.1";
     }
 
     @NoArgsConstructor(access = PRIVATE)
