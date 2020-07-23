@@ -17,6 +17,9 @@ import se.tink.libraries.user.rpc.User;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class CredentialsRequest {
+    // OperationId will be null when originating from CredentialsService...
+    // Will be set when coming from new Authentication & Aggregation Engine
+    private String operationId;
     private Credentials credentials;
     private Provider provider;
     private User user;
@@ -155,6 +158,14 @@ public abstract class CredentialsRequest {
 
     public void setCallbackUri(String callbackUri) {
         this.callbackUri = callbackUri;
+    }
+
+    public String getOperationId() {
+        return operationId;
+    }
+
+    public void setOperationId(String operationId) {
+        this.operationId = operationId;
     }
 
     public List<DataFetchingRestrictions> getDataFetchingRestrictions() {

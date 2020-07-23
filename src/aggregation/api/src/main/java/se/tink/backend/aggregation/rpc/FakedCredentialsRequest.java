@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.user.rpc.User;
@@ -15,6 +16,7 @@ import se.tink.libraries.user.rpc.User;
  * <p>Note that this probably makes it impossible to ask for supplemental information since the
  * credential never should be stored in the DB.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class FakedCredentialsRequest extends CredentialsRequest {
     public FakedCredentialsRequest() {}
 
