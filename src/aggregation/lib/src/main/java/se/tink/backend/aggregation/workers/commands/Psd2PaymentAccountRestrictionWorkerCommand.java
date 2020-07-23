@@ -28,7 +28,7 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
         this.psd2PaymentAccountClassifier = context.getPsd2PaymentAccountClassifier();
     }
 
-    private boolean filterRestrictedAccounts(Account account) {
+    private boolean filterRestrictedAccount(Account account) {
         Optional<Psd2PaymentAccountClassificationResult> classification =
                 psd2PaymentAccountClassifier.classify(
                         refreshInformationRequest.getProvider(), account);
@@ -45,7 +45,15 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
-        this.context.getAccountDataCache().addFilter(this::filterRestrictedAccounts);
+        this.context
+                .getAccountDataCache()
+                .getFilteredAccountData()
+                .forEach(
+                        accountData -> {
+                            // currently we do not want to restrict anything - just see this command
+                            // running
+                            filterRestrictedAccount(accountData.getAccount());
+                        });
         return AgentWorkerCommandResult.CONTINUE;
     }
 
