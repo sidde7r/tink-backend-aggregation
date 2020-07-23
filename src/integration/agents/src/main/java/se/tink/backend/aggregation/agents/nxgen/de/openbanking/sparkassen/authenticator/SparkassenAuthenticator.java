@@ -153,7 +153,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
     private AuthenticationMethodResponse getScaMethodDetails(
             AuthenticationMethodResponse initAuthorizationResponse)
-            throws SupplementalInfoException {
+            throws SupplementalInfoException, LoginException {
         switch (initAuthorizationResponse.getScaStatus()) {
             case PSU_AUTHENTICATED:
                 return getScaMethodDetailsOutOfMultiplePossible(
@@ -166,13 +166,20 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     private List<ScaMethodEntity> getSupportedScaMethods(
-            AuthenticationMethodResponse initAuthResponse) {
-        return initAuthResponse.getScaMethods().stream()
-                .filter(
-                        scaMethod ->
-                                !AuthMethods.UNSUPPORTED_AUTH_TYPES.contains(
-                                        scaMethod.getAuthenticationMethodId()))
-                .collect(Collectors.toList());
+            AuthenticationMethodResponse initAuthResponse) throws LoginException {
+
+        List<ScaMethodEntity> methods =
+                initAuthResponse.getScaMethods().stream()
+                        .filter(
+                                scaMethod ->
+                                        !AuthMethods.UNSUPPORTED_AUTH_TYPES.contains(
+                                                scaMethod.getAuthenticationMethodId()))
+                        .collect(Collectors.toList());
+
+        if (methods.isEmpty()) {
+            throw LoginError.NOT_SUPPORTED.exception(ErrorMessages.STARTCODE_NOT_FOUND);
+        }
+        return methods;
     }
 
     private AuthenticationMethodResponse getScaMethodDetailsOutOfMultiplePossible(
