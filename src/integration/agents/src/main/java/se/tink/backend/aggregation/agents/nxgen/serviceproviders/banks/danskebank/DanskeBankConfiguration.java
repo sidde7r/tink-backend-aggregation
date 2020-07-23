@@ -35,19 +35,19 @@ public interface DanskeBankConfiguration extends ClientConfiguration {
     List<String> getSavingsAccountTypes();
 
     default AccountCapabilities.Answer canExecuteExternalTransfer(String productCode) {
-        return AccountCapabilities.Answer.UNKNOWN;
+        return AccountCapabilities.Answer.UNINITIALIZED;
     }
 
     default AccountCapabilities.Answer canReceiveExternalTransfer(String productCode) {
-        return AccountCapabilities.Answer.UNKNOWN;
+        return AccountCapabilities.Answer.UNINITIALIZED;
     }
 
     default AccountCapabilities.Answer canPlaceFunds(String productCode) {
-        return AccountCapabilities.Answer.UNKNOWN;
+        return AccountCapabilities.Answer.UNINITIALIZED;
     }
 
     default AccountCapabilities.Answer canWithdrawCash(String productCode) {
-        return AccountCapabilities.Answer.UNKNOWN;
+        return AccountCapabilities.Answer.UNINITIALIZED;
     }
 
     Map<String, Loan.Type> getLoanAccountTypes();

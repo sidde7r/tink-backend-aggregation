@@ -6,8 +6,10 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -47,6 +49,15 @@ public class GroupAccountEntity {
                 .setAccountNumber(displayAccountIdentifier)
                 .setName(name)
                 .setPortfolios(portfolios)
+                .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
+                .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
+                .canWithdrawCash(AccountCapabilities.Answer.UNKNOWN)
+                .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
+                .sourceInfo(
+                        AccountSourceInfo.builder()
+                                .bankProductName(name)
+                                .bankProductCode(type)
+                                .build())
                 .build();
     }
 

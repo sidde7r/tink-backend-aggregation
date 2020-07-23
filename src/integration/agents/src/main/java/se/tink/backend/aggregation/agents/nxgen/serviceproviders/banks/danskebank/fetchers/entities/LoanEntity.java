@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -49,6 +51,15 @@ public class LoanEntity {
                 .setExactBalance(getBalance())
                 .setName(loanTypeName)
                 .setAccountNumber(getAccountNumber())
+                .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
+                .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
+                .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
+                .canWithdrawCash(AccountCapabilities.Answer.UNKNOWN)
+                .sourceInfo(
+                        AccountSourceInfo.builder()
+                                .bankProductName(loanTypeName)
+                                .bankProductCode(loanType)
+                                .build())
                 .build();
     }
 
