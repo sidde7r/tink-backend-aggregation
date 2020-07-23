@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
-import se.tink.backend.aggregation.configuration.agents.QWACConfiguration;
 
 @JsonObject
 public class LansforsakringarConfiguration implements ClientConfiguration {
@@ -31,5 +30,4 @@ public class LansforsakringarConfiguration implements ClientConfiguration {
 
         return clientSecret;
     }
-
 }
