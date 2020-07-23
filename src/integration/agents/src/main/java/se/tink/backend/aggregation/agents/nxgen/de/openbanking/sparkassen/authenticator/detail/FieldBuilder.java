@@ -20,6 +20,7 @@ public class FieldBuilder {
     private static final String CHOSEN_SCA_METHOD = "chosenScaMethod";
     private static final Pattern STARTCODE_CHIP_PATTERN =
             Pattern.compile("(?<= Startcode\\s).[\\d]+");
+    private static final String CHIP_TYPE = "CHIP_OTP";
 
     private Catalog catalog;
 
@@ -46,7 +47,7 @@ public class FieldBuilder {
 
     private String getOtpDescription(String otpType, String additionalInformation)
             throws LoginException {
-        if (("CHIP_OTP").equals(otpType)) {
+        if ((CHIP_TYPE).equals(otpType)) {
             String startCode = retrieveStartCode(additionalInformation);
             return String.format(
                     "Please insert card to TAN-Generator and press “TAN”. Then insert start code %s and press “OK”",
