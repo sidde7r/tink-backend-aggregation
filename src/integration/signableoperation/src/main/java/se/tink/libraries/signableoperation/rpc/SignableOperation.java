@@ -6,8 +6,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import java.util.Date;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -17,7 +15,6 @@ import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class SignableOperation {
-    private static final Logger log = LoggerFactory.getLogger(SignableOperation.class);
     private static final ImmutableSet<SignableOperationStatuses> IN_PROGRESS_STATUSES =
             ImmutableSet.of(
                     SignableOperationStatuses.EXECUTING,
@@ -189,7 +186,6 @@ public class SignableOperation {
     }
 
     public void setInternalStatus(String internalStatus) {
-        log.info("internal status is set to {}", internalStatus);
         this.internalStatus = internalStatus;
     }
 
