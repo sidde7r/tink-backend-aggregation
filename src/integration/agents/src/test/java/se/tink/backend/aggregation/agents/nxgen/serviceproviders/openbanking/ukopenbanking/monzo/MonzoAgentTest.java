@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -14,11 +13,11 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
-@Ignore
 public class MonzoAgentTest {
 
     private final String SOURCE_IDENTIFIER = "";
     private final String DESTINATION_IDENTIFIER = "";
+    private static final String MONZO_FINANCIAL_INSTITUTION_ID = "cbdc2976566048f0902600354890d585";
 
     @Test
     public void testLogin() throws Exception {
@@ -27,7 +26,7 @@ public class MonzoAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setAppId("tink")
-                .setFinancialInstitutionId("monzo")
+                .setFinancialInstitutionId(MONZO_FINANCIAL_INSTITUTION_ID)
                 .build()
                 .testRefresh();
     }
@@ -40,7 +39,7 @@ public class MonzoAgentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setAppId("tink")
-                        .setFinancialInstitutionId("monzo");
+                        .setFinancialInstitutionId(MONZO_FINANCIAL_INSTITUTION_ID);
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }
