@@ -18,16 +18,14 @@ public class LansforsakringarConfiguration implements ClientConfiguration {
     public String getClientId() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
-
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "ClientId"));
         return clientId;
     }
 
     public String getClientSecret() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSecret),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
-
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "ClientSecret"));
         return clientSecret;
     }
 }
