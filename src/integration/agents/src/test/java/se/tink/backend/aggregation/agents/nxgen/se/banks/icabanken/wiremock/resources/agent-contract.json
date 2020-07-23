@@ -112,6 +112,28 @@
             "userModifiedType": false
         }
     ],
+    "identityData": {
+        "dateOfBirth": {
+            "chronology": {
+                "calendarType": "iso8601",
+                "id": "ISO"
+            },
+            "dayOfMonth": 9,
+            "dayOfWeek": "THURSDAY",
+            "dayOfYear": 252,
+            "era": "CE",
+            "leapYear": false,
+            "month": "SEPTEMBER",
+            "monthValue": 9,
+            "year": 1999
+        },
+        "nameElements": [
+            {
+                "type": "FULLNAME",
+                "value": "name"
+            }
+        ]
+    },
     "transactions": [
         {
             "amount": -3900.0,
