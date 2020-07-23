@@ -38,6 +38,7 @@ public class AccountEntity {
     private String resourceId;
     private String product;
     private List<BalanceEntity> balances;
+    private String ownerName;
 
     public LinksEntity getLinks() {
         return links;
@@ -100,7 +101,7 @@ public class AccountEntity {
                                                 Type.PAYMENT_CARD_NUMBER, maskedPan))
                                 .build())
                 .setApiIdentifier(resourceId)
-                .addHolderName(getAccountName())
+                .addHolderName(ownerName)
                 .setBankIdentifier(getAccountNumber())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
                 .build();

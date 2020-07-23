@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.LinksEntity;
@@ -24,6 +25,7 @@ public class GetAccountsResponse {
 
     public Collection<TransactionalAccount> toTinkAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+                .filter(this::isAccountWithResourceId)
                 .map(AccountEntity::toTinkAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -39,8 +41,13 @@ public class GetAccountsResponse {
 
     public List<AccountIdEntity> getListOfNecessaryConsents() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+                .filter(this::isAccountWithResourceId)
                 .map(AccountEntity::getAccountId)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isAccountWithResourceId(AccountEntity accountEntity) {
+        return StringUtils.isNotBlank(accountEntity.getResourceId());
     }
 
     private boolean isConsentForAnyAccountNecessary() {

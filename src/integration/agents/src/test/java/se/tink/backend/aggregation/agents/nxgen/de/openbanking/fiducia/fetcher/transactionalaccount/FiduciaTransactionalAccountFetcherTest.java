@@ -38,6 +38,7 @@ public class FiduciaTransactionalAccountFetcherTest {
     private static final String IBAN = "DE11P03058016041005737885631";
     private static final String IBAN_2 = "DE22P03058016041005737885632";
     private static final String CURRENCY = "EUR";
+    private static final String OWNER_NAME = "dummyOwnerName";
 
     private FiduciaApiClient apiClient;
 
@@ -102,8 +103,9 @@ public class FiduciaTransactionalAccountFetcherTest {
     private GetAccountsResponse getAccountsResponse() {
         return new GetAccountsResponse(
                 Arrays.asList(
-                        new AccountEntity(IBAN, ACCOUNT_ID, Collections.emptyList()),
-                        new AccountEntity(IBAN_2, ACCOUNT_ID_2, Collections.emptyList())));
+                        new AccountEntity(IBAN, ACCOUNT_ID, Collections.emptyList(), OWNER_NAME),
+                        new AccountEntity(
+                                IBAN_2, ACCOUNT_ID_2, Collections.emptyList(), OWNER_NAME)));
     }
 
     private GetBalancesResponse getBalancesResponse() {

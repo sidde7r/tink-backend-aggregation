@@ -33,11 +33,16 @@ public class AccountEntity {
     private String usage;
 
     public boolean areConsentsNecessary() {
-        return links == null || !links.hasBalances() || !links.hasTransactions();
+        return resourceId != null
+                && (links == null || !links.hasBalances() || !links.hasTransactions());
     }
 
     public AccountIdEntity getAccountId() {
         return accountId;
+    }
+
+    public String getResourceId() {
+        return resourceId;
     }
 
     public Optional<TransactionalAccount> toTinkAccount() {
