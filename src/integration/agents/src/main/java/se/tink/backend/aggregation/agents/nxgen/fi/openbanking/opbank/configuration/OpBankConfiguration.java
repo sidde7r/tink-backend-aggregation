@@ -17,7 +17,6 @@ public class OpBankConfiguration implements ClientConfiguration {
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @JsonProperty @SensitiveSecret private String apiKey;
-    @JsonProperty @Secret private String eidasQsealc;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -41,13 +40,5 @@ public class OpBankConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "API key"));
 
         return apiKey;
-    }
-
-    public String getEidasQsealc() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasQsealc),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "eIDAS QSealC"));
-
-        return eidasQsealc;
     }
 }

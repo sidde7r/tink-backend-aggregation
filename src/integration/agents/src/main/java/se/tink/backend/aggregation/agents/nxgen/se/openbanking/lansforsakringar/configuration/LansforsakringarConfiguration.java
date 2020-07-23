@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.configuration.agents.QWACConfiguration;
 public class LansforsakringarConfiguration implements ClientConfiguration {
     @Secret @ClientIdConfiguration private String clientId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @Secret @QWACConfiguration private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -33,11 +32,4 @@ public class LansforsakringarConfiguration implements ClientConfiguration {
         return clientSecret;
     }
 
-    public String getEidasQwac() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasQwac),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
-
-        return eidasQwac;
-    }
 }
