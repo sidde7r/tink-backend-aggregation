@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -15,19 +14,20 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
-@Ignore
 public class NatWestAgentTest {
 
     private final String SOURCE_IDENTIFIER = "";
     private final String DESTINATION_IDENTIFIER = "";
+    private static final String NATWEST_FINANCIAL_INSTITUTION_ID =
+            "2ad9cb1542c54c098653a73d7b75c11c";
 
     @Test
-    public void test() throws Exception {
+    public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-natwest-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("natwest")
+                .setFinancialInstitutionId(NATWEST_FINANCIAL_INSTITUTION_ID)
                 .setAppId("tink")
                 .build()
                 .testRefresh();
@@ -40,7 +40,7 @@ public class NatWestAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("natwest")
+                        .setFinancialInstitutionId(NATWEST_FINANCIAL_INSTITUTION_ID)
                         .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
