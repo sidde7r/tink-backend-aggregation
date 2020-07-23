@@ -63,6 +63,7 @@ public final class RabobankApiClient {
             final TinkHttpClient client,
             final PersistentStorage persistentStorage,
             final RabobankConfiguration rabobankConfiguration,
+            final String qsealcPem,
             final EidasProxyConfiguration eidasProxyConf,
             final EidasIdentity eidasIdentity,
             final boolean requestIsManual) {
@@ -73,7 +74,7 @@ public final class RabobankApiClient {
         this.eidasIdentity = eidasIdentity;
         this.requestIsManual = requestIsManual;
 
-        this.qsealcPem = rabobankConfiguration.getQsealCert();
+        this.qsealcPem = qsealcPem;
     }
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {
