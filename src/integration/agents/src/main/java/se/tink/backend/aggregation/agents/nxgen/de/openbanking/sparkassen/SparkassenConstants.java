@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SparkassenConstants {
@@ -17,6 +18,7 @@ public final class SparkassenConstants {
                 "Could not initialize JAXBContext";
         static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
         static final String IBAN_INVALID = "IBAN_INVALID";
+        public static final String STARTCODE_NOT_FOUND = "Startcode fo Chip tan not found";
     }
 
     public static class Urls {
@@ -61,5 +63,12 @@ public final class SparkassenConstants {
 
     public static class FormValues {
         public static final int FREQUENCY_PER_DAY = 4;
+    }
+
+    public static class AuthMethods {
+        private AuthMethods() {}
+
+        public static final ImmutableList<String> UNSUPPORTED_AUTH_TYPES =
+                ImmutableList.of("OPTICAL", "QR");
     }
 }

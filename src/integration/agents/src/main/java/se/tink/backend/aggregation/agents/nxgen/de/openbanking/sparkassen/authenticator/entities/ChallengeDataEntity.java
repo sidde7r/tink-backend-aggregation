@@ -13,4 +13,8 @@ public class ChallengeDataEntity {
     public Integer getOtpMaxLength() {
         return otpMaxLength;
     }
+
+    public String getAdditionalInformation() {
+        return additionalInformation;
+    }
 }
