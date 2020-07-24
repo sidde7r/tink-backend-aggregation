@@ -116,6 +116,7 @@ public class SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand
         CoreRegulatoryClassification coreRegulatoryClassification =
                 new CoreRegulatoryClassification();
         coreRegulatoryClassification.setPsd2(CorePsd2Classification.of(classification));
+        request.setClassification(coreRegulatoryClassification);
         return request;
     }
 
