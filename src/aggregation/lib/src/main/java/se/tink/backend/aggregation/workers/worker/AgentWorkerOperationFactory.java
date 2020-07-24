@@ -65,6 +65,7 @@ import se.tink.backend.aggregation.workers.commands.SendAccountsHoldersToUpdateS
 import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
@@ -222,7 +223,8 @@ public class AgentWorkerOperationFactory {
     private List<AgentWorkerCommand> createOrderedRefreshableItemsCommands(
             CredentialsRequest request,
             AgentWorkerCommandContext context,
-            Set<RefreshableItem> itemsToRefresh) {
+            Set<RefreshableItem> itemsToRefresh,
+            ControllerWrapper controllerWrapper) {
 
         itemsToRefresh = convertLegacyItems(itemsToRefresh);
 
@@ -249,6 +251,12 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
+            commands.add(
+                    new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request),
+                            psd2PaymentAccountClassifier,
+                            controllerWrapper));
 
             /** Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
@@ -293,6 +301,12 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
+            commands.add(
+                    new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request),
+                            psd2PaymentAccountClassifier,
+                            controllerWrapper));
             commands.add(
                     new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
@@ -426,7 +440,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
-                        request, context, request.getItemsToRefresh()));
+                        request, context, request.getItemsToRefresh(), controllerWrapper));
 
         log.debug("Created refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -580,7 +594,10 @@ public class AgentWorkerOperationFactory {
                 commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
                 commands.addAll(
                         createOrderedRefreshableItemsCommands(
-                                request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+                                request,
+                                context,
+                                RefreshableItem.REFRESHABLE_ITEMS_ALL,
+                                controllerWrapper));
             }
         }
 
@@ -1259,10 +1276,15 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
-
             commands.add(
                     new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
+            commands.add(
+                    new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request),
+                            psd2PaymentAccountClassifier,
+                            controllerWrapper));
 
             /** Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
