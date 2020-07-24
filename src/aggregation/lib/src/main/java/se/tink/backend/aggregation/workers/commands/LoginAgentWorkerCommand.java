@@ -177,6 +177,10 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         return new MetricId.MetricLabels().add("action", action);
     }
 
+    public boolean getIsForceAuthenticate() {
+        return context.getRequest().isForceAuthenticate();
+    }
+
     private Optional<Boolean> isLoggedIn() throws Exception {
         if (!(agent instanceof PersistentLogin)) {
             log.info("agent is not instanceof PersistentLogin");
@@ -187,53 +191,61 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         ArrayList<Context> loadPersistentSessionTimerContexts =
                 state.getTimerContexts(
                         state.LOAD_PERSISTENT_SESSION_TIMER_NAME, credentials.getType());
+        Boolean result = Boolean.FALSE;
 
         PersistentLogin persistentAgent = (PersistentLogin) agent;
-        long timeLoadingSession = 0;
-        long timeAgentIsLoggedIn = 0;
-        Boolean result = Boolean.FALSE;
-        try {
-            long beforeLoad = System.nanoTime();
-            persistentAgent.loadLoginSession();
-            timeLoadingSession = System.nanoTime() - beforeLoad;
 
-            long beforeIsLoggedIn = System.nanoTime();
-            if (persistentAgent.isLoggedIn()) {
-                timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
-                action.completed();
-                log.info("We're already logged in. Moving along.");
-                emitLoginResultEvent(LoginResult.ALREADY_LOGGED_IN);
-                result = Boolean.TRUE;
-            } else {
-                timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
-                action.completed();
-                log.info("We're not logged in. Clear Session and Login in again.");
-                persistentAgent.clearLoginSession();
+        if (getIsForceAuthenticate()) {
+            log.info("Clearing session to force authentication towards the bank");
+            persistentAgent.clearLoginSession();
+        } else {
+            long timeLoadingSession = 0;
+            long timeAgentIsLoggedIn = 0;
+            try {
+                long beforeLoad = System.nanoTime();
+                persistentAgent.loadLoginSession();
+                timeLoadingSession = System.nanoTime() - beforeLoad;
+
+                long beforeIsLoggedIn = System.nanoTime();
+                if (persistentAgent.isLoggedIn()) {
+                    timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
+                    action.completed();
+                    log.info("We're already logged in. Moving along.");
+                    emitLoginResultEvent(LoginResult.ALREADY_LOGGED_IN);
+                    result = Boolean.TRUE;
+                } else {
+                    timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
+                    action.completed();
+                    log.info("We're not logged in. Clear Session and Login in again.");
+                    persistentAgent.clearLoginSession();
+                }
+            } catch (BankServiceException e) {
+                log.info(String.format("Bank service exception: %s", e.getMessage()), e);
+                action.unavailable();
+                statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+                // couldn't determine isLoggedIn or not, return ABORT
+                emitLoginResultEvent(
+                        LoginResult
+                                .CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_BANK_SERVICE_ERROR);
+                return Optional.empty();
+            } catch (Exception e) {
+                action.failed();
+                emitLoginResultEvent(
+                        LoginResult.CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_ERROR);
+                throw e;
+            } finally {
+                stopCommandContexts(loadPersistentSessionTimerContexts);
             }
-        } catch (BankServiceException e) {
-            log.info(String.format("Bank service exception: %s", e.getMessage()), e);
-            action.unavailable();
-            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
-            // couldn't determine isLoggedIn or not, return ABORT
-            emitLoginResultEvent(
-                    LoginResult.CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_BANK_SERVICE_ERROR);
-            return Optional.empty();
-        } catch (Exception e) {
-            action.failed();
-            emitLoginResultEvent(LoginResult.CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_ERROR);
-            throw e;
-        } finally {
-            stopCommandContexts(loadPersistentSessionTimerContexts);
-        }
-        if (timeAgentIsLoggedIn > 0 && timeLoadingSession > 0) {
-            long timeAgentIsLoggedInSeconds =
-                    TimeUnit.SECONDS.convert(timeAgentIsLoggedIn, TimeUnit.NANOSECONDS);
-            long timeLoadingSessionSeconds =
-                    TimeUnit.SECONDS.convert(timeLoadingSession, TimeUnit.NANOSECONDS);
-            log.info(
-                    String.format(
-                            "Time loading session: %d s, time agent isLoggedIn: %d s",
-                            timeLoadingSessionSeconds, timeAgentIsLoggedInSeconds));
+            if (timeAgentIsLoggedIn > 0 && timeLoadingSession > 0) {
+                long timeAgentIsLoggedInSeconds =
+                        TimeUnit.SECONDS.convert(timeAgentIsLoggedIn, TimeUnit.NANOSECONDS);
+                long timeLoadingSessionSeconds =
+                        TimeUnit.SECONDS.convert(timeLoadingSession, TimeUnit.NANOSECONDS);
+                log.info(
+                        String.format(
+                                "Time loading session: %d s, time agent isLoggedIn: %d s",
+                                timeLoadingSessionSeconds, timeAgentIsLoggedInSeconds));
+            }
         }
         return Optional.ofNullable(result);
     }
