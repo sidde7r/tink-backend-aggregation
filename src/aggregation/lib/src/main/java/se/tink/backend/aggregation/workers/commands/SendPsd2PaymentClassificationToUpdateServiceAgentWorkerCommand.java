@@ -46,7 +46,7 @@ public class SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand
 
     @Override
     public String getMetricName() {
-        return "agent_refresh";
+        return "send_psd2_account_classification_to_ais";
     }
 
     @Override
