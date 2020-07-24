@@ -286,7 +286,12 @@ public class AccountDetailsResponse {
     }
 
     public AccountTypes toTinkAccountType() {
-        return MAPPERS.inferAccountType(accountType).orElse(AccountTypes.OTHER);
+        return MAPPERS.inferAccountType(accountType)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        String.format(
+                                                "Could not map account type: %s", accountType)));
     }
 
     @JsonIgnore
@@ -364,7 +369,10 @@ public class AccountDetailsResponse {
         return TransactionalAccount.nxBuilder()
                 .withType(
                         TransactionalAccountType.from(toTinkAccountType())
-                                .orElse(TransactionalAccountType.OTHER))
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "Could not translate AccountType to TransactionalAccountType")))
                 .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(ExactCurrencyAmount.of(ownCapital, "SEK")))
                 .withId(
