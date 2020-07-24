@@ -60,7 +60,7 @@ public class PaymentRequest {
             paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
         }
 
-        return new PaymentRequest(paymentInRequestBuilder.build(), transfer.getEndUserIp());
+        return new PaymentRequest(paymentInRequestBuilder.build(), transfer.getOriginatingUserIp());
     }
 
     public Payment getPayment() {
