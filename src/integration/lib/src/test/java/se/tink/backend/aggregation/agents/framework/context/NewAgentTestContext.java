@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -66,8 +68,6 @@ public final class NewAgentTestContext extends AgentContext {
     private final Map<String, Account> accountsByBankId = new HashMap<>();
     private final Map<String, AccountFeatures> accountFeaturesByBankId = new HashMap<>();
     private final Map<String, List<Transaction>> transactionsByAccountBankId = new HashMap<>();
-    private final Map<String, List<TransferDestinationPattern>>
-            transferDestinationPatternsByAccountBankId = new HashMap<>();
     private final List<Transfer> transfers = new ArrayList<>();
     private IdentityData identityData = null;
 
@@ -116,7 +116,6 @@ public final class NewAgentTestContext extends AgentContext {
         accountsByBankId.clear();
         accountFeaturesByBankId.clear();
         transactionsByAccountBankId.clear();
-        transferDestinationPatternsByAccountBankId.clear();
         transfers.clear();
     }
 
@@ -144,9 +143,8 @@ public final class NewAgentTestContext extends AgentContext {
     }
 
     public List<TransferDestinationPattern> getTransferDestinationPatterns() {
-        return transferDestinationPatternsByAccountBankId.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .flatMap(List::stream)
+        return accountDataCache.getTransferDestinationPatternsToBeProcessed().values().stream()
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
@@ -223,17 +221,6 @@ public final class NewAgentTestContext extends AgentContext {
                     accountDataCache.cacheTransferDestinationPatterns(
                             account.getBankId(), patterns);
                 });
-
-        for (Account account : transferDestinationPatterns.keySet()) {
-            if (transferDestinationPatternsByAccountBankId.containsKey(account.getBankId())) {
-                transferDestinationPatternsByAccountBankId
-                        .get(account.getBankId())
-                        .addAll(transferDestinationPatterns.get(account));
-            } else {
-                transferDestinationPatternsByAccountBankId.put(
-                        account.getBankId(), transferDestinationPatterns.get(account));
-            }
-        }
     }
 
     @Override
@@ -515,9 +502,15 @@ public final class NewAgentTestContext extends AgentContext {
     }
 
     private void printTransferDestinations(String bankId) {
+        Optional<AccountData> optionalAccountData =
+                accountDataCache.getProcessedAccountDataByBankAccountId(bankId);
+        if (!optionalAccountData.isPresent()) {
+            return;
+        }
+        AccountData accountData = optionalAccountData.get();
+
         List<Map<String, String>> table =
-                transferDestinationPatternsByAccountBankId
-                        .getOrDefault(bankId, Collections.emptyList()).stream()
+                accountData.getTransferDestinationPatterns().stream()
                         .map(
                                 transferDestination -> {
                                     Map<String, String> row = new LinkedHashMap<>();
@@ -603,17 +596,16 @@ public final class NewAgentTestContext extends AgentContext {
 
     public CredentialDataDao dumpCollectedData() {
         List<AccountDataDao> accountDataList = new ArrayList<>();
-        accountsByBankId.forEach(
-                (bankId, account) -> {
-                    List<Transaction> transactions =
-                            transactionsByAccountBankId.getOrDefault(
-                                    bankId, Collections.emptyList());
-                    List<TransferDestinationPattern> transferDestinationPatterns =
-                            transferDestinationPatternsByAccountBankId.getOrDefault(
-                                    bankId, Collections.emptyList());
-                    accountDataList.add(
-                            new AccountDataDao(account, transactions, transferDestinationPatterns));
-                });
+        accountDataCache
+                .getProcessedAccountData()
+                .forEach(
+                        accountData -> {
+                            accountDataList.add(
+                                    new AccountDataDao(
+                                            accountData.getAccount(),
+                                            accountData.getTransactions(),
+                                            accountData.getTransferDestinationPatterns()));
+                        });
         return new CredentialDataDao(accountDataList, transfers, identityData);
     }
 
