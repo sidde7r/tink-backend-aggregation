@@ -48,14 +48,18 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
-        this.context
-                .getAccountDataCache()
-                .getFilteredAccountData()
-                .forEach(
-                        accountData ->
-                                // currently we do not want to restrict anything - just see this
-                                // command running
-                                filterRestrictedAccount(accountData.getAccount()));
+        try {
+            this.context
+                    .getAccountDataCache()
+                    .getFilteredAccountData()
+                    .forEach(
+                            accountData ->
+                                    // currently we do not want to restrict anything - just see this
+                                    // command running
+                                    filterRestrictedAccount(accountData.getAccount()));
+        } catch (RuntimeException e) {
+            log.warn("Could not execute Psd2PaymentAccountRestrictionWorkerCommand", e);
+        }
         return AgentWorkerCommandResult.CONTINUE;
     }
 
