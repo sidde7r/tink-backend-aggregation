@@ -7,7 +7,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -67,7 +66,6 @@ public final class NewAgentTestContext extends AgentContext {
     private final AccountDataCache accountDataCache;
     private final Map<String, Account> accountsByBankId = new HashMap<>();
     private final Map<String, AccountFeatures> accountFeaturesByBankId = new HashMap<>();
-    private final Map<String, List<Transaction>> transactionsByAccountBankId = new HashMap<>();
     private final List<Transfer> transfers = new ArrayList<>();
     private IdentityData identityData = null;
 
@@ -115,7 +113,6 @@ public final class NewAgentTestContext extends AgentContext {
         accountDataCache.clear();
         accountsByBankId.clear();
         accountFeaturesByBankId.clear();
-        transactionsByAccountBankId.clear();
         transfers.clear();
     }
 
@@ -124,18 +121,18 @@ public final class NewAgentTestContext extends AgentContext {
     }
 
     public List<Transaction> getTransactions() {
-        return transactionsByAccountBankId.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+        return accountDataCache.getTransactionsToBeProcessed();
     }
 
     public Optional<IdentityData> getIdentityData() {
         return Optional.ofNullable(identityData);
     }
 
-    public Map<String, List<Transaction>> getTransactionsByAccountBankId() {
-        return transactionsByAccountBankId;
+    public List<Transaction> getTransactionsToProcessByBankAccountId(String bankAccountId) {
+        return accountDataCache
+                .getProcessedAccountDataByBankAccountId(bankAccountId)
+                .map(AccountData::getTransactions)
+                .orElse(Lists.newArrayList());
     }
 
     public List<Transfer> getTransfers() {
@@ -265,7 +262,6 @@ public final class NewAgentTestContext extends AgentContext {
     public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
-        transactionsByAccountBankId.put(accountUniqueId, transactions);
         accountDataCache.cacheTransactions(accountUniqueId, transactions);
     }
 
@@ -316,8 +312,7 @@ public final class NewAgentTestContext extends AgentContext {
     public void validateFetchedData(AisValidator validator) {
         validator.validate(
                 accountsByBankId.values(),
-                transactionsByAccountBankId.values().stream()
-                        .collect(ArrayList::new, List::addAll, List::addAll),
+                accountDataCache.getTransactionsToBeProcessed(),
                 identityData);
     }
 
@@ -487,7 +482,7 @@ public final class NewAgentTestContext extends AgentContext {
 
     private void printTransactions(String bankId) {
         List<Map<String, String>> table =
-                transactionsByAccountBankId.getOrDefault(bankId, Collections.emptyList()).stream()
+                getTransactionsToProcessByBankAccountId(bankId).stream()
                         .sorted(Comparator.comparing(Transaction::getDate))
                         .map(
                                 transaction -> {

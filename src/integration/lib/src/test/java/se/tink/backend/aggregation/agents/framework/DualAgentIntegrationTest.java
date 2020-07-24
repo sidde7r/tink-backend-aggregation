@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.framework;
 
 import static org.junit.Assert.assertEquals;
 
-import com.google.common.collect.Lists;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -222,12 +221,8 @@ public class DualAgentIntegrationTest {
                 t -> true,
                 t -> String.format("%s%s", t.getDate().getTime(), t.getAmount()),
                 entry -> !Transaction.deepEquals(entry.getValue().first, entry.getValue().second),
-                firstContext
-                        .getTransactionsByAccountBankId()
-                        .getOrDefault(accountId, Lists.newArrayList()),
-                secondContext
-                        .getTransactionsByAccountBankId()
-                        .getOrDefault(accountId, Lists.newArrayList()));
+                firstContext.getTransactionsToProcessByBankAccountId(accountId),
+                secondContext.getTransactionsToProcessByBankAccountId(accountId));
     }
 
     /**
