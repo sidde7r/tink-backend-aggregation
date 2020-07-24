@@ -6,8 +6,8 @@
       "currencyCode" : "SEK",
       "scale" : 2,
       "unscaledValue" : 44187863,
-      "exactValue" : 441878.63,
-      "doubleValue" : 441878.63
+      "doubleValue" : 441878.63,
+      "exactValue" : 441878.63
     },
     "currencyCode" : "SEK",
     "bankId" : "1000000",
@@ -34,14 +34,116 @@
     "availableCredit" : 0.0,
     "balance" : 441878.63
   }, {
+    "accountNumber" : "1000011",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 2336486,
+      "doubleValue" : 23364.86,
+      "exactValue" : 23364.86
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "1000011",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "IPS",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "firstName",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "firstName",
+        "role" : null
+      } ]
+    },
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 23364.86
+  }, {
+    "accountNumber" : "9550-2000040",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 1883043,
+      "doubleValue" : 18830.43,
+      "exactValue" : 18830.43
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "2000040",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "AccountName",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "firstName",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "firstName",
+        "role" : null
+      } ]
+    },
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 18830.43
+  }, {
+    "accountNumber" : "9553-7000040",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 0,
+      "doubleValue" : 0.0,
+      "exactValue" : 0.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "7000040",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "SparkontoPlusCollector",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "firstName",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "firstName",
+        "role" : null
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "availableCredit" : 0.0,
+    "balance" : 0.0
+  }, {
     "accountNumber" : "9554-1000052",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
       "scale" : 1,
       "unscaledValue" : 0,
-      "exactValue" : 0.0,
-      "doubleValue" : 0.0
+      "doubleValue" : 0.0,
+      "exactValue" : 0.0
     },
     "currencyCode" : "SEK",
     "bankId" : "1000052",
@@ -67,6 +169,74 @@
     "flags" : "[]",
     "availableCredit" : 0.0,
     "balance" : 0.0
+  }, {
+    "accountNumber" : "1000075",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 1688567,
+      "doubleValue" : 16885.67,
+      "exactValue" : 16885.67
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "1000075",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Avtalspension SAF-LO",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "firstName",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "firstName",
+        "role" : null
+      } ]
+    },
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 16885.67
+  }, {
+    "accountNumber" : "1000093",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 31227852,
+      "doubleValue" : 312278.52,
+      "exactValue" : 312278.52
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "1000093",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Custom account name",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "firstName",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "firstName",
+        "role" : null
+      } ]
+    },
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 312278.52
   } ],
   "transactions" : [ {
     "amount" : 500.0,
@@ -578,6 +748,17 @@
     "amount" : 2000.0,
     "date" : 1564048800000,
     "description" : "Autogiro insert",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -3.42,
+    "date" : 1588586400000,
+    "description" : "overforing till Avanzakonto",
     "internalPayload" : { },
     "originalAmount" : 0.0,
     "payload" : { },
