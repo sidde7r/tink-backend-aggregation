@@ -51,8 +51,6 @@ public class AgentTestContext extends AgentContext {
     private final AccountDataCache accountDataCache;
     private Map<String, Account> accountsByBankId = Maps.newHashMap();
     private Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
-    private Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount =
-            Maps.newHashMap();
     private List<FraudDetailsContent> detailsContents;
     private List<Transfer> transfers = Lists.newArrayList();
     private Credentials credentials;
@@ -232,24 +230,10 @@ public class AgentTestContext extends AgentContext {
                     accountDataCache.cacheAccount(account);
                     accountDataCache.cacheTransferDestinationPatterns(
                             account.getBankId(), patterns);
+
+                    log.info("\t" + account.toString());
+                    patterns.forEach(pattern -> log.info("\t\t" + pattern.toString()));
                 });
-
-        for (Account account : transferDestinationPatterns.keySet()) {
-            if (transferDestinationPatternsByAccount.containsKey(account)) {
-                transferDestinationPatternsByAccount
-                        .get(account)
-                        .addAll(transferDestinationPatterns.get(account));
-            } else {
-                transferDestinationPatternsByAccount.put(
-                        account, transferDestinationPatterns.get(account));
-            }
-
-            log.info("\t" + account.toString());
-
-            for (TransferDestinationPattern pattern : transferDestinationPatterns.get(account)) {
-                log.info("\t\t" + pattern.toString());
-            }
-        }
     }
 
     @Override
@@ -367,7 +351,9 @@ public class AgentTestContext extends AgentContext {
         try {
             log.info(
                     "------------------------------------------------------------TRANSFER DESTINATIONS----------------------------------------------------------------");
-            log.info(mapper.writeValueAsString(transferDestinationPatternsByAccount));
+            log.info(
+                    mapper.writeValueAsString(
+                            accountDataCache.getTransferDestinationPatternsToBeProcessed()));
             log.info(
                     "------------------------------------------------------------TRANSFER DESTINATIONS----------------------------------------------------------------");
         } catch (JsonProcessingException e) {
