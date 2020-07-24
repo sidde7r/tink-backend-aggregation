@@ -293,7 +293,8 @@ public class AgentWorkerOperationFactory {
                             context,
                             request,
                             regulatoryRestrictions,
-                            psd2PaymentAccountClassifier));
+                            psd2PaymentAccountClassifier,
+                            accountInformationServiceEventsProducer));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
@@ -349,7 +350,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -436,7 +436,11 @@ public class AgentWorkerOperationFactory {
                 createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
         commands.add(
                 new Psd2PaymentAccountRestrictionWorkerCommand(
-                        context, request, regulatoryRestrictions, psd2PaymentAccountClassifier));
+                        context,
+                        request,
+                        regulatoryRestrictions,
+                        psd2PaymentAccountClassifier,
+                        accountInformationServiceEventsProducer));
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
@@ -473,7 +477,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -559,7 +562,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
         String operationName;
         List<AgentWorkerCommand> commands;
@@ -590,7 +592,8 @@ public class AgentWorkerOperationFactory {
                                 context,
                                 request,
                                 regulatoryRestrictions,
-                                psd2PaymentAccountClassifier));
+                                psd2PaymentAccountClassifier,
+                                accountInformationServiceEventsProducer));
                 commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
                 commands.addAll(
                         createOrderedRefreshableItemsCommands(
@@ -635,7 +638,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
 
         String operationName = "execute-whitelisted-transfer";
@@ -798,7 +800,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -839,7 +840,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -879,7 +879,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -938,7 +937,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -1019,7 +1017,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -1143,7 +1140,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -1256,7 +1252,8 @@ public class AgentWorkerOperationFactory {
                             context,
                             request,
                             regulatoryRestrictions,
-                            psd2PaymentAccountClassifier));
+                            psd2PaymentAccountClassifier,
+                            accountInformationServiceEventsProducer));
             // If this is an optIn request we request the caller do supply supplemental information
             // with the
             // accounts they want to whitelist.
@@ -1341,7 +1338,6 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -1406,7 +1402,6 @@ public class AgentWorkerOperationFactory {
                         loginAgentEventProducer,
                         agentWorkerOperationState,
                         this.providerTierConfiguration,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer));
     }
 

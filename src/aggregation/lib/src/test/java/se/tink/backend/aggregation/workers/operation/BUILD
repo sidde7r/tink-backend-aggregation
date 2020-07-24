@@ -15,7 +15,6 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/regulatory_restrictions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/integration/models",
         "//src/libraries/pair",
