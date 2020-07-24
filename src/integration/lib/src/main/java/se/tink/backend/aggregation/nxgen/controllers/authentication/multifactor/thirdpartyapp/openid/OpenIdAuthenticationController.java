@@ -143,6 +143,7 @@ public class OpenIdAuthenticationController
             } else {
                 OAuth2Token refreshedToken = refreshAccessToken(oAuth2Token);
                 saveAccessToken(refreshedToken);
+                oAuth2Token = refreshedToken;
             }
         }
 
