@@ -112,9 +112,7 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     private ExactCurrencyAmount getAvailableCredit() {
-        return ExactCurrencyAmount.of(
-                creditLimit.subtract(currentAmount.add(outstandingAmount)),
-                IcaBankenConstants.CURRENCY);
+        return ExactCurrencyAmount.of(availableAmount, IcaBankenConstants.CURRENCY);
     }
 
     @JsonIgnore

@@ -10,7 +10,7 @@ import se.tink.libraries.enums.MarketCode;
 
 public class IcaBankenSeWireMockTest {
 
-    private static final String PSU = "psu";
+    private static final String PSU = "199909091234";
 
     @Test
     public void testRefresh() throws Exception {
@@ -25,8 +25,8 @@ public class IcaBankenSeWireMockTest {
                 AgentWireMockRefreshTest.builder(
                                 MarketCode.SE, "icabanken-bankid", wireMockServerFilePath)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), PSU)
-                        .addRefreshableItems()
                         .build();
 
         final AgentContractEntity expected =
