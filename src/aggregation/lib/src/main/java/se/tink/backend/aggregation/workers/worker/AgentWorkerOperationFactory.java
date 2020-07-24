@@ -4,11 +4,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +93,12 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.uuid.UUIDUtils;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
 
@@ -161,7 +162,6 @@ public class AgentWorkerOperationFactory {
             ProviderTierConfiguration providerTierConfiguration,
             @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands,
             RegulatoryRestrictions regulatoryRestrictions,
-            Psd2PaymentAccountClassifier psd2PaymentAccountClassifier,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
         this.cacheClient = cacheClient;
 
@@ -193,7 +193,8 @@ public class AgentWorkerOperationFactory {
         this.providerTierConfiguration = providerTierConfiguration;
         this.shouldAddExtraCommands = shouldAddExtraCommands;
         this.regulatoryRestrictions = regulatoryRestrictions;
-        this.psd2PaymentAccountClassifier = psd2PaymentAccountClassifier;
+        this.psd2PaymentAccountClassifier =
+                Psd2PaymentAccountClassifier.createWithMetrics(metricRegistry);
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
     }
 
