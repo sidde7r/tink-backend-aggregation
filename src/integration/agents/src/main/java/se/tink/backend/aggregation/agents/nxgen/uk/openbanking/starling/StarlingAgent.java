@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -9,7 +10,6 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.StarlingTransferExecutor;
@@ -17,9 +17,8 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive.OAuth2Authenticator;
@@ -29,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /** Starling documentation is available at https://api-sandbox.starlingbank.com/api/swagger.yaml */
 public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
@@ -45,10 +43,9 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
     private String redirectUrl;
     private OAuth2Authenticator authenticator;
 
-    public StarlingAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
-
+    @Inject
+    public StarlingAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         final AgentConfiguration<StarlingConfiguration> agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(StarlingConfiguration.class);
