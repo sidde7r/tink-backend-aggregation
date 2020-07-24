@@ -25,15 +25,10 @@ public class StarlingConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String signingKey;
 
     public ClientConfigurationEntity getAisConfiguration() {
-        Preconditions.checkNotNull(aisClientId, "Starling AIS configuration could not load.");
-        Preconditions.checkNotNull(aisClientSecret, "Starling AIS configuration could not load.");
         return new ClientConfigurationEntity(aisClientId, aisClientSecret);
     }
 
     public ClientConfigurationEntity getPisConfiguration() {
-
-        Preconditions.checkNotNull(pisClientId, "Starling PIS configuration could not load.");
-        Preconditions.checkNotNull(pisClientSecret, "Starling PIS configuration could not load.");
         return new ClientConfigurationEntity(pisClientId, pisClientSecret);
     }
 
