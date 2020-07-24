@@ -60,9 +60,11 @@ public class SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand
                             new MetricId.MetricLabels()
                                     .add("action", "send_psd2_account_classification"));
 
-            context.getAccountDataCache()
-                    .getProcessedAccounts()
-                    .forEach(this::sendPsd2AccountClassificationToUpdateService);
+            // temporarily disabling sending out the classification
+
+            //            context.getAccountDataCache()
+            //                    .getProcessedAccounts()
+            //                    .forEach(this::sendPsd2AccountClassificationToUpdateService);
 
             action.completed();
         } catch (RuntimeException e) {
