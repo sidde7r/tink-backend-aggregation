@@ -30,7 +30,12 @@ public class SdcConstants {
         PASSWORD_BLOCKED("the password is blocked", true),
         NO_AGREEMENT("you have no agreement", false),
         DEVICE_REGISTRATION_NOT_ALLOWED("your bank doesn't allow device registration", false),
-        CUSTOMER_KNOWLEDGE_QUESTIONNAIRE_PENDING("ks01052f", true);
+        CUSTOMER_KNOWLEDGE_QUESTIONNAIRE_PENDING("ks01052f", true),
+        PIN_BLOCKED(
+                "Your PIN code is blocked. You can create a new PIN in the netbank or contact your bank.",
+                false),
+        PIN_4_CHARACTERS(
+                "{\n  \"pin\" : \"The string must contain exactly 4 characters\"\n}", false);
 
         private final String message;
         private final boolean blocked;
