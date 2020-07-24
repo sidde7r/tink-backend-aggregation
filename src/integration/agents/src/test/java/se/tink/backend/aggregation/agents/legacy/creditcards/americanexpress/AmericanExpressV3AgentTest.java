@@ -11,8 +11,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
@@ -23,9 +21,9 @@ import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.T
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TransactionsRequest;
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -77,16 +75,12 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
         agent.login();
         agent.refresh();
 
-        Map<String, List<Transaction>> transactionsByAccountBankId =
-                context.getTransactionsByAccountBankId();
+        AccountDataCache accountDataCache = context.getAccountDataCache();
+        int count = accountDataCache.getTransactionsToBeProcessed().size();
 
-        int count = 0;
-
-        for (List<Transaction> transactions : transactionsByAccountBankId.values()) {
-            count += transactions.size();
-        }
-
-        System.out.println(MAPPER.writeValueAsString(transactionsByAccountBankId));
+        System.out.println(
+                MAPPER.writeValueAsString(
+                        accountDataCache.getTransactionsByAccountToBeProcessed()));
         System.out.println("Number of transactions: " + count);
     }
 

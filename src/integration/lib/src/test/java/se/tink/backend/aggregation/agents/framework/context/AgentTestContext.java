@@ -50,7 +50,6 @@ public class AgentTestContext extends AgentContext {
 
     private final AccountDataCache accountDataCache;
     private Map<String, Account> accountsByBankId = Maps.newHashMap();
-    private Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
     private List<FraudDetailsContent> detailsContents;
     private List<Transfer> transfers = Lists.newArrayList();
     private Credentials credentials;
@@ -78,8 +77,11 @@ public class AgentTestContext extends AgentContext {
         super.clear();
         accountDataCache.clear();
         accountsByBankId.clear();
-        transactionsByAccountBankId.clear();
         transfers.clear();
+    }
+
+    public AccountDataCache getAccountDataCache() {
+        return accountDataCache;
     }
 
     public List<Account> getUpdatedAccounts() {
@@ -90,18 +92,8 @@ public class AgentTestContext extends AgentContext {
         return detailsContents;
     }
 
-    public Map<String, List<Transaction>> getTransactionsByAccountBankId() {
-        return transactionsByAccountBankId;
-    }
-
     public List<Transaction> getTransactions() {
-        List<Transaction> transactions = Lists.newArrayList();
-
-        for (String accountId : transactionsByAccountBankId.keySet()) {
-            transactions.addAll(transactionsByAccountBankId.get(accountId));
-        }
-
-        return transactions;
+        return accountDataCache.getTransactionsToBeProcessed();
     }
 
     public List<Transfer> getTransfers() {
@@ -118,33 +110,31 @@ public class AgentTestContext extends AgentContext {
     public void processTransactions() {
         log.info("Processing transactions");
 
-        int numberOfAccounts = 0;
-        int numberOfTransactions = 0;
-
-        try {
-            for (String bankId : accountsByBankId.keySet()) {
-                numberOfAccounts++;
-
-                log.info(mapper.writeValueAsString(accountsByBankId.get(bankId)));
-
-                if (transactionsByAccountBankId.containsKey(bankId)) {
-                    for (Transaction transaction : transactionsByAccountBankId.get(bankId)) {
-                        log.info("\t" + mapper.writeValueAsString(transaction));
-                        numberOfTransactions++;
-                    }
-                }
-
-                log.info("");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        accountDataCache
+                .getTransactionsByAccountToBeProcessed()
+                .forEach(
+                        (account, transactions) -> {
+                            try {
+                                log.info(mapper.writeValueAsString(account));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            transactions.forEach(
+                                    transaction -> {
+                                        try {
+                                            log.info("\t" + mapper.writeValueAsString(transaction));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+                            log.info("");
+                        });
 
         log.info(
                 "Processed "
-                        + numberOfAccounts
+                        + accountDataCache.getProcessedAccounts().size()
                         + " accounts and "
-                        + numberOfTransactions
+                        + accountDataCache.getTransactionsToBeProcessed().size()
                         + " transactions.");
     }
 
@@ -277,7 +267,6 @@ public class AgentTestContext extends AgentContext {
     public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
-        transactionsByAccountBankId.put(accountUniqueId, transactions);
         accountDataCache.cacheTransactions(accountUniqueId, transactions);
     }
 
