@@ -742,4 +742,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public String getCorrelationId() {
         return correlationId;
     }
+
+    public Psd2PaymentAccountClassifier getPsd2PaymentAccountClassifier() {
+        return psd2PaymentAccountClassifier;
+    }
+
+    public RegulatoryRestrictions getRegulatoryRestrictions() {
+        return regulatoryRestrictions;
+    }
 }
