@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
+import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.Psd2PaymentAccountClassifier;
 import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
@@ -55,6 +55,7 @@ import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.Psd2PaymentAccountRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshCommandChainEventTriggerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
@@ -127,9 +128,9 @@ public class AgentWorkerOperationFactory {
     private AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private TppSecretsServiceClient tppSecretsServiceClient;
     private InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
+    private final RegulatoryRestrictions regulatoryRestrictions;
+    private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
-
-    private RegulatoryRestrictions regulatoryRestrictions;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -159,7 +160,7 @@ public class AgentWorkerOperationFactory {
             InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory,
             ProviderTierConfiguration providerTierConfiguration,
             @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands,
-            @Nullable RegulatoryRestrictions regulatoryRestrictions,
+            RegulatoryRestrictions regulatoryRestrictions,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
         this.cacheClient = cacheClient;
 
@@ -191,6 +192,8 @@ public class AgentWorkerOperationFactory {
         this.providerTierConfiguration = providerTierConfiguration;
         this.shouldAddExtraCommands = shouldAddExtraCommands;
         this.regulatoryRestrictions = regulatoryRestrictions;
+        this.psd2PaymentAccountClassifier =
+                Psd2PaymentAccountClassifier.createWithMetrics(metricRegistry);
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
     }
 
@@ -277,6 +280,12 @@ public class AgentWorkerOperationFactory {
         // Due to the agents depending on updateTransactions to populate the the Accounts list
         // We need to reselect and send accounts to system
         if (shouldAddExtraCommands.test(request.getProvider())) {
+            commands.add(
+                    new Psd2PaymentAccountRestrictionWorkerCommand(
+                            context,
+                            request,
+                            regulatoryRestrictions,
+                            psd2PaymentAccountClassifier));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
@@ -411,6 +420,9 @@ public class AgentWorkerOperationFactory {
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
                 createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
+        commands.add(
+                new Psd2PaymentAccountRestrictionWorkerCommand(
+                        context, request, regulatoryRestrictions, psd2PaymentAccountClassifier));
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
@@ -559,6 +571,12 @@ public class AgentWorkerOperationFactory {
                 commands.addAll(
                         createRefreshAccountsCommands(
                                 request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+                commands.add(
+                        new Psd2PaymentAccountRestrictionWorkerCommand(
+                                context,
+                                request,
+                                regulatoryRestrictions,
+                                psd2PaymentAccountClassifier));
                 commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
                 commands.addAll(
                         createOrderedRefreshableItemsCommands(
@@ -1216,6 +1234,12 @@ public class AgentWorkerOperationFactory {
             // Start refreshing all account items
             commands.addAll(createRefreshAccountsCommands(request, context, accountItems));
 
+            commands.add(
+                    new Psd2PaymentAccountRestrictionWorkerCommand(
+                            context,
+                            request,
+                            regulatoryRestrictions,
+                            psd2PaymentAccountClassifier));
             // If this is an optIn request we request the caller do supply supplemental information
             // with the
             // accounts they want to whitelist.
