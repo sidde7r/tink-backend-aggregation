@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -38,7 +37,6 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 public final class AvanzaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshLoanAccountsExecutor {
 
@@ -88,16 +86,6 @@ public final class AvanzaAgent extends NextGenerationAgent
                         apiClient, authSessionStorage, temporaryStorage, sessionStorage),
                 persistentStorage,
                 credentials);
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return transactionalAccountRefreshController.fetchCheckingAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
     @Override
