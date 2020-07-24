@@ -4,11 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
@@ -33,6 +31,7 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -49,7 +48,6 @@ public class AgentTestContext extends AgentContext {
     private final TinkHttpClient supplementalClient;
 
     private final AccountDataCache accountDataCache;
-    private Map<String, Account> accountsByBankId = Maps.newHashMap();
     private List<FraudDetailsContent> detailsContents;
     private List<Transfer> transfers = Lists.newArrayList();
     private Credentials credentials;
@@ -76,7 +74,6 @@ public class AgentTestContext extends AgentContext {
     public void clear() {
         super.clear();
         accountDataCache.clear();
-        accountsByBankId.clear();
         transfers.clear();
     }
 
@@ -85,7 +82,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     public List<Account> getUpdatedAccounts() {
-        return Lists.newArrayList(accountsByBankId.values());
+        return Lists.newArrayList(accountDataCache.getProcessedAccounts());
     }
 
     public List<FraudDetailsContent> getDetailsContents() {
@@ -180,8 +177,6 @@ public class AgentTestContext extends AgentContext {
             // NOOP.
         }
 
-        accountsByBankId.put(account.getBankId(), account);
-
         accountDataCache.cacheAccount(account);
         accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
     }
@@ -198,16 +193,28 @@ public class AgentTestContext extends AgentContext {
     }
 
     public Account sendAccountToUpdateService(String bankAccountId) {
-        return accountsByBankId.get(bankAccountId);
+        Optional<AccountData> optionalAccountData =
+                accountDataCache.getFilteredAccountDataByBankAccountId(bankAccountId);
+        if (!optionalAccountData.isPresent()) {
+            log.warn(
+                    "Trying to send a filtered or non-existent Account to update service! Agents should not do this on their own.");
+            return null;
+        }
+
+        AccountData accountData = optionalAccountData.get();
+        if (accountData.isProcessed()) {
+            // Already updated/processed, do not do it twice.
+            return accountData.getAccount();
+        }
+
+        Account account = accountData.getAccount();
+        accountDataCache.setProcessedTinkAccountId(bankAccountId, account.getId());
+        return account;
     }
 
     @Override
     public AccountHolder sendAccountHolderToUpdateService(Account processedAccount) {
-        return accountsByBankId.values().stream()
-                .filter(a -> Objects.equals(processedAccount.getId(), a.getId()))
-                .findFirst()
-                .map(Account::getAccountHolder)
-                .orElse(null);
+        return processedAccount.getAccountHolder();
     }
 
     @Override
