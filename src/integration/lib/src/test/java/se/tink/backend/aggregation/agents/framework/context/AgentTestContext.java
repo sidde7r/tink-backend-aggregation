@@ -179,6 +179,10 @@ public class AgentTestContext extends AgentContext {
 
         accountDataCache.cacheAccount(account);
         accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
+
+        // Automatically process it when cached. This is because we don't have a WorkerCommand doing
+        // this for us.
+        sendAccountToUpdateService(account.getBankId());
     }
 
     @Override
@@ -258,14 +262,6 @@ public class AgentTestContext extends AgentContext {
         }
 
         cacheAccount(account);
-        account = sendAccountToUpdateService(account.getBankId());
-
-        for (Transaction updatedTransaction : transactions) {
-            updatedTransaction.setAccountId(account.getId());
-            updatedTransaction.setCredentialsId(account.getCredentialsId());
-            updatedTransaction.setUserId(account.getUserId());
-        }
-
         cacheTransactions(account.getBankId(), transactions);
         return account;
     }

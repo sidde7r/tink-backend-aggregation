@@ -164,6 +164,10 @@ public final class NewAgentTestContext extends AgentContext {
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         accountDataCache.cacheAccount(account);
         accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
+
+        // Automatically process it when cached. This is because we don't have a WorkerCommand doing
+        // this for us.
+        sendAccountToUpdateService(account.getBankId());
     }
 
     public Account sendAccountToUpdateService(String bankAccountId) {
@@ -229,22 +233,15 @@ public final class NewAgentTestContext extends AgentContext {
     @Deprecated // Use cacheTransactions instead
     public Account updateTransactions(Account account, List<Transaction> transactions) {
         cacheAccount(account);
-        final Account updatedAccount = sendAccountToUpdateService(account.getBankId());
-
-        for (Transaction updatedTransaction : transactions) {
-            updatedTransaction.setAccountId(updatedAccount.getId());
-            updatedTransaction.setCredentialsId(updatedAccount.getCredentialsId());
-            updatedTransaction.setUserId(updatedAccount.getUserId());
-        }
-
-        cacheTransactions(updatedAccount.getBankId(), transactions);
-        return updatedAccount;
+        cacheTransactions(account.getBankId(), transactions);
+        return account;
     }
 
     @Override
     public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
+
         accountDataCache.cacheTransactions(accountUniqueId, transactions);
     }
 
