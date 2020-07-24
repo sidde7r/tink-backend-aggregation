@@ -1,107 +1,77 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator;
 
-import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.TimeValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.ErrorType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankAuthenticationController
-        implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(OAuth2AuthenticationController.class);
+        implements AutoAuthenticator, BankIdAuthenticator<AuthenticationResponse> {
     private static final int DEFAULT_TOKEN_LIFETIME = 90;
     private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
 
     private final PersistentStorage persistentStorage;
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalRequester supplementalRequester;
     private final SwedbankAuthenticator authenticator;
     private final Credentials credentials;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
-    private final StrongAuthenticationState strongAuthenticationState;
-    private final SwedbankTransactionFetcher swedbankTransactionFetcher;
+    private String ssn;
 
     public SwedbankAuthenticationController(
             PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
+            SupplementalRequester supplementalRequester,
             SwedbankAuthenticator authenticator,
-            Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState,
-            SwedbankTransactionFetcher swedbankTransactionFetcher) {
+            Credentials credentials) {
         this(
                 persistentStorage,
-                supplementalInformationHelper,
+                supplementalRequester,
                 authenticator,
                 credentials,
-                strongAuthenticationState,
                 DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT,
-                swedbankTransactionFetcher);
+                DEFAULT_TOKEN_LIFETIME_UNIT);
     }
 
     public SwedbankAuthenticationController(
             PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
+            SupplementalRequester supplementalRequester,
             SwedbankAuthenticator authenticator,
             Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState,
             int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit,
-            SwedbankTransactionFetcher swedbankTransactionFetcher) {
+            TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
-        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.supplementalRequester = supplementalRequester;
         this.authenticator = authenticator;
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
-        this.strongAuthenticationState = strongAuthenticationState;
-        this.swedbankTransactionFetcher = swedbankTransactionFetcher;
     }
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
         OAuth2Token accessToken =
-                persistentStorage
-                        .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
-                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+                getAccessToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         if (accessToken.hasAccessExpired()) {
             if (!accessToken.canRefresh()) {
@@ -122,48 +92,37 @@ public class SwedbankAuthenticationController
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            // Store the new access token on the persistent storage again.
-            persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
-
-            // Fall through.
+            // Store the new access token
+            authenticator.useAccessToken(accessToken);
         }
-
-        // Tell the authenticator which access token it can use.
-        authenticator.useAccessToken(accessToken);
     }
 
     @Override
-    public ThirdPartyAppResponse<String> init() {
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
+    public AuthenticationResponse init(String ssn) {
+        this.ssn = ssn;
+        return authenticator.init(ssn);
     }
 
     @Override
-    public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        return ThirdPartyAppAuthenticationPayload.of(
-                authenticator.buildAuthorizeUrl(strongAuthenticationState.getState()));
-    }
+    public BankIdStatus collect(AuthenticationResponse reference) throws AuthenticationException {
+        final String collectAuthUri = reference.getCollectAuthUri();
+        final AuthenticationStatusResponse authenticationStatusResponse =
+                authenticator.collect(ssn, collectAuthUri);
 
-    @Override
-    public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException {
-
-        Map<String, String> callbackData =
-                supplementalInformationHelper
-                        .waitForSupplementalInformation(
-                                strongAuthenticationState.getSupplementalKey(),
-                                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                                TimeUnit.MINUTES)
-                        .orElseThrow(
-                                LoginError.INCORRECT_CREDENTIALS
-                                        ::exception); // todo: change this exception
-
-        handleErrors(callbackData);
-
-        String code = callbackData.getOrDefault(OAuth2Constants.CallbackParams.CODE, null);
-        if (Strings.isNullOrEmpty(code)) {
-            throw new IllegalStateException("callbackData did not contain 'code'");
+        switch (authenticationStatusResponse.getScaStatus().toLowerCase()) {
+            case AuthStatus.RECEIVED:
+            case AuthStatus.STARTED:
+                return BankIdStatus.WAITING;
+            case AuthStatus.FINALIZED:
+                return finalizeBankid(authenticationStatusResponse);
+            default:
+                return BankIdStatus.FAILED_UNKNOWN;
         }
+    }
 
-        OAuth2Token accessToken = authenticator.exchangeAuthorizationCode(code);
+    private BankIdStatus finalizeBankid(AuthenticationStatusResponse authenticationStatusResponse) {
+        final String code = authenticationStatusResponse.getAuthorizationCode();
+        final OAuth2Token accessToken = authenticator.exchangeAuthorizationCode(code);
 
         if (!accessToken.isValid()) {
             throw new IllegalStateException("Invalid access token.");
@@ -178,75 +137,53 @@ public class SwedbankAuthenticationController
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                         accessToken, tokenLifetime, tokenLifetimeUnit));
 
-        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
-
         // Tell the authenticator which access token it can use.
         authenticator.useAccessToken(accessToken);
 
         handleSwedbankFlow();
 
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+        return BankIdStatus.DONE;
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public AuthenticationResponse refreshAutostartToken()
+            throws BankIdException, BankServiceException, AuthorizationException,
+                    AuthenticationException {
+        return null;
+    }
+
+    @Override
+    public Optional<OAuth2Token> getAccessToken() {
+        return persistentStorage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class);
+    }
+
+    @Override
+    public Optional<OAuth2Token> refreshAccessToken(String refreshToken) throws SessionException {
+        return Optional.ofNullable(authenticator.refreshAccessToken(refreshToken));
     }
 
     private void handleSwedbankFlow() {
         ConsentResponse initConsent = authenticator.getConsentForAllAccounts();
         authenticator.useConsent(initConsent);
-        List<String> ibanList = authenticator.getAccountList();
 
         ConsentResponse consentResponseIbanList = authenticator.getConsentForIbanList();
         authenticator.useConsent(consentResponseIbanList);
 
-        supplementalInformationHelper.openThirdPartyApp(
-                ThirdPartyAppAuthenticationPayload.of(
-                        new URL(consentResponseIbanList.getLinks().getHrefEntity().getHref())));
+        AuthenticationResponse response =
+                authenticator.initiateAuthorization(
+                        consentResponseIbanList.getLinks().getHrefEntity().getHref());
+        supplementalRequester.openBankId(response.getChallengeData().getAutoStartToken(), true);
 
-        while (!authenticator.getConsentStatus(consentResponseIbanList.getConsentId())) {
+        while (authenticator
+                .getScaStatus(response.getCollectAuthUri())
+                .equalsIgnoreCase(AuthStatus.STARTED)) {
             Uninterruptibles.sleepUninterruptibly(
                     SwedbankConstants.TimeValues.SLEEP_TIME_MILLISECONDS, TimeUnit.MILLISECONDS);
         }
-
-        for (String iban : ibanList) {
-            swedbankTransactionFetcher.startScaAuthorization(
-                    iban,
-                    Timestamp.valueOf(
-                            LocalDateTime.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX)),
-                    Timestamp.valueOf(LocalDateTime.now()));
-        }
-    }
-
-    @Override
-    public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
-        return Optional.empty();
-    }
-
-    private Optional<String> getCallbackElement(Map<String, String> callbackData, String key) {
-        String value = callbackData.getOrDefault(key, null);
-
-        return Strings.isNullOrEmpty(value) ? Optional.empty() : Optional.of(value);
-    }
-
-    private void handleErrors(Map<String, String> callbackData) throws AuthenticationException {
-        Optional<String> error =
-                getCallbackElement(callbackData, OAuth2Constants.CallbackParams.ERROR);
-        Optional<String> errorDescription =
-                getCallbackElement(callbackData, OAuth2Constants.CallbackParams.ERROR_DESCRIPTION);
-
-        if (!error.isPresent()) {
-            logger.info("OAuth2 callback success.");
-            return;
-        }
-
-        ErrorType errorType = ErrorType.getErrorType(error.get());
-        if (OAuth2Constants.ErrorType.ACCESS_DENIED.equals(errorType)
-                || ErrorType.LOGIN_REQUIRED.equals(errorType)) {
-            logger.info(
-                    "OAuth2 {} callback: {}",
-                    errorType.getValue(),
-                    SerializationUtils.serializeToString(callbackData));
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
-
-        throw new IllegalStateException(
-                String.format("Unknown error: %s:%s.", errorType, errorDescription.orElse("")));
     }
 }

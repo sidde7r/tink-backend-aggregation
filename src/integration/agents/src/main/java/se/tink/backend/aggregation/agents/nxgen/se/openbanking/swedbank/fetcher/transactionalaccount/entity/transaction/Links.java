@@ -6,15 +6,27 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class Links {
 
-    private Href startAuthorisation;
+    private Href scaStatus;
+
+    private Href scaRedirect;
 
     private Href status;
 
+    private Href download;
+
     public Href getHrefEntity() {
-        return startAuthorisation;
+        return scaRedirect;
+    }
+
+    public Href getScaStatus() {
+        return scaStatus;
     }
 
     public Href getStatus() {
         return status;
+    }
+
+    public Href getDownload() {
+        return download;
     }
 }

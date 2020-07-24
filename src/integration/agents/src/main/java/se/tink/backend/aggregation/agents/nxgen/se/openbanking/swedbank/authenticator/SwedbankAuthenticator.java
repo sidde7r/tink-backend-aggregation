@@ -5,8 +5,11 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -34,13 +37,21 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
         OAuth2Token token = apiClient.refreshToken(refreshToken);
-        persistentStorage.put(SwedbankConstants.StorageKeys.OAUTH_TOKEN, token);
+        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, token);
         return token;
     }
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        persistentStorage.put(SwedbankConstants.StorageKeys.OAUTH_TOKEN, accessToken);
+        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
+    }
+
+    public AuthenticationResponse init(String ssn) {
+        return apiClient.authenticate(ssn);
+    }
+
+    public AuthenticationStatusResponse collect(String ssn, String collectAuthUri) {
+        return apiClient.collectAuthStatus(ssn, collectAuthUri);
     }
 
     public void useConsent(ConsentResponse consentResponse) {
@@ -63,5 +74,13 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
 
     public boolean getConsentStatus(String consentId) {
         return apiClient.checkIfConsentIsApproved(consentId);
+    }
+
+    public String getScaStatus(String statusLink) {
+        return apiClient.getScaStatus(statusLink);
+    }
+
+    public AuthenticationResponse initiateAuthorization(String authorizationLink) {
+        return apiClient.startAuthorization(authorizationLink);
     }
 }
