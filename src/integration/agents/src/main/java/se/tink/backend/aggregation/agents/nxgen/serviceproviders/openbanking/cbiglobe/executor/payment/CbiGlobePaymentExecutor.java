@@ -70,7 +70,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         sessionStorage.put(QueryKeys.STATE, strongAuthenticationState.getState());
         sessionStorage.put(
-                CbiGlobeConstants.HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getEndUserIp());
+                CbiGlobeConstants.HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
 
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
