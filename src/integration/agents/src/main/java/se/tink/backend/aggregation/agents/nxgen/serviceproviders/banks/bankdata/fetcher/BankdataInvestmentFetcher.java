@@ -13,14 +13,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataPoolAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.AssetDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.DepositsContentListResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BankdataInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger log =
-            new AggregationLogger(BankdataInvestmentFetcher.class);
     private final BankdataApiClient bankClient;
 
     public BankdataInvestmentFetcher(BankdataApiClient bankClient) {

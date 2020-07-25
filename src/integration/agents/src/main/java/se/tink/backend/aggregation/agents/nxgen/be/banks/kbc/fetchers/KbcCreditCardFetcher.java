@@ -6,7 +6,6 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -15,9 +14,6 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class KbcCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(KbcCreditCardFetcher.class);
-
     private final KbcApiClient apiClient;
     private final SessionStorage sessionStorage;
 

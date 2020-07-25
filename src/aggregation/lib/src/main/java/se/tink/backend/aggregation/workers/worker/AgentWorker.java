@@ -8,7 +8,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.ratelimit.RateLimitedExecutorService;
 import se.tink.libraries.concurrency.InstrumentedRunnable;
@@ -21,8 +20,6 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentWorker implements Managed {
-
-    private static final AggregationLogger log = new AggregationLogger(AgentWorker.class);
     private static final int NUMBER_OF_THREADS = 1000;
     private static final int BANKID_ATTEMPTS = 90;
     private static final int SLACK_DURATION = 5;

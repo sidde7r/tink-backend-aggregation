@@ -10,14 +10,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.validators.HandelsbankenValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class BankidAuthenticationValidator extends HandelsbankenValidator<BaseResponse> {
-
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(BankidAuthenticationValidator.class);
-
     private final Credentials credentials;
 
     public BankidAuthenticationValidator(Credentials credentials, AuthorizeResponse response) {

@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.FutureTransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -26,9 +25,6 @@ public class KbcTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, String>,
                 UpcomingTransactionFetcher<TransactionalAccount> {
-
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(KbcTransactionalAccountFetcher.class);
     private static final Set<AccountTypes> SAVINGS_OR_CHECKING =
             Collections.unmodifiableSet(EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS));
 

@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.PendingPaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.PendingPaymentsResponseEntity;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
@@ -18,9 +17,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 public class IngTransactionFetcher
         implements TransactionPagePaginator<TransactionalAccount>,
                 UpcomingTransactionFetcher<TransactionalAccount> {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(IngTransactionFetcher.class);
-
     private final Credentials credentials;
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;

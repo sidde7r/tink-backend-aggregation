@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -27,8 +26,6 @@ import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifier
 @JsonObject
 @XmlRootElement
 public class AccountEntity {
-    private static final AggregationLogger log = new AggregationLogger(AccountEntity.class);
-
     @JsonProperty("comunes")
     private GeneralInfoEntity generalInfo;
 

@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.BanqueP
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entities.ContractOverviewEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.transactionalaccounts.rpc.BanquePopulaireTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.ContractsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -16,9 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class BanquePopulaireTransactionalAccountsFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, String> {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(BanquePopulaireTransactionalAccountsFetcher.class);
-
     private final BanquePopulaireApiClient apiClient;
 
     public BanquePopulaireTransactionalAccountsFetcher(BanquePopulaireApiClient apiClient) {

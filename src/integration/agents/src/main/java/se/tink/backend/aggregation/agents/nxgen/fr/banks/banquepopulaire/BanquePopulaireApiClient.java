@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.BankConfigResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.ContractsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.GeneralConfigrationResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -30,9 +29,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BanquePopulaireApiClient {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(BanquePopulaireApiClient.class);
-
     private final SessionStorage sessionStorage;
     private TinkHttpClient client;
     private BankEntity cachedBankEntity;

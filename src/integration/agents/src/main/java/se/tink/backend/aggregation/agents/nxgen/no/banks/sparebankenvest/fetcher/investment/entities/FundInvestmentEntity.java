@@ -6,13 +6,9 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonObject
 public class FundInvestmentEntity {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(FundInvestmentEntity.class);
-
     private Double gevinst;
     private String isinnr;
     private String kontonummer;

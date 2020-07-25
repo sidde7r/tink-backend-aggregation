@@ -5,7 +5,6 @@ import org.assertj.core.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -14,8 +13,6 @@ public class CreditMutuelPfmCreditCardTransactionsFetcher
         implements TransactionFetcher<CreditCardAccount> {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(CreditMutuelPfmCreditCardTransactionsFetcher.class);
-    private static final AggregationLogger AGGREGATION_LOGGER =
-            new AggregationLogger(EuroInformationApiClient.class);
     private final EuroInformationApiClient apiClient;
 
     private CreditMutuelPfmCreditCardTransactionsFetcher(EuroInformationApiClient apiClient) {
