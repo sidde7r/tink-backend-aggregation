@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +18,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
@@ -44,7 +47,6 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.i18n.Catalog;
@@ -57,12 +59,13 @@ public class AbnAmroAgent extends AbstractAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final Minutes AUTHENTICATION_TIMEOUT = Minutes.minutes(5);
 
     private final Credentials credentials;
     private final Catalog catalog;
     private final User user;
-    private final AggregationLogger log = new AggregationLogger(AbnAmroAgent.class);
 
     private IBSubscriptionClient subscriptionClient;
     private EnrollmentClient enrollmentService;
@@ -137,14 +140,15 @@ public class AbnAmroAgent extends AbstractAgent
     private boolean authenticateWithMobileBanking() throws InvalidPhoneNumberException {
         final String phoneNumber = PhoneNumberUtils.normalize(user.getUsername());
 
-        log.info("Authenticating with mobile banking.");
+        logger.info("Authenticating with mobile banking.");
         InitiateEnrollmentResponse response = enrollmentService.initiate(phoneNumber);
 
         openThirdPartyApp(MobileBankingAuthenticationPayload.create(catalog, response.getToken()));
 
-        log.debug("Polling for mobile banking signing completed.");
+        logger.debug("Polling for mobile banking signing completed.");
         Optional<String> bcNumber = collect(response.getToken());
-        log.debug(String.format("Got bcnumber %s.", bcNumber.orElse("failed")));
+        String bcNumberForLog = bcNumber.orElse("failed");
+        logger.debug("Got bcnumber {}.", bcNumberForLog);
 
         // Reset supplemental and status payload
         credentials.setSupplementalInformation(null);
@@ -154,7 +158,7 @@ public class AbnAmroAgent extends AbstractAgent
             credentials.setPayload(bcNumber.get());
             credentials.setStatus(CredentialsStatus.UPDATING);
         } else {
-            log.error("Failed to receive bc number from ABN.");
+            logger.error("Failed to receive bc number from ABN.");
             credentials.setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
         }
 
@@ -173,17 +177,17 @@ public class AbnAmroAgent extends AbstractAgent
             CollectEnrollmentResponse response = enrollmentService.collect(signingToken);
 
             if (response.isCompleted()) {
-                log.info("User enrolled in Mobile Banking.");
+                logger.info("User enrolled in Mobile Banking.");
                 return Optional.ofNullable(response.getBcNumber());
             }
 
-            log.debug(String.format("User enrollment in progress (Retry = '%d').", retry));
+            logger.debug("User enrollment in progress (Retry = '{}').", retry);
 
             retry++;
             Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
         }
 
-        log.warn("User enrollment timed out.");
+        logger.warn("User enrollment timed out.");
         return Optional.empty();
     }
 
@@ -234,7 +238,7 @@ public class AbnAmroAgent extends AbstractAgent
         }
 
         if (credentials.isDebug()) {
-            log.info(String.format("Fetching ICS transactions for contract: %s", accountNumber));
+            logger.info("Fetching ICS transactions for contract: {}", accountNumber);
         }
 
         String bcNumber = credentials.getPayload();
@@ -246,10 +250,9 @@ public class AbnAmroAgent extends AbstractAgent
                         .collect(Collectors.toList());
 
         if (entities.size() != 1) {
-            log.warn(
-                    String.format(
-                            "Fetching ICS accounts, expected 1 account in payload, got %d",
-                            entities.size()));
+            logger.warn(
+                    "Fetching ICS accounts, expected 1 account in payload, got {}",
+                    entities.size());
             return Optional.empty();
         }
 
@@ -341,7 +344,7 @@ public class AbnAmroAgent extends AbstractAgent
             return new FetchTransactionsResponse(transactionsMap);
         } catch (IcsException e) {
             if (abnAmroConfiguration.shouldIgnoreCreditCardErrors()) {
-                log.warn("Ignoring error from ICS", e);
+                logger.warn("Ignoring error from ICS", e);
                 return new FetchTransactionsResponse(Collections.emptyMap());
             } else {
                 throw new IllegalStateException(e);
