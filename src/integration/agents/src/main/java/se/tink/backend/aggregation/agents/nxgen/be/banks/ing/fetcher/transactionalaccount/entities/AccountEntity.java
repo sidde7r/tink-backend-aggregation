@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities;
 
 import com.google.api.client.util.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
@@ -13,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.entities.SecurityEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.rpc.PortfolioResponseEntity;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -28,7 +30,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @XmlRootElement
 public class AccountEntity {
-    private static final AggregationLogger logger = new AggregationLogger(AccountEntity.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private String type;
     private String category;
@@ -326,9 +329,7 @@ public class AccountEntity {
             case IngConstants.AccountTypes.INVESTMENT_ACCOUNT:
                 return AccountTypes.INVESTMENT;
             default:
-                logger.warn(
-                        String.format(
-                                "Could not map account type [%s] to a Tink account type", type));
+                logger.warn("Could not map account type [{}] to a Tink account type", type);
                 return AccountTypes.OTHER;
         }
     }
