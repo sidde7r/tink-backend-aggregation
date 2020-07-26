@@ -5,15 +5,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestApiClient;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class SparebankenVestTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount> {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(SparebankenVestTransactionalAccountFetcher.class);
-
     private final SparebankenVestApiClient apiClient;
     private final Credentials credentials;
 
