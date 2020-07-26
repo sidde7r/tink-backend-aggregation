@@ -7,12 +7,9 @@ import java.util.regex.Pattern;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.log.AggregationLogger;
 
 @Ignore
 public class JsonDoubleTest {
-
-    private static AggregationLogger LOGGER = new AggregationLogger(JsonDoubleTest.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @JsonObject
