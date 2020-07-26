@@ -26,6 +26,7 @@ import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.Security;
@@ -58,6 +59,8 @@ import org.apache.http.impl.conn.BasicClientConnectionManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
@@ -197,6 +200,8 @@ public class SEBApiAgent extends AbstractAgent
                 RefreshIdentityDataExecutor,
                 PersistentLogin,
                 TransferExecutor {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String API_URL = "/1000/ServiceFactory/PC_BANK/";
     private static final String AUTH_URL = "/auth/bid/v2/authentications";
@@ -371,16 +376,15 @@ public class SEBApiAgent extends AbstractAgent
                                             })
                                     .count();
             if (accountsWithoutSetCapabilities > 0) {
-                log.warn(
-                        "Account Capabilities not set ["
-                                + tag
-                                + "] for accounts: "
-                                + accountsWithoutSetCapabilities);
+                logger.warn(
+                        "Account Capabilities not set [{}] for accounts: {}",
+                        tag,
+                        accountsWithoutSetCapabilities);
             } else {
-                log.info("Account Capabilities set  [" + tag + "] for all accounts");
+                logger.info("Account Capabilities set  [{}] for all accounts", tag);
             }
         } catch (RuntimeException e) {
-            log.warn("[Account Capabilities] Error while logging happened: ", e);
+            logger.warn("[Account Capabilities] Error while logging happened: ", e);
         }
     }
 
@@ -443,7 +447,7 @@ public class SEBApiAgent extends AbstractAgent
         } catch (Exception e) {
             // Don't fail the whole refresh just because we failed updating investment data but log
             // error.
-            log.error("Caught exception while updating investment data", e);
+            logger.error("Caught exception while updating investment data", e);
             return new FetchInvestmentAccountsResponse(Collections.emptyMap());
         }
     }
@@ -489,7 +493,7 @@ public class SEBApiAgent extends AbstractAgent
 
         List<AccountEntity> accounts = listCheckingAccounts(customerId);
         if (accounts == null) {
-            log.info("No accounts found.");
+            logger.info("No accounts found.");
             return Collections.emptyMap();
         }
 
@@ -571,7 +575,7 @@ public class SEBApiAgent extends AbstractAgent
 
     private void tryFetchAndLogInsuranceAccountInstruments(String detailUrl) {
         if (Strings.isNullOrEmpty(detailUrl)) {
-            log.warn("SEB insurance account instruments: detail url not present.");
+            logger.warn("SEB insurance account instruments: detail url not present.");
             return;
         }
 
@@ -587,7 +591,7 @@ public class SEBApiAgent extends AbstractAgent
             log.infoExtraLong(response, LogTag.from("SEB insurance account instruments response"));
 
         } catch (Exception e) {
-            log.warn("SEB insurance account instruments: Fetching of instruments failed.", e);
+            logger.warn("SEB insurance account instruments: Fetching of instruments failed.", e);
         }
     }
 
@@ -755,9 +759,9 @@ public class SEBApiAgent extends AbstractAgent
                     instrument.getMarketValue() / instrument.getQuantity();
             if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice())
                     > 1) {
-                log.warn(
-                        "Possibly faulty value parsing: "
-                                + SerializationUtils.serializeToString(holding));
+                logger.warn(
+                        "Possibly faulty value parsing: {}",
+                        SerializationUtils.serializeToString(holding));
             }
         }
     }
@@ -876,7 +880,7 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private String initiateBankId() {
-        log.info("Initiating BankID");
+        logger.info("Initiating BankID");
         final ClientResponse response =
                 sebBaseApiClient.resource(AUTH_URL).post(ClientResponse.class);
         if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
@@ -909,7 +913,7 @@ public class SEBApiAgent extends AbstractAgent
             final AuthenticationResponse authenticationResponse =
                     response.getEntity(AuthenticationResponse.class);
             final BankIdStatus status = authenticationResponse.toBankIdStatus();
-            log.info("BankID " + status.toString());
+            logger.info("BankID {}", status.toString());
             switch (status) {
                 case DONE:
                     return;
@@ -973,7 +977,7 @@ public class SEBApiAgent extends AbstractAgent
 
             return strategy.apply(config);
         } catch (Exception e) {
-            log.error("Caught exception while creating client", e);
+            logger.error("Caught exception while creating client", e);
             return null;
         }
     }
@@ -1225,11 +1229,11 @@ public class SEBApiAgent extends AbstractAgent
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
 
-        log.info(
+        logger.info(
                 "Credentials contain - supplemental Information: {}",
                 credentials.getSupplementalInformation());
-        log.info("Credentials contain - status payload: {}", credentials.getStatusPayload());
-        log.info("Credentials contain - status: {}", credentials.getStatus());
+        logger.info("Credentials contain - status payload: {}", credentials.getStatusPayload());
+        logger.info("Credentials contain - status: {}", credentials.getStatus());
 
         switch (credentials.getType()) {
             case MOBILE_BANKID:
@@ -1279,7 +1283,7 @@ public class SEBApiAgent extends AbstractAgent
         try {
             sebBaseApiClient.resource("/logout").get(String.class);
         } catch (Exception e) {
-            log.error("Could not log out from SEB.", e);
+            logger.error("Could not log out from SEB.", e);
         }
     }
 
@@ -1386,7 +1390,7 @@ public class SEBApiAgent extends AbstractAgent
                     transaction.setPayload(TransactionPayloadTypes.SUB_ACCOUNT, subAccount);
                 }
             } catch (Exception e) {
-                log.warn("Unable to parse credit card transaction", e);
+                logger.warn("Unable to parse credit card transaction", e);
                 continue;
             }
             transactions.add(transaction);
@@ -1458,7 +1462,7 @@ public class SEBApiAgent extends AbstractAgent
                                     String.valueOf(foreignParser.getExchangeRate()));
                             date = foreignParser.getDate();
                         } catch (Exception e) {
-                            log.error("Could not parse foreign transaction", e);
+                            logger.error("Could not parse foreign transaction", e);
                         }
                     }
                 }
@@ -1472,7 +1476,7 @@ public class SEBApiAgent extends AbstractAgent
                 transactions.add(t);
             }
         } catch (Exception e) {
-            log.error("Could not parse transaction from SEB", e);
+            logger.error("Could not parse transaction from SEB", e);
         }
         return transactions;
     }
@@ -1514,11 +1518,10 @@ public class SEBApiAgent extends AbstractAgent
         String accountTypeDescription = accountEntity.KTOSLAG_TXT;
 
         if (type == null) {
-            log.warn(
-                    "Unknown account-product type: "
-                            + accountTypeCode
-                            + " = "
-                            + accountTypeDescription);
+            logger.warn(
+                    "Unknown account-product type: {} = {}",
+                    accountTypeCode,
+                    accountTypeDescription);
             type = AccountTypes.OTHER;
         }
         account.setType(type);
@@ -1663,7 +1666,7 @@ public class SEBApiAgent extends AbstractAgent
         try {
             response = mapper.readValue(responseContent, SebResponse.class);
         } catch (Exception e) {
-            log.error("Couldn't deserialize SEB response", e);
+            logger.error("Couldn't deserialize SEB response", e);
             return Collections.emptyMap();
         }
 
@@ -1726,14 +1729,14 @@ public class SEBApiAgent extends AbstractAgent
             List<Account> updatedAccounts) {
         SebResponse response = getTransferAccounts(EXTERNAL_ACCOUNTS_URL);
         if (response.d == null || response.d.VODB == null) {
-            log.warn("Could not retrieve external bank transfer accounts.");
+            logger.warn("Could not retrieve external bank transfer accounts.");
             return null;
         }
 
         List<AccountEntity> accountEntities = response.d.VODB.accountEntities;
         // User doesn't have any accounts where external transfers are enabled
         if (accountEntities == null) {
-            log.info("No internal accounts for bank transfers are available");
+            logger.info("No internal accounts for bank transfers are available");
             return Collections.emptyMap();
         }
 
@@ -1757,14 +1760,14 @@ public class SEBApiAgent extends AbstractAgent
         SebResponse response = getTransferAccounts(EXTERNAL_PAYMENT_SOURCE_ACCOUNTS_URL);
 
         if (response.d == null || response.d.VODB == null) {
-            log.warn("Could not retrieve external accounts for payments.");
+            logger.warn("Could not retrieve external accounts for payments.");
             return Collections.emptyMap();
         }
 
         List<AccountEntity> accountEntities = response.d.VODB.accountEntities;
         // User doesn't have any accounts where external payments are enabled
         if (accountEntities == null) {
-            log.info("No source accounts found that can be used for payments");
+            logger.info("No source accounts found that can be used for payments");
             return Collections.emptyMap();
         }
 
@@ -1898,12 +1901,12 @@ public class SEBApiAgent extends AbstractAgent
             unsignedTransfers.forEach(
                     transferQueuedUp -> {
                         if (!deleteTransferFromOutbox(transferQueuedUp)) {
-                            log.error("Could not clean up transfer.");
+                            logger.error("Could not clean up transfer.");
                         }
                     });
 
         } catch (Exception deleteException) {
-            log.warn(
+            logger.warn(
                     "Could not delete unsigned transfer from outbox but was expecting it to be possible.",
                     deleteException);
         }
@@ -2342,10 +2345,10 @@ public class SEBApiAgent extends AbstractAgent
             TransferListEntity transferQueuedUp, Exception initialException) throws Exception {
         try {
             if (!deleteTransferFromOutbox(transferQueuedUp)) {
-                log.error("Could not clean up transfer!", initialException);
+                logger.error("Could not clean up transfer!", initialException);
             }
         } catch (Exception deleteException) {
-            log.warn(
+            logger.warn(
                     "Could not delete unsigned transfer from outbox but was expecting it to be possible.",
                     deleteException);
         }
@@ -2365,7 +2368,7 @@ public class SEBApiAgent extends AbstractAgent
         // Verification response includes a message that is displayed in SEB app. We don't use it in
         // Tink.
         if (verification.d.VODB.TransferVerification != null) {
-            log.debug(verification.d.VODB.TransferVerification.SignText);
+            logger.debug(verification.d.VODB.TransferVerification.SignText);
         }
 
         SebResponse initiateSigningResponse =
@@ -2391,7 +2394,7 @@ public class SEBApiAgent extends AbstractAgent
 
             abortIfTransferSignatureFailed(response);
 
-            log.debug(catalog.getString("Waiting on Mobile Bank Id"));
+            logger.debug(catalog.getString("Waiting on Mobile Bank Id"));
             Thread.sleep(2000);
         }
 
@@ -2468,7 +2471,7 @@ public class SEBApiAgent extends AbstractAgent
         // This should not happen. We will still continue since the user can still sing the transfer
         // that we created
         if (transferEntities.size() > 1) {
-            log.error("User has signed multiple transfers");
+            logger.error("User has signed multiple transfers");
         }
 
         for (TransferListEntity transferListEntity : transferEntities) {
