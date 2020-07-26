@@ -3,11 +3,13 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
@@ -16,7 +18,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountEntity implements GeneralAccountEntity {
     @JsonIgnore
-    private static final AggregationLogger LOG = new AggregationLogger(AccountEntity.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private String accountName;
     private String accountNumber;
@@ -167,10 +170,7 @@ public class AccountEntity implements GeneralAccountEntity {
                 account.setType(AccountTypes.CHECKING);
                 break;
             default:
-                LOG.info(
-                        String.format(
-                                "unknown_account_type %s",
-                                SerializationUtils.serializeToString(this)));
+                logger.info("unknown_account_type {}", SerializationUtils.serializeToString(this));
                 account.setType(AccountTypes.OTHER);
                 break;
         }
