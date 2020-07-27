@@ -719,22 +719,22 @@ spec:
 
   # Precompute statistics
   - record: statistics:tink_aggregation_market_success:delta5m:avg1w
-    expr: avg_over_time(ratio:tink_aggregation_market_success:delta5m[1w])
+    expr: avg_over_time((ratio:tink_aggregation_market_success:delta5m > 0)[1w:])
 
   - record: statistics:tink_aggregation_market_success:delta5m:stddev1w
-    expr: stddev_over_time(ratio:tink_aggregation_market_success:delta5m[1w])
+    expr: stddev_over_time((ratio:tink_aggregation_market_success:delta5m > 0)[1w:])
 
   - record: statistics:tink_aggregation_operation_success:delta5m:avg1w
-    expr: avg_over_time(ratio:tink_aggregation_operation_success:delta5m[1w])
+    expr: avg_over_time((ratio:tink_aggregation_operation_success:delta5m > 0)[1w:])
 
   - record: statistics:tink_aggregation_operation_success:delta5m:stddev1w
-    expr: stddev_over_time(ratio:tink_aggregation_operation_success:delta5m[1w])
+    expr: stddev_over_time((ratio:tink_aggregation_operation_success:delta5m > 0)[1w:])
 
   - record: statistics:tink_aggregation_market_operation_success:delta5m:avg1w
-    expr: avg_over_time(ratio:tink_aggregation_market_operation_success:delta5m[1w])
+    expr: avg_over_time((ratio:tink_aggregation_market_operation_success:delta5m > 0)[1w:])
 
   - record: statistics:tink_aggregation_market_operation_success:delta5m:stddev1w
-    expr: stddev_over_time(ratio:tink_aggregation_market_operation_success:delta5m[1w])
+    expr: stddev_over_time((ratio:tink_aggregation_market_operation_success:delta5m > 0)[1w:])
 
   {{- if eq .Values.Environment "production" }}
   - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier2Banks
