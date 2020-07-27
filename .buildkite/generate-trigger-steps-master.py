@@ -24,6 +24,7 @@ RELEASE_TRAIN_CHARTS = [
 TRAIN_STEP = """
 - name: ':kubernetes: Upload Chart'
   branches: "master"
+  key: "upload-chart"
   command:
   - echo $$GOOGLE_CLOUD_ACCOUNT_JSON | base64 --decode > /root/credentials.json
   - GOOGLE_APPLICATION_CREDENTIALS=/root/credentials.json /go/bin/kubernetes-generator --mode push --version "{version}" --repo . --chart "{chart}"
@@ -38,11 +39,12 @@ TRAIN_STEP = """
       concurrency: 1
       concurrency_group": "upload-helm-gcs"
 
-- wait
 
 - name: "Trigger release-train for {chart}"
   trigger: "release-train"
   branches: "master"
+  depends_on:
+  - "upload_chart"
   async: true
   build:
     message: "{message}"
