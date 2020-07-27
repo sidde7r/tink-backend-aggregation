@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -14,8 +16,8 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.metrics.core.MetricId;
 
 public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand {
-    private static final AggregationLogger log =
-            new AggregationLogger(ReportProviderMetricsAgentWorkerCommand.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private String operationName;
     private ReportProviderMetricsAgentWorkerCommandState state;
@@ -90,13 +92,12 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
                     long queuedTime = context.getTimeLeavingQueue() - context.getTimePutOnQueue();
                     long executionTime = System.currentTimeMillis() - context.getTimeLeavingQueue();
 
-                    log.debug(
-                            String.format(
-                                    "Reporting metrics on successful execution (provider=%s, operation=%s, queued=%sms, execution=%sms)",
-                                    credentials.getProviderName(),
-                                    operationName,
-                                    queuedTime,
-                                    executionTime));
+                    logger.debug(
+                            "Reporting metrics on successful execution (provider={}, operation={}, queued={}ms, execution={}ms)",
+                            credentials.getProviderName(),
+                            operationName,
+                            queuedTime,
+                            executionTime);
 
                     state.getQueuedTimers()
                             .get(providerMetricName)
@@ -122,7 +123,7 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
         try {
             metricReporter.observe(context, operationName);
         } catch (Exception e) {
-            log.warn("Could not update RealTimeBankMetrics", e);
+            logger.warn("Could not update RealTimeBankMetrics", e);
         }
     }
 }
