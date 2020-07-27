@@ -37,4 +37,8 @@ public class RemittanceInformation {
     public String getReference() {
         return reference;
     }
+
+    public String getUnstructured() {
+        return unstructured;
+    }
 }

@@ -46,7 +46,7 @@ public class DomesticPaymentInitiation {
     public DomesticPaymentInitiation(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
         this.remittanceInformation =
-                new RemittanceInformation(payment.getUniqueId(), payment.getReference());
+                RemittanceInformation.ofUnstructured(payment.getReference().getValue());
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;
         this.creditorAccount = new CreditorAccount(payment.getCreditor());
