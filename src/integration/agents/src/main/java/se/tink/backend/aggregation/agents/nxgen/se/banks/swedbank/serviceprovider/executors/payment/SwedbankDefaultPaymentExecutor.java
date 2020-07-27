@@ -125,7 +125,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
                     try {
                         transfer.getRemittanceInformation()
                                 .setType(RemittanceInformationType.UNSTRUCTURED);
-                        tryRegisterPayment(
+                        return tryRegisterPayment(
                                 transfer, sourceAccountId, destinationAccountId, dueDate);
                     } catch (HttpResponseException httpResponseException) {
                         throw convertExceptionIfBadPayment(httpResponseException);
