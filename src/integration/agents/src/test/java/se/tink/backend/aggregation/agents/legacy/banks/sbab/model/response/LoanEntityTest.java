@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Optional;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.LoanTermsEntity;
@@ -88,7 +87,7 @@ public class LoanEntityTest {
         assertFalse(loanEntity.toTinkLoan().isPresent());
     }
 
-    @Ignore
+    @Test
     public void noLoanNumber_ReturnsLoanOptionalAbsent() {
         LoanEntity loanEntity = new LoanEntity();
         loanEntity.setAmount(BigDecimal.valueOf(877500.0));
