@@ -27,7 +27,6 @@ public abstract class CredentialsRequest {
     private List<Account> accounts;
     private String appUriId;
     private String callbackUri;
-    private boolean isForceAuthenticate;
 
     // TODO: Remove with new AgentWorker
     protected boolean create;
@@ -176,13 +175,5 @@ public abstract class CredentialsRequest {
     public void setDataFetchingRestrictions(
             List<DataFetchingRestrictions> dataFetchingRestrictions) {
         this.dataFetchingRestrictions = dataFetchingRestrictions;
-    }
-
-    public boolean isForceAuthenticate() {
-        return isForceAuthenticate;
-    }
-
-    public void setForceAuthenticate(boolean forceAuthenticate) {
-        isForceAuthenticate = forceAuthenticate;
     }
 }
