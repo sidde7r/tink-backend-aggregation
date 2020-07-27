@@ -33,7 +33,8 @@ public class CreateTransactionsConsentScaAuthenticationStep implements Authentic
                         consentManager.createTransactionsConsent(
                                 strongAuthenticationState.getState());
 
-        userState.saveScaMethods(consentResponse.getScaMethods());
+        userState.saveChosenAuthenticationMethod(
+                consentResponse.getScaMethod().getAuthenticationMethodId());
 
         return AuthenticationStepResponse.executeNextStep();
     }

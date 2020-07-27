@@ -35,10 +35,6 @@ public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
                         consentManager, strongAuthenticationState, userState));
 
         manualAuthenticationSteps.add(
-                new ScaMethodFieldAuthenticationStep(
-                        String.valueOf(manualAuthenticationSteps.size()), userState));
-
-        manualAuthenticationSteps.add(
                 new CbiThirdPartyAppAuthenticationStep(
                         new BancoPostaConsentRequestParamsProvider(this, consentManager),
                         ConsentType.ACCOUNT,
@@ -49,10 +45,6 @@ public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
         manualAuthenticationSteps.add(
                 new CreateTransactionsConsentScaAuthenticationStep(
                         consentManager, strongAuthenticationState, userState));
-
-        manualAuthenticationSteps.add(
-                new ScaMethodFieldAuthenticationStep(
-                        String.valueOf(manualAuthenticationSteps.size()), userState));
 
         manualAuthenticationSteps.add(
                 new CbiThirdPartyAppAuthenticationStep(

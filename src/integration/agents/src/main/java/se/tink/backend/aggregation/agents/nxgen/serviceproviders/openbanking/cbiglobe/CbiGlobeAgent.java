@@ -55,7 +55,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         temporaryStorage = new TemporaryStorage();
         apiClient = getApiClient(request.isManual());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        userState = new CbiUserState(persistentStorage, sessionStorage, credentials);
+        userState = new CbiUserState(persistentStorage, credentials);
         authenticator = getAuthenticator();
 
         applyFilters(this.client);
