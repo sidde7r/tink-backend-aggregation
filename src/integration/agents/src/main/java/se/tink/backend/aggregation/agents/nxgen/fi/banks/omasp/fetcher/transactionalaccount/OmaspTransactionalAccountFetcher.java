@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transacti
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transactionalaccount.entities.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transactionalaccount.rpc.TransactionDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -23,9 +22,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class OmaspTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionPagePaginator<TransactionalAccount> {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(OmaspTransactionalAccountFetcher.class);
-
     private final OmaspApiClient apiClient;
     private final Credentials credentials;
 

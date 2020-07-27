@@ -18,13 +18,11 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.LoanDetails;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PCBW2581 {
-    private static final AggregationLogger log = new AggregationLogger(PCBW2581.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private SecurityEntity securityEntity = new SecurityEntity();
 
