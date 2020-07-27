@@ -16,7 +16,7 @@ public class TransferRequest extends CredentialsRequest {
     private SignableOperation signableOperation;
     private boolean update;
     private boolean skipRefresh;
-    private String endUserIp;
+    private String originatingUserIp;
 
     public TransferRequest() {}
 
@@ -73,11 +73,11 @@ public class TransferRequest extends CredentialsRequest {
         this.skipRefresh = skipRefresh;
     }
 
-    public String getEndUserIp() {
-        return endUserIp;
+    public String getOriginatingUserIp() {
+        return originatingUserIp;
     }
 
-    public void setEndUserIp(String endUserIp) {
-        this.endUserIp = endUserIp;
+    public void setOriginatingUserIp(String originatingUserIp) {
+        this.originatingUserIp = originatingUserIp;
     }
 }
