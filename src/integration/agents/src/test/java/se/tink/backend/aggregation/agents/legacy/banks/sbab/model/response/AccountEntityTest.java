@@ -40,7 +40,7 @@ public class AccountEntityTest {
     @Test
     public void entityWithNewLineInName_ConvertsToTinkAccountWithoutNewLine() {
         AccountEntity accountEntity = new AccountEntity();
-        accountEntity.setBalance("10000.00");
+        accountEntity.setBalance("1000.00");
         accountEntity.setAvailableBalance("0");
         accountEntity.setAccountaName("This is a name with a new line\n");
         Optional<Account> tinkAccount = accountEntity.toTinkAccount();
@@ -63,7 +63,7 @@ public class AccountEntityTest {
     @Test
     public void entityWithWindowsNewLineInName_ConvertsToTinkAccountWithoutNewLine() {
         AccountEntity accountEntity = new AccountEntity();
-        accountEntity.setBalance("10000.00");
+        accountEntity.setBalance("100000.00");
         accountEntity.setAvailableBalance("0");
         accountEntity.setAccountaName("This is a name with a Windows new line\r\n");
         Optional<Account> tinkAccount = accountEntity.toTinkAccount();

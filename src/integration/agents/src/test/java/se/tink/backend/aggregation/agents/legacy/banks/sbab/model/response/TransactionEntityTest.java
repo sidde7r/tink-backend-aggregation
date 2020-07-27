@@ -59,7 +59,7 @@ public class TransactionEntityTest {
     @Test
     public void nullOrEmptyDateIsNotOkay() {
         TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setAmount("150.00 kr");
+        transactionEntity.setAmount("1500.00 kr");
 
         Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
 
@@ -76,7 +76,7 @@ public class TransactionEntityTest {
     @Test
     public void nullOrEmptyDescriptionIsOkay() {
         TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setAmount("150.00 kr");
+        transactionEntity.setAmount("15.00 kr");
         transactionEntity.setTransactionDate("2016-01-01");
 
         Assert.assertTrue(transactionEntity.toTinkTransaction(false).isPresent());
@@ -91,7 +91,7 @@ public class TransactionEntityTest {
     @Test
     public void wrongFormatOfDateIsNotOkay() throws Exception {
         TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setAmount("150.00 kr");
+        transactionEntity.setAmount("1.50 kr");
 
         transactionEntity.setTransactionDate("This is not a date");
         Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
