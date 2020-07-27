@@ -707,15 +707,15 @@ spec:
   # Precompute realtime banking metrics
   - record: ratio:tink_aggregation_market_success:delta5m
     expr: sum(increase(tink_aggregation_successful_market_total[5m])) by (market)
-        / sum(increase(tink_aggregation_total_market_total[5m])) by (market)
+        / sum(increase(tink_aggregation_total_market_total[5m])) by (market) > 0
 
   - record: ratio:tink_aggregation_operation_success:delta5m
     expr: sum(increase(tink_aggregation_successful_operations_total[5m])) by (operation)
-       / sum(increase(tink_aggregation_total_operations_total[5m])) by (operation)
+       / sum(increase(tink_aggregation_total_operations_total[5m])) by (operation) > 0
 
   - record: ratio:tink_aggregation_market_operation_success:delta5m
     expr: sum(increase(tink_aggregation_successful_market_operations_total[5m])) by (operation, market)
-      / sum(increase(tink_aggregation_total_market_operations_total[5m])) by (operation, market)
+      / sum(increase(tink_aggregation_total_market_operations_total[5m])) by (operation, market) > 0
 
   # Precompute statistics
   - record: statistics:tink_aggregation_market_success:delta5m:avg1w
