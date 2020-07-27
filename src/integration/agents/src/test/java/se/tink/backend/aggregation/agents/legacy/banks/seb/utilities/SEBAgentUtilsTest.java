@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils.AbroadTransactionParser;
@@ -24,7 +23,6 @@ public class SEBAgentUtilsTest {
         assertFalse(SEBAgentUtils.trimmedDashAgnosticEquals("123-126", "123125"));
     }
 
-    @Ignore("This test fails for unknown reasons, ignoring until fixed or removed")
     @Test
     public void testDescriptionParsing() throws Exception {
 
@@ -42,7 +40,7 @@ public class SEBAgentUtilsTest {
 
         Date flattenDate =
                 DateUtils.flattenTime(DateUtils.parseDate("Thu Aug 08 00:00:00 UTC 2019"));
-        assertEquals("Thu Aug 08 00:00:00 UTC 2019", flattenDate);
+        assertEquals("Thu Aug 08 10:00:00 UTC 2019", flattenDate.toString());
     }
 
     @Test
