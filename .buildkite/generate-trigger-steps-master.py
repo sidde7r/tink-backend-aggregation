@@ -24,7 +24,7 @@ RELEASE_TRAIN_CHARTS = [
 TRAIN_STEP = """
 - name: ':kubernetes: Upload Chart'
   branches: "master"
-  key: "upload-chart"
+  key: "upload-chart-${chart}"
   command:
   - echo $$GOOGLE_CLOUD_ACCOUNT_JSON | base64 --decode > /root/credentials.json
   - GOOGLE_APPLICATION_CREDENTIALS=/root/credentials.json /go/bin/kubernetes-generator --mode push --version "{version}" --repo . --chart "{chart}"
