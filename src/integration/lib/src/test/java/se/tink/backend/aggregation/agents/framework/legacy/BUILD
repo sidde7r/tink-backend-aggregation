@@ -31,6 +31,7 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:junit_junit",
+        "//third_party:org_slf4j_slf4j_api",
         "@tink_backend//src/libraries/strings",
     ],
 )
