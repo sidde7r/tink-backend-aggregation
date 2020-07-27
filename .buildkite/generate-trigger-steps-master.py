@@ -43,7 +43,7 @@ TRAIN_STEP = """
   trigger: "release-train"
   branches: "master"
   depends_on:
-  - "upload_chart"
+  - "upload_chart-${chart}"
   async: true
   build:
     message: "{message}"
