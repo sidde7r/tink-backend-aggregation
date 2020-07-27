@@ -47,6 +47,7 @@ public final class AvanzaAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final LocalDateTimeSource localDateTimeSource;
+    private final String clusterId;
 
     @Inject
     public AvanzaAgent(AgentComponentProvider componentProvider) {
@@ -54,6 +55,7 @@ public final class AvanzaAgent extends NextGenerationAgent
 
         configureHttpClient(client);
 
+        this.clusterId = componentProvider.getContext().getClusterId();
         this.authSessionStorage = new AvanzaAuthSessionStorage();
         this.apiClient = new AvanzaApiClient(client, authSessionStorage);
         this.temporaryStorage = new TemporaryStorage();
@@ -116,7 +118,11 @@ public final class AvanzaAgent extends NextGenerationAgent
     private InvestmentRefreshController constructInvestmentRefreshController() {
         final AvanzaInvestmentFetcher investmentFetcher =
                 new AvanzaInvestmentFetcher(
-                        apiClient, authSessionStorage, temporaryStorage, localDateTimeSource);
+                        apiClient,
+                        authSessionStorage,
+                        temporaryStorage,
+                        localDateTimeSource,
+                        clusterId);
 
         return new InvestmentRefreshController(
                 metricRefreshController,

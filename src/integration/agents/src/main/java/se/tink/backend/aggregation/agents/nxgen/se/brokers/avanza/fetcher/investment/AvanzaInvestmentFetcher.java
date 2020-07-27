@@ -39,16 +39,19 @@ public class AvanzaInvestmentFetcher
     private final AvanzaAuthSessionStorage authSessionStorage;
     private final TemporaryStorage temporaryStorage;
     private final LocalDateTimeSource localDateTimeSource;
+    private final String clusterId;
 
     public AvanzaInvestmentFetcher(
             AvanzaApiClient apiClient,
             AvanzaAuthSessionStorage authSessionStorage,
             TemporaryStorage temporaryStorage,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            String clusterId) {
         this.apiClient = apiClient;
         this.authSessionStorage = authSessionStorage;
         this.temporaryStorage = temporaryStorage;
         this.localDateTimeSource = localDateTimeSource;
+        this.clusterId = clusterId;
     }
 
     @Override
@@ -107,7 +110,7 @@ public class AvanzaInvestmentFetcher
                 apiClient.fetchAccountDetails(sessionAccount.getAccountId(), authSession);
 
         return portfolio.toTinkInvestmentAccount(
-                holder, accountDetails.getClearingNumber(), instruments);
+                holder, accountDetails.getClearingNumber(), instruments, clusterId);
     }
 
     private Function<InstrumentEntity, Stream<? extends InstrumentModule>> getInstruments(

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.PortfolioTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -54,7 +55,11 @@ public class PortfolioEntity {
         return totalBalance;
     }
 
-    public String getAccountName() {
+    public String getAccountName(String clusterId) {
+        if (clusterId.contains(AvanzaConstants.CLUSTER_ID_NESTON)
+                && accountId.contains(accountName)) {
+            return String.format("%s %s", accountName, getPortfolioType());
+        }
         return accountName;
     }
 
@@ -87,13 +92,19 @@ public class PortfolioEntity {
     }
 
     public InvestmentAccount toTinkInvestmentAccount(
-            HolderName holderName, String clearingNumber, List<InstrumentModule> instruments) {
+            HolderName holderName,
+            String clearingNumber,
+            List<InstrumentModule> instruments,
+            String clusterId) {
         return toTinkInvestmentAccount(
-                holderName, clearingNumber, toTinkPortfolioModule(instruments));
+                holderName, clearingNumber, toTinkPortfolioModule(instruments), clusterId);
     }
 
     private InvestmentAccount toTinkInvestmentAccount(
-            HolderName holderName, String clearingNumber, PortfolioModule portfolio) {
+            HolderName holderName,
+            String clearingNumber,
+            PortfolioModule portfolio,
+            String clusterId) {
         final double interestPayable = totalOwnCapital - portfolio.getTotalValue() - totalBalance;
         final String accountNumber =
                 clearingNumber != null
@@ -107,7 +118,7 @@ public class PortfolioEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(getAccountId())
                                 .withAccountNumber(accountNumber)
-                                .withAccountName(getAccountName())
+                                .withAccountName(getAccountName(clusterId))
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 AccountIdentifier.Type.SE, accountId))
@@ -128,6 +139,7 @@ public class PortfolioEntity {
             case PortfolioTypes.TJANSTEPENSION:
             case PortfolioTypes.PENSIONSFORSAKRING:
             case PortfolioTypes.IPS:
+            case PortfolioTypes.AVTALS_PENSION:
                 return PortfolioModule.PortfolioType.PENSION;
             case PortfolioTypes.KAPITALFORSAKRING:
             case PortfolioTypes.KAPITALFORSAKRING_BARN:

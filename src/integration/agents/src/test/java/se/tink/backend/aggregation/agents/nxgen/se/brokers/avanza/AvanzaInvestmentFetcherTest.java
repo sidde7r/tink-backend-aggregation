@@ -52,7 +52,11 @@ public class AvanzaInvestmentFetcherTest {
 
         AvanzaInvestmentFetcher fetcher =
                 new AvanzaInvestmentFetcher(
-                        apiClient, authSessionStorage, temporaryStorage, localDateTimeSource);
+                        apiClient,
+                        authSessionStorage,
+                        temporaryStorage,
+                        localDateTimeSource,
+                        "oxford-preprod");
         InvestmentAccount account = fetcher.fetchAccounts().iterator().next();
 
         assertThat(account.getExactBalance()).isEqualTo(449894.55);
