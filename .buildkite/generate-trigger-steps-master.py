@@ -39,7 +39,6 @@ TRAIN_STEP = """
       concurrency: 1
       concurrency_group": "upload-helm-gcs"
 
-
 - name: "Trigger release-train for {chart}"
   trigger: "release-train"
   branches: "master"
