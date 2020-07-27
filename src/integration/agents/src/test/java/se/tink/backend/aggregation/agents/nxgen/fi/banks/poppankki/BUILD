@@ -31,5 +31,6 @@ junit_test(
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:commons_io_commons_io",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )

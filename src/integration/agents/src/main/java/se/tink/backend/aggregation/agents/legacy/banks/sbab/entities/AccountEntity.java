@@ -1,13 +1,16 @@
 package se.tink.backend.aggregation.agents.banks.sbab.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -16,8 +19,9 @@ import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountEntity implements GeneralAccountEntity {
-
-    private static final AggregationLogger log = new AggregationLogger(AccountEntity.class);
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @JsonProperty("produktnamn")
     private String productName;
@@ -101,7 +105,7 @@ public class AccountEntity implements GeneralAccountEntity {
             String cleanBalance = balance.replaceAll("[^\\d.,]", "");
             account.setBalance(StringUtils.parseAmount(cleanBalance));
         } else {
-            log.error("An account cannot have a null balance");
+            logger.error("An account cannot have a null balance");
             return Optional.empty();
         }
 

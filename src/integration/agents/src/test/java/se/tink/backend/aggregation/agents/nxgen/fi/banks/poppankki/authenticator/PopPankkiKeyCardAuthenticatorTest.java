@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.poppankki.authenticator;
 
+import java.lang.invoke.MethodHandles;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
@@ -18,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.S
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkV1Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.utils.currency.CurrencyConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.agents.agenttest.NextGenerationAgentTest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
@@ -28,8 +30,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class PopPankkiKeyCardAuthenticatorTest extends NextGenerationAgentTest {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(PopPankkiKeyCardAuthenticatorTest.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     String username;
     String password;
     private Credentials credentials;
@@ -60,7 +62,7 @@ public class PopPankkiKeyCardAuthenticatorTest extends NextGenerationAgentTest {
         Assert.assertNotNull("No device id", persistentStorage.getDeviceId());
         Assert.assertNotNull("No device token", persistentStorage.getDeviceToken());
 
-        LOGGER.info(
+        logger.info(
                 String.format(
                         "Logged in and device registered: \ndevice id\n%s\ndevice token\n%s",
                         persistentStorage.getDeviceId(), persistentStorage.getDeviceToken()));
@@ -95,7 +97,7 @@ public class PopPankkiKeyCardAuthenticatorTest extends NextGenerationAgentTest {
                 new SamlinkKeyCardAuthenticator(bankClient, persistentStorage, credentials);
 
         KeyCardInitValues keyCardInitValues = keyCardAuthenticator.init(username, password);
-        LOGGER.info(
+        logger.info(
                 String.format(
                         "KeyCard init values: from key card: %s use key code: %s",
                         keyCardInitValues.getCardId(), keyCardInitValues.getCardIndex()));

@@ -6,14 +6,11 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel.fetchers.c
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel.fetchers.creditcard.pfm.rpc.CreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConfiguration;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CreditMutuelApiClient extends EuroInformationApiClient {
-    private static final AggregationLogger AGGREGATION_LOGGER =
-            new AggregationLogger(CreditMutuelApiClient.class);
     protected final Logger LOGGER = LoggerFactory.getLogger(CreditMutuelApiClient.class);
 
     public CreditMutuelApiClient(

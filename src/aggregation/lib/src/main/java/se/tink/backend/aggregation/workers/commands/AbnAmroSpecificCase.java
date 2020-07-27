@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.workers.commands;
 
 import java.util.List;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
@@ -25,8 +24,6 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
  * <p>Johannes Elgh - 2020-05-07
  */
 public class AbnAmroSpecificCase extends AgentWorkerCommand {
-    private static final AggregationLogger log = new AggregationLogger(AbnAmroSpecificCase.class);
-
     private static class InternalAccountPayloadKeys {
         static final String SUBSCRIBED = "subscribed";
     }

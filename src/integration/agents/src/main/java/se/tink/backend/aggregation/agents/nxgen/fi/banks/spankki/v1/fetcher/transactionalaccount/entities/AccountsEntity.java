@@ -6,7 +6,6 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.SpankkiConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.SpankkiConstants.Regex;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -16,9 +15,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountsEntity {
-    @JsonIgnore
-    private static final AggregationLogger LOGGER = new AggregationLogger(AccountsEntity.class);
-
     private String accountNumber;
     private String accountId;
     private String notificationAccountId;

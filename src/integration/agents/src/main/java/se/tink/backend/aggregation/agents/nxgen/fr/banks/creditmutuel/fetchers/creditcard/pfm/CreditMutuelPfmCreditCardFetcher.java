@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel.fetchers.c
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -29,8 +28,6 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
     public static final String MAX_PAYMENTS_LIMIT = "secondaryValueTitle";
     private static final Logger LOGGER =
             LoggerFactory.getLogger(CreditMutuelPfmCreditCardFetcher.class);
-    private static final AggregationLogger AGGREGATION_LOGGER =
-            new AggregationLogger(CreditMutuelPfmCreditCardFetcher.class);
     private final CreditMutuelApiClient apiClient;
 
     private CreditMutuelPfmCreditCardFetcher(CreditMutuelApiClient apiClient) {

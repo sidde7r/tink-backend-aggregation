@@ -14,15 +14,12 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.en
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanListResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class LaCaixaLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(LaCaixaLoanFetcher.class);
-
     private final LaCaixaApiClient apiClient;
 
     public LaCaixaLoanFetcher(LaCaixaApiClient apiClient) {

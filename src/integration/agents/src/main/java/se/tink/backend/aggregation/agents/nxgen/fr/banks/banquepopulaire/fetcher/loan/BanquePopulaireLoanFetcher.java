@@ -8,14 +8,10 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.BanqueP
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entities.ContractOverviewEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.ContractsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class BanquePopulaireLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(BanquePopulaireLoanFetcher.class);
-
     private final BanquePopulaireApiClient apiClient;
 
     public BanquePopulaireLoanFetcher(BanquePopulaireApiClient apiClient) {

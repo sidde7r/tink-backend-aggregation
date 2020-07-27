@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTuple;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
@@ -19,7 +18,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AgreementDto implements GeneralAccountEntity {
-    private static final AggregationLogger LOGGER = new AggregationLogger(AgreementDto.class);
     private TypeEncValueTuple agreementNo;
     private TypeValuePair structureCode;
     private TypeValuePair productType;
