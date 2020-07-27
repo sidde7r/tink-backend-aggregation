@@ -86,7 +86,7 @@ steps:
   - name: ':junit: System Test'
     branches: '!master'
     command: .buildkite/run-system-tests.sh
-    timeout_in_minutes: 15
+    timeout_in_minutes: 30
     agents:
       queue: default
     plugins:
