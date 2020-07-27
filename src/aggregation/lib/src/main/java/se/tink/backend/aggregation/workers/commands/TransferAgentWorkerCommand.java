@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.TransferExecutor;
@@ -23,7 +25,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -44,11 +45,11 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerCommand
         implements MetricsCommand {
-    private static final AggregationLogger log =
-            new AggregationLogger(TransferAgentWorkerCommand.class);
+    private static final Logger log = LoggerFactory.getLogger(TransferAgentWorkerCommand.class);
 
     private final TransferRequest transferRequest;
     private final AgentWorkerCommandMetricState metrics;
@@ -75,15 +76,14 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         // https://tinkab.atlassian.net/browse/PAY1-506
         if (transfer.getRemittanceInformation() != null) {
             log.info(
-                    transfer,
-                    "Remittance information: "
-                            + transfer.getRemittanceInformation().toString()
-                            + ", Destination message: "
-                            + transfer.getDestinationMessage());
+                    "[transferId: {}] Remittance information: {}, Destination message: {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    transfer.getRemittanceInformation().toString(),
+                    transfer.getDestinationMessage());
         } else {
             log.info(
-                    transfer,
-                    "RemittanceInformation is null, will create it from destinationMessage");
+                    "[transferId: {}] RemittanceInformation is null, will create it from destinationMessage",
+                    UUIDUtils.toTinkUUID(transfer.getId()));
             RemittanceInformation remittanceInformation = new RemittanceInformation();
             remittanceInformation.setValue(transfer.getDestinationMessage());
             remittanceInformation.setType(null);
@@ -98,7 +98,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             return AgentWorkerCommandResult.ABORT;
         }
 
-        log.info(transfer, "Executing transfer.");
+        log.info("[transferId: {}] Executing transfer.", UUIDUtils.toTinkUUID(transfer.getId()));
         MetricAction metricAction =
                 metrics.buildAction(
                         new MetricId.MetricLabels()
@@ -109,7 +109,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                                                 : MetricName.EXECUTE_TRANSFER));
         Optional<String> operationStatusMessage = Optional.empty();
         try {
-            log.info(transfer, getTransferExecuteLogInfo(transfer, transferRequest.isUpdate()));
+            log.info(
+                    "[transferId: {}] {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    getTransferExecuteLogInfo(transfer, transferRequest.isUpdate()));
 
             if (agent instanceof TransferExecutor) {
                 TransferExecutor transferExecutor = (TransferExecutor) agent;
@@ -157,12 +160,15 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 // and register on dashboard as an error.
                 metricAction.cancelled();
                 log.info(
-                        transfer,
-                        "Could not execute transfer. Transfer has been set CANCELLED due to "
-                                + e.getUserMessage());
+                        "[transferId: {}] Could not execute transfer. Transfer has been set CANCELLED due to {}",
+                        UUIDUtils.toTinkUUID(transfer.getId()),
+                        e.getUserMessage());
             } else {
                 metricAction.failed();
-                log.error(transfer, "Could not execute transfer.", e);
+                log.error(
+                        "[transferId: {}] Could not execute transfer.",
+                        UUIDUtils.toTinkUUID(transfer.getId()),
+                        e);
             }
 
             context.updateSignableOperationStatus(
@@ -182,12 +188,19 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 case AUTHORIZATION_REQUIRED: // TODO: This should be a regular
                     // AuthorizationException
                     metricAction.cancelled();
-                    log.info(transfer, e.getMessage());
+                    log.info(
+                            "[transferId: {}] {}",
+                            UUIDUtils.toTinkUUID(transfer.getId()),
+                            e.getMessage());
                     signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
                     break;
                 default:
                     metricAction.failed();
-                    log.error(transfer, String.format("Caught unexpected %s", e.getMessage()), e);
+                    log.error(
+                            "[transferId: {}] Caught unexpected {}",
+                            UUIDUtils.toTinkUUID(transfer.getId()),
+                            e.getMessage(),
+                            e);
                     signableOperation.setStatus(SignableOperationStatuses.FAILED);
             }
 
@@ -200,7 +213,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             Thread.currentThread().interrupt();
 
             metricAction.failed();
-            log.error(transfer, "Could not execute transfer.", e);
+            log.error(
+                    "[transferId: {}] Could not execute transfer.",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e);
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
             signableOperation.setStatusMessage(
@@ -215,10 +231,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             metricAction.unavailable();
 
             log.info(
-                    transfer,
-                    String.format(
-                            "Could not execute transfer due to bank side failure. %s",
-                            e.getMessage()));
+                    "[transferId: {}] Could not execute transfer due to bank side failure. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
             signableOperation.setStatusMessage(catalog.getString(e.getUserMessage()));
@@ -228,10 +243,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         } catch (CreditorValidationException e) {
             metricAction.cancelled();
             log.info(
-                    transfer,
-                    String.format(
-                            "Could not execute payment due to creditor validation failure. %s",
-                            e.getMessage()));
+                    "[transferId: {}] Could not execute payment due to creditor validation failure. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
@@ -243,10 +257,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             metricAction.cancelled();
 
             log.info(
-                    transfer,
-                    String.format(
-                            "Could not execute payment due to date validation failure. %s",
-                            e.getMessage()));
+                    "[transferId: {}] Could not execute payment due to date validation failure. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
@@ -258,10 +271,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             metricAction.cancelled();
 
             log.info(
-                    transfer,
-                    String.format(
-                            "Could not execute payment due insufficient funds. %s",
-                            e.getMessage()));
+                    "[transferId: {}] Could not execute payment due insufficient funds. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
@@ -273,10 +285,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             metricAction.cancelled();
 
             log.info(
-                    transfer,
-                    String.format(
-                            "Could not execute payment due to debtor validation failure. %s",
-                            e.getMessage()));
+                    "[transferId: {}] Could not execute payment due to debtor validation failure. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
@@ -289,10 +300,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             metricAction.cancelled();
 
             log.info(
-                    transfer,
-                    String.format(
-                            "Could not execute payment due to reference validation failure. %s",
-                            e.getMessage()));
+                    "[transferId: {}] Could not execute payment due to reference validation failure. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
@@ -304,10 +314,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             metricAction.cancelled();
 
             log.info(
-                    transfer,
-                    String.format(
-                            "Could not execute payment due to payment authentication failure. %s",
-                            e.getMessage()));
+                    "[transferId: {}] Could not execute payment due to payment authentication failure. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(catalog.getString("Payment authentication failed."));
@@ -318,10 +327,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             metricAction.cancelled();
 
             log.info(
-                    transfer,
-                    String.format(
-                            "Could not execute payment due to authorization failure. %s",
-                            e.getMessage()));
+                    "[transferId: {}] Could not execute payment due to authorization failure. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(catalog.getString("Payment authorization failed."));
@@ -332,10 +340,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             metricAction.cancelled();
 
             log.info(
-                    transfer,
-                    String.format(
-                            "Could not execute payment due to validation failure. %s",
-                            e.getMessage()));
+                    "[transferId: {}] Could not execute payment due to validation failure. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(catalog.getString("Payment validation failed."));
@@ -346,10 +353,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             metricAction.failed();
 
             log.info(
-                    transfer,
-                    String.format(
-                            "Could not execute transfer due to Payment exception. %s",
-                            e.getMessage()));
+                    "[transferId: {}] Could not execute transfer due to Payment exception. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
             signableOperation.setStatusMessage(catalog.getString("Payment failed."));
@@ -363,7 +369,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             // Catching this exception here means that the Credentials will not get status
             // TEMPORARY_ERROR.
             metricAction.failed();
-            log.error(transfer, "Could not execute transfer. Something is badly broken", e);
+            log.error(
+                    "[transferId: {}] Could not execute transfer. Something is badly broken",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e);
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
             signableOperation.setStatusMessage(
@@ -387,22 +396,14 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                                 transferRequest.getTransfer(),
                                 transferRequest.getProvider().getMarket()));
 
-        log.info(
-                String.format(
-                        "Credentials contain - status: %s before first signing",
-                        credentials.getStatus()));
+        log.info("Credentials contain - status: {} before first signing", credentials.getStatus());
 
         PaymentMultiStepResponse signPaymentMultiStepResponse =
                 paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 
+        log.info("Credentials contain - status: {} after first signing", credentials.getStatus());
         log.info(
-                String.format(
-                        "Credentials contain - status: %s after first signing",
-                        credentials.getStatus()));
-        log.info(
-                String.format(
-                        "Payment step is - %s after first signing",
-                        signPaymentMultiStepResponse.getStep()));
+                "Payment step is - {} after first signing", signPaymentMultiStepResponse.getStep());
 
         Map<String, String> map;
         List<Field> fields;
@@ -426,8 +427,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             payment = signPaymentMultiStepResponse.getPayment();
             storage = signPaymentMultiStepResponse.getStorage();
 
-            log.info(String.format("Next step - %s", signPaymentMultiStepResponse.getStep()));
-            log.info(String.format("Credentials contain - status: %s", credentials.getStatus()));
+            log.info("Next step - {}", signPaymentMultiStepResponse.getStep());
+            log.info("Credentials contain - status: {}", credentials.getStatus());
         }
     }
 
