@@ -84,59 +84,42 @@ public class AccountInformationServiceEventsProducer {
             return;
         }
         try {
-            Psd2PaymentAccountClassificationEventProto.Psd2PaymentAccountClassificationEvent.Builder
-                    builder =
-                            Psd2PaymentAccountClassificationEventProto
-                                    .Psd2PaymentAccountClassificationEvent.newBuilder()
-                                    .setAccountCapabilities(
-                                            Psd2PaymentAccountClassificationEventProto
-                                                    .AccountCapabilities.newBuilder()
-                                                    .setCanExecuteExternalTransfer(
-                                                            accountCapabilities
-                                                                    .getCanExecuteExternalTransfer()
-                                                                    .name())
-                                                    .setCanReceiveExternalTransfer(
-                                                            accountCapabilities
-                                                                    .getCanReceiveExternalTransfer()
-                                                                    .name())
-                                                    .setCanPlaceFunds(
-                                                            accountCapabilities
-                                                                    .getCanPlaceFunds()
-                                                                    .name())
-                                                    .setCanWithdrawCash(
-                                                            accountCapabilities
-                                                                    .getCanWithdrawCash()
-                                                                    .name())
-                                                    .build())
-                                    .setAccountId(accountId)
-                                    .setAccountType(accountType)
-                                    .setAppId(appId)
-                                    .setUserId(userId)
-                                    .setClusterId(clusterId)
-                                    .setClassification(classificationResult)
-                                    .setCorrelationId(correlationId)
-                                    .setCredentialsId(credentialsId)
-                                    .setProviderName(provider.getName())
-                                    .setMarketCode(provider.getMarket())
-                                    .setProviderAccessType(
-                                            Optional.ofNullable(provider.getAccessType())
-                                                    .map(Enum::name)
-                                                    .orElse(null))
-                                    .setProviderAuthenticationUserType(
-                                            Optional.ofNullable(
-                                                            provider.getAuthenticationUserType())
-                                                    .map(Enum::name)
-                                                    .orElse(null))
-                                    .setTimestamp(
-                                            ProtobufTypeUtil.toProtobufTimestamp(Instant.now()));
-            Optional.ofNullable(provider.getAccessType())
-                    .ifPresent(accessType -> builder.setProviderAccessType(accessType.name()));
-            Optional.ofNullable(provider.getAuthenticationUserType())
-                    .ifPresent(
-                            authUserType ->
-                                    builder.setProviderAuthenticationUserType(authUserType.name()));
+            Psd2PaymentAccountClassificationEventProto.Psd2PaymentAccountClassificationEvent event =
+                    Psd2PaymentAccountClassificationEventProto.Psd2PaymentAccountClassificationEvent
+                            .newBuilder()
+                            .setAccountCapabilities(
+                                    Psd2PaymentAccountClassificationEventProto.AccountCapabilities
+                                            .newBuilder()
+                                            .setCanExecuteExternalTransfer(
+                                                    accountCapabilities
+                                                            .getCanExecuteExternalTransfer()
+                                                            .name())
+                                            .setCanReceiveExternalTransfer(
+                                                    accountCapabilities
+                                                            .getCanReceiveExternalTransfer()
+                                                            .name())
+                                            .setCanPlaceFunds(
+                                                    accountCapabilities.getCanPlaceFunds().name())
+                                            .setCanWithdrawCash(
+                                                    accountCapabilities.getCanWithdrawCash().name())
+                                            .build())
+                            .setAccountId(accountId)
+                            .setAccountType(accountType)
+                            .setAppId(appId)
+                            .setUserId(userId)
+                            .setClusterId(clusterId)
+                            .setClassification(classificationResult)
+                            .setCorrelationId(correlationId)
+                            .setCredentialsId(credentialsId)
+                            .setProviderName(provider.getName())
+                            .setMarketCode(provider.getMarket())
+                            .setProviderAccessType(provider.getAccessType().name())
+                            .setProviderAuthenticationUserType(
+                                    provider.getAuthenticationUserType().name())
+                            .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()))
+                            .build();
 
-            eventProducerServiceClient.postEventFireAndForget(Any.pack(builder.build()));
+            eventProducerServiceClient.postEventFireAndForget(Any.pack(event));
 
         } catch (RuntimeException e) {
             log.warn(
