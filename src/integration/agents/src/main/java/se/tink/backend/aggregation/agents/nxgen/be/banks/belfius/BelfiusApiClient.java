@@ -34,27 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchUpcomingTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchUpcomingTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.BelfiusPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.getsigningprotocol.SignProtocolResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.preparetransfer.PrepareRoot;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.AddBeneficiaryRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.AppRules;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.BeneficiaryManagementRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.DocumentSign;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.DoubleClickPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.DoublePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.DoubleSignTransferRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.EntityClick;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.EntitySelect;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.GetSigningProtocolRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.LoadMessages;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.MenuAccess;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.PrepareReaderPayment;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.SecurityType;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.SignBeneficiaryRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.SignCounters;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.SignedPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.TransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
@@ -62,13 +42,11 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.SessionOpen
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.StartFlowRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.TechnicalResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusIdGenerationUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.transfer.rpc.Transfer;
 
 public class BelfiusApiClient {
 
@@ -275,54 +253,6 @@ public class BelfiusApiClient {
                 ExecutionMode.AGGREGATED);
     }
 
-    private BelfiusResponse loadMessages() {
-        return post(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                FetchTransactionsResponse.class,
-                LoadMessages.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
-    private BelfiusResponse documentSign() {
-        return post(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                FetchTransactionsResponse.class,
-                DocumentSign.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
-    private BelfiusResponse appRules() {
-        return post(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                FetchTransactionsResponse.class,
-                AppRules.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
-    private BelfiusResponse toSignCounters() {
-        return post(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                FetchTransactionsResponse.class,
-                SignCounters.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
-    private BelfiusResponse menuAccess() {
-        return post(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                FetchTransactionsResponse.class,
-                MenuAccess.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
-    private BelfiusResponse entitySelect() {
-        return post(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                FetchTransactionsResponse.class,
-                EntitySelect.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
     public SendCardNumberResponse sendCardNumber(String cardNumber) {
         return post(
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
@@ -337,119 +267,6 @@ public class BelfiusApiClient {
                 FetchTransactionsResponse.class,
                 CheckStatusRequest.createActor(),
                 ExecutionMode.SERVICES);
-    }
-
-    private BelfiusResponse entityClick() {
-        return post(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                FetchTransactionsResponse.class,
-                EntityClick.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
-    private BelfiusResponse setSecurityType() {
-        return post(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                FetchTransactionsResponse.class,
-                SecurityType.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
-    public PrepareRoot prepareTransfer() {
-        return postTransaction(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                PrepareRoot.class,
-                BeneficiaryManagementRequest.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
-    public SignProtocolResponse addBeneficiary(
-            Transfer transfer, boolean isStructuredMessage, String name) {
-        return postTransaction(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                SignProtocolResponse.class,
-                AddBeneficiaryRequest.create(
-                        sessionStorage.getSessionId(), transfer, isStructuredMessage, name),
-                ExecutionMode.AGGREGATED);
-    }
-
-    public SignProtocolResponse signBeneficiary(String challengeResponse) {
-        return postTransaction(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                SignProtocolResponse.class,
-                SignBeneficiaryRequest.create(challengeResponse),
-                ExecutionMode.AGGREGATED);
-    }
-
-    public BelfiusPaymentResponse executePayment(
-            boolean toOwnAccount,
-            Transfer transfer,
-            String clientHash,
-            boolean isStructuredMessage) {
-        this.entityClick();
-        this.setSecurityType();
-        this.entitySelect();
-        this.menuAccess();
-        this.toSignCounters();
-        this.appRules();
-        this.documentSign();
-        this.fetchProducts();
-        this.loadMessages();
-        return postTransaction(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                BelfiusPaymentResponse.class,
-                TransferRequest.create(toOwnAccount, transfer, clientHash, isStructuredMessage),
-                ExecutionMode.AGGREGATED);
-    }
-
-    public SignProtocolResponse doublePayment() {
-        return postTransaction(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                SignProtocolResponse.class,
-                DoublePaymentRequest.create(),
-                ExecutionMode.AGGREGATED);
-    }
-
-    public SignProtocolResponse doubleClickPayment() {
-        return postTransaction(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                SignProtocolResponse.class,
-                DoubleClickPaymentRequest.create(),
-                ExecutionMode.AGGREGATED);
-    }
-
-    public SignProtocolResponse getSignProtocol() {
-        return postTransaction(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                SignProtocolResponse.class,
-                GetSigningProtocolRequest.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
-    public SignProtocolResponse getTransferSignChallenge() {
-        return postTransaction(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                SignProtocolResponse.class,
-                PrepareReaderPayment.create(sessionStorage.getSessionId()),
-                ExecutionMode.AGGREGATED);
-    }
-
-    public SignProtocolResponse signTransfer(String challenge) {
-        return postTransaction(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                SignProtocolResponse.class,
-                SignedPaymentResponse.create(
-                        BelfiusIdGenerationUtils.generateTransactionId(), challenge),
-                ExecutionMode.AGGREGATED);
-    }
-
-    public SignProtocolResponse doubleSignTransfer(String challenge) {
-        return postTransaction(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                SignProtocolResponse.class,
-                DoubleSignTransferRequest.create(
-                        BelfiusIdGenerationUtils.generateSignTransferId(), challenge),
-                ExecutionMode.AGGREGATED);
     }
 
     public FetchUpcomingTransactionsResponse fetchUpcomingTransactions(
@@ -502,20 +319,6 @@ public class BelfiusApiClient {
                 "request="
                         + urlEncode(SerializationUtils.serializeToString(builder.build()))
                                 .replace("+", "%20");
-        HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
-        T response = parseBelfiusResponse(httpResponse, c);
-        this.sessionStorage.incrementRequestCounter(executionMode);
-        return response;
-    }
-
-    private <T extends BelfiusResponse> T postTransaction(
-            URL url,
-            Class<T> c,
-            BelfiusRequest.Builder builder,
-            final ExecutionMode executionMode) {
-        setSessionData(builder, executionMode);
-        String body = "request=" + urlEncode(SerializationUtils.serializeToString(builder.build()));
-        body = body.replace("\\\\", Character.toString((char) 92));
         HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
         T response = parseBelfiusResponse(httpResponse, c);
         this.sessionStorage.incrementRequestCounter(executionMode);
