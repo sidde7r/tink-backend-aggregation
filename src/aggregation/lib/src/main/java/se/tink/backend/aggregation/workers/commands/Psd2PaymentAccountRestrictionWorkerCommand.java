@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.Psd2PaymentAccountClassifier;
 import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.result.Psd2PaymentAccountClassificationResult;
 import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
+import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
@@ -19,16 +20,19 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
     private final CredentialsRequest refreshInformationRequest;
     private final RegulatoryRestrictions regulatoryRestrictions;
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
+    private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
 
     public Psd2PaymentAccountRestrictionWorkerCommand(
             AgentWorkerCommandContext context,
             CredentialsRequest request,
             RegulatoryRestrictions regulatoryRestrictions,
-            Psd2PaymentAccountClassifier psd2PaymentAccountClassifier) {
+            Psd2PaymentAccountClassifier psd2PaymentAccountClassifier,
+            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
         this.context = context;
         this.refreshInformationRequest = request;
         this.regulatoryRestrictions = regulatoryRestrictions;
         this.psd2PaymentAccountClassifier = psd2PaymentAccountClassifier;
+        this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
     }
 
     private boolean filterRestrictedAccount(Account account) {
@@ -53,14 +57,64 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                     .getAccountDataCache()
                     .getFilteredAccountData()
                     .forEach(
-                            accountData ->
-                                    // currently we do not want to restrict anything - just see this
-                                    // command running
-                                    filterRestrictedAccount(accountData.getAccount()));
+                            accountData -> {
+                                // currently we do not want to restrict anything - just see this
+                                // command running
+                                Account account = accountData.getAccount();
+                                filterRestrictedAccount(account);
+                                sendEvents(account);
+                            });
         } catch (RuntimeException e) {
             log.warn("Could not execute Psd2PaymentAccountRestrictionWorkerCommand", e);
         }
         return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    private void sendEvents(Account account) {
+        sendPsd2PaymentAccountClassificationEvent(account);
+        sendSourceInfoEvent(account);
+    }
+
+    private void sendPsd2PaymentAccountClassificationEvent(Account account) {
+        CredentialsRequest request = context.getRequest();
+        if (request.getProvider() == null) {
+            return;
+        }
+        Optional<Psd2PaymentAccountClassificationResult> paymentAccountClassification =
+                psd2PaymentAccountClassifier.classify(request.getProvider(), account);
+
+        paymentAccountClassification.ifPresent(
+                classification ->
+                        accountInformationServiceEventsProducer
+                                .sendPsd2PaymentAccountClassificationEvent(
+                                        context.getClusterId(),
+                                        context.getAppId(),
+                                        request.getUser().getId(),
+                                        request.getProvider().getName(),
+                                        request.getProvider().getMarket(),
+                                        context.getCorrelationId(),
+                                        request.getCredentials().getId(),
+                                        account.getId(),
+                                        account.getType().name(),
+                                        classification.name(),
+                                        account.getCapabilities()));
+    }
+
+    private void sendSourceInfoEvent(Account account) {
+        CredentialsRequest request = context.getRequest();
+        if (request.getProvider() == null) {
+            return;
+        }
+        accountInformationServiceEventsProducer.sendAccountSourceInfoEvent(
+                context.getClusterId(),
+                context.getAppId(),
+                request.getUser().getId(),
+                request.getProvider().getName(),
+                request.getProvider().getMarket(),
+                context.getCorrelationId(),
+                request.getCredentials().getId(),
+                account.getId(),
+                account.getSourceInfo());
     }
 
     @Override

@@ -34,9 +34,6 @@ import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.Psd2PaymentAccountClassifier;
-import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.result.Psd2PaymentAccountClassificationResult;
-import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
@@ -67,7 +64,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
     private ProviderSessionCacheController providerSessionCacheController;
-    private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     protected final String correlationId;
     protected final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
 
@@ -107,7 +103,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected ControllerWrapper controllerWrapper;
 
     protected IdentityData identityData;
-    private RegulatoryRestrictions regulatoryRestrictions;
 
     public AgentWorkerContext(
             CredentialsRequest request,
@@ -120,19 +115,15 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             String clusterId,
             String appId,
             String correlationId,
-            RegulatoryRestrictions regulatoryRestrictions,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
 
         this.accountDataCache = new AccountDataCache();
-        this.psd2PaymentAccountClassifier =
-                Psd2PaymentAccountClassifier.createWithMetrics(metricRegistry);
         this.correlationId = correlationId;
 
         this.request = request;
 
         // _Not_ instanciating a SystemService from the ServiceFactory here.
         this.coordinationClient = coordinationClient;
-        this.regulatoryRestrictions = regulatoryRestrictions;
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
 
         setClusterId(clusterId);
@@ -331,62 +322,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return accountDataCache;
     }
 
-    private void sendPsd2PaymentAccountEvents(Account account) {
-        try {
-            // TODO: extend filtering by using payment classification information
-            // (For now we discard the result as in the beginning we just want to collect metrics)
-            Optional<Psd2PaymentAccountClassificationResult> paymentAccountClassification =
-                    psd2PaymentAccountClassifier.classify(request.getProvider(), account);
-            regulatoryRestrictions.shouldAccountBeRestricted(
-                    request, account, paymentAccountClassification);
-            // Calling the following 2 methods is a temporary solution to get metrics running.
-            // This will be replaced shortly after the refactor of AgentWorkerContext is finished.
-            sendPsd2PaymentAccountClassificationEvent(account, paymentAccountClassification);
-            sendAccountSourceInfoEvent(account);
-        } catch (RuntimeException e) {
-            log.error("[classifyAsPaymentAccount] Unexpected exception occurred", e);
-        }
-    }
-
-    private void sendPsd2PaymentAccountClassificationEvent(
-            Account account,
-            Optional<Psd2PaymentAccountClassificationResult> paymentAccountClassification) {
-        if (request.getProvider() == null) {
-            return;
-        }
-        paymentAccountClassification.ifPresent(
-                classification ->
-                        accountInformationServiceEventsProducer
-                                .sendPsd2PaymentAccountClassificationEvent(
-                                        getClusterId(),
-                                        getAppId(),
-                                        getRequest().getUser().getId(),
-                                        request.getProvider().getName(),
-                                        request.getProvider().getMarket(),
-                                        correlationId,
-                                        request.getCredentials().getId(),
-                                        account.getId(),
-                                        account.getType().name(),
-                                        classification.name(),
-                                        account.getCapabilities()));
-    }
-
-    private void sendAccountSourceInfoEvent(Account account) {
-        if (request.getProvider() == null) {
-            return;
-        }
-        accountInformationServiceEventsProducer.sendAccountSourceInfoEvent(
-                getClusterId(),
-                getAppId(),
-                getRequest().getUser().getId(),
-                request.getProvider().getName(),
-                request.getProvider().getMarket(),
-                correlationId,
-                request.getCredentials().getId(),
-                account.getId(),
-                account.getSourceInfo());
-    }
-
     public CredentialsRequest getRequest() {
         return request;
     }
@@ -461,9 +396,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         accountDataCache.setProcessedTinkAccountId(
                 updatedAccount.getBankId(), updatedAccount.getId());
-
-        // This is temporary.
-        sendPsd2PaymentAccountEvents(account);
 
         return updatedAccount;
     }
@@ -741,13 +673,5 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     public String getCorrelationId() {
         return correlationId;
-    }
-
-    public Psd2PaymentAccountClassifier getPsd2PaymentAccountClassifier() {
-        return psd2PaymentAccountClassifier;
-    }
-
-    public RegulatoryRestrictions getRegulatoryRestrictions() {
-        return regulatoryRestrictions;
     }
 }

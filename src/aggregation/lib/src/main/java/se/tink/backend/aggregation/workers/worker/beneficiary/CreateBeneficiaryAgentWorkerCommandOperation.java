@@ -7,7 +7,6 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
@@ -75,7 +74,6 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             LoginAgentEventProducer loginAgentEventProducer,
             AgentWorkerOperationState agentWorkerOperationState,
             ProviderTierConfiguration providerTierConfiguration,
-            RegulatoryRestrictions regulatoryRestrictions,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
@@ -90,7 +88,6 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        regulatoryRestrictions,
                         accountInformationServiceEventsProducer);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();

@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
@@ -77,7 +76,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
             String clusterId,
             String appId,
             String correlationId,
-            RegulatoryRestrictions regulatoryRestrictions,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
         super(
                 request,
@@ -90,7 +88,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 clusterId,
                 appId,
                 correlationId,
-                regulatoryRestrictions,
                 accountInformationServiceEventsProducer);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
