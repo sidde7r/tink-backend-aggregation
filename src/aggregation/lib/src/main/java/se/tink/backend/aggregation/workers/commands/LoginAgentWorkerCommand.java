@@ -175,8 +175,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                         credentials.getStatus(), credentials.getId()));
         log.info(
                 String.format(
-                        "AgentWorkerCommandResult result : {}: %s",
-                        Optional.ofNullable(result).map(Enum::toString).orElse(null)));
+                        "AgentWorkerCommandResult result : {}: %s, credentialsId: {}: %s",
+                        Optional.ofNullable(result).map(Enum::toString).orElse(null),
+                        credentials.getId()));
         return result;
     }
 
@@ -190,8 +191,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                     ((RefreshInformationRequest) context.getRequest()).isForceAuthenticate();
             log.info(
                     String.format(
-                            "RefreshInformationRequest contain - isForceAuthenticate: {}: %s",
-                            Boolean.toString(result)));
+                            "RefreshInformationRequest contain - isForceAuthenticate: {}: %s, credentialsId: {}: %s",
+                            Boolean.toString(result), credentials.getId()));
             return result;
         }
         return false;
@@ -263,7 +264,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         }
         log.info(
                 String.format(
-                        "LoginAgentWorkerCommand - isLoggedIn: {}: %s", Boolean.toString(result)));
+                        "LoginAgentWorkerCommand - isLoggedIn: {}: %s, credentialsId: {}: %s",
+                        Boolean.toString(result), credentials.getId()));
         return Optional.ofNullable(result);
     }
 
