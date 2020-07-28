@@ -53,7 +53,7 @@ public class DkbPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         String paymentProduct =
                 paymentRequest.getPayment().isSepa()
                         ? PaymentProducts.INSTANT_SEPA_CREDIT_TRANSFER
