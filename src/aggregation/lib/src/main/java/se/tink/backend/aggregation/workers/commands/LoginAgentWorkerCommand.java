@@ -215,27 +215,27 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         long timeLoadingSession = 0;
         long timeAgentIsLoggedIn = 0;
         try {
+            long beforeLoad = System.nanoTime();
+            persistentAgent.loadLoginSession();
+            timeLoadingSession = System.nanoTime() - beforeLoad;
+
+            long beforeIsLoggedIn = System.nanoTime();
             if (shouldForceAuthenticate()) {
+                timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
+                action.completed();
                 log.info("Clearing session to force authentication towards the bank");
                 persistentAgent.clearLoginSession();
+            } else if (persistentAgent.isLoggedIn()) {
+                timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
+                action.completed();
+                log.info("We're already logged in. Moving along.");
+                emitLoginResultEvent(LoginResult.ALREADY_LOGGED_IN);
+                result = Boolean.TRUE;
             } else {
-                long beforeLoad = System.nanoTime();
-                persistentAgent.loadLoginSession();
-                timeLoadingSession = System.nanoTime() - beforeLoad;
-
-                long beforeIsLoggedIn = System.nanoTime();
-                if (persistentAgent.isLoggedIn()) {
-                    timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
-                    action.completed();
-                    log.info("We're already logged in. Moving along.");
-                    emitLoginResultEvent(LoginResult.ALREADY_LOGGED_IN);
-                    result = Boolean.TRUE;
-                } else {
-                    timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
-                    action.completed();
-                    log.info("We're not logged in. Clear Session and Login in again.");
-                    persistentAgent.clearLoginSession();
-                }
+                timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
+                action.completed();
+                log.info("We're not logged in. Clear Session and Login in again.");
+                persistentAgent.clearLoginSession();
             }
         } catch (BankServiceException e) {
             log.info(String.format("Bank service exception: %s", e.getMessage()), e);
