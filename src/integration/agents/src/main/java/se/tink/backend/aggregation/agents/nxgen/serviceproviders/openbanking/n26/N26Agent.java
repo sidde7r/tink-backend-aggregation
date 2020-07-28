@@ -1,12 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26;
 
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.N26AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.fetcher.N26TransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.fetcher.N26TransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.payment.N26PaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.storage.N26Storage;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -19,13 +24,16 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-public class N26Agent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
+public class N26Agent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshTransferDestinationExecutor {
 
     private final N26Storage storage;
     private final N26ApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
     public N26Agent(AgentComponentProvider componentProvider) {
@@ -33,6 +41,7 @@ public class N26Agent extends NextGenerationAgent implements RefreshCheckingAcco
         this.storage = new N26Storage(persistentStorage);
         this.apiClient = new N26ApiClient(client, getAgentConfig(), storage);
         this.transactionalAccountRefreshController = initTransactionalAccountFetcher();
+        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     @Override
@@ -95,5 +104,15 @@ public class N26Agent extends NextGenerationAgent implements RefreshCheckingAcco
                         supplementalInformationHelper);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new N26TransferDestinationFetcher(apiClient));
     }
 }
