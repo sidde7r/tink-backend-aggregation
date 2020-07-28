@@ -71,6 +71,7 @@ ignoredAgentsForCapabilityTest:
   - nxgen.se.business.seb.SebAgent
   - nxgen.se.openbanking.alandsbanken.AlandsbankenAgent
   - nxgen.se.openbanking.business.danskebank.DanskebankBusinessAgent
+  - nxgen.se.openbanking.business.handelsbanken.HandelsbankenSEAgent
   - nxgen.se.openbanking.business.seb.SebCorporateAgent
   - nxgen.se.openbanking.danskebank.DanskebankV31Agent
   - nxgen.se.openbanking.handelsbanken.HandelsbankenSEAgent
