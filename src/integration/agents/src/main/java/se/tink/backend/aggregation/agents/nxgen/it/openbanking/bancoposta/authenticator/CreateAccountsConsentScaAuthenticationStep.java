@@ -32,7 +32,8 @@ public class CreateAccountsConsentScaAuthenticationStep implements Authenticatio
                 (ConsentScaResponse)
                         consentManager.createAccountConsent(strongAuthenticationState.getState());
 
-        userState.saveScaMethods(consentResponse.getScaMethods());
+        userState.saveChosenAuthenticationMethod(
+                consentResponse.getScaMethod().getAuthenticationMethodId());
 
         return AuthenticationStepResponse.executeNextStep();
     }

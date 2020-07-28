@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator;
 
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -48,8 +47,9 @@ public class CreateAccountsConsentScaAuthenticationStepTest {
         step.execute(null);
 
         // then
-        verify(strongAuthenticationState, times(1)).getState();
-        verify(consentManager, times(1)).createAccountConsent(state);
-        verify(userState, times(1)).saveScaMethods(scaMethods);
+        verify(strongAuthenticationState).getState();
+        verify(consentManager).createAccountConsent(state);
+        verify(userState)
+                .saveChosenAuthenticationMethod(scaMethods.get(0).getAuthenticationMethodId());
     }
 }
