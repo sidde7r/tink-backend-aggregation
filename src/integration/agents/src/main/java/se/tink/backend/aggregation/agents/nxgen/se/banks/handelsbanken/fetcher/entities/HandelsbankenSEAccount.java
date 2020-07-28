@@ -184,6 +184,12 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     }
 
     @VisibleForTesting
+    HandelsbankenSEAccount setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    @VisibleForTesting
     HandelsbankenSEAccount setNumber(String number) {
         this.number = number;
         return this;

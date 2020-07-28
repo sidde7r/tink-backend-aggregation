@@ -29,15 +29,15 @@ public class HandelsbankenSEBankSideErrorFilter extends Filter {
                                 + ", message: "
                                 + response.getDetail());
             }
-        } else if (MediaType.APPLICATION_XML_TYPE.isCompatible(httpResponse.getType())) {
+        } else if (MediaType.APPLICATION_XML_TYPE.isCompatible(httpResponse.getType())
+                && Try.of(() -> httpResponse.getBody(XmlErrorResponse.class).isServiceUnavailable())
+                        .getOrElse(false)) {
             // No check for response status as they return http status 200
 
             // if failed to parse the response to XmlErrorResponse don't throw exception
             XmlErrorResponse xmlError = httpResponse.getBody(XmlErrorResponse.class);
-            if (Try.of(xmlError::isServiceUnavailable).getOrElse(false)) {
-                throw BankServiceError.NO_BANK_SERVICE.exception(
-                        "Error code: " + xmlError.getCode() + ", message: " + xmlError.getLabel());
-            }
+            throw BankServiceError.NO_BANK_SERVICE.exception(
+                    "Error code: " + xmlError.getCode() + ", message: " + xmlError.getLabel());
         }
         return httpResponse;
     }
