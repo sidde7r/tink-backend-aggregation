@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26;
 
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDtoBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Header;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.UrlParam;
@@ -22,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AllArgsConstructor
-public class N26ApiClient {
+public class N26ApiClient implements FrAispApiClient {
 
     private static final String PAGE_LIMIT = "page.limit";
     private static final String PAGE_OFFSET = "page.offset";
@@ -87,5 +90,16 @@ public class N26ApiClient {
 
     private URL createUrl(String path) {
         return URL.of(configuration.getProviderSpecificConfiguration().getBaseUrl() + path);
+    }
+
+    @Override
+    public Optional<? extends TrustedBeneficiariesResponseDtoBase> getTrustedBeneficiaries() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<? extends TrustedBeneficiariesResponseDtoBase> getTrustedBeneficiaries(
+            String path) {
+        return Optional.empty();
     }
 }
