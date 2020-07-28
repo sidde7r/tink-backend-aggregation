@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.PollResponses;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryValues;
@@ -67,7 +67,7 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
             case PollResponses.COMPLETE:
                 if (Strings.nullToEmpty(response.getHintCode())
                         .equalsIgnoreCase(PollResponses.UNKNOWN_BANK_ID)) {
-                    throw BankIdError.BLOCKED.exception(
+                    throw LoginError.NOT_SUPPORTED.exception(
                             new LocalizableKey(
                                     "Message from SEB - SEB needs you to verify your BankID before you can continue using the service. Visit www.seb.se or open the SEB app to verify your BankID. Note that you must be a customer of SEB to be able to use the service."));
                 }
