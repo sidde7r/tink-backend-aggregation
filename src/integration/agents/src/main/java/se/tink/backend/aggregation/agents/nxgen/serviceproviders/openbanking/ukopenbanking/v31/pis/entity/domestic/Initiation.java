@@ -40,7 +40,7 @@ public class Initiation {
                 Objects.isNull(payment.getDebtor()) ? null : new DebtorAccount(payment.getDebtor());
         this.creditorAccount = new CreditorAccount(payment.getCreditor());
         this.remittanceInformation =
-                new RemittanceInformation(payment.getUniqueId(), payment.getReference());
+                RemittanceInformation.ofUnstructured(payment.getReference().getValue());
     }
 
     public ExactCurrencyAmount toTinkAmount() {
@@ -59,7 +59,7 @@ public class Initiation {
 
     @JsonIgnore
     public String getReference() {
-        return remittanceInformation.getReference();
+        return remittanceInformation.getUnstructured();
     }
 
     public String getInstructionIdentification() {

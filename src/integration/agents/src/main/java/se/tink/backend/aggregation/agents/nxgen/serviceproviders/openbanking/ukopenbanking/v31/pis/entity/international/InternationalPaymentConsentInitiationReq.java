@@ -27,7 +27,7 @@ public class InternationalPaymentConsentInitiationReq {
     public InternationalPaymentConsentInitiationReq(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
         this.remittanceInformation =
-                new RemittanceInformation(payment.getUniqueId(), payment.getReference());
+                RemittanceInformation.ofUnstructured(payment.getReference().getValue());
         this.currencyOfTransfer = payment.getCurrency();
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;
@@ -42,7 +42,7 @@ public class InternationalPaymentConsentInitiationReq {
                         .withExactCurrencyAmount(instructedAmount.toTinkAmount())
                         .withReference(
                                 UkOpenBankingV31PisUtils.createTinkReference(
-                                        remittanceInformation.getReference()))
+                                        remittanceInformation.getUnstructured()))
                         .withCreditor(creditorAccount.toCreditor())
                         .withCurrency(currencyOfTransfer)
                         .build();

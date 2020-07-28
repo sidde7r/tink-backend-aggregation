@@ -7,5 +7,6 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/v31",
         "//src/integration/amount",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

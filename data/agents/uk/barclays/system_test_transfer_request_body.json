@@ -7,7 +7,7 @@
         "updated": 0,
         "userId": "00000000-0000-0000-0000-000000000000",
         "credentialsId": "00000000-0000-0000-0000-000000000000",
-        "signableObject": "{\"id\":\"b900555d-0312-4056-b549-30e1c53c9cac\", \"destinationMessage\": \"UK Demo\", \"amount\": 1.00, \"credentialsId\": \"00000000-0000-0000-0000-000000000000\", \"currency\": \"GBP\", \"destinationUri\": \"sort-code://04000469430924?name=Ritesh%20Tink\", \"sourceUri\": \"sort-code://2314701111111\", \"sourceMessage\": \"UK Demo\", \"userId\": \"00000000-0000-0000-0000-000000000000\", \"type\": \"PAYMENT\", \"dueDate\": 695260800, \"messageType\": \"\", \"payloadSerialized\": \"\", \"remittanceInformation\": {\"value\": \"UK Demo\"} }"
+        "signableObject": "{\"id\":\"b900555d-0312-4056-b549-30e1c53c9cac\", \"destinationMessage\": \"UK Demo\", \"amount\": 1.00, \"credentialsId\": \"00000000-0000-0000-0000-000000000000\", \"currency\": \"GBP\", \"destinationUri\": \"sort-code://04000469430924?name=Ritesh%20Tink\", \"sourceUri\": \"sort-code://2314701111111\", \"sourceMessage\": \"UK Demo\", \"userId\": \"00000000-0000-0000-0000-000000000000\", \"type\": \"PAYMENT\", \"dueDate\": 695260800, \"messageType\": \"\", \"payloadSerialized\": \"\", \"remittanceInformation\": {\"value\": \"b900555d03124056b54930e1c53c9cac\"} }"
     },
     "update": true,
     "create": true,

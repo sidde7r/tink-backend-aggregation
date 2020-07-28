@@ -32,7 +32,7 @@ public class DomesticPaymentResponseInitiation {
                 new Builder()
                         .withReference(
                                 UkOpenBankingV31PisUtils.createTinkReference(
-                                        remittanceInformation.getReference()))
+                                        remittanceInformation.getUnstructured()))
                         .withCreditor(creditorAccount.toCreditor())
                         .withExactCurrencyAmount(instructedAmount.toTinkAmount())
                         .withDebtor(
