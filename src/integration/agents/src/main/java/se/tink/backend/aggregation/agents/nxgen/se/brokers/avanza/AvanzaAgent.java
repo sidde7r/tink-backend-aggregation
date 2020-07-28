@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -38,7 +37,6 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 public final class AvanzaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshLoanAccountsExecutor {
 
@@ -49,6 +47,7 @@ public final class AvanzaAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final LocalDateTimeSource localDateTimeSource;
+    private final String clusterId;
 
     @Inject
     public AvanzaAgent(AgentComponentProvider componentProvider) {
@@ -56,6 +55,7 @@ public final class AvanzaAgent extends NextGenerationAgent
 
         configureHttpClient(client);
 
+        this.clusterId = componentProvider.getContext().getClusterId();
         this.authSessionStorage = new AvanzaAuthSessionStorage();
         this.apiClient = new AvanzaApiClient(client, authSessionStorage);
         this.temporaryStorage = new TemporaryStorage();
@@ -91,16 +91,6 @@ public final class AvanzaAgent extends NextGenerationAgent
     }
 
     @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return transactionalAccountRefreshController.fetchCheckingAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
         return transactionalAccountRefreshController.fetchSavingsAccounts();
     }
@@ -128,7 +118,11 @@ public final class AvanzaAgent extends NextGenerationAgent
     private InvestmentRefreshController constructInvestmentRefreshController() {
         final AvanzaInvestmentFetcher investmentFetcher =
                 new AvanzaInvestmentFetcher(
-                        apiClient, authSessionStorage, temporaryStorage, localDateTimeSource);
+                        apiClient,
+                        authSessionStorage,
+                        temporaryStorage,
+                        localDateTimeSource,
+                        clusterId);
 
         return new InvestmentRefreshController(
                 metricRefreshController,

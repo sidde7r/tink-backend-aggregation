@@ -3,12 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.trans
 import static se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.MAPPERS;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -116,29 +111,5 @@ public class AccountEntity {
     @JsonIgnore
     public boolean isInvestmentAccount() {
         return MAPPERS.isInvestmentAccount(getAccountType());
-    }
-
-    @JsonIgnore
-    public AccountTypes toTinkAccountType() {
-        return MAPPERS.inferAccountType(accountType).orElse(AccountTypes.OTHER);
-    }
-
-    @JsonIgnore
-    public <T extends Account> T toTinkAccount(HolderName holderName, Class<T> type) {
-        final Account account =
-                Account.builder(toTinkAccountType(), accountId)
-                        .setAccountNumber(accountId)
-                        .setName(name)
-                        .setHolderName(holderName)
-                        .setExactBalance(ExactCurrencyAmount.of(ownCapital, "SEK"))
-                        .setBankIdentifier(accountId)
-                        .build();
-
-        return type.cast(account);
-    }
-
-    @JsonIgnore
-    public TransactionalAccount toTinkAccount(HolderName holderName) {
-        return toTinkAccount(holderName, TransactionalAccount.class);
     }
 }

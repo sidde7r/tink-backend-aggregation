@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 public class AvanzaConstants {
 
     public static final AvanzaAccountTypeMappers MAPPERS = new AvanzaAccountTypeMappers();
+    public static final String CLUSTER_ID_NESTON = "neston";
 
     public enum BankIdResponseStatus {
         NO_CLIENT("NO_CLIENT"),
@@ -87,6 +88,7 @@ public class AvanzaConstants {
         public static final String IPS = "ips";
         public static final String KAPITALFORSAKRING = "kapitalforsakring";
         public static final String KAPITALFORSAKRING_BARN = "kapitalforsakringbarn";
+        public static final String AVTALS_PENSION = "avtalspension";
     }
 
     public static class Urls {

@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.InstrumentTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 
 @JsonObject
 public class PositionEntity {
@@ -171,37 +172,34 @@ public class PositionEntity {
     }
 
     @JsonIgnore
-    public Instrument toTinkInstrument(InstrumentEntity parent, String marketPlace, String isin) {
-        Instrument instrument = new Instrument();
+    public InstrumentModule toTinkInstrument(
+            InstrumentEntity parent, String marketPlace, String isin) {
 
-        instrument.setAverageAcquisitionPrice(averageAcquiredPrice);
-        instrument.setCurrency(currency);
-        instrument.setIsin(isin);
-        instrument.setMarketPlace(marketPlace);
-        instrument.setMarketValue(value);
-        instrument.setName(name);
-        instrument.setPrice(lastPrice);
-        instrument.setProfit(profit);
-        instrument.setQuantity(volume);
-        instrument.setRawType(parent.getInstrumentType());
-        instrument.setType(getTinkInstrumentType(parent.getInstrumentType()));
         // Since we don't get the isin from this entity we have to enrich the instrument in a later
         // stage.
         // This is done by matching the order book id of the transactions of the specific
         // instrument.
-        instrument.setUniqueIdentifier(getOrderbookId());
-
-        return instrument;
+        return InstrumentModule.builder()
+                .withType(getTinkInstrumentType(parent.getInstrumentType()))
+                .withId(InstrumentIdModule.of(isin, marketPlace, name))
+                .withMarketPrice(lastPrice)
+                .withMarketValue(value)
+                .withAverageAcquisitionPrice(averageAcquiredPrice)
+                .withCurrency(currency)
+                .withQuantity(volume)
+                .withProfit(profit)
+                .setRawType(parent.getInstrumentType())
+                .build();
     }
 
     @JsonIgnore
-    private Instrument.Type getTinkInstrumentType(String instrumentType) {
+    private InstrumentModule.InstrumentType getTinkInstrumentType(String instrumentType) {
         switch (instrumentType.toLowerCase()) {
             case InstrumentTypes.STOCK:
-                return Instrument.Type.STOCK;
+                return InstrumentModule.InstrumentType.STOCK;
             case InstrumentTypes.AUTO_PORTFOLIO:
             case InstrumentTypes.FUND:
-                return Instrument.Type.FUND;
+                return InstrumentModule.InstrumentType.FUND;
             case InstrumentTypes.BOND:
             case InstrumentTypes.OPTION:
             case InstrumentTypes.FUTURE_FORWARD:
@@ -215,7 +213,7 @@ public class PositionEntity {
             case InstrumentTypes.CONVERTIBLE:
                 // Intentional fall through
             default:
-                return Instrument.Type.OTHER;
+                return InstrumentModule.InstrumentType.OTHER;
         }
     }
 }

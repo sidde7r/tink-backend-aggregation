@@ -2,16 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.inves
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.PortfolioTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -53,7 +55,11 @@ public class PortfolioEntity {
         return totalBalance;
     }
 
-    public String getAccountName() {
+    public String getAccountName(String clusterId) {
+        if (clusterId.contains(AvanzaConstants.CLUSTER_ID_NESTON)
+                && accountId.contains(accountName)) {
+            return String.format("%s %s", accountName, getPortfolioType());
+        }
         return accountName;
     }
 
@@ -70,61 +76,76 @@ public class PortfolioEntity {
     }
 
     @JsonIgnore
-    public Portfolio toTinkPortfolio(List<Instrument> instruments) {
-        Portfolio portfolio = new Portfolio();
+    public PortfolioModule toTinkPortfolioModule(List<InstrumentModule> instruments) {
+        final double totalValue =
+                instruments.stream().mapToDouble(InstrumentModule::getMarketValue).sum();
 
-        portfolio.setRawType(accountType);
-        portfolio.setType(getPortfolioType());
-        portfolio.setCashValue(totalBalance);
-        final Double totalValue =
-                instruments.stream().mapToDouble(Instrument::getMarketValue).sum();
-        portfolio.setTotalValue(totalValue);
-        portfolio.setTotalProfit(totalProfit);
-        portfolio.setUniqueIdentifier(accountId);
-        portfolio.setInstruments(instruments);
-
-        return portfolio;
+        return PortfolioModule.builder()
+                .withType(getPortfolioType())
+                .withUniqueIdentifier(accountId)
+                .withCashValue(totalBalance)
+                .withTotalProfit(totalProfit)
+                .withTotalValue(totalValue)
+                .withInstruments(instruments)
+                .setRawType(accountType)
+                .build();
     }
 
     public InvestmentAccount toTinkInvestmentAccount(
-            HolderName holderName, String clearingNumber, List<Instrument> instruments) {
-        return toTinkInvestmentAccount(holderName, clearingNumber, toTinkPortfolio(instruments));
+            HolderName holderName,
+            String clearingNumber,
+            List<InstrumentModule> instruments,
+            String clusterId) {
+        return toTinkInvestmentAccount(
+                holderName, clearingNumber, toTinkPortfolioModule(instruments), clusterId);
     }
 
     private InvestmentAccount toTinkInvestmentAccount(
-            HolderName holderName, String clearingNumber, Portfolio portfolio) {
+            HolderName holderName,
+            String clearingNumber,
+            PortfolioModule portfolio,
+            String clusterId) {
         final double interestPayable = totalOwnCapital - portfolio.getTotalValue() - totalBalance;
         final String accountNumber =
                 clearingNumber != null
                         ? String.format("%s-%s", clearingNumber, accountId)
                         : accountId;
 
-        return InvestmentAccount.builder(getAccountId())
-                .setAccountNumber(accountNumber)
-                .setName(getAccountName())
-                .setHolderName(holderName)
-                .setCashBalance(ExactCurrencyAmount.inSEK(totalBalance + interestPayable))
-                .setBankIdentifier(getAccountId())
-                .setPortfolios(Lists.newArrayList(portfolio))
+        return InvestmentAccount.nxBuilder()
+                .withPortfolios(portfolio)
+                .withCashBalance(ExactCurrencyAmount.inSEK(totalBalance + interestPayable))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getAccountId())
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(getAccountName(clusterId))
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.SE, accountId))
+                                .setProductName(portfolio.getRawType())
+                                .build())
+                .addHolderName(holderName.toString())
+                .setApiIdentifier(getAccountId())
                 .build();
     }
 
     @JsonIgnore
-    private Portfolio.Type getPortfolioType() {
+    private PortfolioModule.PortfolioType getPortfolioType() {
         switch (getAccountType().toLowerCase()) {
             case PortfolioTypes.INVESTERINGSSPARKONTO:
-                return Portfolio.Type.ISK;
+                return PortfolioModule.PortfolioType.ISK;
             case PortfolioTypes.AKTIEFONDKONTO:
-                return Portfolio.Type.DEPOT;
+                return PortfolioModule.PortfolioType.DEPOT;
             case PortfolioTypes.TJANSTEPENSION:
             case PortfolioTypes.PENSIONSFORSAKRING:
             case PortfolioTypes.IPS:
-                return Portfolio.Type.PENSION;
+            case PortfolioTypes.AVTALS_PENSION:
+                return PortfolioModule.PortfolioType.PENSION;
             case PortfolioTypes.KAPITALFORSAKRING:
             case PortfolioTypes.KAPITALFORSAKRING_BARN:
-                return Portfolio.Type.KF;
+                return PortfolioModule.PortfolioType.KF;
             default:
-                return Portfolio.Type.OTHER;
+                return PortfolioModule.PortfolioType.OTHER;
         }
     }
 }

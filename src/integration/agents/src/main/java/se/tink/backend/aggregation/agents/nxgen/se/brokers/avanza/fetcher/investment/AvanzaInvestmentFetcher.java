@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
@@ -29,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -39,16 +39,19 @@ public class AvanzaInvestmentFetcher
     private final AvanzaAuthSessionStorage authSessionStorage;
     private final TemporaryStorage temporaryStorage;
     private final LocalDateTimeSource localDateTimeSource;
+    private final String clusterId;
 
     public AvanzaInvestmentFetcher(
             AvanzaApiClient apiClient,
             AvanzaAuthSessionStorage authSessionStorage,
             TemporaryStorage temporaryStorage,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            String clusterId) {
         this.apiClient = apiClient;
         this.authSessionStorage = authSessionStorage;
         this.temporaryStorage = temporaryStorage;
         this.localDateTimeSource = localDateTimeSource;
+        this.clusterId = clusterId;
     }
 
     @Override
@@ -98,7 +101,7 @@ public class AvanzaInvestmentFetcher
             IsinMap isinMap) {
         final String authSession = sessionAccount.getAuthSession();
 
-        final List<Instrument> instruments =
+        final List<InstrumentModule> instruments =
                 portfolio.getInstruments().stream()
                         .flatMap(getInstruments(authSession, isinMap))
                         .collect(Collectors.toList());
@@ -107,17 +110,17 @@ public class AvanzaInvestmentFetcher
                 apiClient.fetchAccountDetails(sessionAccount.getAccountId(), authSession);
 
         return portfolio.toTinkInvestmentAccount(
-                holder, accountDetails.getClearingNumber(), instruments);
+                holder, accountDetails.getClearingNumber(), instruments, clusterId);
     }
 
-    private Function<InstrumentEntity, Stream<? extends Instrument>> getInstruments(
+    private Function<InstrumentEntity, Stream<? extends InstrumentModule>> getInstruments(
             String authSession, IsinMap isinMap) {
         return instrument ->
                 instrument.getPositions().stream()
                         .map(aggregateInstrument(isinMap, apiClient, authSession, instrument));
     }
 
-    private Function<PositionEntity, Instrument> aggregateInstrument(
+    private Function<PositionEntity, InstrumentModule> aggregateInstrument(
             IsinMap isinMap,
             AvanzaApiClient apiClient,
             String authSession,

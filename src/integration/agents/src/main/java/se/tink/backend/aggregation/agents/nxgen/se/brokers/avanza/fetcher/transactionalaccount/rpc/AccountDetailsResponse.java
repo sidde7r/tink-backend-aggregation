@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.Currencies;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.CurrencyAccountEntity;
@@ -285,8 +284,9 @@ public class AccountDetailsResponse {
         return numberOfTransfers;
     }
 
-    public AccountTypes toTinkAccountType() {
-        return MAPPERS.inferAccountType(accountType).orElse(AccountTypes.OTHER);
+    public TransactionalAccountType toTinkAccountType() {
+        return TransactionalAccountType.from(MAPPERS.inferAccountType(accountType).orElse(null))
+                .orElse(null);
     }
 
     @JsonIgnore
@@ -362,9 +362,7 @@ public class AccountDetailsResponse {
         final String accountNumber = getAccountNumber();
 
         return TransactionalAccount.nxBuilder()
-                .withType(
-                        TransactionalAccountType.from(toTinkAccountType())
-                                .orElse(TransactionalAccountType.OTHER))
+                .withType(toTinkAccountType())
                 .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(ExactCurrencyAmount.of(ownCapital, "SEK")))
                 .withId(
