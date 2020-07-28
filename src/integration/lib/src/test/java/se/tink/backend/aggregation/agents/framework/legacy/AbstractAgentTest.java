@@ -8,10 +8,13 @@ import com.google.inject.Injector;
 import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -47,9 +50,10 @@ import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
 public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigurationBase {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     protected Class<T> cls;
     protected AgentFactory factory;
-    private static final AggregationLogger log = new AggregationLogger(AbstractAgentTest.class);
     protected AgentTestContext testContext;
 
     protected AbstractAgentTest(Class<T> cls) {
@@ -61,7 +65,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                         CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
                 configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
             } catch (IOException | ConfigurationException e) {
-                log.warn("Couldn't set development configuration", e);
+                logger.warn("Couldn't set development configuration", e);
             }
         }
 
@@ -258,9 +262,9 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
         List<Transfer> transfers = testContext.getTransfers();
 
-        log.debug("Transfers fetched:" + (transfers.isEmpty() ? " <none>" : ""));
+        logger.debug("Transfers fetched: {}", (transfers.isEmpty() ? " <none>" : ""));
         for (Transfer transfer : transfers) {
-            log.debug(transfer.toString());
+            logger.debug(transfer.toString());
         }
 
         return transfers;
@@ -459,7 +463,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                     transferExecutorNxgen.execute(transfer);
                 }
             } catch (TransferExecutionException executionException) {
-                log.error("Could not execute transfer", executionException);
+                logger.error("Could not execute transfer", executionException);
                 signableOperation.setStatus(executionException.getSignableOperationStatus());
                 signableOperation.setStatusMessage(executionException.getUserMessage());
 
@@ -507,7 +511,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                     transferExecutorNxgen.update(transfer);
                 }
             } catch (TransferExecutionException e) {
-                log.error("Could not execute transfer", e);
+                logger.error("Could not execute transfer", e);
                 outcome = e.getSignableOperationStatus();
             } finally {
                 httpFilter.removeClientFilters();

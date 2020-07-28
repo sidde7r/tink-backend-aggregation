@@ -7,19 +7,23 @@ import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Spare
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Keys;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
 public class AccountEntity {
-    private static final AggregationLogger log = new AggregationLogger(AccountEntity.class);
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private String id;
     private String name;
@@ -73,8 +77,7 @@ public class AccountEntity {
             case SAVINGS_ACCOUNT:
                 return AccountTypes.SAVINGS;
             default:
-                log.info(
-                        String.format("%s: %s (%s)", Tags.UNKNOWN_ACCOUNT_TYPE, accountType, name));
+                logger.info("{}: {} ({})", Tags.UNKNOWN_ACCOUNT_TYPE, accountType, name);
                 return AccountTypes.CHECKING;
         }
     }

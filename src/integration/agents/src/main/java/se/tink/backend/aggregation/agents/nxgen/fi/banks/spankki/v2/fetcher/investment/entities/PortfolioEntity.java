@@ -9,16 +9,12 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 
 @JsonObject
 public class PortfolioEntity {
-    @JsonIgnore
-    private static final AggregationLogger LOG = new AggregationLogger(PortfolioEntity.class);
-
     @JsonProperty private Boolean onlyDefaultAccountForTransactions;
     @JsonProperty private String ownerName = "";
     @JsonProperty private String paymentReference = "";
