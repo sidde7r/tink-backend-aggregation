@@ -263,7 +263,7 @@ public class NordeaSEConstants {
         public static final String SPEED = "normal";
         public static final String OWN_TRANSFER = "owntransfer";
         public static final String TO_ACCOUNT_TYPE = "NDA-SE";
-        public static final int MAX_POLL_ATTEMPTS = 90;
+        public static final int MAX_POLL_ATTEMPTS = 70;
     }
 
     public static class LogMessages {
