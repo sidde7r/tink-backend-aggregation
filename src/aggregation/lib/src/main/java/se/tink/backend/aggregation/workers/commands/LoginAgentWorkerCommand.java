@@ -180,7 +180,13 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     public boolean shouldForceAuthenticate() {
         if (context.getRequest() instanceof RefreshInformationRequest) {
-            return ((RefreshInformationRequest) context.getRequest()).isForceAuthenticate();
+            boolean result =
+                    ((RefreshInformationRequest) context.getRequest()).isForceAuthenticate();
+            log.info(
+                    String.format(
+                            "RefreshInformationRequest contain - isForceAuthenticate: {}: %b",
+                            result));
+            return result;
         }
         return false;
     }
