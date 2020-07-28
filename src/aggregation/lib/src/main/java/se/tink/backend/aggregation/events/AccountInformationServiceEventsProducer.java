@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.events;
 
 import com.google.protobuf.Any;
+import java.time.Instant;
+import java.util.Optional;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
@@ -11,11 +15,6 @@ import se.tink.eventproducerservice.events.grpc.AccountSourceInfoEventProto;
 import se.tink.eventproducerservice.events.grpc.Psd2PaymentAccountClassificationEventProto;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
 import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.time.Instant;
-import java.util.Optional;
 
 public class AccountInformationServiceEventsProducer {
     private final EventProducerServiceClient eventProducerServiceClient;

@@ -6,6 +6,14 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.agents.rpc.Account;
@@ -43,15 +51,6 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import javax.annotation.Nonnull;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
