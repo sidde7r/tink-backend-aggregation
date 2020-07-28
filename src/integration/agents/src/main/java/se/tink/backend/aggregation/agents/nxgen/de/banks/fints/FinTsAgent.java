@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.fetcher.transacti
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.account.FinTsTransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.accounttype.FinTsAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.transaction.FinTsTransactionMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.ChosenSecurityFunctionProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.ChosenTanMediumProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.TanAnswerProvider;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -71,7 +72,8 @@ public final class FinTsAgent extends NextGenerationAgent
                         dialogContext,
                         new ChosenTanMediumProvider(
                                 componentProvider.getSupplementalInformationHelper()),
-                        new FinTsAccountTypeMapper());
+                        new FinTsAccountTypeMapper(),
+                        new ChosenSecurityFunctionProvider(supplementalInformationHelper, catalog));
         this.transactionClient = new TransactionClient(requestProcessor, dialogContext);
         this.accountClient = new AccountClient(requestProcessor, dialogContext);
 

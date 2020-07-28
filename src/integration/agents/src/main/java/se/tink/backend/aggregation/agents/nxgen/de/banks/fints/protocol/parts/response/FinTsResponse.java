@@ -38,6 +38,7 @@ public class FinTsResponse {
         knownSegmentsLookup.put(HIUPD.class, HIUPD::new);
         knownSegmentsLookup.put(HNHBK.class, HNHBK::new);
         knownSegmentsLookup.put(HNVSD.class, HNVSD::new);
+        knownSegmentsLookup.put(HITANS.class, HITANS::new);
     }
 
     private List<RawSegment> rawSegments;
@@ -84,6 +85,13 @@ public class FinTsResponse {
                 .filter(x -> lookingForName.equals(x.getSegmentName()))
                 .map(rawSegment -> (T) constructor.apply(rawSegment))
                 .collect(Collectors.toList());
+    }
+
+    public <T extends BaseResponsePart> Optional<T> findSegmentWithSupportedVersions(
+            Class<T> type) {
+        return findSegments(type).stream()
+                .filter(a -> a.getSupportedVersions().contains(a.segmentVersion))
+                .findFirst();
     }
 
     // Helper functions go here. Only things that are usable for a lot of responses should go here
