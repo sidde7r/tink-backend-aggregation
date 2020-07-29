@@ -17,7 +17,8 @@ public class AgentRequestTest {
         credentials.setProviderName("jens-test-provider");
 
         CredentialsRequest request =
-                new RefreshInformationRequest(new User(), new Provider(), credentials, false);
+                new RefreshInformationRequest(
+                        new User(), new Provider(), credentials, false, false);
 
         Assert.assertTrue(
                 request.constructLockPath("SALT")

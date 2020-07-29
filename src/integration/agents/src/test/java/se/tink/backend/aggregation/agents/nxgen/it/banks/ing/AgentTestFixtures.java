@@ -47,7 +47,7 @@ class AgentTestFixtures {
             String market, String providerName, Map<String, String> credentialFields) {
         Provider provider = givenProvider(market, providerName);
         return new RefreshInformationRequest(
-                givenUser(), provider, givenCredentials(credentialFields, provider), true);
+                givenUser(), provider, givenCredentials(credentialFields, provider), true, false);
     }
 
     static AgentContext givenAgentContext(

@@ -24,17 +24,23 @@ public class RefreshInformationRequest extends CredentialsRequest {
             Credentials credentials,
             boolean manual,
             boolean create,
-            boolean update) {
+            boolean update,
+            boolean forceAuthenticate) {
         super(user, provider, credentials);
 
         this.manual = manual;
         this.create = create;
         this.update = update;
+        this.forceAuthenticate = forceAuthenticate;
     }
 
     public RefreshInformationRequest(
-            User user, Provider provider, Credentials credentials, boolean manual) {
-        this(user, provider, credentials, manual, false, false);
+            User user,
+            Provider provider,
+            Credentials credentials,
+            boolean manual,
+            boolean forceAuthenticate) {
+        this(user, provider, credentials, manual, false, false, forceAuthenticate);
     }
 
     @Override

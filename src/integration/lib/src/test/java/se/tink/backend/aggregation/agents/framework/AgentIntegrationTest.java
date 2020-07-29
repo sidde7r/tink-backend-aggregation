@@ -198,7 +198,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         credential,
                         requestFlagManual,
                         requestFlagCreate,
-                        requestFlagUpdate);
+                        requestFlagUpdate,
+                        false);
 
         refreshInformationRequest.setCallbackUri(redirectUrl);
 
