@@ -47,18 +47,12 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.SignValidationR
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.SignValidationResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTuple;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.SigningChallengeSotpResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.SigningChallengeUcrResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.TransferRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.TransferResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.ValidateTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AssetJarsDto;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AssetsDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AssetsResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.BeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.FutureTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.FutureTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.InvestmentPlanDetailResponse;
@@ -76,7 +70,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
 
 public class KbcApiClient {
 
@@ -796,178 +789,6 @@ public class KbcApiClient {
         AssetsDetailResponse response =
                 post(Url.ASSETS_DETAIL, assetJarsDto, AssetsDetailResponse.class, cipherKey);
         verifyDoubleZeroResponseCode(response.getHeader());
-        return response;
-    }
-
-    public AccountsResponse accountsForTransferToOwn(final byte[] cipherKey) {
-        AccountsRequest request =
-                AccountsRequest.builder()
-                        .setIncludeAgreementMakeUp(true)
-                        .setIncludeReservationsIndicator(true)
-                        .build();
-
-        AccountsResponse response =
-                post(
-                        KbcConstants.Url.ACCOUNTS_FOR_TRANSFER_TO_OWN,
-                        request,
-                        AccountsResponse.class,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(response.getHeader());
-
-        return response;
-    }
-
-    public AccountsResponse accountsForTransferToOther(final byte[] cipherKey) {
-        AccountsRequest request =
-                AccountsRequest.builder()
-                        .setIncludeAgreementMakeUp(true)
-                        .setIncludeReservationsIndicator(true)
-                        .build();
-
-        AccountsResponse response =
-                post(
-                        KbcConstants.Url.ACCOUNTS_FOR_TRANSFER_TO_OTHER,
-                        request,
-                        AccountsResponse.class,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(response.getHeader());
-
-        return response;
-    }
-
-    public BeneficiariesResponse beneficiariesHistory(final byte[] cipherKey) {
-        BeneficiariesResponse response =
-                post(
-                        KbcConstants.Url.BENEFICIARIES_HISTORY,
-                        null,
-                        BeneficiariesResponse.class,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(response.getHeader());
-
-        return response;
-    }
-
-    public ValidateTransferResponse validateTransfer(
-            Transfer transfer,
-            AgreementDto sourceAccount,
-            boolean isTransferToOwnAccount,
-            final byte[] cipherKey) {
-        TransferRequest request =
-                TransferRequest.create(transfer, sourceAccount, isTransferToOwnAccount);
-
-        ValidateTransferResponse response =
-                post(
-                        KbcConstants.Url.TRANSFER_VALIDATE,
-                        request,
-                        ValidateTransferResponse.class,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(response.getHeader());
-
-        return response;
-    }
-
-    public String prepareTransfer(
-            Transfer transfer,
-            boolean isTransferToOwnAccount,
-            KbcConstants.Url url,
-            AgreementDto sourceAccount,
-            final byte[] cipherKey) {
-        TransferRequest request =
-                TransferRequest.create(transfer, sourceAccount, isTransferToOwnAccount);
-
-        SignValidationResponse response =
-                post(url, request, SignValidationResponse.class, cipherKey);
-        verifyResponseCode(response.getHeader());
-
-        return response.getHeader().getSigningId().getEncoded();
-    }
-
-    public SignTypesResponse signingTypes(String signingId, final byte[] cipherKey) {
-        SignRequest signRequest = SignRequest.createWithSigningId(signingId);
-
-        SignTypesResponse signTypesResponse =
-                post(
-                        KbcConstants.Url.MOB_A031_SIGNING_TYPES,
-                        signRequest,
-                        SignTypesResponse.class,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(signTypesResponse.getHeader());
-
-        return signTypesResponse;
-    }
-
-    public SigningChallengeSotpResponse signingChallengeSotp(
-            String signTypeId, String signingId, final byte[] cipherKey) {
-        SignChallengeRequest request = SignChallengeRequest.create(signTypeId, signingId);
-
-        SigningChallengeSotpResponse response =
-                post(
-                        KbcConstants.Url.MOB_A031_SIGNING_CHALLENGE_SOTP,
-                        request,
-                        SigningChallengeSotpResponse.class,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(response.getHeader());
-
-        return response;
-    }
-
-    public void signingValidationSotp(
-            String signingResponse, String panNr, String signingId, final byte[] cipherKey) {
-        SignValidationRequest signValidationRequest =
-                SignValidationRequest.create(signingResponse, panNr, signingId);
-
-        SignValidationResponse signValidationResponse =
-                post(
-                        KbcConstants.Url.MOB_A031_SIGNING_VALIDATION_SOTP,
-                        signValidationRequest,
-                        SignValidationResponse.class,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(signValidationResponse.getHeader());
-    }
-
-    public SigningChallengeUcrResponse signingChallengeUcr(
-            String signTypeId, String signingId, final byte[] cipherKey) {
-        SignChallengeRequest request = SignChallengeRequest.create(signTypeId, signingId);
-
-        SigningChallengeUcrResponse response =
-                post(
-                        KbcConstants.Url.MOB_A031_SIGNING_CHALLENGE_UCR,
-                        request,
-                        SigningChallengeUcrResponse.class,
-                        DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(response.getHeader());
-
-        return response;
-    }
-
-    public void signingValidationUcr(
-            String signingResponse, String panNr, String signingId, final byte[] cipherKey) {
-        SignValidationRequest signValidationRequest =
-                SignValidationRequest.create(signingResponse, panNr, signingId);
-
-        SignValidationResponse signValidationResponse =
-                post(
-                        KbcConstants.Url.MOB_A031_SIGNING_VALIDATION_UCR,
-                        signValidationRequest,
-                        SignValidationResponse.class,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(signValidationResponse.getHeader());
-    }
-
-    public TransferResponse signTransfer(
-            String signingId, KbcConstants.Url url, final byte[] cipherKey) {
-        SignRequest request = SignRequest.createWithSigningId(signingId);
-
-        TransferResponse response =
-                post(
-                        url,
-                        request,
-                        TransferResponse.class,
-                        DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(response.getHeader());
-
         return response;
     }
 }
