@@ -7,11 +7,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 
 public class SecurityHoldingContainerTest {
+
+    private static final String CURRENCY = "SEK";
 
     private Optional<InstrumentModule> actual;
     private CustodyHoldings holdingDetail;
@@ -22,15 +24,23 @@ public class SecurityHoldingContainerTest {
     @Before
     public void setUp() throws Exception {
         SecurityIdentifier securityIdentifier = new SecurityIdentifier();
+        securityIdentifier.setIsinCode("dummyIsin");
+        securityIdentifier.setMarket("dummyMarket");
+        securityIdentifier.setCurrency(CURRENCY);
+        HandelsbankenAmount handelsbankenAmount = new HandelsbankenAmount();
+        handelsbankenAmount.setAmount(1d);
+        handelsbankenAmount.setCurrency(CURRENCY);
         holdingDetail = new CustodyHoldings();
         holdingDetail.setSecurityIdentifier(securityIdentifier);
+        holdingDetail.setMarketPrice(handelsbankenAmount);
+        holdingDetail.setMarketValue(handelsbankenAmount);
         holdingQuantity = new Quantity();
         quantityValue = 1d;
         identifier = new SecurityHoldingIdentifier();
+        identifier.setType("dummyType");
+        identifier.setCurrency(CURRENCY);
     }
 
-    @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
     @Test
     public void happyFlow() {
         mapToInstrument();
@@ -87,6 +97,8 @@ public class SecurityHoldingContainerTest {
         SecurityHoldingContainer securityHoldingContainer = new SecurityHoldingContainer();
 
         securityHoldingContainer.setHoldingDetail(holdingDetail);
+
+        securityHoldingContainer.setName("dummyName");
 
         if (identifier != null) {
             securityHoldingContainer.setSecurityIdentifier(identifier);

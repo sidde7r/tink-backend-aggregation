@@ -11,7 +11,6 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -37,8 +36,6 @@ public class HandelsbankenSEAccountTest {
         number = "12345678";
     }
 
-    @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
     @Test
     public void numberIsValidBankId_8digits() {
         createTinkAccount();
@@ -46,8 +43,6 @@ public class HandelsbankenSEAccountTest {
         assertTinkAccountIsValid();
     }
 
-    @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
     @Test
     public void numberIsValidBankId_9digits() {
         number = "123456789";
@@ -57,8 +52,6 @@ public class HandelsbankenSEAccountTest {
         assertTinkAccountIsValid();
     }
 
-    @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
     @Test
     public void numberIsValidBankId_13digits() {
         number = "1234567890123";
@@ -68,8 +61,6 @@ public class HandelsbankenSEAccountTest {
         assertTinkAccountIsValid();
     }
 
-    @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
     @Test
     public void numberIsValidBankId_Formatted() {
         number = "12-123456-123456";
@@ -108,8 +99,6 @@ public class HandelsbankenSEAccountTest {
         assertEquals(AccountTypes.CHECKING, tinkAccount.getType());
     }
 
-    @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
     @Test
     public void toTinkAccountSavings() {
         HandelsbankenSEAccount account =
@@ -117,7 +106,7 @@ public class HandelsbankenSEAccountTest {
                         ACCOUNT_DATA, HandelsbankenSEAccount.class);
         AccountInfoResponse accountInfo =
                 SerializationUtils.deserializeFromString(
-                        ACCOUNT_INFO_UNKNOWN_DATA, AccountInfoResponse.class);
+                        ACCOUNT_INFO_SAVINGS_DATA, AccountInfoResponse.class);
         TransactionsSEResponse transactions =
                 SerializationUtils.deserializeFromString(
                         TRANSACTIONS_DATA, TransactionsSEResponse.class);
@@ -134,6 +123,7 @@ public class HandelsbankenSEAccountTest {
     private void createTinkAccount() {
         HandelsbankenSEAccount account =
                 new HandelsbankenSEAccount()
+                        .setName("allkonto")
                         .setNumber(number)
                         .setAmountAvailable(
                                 new HandelsbankenAmount().setCurrency("SEK").setAmount(20.20))
@@ -225,7 +215,7 @@ public class HandelsbankenSEAccountTest {
                     + "\"value\": \"HANDSESS\""
                     + "}]"
                     + "}";
-    private static final String ACCOUNT_INFO_UNKNOWN_DATA =
+    private static final String ACCOUNT_INFO_SAVINGS_DATA =
             "{"
                     + "\"_links\": {},"
                     + "\"links\": [],"
@@ -235,7 +225,7 @@ public class HandelsbankenSEAccountTest {
                     + "\"value\": \"1111 - 111 818 111\""
                     + "}, {"
                     + "\"label\": \"Kontoform\","
-                    + "\"value\": \"Unknown\""
+                    + "\"value\": \"sparkonto\""
                     + "}, {"
                     + "\"label\": \"Kontohavare\","
                     + "\"value\": \"Kalle Kula\""

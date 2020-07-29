@@ -150,7 +150,7 @@ public class PCBW2581 {
     }
 
     private Integer getNumMonthBoundFromName() {
-        if (Strings.isNullOrEmpty(loanName)) {
+        if (!Strings.isNullOrEmpty(loanName)) {
             Pattern pattern = Pattern.compile("BOLÅN - BOTTENLÅN MED (\\d?)-MÅNADERS RÄNTA");
             Matcher matcher = pattern.matcher(loanName.toUpperCase());
             if (matcher.find()) {

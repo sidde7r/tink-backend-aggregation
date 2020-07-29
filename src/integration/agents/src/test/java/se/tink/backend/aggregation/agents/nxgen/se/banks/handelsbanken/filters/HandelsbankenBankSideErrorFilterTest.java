@@ -34,21 +34,22 @@ public class HandelsbankenBankSideErrorFilterTest {
     }
 
     @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
+            "This test works locally but not via buildkite. I suspect that it is related to non-ascii characters 'åäö'. Will ignore this test for now.")
     @Test(expected = BankServiceException.class)
     public void testTmpBankSideFailureResponse() {
         String url = "/BankSideFailure";
+
         mockHttpResponseForUrl(
                 url,
                 500,
-                MediaType.APPLICATION_JSON.concat(";charset=UTF-8"),
+                MediaType.APPLICATION_JSON,
                 "{\"type\":\"http://schemas.shbmain.shb.biz/http/status/serverError\",\"status\":500,\"detail\":\"Ett fel har tyvärr inträffat. Försök igen senare.\"}");
 
         sendRequest(url);
     }
 
     @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
+            "This test works locally but not via buildkite. I suspect that it is related to non-ascii characters 'åäö'. Will ignore this test for now.")
     @Test(expected = BankServiceException.class)
     public void testServiceUnavailableResponse() {
 
@@ -63,8 +64,6 @@ public class HandelsbankenBankSideErrorFilterTest {
         sendRequest(url);
     }
 
-    @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
     @Test
     public void testNotXmlErrorResponse() {
 

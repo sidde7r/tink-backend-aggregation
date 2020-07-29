@@ -54,4 +54,14 @@ public class CustodyHoldings {
     void setSecurityIdentifier(SecurityIdentifier securityIdentifier) {
         this.securityIdentifier = securityIdentifier;
     }
+
+    @VisibleForTesting
+    public void setMarketValue(HandelsbankenAmount marketValue) {
+        this.marketValue = marketValue;
+    }
+
+    @VisibleForTesting
+    public void setMarketPrice(HandelsbankenAmount marketPrice) {
+        this.marketPrice = marketPrice;
+    }
 }

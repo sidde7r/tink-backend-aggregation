@@ -31,4 +31,9 @@ public class SecurityHoldingContainer {
     void setSecurityIdentifier(SecurityHoldingIdentifier identifier) {
         this.identifier = identifier;
     }
+
+    @VisibleForTesting
+    void setName(String name) {
+        this.name = name;
+    }
 }

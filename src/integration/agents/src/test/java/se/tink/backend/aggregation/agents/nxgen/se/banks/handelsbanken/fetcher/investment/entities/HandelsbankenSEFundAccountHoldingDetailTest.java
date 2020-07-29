@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.HandelsbankenSEFundAccountHoldingDetail;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
@@ -447,8 +446,6 @@ public class HandelsbankenSEFundAccountHoldingDetailTest {
                     + "  }\n"
                     + "}";
 
-    @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
     @Test
     public void testFundDetails() {
         HandelsbankenSEFundAccountHoldingDetail details =
@@ -456,11 +453,9 @@ public class HandelsbankenSEFundAccountHoldingDetailTest {
                         holdingResponse, HandelsbankenSEFundAccountHoldingDetail.class);
         Optional<InstrumentModule> instrument = details.toInstrumentModule();
         assertTrue(instrument.isPresent());
-        assertEquals(new Double(182.2448904028436), Optional.of(instrument.get().getQuantity()));
+        assertEquals(182.2448904028436d, instrument.get().getQuantity(), 0d);
     }
 
-    @Ignore(
-            "Noticed this test failed when removing the manual tag that prevents it from running in our CI pipeline")
     @Test
     public void testFundDetails2() {
         HandelsbankenSEFundAccountHoldingDetail details =
@@ -468,6 +463,6 @@ public class HandelsbankenSEFundAccountHoldingDetailTest {
                         holdingResponse2, HandelsbankenSEFundAccountHoldingDetail.class);
         Optional<InstrumentModule> instrument = details.toInstrumentModule();
         assertTrue(instrument.isPresent());
-        assertEquals(new Double(0.47569984403158033), Optional.of(instrument.get().getQuantity()));
+        assertEquals(0.47569984403158033, instrument.get().getQuantity(), 0d);
     }
 }
