@@ -16,6 +16,8 @@ public class RefreshInformationRequest extends CredentialsRequest {
     @JsonProperty("forceAuthenticate")
     private boolean forceAuthenticate;
 
+    @JsonProperty private String testField;
+
     public RefreshInformationRequest() {}
 
     public RefreshInformationRequest(
@@ -79,5 +81,9 @@ public class RefreshInformationRequest extends CredentialsRequest {
 
     public void setForceAuthenticate(boolean forceAuthenticate) {
         this.forceAuthenticate = forceAuthenticate;
+    }
+
+    public String getTestField() {
+        return testField;
     }
 }
