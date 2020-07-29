@@ -2691,9 +2691,7 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     fiducia:
       tink:
-        certificate: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        tppId: SE-FINA-44059
     findomestic:
       tink:
         aspspCode: '03115'
