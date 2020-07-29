@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -8,12 +9,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
 
 public class MovementsItem {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private boolean detailPresent;
     private String period;
     private String amount;
@@ -28,7 +33,6 @@ public class MovementsItem {
     private String otherParty;
     private String operationId;
     private String currency;
-    private static final AggregationLogger logger = new AggregationLogger(MovementsItem.class);
 
     private final DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -135,8 +139,8 @@ public class MovementsItem {
             toTinkTransaction();
             return true;
         } catch (RuntimeException e) {
-            logger.errorExtraLong(
-                    "Cannot parse transactions: ",
+            logger.error(
+                    "tag={} Cannot parse transactions: ",
                     FortisConstants.LoggingTag.TRANSACTION_VALIDATION_ERROR,
                     e);
             return false;

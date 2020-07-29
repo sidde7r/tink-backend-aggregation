@@ -110,4 +110,12 @@ public class CertificateUtilsTest {
         String snHex = CertificateUtils.getSerialNumber(TEST_CERT, 16);
         Assert.assertEquals(expectedSnHex, snHex);
     }
+
+    @Test
+    public void testGetOrganizationIdentifier() throws CertificateException {
+        final String expectedOrgId = "PSDLU-CSSF-B00000351";
+
+        String organizationId = CertificateUtils.getOrganizationIdentifier(TEST_CERT);
+        Assert.assertEquals(expectedOrgId, organizationId);
+    }
 }

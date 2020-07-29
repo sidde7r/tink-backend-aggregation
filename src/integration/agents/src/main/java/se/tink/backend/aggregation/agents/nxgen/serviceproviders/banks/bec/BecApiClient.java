@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -7,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
@@ -37,7 +40,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.BecErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.FetchUpcomingPaymentsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdPollTimeoutException;
@@ -50,6 +52,8 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BecApiClient {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String CODEAPP_OPTION = "codeapp";
 
@@ -62,7 +66,6 @@ public class BecApiClient {
     private BecSecurityHelper securityHelper;
     private final TinkHttpClient apiClient;
     private final BecUrlConfiguration agentUrl;
-    private static final AggregationLogger logger = new AggregationLogger(BecApiClient.class);
 
     public BecApiClient(
             BecSecurityHelper securityHelper, TinkHttpClient client, BecUrlConfiguration url) {
@@ -324,8 +327,8 @@ public class BecApiClient {
              * pension banks) should have this error. We will keep logs and see which banks have
              * issue with credit card
              */
-            logger.errorExtraLong(
-                    "Could not fetch credit card list",
+            logger.error(
+                    "tag={} Could not fetch credit card list",
                     BecConstants.Log.CREDIT_CARD_FETCH_ERROR,
                     ex);
             return new ArrayList<>();

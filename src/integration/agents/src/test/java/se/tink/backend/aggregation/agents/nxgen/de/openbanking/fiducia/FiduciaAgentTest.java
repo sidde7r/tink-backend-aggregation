@@ -28,7 +28,7 @@ public class FiduciaAgentTest {
         passwordManager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("de", "de-vrbank-raiba-muc-sued-ob")
+                new AgentIntegrationTest.Builder("de", "de-vrbank-bayreuth-hof-ob")
                         .addCredentialField(
                                 CredentialKeys.PSU_ID, psuIdManager.get(PsuIdArgumentEnum.PSU_ID))
                         .addCredentialField(
