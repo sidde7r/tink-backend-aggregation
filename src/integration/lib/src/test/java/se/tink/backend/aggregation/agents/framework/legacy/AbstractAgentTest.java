@@ -627,9 +627,8 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
     private ClientFilterFactory getHttpLogFilter(
             Credentials credentials, HttpLoggableExecutor transferExecutor) {
-        AggregationLogger logger = new AggregationLogger(getClass());
         return new HttpLoggingFilterFactory(
-                logger,
+                new AggregationLogger(this.getClass()),
                 "TRANSFER",
                 testContext.getLogMasker(),
                 transferExecutor.getClass(),

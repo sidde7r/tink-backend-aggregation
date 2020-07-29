@@ -87,12 +87,12 @@ public final class AvanzaV2AccountTypeMappers {
     }
 
     private class AvanzaV2AccountTypeMapperExecutor implements AccountTypeMapperExecutor<String> {
-        private final org.slf4j.Logger LOGGER =
+        private final org.slf4j.Logger logger =
                 LoggerFactory.getLogger(AvanzaV2AccountTypeMapperExecutor.class);
 
         @Override
         public void onUnknownAccountType(final String accountTypeKey) {
-            LOGGER.warn("Found unknown account type \"{}\"", accountTypeKey);
+            logger.warn("Found unknown account type \"{}\"", accountTypeKey);
         }
 
         @Override
@@ -103,7 +103,7 @@ public final class AvanzaV2AccountTypeMappers {
             final String message =
                     "Account type key \"{}\" was not explicitly associated with an account type."
                             + " Setting it to {} since a fallback predicate is associated with it.";
-            LOGGER.warn(message, accountTypeKey, accountType);
+            logger.warn(message, accountTypeKey, accountType);
         }
 
         @Override
@@ -113,7 +113,7 @@ public final class AvanzaV2AccountTypeMappers {
             final String message =
                     "Account type key \"{}\" was not explicitly associated with an account type,"
                             + " and matched multiple predicates associated with different account types.";
-            LOGGER.warn(message, accountTypeKey);
+            logger.warn(message, accountTypeKey);
         }
     }
 }
