@@ -1,16 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer;
 
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -40,15 +36,6 @@ public class TransferControllerTest {
     private Transfer createTransfer(TransferType transferType) {
         Transfer transfer = new Transfer();
         transfer.setType(transferType);
-        return transfer;
-    }
-
-    private Transfer createBelgianTransfer() {
-        Transfer transfer = new Transfer();
-        transfer.setType(TransferType.BANK_TRANSFER);
-        // Source iban is just an example that's fetched from an online website.
-        transfer.setSource(
-                AccountIdentifier.create(AccountIdentifier.Type.SEPA_EUR, "BE68539007547034"));
         return transfer;
     }
 
@@ -110,51 +97,5 @@ public class TransferControllerTest {
     @Test(expected = TransferExecutionException.class)
     public void ensureTransferExecutionExceptionIsThrown_whenUpdateOfNotImplementedType() {
         transferControllerWithAllExecutors.update(createTransfer(TransferType.BANK_TRANSFER));
-    }
-
-    @Test
-    public void
-            ensureTransferExecutionExceptionIsThrown_whenSourceIsBelgianAccount_andMessageTypeIsNotSet() {
-        expectedException.expect(TransferExecutionException.class);
-        expectedException.expectMessage("Message type have to be set for transfers of this type");
-
-        transferControllerWithAllExecutors.execute(createBelgianTransfer());
-    }
-
-    @Test
-    public void ensureSuccess_whenMessageTypeIsStructuredOgmVcs_andValid() {
-        Transfer transfer = createBelgianTransfer();
-        transfer.setMessageType(MessageType.STRUCTURED);
-        transfer.setDestinationMessage("+++010/8068/17183+++");
-
-        doReturn(Optional.empty()).when(bankTransferExecutor).executeTransfer(transfer);
-
-        transferControllerWithAllExecutors.execute(transfer);
-    }
-
-    @Test
-    public void
-            ensureTransferExecutionExceptionIsThrown_whenMessageTypeIsStructuredOgmVcs_andInvalid() {
-        Transfer transfer = createBelgianTransfer();
-        transfer.setMessageType(MessageType.STRUCTURED);
-        transfer.setDestinationMessage("+++123/4567/89101+++");
-
-        expectedException.expect(TransferExecutionException.class);
-        expectedException.expectMessage(
-                TransferExecutionException.EndUserMessage.INVALID_STRUCTURED_MESSAGE
-                        .getKey()
-                        .get());
-
-        transferControllerWithAllExecutors.execute(transfer);
-    }
-
-    @Test
-    public void ensureSuccess_whenMessageTypeIsFreeText() {
-        Transfer transfer = createBelgianTransfer();
-        transfer.setMessageType(MessageType.FREE_TEXT);
-
-        doReturn(Optional.empty()).when(bankTransferExecutor).executeTransfer(transfer);
-
-        transferControllerWithAllExecutors.execute(transfer);
     }
 }
