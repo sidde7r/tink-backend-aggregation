@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
+import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -44,18 +46,15 @@ public final class SbabAgent extends NextGenerationAgent
 
     private final SbabApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final LocalDateTimeSource localDateTimeSource;
 
-    public SbabAgent(
-            AgentComponentProvider componentProvider,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+    @Inject
+    public SbabAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
         apiClient = new SbabApiClient(client, sessionStorage);
+        localDateTimeSource = componentProvider.getLocalDateTimeSource();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        apiClient.setConfiguration(getAgentConfiguration());
-
-        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         configureHttpClient(this.client);
     }
 
@@ -77,6 +76,13 @@ public final class SbabAgent extends NextGenerationAgent
 
     protected AgentConfiguration<SbabConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController().getAgentConfiguration(SbabConfiguration.class);
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        apiClient.setConfiguration(getAgentConfiguration());
+        this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
@@ -118,7 +124,8 @@ public final class SbabAgent extends NextGenerationAgent
                                 transactionFetcher,
                                 TransactionFetching.MAX_CONSECUTIVE_EMPTY_PAGES,
                                 TransactionFetching.DAYS_TO_FETCH,
-                                ChronoUnit.DAYS)));
+                                ChronoUnit.DAYS,
+                                localDateTimeSource)));
     }
 
     @Override

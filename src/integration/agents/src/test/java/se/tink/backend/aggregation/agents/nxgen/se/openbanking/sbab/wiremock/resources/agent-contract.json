@@ -1,0 +1,336 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "account2",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "unscaledValue" : 0,
+      "doubleValue" : 0.0,
+      "exactValue" : 0.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "account2",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "accountName",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : null
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "availableCredit" : 0.0,
+    "balance" : 0.0
+  }, {
+    "accountNumber" : "account1",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 1208269,
+      "doubleValue" : 12082.69,
+      "exactValue" : 12082.69
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "account1",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Sparkonto",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : null
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "availableCredit" : 0.0,
+    "balance" : 12082.69
+  } ],
+  "transactions" : [ {
+    "amount" : -20000.0,
+    "date" : 1582628400000,
+    "description" : "overforing",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 20000.0,
+    "date" : 1581937200000,
+    "description" : "overforing",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 11433.0,
+    "date" : 1595584800000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 224.0,
+    "date" : 1595584800000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -13000.0,
+    "date" : 1593079200000,
+    "description" : "overforing",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 11497.0,
+    "date" : 1593079200000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 224.0,
+    "date" : 1593079200000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -10000.0,
+    "date" : 1591610400000,
+    "description" : "SBAB-BANK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 11417.0,
+    "date" : 1590400800000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 224.0,
+    "date" : 1590400800000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -18700.0,
+    "date" : 1587981600000,
+    "description" : "overforing",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 17374.0,
+    "date" : 1587722400000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -15000.0,
+    "date" : 1586167200000,
+    "description" : "overforing",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 15000.0,
+    "date" : 1585306800000,
+    "description" : "STAENDE OVER",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 8624.0,
+    "date" : 1585134000000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -40000.0,
+    "date" : 1585220400000,
+    "description" : "overforing",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 24000.0,
+    "date" : 1583492400000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 8631.0,
+    "date" : 1582628400000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -7000.0,
+    "date" : 1582628400000,
+    "description" : "overforing",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 24000.0,
+    "date" : 1581937200000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -20000.0,
+    "date" : 1581937200000,
+    "description" : "overforing",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -60000.0,
+    "date" : 1580814000000,
+    "description" : "overforing",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 8875.0,
+    "date" : 1580727600000,
+    "description" : "lon",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -12000.0,
+    "date" : 1580382000000,
+    "description" : "overforing",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  } ]
+}

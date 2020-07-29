@@ -1,0 +1,294 @@
+
+REQUEST 1
+GET https://psd.sbab.se/psd2/auth/1.0/authorize?user_id=psu
+PSU-IP-Address:
+Accept: application/json
+
+RESPONSE 1 SET AUTH_1
+200
+Date: Wed, 29 Jul 2020 06:41:56 GMT
+Date: Wed, 29 Jul 2020 06:41:57 GMT
+Server: Apache
+Content-Type: application/json
+Pragma: no-cache
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Expires: 0
+
+{"pending_authorization_code":"dummyAuthCode","autostart_token":"dummyAutostartToken"}
+
+REQUEST 2 MATCH AUTH_1
+POST https://psd.sbab.se/psd2/auth/1.0/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=pending_authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&pending_code=dummyAuthCode
+
+RESPONSE 2 SET AUTH_2
+400
+Date: Wed, 29 Jul 2020 06:41:57 GMT
+Date: Wed, 29 Jul 2020 06:41:57 GMT
+Server: Apache
+Content-Type: application/json
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"error":"authorization_not_completed"}
+
+REQUEST 3 MATCH AUTH_2
+POST https://psd.sbab.se/psd2/auth/1.0/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=pending_authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&pending_code=dummyAuthCode
+
+RESPONSE 3
+200
+Date: Wed, 29 Jul 2020 06:42:09 GMT
+Date: Wed, 29 Jul 2020 06:42:09 GMT
+Server: Apache
+Content-Type: application/json
+Pragma: no-cache
+Cache-Control: no-cache, no-store, must-revalidate
+Expires: 0
+
+{"access_token":"dummyAccessToken","expires_in":300,"refresh_token":"dummyRefreshToken","token_type":"Bearer"}
+
+REQUEST 4
+GET https://psd.sbab.se/psd2/savings/2.0/accounts
+Accept: application/json
+
+RESPONSE 4
+200
+Date: Wed, 29 Jul 2020 06:42:10 GMT
+Date: Wed, 29 Jul 2020 06:42:10 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"accounts":[{"account_name":"Sparkonto","account_number":"account1","account_type":"savings_account","balance":12082.69,"status":"active","interest_rate":0.0050,"accrued_interest_credit":43.2,"co_owned_account":false,"opened_date":"2012-06-19","customer_properties":{"mandate":"OWNER"},"tax_account":false,"currency":"SEK"},{"account_name":"accountName","account_number":"account2","account_type":"savings_account","balance":0.0,"status":"active","interest_rate":0.0050,"accrued_interest_credit":2.19,"co_owned_account":true,"opened_date":"2020-02-17","customer_properties":{"mandate":"OWNER"},"tax_account":false,"currency":"SEK"}]}
+
+REQUEST 5
+GET https://psd.sbab.se/psd2/customer/1.0/customers
+Accept: application/json
+
+RESPONSE 5
+200
+Date: Wed, 29 Jul 2020 06:42:10 GMT
+Date: Wed, 29 Jul 2020 06:42:11 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"personal_identity_number":"psu","first_name":"Firstname","last_name":"Lastname"}
+
+REQUEST 6
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account1/transfers?endDate=1992-04-10&startDate=1992-01-11
+Accept: application/json
+
+RESPONSE 6
+200
+Date: Wed, 29 Jul 2020 06:42:11 GMT
+Date: Wed, 29 Jul 2020 06:42:12 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[{"recurring_transfer":false,"transfer_id":"236322501","value_date":"2020-07-24","amount":11433.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":12082.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"236322491","value_date":"2020-07-24","amount":224.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":649.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"233289981","value_date":"2020-06-25","amount":-13000.0,"statement":"overforing","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"overforing","running_balance":425.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"233126471","value_date":"2020-06-25","amount":11497.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":13425.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"233126461","value_date":"2020-06-25","amount":224.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":1928.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"231851231","value_date":"2020-06-08","amount":-10000.0,"statement":"SBAB-BANK","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"SBAB-BANK","running_balance":1704.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"229754301","value_date":"2020-05-25","amount":11417.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":11704.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"229754291","value_date":"2020-05-25","amount":224.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":287.69,"currency":"SEK"}]}
+
+REQUEST 7
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account1/transfers?endDate=1992-01-10&startDate=1991-10-12
+Accept: application/json
+
+RESPONSE 7
+200
+Date: Wed, 29 Jul 2020 06:42:12 GMT
+Date: Wed, 29 Jul 2020 06:42:13 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[{"recurring_transfer":false,"transfer_id":"223553621","value_date":"2020-04-27","amount":-18700.0,"statement":"overforing","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"overforing","running_balance":63.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553611","value_date":"2020-04-24","amount":17374.0,"statement":"lon","counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":18763.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553601","value_date":"2020-04-06","amount":-15000.0,"statement":"overforing","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"overforing","running_balance":1389.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553591","value_date":"2020-03-27","amount":15000.0,"statement":"STAENDE OVER","counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"STAENDE OVER","running_balance":16389.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553581","value_date":"2020-03-25","amount":8624.0,"statement":"lon","counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":41389.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553571","value_date":"2020-03-26","amount":-40000.0,"statement":"overforing","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"overforing","running_balance":1389.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553561","value_date":"2020-03-06","amount":24000.0,"statement":"lon","counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":32765.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553551","value_date":"2020-02-25","amount":8631.0,"statement":"lon","counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":15765.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553541","value_date":"2020-02-25","amount":-7000.0,"statement":"overforing","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"overforing","running_balance":8765.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553531","value_date":"2020-02-17","amount":24000.0,"statement":"lon","counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":27134.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553521","value_date":"2020-02-17","amount":-20000.0,"statement":"overforing","counter_part_account":"account2","counter_part_bank":"SBAB","status":"complete","running_balance":7134.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553511","value_date":"2020-02-04","amount":-60000.0,"statement":"overforing","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"overforing","running_balance":3134.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553501","value_date":"2020-02-03","amount":8875.0,"statement":"lon","counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":63134.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"223553491","value_date":"2020-01-30","amount":-12000.0,"statement":"overforing","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"overforing","running_balance":54259.69,"currency":"SEK"}]}
+
+REQUEST 8
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account1/transfers?endDate=1991-10-11&startDate=1991-07-13
+Accept: application/json
+
+RESPONSE 8
+200
+Date: Wed, 29 Jul 2020 06:42:12 GMT
+Date: Wed, 29 Jul 2020 06:42:13 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[]}
+
+REQUEST 9
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account1/transfers?endDate=1991-07-12&startDate=1991-04-13
+Accept: application/json
+
+RESPONSE 9
+200
+Date: Wed, 29 Jul 2020 06:42:12 GMT
+Date: Wed, 29 Jul 2020 06:42:13 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[]}
+
+REQUEST 10
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account1/transfers?endDate=1991-04-12&startDate=1991-01-12
+Accept: application/json
+
+RESPONSE 10
+200
+Date: Wed, 29 Jul 2020 06:42:12 GMT
+Date: Wed, 29 Jul 2020 06:42:13 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[]}
+
+REQUEST 11
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account1/transfers?endDate=1991-01-11&startDate=1990-10-13
+Accept: application/json
+
+RESPONSE 11
+200
+Date: Wed, 29 Jul 2020 06:42:12 GMT
+Date: Wed, 29 Jul 2020 06:42:13 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[]}
+
+REQUEST 12
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account2/transfers?endDate=1992-04-10&startDate=1992-01-11
+Accept: application/json
+
+RESPONSE 12
+200
+Date: Wed, 29 Jul 2020 06:42:13 GMT
+Date: Wed, 29 Jul 2020 06:42:14 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[]}
+
+REQUEST 13
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account2/transfers?endDate=1992-01-10&startDate=1991-10-12
+Accept: application/json
+
+RESPONSE 13
+200
+Date: Wed, 29 Jul 2020 06:42:14 GMT
+Date: Wed, 29 Jul 2020 06:42:15 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[{"recurring_transfer":false,"transfer_id":"225532071","value_date":"2020-02-25","amount":-20000.0,"statement":"overforing","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"overforing","running_balance":0.0,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"225532061","value_date":"2020-02-17","amount":20000.0,"statement":"overforing","counter_part_account":"account2","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"overforing","running_balance":20000.0,"currency":"SEK"}]}
+
+REQUEST 14
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account2/transfers?endDate=1991-10-11&startDate=1991-07-13
+Accept: application/json
+
+RESPONSE 14
+200
+Date: Wed, 29 Jul 2020 06:42:15 GMT
+Date: Wed, 29 Jul 2020 06:42:16 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[]}
+
+REQUEST 15
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account2/transfers?endDate=1991-07-12&startDate=1991-04-13
+Accept: application/json
+
+RESPONSE 15
+200
+Date: Wed, 29 Jul 2020 06:42:17 GMT
+Date: Wed, 29 Jul 2020 06:42:17 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[]}
+
+REQUEST 16
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account2/transfers?endDate=1991-04-12&startDate=1991-01-12
+Accept: application/json
+
+RESPONSE 16
+200
+Date: Wed, 29 Jul 2020 06:42:18 GMT
+Date: Wed, 29 Jul 2020 06:42:18 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[]}
+
+REQUEST 17
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account2/transfers?endDate=1991-01-11&startDate=1990-10-13
+Accept: application/json
+
+RESPONSE 17
+200
+Date: Wed, 29 Jul 2020 06:42:18 GMT
+Date: Wed, 29 Jul 2020 06:42:19 GMT
+Server: Apache
+Content-Type: application/json
+Vary: Accept-Encoding
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+{"transfers":[]}
