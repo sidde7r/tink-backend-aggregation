@@ -1,33 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.KbcAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.KbcBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.filters.KbcHttpFilter;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.progressive.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
@@ -37,9 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.Investme
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -47,8 +36,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class KbcAgent
         extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
-        implements RefreshTransferDestinationExecutor,
-                RefreshCreditCardAccountsExecutor,
+        implements RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -57,7 +45,6 @@ public final class KbcAgent
     private final KbcApiClient apiClient;
     private final String kbcLanguage;
     private KbcHttpFilter httpFilter;
-    private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -72,7 +59,6 @@ public final class KbcAgent
 
         this.apiClient = new KbcApiClient(client);
 
-        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.investmentRefreshController = constructInvestmentRefreshController();
         this.transactionalAccountRefreshController =
@@ -169,38 +155,8 @@ public final class KbcAgent
     }
 
     @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
-    }
-
-    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
-        return new TransferDestinationRefreshController(
-                metricRefreshController,
-                new KbcTransferDestinationFetcher(apiClient, kbcLanguage, sessionStorage));
-    }
-
-    @Override
     protected SessionHandler constructSessionHandler() {
         return new KbcSessionHandler(httpFilter, apiClient, sessionStorage);
-    }
-
-    @Override
-    protected Optional<TransferController> constructTransferController() {
-        final SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProviderImpl(supplementalRequester, request);
-
-        return Optional.of(
-                new TransferController(
-                        null,
-                        new KbcBankTransferExecutor(
-                                credentials,
-                                persistentStorage,
-                                sessionStorage,
-                                apiClient,
-                                catalog,
-                                supplementalInformationProvider.getSupplementalInformationHelper()),
-                        null,
-                        null));
     }
 
     @Override
