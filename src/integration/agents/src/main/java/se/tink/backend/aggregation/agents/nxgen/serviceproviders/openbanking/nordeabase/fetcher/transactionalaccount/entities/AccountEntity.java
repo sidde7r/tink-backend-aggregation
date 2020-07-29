@@ -21,7 +21,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
-    private static final AggregationLogger LOG = new AggregationLogger(AccountEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(AccountEntity.class);
 
     @JsonProperty("_id")
     private String id;
@@ -64,7 +64,7 @@ public class AccountEntity {
     private String valueDatedBalance;
 
     public static AggregationLogger getLOG() {
-        return LOG;
+        return logger;
     }
 
     public String getId() {
@@ -198,7 +198,7 @@ public class AccountEntity {
                 .map(AccountNumberEntity::getValue)
                 .orElseThrow(
                         () -> {
-                            LOG.info(
+                            logger.info(
                                     "Failed to fetch iban "
                                             + LogTag.from("openbanking_base_nordea"));
                             return new IllegalArgumentException();

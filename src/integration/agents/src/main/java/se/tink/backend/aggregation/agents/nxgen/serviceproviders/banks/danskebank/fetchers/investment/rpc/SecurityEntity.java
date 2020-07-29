@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonObject
 public class SecurityEntity {
-    private static final AggregationLogger log = new AggregationLogger(SecurityEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(SecurityEntity.class);
     private String id;
     private String name;
     private String currency;
@@ -109,7 +109,7 @@ public class SecurityEntity {
                 return Instrument.Type.OTHER;
 
             default:
-                log.info(
+                logger.info(
                         String.format(
                                 "danske bank - instrument info - security type name [%s] type [%d] securitySubTypeName [%s]",
                                 securityTypeName,

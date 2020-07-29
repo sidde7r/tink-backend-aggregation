@@ -8,7 +8,8 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class OpBankSessionHandler implements SessionHandler {
-    private static final AggregationLogger LOG = new AggregationLogger(OpBankSessionHandler.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(OpBankSessionHandler.class);
     private OpBankApiClient bankClient;
 
     public OpBankSessionHandler(OpBankApiClient bankClient) {
@@ -19,7 +20,7 @@ public class OpBankSessionHandler implements SessionHandler {
     public void logout() {
         OpBankResponseEntity response = bankClient.logout();
         if (!response.isSuccess()) {
-            LOG.warn("Failed to logout with status: " + response.getStatus());
+            logger.warn("Failed to logout with status: " + response.getStatus());
         }
     }
 

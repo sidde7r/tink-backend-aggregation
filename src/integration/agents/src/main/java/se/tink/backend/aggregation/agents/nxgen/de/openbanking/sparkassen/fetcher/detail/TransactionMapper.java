@@ -16,14 +16,14 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class TransactionMapper {
 
-    private static final AggregationLogger log = new AggregationLogger(TransactionMapper.class);
+    private static final AggregationLogger logger = new AggregationLogger(TransactionMapper.class);
     private static JAXBContext context;
 
     static {
         try {
             context = JAXBContext.newInstance(FetchTransactionsResponse.class);
         } catch (JAXBException e) {
-            log.error(ErrorMessages.COULD_NOT_INITIALIZE_JAXBCONTEXT);
+            logger.error(ErrorMessages.COULD_NOT_INITIALIZE_JAXBCONTEXT);
             throw new IllegalStateException(ErrorMessages.COULD_NOT_INITIALIZE_JAXBCONTEXT);
         }
     }
@@ -36,7 +36,7 @@ public class TransactionMapper {
             Unmarshaller m = context.createUnmarshaller();
             return Optional.of((FetchTransactionsResponse) m.unmarshal(new StringReader(xml)));
         } catch (JAXBException e) {
-            log.error(ErrorMessages.COULD_NOT_PARSE_TRANSACTIONS);
+            logger.error(ErrorMessages.COULD_NOT_PARSE_TRANSACTIONS);
         }
         return Optional.empty();
     }

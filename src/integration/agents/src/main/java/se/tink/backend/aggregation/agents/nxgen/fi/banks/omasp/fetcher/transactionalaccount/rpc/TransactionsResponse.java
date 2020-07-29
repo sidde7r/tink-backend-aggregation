@@ -14,7 +14,8 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonObject
 public class TransactionsResponse extends OmaspBaseResponse {
-    private static final AggregationLogger log = new AggregationLogger(TransactionsResponse.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(TransactionsResponse.class);
 
     private List<TransactionsEntity> transactions;
     private AmountEntity balance;
@@ -59,7 +60,7 @@ public class TransactionsResponse extends OmaspBaseResponse {
         AccountTypes type =
                 OmaspConstants.ACCOUNT_TYPES.getOrDefault(productName.toLowerCase(), null);
         if (Objects.isNull(type)) {
-            log.warn(
+            logger.warn(
                     String.format(
                             "%s: Unknown account type: %s",
                             OmaspConstants.LogTags.LOG_TAG_ACCOUNTS, productName));

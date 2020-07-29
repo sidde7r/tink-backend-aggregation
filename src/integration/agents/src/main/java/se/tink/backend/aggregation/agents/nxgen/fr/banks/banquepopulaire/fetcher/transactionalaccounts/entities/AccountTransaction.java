@@ -12,7 +12,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class AccountTransaction {
-    private static final AggregationLogger LOGGER = new AggregationLogger(AccountTransaction.class);
+    private static final AggregationLogger logger = new AggregationLogger(AccountTransaction.class);
 
     private String beneficiaire;
 
@@ -68,7 +68,7 @@ public class AccountTransaction {
     private boolean isPending() {
         if (!BanquePopulaireConstants.Status.TRANSACTION_STATUS_MAPPER.containsKey(
                 transactionStatus.getCode())) {
-            LOGGER.info(
+            logger.info(
                     BanquePopulaireConstants.LogTags.UNKNOWN_TRANSACTION_STATUS.toString()
                             + "  "
                             + SerializationUtils.serializeToString(transactionStatus));

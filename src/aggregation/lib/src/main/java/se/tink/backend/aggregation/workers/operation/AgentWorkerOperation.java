@@ -37,7 +37,8 @@ public class AgentWorkerOperation implements Runnable {
         }
     }
 
-    private static final AggregationLogger log = new AggregationLogger(AgentWorkerOperation.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(AgentWorkerOperation.class);
 
     private List<AgentWorkerCommand> commands;
     private AgentWorkerContext context;
@@ -89,7 +90,7 @@ public class AgentWorkerOperation implements Runnable {
     private void executeAllCommands() {
         Credentials credentials = request.getCredentials();
 
-        log.info(
+        logger.info(
                 String.format(
                         "Starting with command execution for operation '%s'", operationMetricName));
 
@@ -98,7 +99,7 @@ public class AgentWorkerOperation implements Runnable {
 
         for (AgentWorkerCommand command : commands) {
             try {
-                log.info(
+                logger.info(
                         String.format(
                                 "Executing command '%s' for operation '%s'",
                                 command.toString(), operationMetricName));
@@ -112,7 +113,7 @@ public class AgentWorkerOperation implements Runnable {
                 stopCommandContexts(contexts);
 
                 if (commandResult == AgentWorkerCommandResult.ABORT) {
-                    log.info(
+                    logger.info(
                             String.format(
                                     "Got ABORT from command '%s' for operation '%s'",
                                     command.toString(), operationMetricName));
@@ -121,7 +122,7 @@ public class AgentWorkerOperation implements Runnable {
                 }
 
                 if (commandResult == AgentWorkerCommandResult.REJECT) {
-                    log.info(
+                    logger.info(
                             String.format(
                                     "Got REJECT from command '%s' for operation '%s'",
                                     command.toString(), operationMetricName));
@@ -129,7 +130,7 @@ public class AgentWorkerOperation implements Runnable {
                 }
 
                 if (Thread.interrupted()) {
-                    log.info(
+                    logger.info(
                             String.format(
                                     "Thread was interrupted when executing '%s' for operation '%s'. Aborting.",
                                     command.toString(), operationMetricName));
@@ -138,7 +139,7 @@ public class AgentWorkerOperation implements Runnable {
                 }
 
             } catch (Exception e) {
-                log.error(
+                logger.error(
                         String.format(
                                 "Caught exception while executing command '%s' for operation '%s'",
                                 command.toString(), operationMetricName),
@@ -159,19 +160,19 @@ public class AgentWorkerOperation implements Runnable {
         // Handle the status of the last executed command.
 
         if (commandResult == AgentWorkerCommandResult.CONTINUE) {
-            log.info(
+            logger.info(
                     String.format(
                             "Done with command execution for operation '%s'", operationMetricName));
         }
 
         if (commandResult == AgentWorkerCommandResult.ABORT) {
-            log.info(
+            logger.info(
                     String.format(
                             "Aborted command execution for operation '%s'", operationMetricName));
         }
 
         if (commandResult == AgentWorkerCommandResult.REJECT) {
-            log.info(
+            logger.info(
                     String.format(
                             "Rejected command execution for operation '%s'", operationMetricName));
             handleCredentialStatusUpdateForRejectedCommand(credentials);
@@ -181,7 +182,7 @@ public class AgentWorkerOperation implements Runnable {
         while (!executedCommands.isEmpty()) {
             AgentWorkerCommand command = executedCommands.pop();
             try {
-                log.info(
+                logger.info(
                         String.format(
                                 "Finalizing command '%s' for operation '%s'",
                                 command.toString(), operationMetricName));
@@ -195,7 +196,7 @@ public class AgentWorkerOperation implements Runnable {
                 stopCommandContexts(contexts);
 
             } catch (Exception e) {
-                log.error(
+                logger.error(
                         String.format(
                                 "Caught exception while finalizing command '%s' for operation '%s'",
                                 command.toString(), operationMetricName),
@@ -203,7 +204,7 @@ public class AgentWorkerOperation implements Runnable {
             }
         }
 
-        log.info(
+        logger.info(
                 String.format(
                         "Done with command finalization for operation '%s'", operationMetricName));
     }

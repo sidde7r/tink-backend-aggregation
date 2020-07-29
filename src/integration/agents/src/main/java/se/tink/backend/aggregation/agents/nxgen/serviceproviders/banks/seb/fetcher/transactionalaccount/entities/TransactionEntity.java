@@ -23,7 +23,7 @@ import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class TransactionEntity {
-    private static AggregationLogger LOGGER = new AggregationLogger(TransactionEntity.class);
+    private static AggregationLogger logger = new AggregationLogger(TransactionEntity.class);
     private static Pattern DESCRIPTION_DATE_PATTERN =
             Pattern.compile("^(?<description>.+)/(?<date>[0-9]{2}-[01][0-9]-[0123][0-9])$");
     private static String DESCRIPTION_DATE_FORMAT = "yy-MM-dd";
@@ -173,7 +173,7 @@ public class TransactionEntity {
                                 TransactionPayloadTypes.EXCHANGE_RATE,
                                 String.valueOf(exchangeRate));
             } else {
-                LOGGER.error("Could not parse foreign transaction: " + additionalInformation);
+                logger.error("Could not parse foreign transaction: " + additionalInformation);
             }
         }
 

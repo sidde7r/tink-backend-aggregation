@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class IngAutoAuthenticator implements AutoAuthenticator {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(IngAutoAuthenticator.class);
     private static final int MAXIMUM_TRY = 3;
     private final IngApiClient apiClient;
@@ -80,7 +80,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
                         || locationHeader
                                 .toLowerCase()
                                 .contains(IngConstants.Headers.ERROR_CODE_LOGIN))) {
-            LOGGER.warn(
+            logger.warn(
                     String.format(
                             "%s: %s",
                             IngConstants.LogMessage.UNKNOWN_LOCATION_CODE,
@@ -98,7 +98,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
                 && locationHeader
                         .toLowerCase()
                         .contains(IngConstants.Headers.ERROR_CODE_WRONG_OTP)) {
-            LOGGER.warn(
+            logger.warn(
                     String.format(
                             "%s: %s",
                             IngConstants.LogMessage.UNKNOWN_LOCATION_CODE,
@@ -122,7 +122,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
     private int calcOtp() throws SessionException {
         String storageOtp = this.persistentStorage.get(IngConstants.Storage.OTP_COUNTER);
         if (Strings.isNullOrEmpty(storageOtp)) {
-            LOGGER.warn(String.format("%s", IngConstants.LogMessage.PERSISTED_OTP_NULL));
+            logger.warn(String.format("%s", IngConstants.LogMessage.PERSISTED_OTP_NULL));
             throw SessionError.SESSION_EXPIRED.exception();
         }
 

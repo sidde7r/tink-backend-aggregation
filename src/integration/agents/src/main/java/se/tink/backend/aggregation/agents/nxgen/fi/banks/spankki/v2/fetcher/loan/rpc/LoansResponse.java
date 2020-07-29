@@ -15,7 +15,7 @@ public class LoansResponse extends SpankkiResponse {
     @JsonProperty private BigDecimal totalBalance;
 
     @JsonIgnore
-    private static final AggregationLogger LOG = new AggregationLogger(LoansResponse.class);
+    private static final AggregationLogger logger = new AggregationLogger(LoansResponse.class);
 
     @JsonIgnore
     public boolean hasLoans() {
@@ -24,7 +24,7 @@ public class LoansResponse extends SpankkiResponse {
 
     @JsonIgnore
     public void logLoans() {
-        LOG.infoExtraLong(
+        logger.infoExtraLong(
                 SerializationUtils.serializeToString(this), SpankkiConstants.LogTags.LOAN);
     }
 }

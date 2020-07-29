@@ -41,7 +41,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class DanskeBankApiClient {
-    private static final AggregationLogger log = new AggregationLogger(DanskeBankApiClient.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(DanskeBankApiClient.class);
 
     private final Credentials credentials;
     protected final TinkHttpClient client;
@@ -260,7 +261,7 @@ public class DanskeBankApiClient {
         CheckDeviceResponse checkDeviceResponse =
                 DanskeBankDeserializer.convertStringToObject(response, CheckDeviceResponse.class);
         if (checkDeviceResponse.getError() != null) {
-            log.info("DanskeBank - Found non null error in check device response");
+            logger.info("DanskeBank - Found non null error in check device response");
         }
 
         return checkDeviceResponse;

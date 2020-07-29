@@ -15,7 +15,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 public class LoanDetails {
-    private static final AggregationLogger log = new AggregationLogger(LoanDetails.class);
+    private static final AggregationLogger logger = new AggregationLogger(LoanDetails.class);
 
     private final ExactCurrencyAmount amortized;
     private final ExactCurrencyAmount monthlyAmortization;
@@ -71,7 +71,7 @@ public class LoanDetails {
             if (!Objects.equals(
                     initialBalance.getCurrencyCode(),
                     account.getExactBalance().getCurrencyCode())) {
-                log.warn(
+                logger.warn(
                         String.format(
                                 "Detected Multiple loan currencies {balance: %s, initialBalance: %s}",
                                 account.getExactBalance().getCurrencyCode(),

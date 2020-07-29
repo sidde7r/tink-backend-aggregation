@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class LoggingProviderRateLimiterFactory implements ProviderRateLimiterFactory {
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(LoggingProviderRateLimiterFactory.class);
     private ProviderRateLimiterFactory delegate;
 
@@ -18,7 +18,7 @@ public class LoggingProviderRateLimiterFactory implements ProviderRateLimiterFac
     public RateLimiter buildFor(String providerClassName) {
         RateLimiter rateLimiter = delegate.buildFor(providerClassName);
 
-        log.info(
+        logger.info(
                 String.format(
                         "Creating RateLimiter for %s, with rate: %s per second",
                         providerClassName == null ? "null" : providerClassName,

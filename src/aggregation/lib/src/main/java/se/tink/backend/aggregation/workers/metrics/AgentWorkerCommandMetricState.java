@@ -14,7 +14,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentWorkerCommandMetricState {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(AgentWorkerCommandMetricState.class);
 
     private final MetricRegistry metricRegistry;
@@ -130,7 +130,7 @@ public class AgentWorkerCommandMetricState {
         actions = Lists.newArrayList(actions);
 
         for (MetricAction action : actions) {
-            log.warn(String.format("Found unclosed MetricAction: %s", action.getActionName()));
+            logger.warn(String.format("Found unclosed MetricAction: %s", action.getActionName()));
             action.stop();
         }
 

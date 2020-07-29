@@ -20,7 +20,7 @@ public class AssetsDetailGroupDto {
     private TypeValuePair label;
     private TypeValuePair groupId;
     private List<AssetsDetailSubGroupDto> subgroups;
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(AssetsDetailGroupDto.class);
 
     public Double toTotalVale() {
@@ -66,7 +66,7 @@ public class AssetsDetailGroupDto {
                         .sum();
 
         if (Double.compare(toTotalVale(), totalValue) != 0) {
-            LOGGER.warn(
+            logger.warn(
                     String.format(
                             "Total value from the bank is %f, but calculated total value is %f",
                             toTotalVale(), totalValue));

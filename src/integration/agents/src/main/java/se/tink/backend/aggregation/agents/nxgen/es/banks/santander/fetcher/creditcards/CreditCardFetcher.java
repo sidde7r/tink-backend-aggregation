@@ -33,7 +33,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
-    private static final AggregationLogger log = new AggregationLogger(CreditCardFetcher.class);
+    private static final AggregationLogger logger = new AggregationLogger(CreditCardFetcher.class);
 
     private final SantanderEsApiClient apiClient;
     private final SantanderEsSessionStorage santanderEsSessionStorage;
@@ -118,11 +118,11 @@ public class CreditCardFetcher
                 // log error if we get other error than 'no more transactions' since this is string
                 // matching
                 if (soapFaultError.isPresent()) {
-                    log.warn(
+                    logger.warn(
                             "ERROR: " + SerializationUtils.serializeToString(soapFaultError.get()),
                             hre);
                 } else {
-                    log.warn("Fetch transactions returned error", hre);
+                    logger.warn("Fetch transactions returned error", hre);
                 }
             }
             throw hre;

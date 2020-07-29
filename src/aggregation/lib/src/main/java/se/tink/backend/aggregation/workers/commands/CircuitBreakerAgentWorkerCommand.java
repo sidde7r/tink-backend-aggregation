@@ -34,7 +34,7 @@ import se.tink.libraries.i18n.Catalog;
  * That is, operations that are high-throughput should probably use a circuit breaker.
  */
 public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(CircuitBreakerAgentWorkerCommand.class);
 
     private CircuitBreakerAgentWorkerCommandState state;
@@ -87,7 +87,7 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
                     return AgentWorkerCommandResult.ABORT;
                 } else if (Objects.equal(
                         circuitBreakerConfiguration.getMode(), CircuitBreakerMode.TEST)) {
-                    log.info(
+                    logger.info(
                             String.format(
                                     "[EVALUATION MODE] Provider: %s, Multiplication factor: %s",
                                     credentials.getProviderName(),

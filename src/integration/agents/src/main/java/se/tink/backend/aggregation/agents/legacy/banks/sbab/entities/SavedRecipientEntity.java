@@ -9,7 +9,8 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 @JsonObject
 public class SavedRecipientEntity implements GeneralAccountEntity {
 
-    private static final AggregationLogger log = new AggregationLogger(SavedRecipientEntity.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(SavedRecipientEntity.class);
 
     private int id;
     private String name;

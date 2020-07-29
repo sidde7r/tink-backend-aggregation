@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class Sparebank1SessionHandler implements SessionHandler {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(Sparebank1SessionHandler.class);
     private final Sparebank1ApiClient apiClient;
     private final RestRootResponse restRootResponse;
@@ -28,7 +28,7 @@ public class Sparebank1SessionHandler implements SessionHandler {
         HttpResponse response =
                 apiClient.logout(restRootResponse.getLinks().get(Keys.LOGOUT_KEY).getHref());
         if (response.getStatus() != HttpStatusCodes.STATUS_CODE_NO_CONTENT) {
-            log.warn(String.format("Logout failed with status: %d", response.getStatus()));
+            logger.warn(String.format("Logout failed with status: %d", response.getStatus()));
         }
     }
 

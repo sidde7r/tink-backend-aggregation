@@ -14,7 +14,7 @@ import se.tink.libraries.strings.StringUtils;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DepotEntity {
     @JsonIgnore
-    private static final AggregationLogger log = new AggregationLogger(DepotEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(DepotEntity.class);
 
     @JsonProperty("DEPA_ID")
     private String id;
@@ -161,7 +161,7 @@ public class DepotEntity {
             case 119:
                 return Portfolio.Type.ISK;
             default:
-                log.info(
+                logger.info(
                         String.format(
                                 "SEB portfolio type - code: %s, type: %s",
                                 getDepotTypeCode(), getType().trim()));

@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class BecAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final BecApiClient apiClient;
-    private static final AggregationLogger LOGGER = new AggregationLogger(BecAccountFetcher.class);
+    private static final AggregationLogger logger = new AggregationLogger(BecAccountFetcher.class);
 
     public BecAccountFetcher(BecApiClient apiClient) {
         this.apiClient = apiClient;
@@ -29,7 +29,7 @@ public class BecAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
             if (details.isUnknownType()) {
                 // log unknown type
-                LOGGER.infoExtraLong(
+                logger.infoExtraLong(
                         String.format("Unknown type: %s\n", details.getAccountType()),
                         BecConstants.Log.UNKOWN_ACCOUNT_TYPE);
             }

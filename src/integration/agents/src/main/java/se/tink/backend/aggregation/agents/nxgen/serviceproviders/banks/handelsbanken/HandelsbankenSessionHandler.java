@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class HandelsbankenSessionHandler implements SessionHandler {
 
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(HandelsbankenSessionHandler.class);
 
     private final HandelsbankenApiClient client;
@@ -47,7 +47,7 @@ public class HandelsbankenSessionHandler implements SessionHandler {
         if (!keepAlive.isAlive()) {
             sessionStorage.removeApplicationEntryPoint();
             persistentStorage.removeAuthorizeResponse();
-            LOGGER.info(
+            logger.info(
                     String.format(
                             "Session with Handelsbanken cannot be kept alive due to: %s",
                             keepAlive.createErrorMessage()));

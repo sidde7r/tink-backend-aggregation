@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SabadellLoanFetcher implements AccountFetcher<LoanAccount> {
-    private final AggregationLogger log = new AggregationLogger(SabadellLoanFetcher.class);
+    private final AggregationLogger logger = new AggregationLogger(SabadellLoanFetcher.class);
     private final SabadellApiClient apiClient;
 
     public SabadellLoanFetcher(SabadellApiClient apiClient) {
@@ -42,7 +42,7 @@ public class SabadellLoanFetcher implements AccountFetcher<LoanAccount> {
                 return Collections.emptyList();
             }
 
-            log.warn(
+            logger.warn(
                     String.format(
                             "%s: Loan fetching failed with error code: %s, error message: %s",
                             SabadellConstants.Tags.LOAN_ERROR,

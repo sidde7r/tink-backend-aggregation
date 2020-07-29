@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(SparebankenSorLoanFetcher.class);
 
     private final SparebankenSorApiClient apiClient;
@@ -51,7 +51,7 @@ public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
                     new URL("https://nettbank.sor.no/payment/transigo/json/accounts");
             apiClient.transigoAccounts(transigoAccountsUrl);
         } catch (Exception e) {
-            LOGGER.infoExtraLong(
+            logger.infoExtraLong(
                     "Failed to retrieve loans", SparebankenSorConstants.LogTags.LOAN_LOG_TAG, e);
         }
 
@@ -72,7 +72,7 @@ public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
         LinkEntity detailsLink = accountEntity.getLinks().get(SparebankenSorConstants.Link.DETAILS);
 
         if (detailsLink == null || Strings.isNullOrEmpty(detailsLink.getHref())) {
-            LOGGER.warn(
+            logger.warn(
                     SparebankenSorConstants.LogTags.LOAN_DETAILS.toString()
                             + " no link to loan details present.");
             return;
@@ -81,7 +81,7 @@ public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
         try {
             apiClient.fetchLoanDetails(detailsLink.getHref());
         } catch (Exception e) {
-            LOGGER.warn(
+            logger.warn(
                     SparebankenSorConstants.LogTags.LOAN_DETAILS.toString()
                             + " fetching of loan details failed",
                     e);

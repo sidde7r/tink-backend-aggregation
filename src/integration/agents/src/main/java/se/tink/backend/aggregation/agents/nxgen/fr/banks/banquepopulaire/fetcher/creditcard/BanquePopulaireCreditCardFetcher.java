@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 public class BanquePopulaireCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>,
                 TransactionKeyPaginator<CreditCardAccount, String> {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(BanquePopulaireCreditCardFetcher.class);
 
     private final BanquePopulaireApiClient apiClient;
@@ -30,7 +30,7 @@ public class BanquePopulaireCreditCardFetcher
         try {
             apiClient.getAllCards();
         } catch (Exception e) {
-            LOGGER.info("Failed to fetch cards", e);
+            logger.info("Failed to fetch cards", e);
         }
 
         return cards;

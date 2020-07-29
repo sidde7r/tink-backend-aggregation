@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger log = new AggregationLogger(NordeaLoanFetcher.class);
+    private static final AggregationLogger logger = new AggregationLogger(NordeaLoanFetcher.class);
     private final NordeaFIApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -31,7 +31,8 @@ public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private LoanAccount getLoanAccount(LoansEntity loansEntity) {
         FetchLoanDetailsResponse loanDetails = apiClient.fetchLoanDetails(loansEntity.getLoanId());
-        log.infoExtraLong(SerializationUtils.serializeToString(loanDetails), LogTags.LOAN_ACCOUNT);
+        logger.infoExtraLong(
+                SerializationUtils.serializeToString(loanDetails), LogTags.LOAN_ACCOUNT);
         return loanDetails.toTinkLoanAccount();
     }
 

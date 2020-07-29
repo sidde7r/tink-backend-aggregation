@@ -37,7 +37,7 @@ import se.tink.libraries.metrics.types.timers.Timer.Context;
 import se.tink.libraries.user.rpc.User;
 
 public class LoginAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(LoginAgentWorkerCommand.class);
 
     private static final String LOCK_FORMAT_BANKID_REFRESH =
@@ -112,15 +112,15 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
 
-        log.info(
+        logger.info(
                 String.format(
                         "Credentials contain - supplemental Information: {}: %s",
                         credentials.getSupplementalInformation()));
-        log.info(
+        logger.info(
                 String.format(
                         "Credentials contain - status payload: {}: %s",
                         credentials.getStatusPayload()));
-        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+        logger.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
 
         agent = context.getAgent();
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
@@ -157,23 +157,23 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             }
         } finally {
             metrics.stop();
-            log.info(
+            logger.info(
                     String.format(
                             "Credentials contain - supplemental Information: {}: %s",
                             credentials.getSupplementalInformation()));
-            log.info(
+            logger.info(
                     String.format(
                             "Credentials contain - status payload: {}: %s",
                             credentials.getStatusPayload()));
-            log.info(
+            logger.info(
                     String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
         }
 
-        log.info(
+        logger.info(
                 String.format(
                         "Credentials contain - status: {}: %s, credentialsId: {}: %s",
                         credentials.getStatus(), credentials.getId()));
-        log.info(
+        logger.info(
                 String.format(
                         "AgentWorkerCommandResult result : {}: %s, credentialsId: {}: %s",
                         Optional.ofNullable(result).map(Enum::toString).orElse(null),
@@ -189,7 +189,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         if (context.getRequest() instanceof RefreshInformationRequest) {
             boolean result =
                     ((RefreshInformationRequest) context.getRequest()).isForceAuthenticate();
-            log.info(
+            logger.info(
                     String.format(
                             "RefreshInformationRequest contain - isForceAuthenticate: {}: %s, credentialsId: {}: %s",
                             Boolean.toString(result), credentials.getId()));
@@ -200,7 +200,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private Optional<Boolean> isLoggedIn() throws Exception {
         if (!(agent instanceof PersistentLogin)) {
-            log.info("agent is not instanceof PersistentLogin");
+            logger.info("agent is not instanceof PersistentLogin");
             return Optional.of(Boolean.FALSE);
         }
 
@@ -223,22 +223,22 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             if (shouldForceAuthenticate()) {
                 timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
-                log.info("Clearing session to force authentication towards the bank");
+                logger.info("Clearing session to force authentication towards the bank");
                 persistentAgent.clearLoginSession();
             } else if (persistentAgent.isLoggedIn()) {
                 timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
-                log.info("We're already logged in. Moving along.");
+                logger.info("We're already logged in. Moving along.");
                 emitLoginResultEvent(LoginResult.ALREADY_LOGGED_IN);
                 result = Boolean.TRUE;
             } else {
                 timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
-                log.info("We're not logged in. Clear Session and Login in again.");
+                logger.info("We're not logged in. Clear Session and Login in again.");
                 persistentAgent.clearLoginSession();
             }
         } catch (BankServiceException e) {
-            log.info(String.format("Bank service exception: %s", e.getMessage()), e);
+            logger.info(String.format("Bank service exception: %s", e.getMessage()), e);
             action.unavailable();
             statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
             // couldn't determine isLoggedIn or not, return ABORT
@@ -257,12 +257,12 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                     TimeUnit.SECONDS.convert(timeAgentIsLoggedIn, TimeUnit.NANOSECONDS);
             long timeLoadingSessionSeconds =
                     TimeUnit.SECONDS.convert(timeLoadingSession, TimeUnit.NANOSECONDS);
-            log.info(
+            logger.info(
                     String.format(
                             "Time loading session: %d s, time agent isLoggedIn: %d s",
                             timeLoadingSessionSeconds, timeAgentIsLoggedInSeconds));
         }
-        log.info(
+        logger.info(
                 String.format(
                         "LoginAgentWorkerCommand - isLoggedIn: {}: %s, credentialsId: {}: %s",
                         Boolean.toString(result), credentials.getId()));
@@ -283,7 +283,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
                 if (!lock.acquire(2, TimeUnit.MINUTES)) {
                     statusUpdater.updateStatus(CredentialsStatus.UNCHANGED);
-                    log.warn("Login failed due not able to acquire lock");
+                    logger.warn("Login failed due not able to acquire lock");
                     action.failed();
                     return false;
                 }
@@ -304,7 +304,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         ManualOrAutoAuthenticationAgentVisitor visitor =
                 new ManualOrAutoAuthenticationAgentVisitor(request);
         agent.accept(visitor);
-        log.info("Authentication requires user intervention: " + visitor.isManualAuthentication());
+        logger.info(
+                "Authentication requires user intervention: " + visitor.isManualAuthentication());
         return visitor.isManualAuthentication();
     }
 
@@ -366,15 +367,15 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         // If we did not successfully execute in case when credentials has been just created,
         // there's no point in doing anything here.
 
-        log.info(
+        logger.info(
                 String.format(
                         "Credentials contain - supplemental Information: {}: %s",
                         credentials.getSupplementalInformation()));
-        log.info(
+        logger.info(
                 String.format(
                         "Credentials contain - status payload: {}: %s",
                         credentials.getStatusPayload()));
-        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+        logger.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
 
         if (agent == null || initialCredentialStatus == CredentialsStatus.CREATED) {
             return;

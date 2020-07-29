@@ -16,7 +16,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class BunqAutoAuthenticator implements AutoAuthenticator {
-    private static final AggregationLogger log = new AggregationLogger(BunqAutoAuthenticator.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(BunqAutoAuthenticator.class);
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final TemporaryStorage temporaryStorage;
@@ -66,7 +67,7 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-            log.warnExtraLong(
+            logger.warnExtraLong(
                     errorResponse.getErrorDescription().orElse("Error description was null"),
                     BunqBaseConstants.LogTags.AUTO_AUTHENTICATION_FAILED,
                     e);
@@ -83,7 +84,8 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
                     String.format(
                             "PersistentStorage is missing %s",
                             BunqBaseConstants.StorageKeys.USER_DEVICE_RSA_SIGNING_KEY_PAIR);
-            log.warnExtraLong(errorMessage, BunqBaseConstants.LogTags.AUTO_AUTHENTICATION_FAILED);
+            logger.warnExtraLong(
+                    errorMessage, BunqBaseConstants.LogTags.AUTO_AUTHENTICATION_FAILED);
             throw new IllegalStateException(errorMessage);
         }
     }

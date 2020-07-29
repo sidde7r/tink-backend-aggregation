@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardList extends BaseResponse {
-    private static final AggregationLogger log = new AggregationLogger(CardList.class);
+    private static final AggregationLogger logger = new AggregationLogger(CardList.class);
 
     @JsonProperty("Response")
     public List<Card> cards;
@@ -21,7 +21,7 @@ public class CardList extends BaseResponse {
     public void logCards() {
         if (cards != null) {
             for (Card card : cards) {
-                log.info(
+                logger.info(
                         MoreObjects.toStringHelper(Card.class)
                                 .add("expiresAt", card.getExpiresAt())
                                 .add("cardType", card.getCardType())
@@ -31,7 +31,7 @@ public class CardList extends BaseResponse {
                                 .toString());
             }
         } else {
-            log.info("No cards found");
+            logger.info("No cards found");
         }
     }
 

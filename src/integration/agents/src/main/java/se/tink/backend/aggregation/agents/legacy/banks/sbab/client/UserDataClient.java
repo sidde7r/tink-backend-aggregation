@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class UserDataClient extends SBABClient {
 
-    private static final AggregationLogger log = new AggregationLogger(UserDataClient.class);
+    private static final AggregationLogger logger = new AggregationLogger(UserDataClient.class);
 
     private static final String SAVING_URL = SECURE_BASE_URL + "/secure-rest/rest/savings/active";
     private static final String LOAN_URL = SECURE_BASE_URL + "/secure-rest/rest/lan/all";
@@ -100,7 +100,7 @@ public class UserDataClient extends SBABClient {
             if (tinkLoan.isPresent() && tinkAccount.isPresent()) {
                 accountLoanMap.put(tinkAccount.get(), tinkLoan.get());
             } else {
-                log.error("Could not convert mortgage entity to Tink account/loan");
+                logger.error("Could not convert mortgage entity to Tink account/loan");
             }
         }
 

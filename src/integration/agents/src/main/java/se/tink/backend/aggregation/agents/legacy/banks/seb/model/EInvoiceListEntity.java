@@ -31,7 +31,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EInvoiceListEntity implements MatchableTransferRequestEntity {
-    private static final AggregationLogger log = new AggregationLogger(EInvoiceListEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(EInvoiceListEntity.class);
     private static final SebAccountIdentifierFormatter ACCOUNT_IDENTIFIER_FORMATTER =
             new SebAccountIdentifierFormatter();
 
@@ -53,7 +53,7 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
                 try {
                     transfer.setDueDate(eInvoiceListEntity.getOriginalDueDate());
                 } catch (ParseException parseException) {
-                    log.error(
+                    logger.error(
                             String.format(
                                     "Could not parse originalDueDate: %s",
                                     eInvoiceListEntity.originalDueDate),
@@ -230,7 +230,7 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
             plusGiroIdentifier.setName(recipientName);
             return plusGiroIdentifier;
         } else {
-            log.error(
+            logger.error(
                     String.format(
                             "Unknown destination type for giroNumber (giroType=%s and giroNumber=%s)",
                             giroType, giroNumber));
@@ -334,7 +334,7 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
         } else if (Objects.equal(giroType.trim(), "PG")) {
             expectedType = AccountIdentifier.Type.SE_PG;
         } else {
-            log.error("Unexpected account type found: " + giroType);
+            logger.error("Unexpected account type found: " + giroType);
             return false;
         }
 
@@ -345,10 +345,10 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
             currentDueDate = Preconditions.checkNotNull(getCurrentDueDate());
             transferEntityDate = Preconditions.checkNotNull(transferListEntity.getTransferDate());
         } catch (ParseException parseException) {
-            log.error("Could not parse date when matching transfer dates", parseException);
+            logger.error("Could not parse date when matching transfer dates", parseException);
             return false;
         } catch (NullPointerException npe) {
-            log.error("Date is unexpectedly null", npe);
+            logger.error("Date is unexpectedly null", npe);
             return false;
         }
 

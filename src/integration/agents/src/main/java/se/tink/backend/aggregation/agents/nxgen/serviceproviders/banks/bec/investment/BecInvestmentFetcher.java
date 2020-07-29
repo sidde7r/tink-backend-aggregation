@@ -26,7 +26,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger log = new AggregationLogger(BecInvestmentFetcher.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(BecInvestmentFetcher.class);
     private final BecApiClient apiClient;
 
     public BecInvestmentFetcher(BecApiClient apiClient) {
@@ -91,7 +92,7 @@ public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     }
 
     private void logUnknownInstrumentType(PortfolioEntity portfolioEntity) {
-        log.infoExtraLong(
+        logger.infoExtraLong(
                 String.format(
                         "Unknown paper type[%s]: %s",
                         portfolioEntity.getDataType(), portfolioEntity.getInstrumentsType()),
@@ -131,7 +132,7 @@ public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
         try {
             details = apiClient.fetchInstrumentDetails(url, accountNumber);
         } catch (HttpResponseException exception) {
-            log.warn("Fetching investment details failed.", exception);
+            logger.warn("Fetching investment details failed.", exception);
         }
         return Optional.ofNullable(details);
     }

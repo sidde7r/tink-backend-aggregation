@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class AuthenticateResponse extends BaseResponse {
 
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(AuthenticateResponse.class);
 
     public BankIdStatus toBankIdStatus() throws AuthenticationException {
@@ -58,7 +58,7 @@ public class AuthenticateResponse extends BaseResponse {
             return BankIdStatus.CANCELLED;
         }
 
-        LOGGER.info("Status FAILED_UNKNOWN, message: " + message);
+        logger.info("Status FAILED_UNKNOWN, message: " + message);
         return BankIdStatus.FAILED_UNKNOWN;
     }
 

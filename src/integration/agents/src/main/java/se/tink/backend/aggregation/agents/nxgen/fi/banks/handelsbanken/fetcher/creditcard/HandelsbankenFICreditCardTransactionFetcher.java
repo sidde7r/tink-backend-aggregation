@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class HandelsbankenFICreditCardTransactionFetcher
         extends HandelsbankenCreditCardTransactionPaginator<HandelsbankenFIApiClient> {
-    private final AggregationLogger log =
+    private final AggregationLogger logger =
             new AggregationLogger(HandelsbankenFICreditCardTransactionFetcher.class);
 
     public HandelsbankenFICreditCardTransactionFetcher(
@@ -43,11 +43,11 @@ public class HandelsbankenFICreditCardTransactionFetcher
         try {
 
             TransactionKeyPaginatorResponse<URL> response = super.getTransactionsFor(account, key);
-            log.info("Pagination seems to be working. Remove this class.");
+            logger.info("Pagination seems to be working. Remove this class.");
             return response;
         } catch (Exception e) {
 
-            log.error("Pagination failed, paginator is likely incorrectly implemented.", e);
+            logger.error("Pagination failed, paginator is likely incorrectly implemented.", e);
             return new HandelsbankenPaginatorResponse(
                     fetchTransactionsFor(account), Optional.empty());
         }

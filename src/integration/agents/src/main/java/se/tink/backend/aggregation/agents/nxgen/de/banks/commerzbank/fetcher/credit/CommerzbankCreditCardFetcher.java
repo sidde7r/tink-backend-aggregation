@@ -19,7 +19,7 @@ public class CommerzbankCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
 
     private final CommerzbankApiClient apiClient;
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(CommerzbankCreditCardFetcher.class);
 
     public CommerzbankCreditCardFetcher(CommerzbankApiClient apiClient) {
@@ -51,7 +51,7 @@ public class CommerzbankCreditCardFetcher
                 }
 
             } catch (Exception e) {
-                LOGGER.errorExtraLong(
+                logger.errorExtraLong(
                         "Could not fetch credit transactions", Tag.CREDIT_CARD_FETCHING_ERROR, e);
                 return PaginatorResponseImpl.createEmpty();
             }

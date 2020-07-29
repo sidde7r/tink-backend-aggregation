@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 public class LoanDetailsEntity extends LoanEntity {
-    private static final AggregationLogger log = new AggregationLogger(LoanDetailsEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(LoanDetailsEntity.class);
 
     private Boolean financingLimitProduct;
 
@@ -36,7 +36,7 @@ public class LoanDetailsEntity extends LoanEntity {
             case SamlinkConstants.LoanType.OTHER:
                 break;
             default:
-                log.info(
+                logger.info(
                         SamlinkConstants.LogTags.UNKNOWN_LOAN_TYPE.toString()
                                 + " RawType: "
                                 + getLoanPurpose());

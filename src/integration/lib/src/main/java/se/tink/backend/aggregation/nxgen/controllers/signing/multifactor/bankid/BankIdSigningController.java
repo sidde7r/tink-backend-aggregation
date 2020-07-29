@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 public class BankIdSigningController<T> implements Signer<T> {
     private static final int MAX_ATTEMPTS = 90;
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(BankIdSigningController.class);
     private final BankIdSigner<T> signer;
     private final SupplementalRequester supplementalRequester;
@@ -39,7 +39,7 @@ public class BankIdSigningController<T> implements Signer<T> {
                 case DONE:
                     return;
                 case WAITING:
-                    log.info("Waiting for BankID");
+                    logger.info("Waiting for BankID");
                     break;
                 case CANCELLED:
                     throw BankIdError.CANCELLED.exception();
@@ -50,14 +50,14 @@ public class BankIdSigningController<T> implements Signer<T> {
                 case INTERRUPTED:
                     throw BankIdError.INTERRUPTED.exception();
                 default:
-                    log.warn(String.format("Unknown BankIdStatus (%s)", status));
+                    logger.warn(String.format("Unknown BankIdStatus (%s)", status));
                     throw BankIdError.UNKNOWN.exception();
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
-        log.info(String.format("BankID timed out internally, last status: %s", status));
+        logger.info(String.format("BankID timed out internally, last status: %s", status));
         throw BankIdError.TIMEOUT.exception();
     }
 }

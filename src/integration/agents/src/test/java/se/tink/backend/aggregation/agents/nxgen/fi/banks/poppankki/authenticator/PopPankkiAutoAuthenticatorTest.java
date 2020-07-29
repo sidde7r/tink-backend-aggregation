@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class PopPankkiAutoAuthenticatorTest extends NextGenerationAgentTest {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(PopPankkiAutoAuthenticatorTest.class);
 
     private Credentials credentials;
@@ -71,7 +71,7 @@ public class PopPankkiAutoAuthenticatorTest extends NextGenerationAgentTest {
 
         autoAuthenticator.autoAuthenticate();
 
-        LOGGER.info(
+        logger.info(
                 String.format(
                         "Logged in with registered device: \ndevice id\n%s\ndevice token\n%s",
                         persistentStorage.getDeviceId(), persistentStorage.getDeviceToken()));

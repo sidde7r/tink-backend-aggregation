@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SdcSmsOtpAuthenticator
         implements SmsOtpAuthenticatorPassword<SdcSmsOtpAuthenticator.InitValues> {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(SdcSmsOtpAuthenticator.class);
 
     private final SdcApiClient apiClient;
@@ -60,7 +60,7 @@ public class SdcSmsOtpAuthenticator
 
             AgreementsResponse agreementsResponse = this.apiClient.pinLogon(username, password);
             if (agreementsResponse.isEmpty()) {
-                LOGGER.warnExtraLong(
+                logger.warnExtraLong(
                         "User was able to login, but has no agreements?",
                         SdcConstants.Session.LOGIN);
             }
@@ -80,7 +80,7 @@ public class SdcSmsOtpAuthenticator
 
             return new InitValues(device, challenge, transId);
         } catch (HttpResponseException e) {
-            LOGGER.infoExtraLong(e.toString(), SdcConstants.HTTP_RESPONSE_LOGGER, e);
+            logger.infoExtraLong(e.toString(), SdcConstants.HTTP_RESPONSE_LOGGER, e);
             handleErrors(e);
             throw e;
         }
@@ -110,7 +110,7 @@ public class SdcSmsOtpAuthenticator
                         "This bank does not support device registration! Configure this provider to use PIN instead of SMS",
                         e);
             } else if (this.agentConfiguration.isLoginError(errorMessage)) {
-                LOGGER.info(errorMessage, e);
+                logger.info(errorMessage, e);
 
                 // if user is blocked throw more specific exception
                 if (this.agentConfiguration.isUserBlocked(errorMessage)) {

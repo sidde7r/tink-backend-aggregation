@@ -19,7 +19,7 @@ public class OpBankCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>,
                 TransactionKeyPaginator<CreditCardAccount, String> {
 
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(OpBankCreditCardFetcher.class);
 
     private final OpBankApiClient apiClient;
@@ -75,7 +75,7 @@ public class OpBankCreditCardFetcher
                 if (OpBankConstants.Fetcher.CONTINUING_CREDIT.equalsIgnoreCase(
                         credit.getCreditType())) {
                     creditAccounts.add(credit.toTinkCreditAccount());
-                    LOGGER.infoExtraLong(
+                    logger.infoExtraLong(
                             "CONTINUING CREDIT TX: "
                                     + apiClient.fetchContinuingCreditTransactions(
                                             credit.getEncryptedAgreementNumber()),
@@ -83,7 +83,7 @@ public class OpBankCreditCardFetcher
                 }
             }
         } catch (Exception e) {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     "Could not fetch continuing credit ",
                     OpBankConstants.Fetcher.CREDIT_LOGGING,
                     e);

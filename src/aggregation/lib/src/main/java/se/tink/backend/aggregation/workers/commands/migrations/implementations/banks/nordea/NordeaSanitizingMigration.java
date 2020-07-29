@@ -11,7 +11,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration {
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(NordeaSanitizingMigration.class);
     private static final String OLD_AGENT = "banks.nordea.NordeaAgent";
     private static final String NEW_AGENT = "nxgen.se.banks.nordea.v30.NordeaSEAgent";
@@ -40,7 +40,7 @@ public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration 
     public boolean isDataMigrated(CredentialsRequest request) {
         CredentialsTypes type = request.getCredentials().getType();
         if (type == CredentialsTypes.MOBILE_BANKID && hasPin(request)) {
-            log.info(
+            logger.info(
                     "encountered credentials with PIN to 'nordea-password' in cluster: "
                             + getClientIfo().getClusterId()
                             + " credentials: "

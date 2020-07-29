@@ -27,7 +27,7 @@ public class TransferItem {
     private String transferId;
     private se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities.Communication
             communication;
-    private static final AggregationLogger LOGGER = new AggregationLogger(TransferItem.class);
+    private static final AggregationLogger logger = new AggregationLogger(TransferItem.class);
 
     private final DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -83,7 +83,7 @@ public class TransferItem {
             toTinkTransaction();
             return true;
         } catch (RuntimeException e) {
-            LOGGER.errorExtraLong(
+            logger.errorExtraLong(
                     "Cannot parse transactions: ",
                     FortisConstants.LoggingTag.TRANSACTION_VALIDATION_ERROR,
                     e);

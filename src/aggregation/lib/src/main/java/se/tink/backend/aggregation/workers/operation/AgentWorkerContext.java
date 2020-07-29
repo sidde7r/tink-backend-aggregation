@@ -53,7 +53,7 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
-    private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
+    private static final AggregationLogger logger = new AggregationLogger(AgentWorkerContext.class);
 
     private Catalog catalog;
     protected CuratorFramework coordinationClient;
@@ -133,7 +133,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         if (request.getUser() != null) {
             String locale = request.getUser().getProfile().getLocale();
             this.catalog = Catalog.getCatalog(locale);
-            log.info("Catalog created on Locale: " + locale);
+            logger.info("Catalog created on Locale: " + locale);
         }
 
         this.setMetricRegistry(metricRegistry);
@@ -157,7 +157,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public void processTransactions() {
         Credentials credentials = request.getCredentials();
         if (credentials.getStatus() != CredentialsStatus.UPDATING) {
-            log.warn(
+            logger.warn(
                     String.format(
                             "Status does not warrant transaction processing: %s",
                             credentials.getStatus()));
@@ -240,7 +240,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             // Reset barrier.
             lock.removeBarrier();
             lock.setBarrier();
-            log.info(
+            logger.info(
                     String.format(
                             "Supplemental information request of key %s is waiting for %s %s",
                             key, waitFor, unit));
@@ -254,18 +254,18 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                             getMetricRegistry(),
                             SupplementalInformationMetrics.cancelled,
                             getClusterId());
-                    log.info(
+                    logger.info(
                             "Supplemental information request was cancelled by client (returned null)");
                     return Optional.empty();
                 }
-                log.info("Supplemental information response (non-null) has been received");
+                logger.info("Supplemental information response (non-null) has been received");
                 SupplementalInformationMetrics.inc(
                         getMetricRegistry(),
                         SupplementalInformationMetrics.finished,
                         getClusterId());
                 return Optional.of(supplementalInformation);
             } else {
-                log.info("Supplemental information request timed out");
+                logger.info("Supplemental information request timed out");
                 SupplementalInformationMetrics.inc(
                         getMetricRegistry(),
                         SupplementalInformationMetrics.timedOut,
@@ -275,7 +275,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             }
 
         } catch (Exception e) {
-            log.error("Caught exception while waiting for supplemental information", e);
+            logger.error("Caught exception while waiting for supplemental information", e);
             SupplementalInformationMetrics.inc(
                     getMetricRegistry(), SupplementalInformationMetrics.error, getClusterId());
         } finally {
@@ -288,7 +288,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     SupplementalInformationMetrics.duration,
                     stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000);
         }
-        log.info("Supplemental information (empty) will be returned");
+        logger.info("Supplemental information (empty) will be returned");
         return Optional.empty();
     }
 
@@ -344,7 +344,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         Optional<AccountData> optionalAccountData =
                 accountDataCache.getFilteredAccountDataByBankAccountId(bankAccountId);
         if (!optionalAccountData.isPresent()) {
-            log.warn(
+            logger.warn(
                     "Trying to send a filtered or non-existent Account to update service! Agents should not do this on their own.");
             return null;
         }
@@ -386,7 +386,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updatedAccount = controllerWrapper.updateAccount(updateAccountRequest);
 
         } catch (UniformInterfaceException e) {
-            log.error(
+            logger.error(
                     "Account update request failed, response: "
                             + (e.getResponse().hasEntity()
                                     ? e.getResponse().getEntity(String.class)
@@ -404,7 +404,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         String tinkAccountId = processedAccount.getId();
         AccountHolder accountHolder = processedAccount.getAccountHolder();
         if (Objects.isNull(accountHolder)) {
-            log.debug(String.format("tinkAccountId: %s has no account holder", tinkAccountId));
+            logger.debug(String.format("tinkAccountId: %s has no account holder", tinkAccountId));
             return null;
         }
         accountHolder.setAccountId(tinkAccountId);
@@ -415,7 +415,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         try {
             return controllerWrapper.updateAccountHolder(updateAccountHolderRequest);
         } catch (UniformInterfaceException e) {
-            log.error(
+            logger.error(
                     "Account holder update request failed, response: "
                             + (e.getResponse().hasEntity()
                                     ? e.getResponse().getEntity(String.class)
@@ -461,7 +461,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setMigrationUpdate(isMigrationUpdate);
         updateCredentialsStatusRequest.setRequestType(request.getType());
         updateCredentialsStatusRequest.setOperationId(request.getOperationId());
-        log.info(
+        logger.info(
                 String.format(
                         "refreshId: %s - Incoming RequestType is %s, outgoing %s",
                         refreshId.orElse("null"),
@@ -579,7 +579,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
             AccountIdentifier destination = transfer.getDestination();
             if (destination == null) {
-                log.warn(
+                logger.warn(
                         String.format(
                                 "Ignoring transfer because it has missing destination: %s",
                                 transfer));
@@ -587,7 +587,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             }
 
             if (!destination.isValid()) {
-                log.warn(
+                logger.warn(
                         String.format(
                                 "Ignoring non-valid transfer with identifier '%s'. Transfer: %s",
                                 destination.getIdentifier(), transfer));
@@ -604,9 +604,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public void cacheIdentityData(IdentityData identityData) {
         this.identityData = identityData;
         if (identityData != null) {
-            log.info("Identity data is cached in context");
+            logger.info("Identity data is cached in context");
         } else {
-            log.info("Identity data is null, so it will not be cached");
+            logger.info("Identity data is null, so it will not be cached");
         }
     }
 
@@ -631,7 +631,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public void sendIdentityToIdentityAggregatorService() {
 
         if (identityData == null) {
-            log.info("Identity data is null, skipping identity data update request");
+            logger.info("Identity data is null, skipping identity data update request");
             return;
         }
 
@@ -645,9 +645,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         try {
             controllerWrapper.updateIdentityData(updateIdentityDataRequest);
-            log.info("Identity data is successfully updated");
+            logger.info("Identity data is successfully updated");
         } catch (UniformInterfaceException e) {
-            log.error(
+            logger.error(
                     "Identity update request failed, response: "
                             + (e.getResponse().hasEntity()
                                     ? e.getResponse().getEntity(String.class)

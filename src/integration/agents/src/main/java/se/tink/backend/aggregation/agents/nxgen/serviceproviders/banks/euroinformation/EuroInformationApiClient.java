@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfo
 import java.util.Collections;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginResponse;
@@ -28,12 +27,13 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationApiClient {
-    private static final AggregationLogger AGGREGATION_LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(EuroInformationApiClient.class);
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     protected final EuroInformationConfiguration config;
-    protected final Logger LOGGER = LoggerFactory.getLogger(EuroInformationApiClient.class);
+    protected final org.slf4j.Logger LOGGER =
+            LoggerFactory.getLogger(EuroInformationApiClient.class);
 
     public EuroInformationApiClient(
             TinkHttpClient client,
@@ -99,7 +99,7 @@ public class EuroInformationApiClient {
                 .filter(a -> a.getTinkTypeByTypeNumber() == AccountTypeEnum.UNKNOWN)
                 .forEach(
                         acc ->
-                                AGGREGATION_LOGGER.infoExtraLong(
+                                logger.infoExtraLong(
                                         SerializationUtils.serializeToString(acc),
                                         EuroInformationConstants.LoggingTags
                                                 .unknownAccountTypesTag));

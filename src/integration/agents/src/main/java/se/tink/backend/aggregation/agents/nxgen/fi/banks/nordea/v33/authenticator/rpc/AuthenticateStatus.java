@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 @JsonObject
 public class AuthenticateStatus implements ThirdPartyAppResponse<String> {
-    private static final AggregationLogger log = new AggregationLogger(AuthenticateStatus.class);
+    private static final AggregationLogger logger = new AggregationLogger(AuthenticateStatus.class);
     private String error;
     private String code;
 
@@ -23,7 +23,7 @@ public class AuthenticateStatus implements ThirdPartyAppResponse<String> {
     }
 
     private ThirdPartyAppStatus logUnknownError() {
-        log.infoExtraLong(error, NordeaFIConstants.LogTags.NORDEA_FI_AUTHENTICATE);
+        logger.infoExtraLong(error, NordeaFIConstants.LogTags.NORDEA_FI_AUTHENTICATE);
         return ThirdPartyAppStatus.UNKNOWN;
     }
 }

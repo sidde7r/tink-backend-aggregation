@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger LOG =
+    private static final AggregationLogger logger =
             new AggregationLogger(SantanderEsLoanFetcher.class);
 
     private final SantanderEsApiClient apiClient;
@@ -48,7 +48,8 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
                     .collect(Collectors.toList());
 
         } catch (Exception e) {
-            LOG.info("Failed to fetch loan details " + SantanderEsConstants.Tags.LOAN_ACCOUNT, e);
+            logger.info(
+                    "Failed to fetch loan details " + SantanderEsConstants.Tags.LOAN_ACCOUNT, e);
         }
 
         return Collections.emptyList();
@@ -68,7 +69,8 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
                     new LoanDetailsAggregate(loanEntity, loanDetailsResponse).toTinkLoanAccount());
 
         } catch (Exception e) {
-            LOG.info("Could not fetch loan details " + SantanderEsConstants.Tags.LOAN_ACCOUNT, e);
+            logger.info(
+                    "Could not fetch loan details " + SantanderEsConstants.Tags.LOAN_ACCOUNT, e);
         }
         return Optional.empty();
     }

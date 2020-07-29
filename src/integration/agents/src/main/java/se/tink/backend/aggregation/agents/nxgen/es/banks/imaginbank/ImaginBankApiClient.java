@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ImaginBankApiClient {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(ImaginBankApiClient.class);
 
     private final TinkHttpClient client;
@@ -81,7 +81,7 @@ public class ImaginBankApiClient {
 
         // currently imagin bank only allows one account for a customer, log if we get more
         if (accountsResponse != null && accountsResponse.getNumberOfAccounts() > 1) {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     "Got more than one account", ImaginBankConstants.LogTags.MULTIPLE_ACCOUNTS);
         }
 
@@ -101,7 +101,7 @@ public class ImaginBankApiClient {
         String initCardsResponse =
                 createRequest(ImaginBankConstants.Urls.INITIATE_CARD_FETCHING)
                         .post(String.class, "{}");
-        LOGGER.info("Initiated card fetching " + initCardsResponse);
+        logger.info("Initiated card fetching " + initCardsResponse);
     }
 
     public CardsResponse fetchCards() {

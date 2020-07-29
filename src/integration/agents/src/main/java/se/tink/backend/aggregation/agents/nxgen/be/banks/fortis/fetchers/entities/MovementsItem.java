@@ -28,7 +28,7 @@ public class MovementsItem {
     private String otherParty;
     private String operationId;
     private String currency;
-    private static final AggregationLogger LOGGER = new AggregationLogger(MovementsItem.class);
+    private static final AggregationLogger logger = new AggregationLogger(MovementsItem.class);
 
     private final DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -135,7 +135,7 @@ public class MovementsItem {
             toTinkTransaction();
             return true;
         } catch (RuntimeException e) {
-            LOGGER.errorExtraLong(
+            logger.errorExtraLong(
                     "Cannot parse transactions: ",
                     FortisConstants.LoggingTag.TRANSACTION_VALIDATION_ERROR,
                     e);

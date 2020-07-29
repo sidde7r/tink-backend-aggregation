@@ -12,7 +12,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
 public class LoanData {
-    private static final AggregationLogger log = new AggregationLogger(LoanData.class);
+    private static final AggregationLogger logger = new AggregationLogger(LoanData.class);
 
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String localNumber;
@@ -67,7 +67,7 @@ public class LoanData {
                         interestTermEnds.substring(0, 10));
             }
         } catch (ParseException e) {
-            log.warn("Failed to parse end date of interest terms", e);
+            logger.warn("Failed to parse end date of interest terms", e);
         }
 
         return null;

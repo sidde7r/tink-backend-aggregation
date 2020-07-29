@@ -16,7 +16,7 @@ import se.tink.libraries.date.DateUtils;
 
 public class TransactionDatePaginationController<A extends Account>
         implements TransactionPaginator<A> {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(TransactionDatePaginationController.class);
     private static final int DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES = 4;
     private static final int DEFAULT_MONTHS_TO_FETCH = 3;
@@ -90,7 +90,7 @@ public class TransactionDatePaginationController<A extends Account>
         if (transactions.isEmpty() && !response.canFetchMore().isPresent()) {
             // Override canFetchMore with consecutive check.
 
-            log.info(
+            logger.info(
                     String.format(
                             "Couldn't find any transactions for account with accountNumber: %s",
                             account.getAccountNumber()));
@@ -100,7 +100,7 @@ public class TransactionDatePaginationController<A extends Account>
                     consecutiveEmptyPages < consecutiveEmptyPagesLimit);
         }
 
-        log.info(
+        logger.info(
                 String.format(
                         "Fetched %s transactions for account with accountNumber: %s",
                         transactions.size(), account.getAccountNumber()));

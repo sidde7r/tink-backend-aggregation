@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.ty
 
 public abstract class StatelessProgressiveAuthenticator implements AuthenticationControllerType {
 
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(StatelessProgressiveAuthenticator.class);
     private AuthenticationStep currentStep;
 
@@ -19,19 +19,19 @@ public abstract class StatelessProgressiveAuthenticator implements Authenticatio
         Optional<AuthenticationStep> stepToExecute = determineStepToExecute(request);
         while (stepToExecute.isPresent()) {
             currentStep = stepToExecute.get();
-            LOGGER.info(
+            logger.info(
                     "Authentication flow state: Executing step with id "
                             + currentStep.getIdentifier());
             AuthenticationStepResponse stepResponse = executeStep(request);
             if (stepResponse.isAuthenticationFinished()) {
                 break;
             } else if (stepResponse.getSupplementInformationRequester().isPresent()) {
-                LOGGER.info("Authentication flow state: Asking for supplement information");
+                logger.info("Authentication flow state: Asking for supplement information");
                 return SteppableAuthenticationResponse.intermediateResponse(
                         currentStep.getIdentifier(),
                         stepResponse.getSupplementInformationRequester().get());
             }
-            LOGGER.info("Authentication flow state: Finalizing authentication");
+            logger.info("Authentication flow state: Finalizing authentication");
             stepToExecute = determineStepToExecute(stepResponse);
         }
         return SteppableAuthenticationResponse.finalResponse();

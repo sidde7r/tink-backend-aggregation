@@ -13,7 +13,8 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonObject
 public class BankIdCollectResponse extends NordeaResponse {
-    private static final AggregationLogger log = new AggregationLogger(BankIdCollectResponse.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(BankIdCollectResponse.class);
 
     @JsonProperty("pollBankIDSIMAuthenticationResponse")
     private PollBankIDSIMAuthenticationOutEntity pollBankIDSIMAuthenticationOutEntity;
@@ -44,7 +45,7 @@ public class BankIdCollectResponse extends NordeaResponse {
             case NordeaNoConstants.BankIdStatus.COMPLETE:
                 return BankIdStatus.DONE;
             default:
-                log.error(String.format("Nordea (NO) - Unknown BankID status (%s)", rawStatus));
+                logger.error(String.format("Nordea (NO) - Unknown BankID status (%s)", rawStatus));
                 return BankIdStatus.FAILED_UNKNOWN;
         }
     }

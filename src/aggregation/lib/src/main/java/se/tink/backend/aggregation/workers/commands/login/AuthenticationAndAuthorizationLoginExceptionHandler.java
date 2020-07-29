@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 public class AuthenticationAndAuthorizationLoginExceptionHandler
         extends AbstractLoginExceptionHandler {
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(AuthenticationAndAuthorizationLoginExceptionHandler.class);
 
     public AuthenticationAndAuthorizationLoginExceptionHandler(
@@ -27,7 +27,7 @@ public class AuthenticationAndAuthorizationLoginExceptionHandler
         if (exception instanceof AuthenticationException
                 || exception instanceof AuthorizationException) {
             metricAction.cancelled();
-            log.info("Authentication Error", exception);
+            logger.info("Authentication Error", exception);
             return Optional.of(AgentWorkerCommandResult.ABORT);
         }
         return Optional.empty();

@@ -17,11 +17,11 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class SamlinkAuthenticatorBase {
     protected final Credentials credentials;
     protected final SamlinkApiClient apiClient;
-    private final AggregationLogger log;
+    private final AggregationLogger logger;
 
     SamlinkAuthenticatorBase(
-            AggregationLogger log, Credentials credentials, SamlinkApiClient apiClient) {
-        this.log = log;
+            AggregationLogger logger, Credentials credentials, SamlinkApiClient apiClient) {
+        this.logger = logger;
         this.credentials = credentials;
         this.apiClient = apiClient;
     }
@@ -44,7 +44,7 @@ public class SamlinkAuthenticatorBase {
             if (errorResponse.hasError(SamlinkConstants.ServerError.LOGIN_FAILED)) {
                 throw SessionError.SESSION_EXPIRED.exception(e);
             } else {
-                log.warn(formatErrorMessage("loginRequest", errorResponse), e);
+                logger.warn(formatErrorMessage("loginRequest", errorResponse), e);
             }
         }
         throw e;
@@ -66,7 +66,7 @@ public class SamlinkAuthenticatorBase {
                 throw (AuthorizationException) exception;
             }
         }
-        log.warn(formatErrorMessage(action, errorResponse), e);
+        logger.warn(formatErrorMessage(action, errorResponse), e);
         throw e;
     }
 

@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OmaspLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger log = new AggregationLogger(OmaspLoanFetcher.class);
+    private static final AggregationLogger logger = new AggregationLogger(OmaspLoanFetcher.class);
 
     private final OmaspApiClient apiClient;
 
@@ -39,7 +39,7 @@ public class OmaspLoanFetcher implements AccountFetcher<LoanAccount> {
     }
 
     private void logLoanDetails(LoanDetailsEntity loanDetails) {
-        log.infoExtraLong(
+        logger.infoExtraLong(
                 SerializationUtils.serializeToString(loanDetails),
                 OmaspConstants.LogTags.LOG_TAG_LOAN_DETAILS);
     }

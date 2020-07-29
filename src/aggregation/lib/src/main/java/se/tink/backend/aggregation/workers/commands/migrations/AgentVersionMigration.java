@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class AgentVersionMigration {
-    private final AggregationLogger log = new AggregationLogger(AgentVersionMigration.class);
+    private final AggregationLogger logger = new AggregationLogger(AgentVersionMigration.class);
 
     public static final String DUPLICATE = "-duplicate-";
     private ControllerWrapper wrapper;
@@ -100,7 +100,7 @@ public abstract class AgentVersionMigration {
                     accountList.stream().map(this::migrateAccount).collect(Collectors.toList());
         } catch (UniformInterfaceException e) {
 
-            log.error(
+            logger.error(
                     String.format(
                             "Error updating migrated accounts. Pre: %s Post: %s",
                             originalAccountsDescription,
@@ -122,7 +122,7 @@ public abstract class AgentVersionMigration {
         try {
             return getControlWrapper().updateAccountMetaData(account.getId(), account.getBankId());
         } catch (UniformInterfaceException e) {
-            log.error(
+            logger.error(
                     String.format(
                             "Error migrating account %s to %s",
                             account.getId(), account.getBankId()));
@@ -189,7 +189,7 @@ public abstract class AgentVersionMigration {
                             // Tag all but the first account in the list with '-duplicate-{n}'.
                             for (int i = 1; i < duplicates.size(); i++) {
 
-                                log.warn("Tagging duplicate account with -duplicate-" + i);
+                                logger.warn("Tagging duplicate account with -duplicate-" + i);
                                 Account duplicate = duplicates.get(i);
                                 duplicate.setBankId(duplicate.getBankId() + DUPLICATE + i);
                             }

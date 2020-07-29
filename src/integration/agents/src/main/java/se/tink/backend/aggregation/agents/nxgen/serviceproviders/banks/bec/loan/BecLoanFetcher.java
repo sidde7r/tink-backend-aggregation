@@ -18,7 +18,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger log = new AggregationLogger(BecCreditCardFetcher.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(BecCreditCardFetcher.class);
 
     private final BecApiClient apiClient;
     private final Credentials credentials;
@@ -56,7 +57,7 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
                             this.apiClient.parseBodyAsError(httpResponse);
 
                     if (becErrorResponse.isWithoutMortgage()) {
-                        log.info(
+                        logger.info(
                                 String.format(
                                         "%s - User does not have any mortgages",
                                         BecConstants.Log.LOANS),
@@ -65,7 +66,7 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
                     }
 
                     if (becErrorResponse.noDetailsExist()) {
-                        log.info(
+                        logger.info(
                                 String.format(
                                         "%s - No details for loans exist", BecConstants.Log.LOANS),
                                 hre);
@@ -75,14 +76,14 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
                     // TODO: this is a temporary fix. The endpoint has changed, we have a appstore
                     // monitor card for this and we are working on upgrading it
                     if (becErrorResponse.functionIsNotAvailable()) {
-                        log.info(
+                        logger.info(
                                 String.format(
                                         "%s - Function not available", BecConstants.Log.LOANS),
                                 hre);
                         return Collections.emptyList();
                     }
 
-                    log.warn(
+                    logger.warn(
                             String.format(
                                     "%s - Unknown error: [%s] %s",
                                     BecConstants.Log.LOAN_FAILED,

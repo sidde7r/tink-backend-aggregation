@@ -17,11 +17,12 @@ public class LoanDetailsResponse extends SpankkiResponse {
     @JsonProperty private List<LoansEntity> loans;
 
     @JsonIgnore
-    private static final AggregationLogger LOG = new AggregationLogger(LoanDetailsResponse.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(LoanDetailsResponse.class);
 
     @JsonIgnore
     public void logLoans() {
-        LOG.infoExtraLong(
+        logger.infoExtraLong(
                 SerializationUtils.serializeToString(this), SpankkiConstants.LogTags.LOAN_DETAILS);
     }
 }

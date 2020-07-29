@@ -64,7 +64,7 @@ public class CoopConstants {
         MEDMERA_MER(8, "Mer", AccountTypes.CREDIT_CARD, "Coop MedMera Mer"),
         MEDMERA_EFTER_2(9, "Efter", AccountTypes.CREDIT_CARD, "Coop MedMera Efter");
 
-        private static final AggregationLogger log = new AggregationLogger(AccountType.class);
+        private static final AggregationLogger logger = new AggregationLogger(AccountType.class);
         private static final Locale SWEDISH_LOCALE = new Locale("sv", "SE");
 
         private final int accountTypeOrdinal;
@@ -90,7 +90,7 @@ public class CoopConstants {
                 }
             }
 
-            log.warn("valueOf(" + accountTypeOrdinal + ") --> null");
+            logger.warn("valueOf(" + accountTypeOrdinal + ") --> null");
             return null;
         }
 
@@ -107,12 +107,12 @@ public class CoopConstants {
                 if (Objects.equals(
                         accountType.accountNameSuffix.toLowerCase(SWEDISH_LOCALE),
                         suffixLowerCase)) {
-                    log.info("guessFromName(" + accountName + ") --> " + accountType.name());
+                    logger.info("guessFromName(" + accountName + ") --> " + accountType.name());
                     return accountType;
                 }
             }
 
-            log.warn("valueOf(" + accountName + ") --> null");
+            logger.warn("valueOf(" + accountName + ") --> null");
             return null;
         }
 

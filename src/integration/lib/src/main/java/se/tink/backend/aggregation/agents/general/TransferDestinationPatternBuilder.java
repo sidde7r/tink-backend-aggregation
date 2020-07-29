@@ -17,7 +17,7 @@ import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberU
 
 public class TransferDestinationPatternBuilder {
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(TransferDestinationPatternBuilder.class);
 
     private Collection<Account> tinkAccounts;
@@ -101,7 +101,7 @@ public class TransferDestinationPatternBuilder {
                 validPatterns.add(
                         TransferDestinationPattern.createForSingleMatch(identifier, name, bank));
             } else {
-                log.warn("Found non-valid destination: " + getCallingMethod());
+                logger.warn("Found non-valid destination: " + getCallingMethod());
             }
         }
 

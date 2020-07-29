@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 public class BelfiusCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
 
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(BelfiusCreditCardFetcher.class);
 
     private final BelfiusApiClient apiClient;
@@ -49,7 +49,7 @@ public class BelfiusCreditCardFetcher
         try {
             this.apiClient.fetchProducts();
         } catch (Exception e) {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     "Unable to fetch credit cards", BelfiusConstants.Fetcher.CreditCards.LOGTAG, e);
         }
 
@@ -81,7 +81,7 @@ public class BelfiusCreditCardFetcher
 
             } while (response.hasNext());
         } catch (Exception e) {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     "Unable to fetch credit card transactions",
                     BelfiusConstants.Fetcher.CreditCards.LOGTAG,
                     e);

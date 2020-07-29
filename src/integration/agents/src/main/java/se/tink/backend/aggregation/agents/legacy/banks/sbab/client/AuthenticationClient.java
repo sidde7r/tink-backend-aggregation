@@ -18,7 +18,8 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class AuthenticationClient extends SBABClient {
 
-    private static final AggregationLogger log = new AggregationLogger(AuthenticationClient.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(AuthenticationClient.class);
 
     public static ImmutableMap<String, BankIdStatus> BANKID_STATUS =
             ImmutableMap.<String, BankIdStatus>builder()
@@ -56,14 +57,14 @@ public class AuthenticationClient extends SBABClient {
     public String getBearerToken() throws AuthorizationException {
         Document overview = getJsoupDocument(OVERVIEW_URL);
         if (hasKYCPopup(overview)) {
-            log.info("Found KYC popup, giving up");
+            logger.info("Found KYC popup, giving up");
             throw new UnacceptedTermsAndConditionsException(OVERVIEW_URL, null);
         }
         Elements scriptTags = overview.select("script");
         Optional<String> token = parseBearerToken(scriptTags.html());
 
         if (!token.isPresent()) {
-            log.error("Could not parse Bearer token from overview page");
+            logger.error("Could not parse Bearer token from overview page");
             return null;
         }
 

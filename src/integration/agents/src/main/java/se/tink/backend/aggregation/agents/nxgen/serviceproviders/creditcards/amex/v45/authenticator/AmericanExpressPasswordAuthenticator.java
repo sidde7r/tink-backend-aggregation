@@ -20,7 +20,7 @@ public class AmericanExpressPasswordAuthenticator implements PasswordAuthenticat
     private final AmericanExpressConfiguration config;
     private final AmericanExpressApiClient apiClient;
     private final SessionStorage sessionStorage;
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(AmericanExpressPasswordAuthenticator.class);
 
     public AmericanExpressPasswordAuthenticator(
@@ -50,7 +50,7 @@ public class AmericanExpressPasswordAuthenticator implements PasswordAuthenticat
             handleAuthenticationFail(logonData);
         } else {
             Integer status = logonData.getStatus();
-            LOGGER.warn(
+            logger.warn(
                     String.format(
                             "unknown authentication status: (%d) with message: %s",
                             status, logonData.toString()));

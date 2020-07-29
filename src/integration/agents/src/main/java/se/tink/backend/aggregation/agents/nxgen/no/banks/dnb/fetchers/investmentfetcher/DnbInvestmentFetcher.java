@@ -18,7 +18,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class DnbInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger log = new AggregationLogger(DnbInvestmentFetcher.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(DnbInvestmentFetcher.class);
 
     private final DnbApiClient apiClient;
     private final Credentials credentials;
@@ -64,7 +65,7 @@ public class DnbInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
             if (pensionData != null && pensionData.getIpsHoldingsCount() > 0) {
                 accounts.add(pensionData.toTinkAccount());
                 if (pensionData.getAccountNumbers().size() > 1) {
-                    log.warn("Dnb Norway, Pension with more than 1 accounts");
+                    logger.warn("Dnb Norway, Pension with more than 1 accounts");
                 }
             }
 

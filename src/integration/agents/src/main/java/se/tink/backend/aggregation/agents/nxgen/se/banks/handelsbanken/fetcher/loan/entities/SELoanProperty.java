@@ -11,7 +11,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 @JsonObject
 public class SELoanProperty {
 
-    private static final AggregationLogger LOGGER = new AggregationLogger(SELoanProperty.class);
+    private static final AggregationLogger logger = new AggregationLogger(SELoanProperty.class);
 
     private String label;
     private String value;
@@ -58,7 +58,7 @@ public class SELoanProperty {
     public boolean asMultipleApplicantValue() {
         boolean isJa = Loans.YES.equalsIgnoreCase(value);
         if (!isJa) {
-            LOGGER.warn(String.format("Other value than \"ja\" found: %s", value));
+            logger.warn(String.format("Other value than \"ja\" found: %s", value));
         }
         return isJa;
     }

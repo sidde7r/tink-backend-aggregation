@@ -66,7 +66,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class DanskeBankChallengeAuthenticator
         implements TypedAuthenticator, AutoAuthenticator, KeyCardAuthenticator {
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(DanskeBankChallengeAuthenticator.class);
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
     private final Catalog catalog;
@@ -291,7 +291,7 @@ public class DanskeBankChallengeAuthenticator
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
-                log.warnExtraLong(
+                logger.warnExtraLong(
                         "Could not auto authenticate user, status " + response.getStatus(),
                         DanskeBankConstants.LogTags.AUTHENTICATION_AUTO,
                         e);
@@ -343,7 +343,7 @@ public class DanskeBankChallengeAuthenticator
                     driver.findElement(By.tagName("body")).getAttribute("trustedChallengeInfo");
             // if no challengeInfo available, force a new device pinning
             if (Strings.isNullOrEmpty(challengeInfo)) {
-                log.infoExtraLong(
+                logger.infoExtraLong(
                         "Attribute 'trustedChallengeInfo' not found",
                         LogTag.from("danskebank_autherror"));
                 throw SessionError.SESSION_EXPIRED.exception();

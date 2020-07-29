@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class EvoBancoInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private final AggregationLogger log = new AggregationLogger(EvoBancoInvestmentFetcher.class);
+    private final AggregationLogger logger = new AggregationLogger(EvoBancoInvestmentFetcher.class);
     private final EvoBancoApiClient apiClient;
 
     public EvoBancoInvestmentFetcher(EvoBancoApiClient apiClient) {
@@ -27,7 +27,7 @@ public class EvoBancoInvestmentFetcher implements AccountFetcher<InvestmentAccou
         try {
             apiClient.fetchInvestments();
         } catch (Exception e) {
-            log.warn(
+            logger.warn(
                     String.format(
                             "%s could not fetch investments",
                             EvoBancoConstants.Tags.INVESTMENTS_ERROR),

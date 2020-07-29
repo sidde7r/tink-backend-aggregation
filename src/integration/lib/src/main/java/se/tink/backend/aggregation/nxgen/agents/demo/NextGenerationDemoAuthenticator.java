@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class NextGenerationDemoAuthenticator
         implements BankIdAuthenticator<String>, PasswordAuthenticator {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(NextGenerationDemoAuthenticator.class);
     private final Credentials credentials;
 
@@ -71,7 +71,7 @@ public class NextGenerationDemoAuthenticator
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
         if (!Objects.equals(password, "demo")) {
-            log.error(
+            logger.error(
                     String.format(
                             "Could not authenticate demo credentials (fields: %s)",
                             credentials.getFieldsSerialized()));

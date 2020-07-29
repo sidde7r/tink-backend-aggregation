@@ -44,7 +44,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthenticator {
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(Sparebank1Authenticator.class);
 
     private final Sparebank1ApiClient apiClient;
@@ -134,7 +134,7 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
                 continueActivation();
                 return BankIdStatus.DONE;
             } else {
-                log.info(
+                logger.info(
                         String.format(
                                 "%s: Unknown poll status: %s",
                                 Tags.BANKID_POLL_UNKNOWN_STATUS, pollStatus));

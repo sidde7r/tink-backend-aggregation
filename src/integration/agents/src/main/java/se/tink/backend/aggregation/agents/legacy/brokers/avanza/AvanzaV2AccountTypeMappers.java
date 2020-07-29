@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -17,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.pair.Pair;
 
 public final class AvanzaV2AccountTypeMappers {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(AvanzaV2AccountTypeMappers.class);
 
     private TypeMapper<AccountTypes> accountTypeMapper;
@@ -34,7 +33,7 @@ public final class AvanzaV2AccountTypeMappers {
 
         // TODO refactor with isPresentOrElse when we are past Java 8
         if (!accountType.isPresent()) {
-            LOGGER.warn(
+            logger.warn(
                     String.format(
                             "%s Could not infer account type from type \"%s\"; ignoring the account",
                             AvanzaV2Constants.LogTags.UNKNOWN_ACCOUNT_TYPE, accountTypeKey));
@@ -88,7 +87,7 @@ public final class AvanzaV2AccountTypeMappers {
     }
 
     private class AvanzaV2AccountTypeMapperExecutor implements AccountTypeMapperExecutor<String> {
-        private final Logger LOGGER =
+        private final org.slf4j.Logger LOGGER =
                 LoggerFactory.getLogger(AvanzaV2AccountTypeMapperExecutor.class);
 
         @Override

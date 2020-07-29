@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SdcAutoAuthenticator implements AutoAuthenticator {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(SdcAutoAuthenticator.class);
 
     private final SdcApiClient bankClient;
@@ -66,7 +66,7 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
             AgreementsResponse agreementsResponse = this.bankClient.pinLogon(username, password);
             SessionStorageAgreements agreements = agreementsResponse.toSessionStorageAgreements();
             if (agreements.isEmpty()) {
-                LOGGER.warnExtraLong(
+                logger.warnExtraLong(
                         "User was able to login, but has no agreements?",
                         SdcConstants.Session.LOGIN);
                 throw new IllegalStateException("No agreement found");
@@ -99,7 +99,7 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
                                                 .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
                                 .orElse("");
                 if (this.agentConfiguration.isLoginError(errorMessage)) {
-                    LOGGER.info(errorMessage, e);
+                    logger.info(errorMessage, e);
 
                     this.persistentStorage.removeSignedDeviceId();
                     throw SessionError.SESSION_EXPIRED.exception(e);

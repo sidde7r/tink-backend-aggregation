@@ -55,13 +55,13 @@ public class CrossKeyApiClient {
     // Constant Values
     private static final String VERSION_1_4_0 = "1.4.0-iOS";
 
-    private final AggregationLogger log;
+    private final AggregationLogger logger;
 
     public CrossKeyApiClient(
-            Client client, Credentials credentials, AggregationLogger log, String userAgent) {
+            Client client, Credentials credentials, AggregationLogger logger, String userAgent) {
         this.client = client;
         this.credentials = credentials;
-        this.log = log;
+        this.logger = logger;
         this.userAgent = userAgent;
     }
 
@@ -92,7 +92,7 @@ public class CrossKeyApiClient {
 
         BaseResponse response = deserializeResponse(createClientRequest(uri).get(String.class));
 
-        log.info("Requested system status");
+        logger.info("Requested system status");
 
         return response;
     }
@@ -103,7 +103,7 @@ public class CrossKeyApiClient {
                 deserializeResponse(
                         createClientRequest(BANK_ID_AUTO_START_LOGIN).post(String.class));
 
-        log.info("Requested bank id auto-start token");
+        logger.info("Requested bank id auto-start token");
 
         return response;
     }
@@ -116,7 +116,7 @@ public class CrossKeyApiClient {
                             createClientRequest(BANK_ID_AUTO_START_COLLECT_TESTING)
                                     .post(String.class));
 
-            log.info("Requested bank id response");
+            logger.info("Requested bank id response");
 
             return response;
         } else {
@@ -124,7 +124,7 @@ public class CrossKeyApiClient {
                     deserializeResponse(
                             createClientRequest(BANK_ID_AUTO_START_COLLECT).post(String.class));
 
-            log.info("Requested bank id response");
+            logger.info("Requested bank id response");
 
             return response;
         }
@@ -140,7 +140,7 @@ public class CrossKeyApiClient {
                         createClientRequest(PIN_TAN_LOGIN_STEP_PIN_URI)
                                 .post(String.class, request));
 
-        log.info("Identified user");
+        logger.info("Identified user");
 
         return response.getTanPosition();
     }
@@ -154,7 +154,7 @@ public class CrossKeyApiClient {
                         createClientRequest(PIN_TAN_LOGIN_STEP_TAN_URI)
                                 .post(String.class, request));
 
-        log.info("Logged in with pin code");
+        logger.info("Logged in with pin code");
 
         return response;
     }
@@ -169,7 +169,7 @@ public class CrossKeyApiClient {
                             createClientRequest(ADD_DEVICE_URI_TESTING)
                                     .post(String.class, request));
 
-            log.info("Added device");
+            logger.info("Added device");
 
             return response;
         } else {
@@ -177,7 +177,7 @@ public class CrossKeyApiClient {
                     deserializeResponse(
                             createClientRequest(ADD_DEVICE_URI).post(String.class, request));
 
-            log.info("Added device");
+            logger.info("Added device");
 
             return response;
         }
@@ -191,7 +191,7 @@ public class CrossKeyApiClient {
                 deserializeResponse(
                         createClientRequest(GENERATE_TOKEN_URI).post(String.class, request));
 
-        log.info("Generated deviceToken");
+        logger.info("Generated deviceToken");
 
         return response;
     }
@@ -208,7 +208,7 @@ public class CrossKeyApiClient {
                         createClientRequest(TOKEN_LOGIN_WITH_CONVERSION_URI)
                                 .post(String.class, request));
 
-        log.info("Logged in with deviceToken");
+        logger.info("Logged in with deviceToken");
 
         return response;
     }
@@ -222,7 +222,7 @@ public class CrossKeyApiClient {
                 deserializeResponse(
                         createClientRequest(uri).get(String.class), AccountsResponse.class);
 
-        log.info("Fetched " + response.getAccounts().size() + " accounts");
+        logger.info("Fetched " + response.getAccounts().size() + " accounts");
 
         return response;
     }
@@ -261,9 +261,9 @@ public class CrossKeyApiClient {
                         createClientRequest(uri).get(String.class), TransactionsResponse.class);
 
         if (response.getTransactions().size() == 0) {
-            log.info("No more transactions to fetch from the account");
+            logger.info("No more transactions to fetch from the account");
         } else {
-            log.info("Fetched " + response.getTransactions().size() + " transactions");
+            logger.info("Fetched " + response.getTransactions().size() + " transactions");
         }
 
         return response;
@@ -271,7 +271,7 @@ public class CrossKeyApiClient {
 
     public void logout() throws Exception {
         createClientRequest(LOGOUT_URI).post();
-        log.info("Logged out");
+        logger.info("Logged out");
     }
 
     private BaseResponse deserializeResponse(String response) throws Exception {

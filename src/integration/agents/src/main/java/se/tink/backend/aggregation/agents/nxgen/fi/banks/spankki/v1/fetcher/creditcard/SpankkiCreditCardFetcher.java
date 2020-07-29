@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SpankkiCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(SpankkiCreditCardFetcher.class);
 
     private final SpankkiApiClient apiClient;
@@ -42,14 +42,14 @@ public class SpankkiCreditCardFetcher
                         .collect(Collectors.toList());
             }
 
-            LOGGER.infoExtraLong(
+            logger.infoExtraLong(
                     this.apiClient.fetchCardsOverview(),
                     SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD);
 
         } catch (HttpResponseException e) {
-            LOGGER.warnExtraLong(SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD, e);
+            logger.warnExtraLong(SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD, e);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
 
         return Collections.emptyList();

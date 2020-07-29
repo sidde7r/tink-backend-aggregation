@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AmericanExpressTransactionFetcher implements TransactionFetcher<CreditCardAccount> {
-    public final AggregationLogger LOGGER;
+    public final AggregationLogger logger;
     protected final AmericanExpressApiClient apiClient;
     protected final AmericanExpressConfiguration config;
 
@@ -32,7 +32,7 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
             AmericanExpressApiClient apiClient, AmericanExpressConfiguration config) {
         this.apiClient = apiClient;
         this.config = config;
-        LOGGER = new AggregationLogger(AmericanExpressTransactionFetcher.class);
+        logger = new AggregationLogger(AmericanExpressTransactionFetcher.class);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
             availableBilling =
                     response.getTransactionDetails().getBillingInfo().getBillingInfoDetails();
         } catch (NullPointerException e) {
-            LOGGER.error(
+            logger.error(
                     "Can not fetch transaction for account: "
                             + SerializationUtils.serializeToString(card),
                     e);
@@ -122,7 +122,7 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
                                                                     transaction.getSuppIndex())
                                                             .equals(cartSupOnCurrentPage);
                                                 } catch (IllegalStateException e) {
-                                                    LOGGER.warn(e.toString(), e);
+                                                    logger.warn(e.toString(), e);
                                                     return false;
                                                 }
                                             })
@@ -178,12 +178,12 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
 
             if (statusCode != null || !message.equalsIgnoreCase("Card is cancelled")) {
                 if (messageType.equalsIgnoreCase("ERROR")) {
-                    LOGGER.error(
+                    logger.error(
                             String.format(
                                     "Error occurred when fetching transaction: (%s) %s : %s",
                                     statusCode, messageType, message));
                 } else {
-                    LOGGER.warn(
+                    logger.warn(
                             String.format(
                                     "Something wrong when fetching transaction: (%s) %s : %s",
                                     statusCode, messageType, message));

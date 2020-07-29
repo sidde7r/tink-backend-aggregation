@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCard;
@@ -26,7 +25,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
 
 public class SEBAgentUtils {
-    private static final Logger logger = LoggerFactory.getLogger(SEBAgentUtils.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SEBAgentUtils.class);
 
     protected enum SEBAccountType {
         PRIVATKONTO(1),
@@ -190,7 +189,7 @@ public class SEBAgentUtils {
     }
 
     public static class AbroadTransactionParser {
-        private static final AggregationLogger log =
+        private static final AggregationLogger logger =
                 new AggregationLogger(AbroadTransactionParser.class);
         private Date date;
 
@@ -277,7 +276,7 @@ public class SEBAgentUtils {
                                 matcher.group("localAmountSign") + matcher.group("localAmount"));
                 exchangeRate = Double.parseDouble(matcher.group("exchangeRate").replace(",", "."));
             } else {
-                log.warn("Cannot parse foreign description: " + originalDescription);
+                logger.warn("Cannot parse foreign description: " + originalDescription);
             }
         }
     }
