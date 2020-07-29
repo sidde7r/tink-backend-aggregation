@@ -11,9 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaSignatureHeaderGenerator;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -23,19 +21,23 @@ public class FiduciaRequestBuilder {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final FiduciaConfiguration fiduciaConfiguration;
+    private final String tppOrganizationIdentifier;
+    private final String qsealcBase64;
     private final String redirectUrl;
     private final FiduciaSignatureHeaderGenerator signatureHeaderGenerator;
 
     public FiduciaRequestBuilder(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            AgentConfiguration<FiduciaConfiguration> agentConfiguration,
+            String tppOrganizationIdentifier,
+            String qsealcBase64,
+            String redirectUrl,
             FiduciaSignatureHeaderGenerator signatureHeaderGenerator) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.fiduciaConfiguration = agentConfiguration.getProviderSpecificConfiguration();
-        this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.tppOrganizationIdentifier = tppOrganizationIdentifier;
+        this.qsealcBase64 = qsealcBase64;
+        this.redirectUrl = redirectUrl;
         this.signatureHeaderGenerator = signatureHeaderGenerator;
     }
 
@@ -83,12 +85,12 @@ public class FiduciaRequestBuilder {
         Map<String, Object> headers = new HashMap<>();
 
         headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
-        headers.put(HeaderKeys.TPP_ID, fiduciaConfiguration.getTppId());
+        headers.put(HeaderKeys.TPP_ID, tppOrganizationIdentifier);
         headers.put(
                 HeaderKeys.DATE, ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
         headers.put(HeaderKeys.X_REQUEST_ID, requestId);
         headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
-        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, fiduciaConfiguration.getCertificate());
+        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, qsealcBase64);
         headers.put(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
         headers.put(HeaderKeys.DIGEST, digest);
 

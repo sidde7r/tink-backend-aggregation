@@ -12,6 +12,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.openssl.PEMParser;
@@ -106,6 +108,27 @@ public class CertificateUtils {
             throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
         }
         return certs.get(0).getSerialNumber().toString(radix);
+    }
+
+    /**
+     * Extract organization identifier from base64 encoded PEM
+     *
+     * @param base64EncodedCertificates base64 encoded PEM of an eIDAS certificate
+     * @return organization identifier.
+     * @throws CertificateException
+     */
+    public static String getOrganizationIdentifier(String base64EncodedCertificates)
+            throws CertificateException {
+        ArrayList<X509Certificate> certs =
+                getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
+        if (certs.isEmpty()) {
+            throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
+        }
+        return new X500Name(certs.get(0).getSubjectX500Principal().getName())
+                .getRDNs(BCStyle.ORGANIZATION_IDENTIFIER)[0]
+                .getFirst()
+                .getValue()
+                .toString();
     }
 
     private static String getScopeInfoExtension(X509CertificateHolder x509CertificateHolder)

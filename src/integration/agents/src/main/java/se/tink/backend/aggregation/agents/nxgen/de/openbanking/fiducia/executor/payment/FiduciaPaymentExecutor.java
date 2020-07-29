@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.SignatureValues;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.Amt;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.CdtTrfTxInf;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.Cdtr;
@@ -62,22 +61,17 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
     private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
 
     private final FiduciaApiClient apiClient;
-    private final FiduciaConfiguration configuration;
     private final String psuId;
     private final String password;
-    private final String certificate;
+    private final String qsealcDerBase64;
     private final RSAPrivateKey privateKey;
 
     public FiduciaPaymentExecutor(
-            FiduciaApiClient apiClient,
-            FiduciaConfiguration configuration,
-            String psuId,
-            String password) {
+            FiduciaApiClient apiClient, String qsealcDerBase64, String psuId, String password) {
         this.apiClient = apiClient;
-        this.configuration = configuration;
         this.psuId = psuId;
         this.password = password;
-        certificate = configuration.getCertificate();
+        this.qsealcDerBase64 = qsealcDerBase64;
 
         // TODO change made for secrets cleanup purposes (prev values were used by Vega for sbx)
         // Entire payment executor has to be refactored to use QSealC signer
@@ -150,7 +144,8 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
                         psuId);
 
         CreatePaymentResponse createPaymentResponse =
-                apiClient.createPayment(body, psuId, digest, certificate, signature, reqId, date);
+                apiClient.createPayment(
+                        body, psuId, digest, qsealcDerBase64, signature, reqId, date);
 
         return createPaymentResponse.toTinkPayment(creditor, debtor, amount1);
     }
@@ -176,7 +171,14 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
                         psuId);
 
         apiClient.authorizePayment(
-                payment.getUniqueId(), body, psuId, digest, certificate, signature, reqId, date);
+                payment.getUniqueId(),
+                body,
+                psuId,
+                digest,
+                qsealcDerBase64,
+                signature,
+                reqId,
+                date);
         payment.setStatus(PaymentStatus.PAID);
 
         return new PaymentMultiStepResponse(payment, SigningStepConstants.STEP_FINALIZE, null);
@@ -207,7 +209,7 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
                         privateKey, SignatureValues.HEADERS, digest, reqId, date, null);
 
         PaymentDocument paymentDocument =
-                apiClient.getPayment(paymentId, digest, certificate, signature, reqId, date);
+                apiClient.getPayment(paymentId, digest, qsealcDerBase64, signature, reqId, date);
 
         return paymentDocument.toTinkPayment(paymentId, payment.getStatus());
     }
