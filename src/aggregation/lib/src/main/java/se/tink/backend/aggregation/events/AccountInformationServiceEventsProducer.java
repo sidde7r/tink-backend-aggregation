@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.eventproducerservice.events.grpc.AccountHoldersRefreshedEventProto;
@@ -59,7 +60,11 @@ public class AccountInformationServiceEventsProducer {
 
             eventProducerServiceClient.postEventFireAndForget(Any.pack(event));
         } catch (RuntimeException e) {
-            log.warn("Could not produce event: AccountHoldersRefreshedEvent", e);
+            log.warn(
+                    "Could not produce event: AccountHoldersRefreshedEvent for (userId, correlationId): ({}, {})",
+                    userId,
+                    correlationId,
+                    e);
         }
     }
 
@@ -67,8 +72,7 @@ public class AccountInformationServiceEventsProducer {
             String clusterId,
             String appId,
             String userId,
-            String providerName,
-            String marketCode,
+            Provider provider,
             String correlationId,
             String credentialsId,
             String accountId,
@@ -106,14 +110,23 @@ public class AccountInformationServiceEventsProducer {
                             .setClassification(classificationResult)
                             .setCorrelationId(correlationId)
                             .setCredentialsId(credentialsId)
-                            .setProviderName(providerName)
-                            .setMarketCode(marketCode)
+                            .setProviderName(provider.getName())
+                            .setMarketCode(provider.getMarket())
+                            .setProviderAccessType(provider.getAccessType().name())
+                            .setProviderAuthenticationUserType(
+                                    provider.getAuthenticationUserType().name())
                             .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()))
                             .build();
+
             eventProducerServiceClient.postEventFireAndForget(Any.pack(event));
 
         } catch (RuntimeException e) {
-            log.warn("Could not produce event: Psd2PaymentAccountClassificationEvent", e);
+            log.warn(
+                    "Could not produce event: Psd2PaymentAccountClassificationEvent for (userId, credentialsId, correlationId): ({}, {}, {})",
+                    userId,
+                    credentialsId,
+                    correlationId,
+                    e);
         }
     }
 
@@ -121,8 +134,7 @@ public class AccountInformationServiceEventsProducer {
             String clusterId,
             String appId,
             String userId,
-            String providerName,
-            String marketCode,
+            Provider provider,
             String correlationId,
             String credentialsId,
             String accountId,
@@ -139,8 +151,8 @@ public class AccountInformationServiceEventsProducer {
                             .setClusterId(clusterId)
                             .setCorrelationId(correlationId)
                             .setCredentialsId(credentialsId)
-                            .setProviderName(providerName)
-                            .setMarketCode(marketCode)
+                            .setProviderName(provider.getName())
+                            .setMarketCode(provider.getMarket())
                             .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()));
             Optional.ofNullable(sourceInfo)
                     .ifPresent(
@@ -155,7 +167,12 @@ public class AccountInformationServiceEventsProducer {
             eventProducerServiceClient.postEventFireAndForget(Any.pack(builder.build()));
 
         } catch (RuntimeException e) {
-            log.warn("Could not produce event: Psd2PaymentAccountClassificationEvent", e);
+            log.warn(
+                    "Could not produce event: AccountSourceInfoEvent for (userId, credentialsId, correlationId): ({}, {}, {})",
+                    userId,
+                    credentialsId,
+                    correlationId,
+                    e);
         }
     }
 }
