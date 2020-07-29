@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator;
 
 import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,19 +141,7 @@ public class SwedbankDefaultBankIdAuthenticator
 
     private void completeBankIdLogin(CollectBankIdResponse collectBankIdResponse)
             throws AuthenticationException {
-        final LinkEntity nextLink = collectBankIdResponse.getLinks().getNextOrThrow();
-        try {
-            apiClient.completeAuthentication(nextLink);
-        } catch (HttpResponseException hre) {
-            // wait and retry once on SESSION_INVALIDATED error
-            if (isSessionInvalidatedError(hre.getResponse())) {
-                log.warn("Got session invalidated, retrying.");
-                Uninterruptibles.sleepUninterruptibly(900, TimeUnit.MILLISECONDS);
-                apiClient.completeAuthentication(nextLink);
-                return;
-            }
-            throw hre;
-        }
+        apiClient.completeAuthentication(collectBankIdResponse.getLinks().getNextOrThrow());
     }
 
     private InitBankIdResponse initBankId(String ssn) throws BankIdException {
@@ -173,11 +159,5 @@ public class SwedbankDefaultBankIdAuthenticator
 
             throw hre;
         }
-    }
-
-    private boolean isSessionInvalidatedError(HttpResponse response) {
-        return response.getStatus() == HttpStatus.SC_UNAUTHORIZED
-                && response.getBody(ErrorResponse.class)
-                        .hasErrorCode(SwedbankBaseConstants.BankErrorMessage.SESSION_INVALIDATED);
     }
 }
