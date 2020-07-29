@@ -38,7 +38,7 @@ public class FinTsDialogContext {
     @Getter private int securityReference; // Unique number per message
 
     // Bank + user parameters
-    @Getter private List<String> allowedSecurityFunctions = new ArrayList<>();
+    @Getter @Setter private Map<String, String> allowedSecurityFunctions;
     @Getter @Setter private String chosenSecurityFunction = DEFAULT_SECURITY_FUNCTION;
     @Getter private List<String> tanMediumList = new ArrayList<>();
     @Getter @Setter private String chosenTanMedium = DEFAULT_TAN_MEDIIUM;

@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.Segm
 public class DefaultRequestBuilder implements DialogRequestBuilder {
     @Override
     public FinTsRequest getInitRequest(FinTsDialogContext dialogContext) {
-        List<BaseRequestPart> additionalSegments = new ArrayList<>();
+        List<BaseRequestPart> additionalSegments = new ArrayList<>(3);
         additionalSegments.add(
                 HKIDNv2.builder()
                         .systemId(dialogContext.getSystemId())
@@ -40,7 +40,7 @@ public class DefaultRequestBuilder implements DialogRequestBuilder {
 
     @Override
     public FinTsRequest getInitializeSessionRequest(FinTsDialogContext dialogContext) {
-        List<BaseRequestPart> additionalSegments = new ArrayList<>();
+        List<BaseRequestPart> additionalSegments = new ArrayList<>(3);
         additionalSegments.add(
                 HKIDNv2.builder()
                         .systemId(dialogContext.getSystemId())
