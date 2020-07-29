@@ -55,7 +55,8 @@ public final class DkbAgent extends NextGenerationAgent
                 sessionStorage,
                 persistentStorage,
                 dkbConfiguration,
-                supplementalInformationHelper);
+                supplementalInformationHelper,
+                request);
         moduleDependenciesRegistration.registerInternalModuleDependencies();
         return moduleDependenciesRegistration.createModuleDependenciesRegistry();
     }

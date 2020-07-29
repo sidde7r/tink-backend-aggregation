@@ -5,9 +5,6 @@ import static java.util.Base64.getUrlEncoder;
 import static java.util.Locale.US;
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.Configuration.LOCALHOST;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys.PSD_2_AUTHORIZATION_HEADER;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys.PSU_IP_ADDRESS;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.GET;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.POST;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.PUT;
@@ -19,6 +16,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Value;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
@@ -45,7 +43,7 @@ public class DkbAuthRequestsFactory {
         return getRequestBuilder(config.getBaseUrl() + urlPath)
                 .accept(APPLICATION_JSON_TYPE)
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(PSU_IP_ADDRESS, LOCALHOST)
+                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.LOCALHOST)
                 .acceptLanguage(US);
     }
 
@@ -66,7 +64,7 @@ public class DkbAuthRequestsFactory {
                 .type(APPLICATION_JSON_TYPE)
                 .addBearerToken(storage.getWso2OAuthToken())
                 .header(
-                        PSD_2_AUTHORIZATION_HEADER,
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
                         basicAuthValue(config.getClientId(), config.getClientSecret()))
                 .body(new UserCredentials(username, password))
                 .build(POST);
@@ -77,7 +75,7 @@ public class DkbAuthRequestsFactory {
                 .type(APPLICATION_JSON_TYPE)
                 .addBearerToken(storage.getWso2OAuthToken())
                 .header(
-                        PSD_2_AUTHORIZATION_HEADER,
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
                         basicAuthValue(config.getClientId(), config.getClientSecret()))
                 .cookie("JSESSIONID", storage.getJsessionid())
                 .header("X-XSRF-TOKEN", storage.getXsrfToken())
@@ -90,7 +88,7 @@ public class DkbAuthRequestsFactory {
                 .type(APPLICATION_JSON_TYPE)
                 .addBearerToken(storage.getWso2OAuthToken())
                 .header(
-                        PSD_2_AUTHORIZATION_HEADER,
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
                         basicAuthValue(config.getClientId(), config.getClientSecret()))
                 .cookie("JSESSIONID", storage.getJsessionid())
                 .header("X-XSRF-TOKEN", storage.getXsrfToken())
@@ -102,7 +100,9 @@ public class DkbAuthRequestsFactory {
         return newRequest("/psd2/v1/consents")
                 .type(APPLICATION_JSON_TYPE)
                 .addBearerToken(storage.getWso2OAuthToken())
-                .header(PSD_2_AUTHORIZATION_HEADER, storage.getAccessToken().toAuthorizeHeader())
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().toAuthorizeHeader())
                 .body(new Consents(validUntil))
                 .build(POST);
     }
@@ -111,7 +111,9 @@ public class DkbAuthRequestsFactory {
         return newRequest(format("/psd2/v1/consents/%s", consentId))
                 .type(APPLICATION_JSON_TYPE)
                 .addBearerToken(storage.getWso2OAuthToken())
-                .header(PSD_2_AUTHORIZATION_HEADER, storage.getAccessToken().toAuthorizeHeader())
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().toAuthorizeHeader())
                 .build(GET);
     }
 
@@ -120,7 +122,9 @@ public class DkbAuthRequestsFactory {
                 .type(APPLICATION_JSON_TYPE)
                 .addBearerToken(storage.getWso2OAuthToken())
                 .body("{}")
-                .header(PSD_2_AUTHORIZATION_HEADER, storage.getAccessToken().toAuthorizeHeader())
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().toAuthorizeHeader())
                 .build(POST);
     }
 
@@ -133,7 +137,9 @@ public class DkbAuthRequestsFactory {
         return newRequest(getConstantAuthorizationUrl(consentId, authorizationId))
                 .type(APPLICATION_JSON_TYPE)
                 .addBearerToken(storage.getWso2OAuthToken())
-                .header(PSD_2_AUTHORIZATION_HEADER, storage.getAccessToken().toAuthorizeHeader())
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().toAuthorizeHeader())
                 .body(new ConsentAuthorizationMethod(methodId))
                 .build(PUT);
     }
@@ -143,7 +149,9 @@ public class DkbAuthRequestsFactory {
         return newRequest(getConstantAuthorizationUrl(consentId, authorizationId))
                 .type(APPLICATION_JSON_TYPE)
                 .addBearerToken(storage.getWso2OAuthToken())
-                .header(PSD_2_AUTHORIZATION_HEADER, storage.getAccessToken().toAuthorizeHeader())
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().toAuthorizeHeader())
                 .body(new ConsentAuthorizationOtp(otp))
                 .build(PUT);
     }

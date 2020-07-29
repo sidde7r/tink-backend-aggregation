@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
 import java.util.Date;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.QueryKeys;
@@ -21,17 +23,16 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
+@Slf4j
+@RequiredArgsConstructor
 public final class DkbApiClient {
 
     private final TinkHttpClient client;
     private final DkbStorage storage;
-
-    public DkbApiClient(TinkHttpClient client, DkbStorage storage) {
-        this.client = client;
-        this.storage = storage;
-    }
+    private final CredentialsRequest credentialsRequest;
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
@@ -40,15 +41,28 @@ public final class DkbApiClient {
     }
 
     private RequestBuilder createRequestInSession(URL url) {
-        return createRequest(url)
-                .addBearerToken(storage.getWso2OAuthToken())
-                .header("PSD2-AUTHORIZATION", storage.getAccessToken().toAuthorizeHeader());
+        RequestBuilder requestBuilder =
+                createRequest(url)
+                        .addBearerToken(storage.getWso2OAuthToken())
+                        .header(
+                                HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                                storage.getAccessToken().toAuthorizeHeader())
+                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId());
+        addPsuIpAddressHeaderIfManualRefresh(requestBuilder);
+        return requestBuilder;
+    }
+
+    private void addPsuIpAddressHeaderIfManualRefresh(RequestBuilder requestBuilder) {
+        if (credentialsRequest.isManual()) {
+            log.info("Request is attended -- adding PSU header");
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, Configuration.LOCALHOST);
+        } else {
+            log.info("Request is unattended -- omitting PSU header");
+        }
     }
 
     private RequestBuilder createFetchingRequest(URL url) {
-        return createRequestInSession(url)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.CONSENT_ID, getConsent());
+        return createRequestInSession(url).header(HeaderKeys.CONSENT_ID, getConsent());
     }
 
     private String getConsent() {
@@ -83,7 +97,6 @@ public final class DkbApiClient {
             throws HttpResponseException {
         return createRequestInSession(
                         Urls.CREATE_PAYMENT.parameter(IdTags.PAYMENT_PRODUCT, paymentProduct))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
@@ -93,7 +106,6 @@ public final class DkbApiClient {
                         Urls.FETCH_PAYMENT
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .get(FetchPaymentResponse.class);
     }
 }
