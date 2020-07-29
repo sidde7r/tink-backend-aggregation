@@ -17,7 +17,7 @@ import se.tink.libraries.discovery.CoordinationModule;
 
 public abstract class AggregationServiceContextCommand<T extends AggregationServiceConfiguration>
         extends ConfiguredCommand<T> {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(AggregationServiceContextCommand.class);
 
     protected AggregationServiceContextCommand(String name, String description) {
@@ -45,14 +45,14 @@ public abstract class AggregationServiceContextCommand<T extends AggregationServ
         try {
             run(bootstrap, namespace, configuration, injector);
         } catch (Exception e) {
-            log.error("Something went wrong when executing command.", e);
+            logger.error("Something went wrong when executing command.", e);
             commandExecutionError = e;
         } finally {
             try {
                 injector.getInstance(AggregationSpringContext.class).close();
             } catch (Exception e) {
                 // Not throwing exception here to no
-                log.error("Could not stop service gracefully.", e);
+                logger.error("Could not stop service gracefully.", e);
                 serviceShutdownError = e;
             }
         }

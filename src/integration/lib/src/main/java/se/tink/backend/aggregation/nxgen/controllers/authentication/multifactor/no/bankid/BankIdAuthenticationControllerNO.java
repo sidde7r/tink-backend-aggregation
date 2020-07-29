@@ -27,7 +27,7 @@ public class BankIdAuthenticationControllerNO
         implements TypedAuthenticator, AuthenticationControllerType {
     private static final int MAX_ATTEMPTS = 90;
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(BankIdAuthenticationControllerNO.class);
     private final BankIdAuthenticatorNO authenticator;
     private final SupplementalRequester supplementalRequester;
@@ -93,21 +93,22 @@ public class BankIdAuthenticationControllerNO
                 case DONE:
                     return;
                 case WAITING:
-                    log.info("Waiting for BankID");
+                    logger.info("Waiting for BankID");
                     break;
                 case CANCELLED:
                     throw BankIdError.CANCELLED.exception();
                 case TIMEOUT:
                     throw BankIdError.TIMEOUT.exception();
                 default:
-                    log.warn(String.format("Unknown Norweigan BankIdStatus (%s)", status));
+                    logger.warn(String.format("Unknown Norweigan BankIdStatus (%s)", status));
                     throw BankIdError.UNKNOWN.exception();
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
-        log.info(String.format("Norweigan BankID timed out internally, last status: %s", status));
+        logger.info(
+                String.format("Norweigan BankID timed out internally, last status: %s", status));
         throw BankIdError.TIMEOUT.exception();
     }
 

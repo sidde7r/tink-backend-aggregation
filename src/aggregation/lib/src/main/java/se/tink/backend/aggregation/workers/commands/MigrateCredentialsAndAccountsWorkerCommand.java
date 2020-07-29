@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerCommand {
-    private final AggregationLogger log =
+    private final AggregationLogger logger =
             new AggregationLogger(MigrateCredentialsAndAccountsWorkerCommand.class);
 
     private final ControllerWrapper controllerWrapper;
@@ -121,7 +121,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
      *     for the new `bankId` format as well as the validation if a migration should be executed.
      */
     private void migrate(AgentVersionMigration migration) {
-        log.debug(String.format("Migrating request for %s", request.getProvider().getName()));
+        logger.debug(String.format("Migrating request for %s", request.getProvider().getName()));
 
         migration.setWrapper(controllerWrapper);
         migration.setClientIfo(clientInfo);

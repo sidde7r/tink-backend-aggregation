@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanEntity {
 
-    private static final AggregationLogger log = new AggregationLogger(LoanEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(LoanEntity.class);
     private static final Pattern NUM_MONTHS_BOUND_PATTERN = Pattern.compile("(MONTHS_)([\\d]*)");
 
     @JsonProperty("bindningsbart")
@@ -162,7 +162,7 @@ public class LoanEntity {
         Account account = new Account();
 
         if (Objects.equal(getLoanNumber().intValue(), 0)) {
-            log.error("No loan number, can't create account");
+            logger.error("No loan number, can't create account");
             return Optional.empty();
         }
 
@@ -182,12 +182,12 @@ public class LoanEntity {
             LoanTermsEntity loanTerms = getLoanTerms();
 
             if (loanTerms == null) {
-                log.error("No loan terms, can't create loan");
+                logger.error("No loan terms, can't create loan");
                 return Optional.empty();
             }
 
             if (Objects.equal(getLoanNumber().intValue(), 0)) {
-                log.error("No loan number, can't create loan");
+                logger.error("No loan number, can't create loan");
                 return Optional.empty();
             }
 
@@ -223,7 +223,7 @@ public class LoanEntity {
             return Optional.of(loan);
 
         } catch (Exception e) {
-            log.error("Could not create loan", e);
+            logger.error("Could not create loan", e);
             return Optional.empty();
         }
     }

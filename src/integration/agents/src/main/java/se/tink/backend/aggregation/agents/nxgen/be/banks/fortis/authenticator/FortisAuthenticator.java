@@ -46,7 +46,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
     private final FortisApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SupplementalInformationFormer supplementalInformationFormer;
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(FortisAuthenticator.class);
 
     public FortisAuthenticator(
@@ -155,7 +155,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        LOGGER.info("Trying to authenticate manually...");
+        logger.info("Trying to authenticate manually...");
         final String authenticatorFactorId =
                 credentials.getField(se.tink.backend.agents.rpc.Field.Key.USERNAME);
         final String smid = credentials.getField(FortisConstants.Field.CLIENTNUMBER);
@@ -248,7 +248,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         }
 
         if (eBankingUserIdEntity.getValue().getEBankingUsers().size() > 1) {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     String.format("authenticate, multiple users found: %s", ""),
                     FortisConstants.LoggingTag.MULTIPLE_USER_ENTITIES);
         }
@@ -262,7 +262,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                             .getEBankingUser()
                             .getEBankingUserId());
         } else {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     String.format("authenticate, no user data found: %s", ""),
                     FortisConstants.LoggingTag.NO_USER_DATA_FOUND);
             throw LoginError.INCORRECT_CREDENTIALS.exception();
@@ -283,7 +283,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
 
     private void validateMuid(UserInfoResponse userInfoResponse) throws AuthorizationException {
         if (Strings.isNullOrEmpty(userInfoResponse.getValue().getUserData().getMuid())) {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     String.format(
                             "muid missing, muidcode %s",
                             userInfoResponse.getValue().getUserData().getMuidCode()),
@@ -294,7 +294,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         if (!Strings.isNullOrEmpty(userInfoResponse.getValue().getUserData().getMuidCode())
                 && !FortisConstants.ErrorCode.MUID_OK.equalsIgnoreCase(
                         userInfoResponse.getValue().getUserData().getMuidCode())) {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     String.format(
                             "muidcode %s, daysPasswordStillValid %s",
                             userInfoResponse.getValue().getUserData().getMuidCode(),
@@ -331,7 +331,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         if (Strings.isNullOrEmpty(persistentStoreValue)) {
             String errorMessage =
                     String.format("PersistentStorage is missing %s", persistentStorageKey);
-            LOGGER.warnExtraLong(errorMessage, FortisConstants.LoggingTag.LOGIN_ERROR);
+            logger.warnExtraLong(errorMessage, FortisConstants.LoggingTag.LOGIN_ERROR);
             throw new IllegalStateException(errorMessage);
         }
         return persistentStoreValue;
@@ -349,14 +349,14 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                 persistentStorage.get(FortisConstants.Storage.DEVICE_FINGERPRINT);
         final String muid = persistentStorage.get(FortisConstants.Storage.MUID);
 
-        LOGGER.info(
+        logger.info(
                 "Password is null/empty (during auto auth): " + Strings.isNullOrEmpty(password));
 
         if (Strings.isNullOrEmpty(password) || Strings.isNullOrEmpty(muid)) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
-        LOGGER.info("Trying to authenticate automatic....");
+        logger.info("Trying to authenticate automatic....");
         EbankingUsersResponse ebankingUsersResponse =
                 getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
 
@@ -417,7 +417,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                     FortisConstants.Storage.MUID,
                     userInfoResponse.getValue().getUserData().getMuid());
         } else {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     String.format("authenticate, no user data found: %s", ""),
                     FortisConstants.LoggingTag.NO_USER_DATA_FOUND);
             clearAuthenticationData();
@@ -434,7 +434,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         } catch (SupplementalInfoException ex) {
             // there was timeout on waiting for supplement information
             // should be handled as session expired
-            LOGGER.info("Timeout on waiting for the Password supplemental information");
+            logger.info("Timeout on waiting for the Password supplemental information");
             throw SessionError.SESSION_EXPIRED.exception(ex);
         }
     }
@@ -446,7 +446,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         } catch (SupplementalInfoException ex) {
             // there was timeout on waiting for supplement information
             // should be handled as session expired
-            LOGGER.info("Timeout on waiting for the Login Code supplemental information");
+            logger.info("Timeout on waiting for the Login Code supplemental information");
             throw SessionError.SESSION_EXPIRED.exception(ex);
         }
     }
@@ -457,7 +457,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         } catch (SupplementalInfoException ex) {
             // there was timeout on waiting for supplement information
             // should be handled as session expired
-            LOGGER.info("Timeout on waiting for the Sign Code supplemental information");
+            logger.info("Timeout on waiting for the Sign Code supplemental information");
             throw SessionError.SESSION_EXPIRED.exception(ex);
         }
     }
@@ -480,7 +480,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                         FortisConstants.Storage.DEVICE_FINGERPRINT,
                         FortisConstants.Storage.MUID);
         valuesToClean.forEach(v -> persistentStorage.put(v, null));
-        LOGGER.info(
+        logger.info(
                 "Password is null/empty (after cleaning): "
                         + Strings.isNullOrEmpty(
                                 persistentStorage.get(FortisConstants.Storage.PASSWORD)));

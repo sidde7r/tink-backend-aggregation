@@ -44,7 +44,7 @@ public class OpenIdApiClient {
     private OpenIdAuthenticatedHttpFilter aisAuthFilter;
     private OpenIdAuthenticatedHttpFilter pisAuthFilter;
     private OpenIdError openIdError;
-    private static final AggregationLogger log = new AggregationLogger(OpenIdApiClient.class);
+    private static final AggregationLogger logger = new AggregationLogger(OpenIdApiClient.class);
 
     public OpenIdApiClient(
             TinkHttpClient httpClient,
@@ -301,14 +301,14 @@ public class OpenIdApiClient {
     }
 
     public void instantiateAisAuthFilter(OAuth2Token token) {
-        log.debug("Instantiating the Ais Auth Filter.");
+        logger.debug("Instantiating the Ais Auth Filter.");
         aisAuthFilter =
                 new OpenIdAuthenticatedHttpFilter(
                         token, providerConfiguration, null, null, randomValueGenerator);
     }
 
     public void instantiatePisAuthFilter(OAuth2Token token) {
-        log.debug("Instantiating the Pis Auth Filter.");
+        logger.debug("Instantiating the Pis Auth Filter.");
         pisAuthFilter =
                 new OpenIdAuthenticatedHttpFilter(
                         token, providerConfiguration, null, null, randomValueGenerator);

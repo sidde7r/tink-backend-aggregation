@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class Sparebank1InvestmentsFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(Sparebank1InvestmentsFetcher.class);
 
     private final Sparebank1ApiClient apiClient;
@@ -48,7 +48,7 @@ public class Sparebank1InvestmentsFetcher implements AccountFetcher<InvestmentAc
         List<Instrument> instruments = Lists.newArrayList();
 
         if (!portfolioEntity.getLinks().containsKey(Keys.PORTFOLIO_HOLDINGS_KEY)) {
-            log.warn("Sparebank 1 - link to portfolio holdings is not present.");
+            logger.warn("Sparebank 1 - link to portfolio holdings is not present.");
             return Collections.emptyList();
         }
 

@@ -53,7 +53,7 @@ public class SEBKortParser {
         public double debt;
     }
 
-    private static final AggregationLogger log = new AggregationLogger(SEBKortParser.class);
+    private static final AggregationLogger logger = new AggregationLogger(SEBKortParser.class);
     private Double totalDebt;
     private Double unInvoicedDebt;
     private Set<String> transactionHashes = Sets.newHashSet();
@@ -278,7 +278,7 @@ public class SEBKortParser {
                 }
 
                 if (description.contains("KREDIT")) {
-                    log.info(description);
+                    logger.info(description);
                 }
                 Transaction transaction = parseTransaction(transactionEntity, invoiceDate);
                 if (checkAndMemorizeNewTransaction(transactionEntity, transaction)) {

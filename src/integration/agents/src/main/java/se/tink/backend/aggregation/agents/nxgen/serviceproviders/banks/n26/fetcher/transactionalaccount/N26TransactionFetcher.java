@@ -14,7 +14,7 @@ public class N26TransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
 
     private final N26ApiClient n26ApiClient;
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(N26TransactionFetcher.class);
 
     public N26TransactionFetcher(N26ApiClient n26ApiClient) {
@@ -33,7 +33,7 @@ public class N26TransactionFetcher
             }
         } catch (HttpClientException hce) {
             // N26 times out if you paginate too far back. Stop paginating if it does
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     "N26 Transaction Pagination error:",
                     N26Constants.Logging.TRANSACTION_PAGINATION_ERROR,
                     hce);

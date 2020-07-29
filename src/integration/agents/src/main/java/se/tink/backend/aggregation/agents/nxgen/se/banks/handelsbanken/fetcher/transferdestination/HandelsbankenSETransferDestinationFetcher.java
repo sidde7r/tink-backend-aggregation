@@ -24,7 +24,7 @@ import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 
 public class HandelsbankenSETransferDestinationFetcher implements TransferDestinationFetcher {
 
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(HandelsbankenSETransferDestinationFetcher.class);
 
     private final HandelsbankenSEApiClient client;
@@ -102,7 +102,7 @@ public class HandelsbankenSETransferDestinationFetcher implements TransferDestin
         } catch (HttpResponseException e) {
             Failure failure = e.getResponse().getBody(Failure.class);
             if (!failure.customerIsUnder16()) {
-                LOGGER.error(
+                logger.error(
                         HandelsbankenSEConstants.Transfers.LOG_TAG
                                 + " - unable to fetch payment context - "
                                 + failure,

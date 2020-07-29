@@ -20,7 +20,7 @@ public class CreditCardTransactionsResponse extends SpankkiResponse {
     @JsonProperty private int pageAmount;
 
     @JsonIgnore
-    private static final AggregationLogger LOG =
+    private static final AggregationLogger logger =
             new AggregationLogger(CreditCardTransactionsResponse.class);
 
     @JsonSetter(nulls = Nulls.AS_EMPTY)
@@ -39,7 +39,7 @@ public class CreditCardTransactionsResponse extends SpankkiResponse {
 
     @JsonIgnore
     public Optional<CreditCardTransaction> toTinkCardTransactions() {
-        LOG.infoExtraLong(
+        logger.infoExtraLong(
                 SerializationUtils.serializeToString(this),
                 SpankkiConstants.LogTags.CREDIT_CARD_TRANSACTIONS);
 

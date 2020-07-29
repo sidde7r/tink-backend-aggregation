@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class CommerzbankTransactionFetcher
         implements TransactionDatePaginator<TransactionalAccount> {
 
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(CommerzbankTransactionFetcher.class);
 
     private final CommerzbankApiClient apiClient;
@@ -41,7 +41,7 @@ public class CommerzbankTransactionFetcher
                 }
 
             } catch (Exception e) {
-                LOGGER.errorExtraLong(
+                logger.errorExtraLong(
                         "Error fetching transactions", Tag.TRANSACTION_FETCHING_ERROR, e);
                 return PaginatorResponseImpl.createEmpty();
             }

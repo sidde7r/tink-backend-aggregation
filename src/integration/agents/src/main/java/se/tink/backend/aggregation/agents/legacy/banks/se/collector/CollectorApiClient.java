@@ -32,7 +32,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 class CollectorApiClient {
-    private static final AggregationLogger log = new AggregationLogger(CollectorApiClient.class);
+    private static final AggregationLogger logger = new AggregationLogger(CollectorApiClient.class);
 
     /*
         ENV explanation:
@@ -108,7 +108,7 @@ class CollectorApiClient {
 
     boolean isAlive(String accessToken) {
         if (Strings.isNullOrEmpty(accessToken)) {
-            log.info("AccessToken not available");
+            logger.info("AccessToken not available");
             return false;
         }
 
@@ -140,7 +140,7 @@ class CollectorApiClient {
 
         T response = get(String.format(uri, sessionId), responseEntity);
 
-        log.info(
+        logger.info(
                 String.format(
                         "BankID authentication in progress, status=%s", response.getStatus()));
 
@@ -186,13 +186,13 @@ class CollectorApiClient {
     SwedishIdentifier getWithdrawalIdentifierFor(Account account) {
         AccountEntity accountEntity = accounts.find(account.getBankId());
         if (accountEntity == null) {
-            log.error(String.format("accountEntity is null, bankId: %s", account.getBankId()));
+            logger.error(String.format("accountEntity is null, bankId: %s", account.getBankId()));
             return null;
         }
 
         AccountIdentifier identifier = accountEntity.getWithdrawalIdentifier();
         if (!identifier.isValid()) {
-            log.error(
+            logger.error(
                     String.format(
                             "identifier is not valid: %s", accountEntity.getWithdrawalAccount()));
             return null;

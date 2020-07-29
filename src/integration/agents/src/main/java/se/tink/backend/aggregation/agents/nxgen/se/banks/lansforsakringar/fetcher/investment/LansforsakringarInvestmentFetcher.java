@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class LansforsakringarInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
     private final LansforsakringarApiClient apiClient;
-    private final AggregationLogger log =
+    private final AggregationLogger logger =
             new AggregationLogger(LansforsakringarInvestmentFetcher.class);
 
     public LansforsakringarInvestmentFetcher(LansforsakringarApiClient apiClient) {
@@ -59,7 +59,7 @@ public class LansforsakringarInvestmentFetcher implements AccountFetcher<Investm
         if (!pensionResponse.getIpsPensionsResponseModel().isEmpty()
                 || !pensionResponse.getLivPensionsResponseModel().isPrivatPensionsEmpty()
                 || !pensionResponse.getLivPensionsResponseModel().isCapitalInsurancesEmpty()) {
-            log.infoExtraLong("Found new unknown entity", LogTags.UNKNOWN_PENSION_TYPE);
+            logger.infoExtraLong("Found new unknown entity", LogTags.UNKNOWN_PENSION_TYPE);
         }
         return pensionAccounts;
     }
@@ -104,7 +104,7 @@ public class LansforsakringarInvestmentFetcher implements AccountFetcher<Investm
                 instrumentDetailsResponse =
                         apiClient.fetchInstrumentDetails(depotNumber, shareEntity.getIsinCode());
             } catch (HttpResponseException e) {
-                log.error(
+                logger.error(
                         String.format(
                                 "Failed to fetch instrument details for depo=%s with ISIN=%s",
                                 depotNumber, shareEntity.getIsinCode()));

@@ -15,7 +15,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
-    private static final AggregationLogger LOGGER = new AggregationLogger(AccountEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(AccountEntity.class);
 
     private String id;
     private String accountNumber;
@@ -94,7 +94,7 @@ public class AccountEntity {
                 return AccountTypes.SAVINGS;
             default:
                 // This should never happen as we filter on checking and savings accounts
-                LOGGER.warn(
+                logger.warn(
                         String.format(
                                 "Could not map account type [%s] to a Tink account type", type));
                 return AccountTypes.OTHER;
@@ -121,7 +121,7 @@ public class AccountEntity {
         String currency = properties.getCurrencyCode();
 
         if (Strings.isNullOrEmpty(currency)) {
-            LOGGER.warn("Sparebanken Sor: No currency for account found. Defaulting to NOK.");
+            logger.warn("Sparebanken Sor: No currency for account found. Defaulting to NOK.");
 
             return ExactCurrencyAmount.inNOK(balance);
         }

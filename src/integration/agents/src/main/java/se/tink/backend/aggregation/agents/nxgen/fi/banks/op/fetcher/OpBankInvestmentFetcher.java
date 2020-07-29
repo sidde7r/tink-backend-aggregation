@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpBankInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(OpBankInvestmentFetcher.class);
 
     private final OpBankApiClient client;
@@ -28,7 +28,7 @@ public class OpBankInvestmentFetcher implements AccountFetcher<InvestmentAccount
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
 
-        log.infoExtraLong(
+        logger.infoExtraLong(
                 "Summary: " + client.fetchTradingAssetsSummary(),
                 OpBankConstants.Fetcher.INVESTMENT_LOGGING);
 
@@ -53,7 +53,7 @@ public class OpBankInvestmentFetcher implements AccountFetcher<InvestmentAccount
             if (instrumentGroupMatcher.groupCount() > 0) {
                 if (!OpBankConstants.Fetcher.KNOWN_PORTFOLIO_TYPES.contains(
                         instrumentGroupMatcher.group(1).toLowerCase())) {
-                    log.infoExtraLong(
+                    logger.infoExtraLong(
                             String.format(
                                     "Property name: %s, type: %s",
                                     instrumentGroupMatcher.group(0),

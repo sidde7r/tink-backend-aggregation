@@ -13,7 +13,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
-    private static final AggregationLogger log = new AggregationLogger(TransactionEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(TransactionEntity.class);
 
     private long accountTransactionId;
     private long externalId;
@@ -141,7 +141,7 @@ public class TransactionEntity {
                 // NOP
         }
 
-        log.info(
+        logger.info(
                 String.format(
                         "[transactionTypeText]: %s [hasMessage]: %s",
                         getTransactionTypeText(), !Strings.isNullOrEmpty(getMessage())));

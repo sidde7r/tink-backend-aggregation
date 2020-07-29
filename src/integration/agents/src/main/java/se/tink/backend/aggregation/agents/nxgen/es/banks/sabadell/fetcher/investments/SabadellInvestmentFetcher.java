@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private final AggregationLogger log = new AggregationLogger(SabadellInvestmentFetcher.class);
+    private final AggregationLogger logger = new AggregationLogger(SabadellInvestmentFetcher.class);
     private final SabadellApiClient apiClient;
 
     public SabadellInvestmentFetcher(SabadellApiClient apiClient) {
@@ -78,7 +78,7 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
             // will be logged to s3
             apiClient.fetchDeposits();
         } catch (Exception e) {
-            log.warn(
+            logger.warn(
                     String.format(
                             "%s could not fetch deposits", SabadellConstants.Tags.DEPOSITS_ERROR),
                     e);
@@ -103,7 +103,7 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
                                                         .createRequestFromAccount(account)));
             }
         } catch (Exception e) {
-            log.warn(
+            logger.warn(
                     String.format(
                             "%s could not fetch servicing funds",
                             SabadellConstants.Tags.SERVICING_FUNDS_ERROR),
@@ -116,7 +116,7 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
             // will be logged to s3
             apiClient.fetchPensionPlans();
         } catch (Exception e) {
-            log.warn(
+            logger.warn(
                     String.format(
                             "%s could not fetch pension plans",
                             SabadellConstants.Tags.PENSION_PLANS_ERROR),
@@ -138,7 +138,7 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
                                                 savingsPlan.getQueryParamsForDetailsRequest()));
             }
         } catch (Exception e) {
-            log.warn(
+            logger.warn(
                     String.format(
                             "%s could not fetch savings", SabadellConstants.Tags.SAVINGS_ERROR),
                     e);

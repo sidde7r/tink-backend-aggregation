@@ -38,7 +38,7 @@ public class FetchLoanDetailsResponse {
     // `bindingPeriodInfoModel` is null - cannot define it!
 
     @JsonIgnore
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(FetchLoanOverviewResponse.class);
 
     @JsonIgnore
@@ -102,7 +102,7 @@ public class FetchLoanDetailsResponse {
         } else if (loanName.toLowerCase().contains("bolån")) {
             return Type.MORTGAGE;
         } else {
-            log.infoExtraLong("Found new unknown entity", LogTags.UNKNOWN_LOAN_TYPE);
+            logger.infoExtraLong("Found new unknown entity", LogTags.UNKNOWN_LOAN_TYPE);
             return Type.OTHER;
         }
     }

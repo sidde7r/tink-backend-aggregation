@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger LOG =
+    private static final AggregationLogger logger =
             new AggregationLogger(SantanderEsInvestmentFetcher.class);
 
     private final SantanderEsApiClient apiClient;
@@ -94,7 +94,7 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
         } catch (Exception e) {
             // if amount is zero it looks like we cannot ask for details, we get a 500
             if (!portfolio.getTotalValue().getAmount().equalsIgnoreCase("0")) {
-                LOG.info(
+                logger.info(
                         "Could not fetch investments "
                                 + SantanderEsConstants.Tags.INVESTMENT_ACCOUNT,
                         e);

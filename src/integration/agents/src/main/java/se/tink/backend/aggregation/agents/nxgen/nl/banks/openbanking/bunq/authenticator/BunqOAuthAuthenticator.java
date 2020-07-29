@@ -32,7 +32,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 // retrieve a client authentication token that is then used to authenticate the user in subsequent
 // calls to the API. More info: https://doc.bunq.com/#/psd2
 public class BunqOAuthAuthenticator implements OAuth2Authenticator {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(BunqOAuthAuthenticator.class);
 
     private final BunqApiClient apiClient;
@@ -195,7 +195,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
             apiClient.listAccounts(persistentStorage.get(BunqBaseConstants.StorageKeys.USER_ID));
             return true;
         } catch (HttpResponseException e) {
-            log.info(
+            logger.info(
                     "Session was not active for userId : "
                             + persistentStorage.get(BunqBaseConstants.StorageKeys.USER_ID),
                     e);

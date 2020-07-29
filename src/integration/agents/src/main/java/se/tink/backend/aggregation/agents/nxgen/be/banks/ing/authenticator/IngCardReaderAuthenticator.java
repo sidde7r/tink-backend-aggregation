@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class IngCardReaderAuthenticator {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(IngCardReaderAuthenticator.class);
 
     private final IngApiClient apiClient;
@@ -153,7 +153,7 @@ public class IngCardReaderAuthenticator {
                             errorCode,
                             " Message: ",
                             responseEntity.getErrorText().get());
-            LOGGER.errorExtraLong(
+            logger.errorExtraLong(
                     errormsg,
                     IngConstants.Logs.UNKNOWN_ERROR_CODE,
                     new IllegalStateException("Error during autoAuth!"));
@@ -193,10 +193,10 @@ public class IngCardReaderAuthenticator {
         String virtualCardNumber = split[0];
         String psn = split[1];
 
-        LOGGER.debug(
+        logger.debug(
                 "Checking OTP HEX value to save to Persistent Storage: "
                         + EncodingUtils.encodeHexAsString(otpKey));
-        LOGGER.debug("ING values to save to Persistent Storage: " + ingId);
+        logger.debug("ING values to save to Persistent Storage: " + ingId);
 
         this.persistentStorage.put(IngConstants.Storage.ING_ID, ingId);
         this.persistentStorage.put(IngConstants.Storage.DEVICE_ID, cryptoInitValues.getDeviceId());
@@ -238,7 +238,7 @@ public class IngCardReaderAuthenticator {
                         this.persistentStorage.get(IngConstants.Storage.OTP_KEY_HEX));
         int otp = IngCryptoUtils.calculateOtpForAuthentication(otpKey, otpCounter);
         otpCounter++;
-        LOGGER.debug("Checking OTP value to save to Persistent Storage: " + otpCounter);
+        logger.debug("Checking OTP value to save to Persistent Storage: " + otpCounter);
         this.persistentStorage.put(IngConstants.Storage.OTP_COUNTER, otpCounter);
 
         return otp;
@@ -265,7 +265,7 @@ public class IngCardReaderAuthenticator {
         if (IngConstants.ReturnCodes.NOK.equalsIgnoreCase(returnCode)) {
             Optional<String> errorText = responseEntity.getErrorText();
             if (errorText.isPresent()) {
-                LOGGER.warn(
+                logger.warn(
                         String.format(
                                 "%s: errorCode:%s errorText:%s",
                                 IngConstants.LogMessage.CHALLENGE_EXCHANGE_ERROR,
@@ -278,7 +278,7 @@ public class IngCardReaderAuthenticator {
         }
 
         // Don't know if there are other codes than ok and nok, logging those here if so.
-        LOGGER.warn(
+        logger.warn(
                 String.format("%s: %s", IngConstants.LogMessage.UNKNOWN_RETURN_CODE, returnCode));
         throw new IllegalStateException(IngConstants.LogMessage.CHALLENGE_EXCHANGE_ERROR);
     }

@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BankinterAuthenticator implements PasswordAuthenticator {
-    private static final AggregationLogger LOG =
+    private static final AggregationLogger logger =
             new AggregationLogger(BankinterAuthenticator.class);
     private static final File phantomJsFile;
     private final BankinterApiClient apiClient;
@@ -139,13 +139,13 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(e);
         }
         codeField.sendKeys(code);
-        LOG.info("Submitting SCA");
+        logger.info("Submitting SCA");
         submitButton.click();
 
         try {
             waitForErrorOrRedirect(driver, driver.getCurrentUrl(), ScaForm.SUBMIT_TIMEOUT_SECONDS);
         } catch (TimeoutException ex) {
-            LOG.error("Timed out after submitting SCA");
+            logger.error("Timed out after submitting SCA");
             logRequest("Timed out after submitting SCA", driver.getPageSource());
             throw ex;
         }
@@ -168,7 +168,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         passwordField.sendKeys(password);
 
         // submit and wait for error or redirect
-        LOG.info("Submitting login form");
+        logger.info("Submitting login form");
         loginForm.submit();
         waitForErrorOrRedirect(driver, initialUrl, LoginForm.SUBMIT_TIMEOUT_SECONDS);
         final URL afterLoginUrl = getCurrentUrl(driver);
@@ -176,26 +176,26 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
 
         // SCA
         if (afterLoginUrl.toUri().getPath().equalsIgnoreCase(Paths.VERIFY_SCA)) {
-            LOG.info("Reached SCA form");
+            logger.info("Reached SCA form");
             submitScaForm(driver);
         }
 
         if (isShowingError(driver)) {
             // error message
             final String errorMessage = getErrorMessage(driver);
-            LOG.info("Login error: " + errorMessage);
+            logger.info("Login error: " + errorMessage);
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else if (getCurrentUrl(driver)
                 .toUri()
                 .getPath()
                 .equalsIgnoreCase(Paths.GLOBAL_POSITION)) {
             // login successful
-            LOG.info("Login successful");
+            logger.info("Login successful");
             return;
         }
 
         // Unhandled error
-        LOG.error("Did not reach logged in state or error message: " + driver.getCurrentUrl());
+        logger.error("Did not reach logged in state or error message: " + driver.getCurrentUrl());
         throw LoginError.NOT_SUPPORTED.exception();
     }
 

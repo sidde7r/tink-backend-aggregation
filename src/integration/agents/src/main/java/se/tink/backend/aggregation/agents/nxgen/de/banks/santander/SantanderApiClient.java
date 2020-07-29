@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.authenticator.rpc.LoginRequest;
@@ -27,7 +26,7 @@ public class SantanderApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage storage;
-    Logger logger = LoggerFactory.getLogger(SantanderApiClient.class);
+    org.slf4j.Logger logger = LoggerFactory.getLogger(SantanderApiClient.class);
     AggregationLogger longlogger = new AggregationLogger(SantanderApiClient.class);
 
     public SantanderApiClient(TinkHttpClient client, SessionStorage storage) {

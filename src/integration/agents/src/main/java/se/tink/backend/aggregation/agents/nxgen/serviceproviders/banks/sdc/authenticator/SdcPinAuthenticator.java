@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SdcPinAuthenticator implements PasswordAuthenticator {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(SdcPinAuthenticator.class);
 
     private final SdcApiClient bankClient;
@@ -50,7 +50,7 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
             AgreementsResponse agreementsResponse = bankClient.pinLogon(username, password);
 
             if (agreementsResponse.isEmpty()) {
-                LOGGER.warnExtraLong(
+                logger.warnExtraLong(
                         "User was able to login, but has no agreements?",
                         SdcConstants.Session.LOGIN);
             }
@@ -76,7 +76,7 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
                 if (this.agentConfiguration.isNotCustomer(errorMessage)) {
                     throw LoginError.NOT_CUSTOMER.exception(e);
                 } else if (agentConfiguration.isLoginError(errorMessage)) {
-                    LOGGER.info(errorMessage, e);
+                    logger.info(errorMessage, e);
 
                     // if user is blocked throw more specific exception
                     if (agentConfiguration.isUserBlocked(errorMessage)) {

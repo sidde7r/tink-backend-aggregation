@@ -20,7 +20,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpcomingTransactionEntity {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(UpcomingTransactionEntity.class);
 
     @JsonProperty("BETAL_DATUM")
@@ -75,8 +75,8 @@ public class UpcomingTransactionEntity {
                     try {
                         return upcomingTransactionEntity.toPendingTransaction();
                     } catch (ParseException e) {
-                        log.error("Could not parse SEB upcoming transaction date", e);
-                        log.error(upcomingTransactionEntity.toString());
+                        logger.error("Could not parse SEB upcoming transaction date", e);
+                        logger.error(upcomingTransactionEntity.toString());
                         return null;
                     }
                 }
@@ -100,7 +100,7 @@ public class UpcomingTransactionEntity {
             Date date = ThreadSafeDateFormat.FORMATTER_DAILY.parse(this.date);
             return DateUtils.flattenTime(date);
         } catch (ParseException pe) {
-            log.warn(
+            logger.warn(
                     String.format(
                             "[Expected format for date]: YYYY-MM-DD [Found]: %s [Account number non-empty]: %s [Amount]: %s [Description non-empty]: %s",
                             this.date,

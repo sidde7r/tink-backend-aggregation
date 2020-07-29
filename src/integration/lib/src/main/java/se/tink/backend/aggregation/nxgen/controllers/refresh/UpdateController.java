@@ -20,7 +20,7 @@ import se.tink.libraries.pair.Pair;
 import se.tink.libraries.user.rpc.User;
 
 public class UpdateController {
-    private static final AggregationLogger log = new AggregationLogger(UpdateController.class);
+    private static final AggregationLogger logger = new AggregationLogger(UpdateController.class);
 
     protected final String currency;
     private final HashSet<Account> accounts = Sets.newHashSet();
@@ -62,7 +62,7 @@ public class UpdateController {
 
         if (!FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(user.getFlags())
                 && !currency.equalsIgnoreCase(account.getExactBalance().getCurrencyCode())) {
-            log.info(
+            logger.info(
                     String.format(
                             "Found incompatible Account currencies (expected: %s, but was: %s)",
                             currency, account.getExactBalance().getCurrencyCode()));
@@ -70,7 +70,7 @@ public class UpdateController {
         }
 
         if (accounts.contains(account)) {
-            log.warn("Updating an already updated account");
+            logger.warn("Updating an already updated account");
         }
 
         accounts.add(account);

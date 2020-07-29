@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OmaspAutoAuthenticator implements AutoAuthenticator {
 
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(OmaspAutoAuthenticator.class);
 
     private final OmaspApiClient apiClient;
@@ -79,7 +79,7 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
                 case OmaspConstants.Error.BAD_REQUEST:
                     throw SessionError.SESSION_EXPIRED.exception(e);
                 default:
-                    LOGGER.warn(
+                    logger.warn(
                             String.format(
                                     "%s: Unknown error code for loginRequest: %s, Message: %s",
                                     OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,

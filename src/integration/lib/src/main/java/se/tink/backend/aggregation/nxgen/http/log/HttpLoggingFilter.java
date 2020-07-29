@@ -33,7 +33,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class HttpLoggingFilter extends ClientFilter {
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private final AggregationLogger log;
+    private final AggregationLogger logger;
     private final String logTag;
     private final Class<?> agentClass;
     private final MapValueMasker headerMasker;
@@ -44,12 +44,12 @@ public class HttpLoggingFilter extends ClientFilter {
     private static final LogTag GENERIC_HTTP_LOGGER = LogTag.from("http_logging_filter");
 
     public HttpLoggingFilter(
-            AggregationLogger log,
+            AggregationLogger logger,
             String logTag,
             LogMasker logMasker,
             Class<? extends HttpLoggableExecutor> agentClass,
             LoggingMode loggingMode) {
-        this.log = log;
+        this.logger = logger;
         this.logTag = logTag;
         this.logMasker = logMasker;
         this.headerMasker =
@@ -83,7 +83,7 @@ public class HttpLoggingFilter extends ClientFilter {
             Iterable<String> logLines = getLogLinesForEntity(logEntryJsonString);
 
             for (String logLine : logLines) {
-                log.infoExtraLong(
+                logger.infoExtraLong(
                         String.format(
                                 Locale.ENGLISH,
                                 LOG_FORMAT,
@@ -96,7 +96,7 @@ public class HttpLoggingFilter extends ClientFilter {
                 lineNumber++;
             }
         } catch (IOException exception) {
-            log.error(
+            logger.error(
                     String.format(
                             Locale.ENGLISH,
                             LOG_FORMAT,

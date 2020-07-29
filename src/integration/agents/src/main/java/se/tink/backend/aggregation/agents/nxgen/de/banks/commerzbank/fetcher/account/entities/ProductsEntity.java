@@ -20,7 +20,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class ProductsEntity {
-    private static final AggregationLogger LOGGER = new AggregationLogger(ProductsEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(ProductsEntity.class);
 
     private ProductTypeEntity productType;
 
@@ -51,7 +51,7 @@ public class ProductsEntity {
             case DisplayCategoryIndex.SAVINGS_OR_INVESTMENT:
                 return getSavingsOrInvestment();
             default:
-                LOGGER.warnExtraLong(
+                logger.warnExtraLong(
                         String.format(
                                 "displayCategoryIndex: %s", productType.getDisplayCategoryIndex()),
                         Tag.UNKNOWN_ACCOUNT_TYPE);

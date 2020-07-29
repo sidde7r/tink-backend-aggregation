@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.Assert;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -50,7 +49,7 @@ import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
 public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigurationBase {
-    private static final Logger logger =
+    private static final org.slf4j.Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     protected Class<T> cls;
     protected AgentFactory factory;
@@ -628,9 +627,8 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
     private ClientFilterFactory getHttpLogFilter(
             Credentials credentials, HttpLoggableExecutor transferExecutor) {
-        AggregationLogger log = new AggregationLogger(getClass());
         return new HttpLoggingFilterFactory(
-                log,
+                new AggregationLogger(this.getClass()),
                 "TRANSFER",
                 testContext.getLogMasker(),
                 transferExecutor.getClass(),

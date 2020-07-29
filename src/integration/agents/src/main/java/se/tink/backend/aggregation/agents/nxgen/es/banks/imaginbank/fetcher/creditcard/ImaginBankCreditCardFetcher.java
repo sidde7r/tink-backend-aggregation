@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 
 public class ImaginBankCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(ImaginBankCreditCardFetcher.class);
 
     private final ImaginBankApiClient apiClient;
@@ -47,7 +47,7 @@ public class ImaginBankCreditCardFetcher
 
             return cardTransactionsResponse.toPaginatorResponse();
         } catch (Exception e) {
-            LOGGER.warn("Failed to fetch credit card transactions ", e);
+            logger.warn("Failed to fetch credit card transactions ", e);
             return PaginatorResponseImpl.createEmpty(false);
         }
     }

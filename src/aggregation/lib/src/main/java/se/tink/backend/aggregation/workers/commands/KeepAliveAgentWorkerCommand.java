@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class KeepAliveAgentWorkerCommand extends AgentWorkerCommand {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(KeepAliveAgentWorkerCommand.class);
     private AgentWorkerCommandContext context;
 
@@ -33,7 +33,7 @@ public class KeepAliveAgentWorkerCommand extends AgentWorkerCommand {
 
             boolean alive = persistentAgent.keepAlive();
 
-            log.info(alive ? "Credential is alive" : "Credential is not alive");
+            logger.info(alive ? "Credential is alive" : "Credential is not alive");
 
             // If we're not alive, we might as well clear the persisted session data.
 
@@ -43,7 +43,7 @@ public class KeepAliveAgentWorkerCommand extends AgentWorkerCommand {
 
             return AgentWorkerCommandResult.CONTINUE;
         } else {
-            log.info(
+            logger.info(
                     String.format(
                             "Agent %s does not implement PersistentLogin",
                             agent.getAgentClass().getName()));

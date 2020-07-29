@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionsResponse implements PaginatorResponse {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(TransactionsResponse.class);
 
     private TransactionsResponseEntity mobileResponse;
@@ -52,7 +52,7 @@ public class TransactionsResponse implements PaginatorResponse {
 
         if (!IngConstants.ReturnCodes.NOK.equalsIgnoreCase(returnCode)) {
             // Don't know if there are other codes than ok and nok, logging those here if so.
-            LOGGER.warn(
+            logger.warn(
                     String.format(
                             "%s: %s", IngConstants.LogMessage.UNKNOWN_RETURN_CODE, returnCode));
             throw new IllegalStateException(

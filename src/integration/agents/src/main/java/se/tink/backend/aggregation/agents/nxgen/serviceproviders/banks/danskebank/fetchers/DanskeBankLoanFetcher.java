@@ -18,7 +18,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class DanskeBankLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger LOG = new AggregationLogger(DanskeBankLoanFetcher.class);
+    private static final AggregationLogger logger =
+            new AggregationLogger(DanskeBankLoanFetcher.class);
 
     private final Credentials credentials;
     private final DanskeBankApiClient apiClient;
@@ -51,7 +52,7 @@ public class DanskeBankLoanFetcher implements AccountFetcher<LoanAccount> {
                     .map(this::toLoanAccount)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            LOG.warn(
+            logger.warn(
                     DanskeBankConstants.LogTags.LOAN_ACCOUNT
                             + " - Failed to fetch loans "
                             + e.getMessage(),

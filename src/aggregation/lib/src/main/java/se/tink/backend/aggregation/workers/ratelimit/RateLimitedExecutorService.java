@@ -19,7 +19,7 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class RateLimitedExecutorService implements Managed {
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(RateLimitedExecutorService.class);
     private final MetricRegistry metricRegistry;
 
@@ -48,7 +48,8 @@ public class RateLimitedExecutorService implements Managed {
                                                         "other.CSNAgent", 0.1),
                                                 new DefaultProviderRateLimiterFactory(0.1)))));
 
-        log.info(String.format("Rate limiter factory on initialization: %s", rateLimiterFactory));
+        logger.info(
+                String.format("Rate limiter factory on initialization: %s", rateLimiterFactory));
     }
 
     private LoadingCache<Provider, RateLimitedExecutorProxy> buildRateLimittedProxyCache(
@@ -66,7 +67,7 @@ public class RateLimitedExecutorService implements Managed {
 
                                     if (!MoreExecutors.shutdownAndAwaitTermination(
                                             executor, 2, TimeUnit.MINUTES)) {
-                                        log.error(
+                                        logger.error(
                                                 String.format(
                                                         "Could gracefully shut down RateLimitedExecutorProxy for provider '%s'.",
                                                         notification.getKey().getName()));
@@ -135,7 +136,7 @@ public class RateLimitedExecutorService implements Managed {
 
         ProviderRateLimiterFactory oldFactory = this.rateLimiterFactory.getAndSet(cachedFactor);
 
-        log.info(String.format("Old provider rate limiter factory: %s", oldFactory));
-        log.info(String.format("New provider rate limiter factory: %s", cachedFactor));
+        logger.info(String.format("Old provider rate limiter factory: %s", oldFactory));
+        logger.info(String.format("New provider rate limiter factory: %s", cachedFactor));
     }
 }

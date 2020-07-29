@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.S
 import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatBankIdHandler {
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(CredentialsSignicatBankIdAuthenticationHandler.class);
 
     private final Credentials credentials;
@@ -37,7 +37,7 @@ public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatB
                 supplementalRequester.requestSupplementalInformation(credentials, false);
                 break;
             default:
-                log.error("Unknown authentication status: " + status);
+                logger.error("Unknown authentication status: " + status);
                 credentials.setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
                 break;
         }

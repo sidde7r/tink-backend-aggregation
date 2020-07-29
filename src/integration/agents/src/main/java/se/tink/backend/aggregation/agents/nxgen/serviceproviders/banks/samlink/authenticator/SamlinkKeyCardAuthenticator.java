@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SamlinkKeyCardAuthenticator extends SamlinkAuthenticatorBase
         implements KeyCardAuthenticator {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(SamlinkKeyCardAuthenticator.class);
 
     private final SamlinkPersistentStorage persistentStorage;
@@ -27,7 +27,7 @@ public class SamlinkKeyCardAuthenticator extends SamlinkAuthenticatorBase
             SamlinkApiClient apiClient,
             SamlinkPersistentStorage persistentStorage,
             Credentials credentials) {
-        super(LOGGER, credentials, apiClient);
+        super(logger, credentials, apiClient);
         this.persistentStorage = persistentStorage;
     }
 

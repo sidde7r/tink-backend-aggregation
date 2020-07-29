@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CustodyAccount extends BaseResponse {
-    private static final AggregationLogger log = new AggregationLogger(CustodyAccount.class);
+    private static final AggregationLogger logger = new AggregationLogger(CustodyAccount.class);
 
     private String type;
     private String title;
@@ -42,7 +42,7 @@ public class CustodyAccount extends BaseResponse {
                     // Intentional fall through
             }
         }
-        log.info(
+        logger.info(
                 String.format(
                         "Not yet implemented custody account - type: %s, relative links: %s",
                         type, getLinks().keySet()));

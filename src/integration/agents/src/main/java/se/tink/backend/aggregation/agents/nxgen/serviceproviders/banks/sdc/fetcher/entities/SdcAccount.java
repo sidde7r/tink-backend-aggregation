@@ -16,7 +16,7 @@ import se.tink.libraries.account.enums.AccountFlag;
 @JsonObject
 public class SdcAccount {
     @JsonIgnore
-    private static final AggregationLogger LOGGER = new AggregationLogger(SdcAccount.class);
+    private static final AggregationLogger logger = new AggregationLogger(SdcAccount.class);
 
     private SdcAccountKey entityKey;
     private SdcAmount amount;
@@ -79,7 +79,7 @@ public class SdcAccount {
         if (accountType != SdcConstants.AccountType.UNKNOWN) {
             return accountType.getTinkAccountType();
         }
-        LOGGER.info("Found unknown productElementType: " + productElementType);
+        logger.info("Found unknown productElementType: " + productElementType);
         return AccountTypes.OTHER;
     }
 

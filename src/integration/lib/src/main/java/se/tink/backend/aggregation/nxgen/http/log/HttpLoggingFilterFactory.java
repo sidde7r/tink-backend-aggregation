@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory
  * attaching to clients. This helps out storing that info and removing them when done.
  */
 public class HttpLoggingFilterFactory implements ClientFilterFactory {
-    private final AggregationLogger log;
+    private final AggregationLogger logger;
     private final String logTag;
     private final LogMasker logMasker;
     private final Class<? extends HttpLoggableExecutor> agentClass;
@@ -24,12 +24,12 @@ public class HttpLoggingFilterFactory implements ClientFilterFactory {
     private final LoggingMode loggingMode;
 
     public HttpLoggingFilterFactory(
-            AggregationLogger log,
+            AggregationLogger logger,
             String logTag,
             LogMasker logMasker,
             Class<? extends HttpLoggableExecutor> agentClass,
             LoggingMode loggingMode) {
-        this.log = log;
+        this.logger = logger;
         this.logTag = logTag;
         this.logMasker = logMasker;
         this.agentClass = agentClass;
@@ -40,7 +40,7 @@ public class HttpLoggingFilterFactory implements ClientFilterFactory {
     @Override
     public ClientFilter addClientFilter(Client client) {
         HttpLoggingFilter filter =
-                new HttpLoggingFilter(log, logTag, logMasker, agentClass, loggingMode);
+                new HttpLoggingFilter(logger, logTag, logMasker, agentClass, loggingMode);
         client.addFilter(filter);
         createdFilters.put(client, filter);
         return filter;

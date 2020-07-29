@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationServerClient;
@@ -26,11 +25,11 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OAuth2Authenticator.class);
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(OAuth2Authenticator.class);
     private static final String REFRESH_TOKEN_STEP_ID = "refreshAccessTokenStep";
     private static final String AUTOMATIC_AUTHORIZATION_STEP_ID = "authorizationStep";
     static final String AUTHORIZATION_SERVER_THIRD_PARTY_APP_STEP_ID = "issueAccessTokenStep";
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(OAuth2Authenticator.class);
     private final List<AuthenticationStep> authSteps;
     private final OAuth2TokenStorage tokenStorage;
@@ -126,7 +125,7 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
             Map<String, String> callbackData) {
         OAuth2Token token = authorizationServerClient.handleAuthorizationResponse(callbackData);
         tokenStorage.storeToken(token);
-        LOGGER.info(
+        logger.info(
                 "OAuth2 token with expiration in " + token.getExpiresIn() + " seconds was stored");
         return AuthenticationStepResponse.executeNextStep();
     }

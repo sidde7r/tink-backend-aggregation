@@ -8,7 +8,7 @@ import se.tink.libraries.date.DateUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
-    private static final AggregationLogger log = new AggregationLogger(TransactionEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(TransactionEntity.class);
     protected double amount;
     protected String text;
     protected Date transactiondate;
@@ -58,7 +58,7 @@ public class TransactionEntity {
             // This check is used to see if we have any occurence of legacy way of finding pending
             // transactions for LF
             if (!isPreliminary()) {
-                log.info("[Found occurence of PendingStringTypes.LANSFORSAKRINGAR]");
+                logger.info("[Found occurence of PendingStringTypes.LANSFORSAKRINGAR]");
             }
         }
 

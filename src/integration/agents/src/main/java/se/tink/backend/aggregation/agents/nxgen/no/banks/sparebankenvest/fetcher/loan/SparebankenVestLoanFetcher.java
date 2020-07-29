@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class SparebankenVestLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(SparebankenVestLoanFetcher.class);
 
     private final SparebankenVestApiClient apiClient;
@@ -46,7 +46,7 @@ public class SparebankenVestLoanFetcher implements AccountFetcher<LoanAccount> {
                         .collect(Collectors.toList());
             }
         } catch (Exception e) {
-            LOGGER.warnExtraLong(e.getMessage(), SparebankenVestConstants.LogTags.LOANS, e);
+            logger.warnExtraLong(e.getMessage(), SparebankenVestConstants.LogTags.LOANS, e);
         }
 
         return Collections.emptyList();
@@ -56,7 +56,7 @@ public class SparebankenVestLoanFetcher implements AccountFetcher<LoanAccount> {
         try {
             apiClient.fetchCurrencyLoanDetails(loanEntity);
         } catch (Exception e) {
-            LOGGER.infoExtraLong(
+            logger.infoExtraLong(
                     "DETAILS: Failed to fetch details: " + e.getMessage(),
                     SparebankenVestConstants.LogTags.LOANS,
                     e);

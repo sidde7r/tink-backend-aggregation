@@ -32,7 +32,7 @@ public class FortisApiClient {
 
     private final TinkHttpClient client;
     private final String CSRF = FortisUtils.generateCSRF();
-    private static final AggregationLogger LOGGER = new AggregationLogger(FortisApiClient.class);
+    private static final AggregationLogger logger = new AggregationLogger(FortisApiClient.class);
     private final String baseUrl;
     private final String distributorId;
 
@@ -141,7 +141,7 @@ public class FortisApiClient {
                         .getChallenges();
 
         if (challenges.size() > 1) {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     String.format("Multiple challanges: %s", challenges.toString()),
                     FortisConstants.LoggingTag.MULTIPLE_CHALLENGES);
         }

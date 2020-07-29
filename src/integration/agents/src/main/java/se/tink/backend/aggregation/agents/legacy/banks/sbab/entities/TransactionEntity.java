@@ -14,7 +14,7 @@ import se.tink.libraries.date.DateUtils;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
 
-    private static final AggregationLogger log = new AggregationLogger(TransactionEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(TransactionEntity.class);
 
     @JsonProperty("transferId")
     private String id;
@@ -61,7 +61,7 @@ public class TransactionEntity {
             if (!Strings.isNullOrEmpty(transactionDate) && !transactionDate.trim().isEmpty()) {
                 transaction.setDate(DateUtils.parseDate(transactionDate));
             } else {
-                log.error("A transaction cannot have a null date");
+                logger.error("A transaction cannot have a null date");
                 return Optional.empty();
             }
 
@@ -71,10 +71,10 @@ public class TransactionEntity {
                 transaction.setAmount(amount);
 
                 if (Objects.equal(amount, 0)) {
-                    log.warn("Transaction amount (" + amount + ") was parsed to 0.");
+                    logger.warn("Transaction amount (" + amount + ") was parsed to 0.");
                 }
             } else {
-                log.error("A transaction cannot have a null amount");
+                logger.error("A transaction cannot have a null amount");
                 return Optional.empty();
             }
 
@@ -85,7 +85,7 @@ public class TransactionEntity {
             return Optional.of(transaction);
 
         } catch (Exception e) {
-            log.error("Could not create transaction", e);
+            logger.error("Could not create transaction", e);
             return Optional.empty();
         }
     }

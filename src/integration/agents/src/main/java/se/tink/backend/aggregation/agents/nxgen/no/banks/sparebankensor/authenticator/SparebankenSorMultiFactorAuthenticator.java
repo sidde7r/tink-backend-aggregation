@@ -37,7 +37,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
 public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticatorNO {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(SparebankenSorMultiFactorAuthenticator.class);
     private static final String ACTIVATION_CODE_FIELD_KEY = "activationCode";
     private static final int ACTIVATION_CODE_LENGTH = 8;
@@ -119,7 +119,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
             }
         }
 
-        LOGGER.warn(String.format("Potential unknown login error %s", errorElement.toString()));
+        logger.warn(String.format("Potential unknown login error %s", errorElement.toString()));
     }
 
     @Override
@@ -141,14 +141,14 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                 if (pollWaitCounter > 15) {
                     return BankIdStatus.TIMEOUT;
                 } else {
-                    LOGGER.info(
+                    logger.info(
                             String.format(
                                     "%s: Received error status when polling bankId",
                                     SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
                     return BankIdStatus.FAILED_UNKNOWN;
                 }
             default:
-                LOGGER.info(
+                logger.info(
                         String.format(
                                 "%s: Unknown poll status: %s. Number of polls: %s",
                                 SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString(),

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class SignatureValidator extends HandelsbankenValidator<BaseResponse> {
 
-    private static final AggregationLogger LOGGER = new AggregationLogger(SignatureValidator.class);
+    private static final AggregationLogger logger = new AggregationLogger(SignatureValidator.class);
 
     private final String validSignatureResult;
     private final Credentials credentials;
@@ -26,7 +26,7 @@ public class SignatureValidator extends HandelsbankenValidator<BaseResponse> {
     public void validate() throws SessionException {
         String result = getResult();
         if (!validSignatureResult.equals(result)) {
-            LOGGER.warn(
+            logger.warn(
                     String.format(
                             "#login-refactoring - SHB - Login failed (validateSignatureResponse/result) with "
                                     + "message %s, code %s, errors %s",

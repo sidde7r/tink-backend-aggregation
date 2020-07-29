@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount> {
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(DanskeBankAccountLoanFetcher.class);
 
     private final Credentials credentials;
@@ -55,6 +55,6 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
                         DanskeBankPredicates.knownLoanAccountProducts(
                                         configuration.getLoanAccountTypes())
                                 .negate())
-                .forEach(a -> log.info("Unknown loan account type: " + a.getAccountType()));
+                .forEach(a -> logger.info("Unknown loan account type: " + a.getAccountType()));
     }
 }

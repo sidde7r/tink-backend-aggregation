@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 public class BankiaCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
 
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(BankiaCreditCardFetcher.class);
     private final BankiaApiClient apiClient;
 
@@ -58,7 +58,7 @@ public class BankiaCreditCardFetcher
                         .collect(Collectors.toList());
 
         if (hasMore) {
-            LOGGER.warn(
+            logger.warn(
                     String.format(
                             "Fetched %d transactions when limit was set to %d. hasMore was set to %s.",
                             transactions.size(), maxLimit, Boolean.toString(hasMore)));

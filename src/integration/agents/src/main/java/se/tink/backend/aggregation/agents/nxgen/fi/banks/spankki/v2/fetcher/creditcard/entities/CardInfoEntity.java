@@ -37,11 +37,11 @@ public class CardInfoEntity {
     @JsonProperty private Boolean showLimits;
 
     @JsonIgnore
-    private static final AggregationLogger LOG = new AggregationLogger(CardsEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(CardsEntity.class);
 
     @JsonIgnore
     public Optional<CreditCardAccount> toTinkCard() {
-        LOG.infoExtraLong(
+        logger.infoExtraLong(
                 SerializationUtils.serializeToString(this), SpankkiConstants.LogTags.CREDIT_CARD);
 
         return Optional.empty();

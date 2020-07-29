@@ -16,7 +16,7 @@ public class SamlinkCreditCardFetcher
                 TransactionKeyPaginator<
                         CreditCardAccount, SamlinkCreditCardFetcher.TransactionKey> {
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(SamlinkCreditCardFetcher.class);
 
     private final SamlinkApiClient apiClient;
@@ -31,7 +31,8 @@ public class SamlinkCreditCardFetcher
                 .getCreditCards()
                 .toCreditCardAccounts(
                         apiClient::getCardDetails,
-                        message -> log.infoExtraLong(message, SamlinkConstants.LogTags.CREDITCARD));
+                        message ->
+                                logger.infoExtraLong(message, SamlinkConstants.LogTags.CREDITCARD));
     }
 
     @Override

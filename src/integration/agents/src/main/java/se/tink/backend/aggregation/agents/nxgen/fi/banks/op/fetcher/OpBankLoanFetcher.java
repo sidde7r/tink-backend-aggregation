@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpBankLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(OpBankLoanFetcher.class);
+    private static final AggregationLogger logger = new AggregationLogger(OpBankLoanFetcher.class);
 
     private final OpBankApiClient client;
     private final Credentials credentials;
@@ -34,7 +34,7 @@ public class OpBankLoanFetcher implements AccountFetcher<LoanAccount> {
         FetchCreditsResponse fetchCreditsResponse = client.fetchCredits();
 
         if (!fetchCreditsResponse.isSuccess()) {
-            LOGGER.warn(
+            logger.warn(
                     String.format(
                             "Fetch loans returned error: %s",
                             SerializationUtils.serializeToString(fetchCreditsResponse)));
@@ -69,7 +69,7 @@ public class OpBankLoanFetcher implements AccountFetcher<LoanAccount> {
                 if (!OpBankConstants.Fetcher.CONTINUING_CREDIT.equalsIgnoreCase(
                         credit.getCreditType())) {
                     // log the last of them, haven seen it yet
-                    LOGGER.infoExtraLong(
+                    logger.infoExtraLong(
                             SerializationUtils.serializeToString(credit),
                             OpBankConstants.Fetcher.LOAN_LOGGING);
                 }

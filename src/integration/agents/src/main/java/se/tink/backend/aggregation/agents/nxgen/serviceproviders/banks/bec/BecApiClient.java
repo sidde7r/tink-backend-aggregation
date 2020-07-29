@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.Log;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities.FetchAccountTransactionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.FetchAccountResponse;
@@ -63,7 +62,7 @@ public class BecApiClient {
     private BecSecurityHelper securityHelper;
     private final TinkHttpClient apiClient;
     private final BecUrlConfiguration agentUrl;
-    private static final AggregationLogger log = new AggregationLogger(BecApiClient.class);
+    private static final AggregationLogger logger = new AggregationLogger(BecApiClient.class);
 
     public BecApiClient(
             BecSecurityHelper securityHelper, TinkHttpClient client, BecUrlConfiguration url) {
@@ -86,7 +85,7 @@ public class BecApiClient {
     }
 
     public void appSync() {
-        log.info("app sync -> init");
+        logger.info("app sync -> init");
 
         BaseBecRequest request = baseRequest();
 
@@ -107,14 +106,14 @@ public class BecApiClient {
 
     public ScaOptionsEncryptedPayload scaPrepare(String username, String password)
             throws LoginException, NemIdException {
-        log.info("SCA prepare -> get available options");
+        logger.info("SCA prepare -> get available options");
         BaseBecRequest request = baseRequest();
         EncryptedPayloadAndroidEntity payloadEntity = scaPrepareRequest(username, password);
         request.setEncryptedPayload(
                 securityHelper.encrypt(
                         SerializationUtils.serializeToString(payloadEntity).getBytes()));
         ScaOptionsEncryptedPayload payload = postScaPrepareAndDecryptResponse(request);
-        log.info(
+        logger.info(
                 String.format(
                         "SCA prepare -> available login options: %s",
                         payload.getSecondFactorOptions()));
@@ -136,7 +135,7 @@ public class BecApiClient {
             return SerializationUtils.deserializeFromString(
                     decryptedResponse, ScaOptionsEncryptedPayload.class);
         } catch (BecAuthenticationException e) {
-            log.error("SCA prepare -> error get options response: " + e.getMessage());
+            logger.error("SCA prepare -> error get options response: " + e.getMessage());
             if (e.getMessage().startsWith("Your chosen PIN code is locked.")) {
                 throw new NemIdException(NemIdError.LOCKED_PIN);
             } else if (e.getMessage().startsWith("NemID is blocked. Contact support.")) {
@@ -153,7 +152,7 @@ public class BecApiClient {
     public CodeAppTokenEncryptedPayload scaPrepare2(String username, String password)
             throws NemIdException {
         try {
-            log.info("SCA prepare -> get token");
+            logger.info("SCA prepare -> get token");
             BaseBecRequest request = baseRequest();
             EncryptedPayloadAndroidEntity payloadEntity = scaPrepare2Request(username, password);
             request.setEncryptedPayload(
@@ -167,19 +166,19 @@ public class BecApiClient {
             return SerializationUtils.deserializeFromString(
                     decryptedResponse, CodeAppTokenEncryptedPayload.class);
         } catch (BecAuthenticationException e) {
-            log.error("SCA prepare -> error get token response: " + e.getMessage());
+            logger.error("SCA prepare -> error get token response: " + e.getMessage());
             throw new NemIdException(NemIdError.CODEAPP_NOT_REGISTERED);
         }
     }
 
     public void pollNemId(String token) throws AuthenticationException {
-        log.info("Poll for 2fa prove");
+        logger.info("Poll for 2fa prove");
         NemIdPollResponse response =
                 createRequest(this.agentUrl.getNemIdPoll())
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .queryParam("token", token)
                         .get(NemIdPollResponse.class);
-        log.info(String.format("The 2fa response: %s", response));
+        logger.info(String.format("The 2fa response: %s", response));
 
         nemIdStateMap
                 .getOrDefault(
@@ -192,7 +191,7 @@ public class BecApiClient {
     }
 
     public void sca(String username, String password, String token) throws ThirdPartyAppException {
-        log.info("SCA -> authenticate");
+        logger.info("SCA -> authenticate");
         try {
             BaseBecRequest request = baseRequest();
             EncryptedPayloadAndroidEntity payloadEntity = scaRequest(username, password, token);
@@ -203,7 +202,7 @@ public class BecApiClient {
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .post(request);
         } catch (BecAuthenticationException e) {
-            log.error("SCA -> error auth response: " + e.getMessage());
+            logger.error("SCA -> error auth response: " + e.getMessage());
             throw ThirdPartyAppError.TIMED_OUT.exception(e.getMessage());
         }
     }
@@ -325,7 +324,10 @@ public class BecApiClient {
              * pension banks) should have this error. We will keep logs and see which banks have
              * issue with credit card
              */
-            log.errorExtraLong("Could not fetch credit card list", Log.CREDIT_CARD_FETCH_ERROR, ex);
+            logger.errorExtraLong(
+                    "Could not fetch credit card list",
+                    BecConstants.Log.CREDIT_CARD_FETCH_ERROR,
+                    ex);
             return new ArrayList<>();
         }
     }

@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SavingsGoalEntity {
     @JsonIgnore
-    private static final AggregationLogger log = new AggregationLogger(SavingsGoalEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(SavingsGoalEntity.class);
 
     private String id;
     private String name;
@@ -47,9 +47,9 @@ public class SavingsGoalEntity {
 
     public void setCategory(Object category) {
         if (category instanceof String) {
-            log.info("LF - SavingsGoalEntity - category is type String");
+            logger.info("LF - SavingsGoalEntity - category is type String");
         } else if (category instanceof Integer) {
-            log.info("LF - SavingsGoalEntity - category is type Ieteger");
+            logger.info("LF - SavingsGoalEntity - category is type Ieteger");
         }
 
         this.category = category;
@@ -61,7 +61,7 @@ public class SavingsGoalEntity {
 
     public void setImageReference(Object imageReference) {
         if (category instanceof String) {
-            log.info("LF - SavingsGoalEntity - imageReference is type String");
+            logger.info("LF - SavingsGoalEntity - imageReference is type String");
         }
 
         this.imageReference = imageReference;

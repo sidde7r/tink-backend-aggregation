@@ -15,7 +15,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class GroupAccountEntity {
     @JsonIgnore
-    private static final AggregationLogger log = new AggregationLogger(GroupAccountEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(GroupAccountEntity.class);
 
     private String name;
 
@@ -80,7 +80,7 @@ public class GroupAccountEntity {
             case DanskeBankConstants.Investment.CUSTODY_ACCOUNT:
                 return Portfolio.Type.DEPOT;
             default:
-                log.info(
+                logger.info(
                         String.format(
                                 "Danske Bank - portfolio info - portfolio name [%s] portfolio type [%s]",
                                 name, type));

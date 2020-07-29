@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.
 import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class RegisteredCards extends BaseResponse {
-    private static final AggregationLogger log = new AggregationLogger(RegisteredCards.class);
+    private static final AggregationLogger logger = new AggregationLogger(RegisteredCards.class);
 
     @JsonProperty("_ProductCode")
     private List<String> cardTypes;
@@ -39,13 +39,13 @@ public class RegisteredCards extends BaseResponse {
     public void logRequestedAndRegisteredCardTypes(
             Credentials credentials, String requestedCardType) {
         if (cardTypes != null && cardTypes.size() > 0) {
-            log.info(
+            logger.info(
                     MoreObjects.toStringHelper(Card.class)
                             .add("requestCardType", requestedCardType)
                             .add("responseCardTypes", Joiner.on(", ").join(cardTypes))
                             .toString());
         } else {
-            log.info("Failed to register card {requestedCardType=" + requestedCardType + "}");
+            logger.info("Failed to register card {requestedCardType=" + requestedCardType + "}");
         }
     }
 }

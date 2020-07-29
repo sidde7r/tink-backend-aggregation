@@ -27,7 +27,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
-    private static final AggregationLogger log =
+    private static final AggregationLogger logger =
             new AggregationLogger(SebDecoupledAuthenticator.class);
     private final SebBaseApiClient apiClient;
     private final SebConfiguration configuration;
@@ -87,11 +87,11 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
                     case PollResponses.NO_CLIENT:
                         return BankIdStatus.NO_CLIENT;
                     default:
-                        log.warn("Unhandled BankID hint: " + response.getHintCode());
+                        logger.warn("Unhandled BankID hint: " + response.getHintCode());
                         return BankIdStatus.FAILED_UNKNOWN;
                 }
             default:
-                log.warn("Unhandled BankID status: " + response.getStatus());
+                logger.warn("Unhandled BankID status: " + response.getStatus());
                 return BankIdStatus.FAILED_UNKNOWN;
         }
     }

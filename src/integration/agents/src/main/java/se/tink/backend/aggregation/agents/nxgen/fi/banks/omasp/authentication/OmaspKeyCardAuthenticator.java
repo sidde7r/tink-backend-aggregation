@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
-    private static final AggregationLogger LOGGER =
+    private static final AggregationLogger logger =
             new AggregationLogger(OmaspKeyCardAuthenticator.class);
 
     private final OmaspApiClient apiClient;
@@ -103,7 +103,7 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
                     throw AuthorizationError.ACCOUNT_BLOCKED.exception(
                             OmaspConstants.UserMessage.LOGIN_BLOCKED.getKey(), e);
                 default:
-                    LOGGER.warn(
+                    logger.warn(
                             String.format(
                                     "%s: Unknown error code for loginRequest: %s, Message: %s",
                                     OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,
@@ -154,7 +154,7 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
                 case OmaspConstants.Error.SECURITY_KEY_FAILED:
                     throw LoginError.INCORRECT_CREDENTIALS.exception(e);
                 default:
-                    LOGGER.warn(
+                    logger.warn(
                             String.format(
                                     "%s: Unknown error code for registerDevice: %s, Message: %s",
                                     OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,

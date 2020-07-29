@@ -21,7 +21,7 @@ public class BankProfileHandler {
     @JsonProperty private Map<String, MenuItemLinkEntity> menuItems;
 
     @JsonIgnore
-    private final AggregationLogger log = new AggregationLogger(BankProfileHandler.class);
+    private final AggregationLogger logger = new AggregationLogger(BankProfileHandler.class);
 
     public BankProfileHandler setActiveBankProfile(BankProfile activeBankProfile) {
         this.activeBankProfile = activeBankProfile;
@@ -87,7 +87,7 @@ public class BankProfileHandler {
             MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
             return menuItem.isAuthorized();
         } else {
-            log.warn(String.format("Could not find key: %s", menuItemKey.getKey()));
+            logger.warn(String.format("Could not find key: %s", menuItemKey.getKey()));
             return false;
         }
     }
