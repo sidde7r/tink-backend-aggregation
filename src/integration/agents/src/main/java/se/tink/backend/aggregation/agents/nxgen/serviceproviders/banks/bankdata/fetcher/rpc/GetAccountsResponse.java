@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.MastercardAgreementEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -14,8 +16,13 @@ public class GetAccountsResponse {
 
     public List<TransactionalAccount> getTinkAccounts() {
         return accounts.stream()
+                .filter(accountIsNotALoan())
                 .map(BankdataAccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
+    }
+
+    private Predicate<BankdataAccountEntity> accountIsNotALoan() {
+        return accountEntity -> AccountTypes.LOAN != accountEntity.getType();
     }
 
     public List<BankdataAccountEntity> getAccounts() {

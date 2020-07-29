@@ -9,23 +9,22 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class GetAccountsResponseTest {
 
+    private static final int NO_OF_ACCOUNTS_IN_RESPONSE = 2;
+    private static final int NO_OF_ACCOUNTS_AFTER_FILTERING_LOANS = 1;
+
     @Test
-    public void parseGetAccountsResponse() throws Exception {
+    public void parseGetAccountsResponse() {
         GetAccountsResponse getAccountsResponse = GetAccountsResponseTestData.getTestData();
 
         assertThat(getAccountsResponse).isNotNull();
-        assertThat(getAccountsResponse.getAccounts()).hasSize(2);
+        assertThat(getAccountsResponse.getAccounts()).hasSize(NO_OF_ACCOUNTS_IN_RESPONSE);
         assertThat(getAccountsResponse.getAccounts().get(0).getBalance()).isEqualTo(10.0);
         assertThat(getAccountsResponse.getAccounts().get(0).getName()).isEqualTo("Basiskonto");
 
         List<TransactionalAccount> tinkAccounts = getAccountsResponse.getTinkAccounts();
-        assertThat(tinkAccounts).isNotNull();
-        assertThat(tinkAccounts).hasSize(2);
+        assertThat(tinkAccounts).isNotNull().hasSize(NO_OF_ACCOUNTS_AFTER_FILTERING_LOANS);
         assertThat(tinkAccounts.get(0).getExactBalance().getDoubleValue()).isEqualTo(10.0);
         assertThat(tinkAccounts.get(0).getName()).isEqualTo("Basiskonto");
         assertThat(tinkAccounts.get(0).getType()).isEqualTo(AccountTypes.CHECKING);
-        assertThat(tinkAccounts.get(1).getExactBalance().getDoubleValue()).isEqualTo(0.0);
-        assertThat(tinkAccounts.get(1).getName()).isEqualTo("Investeringskonto");
-        assertThat(tinkAccounts.get(1).getType()).isEqualTo(AccountTypes.CHECKING);
     }
 }
