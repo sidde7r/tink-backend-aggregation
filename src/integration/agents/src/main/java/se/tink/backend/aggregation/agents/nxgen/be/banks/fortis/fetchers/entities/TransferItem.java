@@ -1,19 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class TransferItem {
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private Object transferLastUpdate;
     private String amountType;
     private se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities.Amount
@@ -27,7 +34,6 @@ public class TransferItem {
     private String transferId;
     private se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities.Communication
             communication;
-    private static final AggregationLogger logger = new AggregationLogger(TransferItem.class);
 
     private final DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -83,8 +89,8 @@ public class TransferItem {
             toTinkTransaction();
             return true;
         } catch (RuntimeException e) {
-            logger.errorExtraLong(
-                    "Cannot parse transactions: ",
+            logger.error(
+                    "tag={} Cannot parse transactions: ",
                     FortisConstants.LoggingTag.TRANSACTION_VALIDATION_ERROR,
                     e);
             return false;

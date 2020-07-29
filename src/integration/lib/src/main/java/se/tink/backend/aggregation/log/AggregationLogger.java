@@ -92,10 +92,6 @@ public class AggregationLogger {
         warnExtraLong("Http Response Exception: ", logTag, exception);
     }
 
-    public void errorExtraLong(String message, LogTag logTag, Exception exception) {
-        logExtraLong(concatenate(message, exception), logTag, this::error);
-    }
-
     @VisibleForTesting
     static void logExtraLong(String message, LogTag logTag, Consumer<String> logger) {
         // Hack to handle max characters 2048 in logging message

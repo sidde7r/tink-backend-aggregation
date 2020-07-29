@@ -2,8 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator;
 
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.Preconditions;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -23,13 +26,12 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.A
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.InitEnrollResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.BaseMobileResponseEntity;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class IngCardReaderAuthenticator {
-    private static final AggregationLogger logger =
-            new AggregationLogger(IngCardReaderAuthenticator.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final IngApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -153,9 +155,10 @@ public class IngCardReaderAuthenticator {
                             errorCode,
                             " Message: ",
                             responseEntity.getErrorText().get());
-            logger.errorExtraLong(
-                    errormsg,
+            logger.error(
+                    "tag={} {}",
                     IngConstants.Logs.UNKNOWN_ERROR_CODE,
+                    errormsg,
                     new IllegalStateException("Error during autoAuth!"));
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
         }
