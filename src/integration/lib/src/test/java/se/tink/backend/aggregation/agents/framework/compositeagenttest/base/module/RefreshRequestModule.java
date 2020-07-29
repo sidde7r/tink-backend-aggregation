@@ -47,7 +47,8 @@ public final class RefreshRequestModule extends AbstractModule {
                         credential,
                         requestFlagManual,
                         requestFlagCreate,
-                        requestFlagUpdate);
+                        requestFlagUpdate,
+                        false);
         refreshInformationRequest.setItemsToRefresh(refreshableItems);
         return refreshInformationRequest;
     }

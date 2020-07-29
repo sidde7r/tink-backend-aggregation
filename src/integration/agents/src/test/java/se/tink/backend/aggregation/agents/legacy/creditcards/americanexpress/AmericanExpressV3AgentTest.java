@@ -103,7 +103,7 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
         context = new AgentTestContext(credentials);
         CredentialsRequest request =
                 new RefreshInformationRequest(
-                        CoreUserMapper.toAggregationUser(user), provider, credentials, true);
+                        CoreUserMapper.toAggregationUser(user), provider, credentials, true, false);
         AmericanExpressV3ApiClient apiClient =
                 new AmericanExpressV3ApiClient(client, "SE", "Tink", credentials);
 

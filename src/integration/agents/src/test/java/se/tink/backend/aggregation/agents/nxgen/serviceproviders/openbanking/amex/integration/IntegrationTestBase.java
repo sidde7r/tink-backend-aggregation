@@ -83,7 +83,7 @@ public abstract class IntegrationTestBase {
         final Provider provider = getProvider();
         final Credentials credentials = createCredentials(user, provider);
 
-        return new RefreshInformationRequest(user, provider, credentials, false);
+        return new RefreshInformationRequest(user, provider, credentials, false, false);
     }
 
     private AgentContext createAgentContext(CredentialsRequest credentialsRequest) {
