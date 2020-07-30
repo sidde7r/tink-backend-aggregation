@@ -148,6 +148,13 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
         Map<String, String> activationCodeResponse =
                 supplementalInformationController.askSupplementalInformation(
                         getActivationCodeField());
+
+        if (activationCodeResponse.get(ActivationCodeFieldConstants.NAME) == null) {
+            log.info(
+                    "Activation code was not retrieved. Possible options in response: [{}]",
+                    activationCodeResponse);
+        }
+
         try {
             String activateEvryToken =
                     encapClient

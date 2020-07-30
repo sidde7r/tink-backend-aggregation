@@ -23,6 +23,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.InitInvestmentsLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.InvestmentsOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.PositionsListEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan.rpc.LoanDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan.rpc.LoanFetchingResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountFetchingResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -80,12 +82,11 @@ public class HandelsbankenNOApiClient {
     }
 
     public void configureBankId(String nationalId, String mobileNumber) {
-        HttpResponse response =
-                client.request(Url.CONFIGURE_BANKID.parameters(nationalId, mobileNumber))
-                        .accept(MediaType.TEXT_HTML_TYPE)
-                        .accept(MediaType.APPLICATION_XHTML_XML_TYPE)
-                        .accept(MediaType.APPLICATION_XML_TYPE)
-                        .get(HttpResponse.class);
+        client.request(Url.CONFIGURE_BANKID.parameters(nationalId, mobileNumber))
+                .accept(MediaType.TEXT_HTML_TYPE)
+                .accept(MediaType.APPLICATION_XHTML_XML_TYPE)
+                .accept(MediaType.APPLICATION_XML_TYPE)
+                .get(HttpResponse.class);
 
         String jSession =
                 client.getCookies().stream()
@@ -204,6 +205,15 @@ public class HandelsbankenNOApiClient {
     public HttpResponse fetchTransactions(String uri, int number, int index) {
         URL url = Url.TRANSACTIONS.parameters(uri, String.valueOf(number), String.valueOf(index));
         return requestInSession(url).get(HttpResponse.class);
+    }
+
+    public LoanFetchingResponse fetchLoans() {
+        return requestInSession(Url.LOANS.get()).get(LoanFetchingResponse.class);
+    }
+
+    public LoanDetailsResponse fetchLoanDetails(String repaymentPlanForLoanAccountPath) {
+        return requestInSession(Url.LOAN_DETAILS.parameters(repaymentPlanForLoanAccountPath))
+                .get(LoanDetailsResponse.class);
     }
 
     public HttpResponse extendSession() {

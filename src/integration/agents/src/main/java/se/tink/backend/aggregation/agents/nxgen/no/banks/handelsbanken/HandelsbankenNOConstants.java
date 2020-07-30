@@ -37,6 +37,10 @@ public class HandelsbankenNOConstants {
         TRANSACTIONS(
                 getNetbankEndpoint(
                         "/secesb/rest/era%s?number=%s&include_authorizations=true&index=%s")),
+        LOANS(
+                getNetbankEndpoint(
+                        "/secesb/rest/era-alp/loanmod/accounts?type=loan&includerepaymentplandetails=true")),
+        LOAN_DETAILS(getNetbankEndpoint("/secesb/rest/era-alp%s")),
         KEEP_ALIVE(getNetbankEndpoint("/secesb/rest/esb/v1/keepalive")),
         INIT_INVESTOR_LOGIN(getNetbankEndpoint("/secesb/rest/era/ssotoken/so")),
         CUSTOMER_PORTAL_LOGIN(getCustomerPortalEndpoint("/idp/profile/SAML2/Unsolicited/SSO")),
