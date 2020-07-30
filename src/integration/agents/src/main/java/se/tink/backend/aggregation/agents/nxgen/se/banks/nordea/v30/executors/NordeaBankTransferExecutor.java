@@ -92,7 +92,11 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         if (internalAccount.isPresent()) {
             // Transfers doesn't need signing.
             executeTransferWithoutUserSigning(
-                    transfer, sourceAccount, internalAccount.get(), transferMessageFormatter);
+                    transfer,
+                    sourceAccount,
+                    internalAccount.get(),
+                    transferMessageFormatter,
+                    dueDate);
         } else {
             // Transfers require adding beneficiary and signing.
             executeTransferWithUserSigning(
@@ -104,16 +108,15 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
             Transfer transfer,
             AccountEntity sourceAccount,
             AccountEntity destinationInternalAccount,
-            TransferMessageFormatter transferMessageFormatter) {
+            TransferMessageFormatter transferMessageFormatter,
+            Date dueDate) {
 
         InternalBankTransferRequest transferRequest = new InternalBankTransferRequest();
         transferRequest.setAmount(transfer);
         transferRequest.setFrom(sourceAccount);
         transferRequest.setTo(destinationInternalAccount);
         transferRequest.setMessage(transfer, transferMessageFormatter);
-        transferRequest.setDue(
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                        NordeaDateUtil.getTransferDateForIntraBankTransfer(transfer.getDueDate())));
+        transferRequest.setDue(ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate));
 
         InternalBankTransferResponse transferResponse =
                 apiClient.executeInternalBankTransfer(transferRequest);
