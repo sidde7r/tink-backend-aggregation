@@ -77,8 +77,7 @@ public class PortfolioEntity {
 
     @JsonIgnore
     public PortfolioModule toTinkPortfolioModule(List<InstrumentModule> instruments) {
-        final double totalValue =
-                instruments.stream().mapToDouble(InstrumentModule::getMarketValue).sum();
+        final double totalValue = totalOwnCapital - totalBalance;
 
         return PortfolioModule.builder()
                 .withType(getPortfolioType())
