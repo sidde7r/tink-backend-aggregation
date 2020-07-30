@@ -295,4 +295,24 @@ public class PaymentEntity {
     public String getRecipientName() {
         return recipientName;
     }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public void setRecipientAccountNumber(String recipientAccountNumber) {
+        this.recipientAccountNumber = recipientAccountNumber;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setDue(Date due) {
+        this.due = due;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
