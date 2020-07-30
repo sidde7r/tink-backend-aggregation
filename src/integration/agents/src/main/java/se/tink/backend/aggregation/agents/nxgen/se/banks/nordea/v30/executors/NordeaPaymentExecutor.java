@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
+import java.util.Date;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -38,22 +39,23 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
 
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
+        Date dueDate = NordeaDateUtil.getTransferDateForBgPg(transfer.getDueDate());
         // check if transfer already exist in outbox, if it does then user can confirm that one
-        createNewOrConfirmExisting(transfer);
+        createNewOrConfirmExisting(transfer, dueDate);
     }
 
     /**
      * Check if payment already exist in outbox as unconfirmed if it does then execute a payment on
      * that id instead. Otherwise, proceeds to create a new payment
      */
-    private void createNewOrConfirmExisting(Transfer transfer) {
+    private void createNewOrConfirmExisting(Transfer transfer, Date dueDate) {
         try {
             final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
 
             if (payment.isPresent()) {
                 executorHelper.confirm(payment.get().getApiIdentifier());
             } else {
-                createNewPayment(transfer);
+                createNewPayment(transfer, dueDate);
             }
         } catch (HttpResponseException e) {
             final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
@@ -71,7 +73,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
         return destination;
     }
 
-    private void createNewPayment(Transfer transfer) {
+    private void createNewPayment(Transfer transfer, Date dueDate) {
         final FetchAccountResponse accountResponse = fetchAccounts();
 
         // find source account
@@ -86,7 +88,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
 
         // create request
         final PaymentRequest paymentRequest =
-                createPaymentRequest(transfer, sourceAccount, destinationAccount);
+                createPaymentRequest(transfer, sourceAccount, destinationAccount, dueDate);
 
         // execute payment
         executeBankPayment(paymentRequest);
@@ -105,14 +107,15 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
     private PaymentRequest createPaymentRequest(
             Transfer transfer,
             AccountEntity sourceAccount,
-            BeneficiariesEntity destinationAccount) {
+            BeneficiariesEntity destinationAccount,
+            Date dueDate) {
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setAmount(transfer.getAmount());
         paymentRequest.setFrom(sourceAccount);
         paymentRequest.setBankName(destinationAccount);
         paymentRequest.setTo(destinationAccount);
         paymentRequest.setMessage(transfer.getRemittanceInformation().getValue());
-        paymentRequest.setDue(NordeaDateUtil.getTransferDateForBgPg(transfer.getDueDate()));
+        paymentRequest.setDue(dueDate);
         paymentRequest.setType(executorHelper.getPaymentType(transfer.getDestination()));
         paymentRequest.setToAccountNumberType(
                 executorHelper.getPaymentAccountType(transfer.getDestination()));
