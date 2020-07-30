@@ -41,7 +41,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
     public void executePayment(Transfer transfer) throws TransferExecutionException {
         Date dueDate = NordeaDateUtil.getTransferDateForBgPg(transfer.getDueDate());
         try {
-            final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
+            final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer, dueDate);
 
             if (payment.isPresent()) {
                 executorHelper.confirm(payment.get().getApiIdentifier());
