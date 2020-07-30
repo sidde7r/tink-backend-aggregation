@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
@@ -186,19 +187,20 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         transferRequest.setBankName(destinationAccount);
         transferRequest.setTo(destinationAccount);
         transferRequest.setMessage(transfer, transferMessageFormatter);
-        if (IntraBankChecker.isSwedishMarketIntraBank(
-                transfer.getSource(), transfer.getDestination())) {
-            transferRequest.setDue(
-                    NordeaDateUtil.getTransferDateForIntraBankTransfer(transfer.getDueDate()));
-        } else {
-
-            transferRequest.setDue(
-                    NordeaDateUtil.getTransferDateForInterBankTransfer(transfer.getDueDate()));
-        }
+        transferRequest.setDue(getDueDate(transfer));
         transferRequest.setType(NordeaSEConstants.PaymentTypes.LBAN);
         transferRequest.setToAccountNumberType(getToAccountType(transfer));
 
         return transferRequest;
+    }
+
+    private Date getDueDate(Transfer transfer) {
+        if (IntraBankChecker.isSwedishMarketIntraBank(
+                transfer.getSource(), transfer.getDestination())) {
+            return NordeaDateUtil.getTransferDateForIntraBankTransfer(transfer.getDueDate());
+        } else {
+            return NordeaDateUtil.getTransferDateForInterBankTransfer(transfer.getDueDate());
+        }
     }
 
     private String getToAccountType(Transfer transfer) {
