@@ -16,7 +16,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.Fin
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.PayloadParser;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.fetcher.transactionalaccount.FinTsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.fetcher.transactionalaccount.FinTsTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.account.DefaultHisalBalance;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.account.FinTsTransactionalAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.account.HisalBalance;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.account.IngHisalBalance;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.accounttype.FinTsAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.transaction.FinTsTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.ChosenSecurityFunctionProvider;
@@ -111,7 +114,9 @@ public final class FinTsAgent extends NextGenerationAgent
                 metricRefreshController,
                 updateController,
                 new FinTsAccountFetcher(
-                        dialogContext, accountClient, new FinTsTransactionalAccountMapper()),
+                        dialogContext,
+                        accountClient,
+                        new FinTsTransactionalAccountMapper(getHisalBalance())),
                 new FinTsTransactionFetcher(
                         dialogContext, transactionClient, new FinTsTransactionMapper()));
     }
@@ -119,5 +124,10 @@ public final class FinTsAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
+    }
+
+    private HisalBalance getHisalBalance() {
+        Bank bank = dialogContext.getConfiguration().getBank();
+        return bank.equals(Bank.ING_DIBA) ? new IngHisalBalance() : new DefaultHisalBalance();
     }
 }

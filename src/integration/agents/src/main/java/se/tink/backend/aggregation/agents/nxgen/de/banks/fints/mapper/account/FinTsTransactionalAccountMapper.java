@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.account;
 
 import com.google.common.base.Strings;
-import java.math.BigDecimal;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsAccountInformation;
@@ -16,10 +16,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.GermanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
+@RequiredArgsConstructor
 public class FinTsTransactionalAccountMapper {
+
+    private final HisalBalance hisalBalance;
 
     public Optional<TransactionalAccount> toTinkAccount(
             FinTsAccountInformation accountInformation) {
@@ -32,7 +34,7 @@ public class FinTsTransactionalAccountMapper {
             return Optional.empty();
         }
 
-        BalanceModule balanceModule = getBalanceModule(balance);
+        BalanceModule balanceModule = hisalBalance.calculate(balance);
         String iban = getIBAN(basicInfo, details);
         String uniqueIdentifier = getUniqueIdentifier(basicInfo, iban);
         TransactionalAccountType accountType =
@@ -84,15 +86,5 @@ public class FinTsTransactionalAccountMapper {
         return details != null && !Strings.isNullOrEmpty(details.getIban())
                 ? details.getIban()
                 : basicInfo.getIban();
-    }
-
-    private BalanceModule getBalanceModule(HISAL balance) {
-        return BalanceModule.of(ExactCurrencyAmount.of(getBalance(balance), balance.getCurrency()));
-    }
-
-    private BigDecimal getBalance(HISAL balance) {
-        BigDecimal pendingBalance =
-                Optional.ofNullable(balance.getPendingBalance()).orElse(BigDecimal.valueOf(0));
-        return balance.getBookedBalance().add(pendingBalance);
     }
 }

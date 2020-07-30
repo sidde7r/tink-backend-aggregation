@@ -1,21 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsAccountInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HISAL;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HISPA;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HIUPD;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class FinTsTransactionalAccountMapperTest {
     private static final BigDecimal BOOKED_BALANCE = BigDecimal.valueOf(12.0);
-    private static final BigDecimal PENDING_BALANCE = BigDecimal.valueOf(4.0);
     private static final String CURRENCY = "EUR";
     private static final String BLZ = "50010517";
     private static final String PRODUCT_NAME = "Test Product";
@@ -25,7 +31,16 @@ public class FinTsTransactionalAccountMapperTest {
     private static final String FIRST_HOLDER = "First Account Holder";
     private static final String SECOND_HOLDER = "Second Account Holder";
 
-    private FinTsTransactionalAccountMapper mapper = new FinTsTransactionalAccountMapper();
+    private FinTsTransactionalAccountMapper mapper;
+    private HisalBalance hisalBalance;
+
+    @Before
+    public void setUp() {
+        hisalBalance = mock(HisalBalance.class);
+        given(hisalBalance.calculate(any(HISAL.class)))
+                .willReturn(BalanceModule.of(ExactCurrencyAmount.of(BOOKED_BALANCE, CURRENCY)));
+        mapper = new FinTsTransactionalAccountMapper(hisalBalance);
+    }
 
     @Test
     public void shouldGetProperlyMappedAccount() {
@@ -37,27 +52,12 @@ public class FinTsTransactionalAccountMapperTest {
 
         // then
         assertThat(mappedAccount.isPresent()).isTrue();
-        assertAccount(
-                mappedAccount.get(),
-                PRODUCT_NAME,
-                BOOKED_BALANCE.add(PENDING_BALANCE),
-                AccountTypes.CHECKING,
-                IBAN);
-    }
-
-    @Test
-    public void shouldGetProperlyMappedAccountWhenNoPendingBalance() {
-        // given
-        FinTsAccountInformation accountInformation = getAccountInformation();
-        accountInformation.getBalance().setPendingBalance(null);
-
-        // when
-        Optional<TransactionalAccount> mappedAccount = mapper.toTinkAccount(accountInformation);
-
-        // then
-        assertThat(mappedAccount.isPresent()).isTrue();
-        assertAccount(
-                mappedAccount.get(), PRODUCT_NAME, BOOKED_BALANCE, AccountTypes.CHECKING, IBAN);
+        assertAccount(mappedAccount.get(), PRODUCT_NAME, AccountTypes.CHECKING, IBAN);
+        // and hisal from account information is used to calculate balance module
+        ArgumentCaptor<HISAL> hisalCaptor = ArgumentCaptor.forClass(HISAL.class);
+        verify(hisalBalance).calculate(hisalCaptor.capture());
+        assertThat(hisalCaptor.getValue().getCurrency()).isEqualTo(CURRENCY);
+        assertThat(hisalCaptor.getValue().getBookedBalance()).isEqualTo(BOOKED_BALANCE);
     }
 
     @Test
@@ -71,12 +71,7 @@ public class FinTsTransactionalAccountMapperTest {
 
         // then
         assertThat(mappedAccount.isPresent()).isTrue();
-        assertAccount(
-                mappedAccount.get(),
-                PRODUCT_NAME,
-                BOOKED_BALANCE.add(PENDING_BALANCE),
-                AccountTypes.CHECKING,
-                IBAN);
+        assertAccount(mappedAccount.get(), PRODUCT_NAME, AccountTypes.CHECKING, IBAN);
     }
 
     @Test
@@ -92,12 +87,7 @@ public class FinTsTransactionalAccountMapperTest {
 
         // then
         assertThat(mappedAccount.isPresent()).isTrue();
-        assertAccount(
-                mappedAccount.get(),
-                PRODUCT_NAME,
-                BOOKED_BALANCE.add(PENDING_BALANCE),
-                AccountTypes.CHECKING,
-                ACCOUNT_NUMBER);
+        assertAccount(mappedAccount.get(), PRODUCT_NAME, AccountTypes.CHECKING, ACCOUNT_NUMBER);
     }
 
     @Test
@@ -110,7 +100,7 @@ public class FinTsTransactionalAccountMapperTest {
         Optional<TransactionalAccount> mappedAccount = mapper.toTinkAccount(accountInformation);
 
         // then
-        assertThat(mappedAccount.isPresent()).isFalse();
+        assertThat(mappedAccount).isNotPresent();
     }
 
     @Test
@@ -123,30 +113,25 @@ public class FinTsTransactionalAccountMapperTest {
         Optional<TransactionalAccount> mappedAccount = mapper.toTinkAccount(accountInformation);
 
         // then
-        assertThat(mappedAccount.isPresent()).isFalse();
+        assertThat(mappedAccount).isNotPresent();
     }
 
     private void assertAccount(
             TransactionalAccount account,
             String productName,
-            BigDecimal balanceAmount,
             AccountTypes accountType,
             String uniqueId) {
         assertThat(account.getType()).isEqualTo(accountType);
         assertThat(account.getHolderName().toString()).isEqualTo(FIRST_HOLDER);
         assertThat(account.getExactBalance())
-                .isEqualTo(ExactCurrencyAmount.of(balanceAmount, CURRENCY));
+                .isEqualTo(ExactCurrencyAmount.of(BOOKED_BALANCE, CURRENCY));
         assertThat(account.getIdModule().getAccountNumber()).isEqualTo(ACCOUNT_NUMBER);
         assertThat(account.getIdModule().getUniqueId()).isEqualTo(uniqueId);
         assertThat(account.getIdModule().getProductName()).isEqualTo(productName);
     }
 
     private FinTsAccountInformation getAccountInformation() {
-        HISAL hisal =
-                new HISAL()
-                        .setCurrency(CURRENCY)
-                        .setBookedBalance(BOOKED_BALANCE)
-                        .setPendingBalance(PENDING_BALANCE);
+        HISAL hisal = new HISAL().setCurrency(CURRENCY).setBookedBalance(BOOKED_BALANCE);
         HIUPD hiupd =
                 new HIUPD()
                         .setAccountType(CHECKING_ACCOUNT_ID)
