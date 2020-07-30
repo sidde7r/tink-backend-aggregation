@@ -121,4 +121,12 @@ public class TransferRequest {
                 ? IcaBankenConstants.Transfers.OCR
                 : IcaBankenConstants.Transfers.MESSAGE;
     }
+
+    public String getReferenceType() {
+        return referenceType;
+    }
+
+    public void setReferenceType(String referenceType) {
+        this.referenceType = referenceType;
+    }
 }

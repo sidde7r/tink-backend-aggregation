@@ -60,10 +60,19 @@ public class ResponseStatusEntity {
                         .contains(IcaBankenConstants.BankIdStatus.SOMETHING_WENT_WRONG);
     }
 
+    @JsonIgnore
     public boolean isInvalidCustomer() {
         return serverMessage != null
                 && serverMessage
                         .toLowerCase()
                         .contains(IcaBankenConstants.BankIdStatus.INVALID_CUSTOMER_ID);
+    }
+
+    @JsonIgnore
+    public boolean isReferenceShouldBeMessageError() {
+        return clientMessage != null
+                && clientMessage
+                        .toLowerCase()
+                        .contains(IcaBankenConstants.Transfers.INVALID_REFERENCE_TYPE);
     }
 }
