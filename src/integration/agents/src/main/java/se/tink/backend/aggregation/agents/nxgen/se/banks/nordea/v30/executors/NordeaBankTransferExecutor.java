@@ -51,13 +51,14 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
 
     @Override
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
+        Date dueDate = getDueDate(transfer);
         try {
-            final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
+            final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer, dueDate);
 
             if (payment.isPresent()) {
                 executorHelper.confirm(payment.get().getApiIdentifier());
             } else {
-                createNewTransfer(transfer);
+                createNewTransfer(transfer, dueDate);
             }
         } catch (HttpResponseException e) {
             handleTransferErrors(e);
@@ -65,7 +66,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         return Optional.empty();
     }
 
-    private void createNewTransfer(Transfer transfer) {
+    private void createNewTransfer(Transfer transfer, Date dueDate) {
         final FetchAccountResponse accountResponse =
                 Optional.ofNullable(apiClient.fetchAccount())
                         .orElseThrow(ErrorResponse::failedFetchAccountsError);
@@ -97,7 +98,8 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                     transferMessageFormatter);
         } else {
             // Transfers require adding beneficiary and signing.
-            executeTransferWithUserSigning(transfer, sourceAccount, transferMessageFormatter);
+            executeTransferWithUserSigning(
+                    transfer, sourceAccount, transferMessageFormatter, dueDate);
         }
     }
 
@@ -148,7 +150,8 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
     private void executeTransferWithUserSigning(
             Transfer transfer,
             AccountEntity sourceAccount,
-            TransferMessageFormatter transferMessageFormatter) {
+            TransferMessageFormatter transferMessageFormatter,
+            Date dueDate) {
         final BeneficiariesEntity destinationAccount =
                 executorHelper
                         .validateDestinationAccount(transfer)
@@ -157,7 +160,11 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         // create transfer request
         PaymentRequest transferRequest =
                 createPaymentRequest(
-                        transfer, sourceAccount, destinationAccount, transferMessageFormatter);
+                        transfer,
+                        sourceAccount,
+                        destinationAccount,
+                        transferMessageFormatter,
+                        dueDate);
 
         // execute external transfer
         try {
@@ -180,14 +187,15 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
             Transfer transfer,
             AccountEntity sourceAccount,
             BeneficiariesEntity destinationAccount,
-            TransferMessageFormatter transferMessageFormatter) {
+            TransferMessageFormatter transferMessageFormatter,
+            Date dueDate) {
         PaymentRequest transferRequest = new PaymentRequest();
         transferRequest.setAmount(transfer.getAmount());
         transferRequest.setFrom(sourceAccount);
         transferRequest.setBankName(destinationAccount);
         transferRequest.setTo(destinationAccount);
         transferRequest.setMessage(transfer, transferMessageFormatter);
-        transferRequest.setDue(getDueDate(transfer));
+        transferRequest.setDue(dueDate);
         transferRequest.setType(NordeaSEConstants.PaymentTypes.LBAN);
         transferRequest.setToAccountNumberType(getToAccountType(transfer));
 
