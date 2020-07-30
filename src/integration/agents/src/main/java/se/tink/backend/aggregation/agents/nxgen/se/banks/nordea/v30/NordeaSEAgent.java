@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaExecutorHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaPaymentExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.einvoice.NordeaApproveEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.creditcard.NordeaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.creditcard.NordeaCreditCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.identitydata.NordeaSeIdentityDataFetcher;
@@ -224,7 +223,7 @@ public class NordeaSEAgent extends NextGenerationAgent
                 new TransferController(
                         new NordeaPaymentExecutor(apiClient, executorHelper),
                         new NordeaBankTransferExecutor(apiClient, catalog, executorHelper),
-                        new NordeaApproveEInvoiceExecutor(apiClient, catalog, executorHelper),
+                        null,
                         null));
     }
 
