@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -60,6 +62,9 @@ import se.tink.libraries.identitydata.NameElement;
 
 public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {
+    private static final Logger log =
+            LoggerFactory.getLogger(RedirectAuthenticationDemoAgent.class);
+
     private static final String USERNAME = "tink";
 
     private String provider;
@@ -118,9 +123,19 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
             public void keepAlive() throws SessionException {
                 if (request instanceof RefreshInformationRequest
                         && ((RefreshInformationRequest) request).isForceAuthenticate()) {
+                    log.info(
+                            String.format(
+                                    "[forceAuthenticate] RedirectAuthenticationDemoAgent:refresh for credentials: %s, forceAuthenticate: %s, isInstanceOf RefreshInformationRequest: %s",
+                                    credentials.getId(),
+                                    ((RefreshInformationRequest) request).isForceAuthenticate(),
+                                    request instanceof RefreshInformationRequest));
                     persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
                     throw SessionError.SESSION_EXPIRED.exception();
                 } else {
+                    log.info(
+                            String.format(
+                                    "[forceAuthenticate] RedirectAuthenticationDemoAgent:refresh for credentials: %s, reusing oAuth token from persistent storage",
+                                    credentials.getId()));
                     persistentStorage
                             .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                             .filter(t -> !t.hasAccessExpired())
