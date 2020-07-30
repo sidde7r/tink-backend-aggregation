@@ -1,24 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.entity;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionEntity {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private String id;
     private AmountEntity amount;
     private String title;
     private String subtitle;
     private String date;
-    private static final AggregationLogger LONGLOGGER =
-            new AggregationLogger(TransactionEntity.class);
 
     public String getId() {
         return id;
@@ -105,8 +108,8 @@ public class TransactionEntity {
                 return getYesterdayDate();
             }
 
-            LONGLOGGER.errorExtraLong(
-                    "DateParsing error", ErsteBankConstants.LOGTAG.ERROR_DATE_PARSING, e);
+            logger.error(
+                    "tag={} DateParsing error", ErsteBankConstants.LOGTAG.ERROR_DATE_PARSING, e);
             throw new IllegalArgumentException("Cannot parse date: " + e.toString(), e);
         }
     }

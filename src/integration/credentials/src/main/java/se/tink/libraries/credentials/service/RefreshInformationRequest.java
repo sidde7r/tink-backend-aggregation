@@ -16,6 +16,8 @@ public class RefreshInformationRequest extends CredentialsRequest {
     @JsonProperty("forceAuthenticate")
     private boolean forceAuthenticate;
 
+    @JsonProperty private String testField;
+
     public RefreshInformationRequest() {}
 
     public RefreshInformationRequest(
@@ -24,17 +26,23 @@ public class RefreshInformationRequest extends CredentialsRequest {
             Credentials credentials,
             boolean manual,
             boolean create,
-            boolean update) {
+            boolean update,
+            boolean forceAuthenticate) {
         super(user, provider, credentials);
 
         this.manual = manual;
         this.create = create;
         this.update = update;
+        this.forceAuthenticate = forceAuthenticate;
     }
 
     public RefreshInformationRequest(
-            User user, Provider provider, Credentials credentials, boolean manual) {
-        this(user, provider, credentials, manual, false, false);
+            User user,
+            Provider provider,
+            Credentials credentials,
+            boolean manual,
+            boolean forceAuthenticate) {
+        this(user, provider, credentials, manual, false, false, forceAuthenticate);
     }
 
     @Override
@@ -73,5 +81,9 @@ public class RefreshInformationRequest extends CredentialsRequest {
 
     public void setForceAuthenticate(boolean forceAuthenticate) {
         this.forceAuthenticate = forceAuthenticate;
+    }
+
+    public String getTestField() {
+        return testField;
     }
 }

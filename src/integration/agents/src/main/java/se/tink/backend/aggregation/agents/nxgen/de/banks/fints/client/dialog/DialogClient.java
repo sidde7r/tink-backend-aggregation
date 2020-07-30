@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConst
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HISALS;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HISYN;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HITAB;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HITANS;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HIUPD;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.SegmentType;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.TanByOperationLookup;
@@ -35,17 +37,20 @@ public class DialogClient {
     private final ChosenTanMediumProvider chosenTanMediumProvider;
     private final DialogRequestBuilder requestBuilder;
     private final FinTsAccountTypeMapper mapper;
+    private final ChosenSecurityFunctionProvider chosenSecurityFunctionProvider;
 
     public DialogClient(
             FinTsRequestProcessor requestProcessor,
             FinTsDialogContext dialogContext,
             ChosenTanMediumProvider chosenTanMediumProvider,
-            FinTsAccountTypeMapper mapper) {
+            FinTsAccountTypeMapper mapper,
+            ChosenSecurityFunctionProvider chosenSecurityFunctionProvider) {
         this.requestProcessor = requestProcessor;
         this.dialogContext = dialogContext;
         this.chosenTanMediumProvider = chosenTanMediumProvider;
         this.requestBuilder = DialogRequestBuilderProvider.getRequestBuilder(dialogContext);
         this.mapper = mapper;
+        this.chosenSecurityFunctionProvider = chosenSecurityFunctionProvider;
     }
 
     public FinTsResponse initializeSession() {
@@ -119,17 +124,26 @@ public class DialogClient {
     private void setUpSecurityFunctionInformation(FinTsResponse response) {
         // information about allowed security functions:
         // https://www.hbci-zka.de/dokumente/spezifikation_deutsch/fintsv3/FinTS_3.0_Security_Sicherheitsverfahren_PINTAN_2018-02-23_final_version.pdf page 53
-        List<String> securityFunctions = dialogContext.getAllowedSecurityFunctions();
-        securityFunctions.addAll(
+        dialogContext.setAllowedSecurityFunctions(
+                response.findSegmentWithSupportedVersions(HITANS.class)
+                        .orElseThrow(IllegalArgumentException::new)
+                        .getAllowedScaMethods());
+        List<String> allowedTanProcedures =
                 response.findSegments(HIRMS.class).stream()
                         .flatMap(
                                 hirms ->
                                         hirms.getResponsesWithCode(APPROVED_TAN_PROCEDURES)
                                                 .stream())
                         .flatMap(hirmsResponse -> hirmsResponse.getParameters().stream())
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
+        Map<String, String> tanProcedures =
+                dialogContext.getAllowedSecurityFunctions().entrySet().stream()
+                        .filter(a -> allowedTanProcedures.contains(a.getKey()))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        Optional.ofNullable(ChosenSecurityFunctionProvider.getChosenSecurityFunction(dialogContext))
+        dialogContext.setAllowedSecurityFunctions(tanProcedures);
+
+        Optional.ofNullable(chosenSecurityFunctionProvider.getChosenSecurityFunction(dialogContext))
                 .ifPresent(dialogContext::setChosenSecurityFunction);
     }
 

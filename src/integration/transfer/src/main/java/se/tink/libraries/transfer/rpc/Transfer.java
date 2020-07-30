@@ -2,6 +2,7 @@ package se.tink.libraries.transfer.rpc;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,7 +28,6 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.iface.UuidIdentifiable;
@@ -38,6 +38,7 @@ import se.tink.libraries.uuid.UUIDUtils;
         fieldVisibility = JsonAutoDetect.Visibility.ANY,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     private static final String FOUR_POINT_PRECISION_FORMAT_STRING = "0.0000";
 
@@ -68,7 +69,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     private UUID userId;
     private String type;
     private Date dueDate;
-    private String messageType;
     private String payloadSerialized;
     private String originatingUserIp;
 
@@ -346,21 +346,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
             }
         } catch (JsonProcessingException e) {
             log.error("Could not serialize payload.", e);
-        }
-    }
-
-    // Note! Have to be added to the grpc converter for transfers in order to work with the Tink
-    // app.
-    public MessageType getMessageType() {
-        if (messageType != null) {
-            return MessageType.valueOf(messageType);
-        }
-        return null;
-    }
-
-    public void setMessageType(MessageType messageType) {
-        if (messageType != null) {
-            this.messageType = messageType.name();
         }
     }
 

@@ -3,10 +3,6 @@ package se.tink.backend.aggregation.nxgen.controllers.transfer;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.validators.StructuredMessageValidator;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferController {
@@ -59,12 +55,6 @@ public class TransferController {
     private Optional<String> executeBankTransfer(final Transfer transfer) {
         Preconditions.checkNotNull(bankTransferExecutor);
 
-        if (transfer.getSource() != null
-                && (transfer.getSource().is(AccountIdentifier.Type.BE)
-                        || transfer.getSource().is(AccountIdentifier.Type.SEPA_EUR))) {
-            validateTransferMessageType(transfer);
-        }
-
         return bankTransferExecutor.executeTransfer(transfer);
     }
 
@@ -84,29 +74,5 @@ public class TransferController {
         Preconditions.checkNotNull(updatePaymentExecutor);
 
         updatePaymentExecutor.updatePayment(transfer);
-    }
-
-    private void validateTransferMessageType(Transfer transfer) {
-        if (transfer.getMessageType() == null) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            TransferExecutionException.EndUserMessage.MISSING_MESSAGE_TYPE
-                                    .getKey()
-                                    .get())
-                    .setMessage("Message type have to be set for transfers of this type")
-                    .build();
-        }
-
-        if (transfer.getMessageType() == MessageType.STRUCTURED
-                && !StructuredMessageValidator.isValidOgmVcs(transfer.getDestinationMessage())) {
-            String errorMessage =
-                    TransferExecutionException.EndUserMessage.INVALID_STRUCTURED_MESSAGE
-                            .getKey()
-                            .get();
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(errorMessage)
-                    .setMessage(errorMessage)
-                    .build();
-        }
     }
 }

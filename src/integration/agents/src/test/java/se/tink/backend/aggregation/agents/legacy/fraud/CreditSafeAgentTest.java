@@ -169,7 +169,8 @@ public class CreditSafeAgentTest extends AbstractAgentTest<CreditSafeAgent> {
                         CoreUserMapper.toAggregationUser(user),
                         constructProvider(),
                         credentials,
-                        true);
+                        true,
+                        false);
         AgentTestContext testContext = new AgentTestContext(credentials);
 
         CreditSafeAgent creditSafeAgent =
