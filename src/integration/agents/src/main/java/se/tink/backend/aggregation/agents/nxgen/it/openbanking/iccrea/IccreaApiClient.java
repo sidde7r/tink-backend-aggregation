@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authentica
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -18,14 +19,16 @@ public class IccreaApiClient extends CbiGlobeApiClient {
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
             boolean requestManual,
-            TemporaryStorage temporaryStorage) {
+            TemporaryStorage temporaryStorage,
+            CbiGlobeProviderConfiguration providerConfiguration) {
         super(
                 client,
                 persistentStorage,
                 sessionStorage,
                 requestManual,
                 temporaryStorage,
-                InstrumentType.ACCOUNTS);
+                InstrumentType.ACCOUNTS,
+                providerConfiguration);
     }
 
     @Override

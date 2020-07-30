@@ -64,7 +64,7 @@ public class QsealcSignerHttpClientTest {
                         .toInternalConfig();
 
         proxyServer = new SimpleHTTPServer(11111);
-        proxyServer.configureSsl(Utils.buildSslContextFactoryFromConfig(), 12345, false);
+        proxyServer.configureSsl(Utils.buildSslContextFactoryFromConfig(), 12345, false, 8 * 1024);
         proxyServer.addContext("/", new ProxyServerHandler());
         proxyServer.addContext("/test", new ProxyServerHandler());
         proxyServer.addContext("/jwt-rsa-sha256", new ProxyServerHandler());

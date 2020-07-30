@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -17,14 +18,16 @@ public class BPSondrioApiClient extends CbiGlobeApiClient {
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
             boolean requestManual,
-            TemporaryStorage temporaryStorage) {
+            TemporaryStorage temporaryStorage,
+            CbiGlobeProviderConfiguration providerConfiguration) {
         super(
                 client,
                 persistentStorage,
                 sessionStorage,
                 requestManual,
                 temporaryStorage,
-                InstrumentType.ACCOUNTS);
+                InstrumentType.ACCOUNTS,
+                providerConfiguration);
     }
 
     @Override

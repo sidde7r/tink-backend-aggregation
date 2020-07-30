@@ -9,19 +9,18 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -35,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.payloadparser.PayloadParser;
 
 public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -47,11 +46,13 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     protected TemporaryStorage temporaryStorage;
     protected StatelessProgressiveAuthenticator authenticator;
     protected CbiUserState userState;
+    private CbiGlobeProviderConfiguration providerConfiguration;
 
-    public CbiGlobeAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
-
+    public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
+        this.providerConfiguration =
+                PayloadParser.parse(
+                        request.getProvider().getPayload(), CbiGlobeProviderConfiguration.class);
         temporaryStorage = new TemporaryStorage();
         apiClient = getApiClient(request.isManual());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -59,6 +60,10 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         authenticator = getAuthenticator();
 
         applyFilters(this.client);
+    }
+
+    protected CbiGlobeProviderConfiguration getProviderConfiguration() {
+        return providerConfiguration;
     }
 
     private void applyFilters(TinkHttpClient client) {
@@ -72,7 +77,8 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                 sessionStorage,
                 requestManual,
                 temporaryStorage,
-                InstrumentType.ACCOUNTS);
+                InstrumentType.ACCOUNTS,
+                getProviderConfiguration());
     }
 
     @Override

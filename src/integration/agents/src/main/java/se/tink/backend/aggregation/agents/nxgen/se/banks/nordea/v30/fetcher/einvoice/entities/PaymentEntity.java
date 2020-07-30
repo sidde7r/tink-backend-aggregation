@@ -237,11 +237,11 @@ public class PaymentEntity {
     }
 
     @JsonIgnore
-    public boolean isEqualToTransfer(Transfer transfer) {
+    public boolean isEqualToTransfer(Transfer transfer, Date transferDueDate) {
         return transfer.getAmount().equals(getAmount())
                 && isIdentifierEquals(transfer.getDestination(), getRecipientAccountNumber())
                 && isIdentifierEquals(transfer.getSource(), getFrom())
-                && DateUtils.isSameDay(transfer.getDueDate(), getDue())
+                && DateUtils.isSameDay(transferDueDate, getDue())
                 && Strings.nullToEmpty(transfer.getRemittanceInformation().getValue())
                         .equals(Strings.nullToEmpty(message));
     }
@@ -294,5 +294,25 @@ public class PaymentEntity {
     @JsonIgnore
     public String getRecipientName() {
         return recipientName;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public void setRecipientAccountNumber(String recipientAccountNumber) {
+        this.recipientAccountNumber = recipientAccountNumber;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setDue(Date due) {
+        this.due = due;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

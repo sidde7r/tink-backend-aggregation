@@ -24,6 +24,7 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/pair",
+        "//src/libraries/payloadparser",
         "//src/libraries/serialization",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_google_http_client_google_http_client",

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -288,13 +289,13 @@ public class NordeaExecutorHelper {
      * Check if payment already exist in outbox as unconfirmed if it does then return the existing
      * payment entity
      */
-    protected Optional<PaymentEntity> findInOutbox(Transfer transfer) {
+    protected Optional<PaymentEntity> findInOutbox(Transfer transfer, Date dueDate) {
         return apiClient.fetchPayments().getPayments().stream()
                 .filter(PaymentEntity::isUnconfirmed)
                 .map(
                         paymentEntity ->
                                 apiClient.fetchPaymentDetails(paymentEntity.getApiIdentifier()))
-                .filter(paymentEntity -> paymentEntity.isEqualToTransfer(transfer))
+                .filter(paymentEntity -> paymentEntity.isEqualToTransfer(transfer, dueDate))
                 .findFirst();
     }
 
