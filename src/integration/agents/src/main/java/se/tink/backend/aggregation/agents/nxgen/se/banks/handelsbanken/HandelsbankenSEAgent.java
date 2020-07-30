@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenSECardDeviceAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.HandelsbankenSEEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.payment.HandelsbankenSEPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.HandelsbankenSEBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.HandelsbankenSECreditCardAccountFetcher;
@@ -155,23 +154,19 @@ public class HandelsbankenSEAgent
         HandelsbankenSEPaymentExecutor paymentExecutor =
                 new HandelsbankenSEPaymentExecutor(
                         supplementalRequester, catalog, client, sessionStorage, exceptionResolver);
-
-        return Optional.of(
-                new TransferController(
-                        paymentExecutor,
-                        new HandelsbankenSEBankTransferExecutor(
-                                client,
-                                sessionStorage,
-                                exceptionResolver,
-                                new TransferMessageFormatter(
-                                        catalog,
-                                        TransferMessageLengthConfig.createWithMaxLength(14, 12),
-                                        new StringNormalizerSwedish(",.-?!/+")),
+        HandelsbankenSEBankTransferExecutor transferExecutor =
+                new HandelsbankenSEBankTransferExecutor(
+                        client,
+                        sessionStorage,
+                        exceptionResolver,
+                        new TransferMessageFormatter(
                                 catalog,
-                                paymentExecutor),
-                        new HandelsbankenSEEInvoiceExecutor(
-                                client, sessionStorage, exceptionResolver, paymentExecutor),
-                        paymentExecutor));
+                                TransferMessageLengthConfig.createWithMaxLength(14, 12),
+                                new StringNormalizerSwedish(",.-?!/+")),
+                        catalog,
+                        paymentExecutor);
+
+        return Optional.of(new TransferController(paymentExecutor, transferExecutor, null, null));
     }
 
     @Override
