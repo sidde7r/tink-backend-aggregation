@@ -55,6 +55,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.identitydata.NameElement;
 
 public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
@@ -115,10 +116,16 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
             @Override
             public void keepAlive() throws SessionException {
-                persistentStorage
-                        .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
-                        .filter(t -> !t.hasAccessExpired())
-                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+                if (request instanceof RefreshInformationRequest
+                        && ((RefreshInformationRequest) request).isForceAuthenticate()) {
+                    persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
+                    throw SessionError.SESSION_EXPIRED.exception();
+                } else {
+                    persistentStorage
+                            .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
+                            .filter(t -> !t.hasAccessExpired())
+                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+                }
             }
         };
     }
