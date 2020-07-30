@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.transfer;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferController {
@@ -40,15 +41,10 @@ public class TransferController {
     public void update(Transfer transfer) {
         Preconditions.checkNotNull(transfer);
 
-        switch (transfer.getType()) {
-            case EINVOICE:
-                approveEInvoice(transfer);
-                break;
-            case PAYMENT:
-                updatePayment(transfer);
-                break;
-            default:
-                TransferExecutionException.throwIf(true);
+        if (transfer.getType() == TransferType.PAYMENT) {
+            updatePayment(transfer);
+        } else {
+            TransferExecutionException.throwIf(true);
         }
     }
 
