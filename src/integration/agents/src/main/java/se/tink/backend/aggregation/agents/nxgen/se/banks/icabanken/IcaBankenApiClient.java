@@ -6,17 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.SessionBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.SessionInfoResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.AcceptEInvoiceTransferRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.FinishEInvoiceSignRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.UpdateEInvoiceRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.ValidateEInvoiceRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.ValidateEInvoiceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.PaymentNameBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.TransferBankEntity;
@@ -56,8 +49,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class IcaBankenApiClient {
-    private static final Logger log = LoggerFactory.getLogger(IcaBankenApiClient.class);
-
     private final TinkHttpClient client;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
     private final IcabankenPersistentStorage icabankenPersistentStorage;
@@ -101,14 +92,6 @@ public class IcaBankenApiClient {
         return createPostRequest(
                         IcaBankenConstants.Urls.LOGIN_BANKID.parameter(
                                 IcaBankenConstants.IdTags.IDENTIFIER_TAG, ssn))
-                .post(BankIdResponse.class)
-                .getBody();
-    }
-
-    public BankIdBodyEntity initEInvoiceBankId(String invoiceId) {
-        return createPostRequest(
-                        IcaBankenConstants.Urls.INIT_EINVOICE_SIGN.parameter(
-                                IcaBankenConstants.IdTags.INVOICE_ID_TAG, invoiceId))
                 .post(BankIdResponse.class)
                 .getBody();
     }
@@ -262,27 +245,6 @@ public class IcaBankenApiClient {
                         .getBody();
 
         return Optional.ofNullable(bodyEntity.getAssignments()).orElseGet(Collections::emptyList);
-    }
-
-    public ValidateEInvoiceResponse validateEInvoice(ValidateEInvoiceRequest validateRequest) {
-        return createPostRequest(IcaBankenConstants.Urls.VALIDATE_INVOICE)
-                .post(ValidateEInvoiceResponse.class, validateRequest);
-    }
-
-    public ValidateEInvoiceResponse updateEInvoice(UpdateEInvoiceRequest updateEInvoiceRequest) {
-        return createRequest(IcaBankenConstants.Urls.UPDATE_INVOICE)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .put(ValidateEInvoiceResponse.class, updateEInvoiceRequest);
-    }
-
-    public void acceptEInvoice(AcceptEInvoiceTransferRequest request) {
-        createPostRequest(IcaBankenConstants.Urls.ACCEPT_EINVOICE)
-                .post(HttpResponse.class, request);
-    }
-
-    public void finishEInvoiceSign(FinishEInvoiceSignRequest request) {
-        createPostRequest(IcaBankenConstants.Urls.FINISH_EINVOICE_SIGN)
-                .post(HttpResponse.class, request);
     }
 
     public List<TransferBankEntity> fetchTransferBanks() {
