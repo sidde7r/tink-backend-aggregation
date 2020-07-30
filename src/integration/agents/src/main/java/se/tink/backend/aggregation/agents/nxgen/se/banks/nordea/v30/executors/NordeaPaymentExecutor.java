@@ -40,15 +40,6 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
         Date dueDate = NordeaDateUtil.getTransferDateForBgPg(transfer.getDueDate());
-        // check if transfer already exist in outbox, if it does then user can confirm that one
-        createNewOrConfirmExisting(transfer, dueDate);
-    }
-
-    /**
-     * Check if payment already exist in outbox as unconfirmed if it does then execute a payment on
-     * that id instead. Otherwise, proceeds to create a new payment
-     */
-    private void createNewOrConfirmExisting(Transfer transfer, Date dueDate) {
         try {
             final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
 
