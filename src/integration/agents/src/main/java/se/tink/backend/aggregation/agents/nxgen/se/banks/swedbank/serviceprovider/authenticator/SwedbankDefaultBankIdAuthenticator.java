@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
@@ -106,7 +107,9 @@ public class SwedbankDefaultBankIdAuthenticator
                     return BankIdStatus.TIMEOUT;
                 } else if (errorResponse.hasErrorCode(
                         SwedbankBaseConstants.BankErrorMessage.SESSION_INVALIDATED)) {
-                    return BankIdStatus.FAILED_UNKNOWN;
+                    // When user has bank app running, and starts a refresh, both sessions will be
+                    // invalidated
+                    throw SessionError.SESSION_ALREADY_ACTIVE.exception();
                 }
             } else if (responseStatus == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 // This code is a temporary fix until Swedbank returns a better error message.
