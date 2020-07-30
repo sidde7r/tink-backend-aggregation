@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -117,7 +118,8 @@ public class AvanzaInvestmentFetcher
             String authSession, IsinMap isinMap) {
         return instrument ->
                 instrument.getPositions().stream()
-                        .map(aggregateInstrument(isinMap, apiClient, authSession, instrument));
+                        .map(aggregateInstrument(isinMap, apiClient, authSession, instrument))
+                        .filter(Objects::nonNull);
     }
 
     private Function<PositionEntity, InstrumentModule> aggregateInstrument(
@@ -138,12 +140,9 @@ public class AvanzaInvestmentFetcher
                 final String marketInfoIsin = marketInfo.getIsin();
                 final String mapIsin = isinMap.get(position.getName());
                 isin = Optional.ofNullable(marketInfoIsin).orElse(mapIsin);
-            } else {
-                marketPlace = null;
-                isin = isinMap.get(position.getName());
+                return position.toTinkInstrument(instrument, marketPlace, isin);
             }
-
-            return position.toTinkInstrument(instrument, marketPlace, isin);
+            return null;
         };
     }
 

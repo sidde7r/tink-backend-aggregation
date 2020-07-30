@@ -4,10 +4,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "exactValue" : 441878.63,
       "scale" : 2,
       "unscaledValue" : 44187863,
-      "doubleValue" : 441878.63,
-      "exactValue" : 441878.63
+      "doubleValue" : 441878.63
     },
     "currencyCode" : "SEK",
     "bankId" : "1000000",
@@ -38,10 +38,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "exactValue" : 23364.86,
       "scale" : 2,
       "unscaledValue" : 2336486,
-      "doubleValue" : 23364.86,
-      "exactValue" : 23364.86
+      "doubleValue" : 23364.86
     },
     "currencyCode" : "SEK",
     "bankId" : "1000011",
@@ -72,10 +72,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "exactValue" : 2154.31,
       "scale" : 2,
-      "unscaledValue" : 1883043,
-      "doubleValue" : 18830.43,
-      "exactValue" : 18830.43
+      "unscaledValue" : 215431,
+      "doubleValue" : 2154.31
     },
     "currencyCode" : "SEK",
     "bankId" : "2000040",
@@ -100,16 +100,16 @@
     },
     "flags" : "[]",
     "availableCredit" : 0.0,
-    "balance" : 18830.43
+    "balance" : 2154.31
   }, {
     "accountNumber" : "9553-7000040",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "exactValue" : 0.0,
       "scale" : 2,
       "unscaledValue" : 0,
-      "doubleValue" : 0.0,
-      "exactValue" : 0.0
+      "doubleValue" : 0.0
     },
     "currencyCode" : "SEK",
     "bankId" : "7000040",
@@ -140,10 +140,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "exactValue" : 0.0,
       "scale" : 1,
       "unscaledValue" : 0,
-      "doubleValue" : 0.0,
-      "exactValue" : 0.0
+      "doubleValue" : 0.0
     },
     "currencyCode" : "SEK",
     "bankId" : "1000052",
@@ -174,10 +174,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "exactValue" : 16885.67,
       "scale" : 2,
       "unscaledValue" : 1688567,
-      "doubleValue" : 16885.67,
-      "exactValue" : 16885.67
+      "doubleValue" : 16885.67
     },
     "currencyCode" : "SEK",
     "bankId" : "1000075",
@@ -208,10 +208,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "exactValue" : 312378.52,
       "scale" : 2,
-      "unscaledValue" : 31227852,
-      "doubleValue" : 312278.52,
-      "exactValue" : 312278.52
+      "unscaledValue" : 31237852,
+      "doubleValue" : 312378.52
     },
     "currencyCode" : "SEK",
     "bankId" : "1000093",
@@ -236,7 +236,7 @@
     },
     "flags" : "[]",
     "availableCredit" : 0.0,
-    "balance" : 312278.52
+    "balance" : 312378.52
   } ],
   "transactions" : [ {
     "amount" : 500.0,

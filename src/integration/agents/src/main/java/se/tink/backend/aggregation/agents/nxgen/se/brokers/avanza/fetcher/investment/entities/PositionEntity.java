@@ -181,7 +181,7 @@ public class PositionEntity {
         // instrument.
         return InstrumentModule.builder()
                 .withType(getTinkInstrumentType(parent.getInstrumentType()))
-                .withId(InstrumentIdModule.of(isin, marketPlace, name))
+                .withId(InstrumentIdModule.of(isin, marketPlace, name, getOrderbookId()))
                 .withMarketPrice(lastPrice)
                 .withMarketValue(value)
                 .withAverageAcquisitionPrice(averageAcquiredPrice)
