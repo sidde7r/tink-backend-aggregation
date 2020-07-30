@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.seb.mortgage;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
@@ -52,9 +54,8 @@ public class JerseyClientWrapperTest {
         // Hook the wiremock server to URI and match the headers + content
         stubFor(
                 post(urlEqualTo("/test"))
-                        .withHeader("Content-Type", matching("application/json; charset=utf-8"))
-                        .withHeader("Accept", matching("application/json"))
-                        .withRequestBody(matching("\\{\\\"input\\\":\\\"value\\\"\\}"))
+                        .withHeader("Accept", equalTo("application/json"))
+                        .withRequestBody(equalToJson("{\"input\":\"value\"}"))
                         .willReturn(aResponse().withBody("...response...")));
 
         // Setup
@@ -73,7 +74,6 @@ public class JerseyClientWrapperTest {
         stubFor(
                 get(urlEqualTo("/test"))
                         .withHeader("Accept", matching("application/json"))
-                        .withRequestBody(matching("^$")) // Empty body
                         .willReturn(aResponse().withBody("...response...")));
 
         // Setup
@@ -93,7 +93,6 @@ public class JerseyClientWrapperTest {
                 get(urlEqualTo("/test"))
                         .withHeader("Accept", matching("application/json"))
                         .withHeader("Custom-Header", matching("my-custom"))
-                        .withRequestBody(matching("^$")) // Empty body
                         .willReturn(aResponse().withBody("...response...")));
 
         // Setup

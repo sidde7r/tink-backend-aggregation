@@ -918,7 +918,7 @@ maven_install(
         "com.amazonaws:aws-java-sdk-sqs:1.11.381",
         "com.amazonaws:jmespath-java:1.11.381",
         "com.auth0:java-jwt:3.3.0",
-        "com.github.tomakehurst:wiremock:2.1.12",
+        "com.github.tomakehurst:wiremock-standalone:2.27.1",
         "com.google.crypto.tink:tink:1.2.2",
         "com.google.errorprone:javac-shaded:9+181-r4173-1",
         "com.google.googlejavaformat:google-java-format:1.7",

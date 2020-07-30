@@ -3,7 +3,7 @@ POST https://aggregation.com/aggregation/controller/v1/system/update/credentials
 Accept: application/json
 Content-Type: application/json
 
-{"credentials":{"providerLatency":0,"id":"dummy_id","statusUpdated":1,"dataVersion":0,"fields":{},"sensitivePayload":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"migrationUpdate":false},"updateContextTimestamp":false,"manual":false,"migrationUpdate":false}
+{"credentials":{"providerLatency":0,"id":"dummy_id","statusUpdated":1,"dataVersion":0,"fields":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"migrationUpdate":false},"updateContextTimestamp":false,"manual":false,"migrationUpdate":false,"refreshId":null,"requestType":null}
 
 RESPONSE 1 SET STATE1
 502
@@ -16,7 +16,7 @@ POST https://aggregation.com/aggregation/controller/v1/system/update/credentials
 Accept: application/json
 Content-Type: application/json
 
-{"credentials":{"providerLatency":0,"id":"dummy_id","statusUpdated":1,"dataVersion":0,"fields":{},"sensitivePayload":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"migrationUpdate":false},"updateContextTimestamp":false,"manual":false,"migrationUpdate":false}
+{"credentials":{"providerLatency":0,"id":"dummy_id","statusUpdated":1,"dataVersion":0,"fields":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"migrationUpdate":false},"updateContextTimestamp":false,"manual":false,"migrationUpdate":false,"refreshId":null,"requestType":null}
 
 RESPONSE 2
 200
