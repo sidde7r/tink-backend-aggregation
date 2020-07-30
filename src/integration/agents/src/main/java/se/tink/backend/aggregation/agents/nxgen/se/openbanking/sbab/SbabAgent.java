@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
+import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -7,14 +8,13 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.TransactionFetching;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.SbabPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountFetcher;
@@ -25,6 +25,8 @@ import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestina
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -37,29 +39,22 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public final class SbabAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                RefreshTransferDestinationExecutor {
+        implements RefreshSavingsAccountsExecutor, RefreshTransferDestinationExecutor {
 
     private final SbabApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final LocalDateTimeSource localDateTimeSource;
 
-    public SbabAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+    @Inject
+    public SbabAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
 
         apiClient = new SbabApiClient(client, sessionStorage);
+        localDateTimeSource = componentProvider.getLocalDateTimeSource();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        apiClient.setConfiguration(getAgentConfiguration());
-
-        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         configureHttpClient(this.client);
     }
 
@@ -84,25 +79,22 @@ public final class SbabAgent extends NextGenerationAgent
     }
 
     @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        apiClient.setConfiguration(getAgentConfiguration());
+        this.client.setEidasProxy(configuration.getEidasProxy());
+    }
+
+    @Override
     protected Authenticator constructAuthenticator() {
         SbabAuthenticator sbabAuthenticator =
                 new SbabAuthenticator(apiClient, sessionStorage, shouldRequestRefreshableToken());
-        BankIdAuthenticationController bankIdAuthenticationController =
+        BankIdAuthenticationController<BankIdResponse> bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalRequester, sbabAuthenticator, persistentStorage, credentials);
 
         return new SbabAuthenticationController(
                 request, systemUpdater, bankIdAuthenticationController);
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return transactionalAccountRefreshController.fetchCheckingAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
     @Override
@@ -132,7 +124,8 @@ public final class SbabAgent extends NextGenerationAgent
                                 transactionFetcher,
                                 TransactionFetching.MAX_CONSECUTIVE_EMPTY_PAGES,
                                 TransactionFetching.DAYS_TO_FETCH,
-                                ChronoUnit.DAYS)));
+                                ChronoUnit.DAYS,
+                                localDateTimeSource)));
     }
 
     @Override
