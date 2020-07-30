@@ -45,14 +45,9 @@ public class IcaBankenConstants {
         public static final URL UNSIGNED_ASSIGNMENTS = new URL(HOST + "/api/assignments");
         public static final URL DELETE_UNSIGNED_TRANSFER =
                 new URL(HOST + "/api/assignments/bundle/{transferId}");
-        public static final URL ACCEPT_EINVOICE = new URL(HOST + "/api/egiro/invoice/accept");
-        public static final URL VALIDATE_INVOICE = new URL(HOST + "/api/egiro/invoice/validate");
         public static final URL EINVOICES = new URL(HOST + "/api/egiro/invoices");
-        public static final URL UPDATE_INVOICE = new URL(HOST + "/api/egiro/invoice/update");
         public static final URL INIT_EINVOICE_SIGN =
                 new URL(HOST + "/api/egiro/recipient/bankId/init/{invoiceId}");
-        public static final URL FINISH_EINVOICE_SIGN =
-                new URL(HOST + "/api/egiro/recipient/bankId");
     }
 
     public static final class Headers {
@@ -130,12 +125,6 @@ public class IcaBankenConstants {
         public static final String OCR = "1";
         public static final String MESSAGE = "2";
 
-        public static final int EINVOICE_VALIDATE_SUCCESS_CODE = 0;
-        public static final int EINVOICE_VALIDATE_ERROR_CODE = 1000;
-        public static final String EINVOICE_VALIDATE_ERROR_MSG = "Error validating invoice.";
-        public static final String EINVOICE_DATE_CHANGED_MSG =
-                "Angivet datum har ändrats till närmast möjliga dag.";
-
         public static final String RECIPIENT_NAME_FIELD_NAME = "name";
         public static final String RECIPIENT_NAME_FIELD_DESCRIPTION = "Mottagarnamn";
 
@@ -163,24 +152,8 @@ public class IcaBankenConstants {
     }
 
     public static final class LogMessage {
-        public static final String PROVIDER_UNIQUE_ID_NOT_FOUND =
-                "Missing PROVIDER_UNIQUE_ID on transfer payload";
-        public static final String NO_ORIGINAL_TRANSFER =
-                "No original transfer on payload to compare with.";
         public static final String NO_RECIPIENT_NAME = "Could not get recipient name from user";
         public static final String NO_SAVE_NEW_RECIPIENT_MESSAGE = "Could not save new recipient";
-        public static final String EINVOICE_MODIFIED_IN_BANK_APP =
-                "The e-invoice has been changed in the bank app,"
-                        + " user have to refresh so that we update according to most recent data";
-        public static final String EINVOICE_NOT_FOUND =
-                "Could not find the selected invoice in user's bank.";
-        public static final String EINVOICE_DESTINATION_MODIFIED =
-                "Destination account cannot be changed.";
-        public static final String EINVOICE_SRC_MSG_MODIFIED = "Source message cannot be changed.";
-        public static final String EINVOICE_DEST_MSG_MODIFIED =
-                "Destination message cannot be changed.";
-        public static final String EINVOICE_UPDATE_ERROR = "Could not update invoice";
-        public static final String EINVOICE_VALIDATE_ERROR = "Could not validate invoice";
     }
 
     public static final class Error {

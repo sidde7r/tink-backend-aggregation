@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenExecutorHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenPaymentExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.IcaBankenEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.IcaBankenEInvoiceFetcher;
@@ -222,7 +221,7 @@ public class IcaBankenAgent extends NextGenerationAgent
                 new TransferController(
                         new IcaBankenPaymentExecutor(apiClient, executorHelper),
                         new IcaBankenBankTransferExecutor(apiClient, executorHelper, catalog),
-                        new IcaBankenEInvoiceExecutor(apiClient, executorHelper, catalog),
+                        null,
                         null));
     }
 
