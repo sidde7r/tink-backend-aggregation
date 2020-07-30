@@ -48,6 +48,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -80,6 +81,22 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
+        log.info(
+                "[forceAuthenticate] constructRedirectAuthenticator, credentials: {}",
+                request.getCredentials().getId());
+        if (request instanceof RefreshInformationRequest
+                && ((RefreshInformationRequest) request).isForceAuthenticate()) {
+            if (persistentStorage.containsKey(
+                    OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN)) {
+                log.info(
+                        "[forceAuthenticate] persistentStorage contains token, credentials: {}",
+                        request.getCredentials().getId());
+            }
+            log.info(
+                    "[forceAuthenticate] removing token from persistentStorage, credentials: {}",
+                    request.getCredentials().getId());
+            persistentStorage.remove(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN);
+        }
         // Note: It's on purpose that this agent does not use the
         // AgentConfigurationController to get the callbackUri/redirectUri.
         // This is only for customers to test the callbackUri without

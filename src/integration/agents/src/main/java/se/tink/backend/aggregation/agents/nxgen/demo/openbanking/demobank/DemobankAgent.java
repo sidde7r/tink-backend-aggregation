@@ -36,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternal
 
 public class DemobankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
-
     protected final DemobankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final String callbackUri;

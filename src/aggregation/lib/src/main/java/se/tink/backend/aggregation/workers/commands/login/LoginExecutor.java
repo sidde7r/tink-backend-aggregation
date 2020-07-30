@@ -4,6 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -32,6 +35,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LoginExecutor {
 
+    private static final Logger log = LoggerFactory.getLogger(LoginExecutor.class);
     private List<LoginHandler> loginHandlerChain = new LinkedList<>();
     private List<LoginExceptionHandler> loginExceptionHandlerChain = new LinkedList<>();
     private final LoginAgentEventProducer loginAgentEventProducer;
@@ -230,8 +234,18 @@ public class LoginExecutor {
             final MetricActionIface metricAction,
             final CredentialsRequest credentialsRequest) {
         try {
+            log.info(
+                    "LoginExecutor for credentials {}",
+                    Optional.ofNullable(credentialsRequest.getCredentials())
+                            .map(Credentials::getId)
+                            .orElse(null));
             return processLoginHandlerChain(agent, metricAction, credentialsRequest);
         } catch (Exception ex) {
+            log.info(
+                    "LoginExecutor-EXCEPTION for credentials {}",
+                    Optional.ofNullable(credentialsRequest.getCredentials())
+                            .map(Credentials::getId)
+                            .orElse(null));
             return processLoginExceptionHandlerChain(ex, metricAction);
         }
     }
