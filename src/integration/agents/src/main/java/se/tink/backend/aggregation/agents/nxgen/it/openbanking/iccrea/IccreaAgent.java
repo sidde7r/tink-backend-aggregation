@@ -1,25 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea;
 
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.IccreaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IccreaAgent extends CbiGlobeAgent {
 
-    public IccreaAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public IccreaAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
     }
 
     @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
         return new IccreaApiClient(
-                client, persistentStorage, sessionStorage, requestManual, temporaryStorage);
+                client,
+                persistentStorage,
+                sessionStorage,
+                requestManual,
+                temporaryStorage,
+                getProviderConfiguration());
     }
 
     @Override

@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.exception.NoAccountsException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
@@ -57,6 +58,7 @@ public class CbiGlobeApiClient {
     private boolean requestManual;
     protected TemporaryStorage temporaryStorage;
     protected InstrumentType instrumentType;
+    private CbiGlobeProviderConfiguration providerConfiguration;
 
     public CbiGlobeApiClient(
             TinkHttpClient client,
@@ -64,13 +66,15 @@ public class CbiGlobeApiClient {
             SessionStorage sessionStorage,
             boolean requestManual,
             TemporaryStorage temporaryStorage,
-            InstrumentType instrumentType) {
+            InstrumentType instrumentType,
+            CbiGlobeProviderConfiguration providerConfiguration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.requestManual = requestManual;
         this.temporaryStorage = temporaryStorage;
         this.instrumentType = instrumentType;
+        this.providerConfiguration = providerConfiguration;
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -98,7 +102,7 @@ public class CbiGlobeApiClient {
         return createRequest(url)
                 .addBearerToken(authToken)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.ASPSP_CODE, configuration.getAspspCode())
+                .header(HeaderKeys.ASPSP_CODE, providerConfiguration.getAspspCode())
                 .header(HeaderKeys.DATE, CbiGlobeUtils.formatDate(new Date()));
     }
 
@@ -160,7 +164,7 @@ public class CbiGlobeApiClient {
     protected RequestBuilder createConsentRequest(String state, ConsentType consentType) {
         String redirectUrl = createRedirectUrl(state, consentType);
         return createRequestInSession(Urls.CONSENTS)
-                .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
+                .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
     }
@@ -273,7 +277,7 @@ public class CbiGlobeApiClient {
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
         return createRequestInSession(Urls.PAYMENT)
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
-                .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
+                .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
@@ -294,7 +298,7 @@ public class CbiGlobeApiClient {
     public CreatePaymentResponse getPayment(String uniqueId) {
         return createRequestInSession(Urls.FETCH_PAYMENT.parameter(IdTags.PAYMENT_ID, uniqueId))
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
-                .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
+                .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
                 .get(CreatePaymentResponse.class);
     }
 

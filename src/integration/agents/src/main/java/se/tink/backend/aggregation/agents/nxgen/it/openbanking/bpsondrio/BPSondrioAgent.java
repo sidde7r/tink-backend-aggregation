@@ -1,21 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio;
 
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 public class BPSondrioAgent extends CbiGlobeAgent {
 
-    public BPSondrioAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public BPSondrioAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
     }
 
     @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
         return new BPSondrioApiClient(
-                client, persistentStorage, sessionStorage, requestManual, temporaryStorage);
+                client,
+                persistentStorage,
+                sessionStorage,
+                requestManual,
+                temporaryStorage,
+                getProviderConfiguration());
     }
 }
