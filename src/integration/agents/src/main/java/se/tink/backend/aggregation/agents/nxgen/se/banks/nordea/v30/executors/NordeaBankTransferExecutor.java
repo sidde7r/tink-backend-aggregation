@@ -85,17 +85,14 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         final AccountEntity sourceAccount =
                 executorHelper.validateSourceAccount(transfer, accountResponse, false);
 
-        // find existing Beneficiary Account
-        final Optional<AccountEntity> existingBeneficiaryAccount =
+        // find if it's user's own account
+        final Optional<AccountEntity> internalAccount =
                 executorHelper.validateOwnDestinationAccount(transfer, accountResponse);
 
-        if (existingBeneficiaryAccount.isPresent()) {
+        if (internalAccount.isPresent()) {
             // Transfers doesn't need signing.
             executeTransferWithoutUserSigning(
-                    transfer,
-                    sourceAccount,
-                    existingBeneficiaryAccount.get(),
-                    transferMessageFormatter);
+                    transfer, sourceAccount, internalAccount.get(), transferMessageFormatter);
         } else {
             // Transfers require adding beneficiary and signing.
             executeTransferWithUserSigning(
