@@ -268,16 +268,6 @@ public class IcaBankenExecutorHelper {
         }
     }
 
-    public String signEInvoice(String invoiceId) {
-        BankIdBodyEntity bankIdResponse = apiClient.initEInvoiceBankId(invoiceId);
-        String reference = bankIdResponse.getRequestId();
-
-        supplementalRequester.openBankId(bankIdResponse.getAutostartToken(), false);
-        poll(reference);
-
-        return reference;
-    }
-
     private void throwBankIdAlreadyInProgressError(Exception initialException) {
 
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
