@@ -36,7 +36,7 @@ public class BPostBankAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         if (authSteps.isEmpty()) {
             authSteps.add(
                     new AutomaticAuthenticationStep(

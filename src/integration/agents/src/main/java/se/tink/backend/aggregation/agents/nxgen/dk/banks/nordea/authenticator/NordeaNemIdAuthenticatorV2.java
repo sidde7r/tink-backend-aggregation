@@ -165,7 +165,7 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         List<AuthenticationStep> steps = new LinkedList<>();
         steps.add(new AutomaticAuthenticationStep(this::autoAuthenticate, "autoAuth"));
         steps.add(new CredentialsAuthenticationStep(this::authenticate));

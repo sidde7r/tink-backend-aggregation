@@ -64,7 +64,7 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         return isDeviceRegistered() ? autoAuthenticationSteps : manualAuthenticationSteps;
     }
 

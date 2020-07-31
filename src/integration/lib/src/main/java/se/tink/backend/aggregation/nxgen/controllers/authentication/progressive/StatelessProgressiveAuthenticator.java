@@ -66,7 +66,7 @@ public abstract class StatelessProgressiveAuthenticator implements Authenticatio
     }
 
     private AuthenticationStep getStepById(String stepId) {
-        List<? extends AuthenticationStep> authSteps = authenticationSteps();
+        List<AuthenticationStep> authSteps = authenticationSteps();
         return authSteps.stream()
                 .filter(s -> s.getIdentifier().equals(stepId))
                 .findAny()
@@ -77,7 +77,7 @@ public abstract class StatelessProgressiveAuthenticator implements Authenticatio
     }
 
     private Optional<AuthenticationStep> getStepNextToCurrent() {
-        List<? extends AuthenticationStep> authSteps = authenticationSteps();
+        List<AuthenticationStep> authSteps = authenticationSteps();
         int currentStepId = authSteps.indexOf(currentStep);
         if (currentStepId < authSteps.size() - 1) {
             return Optional.of(authSteps.get(currentStepId + 1));
@@ -85,5 +85,5 @@ public abstract class StatelessProgressiveAuthenticator implements Authenticatio
         return Optional.empty();
     }
 
-    public abstract List<? extends AuthenticationStep> authenticationSteps();
+    public abstract List<AuthenticationStep> authenticationSteps();
 }

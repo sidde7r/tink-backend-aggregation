@@ -25,19 +25,19 @@ public final class ProgressiveAuthController {
     public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        LinkedList<? extends AuthenticationStep> authSteps =
+        LinkedList<AuthenticationStep> authSteps =
                 Lists.newLinkedList(authenticator.authenticationSteps());
         return executeStep(authSteps, determineStepClassToExecute(authSteps, request), request);
     }
 
     private String determineStepClassToExecute(
-            LinkedList<? extends AuthenticationStep> authenticationSteps,
+            LinkedList<AuthenticationStep> authenticationSteps,
             SteppableAuthenticationRequest request) {
         return request.getStepIdentifier().orElse(authenticationSteps.getFirst().getIdentifier());
     }
 
     private SteppableAuthenticationResponse executeStep(
-            LinkedList<? extends AuthenticationStep> authenticationSteps,
+            LinkedList<AuthenticationStep> authenticationSteps,
             final String stepIdentifier,
             final SteppableAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
@@ -64,8 +64,7 @@ public final class ProgressiveAuthController {
     }
 
     private static boolean isLastStep(
-            final AuthenticationStep step,
-            LinkedList<? extends AuthenticationStep> authenticationSteps) {
+            final AuthenticationStep step, LinkedList<AuthenticationStep> authenticationSteps) {
         return authenticationSteps.getLast().equals(step);
     }
 }

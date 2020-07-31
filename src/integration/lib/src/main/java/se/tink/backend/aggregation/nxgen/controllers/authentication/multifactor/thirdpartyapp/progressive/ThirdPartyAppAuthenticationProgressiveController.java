@@ -24,7 +24,7 @@ public class ThirdPartyAppAuthenticationProgressiveController
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps() {
+    public Iterable<AuthenticationStep> authenticationSteps() {
         return Arrays.asList(
                 new OpenThirdPartyAppStep(authenticator),
                 new RedirectStep(authenticator),

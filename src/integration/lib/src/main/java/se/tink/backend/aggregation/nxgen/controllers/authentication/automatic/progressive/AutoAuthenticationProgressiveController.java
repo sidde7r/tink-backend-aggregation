@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.ProgressiveAuthenticator;
@@ -51,7 +50,7 @@ public class AutoAuthenticationProgressiveController
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps()
+    public Iterable<AuthenticationStep> authenticationSteps()
             throws AuthenticationException, AuthorizationException {
         try {
             if (shouldDoManualAuthentication(credentials)) {
@@ -89,7 +88,7 @@ public class AutoAuthenticationProgressiveController
                 && !requestIsCreate;
     }
 
-    private Iterable<? extends AuthenticationStep> manualProgressive(final Credentials credentials)
+    private Iterable<AuthenticationStep> manualProgressive(final Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         if (!requestIsManual) {
             throw SessionError.SESSION_EXPIRED.exception();
@@ -105,18 +104,12 @@ public class AutoAuthenticationProgressiveController
         }
     }
 
-    private Iterable<? extends AuthenticationStep> auto(Credentials credentials)
+    private Iterable<AuthenticationStep> auto(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         try {
             autoAuthenticator.autoAuthenticate();
             return Collections.singletonList(
-                    new AuthenticationStep() {
-                        @Override
-                        public AuthenticationStepResponse execute(AuthenticationRequest request)
-                                throws AuthenticationException, AuthorizationException {
-                            return AuthenticationStepResponse.executeNextStep();
-                        }
-                    });
+                    request -> AuthenticationStepResponse.executeNextStep());
         } catch (SessionException autoException) {
             if (!requestIsManual) {
                 credentials.setType(manualAuthenticator.getType());

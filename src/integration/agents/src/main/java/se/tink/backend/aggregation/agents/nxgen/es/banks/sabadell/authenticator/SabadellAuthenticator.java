@@ -29,7 +29,7 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
     private final SabadellApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
-    private final List<? extends AuthenticationStep> authenticationSteps;
+    private final List<AuthenticationStep> authenticationSteps;
 
     public SabadellAuthenticator(
             SabadellApiClient apiClient,
@@ -47,7 +47,7 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         return authenticationSteps;
     }
 

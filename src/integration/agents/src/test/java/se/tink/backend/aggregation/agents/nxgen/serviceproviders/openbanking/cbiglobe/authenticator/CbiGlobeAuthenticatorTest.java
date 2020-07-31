@@ -51,8 +51,7 @@ public class CbiGlobeAuthenticatorTest {
         when(consentManager.isConsentAccepted()).thenReturn(true);
 
         // when
-        Iterable<? extends AuthenticationStep> authenticationSteps =
-                authenticator.authenticationSteps();
+        Iterable<AuthenticationStep> authenticationSteps = authenticator.authenticationSteps();
 
         // then
         assertThat(authenticationSteps).isEmpty();

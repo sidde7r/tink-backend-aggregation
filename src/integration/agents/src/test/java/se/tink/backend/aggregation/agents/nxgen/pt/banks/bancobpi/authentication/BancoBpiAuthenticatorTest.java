@@ -52,7 +52,7 @@ public class BancoBpiAuthenticatorTest {
         Mockito.when(userState.isDeviceActivationFinished()).thenReturn(false);
         // when
 
-        List<? extends AuthenticationStep> steps =
+        List<AuthenticationStep> steps =
                 ImmutableList.copyOf(objectUnderTest.authenticationSteps());
         // then
         Assert.assertEquals(4, steps.size());
@@ -70,7 +70,7 @@ public class BancoBpiAuthenticatorTest {
         // given
         Mockito.when(userState.isDeviceActivationFinished()).thenReturn(true);
         // when
-        List<? extends AuthenticationStep> steps =
+        List<AuthenticationStep> steps =
                 ImmutableList.copyOf(objectUnderTest.authenticationSteps());
         // then
         Assert.assertEquals(2, steps.size());

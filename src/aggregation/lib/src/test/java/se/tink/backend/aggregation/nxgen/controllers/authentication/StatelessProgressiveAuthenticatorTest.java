@@ -152,7 +152,7 @@ public class StatelessProgressiveAuthenticatorTest {
             AuthenticationStep... authSteps) {
         return new StatelessProgressiveAuthenticator() {
             @Override
-            public List<? extends AuthenticationStep> authenticationSteps() {
+            public List<AuthenticationStep> authenticationSteps() {
                 return Arrays.asList(authSteps);
             }
 

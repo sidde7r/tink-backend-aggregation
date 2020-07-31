@@ -33,7 +33,7 @@ public class CaisseEpargneAuthenticator extends StatelessProgressiveAuthenticato
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         return Arrays.asList(
                 new PasswordLoginStep(apiClient, instanceStorage, persistentStorage),
                 new SmsOtpStep(apiClient, instanceStorage, supplementalInformationProvider),
