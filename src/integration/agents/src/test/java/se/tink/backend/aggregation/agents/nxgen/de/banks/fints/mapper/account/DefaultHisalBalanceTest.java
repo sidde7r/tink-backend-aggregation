@@ -27,8 +27,8 @@ public class DefaultHisalBalanceTest {
                 balance.calculate(
                         new HISAL()
                                 .setCurrency("EUR")
-                                .setBookedBalance(BigDecimal.valueOf(10))
-                                .setPendingBalance(BigDecimal.valueOf(3)));
+                                .setFirstBalanceValue(BigDecimal.valueOf(10))
+                                .setSecondBalanceValue(BigDecimal.valueOf(3)));
 
         // then
         assertThat(result.getExactBalance())
@@ -45,7 +45,9 @@ public class DefaultHisalBalanceTest {
         // when
         BalanceModule result =
                 balance.calculate(
-                        new HISAL().setCurrency("EUR").setBookedBalance(BigDecimal.valueOf(10)));
+                        new HISAL()
+                                .setCurrency("EUR")
+                                .setFirstBalanceValue(BigDecimal.valueOf(10)));
 
         // then
         assertThat(result.getExactBalance())

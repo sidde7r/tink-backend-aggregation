@@ -9,9 +9,10 @@ public class IngHisalBalance implements HisalBalance {
     @Override
     public BalanceModule calculate(HISAL hisal) {
         return BalanceModule.builder()
-                .withBalance(ExactCurrencyAmount.of(hisal.getBookedBalance(), hisal.getCurrency()))
+                .withBalance(
+                        ExactCurrencyAmount.of(hisal.getFirstBalanceValue(), hisal.getCurrency()))
                 .setAvailableBalance(
-                        ExactCurrencyAmount.of(hisal.getPendingBalance(), hisal.getCurrency()))
+                        ExactCurrencyAmount.of(hisal.getSecondBalanceValue(), hisal.getCurrency()))
                 .build();
     }
 }

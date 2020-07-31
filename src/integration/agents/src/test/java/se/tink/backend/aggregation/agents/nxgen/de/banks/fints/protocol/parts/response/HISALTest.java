@@ -42,8 +42,8 @@ public class HISALTest {
         assertThat(segment.getBlz()).isEqualTo("BLZ_70150000");
 
         assertThat(segment.getCurrency()).isEqualTo("EUR");
-        assertThat(segment.getBookedBalance()).isEqualTo(BigDecimal.valueOf(6569.44));
-        assertThat(segment.getPendingBalance()).isEqualTo(BigDecimal.valueOf(-1234.32));
+        assertThat(segment.getFirstBalanceValue()).isEqualTo(BigDecimal.valueOf(6569.44));
+        assertThat(segment.getSecondBalanceValue()).isEqualTo(BigDecimal.valueOf(-1234.32));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class HISALTest {
         assertThat(segment.getBlz()).isEqualTo("BLZ_70150000");
 
         assertThat(segment.getCurrency()).isEqualTo("EUR");
-        assertThat(segment.getBookedBalance()).isEqualTo(BigDecimal.valueOf(6569.44));
-        assertThat(segment.getPendingBalance()).isEqualTo(BigDecimal.valueOf(-1234.32));
+        assertThat(segment.getFirstBalanceValue()).isEqualTo(BigDecimal.valueOf(6569.44));
+        assertThat(segment.getSecondBalanceValue()).isEqualTo(BigDecimal.valueOf(-1234.32));
     }
 }

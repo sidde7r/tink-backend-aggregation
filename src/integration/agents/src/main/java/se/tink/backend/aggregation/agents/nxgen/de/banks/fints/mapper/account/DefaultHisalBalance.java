@@ -12,14 +12,15 @@ public class DefaultHisalBalance implements HisalBalance {
     public BalanceModule calculate(HISAL hisal) {
 
         return BalanceModule.builder()
-                .withBalance(ExactCurrencyAmount.of(hisal.getBookedBalance(), hisal.getCurrency()))
+                .withBalance(
+                        ExactCurrencyAmount.of(hisal.getFirstBalanceValue(), hisal.getCurrency()))
                 .setAvailableBalance(ExactCurrencyAmount.of(getBalance(hisal), hisal.getCurrency()))
                 .build();
     }
 
     private BigDecimal getBalance(HISAL hisal) {
         BigDecimal pendingBalance =
-                Optional.ofNullable(hisal.getPendingBalance()).orElse(BigDecimal.valueOf(0));
-        return hisal.getBookedBalance().add(pendingBalance);
+                Optional.ofNullable(hisal.getSecondBalanceValue()).orElse(BigDecimal.valueOf(0));
+        return hisal.getFirstBalanceValue().add(pendingBalance);
     }
 }

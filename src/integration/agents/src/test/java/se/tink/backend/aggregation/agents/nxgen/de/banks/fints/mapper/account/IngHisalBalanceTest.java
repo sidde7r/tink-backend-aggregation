@@ -27,8 +27,8 @@ public class IngHisalBalanceTest {
                 balance.calculate(
                         new HISAL()
                                 .setCurrency("EUR")
-                                .setBookedBalance(BigDecimal.valueOf(10))
-                                .setPendingBalance(BigDecimal.valueOf(3)));
+                                .setFirstBalanceValue(BigDecimal.valueOf(10))
+                                .setSecondBalanceValue(BigDecimal.valueOf(3)));
 
         // then
         assertThat(result.getExactBalance())
