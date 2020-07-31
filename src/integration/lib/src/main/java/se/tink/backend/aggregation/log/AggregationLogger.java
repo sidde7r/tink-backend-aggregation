@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.log;
 import com.google.api.client.util.Charsets;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -65,22 +63,8 @@ public class AggregationLogger {
         log.warn(message, e);
     }
 
-    private static String concatenate(String message, Exception exception) {
-        StringWriter exceptionStackTrace = new StringWriter();
-        exception.printStackTrace(new PrintWriter(exceptionStackTrace));
-        return message + "\n" + exceptionStackTrace;
-    }
-
     public void infoExtraLong(String message, LogTag logTag) {
         logExtraLong(message, logTag, this::info);
-    }
-
-    public void infoExtraLong(String message, LogTag logTag, Exception exception) {
-        logExtraLong(concatenate(message, exception), logTag, this::info);
-    }
-
-    public void warnExtraLong(String message, LogTag logTag) {
-        logExtraLong(message, logTag, this::warn);
     }
 
     @VisibleForTesting

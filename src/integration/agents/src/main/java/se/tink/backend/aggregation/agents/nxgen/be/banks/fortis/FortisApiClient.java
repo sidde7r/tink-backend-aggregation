@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.CheckForcedUpgradeRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ExecuteContractUpdateRequest;
@@ -20,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.Acc
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.UpcomingTransactionsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -29,10 +31,11 @@ import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguratio
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class FortisApiClient {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final TinkHttpClient client;
     private final String CSRF = FortisUtils.generateCSRF();
-    private static final AggregationLogger logger = new AggregationLogger(FortisApiClient.class);
     private final String baseUrl;
     private final String distributorId;
 
@@ -141,9 +144,10 @@ public class FortisApiClient {
                         .getChallenges();
 
         if (challenges.size() > 1) {
-            logger.warnExtraLong(
-                    String.format("Multiple challanges: %s", challenges.toString()),
-                    FortisConstants.LoggingTag.MULTIPLE_CHALLENGES);
+            logger.warn(
+                    "tag={} Multiple challenges: {}",
+                    FortisConstants.LoggingTag.MULTIPLE_CHALLENGES,
+                    challenges.toString());
         }
 
         return challenges.get(0);

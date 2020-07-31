@@ -5,11 +5,14 @@ import static se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.primitives.Bytes;
+import java.lang.invoke.MethodHandles;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import org.assertj.core.util.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -64,7 +67,6 @@ import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.libraries.pair.Pair;
@@ -72,10 +74,11 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class KbcApiClient {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final TinkHttpClient client;
     private AccountsResponse accountResponse;
-    private static final AggregationLogger logger = new AggregationLogger(KbcApiClient.class);
 
     KbcApiClient(TinkHttpClient client) {
         this.client = client;
@@ -106,11 +109,11 @@ public class KbcApiClient {
                                 headerDto.getResultMessage(),
                                 KbcConstants.ErrorMessage.ACCOUNT_BLOCKED2);
         if (Objects.equals(KbcConstants.ResultCode.ZERO_TWO, resultValue) && matchesErrorMessages) {
-            logger.warnExtraLong(
-                    String.format(
-                            "Header: %s Error message:%s",
-                            errorHeader, headerDto.getResultMessage()),
-                    KbcConstants.LogTags.ERROR_CODE_MESSAGE);
+            logger.warn(
+                    "tag={} Header: {} Error message: {}",
+                    KbcConstants.LogTags.ERROR_CODE_MESSAGE,
+                    errorHeader,
+                    headerDto.getResultMessage());
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
     }

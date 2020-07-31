@@ -1,24 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.loan;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.loan.rpc.SoTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.AccountEntity;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger logger =
-            new AggregationLogger(SparebankenSorLoanFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SparebankenSorApiClient apiClient;
 
@@ -51,8 +53,10 @@ public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
                     new URL("https://nettbank.sor.no/payment/transigo/json/accounts");
             apiClient.transigoAccounts(transigoAccountsUrl);
         } catch (Exception e) {
-            logger.infoExtraLong(
-                    "Failed to retrieve loans", SparebankenSorConstants.LogTags.LOAN_LOG_TAG, e);
+            logger.info(
+                    "tag={} Failed to retrieve loans",
+                    SparebankenSorConstants.LogTags.LOAN_LOG_TAG,
+                    e);
         }
 
         List<AccountEntity> accountList = apiClient.fetchAccounts();

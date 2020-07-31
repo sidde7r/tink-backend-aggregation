@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginRequest;
@@ -15,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.iden
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata.rpc.UserDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -24,8 +26,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ImaginBankApiClient {
-    private static final AggregationLogger logger =
-            new AggregationLogger(ImaginBankApiClient.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final TinkHttpClient client;
 
@@ -81,8 +83,9 @@ public class ImaginBankApiClient {
 
         // currently imagin bank only allows one account for a customer, log if we get more
         if (accountsResponse != null && accountsResponse.getNumberOfAccounts() > 1) {
-            logger.warnExtraLong(
-                    "Got more than one account", ImaginBankConstants.LogTags.MULTIPLE_ACCOUNTS);
+            logger.warn(
+                    "tag={} Got more than one account",
+                    ImaginBankConstants.LogTags.MULTIPLE_ACCOUNTS);
         }
 
         return accountsResponse;
@@ -101,7 +104,7 @@ public class ImaginBankApiClient {
         String initCardsResponse =
                 createRequest(ImaginBankConstants.Urls.INITIATE_CARD_FETCHING)
                         .post(String.class, "{}");
-        logger.info("Initiated card fetching " + initCardsResponse);
+        logger.info("Initiated card fetching {}", initCardsResponse);
     }
 
     public CardsResponse fetchCards() {

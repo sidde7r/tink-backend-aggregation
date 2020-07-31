@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -19,14 +22,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc.InvalidPinResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SelectAgreementRequest;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SdcAutoAuthenticator implements AutoAuthenticator {
-    private static final AggregationLogger logger =
-            new AggregationLogger(SdcAutoAuthenticator.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;
@@ -66,8 +68,8 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
             AgreementsResponse agreementsResponse = this.bankClient.pinLogon(username, password);
             SessionStorageAgreements agreements = agreementsResponse.toSessionStorageAgreements();
             if (agreements.isEmpty()) {
-                logger.warnExtraLong(
-                        "User was able to login, but has no agreements?",
+                logger.warn(
+                        "tag={} User was able to login, but has no agreements?",
                         SdcConstants.Session.LOGIN);
                 throw new IllegalStateException("No agreement found");
             }
