@@ -65,7 +65,6 @@ ignoredAgentsForCapabilityTest:
   - nxgen.pt.banks.montepio.MontepioAgent
   - nxgen.ro.banks.raiffeisen.RaiffeisenAgent
   - nxgen.se.banks.volvofinans.VolvoFinansAgent
-  - nxgen.se.brokers.avanza.AvanzaAgent
   - nxgen.se.business.handelsbanken.HandelsbankenSEAgent
   - nxgen.se.business.nordea.NordeaSEAgent
   - nxgen.se.business.seb.SebAgent
@@ -78,7 +77,6 @@ ignoredAgentsForCapabilityTest:
   - nxgen.se.openbanking.icabanken.IcaBankenAgent
   - nxgen.se.openbanking.lansforsakringar.LansforsakringarAgent
   - nxgen.se.openbanking.resursbank.ResursBankAgent
-  - nxgen.se.openbanking.sbab.SbabAgent
   - nxgen.se.openbanking.sebopenbanking.SebAgent
   - nxgen.se.openbanking.swedbank.SwedbankAgent
   - nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent
