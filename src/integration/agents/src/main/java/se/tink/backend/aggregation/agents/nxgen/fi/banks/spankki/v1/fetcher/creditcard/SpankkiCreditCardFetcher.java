@@ -60,7 +60,6 @@ public class SpankkiCreditCardFetcher
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        List<AggregationTransaction> transactions = Collections.emptyList();
-        return transactions;
+        return Collections.emptyList();
     }
 }
