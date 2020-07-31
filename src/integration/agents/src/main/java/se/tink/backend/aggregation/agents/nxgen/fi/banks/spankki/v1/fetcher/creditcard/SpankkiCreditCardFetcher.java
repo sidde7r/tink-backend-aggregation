@@ -1,15 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.fetcher.creditcard;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.SpankkiApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.SpankkiConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.fetcher.creditcard.rpc.CardsOverviewResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -18,8 +20,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SpankkiCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
-    private static final AggregationLogger logger =
-            new AggregationLogger(SpankkiCreditCardFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SpankkiApiClient apiClient;
 
@@ -42,12 +44,13 @@ public class SpankkiCreditCardFetcher
                         .collect(Collectors.toList());
             }
 
-            logger.infoExtraLong(
-                    this.apiClient.fetchCardsOverview(),
-                    SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD);
+            logger.info(
+                    "tag={} {}",
+                    SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD,
+                    this.apiClient.fetchCardsOverview());
 
         } catch (HttpResponseException e) {
-            logger.warnExtraLong(SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD, e);
+            logger.warn("tag={}", SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD, e);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -57,7 +60,6 @@ public class SpankkiCreditCardFetcher
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        List<AggregationTransaction> transactions = Collections.emptyList();
-        return transactions;
+        return Collections.emptyList();
     }
 }
