@@ -85,12 +85,6 @@ public class WireMockErrorDetectorTest {
         // and
         assertThat(differences.areMethodsMatching()).isTrue();
         assertThat(differences.areUrlsMatching()).isFalse();
-        assertThat(differences.getMissingHeaderKeysInGivenRequest()).isEmpty();
-        assertThat(differences.getHeaderKeysWithDifferentValues()).isEmpty();
-        // and
-        MapComparisonReporter reporter = getReporter(differences, MapComparisonReporter.class);
-        assertThat(reporter.getMissingBodyKeysInGivenRequest()).isEmpty();
-        assertThat(reporter.getBodyKeysWithDifferentValue()).isEmpty();
     }
 
     @Test

@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.body.
 
 public class ErrorDetector {
 
+    private static final String CONTENT_TYPE_HEADER_KEY = "content-type";
+
     private Map<String, String> parseHeadersInGivenRequest(LoggedRequest givenRequest) {
         Map<String, String> headersInGivenRequest = new HashMap<>();
         givenRequest
@@ -90,15 +92,14 @@ public class ErrorDetector {
             RequestPattern expectedRequest,
             CompareEntity.Builder builder)
             throws IOException {
-
-        Map<String, String> headers = parseHeadersInGivenRequest(givenRequest);
-        MediaType mediaType =
-                headers.containsKey("content-type")
-                        ? MediaType.valueOf(headers.get("content-type"))
+        Map<String, String> headersInGivenRequest = parseHeadersInGivenRequest(givenRequest);
+        MediaType mediaTypeOfGivenRequest =
+                headersInGivenRequest.containsKey(CONTENT_TYPE_HEADER_KEY)
+                        ? MediaType.valueOf(headersInGivenRequest.get(CONTENT_TYPE_HEADER_KEY))
                         : null;
 
         BodyEntity givenBodyEntity =
-                BodyEntityFactory.create(givenRequest.getBodyAsString(), mediaType);
+                BodyEntityFactory.create(givenRequest.getBodyAsString(), mediaTypeOfGivenRequest);
 
         String body = null;
         if (expectedRequest.getBodyPatterns() != null) {
@@ -108,7 +109,15 @@ public class ErrorDetector {
                             .collect(Collectors.joining("&"));
         }
 
-        BodyEntity expectedBodyEntity = BodyEntityFactory.create(body, mediaType);
+        Map<String, MultiValuePattern> headersInExpectedRequest =
+                parseHeadersInExpectedRequest(expectedRequest);
+        MediaType mediaTypeOfExpectedRequest =
+                headersInExpectedRequest.containsKey(CONTENT_TYPE_HEADER_KEY)
+                        ? MediaType.valueOf(
+                                headersInExpectedRequest.get(CONTENT_TYPE_HEADER_KEY).getExpected())
+                        : null;
+
+        BodyEntity expectedBodyEntity = BodyEntityFactory.create(body, mediaTypeOfExpectedRequest);
         ComparisonReporter reporter = expectedBodyEntity.compare(givenBodyEntity);
         builder.addBodyComparisonReporter(reporter);
     }
