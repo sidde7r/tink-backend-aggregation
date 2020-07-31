@@ -3,13 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.PaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -18,7 +20,9 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class UpcomingPaymentEntity {
-    private static AggregationLogger logger = new AggregationLogger(UpcomingPaymentEntity.class);
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @JsonProperty("Amount")
     private double amount;
@@ -133,11 +137,11 @@ public class UpcomingPaymentEntity {
     public Optional<UpcomingTransaction> toTinkUpcomingTransaction() {
         final Transfer transfer = toTransfer();
         if (transfer.getDestination() == null || transfer.getType() == null) {
-            logger.warnExtraLong(
-                    String.format(
-                            "upcoming payment - PaymentType=%d,PaymentTypeName=%s",
-                            paymentType, paymentTypeName),
-                    LogTags.UPCOMING_TRANSFER);
+            logger.warn(
+                    "tag={} upcoming payment - PaymentType={} PaymentTypeName={}",
+                    LogTags.UPCOMING_TRANSFER,
+                    paymentType,
+                    paymentTypeName);
             return Optional.empty();
         }
 
