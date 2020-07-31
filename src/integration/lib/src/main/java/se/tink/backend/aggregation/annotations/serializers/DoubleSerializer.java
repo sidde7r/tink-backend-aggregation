@@ -2,13 +2,13 @@ package se.tink.backend.aggregation.annotations.serializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.CharBuffer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -63,12 +63,12 @@ public class DoubleSerializer extends StdSerializer<Double> implements Contextua
                 return;
             default:
                 // Unknown type, handle as standard double serialization
-                jgen.writeRawValue(new BigDecimal(value).toPlainString());
+                jgen.writeRawValue(BigDecimal.valueOf(value).toPlainString());
         }
     }
 
     private String getNumericValue(Double value) {
-        BigDecimal bd = new BigDecimal(value).setScale(decimals, BigDecimal.ROUND_HALF_UP);
+        BigDecimal bd = BigDecimal.valueOf(value).setScale(decimals, RoundingMode.HALF_UP);
         if (!trailingZeros) {
             bd = bd.stripTrailingZeros();
         }
@@ -101,8 +101,7 @@ public class DoubleSerializer extends StdSerializer<Double> implements Contextua
     }
 
     @Override
-    public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)
-            throws JsonMappingException {
+    public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) {
         JsonType outputType = null;
         int decimals = 0;
         boolean trailingZeros = false;

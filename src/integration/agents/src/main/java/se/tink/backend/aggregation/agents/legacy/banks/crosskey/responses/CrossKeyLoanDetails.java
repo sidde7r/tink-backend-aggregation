@@ -601,7 +601,7 @@ public class CrossKeyLoanDetails {
 
     public Double getInterestRate() {
         // Example of `interestRate`: 1.35
-        BigDecimal interest = new BigDecimal(interestRate);
+        BigDecimal interest = BigDecimal.valueOf(interestRate);
         interest = interest.divide(new BigDecimal(100)).setScale(6, RoundingMode.HALF_UP);
         return interest.doubleValue();
     }
