@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.transfer.iface.UuidIdentifiable;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -86,10 +85,6 @@ public class AggregationLogger {
 
     public void warnExtraLong(String message, LogTag logTag, Exception exception) {
         logExtraLong(concatenate(message, exception), logTag, this::warn);
-    }
-
-    public void warnExtraLong(LogTag logTag, HttpResponseException exception) {
-        warnExtraLong("Http Response Exception: ", logTag, exception);
     }
 
     @VisibleForTesting
