@@ -72,7 +72,8 @@ public abstract class EnterCardAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new EnterCardAuthenticator(apiClient, agentConfiguration),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

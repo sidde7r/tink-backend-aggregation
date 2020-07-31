@@ -54,7 +54,8 @@ public class RaiffeisenAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         authenticator,
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,

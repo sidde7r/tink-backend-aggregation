@@ -82,7 +82,8 @@ public final class ArgentaAgent extends NextGenerationAgent
                                 supplementalInformationHelper,
                                 catalog),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

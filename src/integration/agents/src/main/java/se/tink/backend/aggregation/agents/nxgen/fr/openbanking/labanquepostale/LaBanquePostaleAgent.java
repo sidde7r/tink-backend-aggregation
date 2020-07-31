@@ -75,7 +75,8 @@ public final class LaBanquePostaleAgent
                         supplementalInformationHelper,
                         new LaBanquePostaleAuthenticator(apiClient, sessionStorage),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

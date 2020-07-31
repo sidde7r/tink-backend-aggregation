@@ -65,7 +65,8 @@ public class NorwegianAgent extends NextGenerationAgent implements RefreshChecki
                         new NorwegianAuthenticator(
                                 apiClient, sessionStorage, norwegianConfiguration),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

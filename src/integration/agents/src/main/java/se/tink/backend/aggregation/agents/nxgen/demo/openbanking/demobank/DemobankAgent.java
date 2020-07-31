@@ -171,7 +171,8 @@ public class DemobankAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         demobankRedirectAuthenticator,
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

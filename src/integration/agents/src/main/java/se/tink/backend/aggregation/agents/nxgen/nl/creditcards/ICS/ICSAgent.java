@@ -78,7 +78,8 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
                         supplementalInformationHelper,
                         new ICSOAuthAuthenticator(apiClient, sessionStorage),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

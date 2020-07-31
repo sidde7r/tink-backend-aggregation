@@ -32,6 +32,8 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -49,6 +51,7 @@ public class OAuth2AuthenticationController
     private final Credentials credentials;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
+    private final CredentialsRequest request;
 
     private final String strongAuthenticationState;
     private final String strongAuthenticationStateSupplementalKey;
@@ -58,13 +61,15 @@ public class OAuth2AuthenticationController
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
             Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState strongAuthenticationState,
+            CredentialsRequest request) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
                 credentials,
                 strongAuthenticationState,
+                request,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
     }
@@ -75,6 +80,7 @@ public class OAuth2AuthenticationController
             OAuth2Authenticator authenticator,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
+            CredentialsRequest request,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
@@ -83,10 +89,15 @@ public class OAuth2AuthenticationController
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
+        this.request = request;
 
         this.strongAuthenticationStateSupplementalKey =
                 strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
+
+        if (shouldForceAuthentication()) {
+            invalidateToken();
+        }
     }
 
     @Override
@@ -271,5 +282,16 @@ public class OAuth2AuthenticationController
                         token.getIssuedAt(),
                         token.getExpiresInSeconds()));
         authenticator.useAccessToken(token);
+    }
+
+    private boolean shouldForceAuthentication() {
+        boolean shouldForceAuthentication =
+                request instanceof RefreshInformationRequest
+                        && ((RefreshInformationRequest) request).isForceAuthenticate();
+        logger.info(
+                "[forceAuthenticate] Should force authentication for credentials: {}, {}",
+                request.getCredentials().getId(),
+                shouldForceAuthentication);
+        return shouldForceAuthentication;
     }
 }

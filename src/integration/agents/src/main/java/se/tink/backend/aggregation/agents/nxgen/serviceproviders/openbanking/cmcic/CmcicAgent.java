@@ -102,7 +102,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new CmcicAuthenticator(apiClient, persistentStorage),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

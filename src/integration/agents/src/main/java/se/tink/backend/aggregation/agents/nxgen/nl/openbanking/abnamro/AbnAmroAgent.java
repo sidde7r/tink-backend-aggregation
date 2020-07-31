@@ -60,7 +60,8 @@ public final class AbnAmroAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new AbnAmroAuthenticator(apiClient, persistentStorage, agentConfiguration),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

@@ -27,7 +27,8 @@ public final class ComdirectAgent extends Xs2aDevelopersAgent {
                         new ComdirectAuthenticator(
                                 apiClient, persistentStorage, getAgentConfiguration()),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,
