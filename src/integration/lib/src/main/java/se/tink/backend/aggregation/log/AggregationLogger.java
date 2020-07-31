@@ -119,8 +119,4 @@ public class AggregationLogger {
     public void info(UuidIdentifiable transfer, String message) {
         this.log.info(format(transfer) + message);
     }
-
-    public void error(UuidIdentifiable transfer, String message, Throwable e) {
-        this.log.error(format(transfer) + message, e);
-    }
 }
