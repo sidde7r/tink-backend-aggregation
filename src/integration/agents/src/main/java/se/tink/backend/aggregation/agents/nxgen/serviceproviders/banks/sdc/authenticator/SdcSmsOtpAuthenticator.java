@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -20,15 +23,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc.InvalidPinResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc.SdcAgreementServiceConfigurationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SelectAgreementRequest;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticatorPassword;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SdcSmsOtpAuthenticator
         implements SmsOtpAuthenticatorPassword<SdcSmsOtpAuthenticator.InitValues> {
-    private static final AggregationLogger logger =
-            new AggregationLogger(SdcSmsOtpAuthenticator.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SdcApiClient apiClient;
     private final SdcSessionStorage sessionStorage;
@@ -60,8 +62,8 @@ public class SdcSmsOtpAuthenticator
 
             AgreementsResponse agreementsResponse = this.apiClient.pinLogon(username, password);
             if (agreementsResponse.isEmpty()) {
-                logger.warnExtraLong(
-                        "User was able to login, but has no agreements?",
+                logger.warn(
+                        "tag={} User was able to login, but has no agreements?",
                         SdcConstants.Session.LOGIN);
             }
 
@@ -80,7 +82,7 @@ public class SdcSmsOtpAuthenticator
 
             return new InitValues(device, challenge, transId);
         } catch (HttpResponseException e) {
-            logger.infoExtraLong(e.toString(), SdcConstants.HTTP_RESPONSE_LOGGER, e);
+            logger.info("tag={}", SdcConstants.HTTP_RESPONSE_LOGGER, e);
             handleErrors(e);
             throw e;
         }
