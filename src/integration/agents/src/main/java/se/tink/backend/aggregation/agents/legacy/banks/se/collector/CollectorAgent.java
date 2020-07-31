@@ -205,7 +205,7 @@ public class CollectorAgent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception, TransferExecutionException {
+    public void update(Transfer transfer) {
         throw new NotImplementedException("Update not implemented");
     }
 
