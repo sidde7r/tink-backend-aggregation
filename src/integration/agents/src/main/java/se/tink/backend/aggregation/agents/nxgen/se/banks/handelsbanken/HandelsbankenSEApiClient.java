@@ -10,11 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.device.CheckAgreementResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.EInvoice;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.PendingTransaction;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.rpc.EInvoiceDetails;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.BaseSignRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.UpdatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.HandelsbankenSETransferContext;
@@ -39,7 +36,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.SecurityHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.PaymentDetails;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.interfaces.UpdatablePayment;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.HandelsbankenSEPaymentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PaymentRecipient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PendingTransactionsResponse;
@@ -138,29 +134,6 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
             ApplicationEntryPointResponse applicationEntryPoint) {
         return createRequest(applicationEntryPoint.toPendingEInvoices())
                 .get(PendingEInvoicesResponse.class);
-    }
-
-    public Optional<EInvoiceDetails> eInvoiceDetails(EInvoice eInvoice) {
-        return eInvoice.toEInvoiceDetails()
-                .map(url -> createRequest(url).get(EInvoiceDetails.class));
-    }
-
-    public HandelsbankenSEPaymentContext paymentContext(UpdatablePayment updatablePayment) {
-        return createRequest(updatablePayment.toPaymentContext())
-                .get(HandelsbankenSEPaymentContext.class);
-    }
-
-    public Optional<TransferSignResponse> updatePayment(
-            UpdatablePayment updatablePayment, UpdatePaymentRequest request) {
-        return updatablePayment
-                .toUpdate()
-                .map(url -> createPostRequest(url).put(TransferSignResponse.class, request));
-    }
-
-    public Optional<PaymentDetails> signPayment(PaymentDetails paymentDetails) {
-        return paymentDetails
-                .toSignature()
-                .map(url -> createPostRequest(url).post(PaymentDetails.class));
     }
 
     public CreditCardsSEResponse creditCards(ApplicationEntryPointResponse applicationEntryPoint) {
