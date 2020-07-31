@@ -24,17 +24,17 @@ public class HISAL extends BaseResponsePart {
     private String blz;
 
     private String currency;
-    private BigDecimal bookedBalance;
-    private BigDecimal pendingBalance;
+    private BigDecimal firstBalanceValue;
+    private BigDecimal secondBalanceValue;
 
     HISAL(RawSegment rawSegment) {
         super(rawSegment);
 
         currency = rawSegment.getGroup(3).getString(0);
         RawGroup group = rawSegment.getGroup(4);
-        bookedBalance = balanceWithSign(group.getString(0), group.getDecimal(1));
+        firstBalanceValue = balanceWithSign(group.getString(0), group.getDecimal(1));
         group = rawSegment.getGroup(5);
-        pendingBalance =
+        secondBalanceValue =
                 group.isEmpty() ? null : balanceWithSign(group.getString(0), group.getDecimal(1));
 
         switch (getSegmentVersion()) {

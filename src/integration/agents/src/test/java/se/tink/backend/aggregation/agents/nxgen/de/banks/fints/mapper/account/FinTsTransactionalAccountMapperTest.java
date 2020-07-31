@@ -57,7 +57,7 @@ public class FinTsTransactionalAccountMapperTest {
         ArgumentCaptor<HISAL> hisalCaptor = ArgumentCaptor.forClass(HISAL.class);
         verify(hisalBalance).calculate(hisalCaptor.capture());
         assertThat(hisalCaptor.getValue().getCurrency()).isEqualTo(CURRENCY);
-        assertThat(hisalCaptor.getValue().getBookedBalance()).isEqualTo(BOOKED_BALANCE);
+        assertThat(hisalCaptor.getValue().getFirstBalanceValue()).isEqualTo(BOOKED_BALANCE);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class FinTsTransactionalAccountMapperTest {
     }
 
     private FinTsAccountInformation getAccountInformation() {
-        HISAL hisal = new HISAL().setCurrency(CURRENCY).setBookedBalance(BOOKED_BALANCE);
+        HISAL hisal = new HISAL().setCurrency(CURRENCY).setFirstBalanceValue(BOOKED_BALANCE);
         HIUPD hiupd =
                 new HIUPD()
                         .setAccountType(CHECKING_ACCOUNT_ID)
