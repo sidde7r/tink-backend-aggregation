@@ -104,7 +104,7 @@ public class ImaginBankApiClient {
         String initCardsResponse =
                 createRequest(ImaginBankConstants.Urls.INITIATE_CARD_FETCHING)
                         .post(String.class, "{}");
-        logger.info("Initiated card fetching " + initCardsResponse);
+        logger.info("Initiated card fetching {}", initCardsResponse);
     }
 
     public CardsResponse fetchCards() {
