@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.lang.invoke.MethodHandles;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -10,6 +11,8 @@ import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -45,7 +48,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
@@ -65,9 +67,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DanskeBankChallengeAuthenticator
         implements TypedAuthenticator, AutoAuthenticator, KeyCardAuthenticator {
-
-    private static final AggregationLogger logger =
-            new AggregationLogger(DanskeBankChallengeAuthenticator.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -291,9 +292,10 @@ public class DanskeBankChallengeAuthenticator
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
-                logger.warnExtraLong(
-                        "Could not auto authenticate user, status " + response.getStatus(),
+                logger.warn(
+                        "tag={} Could not auto authenticate user, status {}",
                         DanskeBankConstants.LogTags.AUTHENTICATION_AUTO,
+                        response.getStatus(),
                         e);
                 throw e;
             }
@@ -343,8 +345,8 @@ public class DanskeBankChallengeAuthenticator
                     driver.findElement(By.tagName("body")).getAttribute("trustedChallengeInfo");
             // if no challengeInfo available, force a new device pinning
             if (Strings.isNullOrEmpty(challengeInfo)) {
-                logger.infoExtraLong(
-                        "Attribute 'trustedChallengeInfo' not found",
+                logger.info(
+                        "tag={} Attribute 'trustedChallengeInfo' not found",
                         LogTag.from("danskebank_autherror"));
                 throw SessionError.SESSION_EXPIRED.exception();
             }

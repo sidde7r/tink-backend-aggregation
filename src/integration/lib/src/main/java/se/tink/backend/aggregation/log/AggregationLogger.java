@@ -83,10 +83,6 @@ public class AggregationLogger {
         logExtraLong(message, logTag, this::warn);
     }
 
-    public void warnExtraLong(String message, LogTag logTag, Exception exception) {
-        logExtraLong(concatenate(message, exception), logTag, this::warn);
-    }
-
     @VisibleForTesting
     static void logExtraLong(String message, LogTag logTag, Consumer<String> logger) {
         // Hack to handle max characters 2048 in logging message
