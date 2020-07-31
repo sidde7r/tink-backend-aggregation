@@ -1,16 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusTransaction;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -19,9 +21,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 
 public class BelfiusCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
-
-    private static final AggregationLogger logger =
-            new AggregationLogger(BelfiusCreditCardFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final BelfiusApiClient apiClient;
 
@@ -49,8 +50,10 @@ public class BelfiusCreditCardFetcher
         try {
             this.apiClient.fetchProducts();
         } catch (Exception e) {
-            logger.warnExtraLong(
-                    "Unable to fetch credit cards", BelfiusConstants.Fetcher.CreditCards.LOGTAG, e);
+            logger.warn(
+                    "tag={} Unable to fetch credit cards",
+                    BelfiusConstants.Fetcher.CreditCards.LOGTAG,
+                    e);
         }
 
         return Collections.emptyList();
@@ -81,8 +84,8 @@ public class BelfiusCreditCardFetcher
 
             } while (response.hasNext());
         } catch (Exception e) {
-            logger.warnExtraLong(
-                    "Unable to fetch credit card transactions",
+            logger.warn(
+                    "tag={} Unable to fetch credit card transactions",
                     BelfiusConstants.Fetcher.CreditCards.LOGTAG,
                     e);
         }
