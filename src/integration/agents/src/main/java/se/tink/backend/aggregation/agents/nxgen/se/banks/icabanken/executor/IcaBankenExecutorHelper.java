@@ -434,30 +434,42 @@ public class IcaBankenExecutorHelper {
     }
 
     public void putTransferInOutbox(TransferRequest transferRequest) {
-
         try {
             apiClient.putAssignmentInOutbox(transferRequest);
-        } catch (HttpResponseException e) {
-            HttpResponse response = e.getResponse();
-
-            // Conflict (409) means the date was a non bank day
+        } catch (HttpResponseException exception) {
+            HttpResponse response = exception.getResponse();
             if (response.getStatus() == HttpStatus.SC_CONFLICT) {
                 TransferResponse transferResponse = response.getBody(TransferResponse.class);
-
-                if (transferResponse.getResponseStatus().getCode()
-                        != IcaBankenConstants.StatusCodes.OK_RESPONSE) {
-                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setEndUserMessage(
-                                    getEndUserMessage(
-                                            transferResponse,
-                                            TransferExecutionException.EndUserMessage
-                                                    .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY))
-                            .setException(e)
-                            .build();
+                if (transferResponse.getResponseStatus().isReferenceShouldBeMessageError()) {
+                    try {
+                        transferRequest.setReferenceType(IcaBankenConstants.Transfers.MESSAGE);
+                        apiClient.putAssignmentInOutbox(transferRequest);
+                    } catch (HttpResponseException hre) {
+                        handleRegisterPaymentError(hre, response);
+                    }
                 }
-            } else {
-                throw e;
             }
+            handleRegisterPaymentError(exception, response);
+        }
+    }
+
+    private void handleRegisterPaymentError(
+            HttpResponseException exception, HttpResponse response) {
+        if (response.getStatus() == HttpStatus.SC_CONFLICT) {
+            TransferResponse transferResponse = response.getBody(TransferResponse.class);
+            if (transferResponse.getResponseStatus().getCode()
+                    != IcaBankenConstants.StatusCodes.OK_RESPONSE) {
+                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                        .setEndUserMessage(
+                                getEndUserMessage(
+                                        transferResponse,
+                                        TransferExecutionException.EndUserMessage
+                                                .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY))
+                        .setException(exception)
+                        .build();
+            }
+        } else {
+            throw exception;
         }
     }
 

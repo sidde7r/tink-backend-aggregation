@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenExecutorUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferRequest {
@@ -76,21 +78,7 @@ public class TransferRequest {
             this.recipientType = typeOfPayment;
         } else {
             this.recipientType = destinationAccount.getType();
-
-            // TODO: these 3 lines + method should be removed after customers start using only RI
-            if (transfer.getRemittanceInformation().getType() == null) {
-                IcaBankenExecutorUtils.validateAndSetRemittanceInformationType(transfer);
-            }
-            switch (transfer.getRemittanceInformation().getType()) {
-                case OCR:
-                    this.referenceType = IcaBankenConstants.Transfers.OCR;
-                    break;
-                case UNSTRUCTURED:
-                    this.referenceType = IcaBankenConstants.Transfers.MESSAGE;
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown remittance information type");
-            }
+            this.referenceType = getReferenceType(transfer);
         }
         this.recipientId = destinationAccount.getRecipientId();
     }
@@ -121,5 +109,24 @@ public class TransferRequest {
                 formattedMessages.getSourceMessage(),
                 formattedMessages.getDestinationMessage(),
                 IcaBankenConstants.Transfers.BANK_TRANSFER);
+    }
+
+    @JsonIgnore
+    private String getReferenceType(Transfer transfer) {
+        // TODO: these 3 lines + method should be removed after customers start using only RI
+        if (transfer.getRemittanceInformation().getType() == null) {
+            IcaBankenExecutorUtils.validateAndSetRemittanceInformationType(transfer);
+        }
+        return RemittanceInformationType.OCR.equals(transfer.getRemittanceInformation().getType())
+                ? IcaBankenConstants.Transfers.OCR
+                : IcaBankenConstants.Transfers.MESSAGE;
+    }
+
+    public String getReferenceType() {
+        return referenceType;
+    }
+
+    public void setReferenceType(String referenceType) {
+        this.referenceType = referenceType;
     }
 }
