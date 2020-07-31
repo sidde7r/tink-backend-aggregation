@@ -12,8 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.libraries.transfer.iface.UuidIdentifiable;
-import se.tink.libraries.uuid.UUIDUtils;
 
 /**
  * Extension of AggregationLogger to provide custom formatter for Credentials
@@ -110,13 +108,5 @@ public class AggregationLogger {
 
     private static String subString(char[] chars, int length, int start) {
         return new String(Arrays.copyOfRange(chars, start, start + length));
-    }
-
-    private String format(UuidIdentifiable transfer) {
-        return "[transferId: " + UUIDUtils.toTinkUUID(transfer.getId()) + "] ";
-    }
-
-    public void info(UuidIdentifiable transfer, String message) {
-        this.log.info(format(transfer) + message);
     }
 }
