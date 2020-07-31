@@ -1,16 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.DisplayCategoryIndex;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Tag;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.utils.CreditCardMasker;
@@ -20,7 +23,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class ProductsEntity {
-    private static final AggregationLogger logger = new AggregationLogger(ProductsEntity.class);
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private ProductTypeEntity productType;
 
@@ -51,10 +56,10 @@ public class ProductsEntity {
             case DisplayCategoryIndex.SAVINGS_OR_INVESTMENT:
                 return getSavingsOrInvestment();
             default:
-                logger.warnExtraLong(
-                        String.format(
-                                "displayCategoryIndex: %s", productType.getDisplayCategoryIndex()),
-                        Tag.UNKNOWN_ACCOUNT_TYPE);
+                logger.warn(
+                        "tag={} displayCategoryIndex: {}",
+                        Tag.UNKNOWN_ACCOUNT_TYPE,
+                        productType.getDisplayCategoryIndex());
                 return AccountTypes.OTHER;
         }
     }
