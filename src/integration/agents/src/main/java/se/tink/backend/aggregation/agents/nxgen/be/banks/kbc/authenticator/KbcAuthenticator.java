@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -17,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.A
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.EnrollDeviceRoundTwoResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.ProgressiveTypedAuthenticator;
@@ -26,12 +28,13 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class KbcAuthenticator implements AutoAuthenticator, ProgressiveTypedAuthenticator {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final KbcApiClient apiClient;
     private final SupplementalInformationFormer supplementalInformationFormer;
-    private static final AggregationLogger logger = new AggregationLogger(KbcAuthenticator.class);
 
     public KbcAuthenticator(
             final SessionStorage sessionStorage,
@@ -159,9 +162,10 @@ public class KbcAuthenticator implements AutoAuthenticator, ProgressiveTypedAuth
 
     private boolean possibleUnhandledErrorCodeLogAndCheckTextMessage(
             IllegalStateException e, String textMessage) {
-        logger.warnExtraLong(
-                String.format("Error message: %s", e.getMessage()),
-                KbcConstants.LogTags.ERROR_CODE_MESSAGE);
+        logger.warn(
+                "tag={} Error message: {}",
+                KbcConstants.LogTags.ERROR_CODE_MESSAGE,
+                e.getMessage());
         return matchesErrorMessage(e, textMessage);
     }
 
