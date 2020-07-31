@@ -37,7 +37,7 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         if (authSteps.isEmpty()) {
             SibsThirdPartyAppRequestParamsProvider sibsThirdPartyAppRequestParamsProvider =
                     new SibsThirdPartyAppRequestParamsProvider(

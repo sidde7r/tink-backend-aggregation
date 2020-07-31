@@ -47,7 +47,7 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Storage authStorage;
     private final LogMasker logMasker;
-    private final List<? extends AuthenticationStep> authenticationSteps;
+    private final List<AuthenticationStep> authenticationSteps;
     private final AuthenticationStep otpStep;
     private final AuthenticationStep codeCardStep;
     private final AuthenticationStep appStep;
@@ -85,7 +85,7 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         return authenticationSteps;
     }
 

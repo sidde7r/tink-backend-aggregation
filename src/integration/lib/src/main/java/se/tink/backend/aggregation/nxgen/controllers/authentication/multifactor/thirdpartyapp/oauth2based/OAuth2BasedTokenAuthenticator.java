@@ -26,7 +26,7 @@ public class OAuth2BasedTokenAuthenticator extends StatelessProgressiveAuthentic
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         return authenticationSteps;
     }
 

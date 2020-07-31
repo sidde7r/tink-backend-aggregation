@@ -40,7 +40,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         return ImmutableList.of(
                 new AutomaticAuthenticationStep(this::syncAppDetails, "syncApp"),
                 new UsernamePasswordAuthenticationStep(this::fetchScaOptions),

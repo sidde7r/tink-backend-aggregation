@@ -65,7 +65,7 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         if (authContext.isDeviceActivationFinished()) {
             manualAuthenticationFlag = false;
             return autoAuthenticationSteps;

@@ -45,7 +45,7 @@ public class KbcAuthenticator implements AutoAuthenticator, ProgressiveTypedAuth
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps() {
+    public Iterable<AuthenticationStep> authenticationSteps() {
         return Arrays.asList(
                 new LoginStep(this, sessionStorage, apiClient, supplementalInformationFormer),
                 new SignStep(this, sessionStorage, apiClient, supplementalInformationFormer),

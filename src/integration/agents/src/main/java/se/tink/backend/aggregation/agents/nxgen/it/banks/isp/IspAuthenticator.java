@@ -57,7 +57,7 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         return manualAuthenticationSteps;
     }
 

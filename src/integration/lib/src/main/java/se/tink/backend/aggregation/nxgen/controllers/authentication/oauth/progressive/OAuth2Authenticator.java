@@ -80,7 +80,7 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         return authSteps;
     }
 

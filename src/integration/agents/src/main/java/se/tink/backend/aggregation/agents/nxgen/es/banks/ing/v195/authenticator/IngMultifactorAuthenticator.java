@@ -41,7 +41,7 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         final Map<Integer, String> scaStepMapper =
                 ImmutableMap.of(ScaMethod.SMS, OtpStep.STEP_ID, ScaMethod.PUSH, PushStep.STEP_ID);
         return ImmutableList.of(

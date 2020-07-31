@@ -10,6 +10,6 @@ public interface ProgressiveAuthenticator {
      * request to an authentication response. A collection of n steps implies that supplemental
      * information is requested n-1 times, where n >= 2.
      */
-    Iterable<? extends AuthenticationStep> authenticationSteps()
+    Iterable<AuthenticationStep> authenticationSteps()
             throws AuthenticationException, AuthorizationException;
 }

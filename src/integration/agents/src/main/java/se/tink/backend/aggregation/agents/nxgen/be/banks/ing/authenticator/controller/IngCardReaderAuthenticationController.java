@@ -22,7 +22,7 @@ public final class IngCardReaderAuthenticationController implements ProgressiveT
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps() {
+    public Iterable<AuthenticationStep> authenticationSteps() {
         return Arrays.asList(
                 new OtpStep(supplementalInformationFormer),
                 new SignStep(supplementalInformationFormer, authenticator),
