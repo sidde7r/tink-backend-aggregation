@@ -350,7 +350,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         final String muid = persistentStorage.get(FortisConstants.Storage.MUID);
 
         logger.info(
-                "Password is null/empty (during auto auth): " + Strings.isNullOrEmpty(password));
+                "Password is null/empty (during auto auth): {}", Strings.isNullOrEmpty(password));
 
         if (Strings.isNullOrEmpty(password) || Strings.isNullOrEmpty(muid)) {
             throw SessionError.SESSION_EXPIRED.exception();
