@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.CreateSessionUserResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.entities.ErrorResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -16,8 +18,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class BunqAutoAuthenticator implements AutoAuthenticator {
-    private static final AggregationLogger logger =
-            new AggregationLogger(BunqAutoAuthenticator.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final TemporaryStorage temporaryStorage;
@@ -67,9 +69,10 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-            logger.warnExtraLong(
-                    errorResponse.getErrorDescription().orElse("Error description was null"),
+            logger.warn(
+                    "tag={} {}",
                     BunqBaseConstants.LogTags.AUTO_AUTHENTICATION_FAILED,
+                    errorResponse.getErrorDescription().orElse("Error description was null"),
                     e);
 
             throw SessionError.SESSION_EXPIRED.exception(e);
@@ -84,8 +87,10 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
                     String.format(
                             "PersistentStorage is missing %s",
                             BunqBaseConstants.StorageKeys.USER_DEVICE_RSA_SIGNING_KEY_PAIR);
-            logger.warnExtraLong(
-                    errorMessage, BunqBaseConstants.LogTags.AUTO_AUTHENTICATION_FAILED);
+            logger.warn(
+                    "tag={} {}",
+                    BunqBaseConstants.LogTags.AUTO_AUTHENTICATION_FAILED,
+                    errorMessage);
             throw new IllegalStateException(errorMessage);
         }
     }

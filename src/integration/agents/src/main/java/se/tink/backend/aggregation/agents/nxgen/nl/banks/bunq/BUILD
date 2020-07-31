@@ -19,6 +19,7 @@ java_library(
         "//src/libraries/uuid",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
