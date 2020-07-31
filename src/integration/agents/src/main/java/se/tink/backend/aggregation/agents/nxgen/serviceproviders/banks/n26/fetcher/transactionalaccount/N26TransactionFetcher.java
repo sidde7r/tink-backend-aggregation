@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactionalaccount;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -12,10 +14,10 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientExcept
 
 public class N26TransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final N26ApiClient n26ApiClient;
-    private static final AggregationLogger logger =
-            new AggregationLogger(N26TransactionFetcher.class);
 
     public N26TransactionFetcher(N26ApiClient n26ApiClient) {
         this.n26ApiClient = n26ApiClient;
@@ -33,8 +35,8 @@ public class N26TransactionFetcher
             }
         } catch (HttpClientException hce) {
             // N26 times out if you paginate too far back. Stop paginating if it does
-            logger.warnExtraLong(
-                    "N26 Transaction Pagination error:",
+            logger.warn(
+                    "tag={} N26 Transaction Pagination error",
                     N26Constants.Logging.TRANSACTION_PAGINATION_ERROR,
                     hce);
         }
