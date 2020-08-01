@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment;
 
 import com.google.common.collect.Lists;
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.entities.BondEntity;
@@ -18,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchInstrumentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchSecurityHoldingResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
@@ -26,10 +28,10 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfol
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class LansforsakringarInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final LansforsakringarApiClient apiClient;
-    private final AggregationLogger logger =
-            new AggregationLogger(LansforsakringarInvestmentFetcher.class);
 
     public LansforsakringarInvestmentFetcher(LansforsakringarApiClient apiClient) {
         this.apiClient = apiClient;
@@ -59,7 +61,7 @@ public class LansforsakringarInvestmentFetcher implements AccountFetcher<Investm
         if (!pensionResponse.getIpsPensionsResponseModel().isEmpty()
                 || !pensionResponse.getLivPensionsResponseModel().isPrivatPensionsEmpty()
                 || !pensionResponse.getLivPensionsResponseModel().isCapitalInsurancesEmpty()) {
-            logger.infoExtraLong("Found new unknown entity", LogTags.UNKNOWN_PENSION_TYPE);
+            logger.info("tag={} Found new unknown entity", LogTags.UNKNOWN_PENSION_TYPE);
         }
         return pensionAccounts;
     }
