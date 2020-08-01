@@ -2,15 +2,21 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.cre
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class CardInfoEntity {
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @JsonProperty private String productCode;
     @JsonProperty private String cardName;
     @JsonProperty private String debitCardNr;
@@ -37,12 +43,11 @@ public class CardInfoEntity {
     @JsonProperty private Boolean showLimits;
 
     @JsonIgnore
-    private static final AggregationLogger logger = new AggregationLogger(CardsEntity.class);
-
-    @JsonIgnore
     public Optional<CreditCardAccount> toTinkCard() {
-        logger.infoExtraLong(
-                SerializationUtils.serializeToString(this), SpankkiConstants.LogTags.CREDIT_CARD);
+        logger.info(
+                "tag={} {}",
+                SpankkiConstants.LogTags.CREDIT_CARD,
+                SerializationUtils.serializeToString(this));
 
         return Optional.empty();
     }
