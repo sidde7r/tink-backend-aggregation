@@ -3,16 +3,18 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetch
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.api.client.util.Lists;
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Accounts;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.entities.BorrowersEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.entities.SecuritiesEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -22,6 +24,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private String loanName;
     private String loanNumber;
     private String originalDebt;
@@ -36,10 +42,6 @@ public class FetchLoanDetailsResponse {
     // `infoText` is null - cannot define it!
     private boolean nearExpiryDate;
     // `bindingPeriodInfoModel` is null - cannot define it!
-
-    @JsonIgnore
-    private static final AggregationLogger logger =
-            new AggregationLogger(FetchLoanOverviewResponse.class);
 
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
@@ -102,7 +104,7 @@ public class FetchLoanDetailsResponse {
         } else if (loanName.toLowerCase().contains("bolån")) {
             return Type.MORTGAGE;
         } else {
-            logger.infoExtraLong("Found new unknown entity", LogTags.UNKNOWN_LOAN_TYPE);
+            logger.info("tag={} Found new unknown entity", LogTags.UNKNOWN_LOAN_TYPE);
             return Type.OTHER;
         }
     }
