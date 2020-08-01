@@ -22,7 +22,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
@@ -45,7 +44,6 @@ public class HttpLoggingFilterTest {
         ByteArrayOutputStream out = attachSystemOutStream();
         HttpLoggingFilter httpLoggingFilter =
                 new HttpLoggingFilter(
-                        createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
                         createLoggedClass(),
@@ -100,7 +98,6 @@ public class HttpLoggingFilterTest {
         ByteArrayOutputStream out = attachSystemOutStream();
         HttpLoggingFilter httpLoggingFilter =
                 new HttpLoggingFilter(
-                        createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
                         createLoggedClass(),
@@ -129,7 +126,6 @@ public class HttpLoggingFilterTest {
         ByteArrayOutputStream out = attachSystemOutStream();
         HttpLoggingFilter httpLoggingFilter =
                 new HttpLoggingFilter(
-                        createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
                         createLoggedClass(),
@@ -157,7 +153,6 @@ public class HttpLoggingFilterTest {
         ByteArrayOutputStream out = attachSystemOutStream();
         HttpLoggingFilter httpLoggingFilter =
                 new HttpLoggingFilter(
-                        createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
                         createLoggedClass(),
@@ -237,10 +232,6 @@ public class HttpLoggingFilterTest {
 
     private static Class<HttpLoggableExecutor> createLoggedClass() {
         return HttpLoggableExecutor.class;
-    }
-
-    private static AggregationLogger createAggregationLogger() {
-        return new AggregationLogger(HttpLoggingFilter.class);
     }
 
     private static ByteArrayOutputStream attachSystemOutStream() {

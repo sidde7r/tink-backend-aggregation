@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.framework.modules.production.AgentIntegrationTestModule;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
@@ -629,7 +628,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     private ClientFilterFactory getHttpLogFilter(
             Credentials credentials, HttpLoggableExecutor transferExecutor) {
         return new HttpLoggingFilterFactory(
-                new AggregationLogger(this.getClass()),
                 "TRANSFER",
                 testContext.getLogMasker(),
                 transferExecutor.getClass(),
