@@ -28,6 +28,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IberCajaAgent extends NextGenerationAgent
@@ -46,6 +48,7 @@ public class IberCajaAgent extends NextGenerationAgent
     public IberCajaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.iberCajaSessionStorage = new IberCajaSessionStorage(sessionStorage);
         this.apiClient = new IberCajaApiClient(client, iberCajaSessionStorage);
 
@@ -58,6 +61,10 @@ public class IberCajaAgent extends NextGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+    }
+
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     @Override
