@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
 import com.google.gson.Gson;
+import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -24,15 +25,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.CustomerTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.IngBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.MarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.utils.IngBaseUtils;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -52,10 +53,10 @@ public class IngBaseApiClient {
     private final PersistentStorage persistentStorage;
     private final String market;
     private EidasIdentity eidasIdentity;
-    private IngBaseConfiguration configuration;
     private String redirectUrl;
     private EidasProxyConfiguration eidasProxyConfiguration;
-    private String certificateSerial;
+    private String hexCertificateSerial;
+    private String base64derQsealc;
     private final ProviderSessionCacheController providerSessionCacheController;
     private final boolean isManualAuthentication;
     private MarketConfiguration marketConfiguration;
@@ -77,24 +78,19 @@ public class IngBaseApiClient {
         this.marketConfiguration = marketConfiguration;
     }
 
-    public IngBaseConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
     public void setConfiguration(
-            AgentConfiguration<IngBaseConfiguration> agentConfiguration,
+            AgentConfiguration<EmptyConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity) {
-        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
+            EidasIdentity eidasIdentity)
+            throws CertificateException {
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
-        this.certificateSerial =
-                IngBaseUtils.getCertificateSerial(
-                        agentConfiguration
-                                .getProviderSpecificConfiguration()
-                                .getClientCertificate());
+        this.hexCertificateSerial =
+                CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 16);
+        this.base64derQsealc =
+                CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
+                        agentConfiguration.getQsealc());
     }
 
     public FetchAccountsResponse fetchAccounts() {
@@ -212,7 +208,7 @@ public class IngBaseApiClient {
                 Signature.SIGNATURE
                         + StringUtils.SPACE
                         + getAuthorization(
-                                certificateSerial,
+                                "SN=" + hexCertificateSerial,
                                 Signature.HTTP_METHOD_POST,
                                 Urls.TOKEN,
                                 reqId,
@@ -223,9 +219,7 @@ public class IngBaseApiClient {
                 buildRequest(reqId, date, digest, Urls.TOKEN)
                         .header(HeaderKeys.AUTHORIZATION, authHeader)
                         .type(MediaType.APPLICATION_FORM_URLENCODED)
-                        .header(
-                                HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
-                                getConfiguration().getClientCertificate())
+                        .header(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, base64derQsealc)
                         .post(TokenResponse.class, payload);
 
         /*
@@ -280,9 +274,7 @@ public class IngBaseApiClient {
 
     private RequestBuilder buildRequest(
             final String reqId, final String date, final String digest, final String reqPath) {
-        final String baseUrl = getConfiguration().getBaseUrl();
-
-        return client.request(baseUrl + reqPath)
+        return client.request(Urls.BASE_URL + reqPath)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.DIGEST, digest)
                 .header(HeaderKeys.DATE, date)
