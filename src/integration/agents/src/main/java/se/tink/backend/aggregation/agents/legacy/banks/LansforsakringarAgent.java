@@ -11,7 +11,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
@@ -81,7 +80,6 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.DebitTran
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.DeleteSignedTransactionRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoice;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoiceAndCreditAlertsResponse;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoicePaymentRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoicesListResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.FundHoldingsResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.FundInformationWrapper;
@@ -115,7 +113,6 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferR
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferrableResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionListResponse;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpdatePaymentRequest;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -160,7 +157,6 @@ import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.strings.StringUtils;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -646,9 +642,6 @@ public class LansforsakringarAgent extends AbstractAgent
     @Override
     public void update(Transfer transfer) throws Exception {
         switch (transfer.getType()) {
-            case PAYMENT:
-                updatePayment(transfer);
-                break;
             default:
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                         .setMessage("Not implemented.")
@@ -677,55 +670,6 @@ public class LansforsakringarAgent extends AbstractAgent
         }
 
         return sourceAccount.get();
-    }
-
-    private void updatePayment(Transfer transfer) throws Exception {
-        // Validate the payment is at the bank.
-
-        Transfer originalTransfer = transfer.getOriginalTransfer().get();
-
-        OverviewEntity overview = createGetRequest(OVERVIEW_URL, OverviewEntity.class);
-        Optional<UpcomingTransactionEntity> payment = Optional.empty();
-
-        accountLoop:
-        for (AccountEntity accountEntity : overview.getAccountEntities()) {
-            for (UpcomingTransactionEntity upcomingTransaction :
-                    fetchUpcomingTransactions(accountEntity.getAccountNumber())) {
-                Transfer upcomingTransactionTransfer = upcomingTransaction.toTransfer();
-
-                if (Objects.equal(
-                        originalTransfer.getHash(), upcomingTransactionTransfer.getHash())) {
-                    payment = Optional.of(upcomingTransaction);
-                    break accountLoop;
-                }
-            }
-        }
-
-        if (!payment.isPresent()) {
-            throw failTransfer(TransferExecutionException.EndUserMessage.PAYMENT_NO_MATCHES);
-        }
-
-        AccountEntity source = validatePaymentSourceAccount(transfer.getSource());
-
-        // Create update request and sign.
-
-        UpdatePaymentRequest paymentRequest = new UpdatePaymentRequest();
-        paymentRequest.setAmount(transfer.getAmount().getValue());
-        paymentRequest.setReference(transfer.getRemittanceInformation().getValue());
-        paymentRequest.setFromAccountNumber(
-                source.generalGetAccountIdentifier().getIdentifier(DEFAULT_FORMATTER));
-        paymentRequest.setPaymentDate(transfer.getDueDate().getTime());
-        paymentRequest.setPaymentId(payment.get().getId());
-
-        ClientResponse createPaymentClientResponse =
-                createPostRequest(SIGN_PAYMENT_CREATE_REFERENCE_URL, paymentRequest);
-        validateTransactionClientResponse(createPaymentClientResponse);
-
-        supplementalRequester.openBankId();
-
-        ClientResponse sendPaymentClientResponse =
-                createPostRequest(SIGN_PAYMENT_SEND_PAYMENT_URL, paymentRequest);
-        validateTransactionClientResponse(sendPaymentClientResponse);
     }
 
     private void executePayment(Transfer transfer) throws Exception {
