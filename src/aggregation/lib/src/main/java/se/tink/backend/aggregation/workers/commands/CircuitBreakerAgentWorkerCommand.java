@@ -2,13 +2,15 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
 import com.google.common.util.concurrent.RateLimiter;
+import java.lang.invoke.MethodHandles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.configuration.agentsservice.CircuitBreakerConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.CircuitBreakerMode;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.concurrency.CircuitBreakerStatistics;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -34,8 +36,8 @@ import se.tink.libraries.i18n.Catalog;
  * That is, operations that are high-throughput should probably use a circuit breaker.
  */
 public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
-    private static final AggregationLogger logger =
-            new AggregationLogger(CircuitBreakerAgentWorkerCommand.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private CircuitBreakerAgentWorkerCommandState state;
     private AgentWorkerCommandContext context;

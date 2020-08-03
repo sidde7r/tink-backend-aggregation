@@ -30,6 +30,7 @@ java_library(
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_json_json",
+        "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",

@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.workers.encryption;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.libraries.cache.CacheClient;
@@ -19,7 +21,8 @@ import se.tink.libraries.encryptedpayload.VersionDeserializer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsCrypto {
-    private static final AggregationLogger logger = new AggregationLogger(CredentialsCrypto.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     // according to
     // https://grafana.global-production.tink.network/d/000000054/aggregation-service?editPanel=8&orgId=1&from=now-2d&to=now

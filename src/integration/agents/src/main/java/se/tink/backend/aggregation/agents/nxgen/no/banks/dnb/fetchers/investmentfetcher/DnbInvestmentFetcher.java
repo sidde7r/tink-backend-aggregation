@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmentfetcher;
 
 import com.google.common.collect.Lists;
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants;
@@ -13,13 +16,12 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investment
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmentfetcher.rpc.FetchFundsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmentfetcher.rpc.FetchPensionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.oauth.rpc.InitMyWealthResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class DnbInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger logger =
-            new AggregationLogger(DnbInvestmentFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final DnbApiClient apiClient;
     private final Credentials credentials;

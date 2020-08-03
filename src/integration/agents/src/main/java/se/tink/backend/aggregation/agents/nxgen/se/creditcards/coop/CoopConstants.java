@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class CoopConstants {
@@ -64,7 +66,8 @@ public class CoopConstants {
         MEDMERA_MER(8, "Mer", AccountTypes.CREDIT_CARD, "Coop MedMera Mer"),
         MEDMERA_EFTER_2(9, "Efter", AccountTypes.CREDIT_CARD, "Coop MedMera Efter");
 
-        private static final AggregationLogger logger = new AggregationLogger(AccountType.class);
+        private static final Logger logger =
+                LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
         private static final Locale SWEDISH_LOCALE = new Locale("sv", "SE");
 
         private final int accountTypeOrdinal;

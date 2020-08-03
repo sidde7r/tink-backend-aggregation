@@ -1,15 +1,17 @@
 package se.tink.backend.aggregation.agents.bankid;
 
+import java.lang.invoke.MethodHandles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdHandler;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdStatus;
-import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatBankIdHandler {
-    private static final AggregationLogger logger =
-            new AggregationLogger(CredentialsSignicatBankIdAuthenticationHandler.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Credentials credentials;
     private final SupplementalRequester supplementalRequester;

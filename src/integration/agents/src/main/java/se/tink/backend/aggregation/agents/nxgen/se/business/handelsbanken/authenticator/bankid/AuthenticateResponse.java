@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
@@ -10,13 +11,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.Handel
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEConstants.BankIdUserMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class AuthenticateResponse extends BaseResponse {
-
-    private static final AggregationLogger logger =
-            new AggregationLogger(AuthenticateResponse.class);
+    private static final org.slf4j.Logger logger =
+            org.slf4j.LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public BankIdStatus toBankIdStatus() throws AuthenticationException {
         String authenticateResult = getResult();
