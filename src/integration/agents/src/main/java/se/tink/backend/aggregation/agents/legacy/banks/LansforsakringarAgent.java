@@ -11,7 +11,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
@@ -81,7 +80,6 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.DebitTran
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.DeleteSignedTransactionRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoice;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoiceAndCreditAlertsResponse;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoicePaymentRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoicesListResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.FundHoldingsResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.FundInformationWrapper;
@@ -115,7 +113,6 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferR
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferrableResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionListResponse;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpdatePaymentRequest;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -160,7 +157,6 @@ import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.strings.StringUtils;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -221,21 +217,7 @@ public class LansforsakringarAgent extends AbstractAgent
     private static final String FETCH_CARD_TRANSACTIONS_URL = BASE_URL + "/card/transaction";
     private static final String FETCH_LOANS_URL = BASE_URL + "/loan/loans/withtotal";
     private static final String FETCH_LOAN_DETAILS_URL = BASE_URL + "/loan/details";
-    private static final String FETCH_UNSIGNED_PAYMENTS_URL =
-            BASE_URL + "/unsigned/paymentsandtransfers/list";
-    private static final String VALIDATE_UNSIGNED_PAYMENTS_URL =
-            BASE_URL + "/unsigned/paymentsandtransfers/validate";
-    private static final String CREATE_BANKID_REFERENCE_PAYMENTS_URL =
-            BASE_URL + "/unsigned/paymentsandtransfers/bankid/createreference";
-    private static final String SEND_UNSIGNED_PAYMENT_URL =
-            BASE_URL + "/unsigned/paymentsandtransfers/bankid/send";
     private static final String DELETE_UNSIGNED_PAYMENT_URL = BASE_URL + "/payment/deleteunsigned";
-    private static final String SIGNLIST_ADD_EINVOICE_URL =
-            BASE_URL + "/payment/einvoice/addeinvoice";
-    private static final String SIGN_PAYMENT_CREATE_REFERENCE_URL =
-            BASE_URL + "/payment/signed/bankid/createreference";
-    private static final String SIGN_PAYMENT_SEND_PAYMENT_URL =
-            BASE_URL + "/payment/signed/modify/bankid";
     private static final String FETCH_TRANSFER_SOURCE_ACCOUNTS =
             BASE_URL + "/account/transferrable?direction=from";
     private static final String INTERNAL_TRANSFER_URL = BASE_URL + "/directtransfer";
@@ -644,90 +626,11 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception {
-        switch (transfer.getType()) {
-            case EINVOICE:
-                approveEInvoice(transfer);
-                break;
-            case PAYMENT:
-                updatePayment(transfer);
-                break;
-            default:
-                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setMessage("Not implemented.")
-                        .setEndUserMessage("Not implemented.")
-                        .build();
-        }
-    }
-
-    private void approveEInvoice(final Transfer transfer) throws Exception {
-        validateUpdateIsPermitted(transfer);
-        AccountEntity sourceAccount = validatePaymentSourceAccount(transfer.getSource());
-        EInvoice eInvoice = validateEInvoice(transfer);
-        validateNumberOfOutstandingPaymentEntities(0);
-        addEInvoiceToApproveList(transfer, sourceAccount, eInvoice);
-        PaymentEntity paymentEntityToSign = validateNumberOfOutstandingPaymentEntities(1);
-        signEInvoice(paymentEntityToSign);
-    }
-
-    private void validateUpdateIsPermitted(Transfer transfer) {
-        Transfer originalTransfer = transfer.getOriginalTransfer().get();
-
-        if (!Objects.equal(
-                transfer.getRemittanceInformation().getValue(),
-                originalTransfer.getRemittanceInformation().getValue())) {
-
-            throw cancelTransfer(
-                    TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE);
-        }
-
-        if (!Objects.equal(transfer.getSourceMessage(), originalTransfer.getSourceMessage())) {
-            throw cancelTransfer(
-                    TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_SOURCE_MESSAGE);
-        }
-    }
-
-    private PaymentEntity validateNumberOfOutstandingPaymentEntities(
-            int numberOfOutstandingPayments) throws Exception {
-        PaymentsListResponse paymentsListResponse =
-                createGetRequest(FETCH_UNSIGNED_PAYMENTS_URL, PaymentsListResponse.class);
-
-        if (paymentsListResponse != null) {
-            List<PaymentEntity> eInvoices =
-                    paymentsListResponse.getPayments().stream()
-                            .filter(p -> Objects.equal(p.getPaymentType(), EINVOICE_DESCRIPTION))
-                            .collect(Collectors.toList());
-
-            if (Iterables.size(eInvoices) == numberOfOutstandingPayments) {
-                if (numberOfOutstandingPayments == 0) {
-                    return null;
-                } else {
-                    return Iterables.get(eInvoices, 0);
-                }
-            }
-        }
-
-        throw cancelTransfer(TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS);
-    }
-
-    private void signEInvoice(PaymentEntity paymentEntityToSign) {
-        try {
-            ClientResponse validateResponse = createGetRequest(VALIDATE_UNSIGNED_PAYMENTS_URL);
-            validateTransactionClientResponse(validateResponse);
-
-            ClientResponse createReferenceResponse =
-                    createGetRequest(CREATE_BANKID_REFERENCE_PAYMENTS_URL);
-            validateTransactionClientResponse(createReferenceResponse);
-
-            supplementalRequester.openBankId();
-
-            ClientResponse bankIdResponse = createGetRequest(SEND_UNSIGNED_PAYMENT_URL);
-            validateTransactionClientResponse(bankIdResponse);
-
-        } catch (TransferExecutionException e) {
-            cancelUnsignedPayment(paymentEntityToSign.getUniqueId(), e);
-            throw e;
-        }
+    public void update(Transfer transfer) {
+        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage("Not implemented.")
+                .setEndUserMessage("Not implemented.")
+                .build();
     }
 
     private void cancelUnsignedPayment(String uniqueId, Exception e)
@@ -742,48 +645,6 @@ public class LansforsakringarAgent extends AbstractAgent
         validateTransactionClientResponse(cancelPaymentResponse);
     }
 
-    private void addEInvoiceToApproveList(
-            final Transfer transfer, AccountEntity sourceAccount, EInvoice eInvoice) {
-        EInvoicePaymentRequest request = new EInvoicePaymentRequest();
-        request.setOcr(transfer.getRemittanceInformation().getValue());
-        request.setDate(transfer.getDueDate().getTime());
-        request.setToAccount(transfer.getDestination().getIdentifier(GIRO_FORMATTER));
-        request.setElectronicInvoiceId(eInvoice.getElectronicInvoiceId());
-        request.setAmount(transfer.getAmount().getValue());
-        request.setFromAccount(
-                sourceAccount.generalGetAccountIdentifier().getIdentifier(DEFAULT_FORMATTER));
-
-        ClientResponse createPaymentClientResponse =
-                createPostRequest(SIGNLIST_ADD_EINVOICE_URL, request);
-
-        validateTransactionClientResponse(createPaymentClientResponse);
-    }
-
-    private EInvoice validateEInvoice(final Transfer transfer) throws Exception {
-        final Optional<String> electronicInvoiceId =
-                transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID);
-
-        if (!electronicInvoiceId.isPresent()) {
-            throw failTransferWithMessage(
-                    "No electronicInvoiceId on transfer",
-                    TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
-        }
-
-        EInvoicesListResponse invoicesListResponse =
-                createGetRequest(FETCH_EINVOICES_URL, EInvoicesListResponse.class);
-
-        Optional<EInvoice> eInvoice =
-                invoicesListResponse.getElectronicInvoices().stream()
-                        .filter(i -> LFUtils.findEInvoice(electronicInvoiceId.get()).apply(i))
-                        .findFirst();
-
-        if (!eInvoice.isPresent()) {
-            throw failTransfer(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES);
-        }
-
-        return eInvoice.get();
-    }
-
     private AccountEntity validatePaymentSourceAccount(AccountIdentifier source) throws Exception {
         Optional<AccountEntity> sourceAccount = GeneralUtils.find(source, fetchPaymentAccounts());
 
@@ -792,55 +653,6 @@ public class LansforsakringarAgent extends AbstractAgent
         }
 
         return sourceAccount.get();
-    }
-
-    private void updatePayment(Transfer transfer) throws Exception {
-        // Validate the payment is at the bank.
-
-        Transfer originalTransfer = transfer.getOriginalTransfer().get();
-
-        OverviewEntity overview = createGetRequest(OVERVIEW_URL, OverviewEntity.class);
-        Optional<UpcomingTransactionEntity> payment = Optional.empty();
-
-        accountLoop:
-        for (AccountEntity accountEntity : overview.getAccountEntities()) {
-            for (UpcomingTransactionEntity upcomingTransaction :
-                    fetchUpcomingTransactions(accountEntity.getAccountNumber())) {
-                Transfer upcomingTransactionTransfer = upcomingTransaction.toTransfer();
-
-                if (Objects.equal(
-                        originalTransfer.getHash(), upcomingTransactionTransfer.getHash())) {
-                    payment = Optional.of(upcomingTransaction);
-                    break accountLoop;
-                }
-            }
-        }
-
-        if (!payment.isPresent()) {
-            throw failTransfer(TransferExecutionException.EndUserMessage.PAYMENT_NO_MATCHES);
-        }
-
-        AccountEntity source = validatePaymentSourceAccount(transfer.getSource());
-
-        // Create update request and sign.
-
-        UpdatePaymentRequest paymentRequest = new UpdatePaymentRequest();
-        paymentRequest.setAmount(transfer.getAmount().getValue());
-        paymentRequest.setReference(transfer.getRemittanceInformation().getValue());
-        paymentRequest.setFromAccountNumber(
-                source.generalGetAccountIdentifier().getIdentifier(DEFAULT_FORMATTER));
-        paymentRequest.setPaymentDate(transfer.getDueDate().getTime());
-        paymentRequest.setPaymentId(payment.get().getId());
-
-        ClientResponse createPaymentClientResponse =
-                createPostRequest(SIGN_PAYMENT_CREATE_REFERENCE_URL, paymentRequest);
-        validateTransactionClientResponse(createPaymentClientResponse);
-
-        supplementalRequester.openBankId();
-
-        ClientResponse sendPaymentClientResponse =
-                createPostRequest(SIGN_PAYMENT_SEND_PAYMENT_URL, paymentRequest);
-        validateTransactionClientResponse(sendPaymentClientResponse);
     }
 
     private void executePayment(Transfer transfer) throws Exception {

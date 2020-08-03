@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar;
 
 import static com.google.common.base.Objects.equal;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.sun.jersey.api.client.ClientResponse;
@@ -13,7 +12,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.AccountEntity;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoice;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferRequest;
@@ -55,10 +53,6 @@ public class LFUtils {
                                         ae.getAccountNumber(),
                                         identifier.getIdentifier(DEFAULT_FORMATTER))))
                 .findFirst();
-    }
-
-    public static Predicate<EInvoice> findEInvoice(final String electronicInvoiceId) {
-        return input -> Objects.equals(input.getElectronicInvoiceId(), electronicInvoiceId);
     }
 
     /**
