@@ -9,10 +9,10 @@ spec:
     - alert: LoginSuccessRateLowWithAttemptLimitES
       expr: |
         # Successful/Cancelled attempts above 65%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="ES"}[60m])) by (action,className,provider)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[60m])) by (action,className,provider) < 0.65)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="ES", provider_type!="test"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES", provider_type!="test"}[60m])) by (action,className,provider) < 0.65)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[60m])) by (action,className,provider) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES", provider_type!="test"}[60m])) by (action,className,provider) > 5
       for: 5m
       labels:
         severity: urgent
@@ -27,10 +27,10 @@ spec:
     - alert: RefreshSuccessRateLowWithAttemptLimitES
       expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="ES"}[60m])) by (className,provider)
-            / sum(increase(tink_agent_refresh_total{market="ES"}[60m])) by (className,provider) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="ES", provider_type!="test"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="ES", provider_type!="test"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="ES"}[60m])) by (className,provider) > 10
+        and sum(increase(tink_agent_refresh_total{market="ES", provider_type!="test"}[60m])) by (className,provider) > 10
       for: 5m
       labels:
         severity: urgent

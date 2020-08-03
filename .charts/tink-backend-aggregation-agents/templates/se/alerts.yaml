@@ -11,10 +11,10 @@ spec:
     - alert: LoginSuccessRateLowWithAttemptLimitSE
       expr: |
         # Successful/Cancelled attempts above 85%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[60m])) by (action,className,provider)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[60m])) by (action,className,provider) < 0.85)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[60m])) by (action,className,provider) < 0.85)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[60m])) by (action,className,provider) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[60m])) by (action,className,provider) > 10
       for: 5m
       labels:
         severity: urgent
@@ -31,10 +31,10 @@ spec:
     - alert: LoginSuccessRateLowWithAttemptLimitDanskebank
       expr: |
         # Successful/Cancelled attempts above 80%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider) < 0.80)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider) < 0.80)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider) > 10
       for: 5m
       labels:
         severity: urgent
@@ -49,10 +49,10 @@ spec:
     - alert: RefreshSuccessRateLowWithAttemptLimitSE
       expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE"}[30m])) by (className,provider)
-            / sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className,provider) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className,provider) > 50
+        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) > 50
       for: 5m
       labels:
         severity: urgent
