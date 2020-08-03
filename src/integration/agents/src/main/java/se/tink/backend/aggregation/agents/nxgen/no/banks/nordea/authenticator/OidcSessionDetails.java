@@ -16,6 +16,6 @@ public class OidcSessionDetails {
     // At this point in authentication flow, we expect this one state, and no errors. Anything but
     // that would suggest that we did something wrong already.
     public boolean isInProperState() {
-        return "AUTHENTICATE".equals(action) && "null".equalsIgnoreCase(error);
+        return "AUTHENTICATE".equals(action) && "false".equalsIgnoreCase(error);
     }
 }

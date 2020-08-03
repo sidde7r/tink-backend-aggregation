@@ -27,7 +27,7 @@ public class CreditCardFetcher implements AccountFetcher<CreditCardAccount> {
                 .collect(Collectors.toList());
     }
 
-    public CreditCardAccount toTinkCreditCardAccount(CreditCardDetailsResponse cardDetails) {
+    private CreditCardAccount toTinkCreditCardAccount(CreditCardDetailsResponse cardDetails) {
         CreditCardModule cardModule =
                 CreditCardModule.builder()
                         .withCardNumber(cardDetails.getMaskedCreditCardNumber())

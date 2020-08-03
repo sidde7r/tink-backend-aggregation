@@ -14,8 +14,8 @@ public class ExceptionFilter extends Filter {
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
-
         HttpResponse httpResponse = nextFilter(httpRequest);
+
         if (httpResponse.getStatus() >= 400) {
             handleKnownErrors(httpResponse);
         }
@@ -23,7 +23,14 @@ public class ExceptionFilter extends Filter {
     }
 
     private void handleKnownErrors(HttpResponse httpResponse) {
-        ErrorResponse body = httpResponse.getBody(ErrorResponse.class);
+        ErrorResponse body = null;
+        try {
+            body = httpResponse.getBody(ErrorResponse.class);
+        } catch (Exception e) {
+            // Could not parse as ErrorResponse.class or some other error during it, skip trying.
+            return;
+        }
+
         if (body.getHttpStatus() == 400 && INVALID_GRANT.equals(body.getError())) {
             throw SessionError.SESSION_EXPIRED.exception();
         }

@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.identity
 import se.tink.libraries.identitydata.IdentityData;
 
 @AllArgsConstructor
-public class NordeaNoIdentityDataFetcher {
+public class IdentityDataFetcher {
 
     private FetcherClient fetcherClient;
 

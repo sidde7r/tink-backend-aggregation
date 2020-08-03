@@ -1,1 +1,437 @@
-{}
+{
+  "accounts" : [ {
+    "accountNumber" : "5269********3239",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "NOK",
+      "doubleValue" : 1765.06,
+      "exactValue" : 1765.06,
+      "scale" : 2,
+      "unscaledValue" : 176506
+    },
+    "exactBalance" : {
+      "currencyCode" : "NOK",
+      "doubleValue" : 127.05,
+      "exactValue" : 127.05,
+      "scale" : 2,
+      "unscaledValue" : 12705
+    },
+    "currencyCode" : "NOK",
+    "bankId" : "52693239",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "5269********3239",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "availableCredit" : 1765.06,
+    "balance" : 127.05
+  }, {
+    "accountNumber" : "NO9386011117947",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "NOK",
+      "doubleValue" : 1801.4,
+      "exactValue" : 1801.4,
+      "scale" : 2,
+      "unscaledValue" : 180140
+    },
+    "currencyCode" : "NOK",
+    "availableBalance" : {
+      "currencyCode" : "NOK",
+      "doubleValue" : 1801.4,
+      "exactValue" : 1801.4,
+      "scale" : 2,
+      "unscaledValue" : 180140
+    },
+    "creditLimit" : {
+      "currencyCode" : "NOK",
+      "doubleValue" : 0.0,
+      "exactValue" : 0.0,
+      "scale" : 2,
+      "unscaledValue" : 0
+    },
+    "bankId" : "NO9386011117947",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Felleskonto",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"no://60111473857\",\"iban://NDEANOKK/NO9386011117947\"]",
+    "closed" : false,
+    "holderName" : "ASDF ASDF ASDF",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "ASDF ASDF ASDF",
+        "role" : null
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "availableCredit" : 0.0,
+    "balance" : 1801.4
+  } ],
+  "transactions" : [ {
+    "amount" : -10.0,
+    "date" : 1593684000000,
+    "description" : "APPLE.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 11000.0,
+    "date" : 1593597600000,
+    "description" : "FRA: JESUS REVOLUTION, FERIEPENGER",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -548.5,
+    "date" : 1593597600000,
+    "description" : "COOP OBS SLITU  MORSTONG SLITU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -90.93,
+    "date" : 1593597600000,
+    "description" : "NILLE 121 ASKIM EIDSBERGVN ASKIM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -24.3,
+    "date" : 1593597600000,
+    "description" : "EXTRA ASKIMTORG P.W.RÂ¢WDES G ASKIM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -186.06,
+    "date" : 1593597600000,
+    "description" : "KIWI 287 VAMMAV VAMMAVEIEN 2 ASKIM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -10212.0,
+    "date" : 1593597600000,
+    "description" : "BETALING PÃ LÃN 6320.82.53648",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -147.0,
+    "date" : 1593597600000,
+    "description" : "VIPPS*VY APP",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -200.0,
+    "date" : 1593511200000,
+    "description" : "VIPPS CANDY AND DIP",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -172.0,
+    "date" : 1593511200000,
+    "description" : "CUBUS 924 MORSTONGVN SLITU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1593424800000,
+    "description" : "FRA: JESUS REVOLUTION",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1593424800000,
+    "description" : "FRA: JESUS REVOLUTION",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 1862.33,
+    "date" : 1593424800000,
+    "description" : "SENT FROM REVOLUT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 1000.0,
+    "date" : 1593424800000,
+    "description" : "FRA: JESUS REVOLUTION",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -706.14,
+    "date" : 1593424800000,
+    "description" : "KIWI 287 VAMMAV VAMMAVEIEN 2 ASKIM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -152.0,
+    "date" : 1593424800000,
+    "description" : "SPORT OUTLET AS TRÂ¢GDSTADVEI ASKIM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -175.0,
+    "date" : 1593424800000,
+    "description" : "H&M NO0873 ASKIMTORGET  ASKIM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -29.0,
+    "date" : 1593424800000,
+    "description" : "EXTRA ASKIM HENSTAD ALLE ASKIM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -223.0,
+    "date" : 1593424800000,
+    "description" : "CUBUS 817 ASKIMTORGET  1800 ASKIM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -70.0,
+    "date" : 1593424800000,
+    "description" : "VIPPS*BAKKEN, MALMOEYA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -115.0,
+    "date" : 1593424800000,
+    "description" : "VIPPS*BAKKEN, MALMOEYA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -663.84,
+    "date" : 1593165600000,
+    "description" : "REVOLUT**4601*",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1593079200000,
+    "description" : "FRA: JESUS REVOLUTION",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -500.0,
+    "date" : 1592992800000,
+    "description" : "TIL GURO LARSEN ASDF",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -2064.0,
+    "date" : 1592992800000,
+    "description" : "BAUHAUS WEB SHOP",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1592906400000,
+    "description" : "FOR UTLEGG FOR GAVE TIL GURO LÂ´RER, KINOGAVEKORT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -89.0,
+    "date" : 1592906400000,
+    "description" : "APPLE.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -923.49,
+    "date" : 1592906400000,
+    "description" : "KIWI 287 VAMMAVEIEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 686.46,
+    "date" : 1592820000000,
+    "description" : "FRA: ASDF ASDF ASDF",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 1000.0,
+    "date" : 1592820000000,
+    "description" : "FRA: JESUS REVOLUTION",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FIRST_NAME",
+      "value" : "ASDF ASDF"
+    }, {
+      "type" : "SURNAME",
+      "value" : "ASDF"
+    } ],
+    "dateOfBirth" : {
+      "year" : 1984,
+      "month" : "AUGUST",
+      "dayOfWeek" : "WEDNESDAY",
+      "leapYear" : true,
+      "dayOfYear" : 242,
+      "chronology" : {
+        "id" : "ISO",
+        "calendarType" : "iso8601"
+      },
+      "monthValue" : 8,
+      "dayOfMonth" : 29,
+      "era" : "CE"
+    }
+  }
+}

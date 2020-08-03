@@ -38,6 +38,6 @@ public class CreditCardDetailsResponse {
     }
 
     public String getMaskedCreditCardNumber() {
-        return creditDetails.maskedCreditCardNumber;
+        return creditDetails.maskedCreditCardNumber.replace(" ", "");
     }
 }

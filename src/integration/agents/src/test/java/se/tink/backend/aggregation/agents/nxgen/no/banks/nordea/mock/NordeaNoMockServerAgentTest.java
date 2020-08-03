@@ -36,6 +36,9 @@ public class NordeaNoMockServerAgentTest {
                         .parseContractOnBasisOfFile(contractFilePath);
 
         // when
-        // agentWireMockRefreshTest.executeRefresh();
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
     }
 }

@@ -29,7 +29,7 @@ public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public List<? extends AuthenticationStep> authenticationSteps() {
+    public List<AuthenticationStep> authenticationSteps() {
         return mySteps;
     }
 

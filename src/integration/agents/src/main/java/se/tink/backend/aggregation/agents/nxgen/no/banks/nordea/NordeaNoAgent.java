@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.Exception
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.FetcherClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditcard.CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditcard.CreditCardTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.identitydata.NordeaNoIdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.TransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
@@ -103,7 +103,7 @@ public class NordeaNoAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return new FetchIdentityDataResponse(
-                new NordeaNoIdentityDataFetcher(fetcherClient).fetchIdentityData());
+                new IdentityDataFetcher(fetcherClient).fetchIdentityData());
     }
 
     @Override
