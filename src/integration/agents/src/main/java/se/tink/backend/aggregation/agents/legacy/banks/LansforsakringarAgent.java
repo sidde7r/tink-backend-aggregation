@@ -646,9 +646,6 @@ public class LansforsakringarAgent extends AbstractAgent
     @Override
     public void update(Transfer transfer) throws Exception {
         switch (transfer.getType()) {
-            case EINVOICE:
-                approveEInvoice(transfer);
-                break;
             case PAYMENT:
                 updatePayment(transfer);
                 break;
@@ -657,76 +654,6 @@ public class LansforsakringarAgent extends AbstractAgent
                         .setMessage("Not implemented.")
                         .setEndUserMessage("Not implemented.")
                         .build();
-        }
-    }
-
-    private void approveEInvoice(final Transfer transfer) throws Exception {
-        validateUpdateIsPermitted(transfer);
-        AccountEntity sourceAccount = validatePaymentSourceAccount(transfer.getSource());
-        EInvoice eInvoice = validateEInvoice(transfer);
-        validateNumberOfOutstandingPaymentEntities(0);
-        addEInvoiceToApproveList(transfer, sourceAccount, eInvoice);
-        PaymentEntity paymentEntityToSign = validateNumberOfOutstandingPaymentEntities(1);
-        signEInvoice(paymentEntityToSign);
-    }
-
-    private void validateUpdateIsPermitted(Transfer transfer) {
-        Transfer originalTransfer = transfer.getOriginalTransfer().get();
-
-        if (!Objects.equal(
-                transfer.getRemittanceInformation().getValue(),
-                originalTransfer.getRemittanceInformation().getValue())) {
-
-            throw cancelTransfer(
-                    TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE);
-        }
-
-        if (!Objects.equal(transfer.getSourceMessage(), originalTransfer.getSourceMessage())) {
-            throw cancelTransfer(
-                    TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_SOURCE_MESSAGE);
-        }
-    }
-
-    private PaymentEntity validateNumberOfOutstandingPaymentEntities(
-            int numberOfOutstandingPayments) throws Exception {
-        PaymentsListResponse paymentsListResponse =
-                createGetRequest(FETCH_UNSIGNED_PAYMENTS_URL, PaymentsListResponse.class);
-
-        if (paymentsListResponse != null) {
-            List<PaymentEntity> eInvoices =
-                    paymentsListResponse.getPayments().stream()
-                            .filter(p -> Objects.equal(p.getPaymentType(), EINVOICE_DESCRIPTION))
-                            .collect(Collectors.toList());
-
-            if (Iterables.size(eInvoices) == numberOfOutstandingPayments) {
-                if (numberOfOutstandingPayments == 0) {
-                    return null;
-                } else {
-                    return Iterables.get(eInvoices, 0);
-                }
-            }
-        }
-
-        throw cancelTransfer(TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS);
-    }
-
-    private void signEInvoice(PaymentEntity paymentEntityToSign) {
-        try {
-            ClientResponse validateResponse = createGetRequest(VALIDATE_UNSIGNED_PAYMENTS_URL);
-            validateTransactionClientResponse(validateResponse);
-
-            ClientResponse createReferenceResponse =
-                    createGetRequest(CREATE_BANKID_REFERENCE_PAYMENTS_URL);
-            validateTransactionClientResponse(createReferenceResponse);
-
-            supplementalRequester.openBankId();
-
-            ClientResponse bankIdResponse = createGetRequest(SEND_UNSIGNED_PAYMENT_URL);
-            validateTransactionClientResponse(bankIdResponse);
-
-        } catch (TransferExecutionException e) {
-            cancelUnsignedPayment(paymentEntityToSign.getUniqueId(), e);
-            throw e;
         }
     }
 
@@ -740,48 +667,6 @@ public class LansforsakringarAgent extends AbstractAgent
                 createPostRequest(DELETE_UNSIGNED_PAYMENT_URL, request);
 
         validateTransactionClientResponse(cancelPaymentResponse);
-    }
-
-    private void addEInvoiceToApproveList(
-            final Transfer transfer, AccountEntity sourceAccount, EInvoice eInvoice) {
-        EInvoicePaymentRequest request = new EInvoicePaymentRequest();
-        request.setOcr(transfer.getRemittanceInformation().getValue());
-        request.setDate(transfer.getDueDate().getTime());
-        request.setToAccount(transfer.getDestination().getIdentifier(GIRO_FORMATTER));
-        request.setElectronicInvoiceId(eInvoice.getElectronicInvoiceId());
-        request.setAmount(transfer.getAmount().getValue());
-        request.setFromAccount(
-                sourceAccount.generalGetAccountIdentifier().getIdentifier(DEFAULT_FORMATTER));
-
-        ClientResponse createPaymentClientResponse =
-                createPostRequest(SIGNLIST_ADD_EINVOICE_URL, request);
-
-        validateTransactionClientResponse(createPaymentClientResponse);
-    }
-
-    private EInvoice validateEInvoice(final Transfer transfer) throws Exception {
-        final Optional<String> electronicInvoiceId =
-                transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID);
-
-        if (!electronicInvoiceId.isPresent()) {
-            throw failTransferWithMessage(
-                    "No electronicInvoiceId on transfer",
-                    TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
-        }
-
-        EInvoicesListResponse invoicesListResponse =
-                createGetRequest(FETCH_EINVOICES_URL, EInvoicesListResponse.class);
-
-        Optional<EInvoice> eInvoice =
-                invoicesListResponse.getElectronicInvoices().stream()
-                        .filter(i -> LFUtils.findEInvoice(electronicInvoiceId.get()).apply(i))
-                        .findFirst();
-
-        if (!eInvoice.isPresent()) {
-            throw failTransfer(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES);
-        }
-
-        return eInvoice.get();
     }
 
     private AccountEntity validatePaymentSourceAccount(AccountIdentifier source) throws Exception {
