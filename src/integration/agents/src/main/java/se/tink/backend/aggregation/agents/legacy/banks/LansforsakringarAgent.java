@@ -217,21 +217,7 @@ public class LansforsakringarAgent extends AbstractAgent
     private static final String FETCH_CARD_TRANSACTIONS_URL = BASE_URL + "/card/transaction";
     private static final String FETCH_LOANS_URL = BASE_URL + "/loan/loans/withtotal";
     private static final String FETCH_LOAN_DETAILS_URL = BASE_URL + "/loan/details";
-    private static final String FETCH_UNSIGNED_PAYMENTS_URL =
-            BASE_URL + "/unsigned/paymentsandtransfers/list";
-    private static final String VALIDATE_UNSIGNED_PAYMENTS_URL =
-            BASE_URL + "/unsigned/paymentsandtransfers/validate";
-    private static final String CREATE_BANKID_REFERENCE_PAYMENTS_URL =
-            BASE_URL + "/unsigned/paymentsandtransfers/bankid/createreference";
-    private static final String SEND_UNSIGNED_PAYMENT_URL =
-            BASE_URL + "/unsigned/paymentsandtransfers/bankid/send";
     private static final String DELETE_UNSIGNED_PAYMENT_URL = BASE_URL + "/payment/deleteunsigned";
-    private static final String SIGNLIST_ADD_EINVOICE_URL =
-            BASE_URL + "/payment/einvoice/addeinvoice";
-    private static final String SIGN_PAYMENT_CREATE_REFERENCE_URL =
-            BASE_URL + "/payment/signed/bankid/createreference";
-    private static final String SIGN_PAYMENT_SEND_PAYMENT_URL =
-            BASE_URL + "/payment/signed/modify/bankid";
     private static final String FETCH_TRANSFER_SOURCE_ACCOUNTS =
             BASE_URL + "/account/transferrable?direction=from";
     private static final String INTERNAL_TRANSFER_URL = BASE_URL + "/directtransfer";
