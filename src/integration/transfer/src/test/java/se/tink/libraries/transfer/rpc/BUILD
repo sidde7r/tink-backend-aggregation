@@ -6,6 +6,6 @@ junit_test(
     data = [
     ],
     deps = [
-        "//src/integration/transfer:rpc"
+        "//src/integration/transfer:rpc",
     ],
 )
