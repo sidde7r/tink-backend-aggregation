@@ -6,7 +6,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/libraries/concurrency",
         "//third_party:com_google_guava_guava",
         "//third_party:io_dropwizard_dropwizard_lifecycle",

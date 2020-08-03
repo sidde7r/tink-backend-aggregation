@@ -13,7 +13,6 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation/type",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//third_party:com_google_guava_guava",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:org_apache_curator_curator_framework",

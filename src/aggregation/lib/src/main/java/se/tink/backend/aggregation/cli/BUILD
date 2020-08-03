@@ -7,7 +7,6 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/repositories",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/libraries/discovery/src/main/java/se/tink/libraries/discovery",
         "//src/libraries/repository",
         "//third_party:com_google_guava_guava",

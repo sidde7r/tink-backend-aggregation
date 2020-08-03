@@ -29,7 +29,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/psd2_payment_account/result",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/locks",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/models",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_data_cache",
