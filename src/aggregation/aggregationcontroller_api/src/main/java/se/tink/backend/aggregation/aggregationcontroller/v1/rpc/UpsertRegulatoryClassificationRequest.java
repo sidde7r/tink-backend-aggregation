@@ -4,6 +4,7 @@ public class UpsertRegulatoryClassificationRequest {
     private String appId;
     private String userId;
     private String accountId;
+    private String credentialsId;
     private CoreRegulatoryClassification classification;
 
     public String getAppId() {
@@ -36,5 +37,13 @@ public class UpsertRegulatoryClassificationRequest {
 
     public void setClassification(CoreRegulatoryClassification classification) {
         this.classification = classification;
+    }
+
+    public String getCredentialsId() {
+        return credentialsId;
+    }
+
+    public void setCredentialsId(String credentialsId) {
+        this.credentialsId = credentialsId;
     }
 }
