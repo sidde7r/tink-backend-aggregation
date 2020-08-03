@@ -2,12 +2,15 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import java.lang.invoke.MethodHandles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SavingsGoalEntity {
     @JsonIgnore
-    private static final AggregationLogger logger = new AggregationLogger(SavingsGoalEntity.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private String id;
     private String name;

@@ -4,18 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.TransactionType;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -23,7 +25,9 @@ import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class TransactionEntity {
-    private static AggregationLogger logger = new AggregationLogger(TransactionEntity.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static Pattern DESCRIPTION_DATE_PATTERN =
             Pattern.compile("^(?<description>.+)/(?<date>[0-9]{2}-[01][0-9]-[0123][0-9])$");
     private static String DESCRIPTION_DATE_FORMAT = "yy-MM-dd";

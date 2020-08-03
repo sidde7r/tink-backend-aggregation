@@ -3,10 +3,13 @@ package se.tink.backend.aggregation.agents.banks.sbab.client;
 import com.google.api.client.util.Maps;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.LoanEntity;
@@ -14,11 +17,10 @@ import se.tink.backend.aggregation.agents.banks.sbab.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.LoanResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class UserDataClient extends SBABClient {
-
-    private static final AggregationLogger logger = new AggregationLogger(UserDataClient.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String SAVING_URL = SECURE_BASE_URL + "/secure-rest/rest/savings/active";
     private static final String LOAN_URL = SECURE_BASE_URL + "/secure-rest/rest/lan/all";

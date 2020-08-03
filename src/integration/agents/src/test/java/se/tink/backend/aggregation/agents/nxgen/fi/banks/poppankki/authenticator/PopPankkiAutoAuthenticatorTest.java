@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.poppankki.authenticator;
 
+import java.lang.invoke.MethodHandles;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
@@ -14,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.S
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkV1Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkAutoAuthenticator;
 import se.tink.backend.aggregation.agents.utils.currency.CurrencyConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.agents.agenttest.NextGenerationAgentTest;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
@@ -23,8 +25,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class PopPankkiAutoAuthenticatorTest extends NextGenerationAgentTest {
-    private static final AggregationLogger logger =
-            new AggregationLogger(PopPankkiAutoAuthenticatorTest.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private Credentials credentials;
     private SamlinkPersistentStorage persistentStorage;

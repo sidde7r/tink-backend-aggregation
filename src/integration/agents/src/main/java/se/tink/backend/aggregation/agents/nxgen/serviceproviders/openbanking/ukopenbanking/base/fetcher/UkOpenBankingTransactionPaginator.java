@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher;
 
+import java.lang.invoke.MethodHandles;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -24,6 +26,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
  */
 public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends Account>
         implements TransactionKeyPaginator<AccountType, String> {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static final int PAGINATION_LIMIT =
             50; // Limits number of pages fetched in order to reduce loading.
     private static final int PAGINATION_GRACE_LIMIT = 5;
@@ -35,8 +40,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private final UkOpenBankingApiClient apiClient;
     private final Class<ResponseType> responseType;
     private final TransactionConverter<ResponseType, AccountType> transactionConverter;
-    private AggregationLogger logger =
-            new AggregationLogger(UkOpenBankingTransactionPaginator.class);
+
     private String lastAccount;
     private int paginationCount;
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;

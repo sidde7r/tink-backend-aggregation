@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.santander;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
 import java.util.regex.Matcher;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.authenticator.rpc.LoginRequest;
@@ -15,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.entities.TransactionQueryEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -23,11 +24,11 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SantanderApiClient {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final TinkHttpClient client;
     private final SessionStorage storage;
-    org.slf4j.Logger logger = LoggerFactory.getLogger(SantanderApiClient.class);
-    AggregationLogger longlogger = new AggregationLogger(SantanderApiClient.class);
 
     public SantanderApiClient(TinkHttpClient client, SessionStorage storage) {
         this.client = client;

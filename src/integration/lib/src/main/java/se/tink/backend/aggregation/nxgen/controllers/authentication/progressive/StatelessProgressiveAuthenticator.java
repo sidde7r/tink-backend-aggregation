@@ -1,16 +1,18 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.progressive;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 
 public abstract class StatelessProgressiveAuthenticator implements AuthenticationControllerType {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final AggregationLogger logger =
-            new AggregationLogger(StatelessProgressiveAuthenticator.class);
     private AuthenticationStep currentStep;
 
     public SteppableAuthenticationResponse processAuthentication(

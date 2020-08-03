@@ -1,17 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.loan.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.lang.invoke.MethodHandles;
 import java.text.ParseException;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Loans;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
 public class SELoanProperty {
-
-    private static final AggregationLogger logger = new AggregationLogger(SELoanProperty.class);
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private String label;
     private String value;
