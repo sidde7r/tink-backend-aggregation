@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.creditcard;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -15,9 +17,8 @@ public class SamlinkCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>,
                 TransactionKeyPaginator<
                         CreditCardAccount, SamlinkCreditCardFetcher.TransactionKey> {
-
-    private static final AggregationLogger logger =
-            new AggregationLogger(SamlinkCreditCardFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SamlinkApiClient apiClient;
 
@@ -32,7 +33,8 @@ public class SamlinkCreditCardFetcher
                 .toCreditCardAccounts(
                         apiClient::getCardDetails,
                         message ->
-                                logger.infoExtraLong(message, SamlinkConstants.LogTags.CREDITCARD));
+                                logger.info(
+                                        "tag={} {}", SamlinkConstants.LogTags.CREDITCARD, message));
     }
 
     @Override

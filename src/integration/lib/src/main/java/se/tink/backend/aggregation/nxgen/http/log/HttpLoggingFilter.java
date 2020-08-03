@@ -15,15 +15,17 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
@@ -32,8 +34,9 @@ import se.tink.backend.aggregation.utils.MapValueMaskerImpl;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class HttpLoggingFilter extends ClientFilter {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private final AggregationLogger logger;
     private final String logTag;
     private final Class<?> agentClass;
     private final MapValueMasker headerMasker;
@@ -44,12 +47,10 @@ public class HttpLoggingFilter extends ClientFilter {
     private static final LogTag GENERIC_HTTP_LOGGER = LogTag.from("http_logging_filter");
 
     public HttpLoggingFilter(
-            AggregationLogger logger,
             String logTag,
             LogMasker logMasker,
             Class<? extends HttpLoggableExecutor> agentClass,
             LoggingMode loggingMode) {
-        this.logger = logger;
         this.logTag = logTag;
         this.logMasker = logMasker;
         this.headerMasker =
@@ -83,7 +84,9 @@ public class HttpLoggingFilter extends ClientFilter {
             Iterable<String> logLines = getLogLinesForEntity(logEntryJsonString);
 
             for (String logLine : logLines) {
-                logger.infoExtraLong(
+                logger.info(
+                        "tag={} {}",
+                        GENERIC_HTTP_LOGGER,
                         String.format(
                                 Locale.ENGLISH,
                                 LOG_FORMAT,
@@ -91,8 +94,7 @@ public class HttpLoggingFilter extends ClientFilter {
                                 logEntry.getEntryType(),
                                 requestCount,
                                 lineNumber,
-                                logLine),
-                        GENERIC_HTTP_LOGGER);
+                                logLine));
                 lineNumber++;
             }
         } catch (IOException exception) {

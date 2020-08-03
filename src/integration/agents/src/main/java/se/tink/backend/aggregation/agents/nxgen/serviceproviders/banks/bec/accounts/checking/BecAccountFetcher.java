@@ -1,20 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.FetchAccountResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class BecAccountFetcher implements AccountFetcher<TransactionalAccount> {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final BecApiClient apiClient;
-    private static final AggregationLogger logger = new AggregationLogger(BecAccountFetcher.class);
 
     public BecAccountFetcher(BecApiClient apiClient) {
         this.apiClient = apiClient;
@@ -29,9 +32,10 @@ public class BecAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
             if (details.isUnknownType()) {
                 // log unknown type
-                logger.infoExtraLong(
-                        String.format("Unknown type: %s\n", details.getAccountType()),
-                        BecConstants.Log.UNKOWN_ACCOUNT_TYPE);
+                logger.info(
+                        "tag={} Unknown type: {}",
+                        BecConstants.Log.UNKOWN_ACCOUNT_TYPE,
+                        details.getAccountType());
             }
 
             // Filter out non-transactional accounts

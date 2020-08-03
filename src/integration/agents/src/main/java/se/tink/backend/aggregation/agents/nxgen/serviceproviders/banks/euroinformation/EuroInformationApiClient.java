@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LogoutResponse;
@@ -18,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.paginated.OperationSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.PfmInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.PfmInitResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -26,8 +28,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationApiClient {
-    private static final AggregationLogger logger =
-            new AggregationLogger(EuroInformationApiClient.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     protected final EuroInformationConfiguration config;
@@ -96,10 +98,10 @@ public class EuroInformationApiClient {
                 .filter(a -> a.getTinkTypeByTypeNumber() == AccountTypeEnum.UNKNOWN)
                 .forEach(
                         acc ->
-                                logger.infoExtraLong(
-                                        SerializationUtils.serializeToString(acc),
-                                        EuroInformationConstants.LoggingTags
-                                                .unknownAccountTypesTag));
+                                logger.info(
+                                        "tag={} {}",
+                                        EuroInformationConstants.LoggingTags.unknownAccountTypesTag,
+                                        SerializationUtils.serializeToString(acc)));
         return details;
     }
 

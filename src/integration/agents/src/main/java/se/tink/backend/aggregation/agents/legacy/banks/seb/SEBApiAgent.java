@@ -588,7 +588,10 @@ public class SEBApiAgent extends AbstractAgent
             investmentDataRequest.setRequest(requestWrappingEntity);
 
             String response = postAsJSON(INSURANCE_DETAIL, investmentDataRequest, String.class);
-            log.infoExtraLong(response, LogTag.from("SEB insurance account instruments response"));
+            logger.info(
+                    "tag={} {}",
+                    LogTag.from("SEB insurance account instruments response"),
+                    response);
 
         } catch (Exception e) {
             logger.warn("SEB insurance account instruments: Fetching of instruments failed.", e);

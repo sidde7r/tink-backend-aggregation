@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
@@ -11,13 +14,13 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpB
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.CollateralCreditDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.CreditDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCreditsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpBankLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger logger = new AggregationLogger(OpBankLoanFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final OpBankApiClient client;
     private final Credentials credentials;
@@ -69,9 +72,10 @@ public class OpBankLoanFetcher implements AccountFetcher<LoanAccount> {
                 if (!OpBankConstants.Fetcher.CONTINUING_CREDIT.equalsIgnoreCase(
                         credit.getCreditType())) {
                     // log the last of them, haven seen it yet
-                    logger.infoExtraLong(
-                            SerializationUtils.serializeToString(credit),
-                            OpBankConstants.Fetcher.LOAN_LOGGING);
+                    logger.info(
+                            "tag={} {}",
+                            OpBankConstants.Fetcher.LOAN_LOGGING,
+                            SerializationUtils.serializeToString(credit));
                 }
             }
         }

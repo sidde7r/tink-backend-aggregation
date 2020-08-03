@@ -5,7 +5,6 @@ import com.google.common.collect.MultimapBuilder;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
@@ -16,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory
  * attaching to clients. This helps out storing that info and removing them when done.
  */
 public class HttpLoggingFilterFactory implements ClientFilterFactory {
-    private final AggregationLogger logger;
     private final String logTag;
     private final LogMasker logMasker;
     private final Class<? extends HttpLoggableExecutor> agentClass;
@@ -24,12 +22,10 @@ public class HttpLoggingFilterFactory implements ClientFilterFactory {
     private final LoggingMode loggingMode;
 
     public HttpLoggingFilterFactory(
-            AggregationLogger logger,
             String logTag,
             LogMasker logMasker,
             Class<? extends HttpLoggableExecutor> agentClass,
             LoggingMode loggingMode) {
-        this.logger = logger;
         this.logTag = logTag;
         this.logMasker = logMasker;
         this.agentClass = agentClass;
@@ -40,7 +36,7 @@ public class HttpLoggingFilterFactory implements ClientFilterFactory {
     @Override
     public ClientFilter addClientFilter(Client client) {
         HttpLoggingFilter filter =
-                new HttpLoggingFilter(logger, logTag, logMasker, agentClass, loggingMode);
+                new HttpLoggingFilter(logTag, logMasker, agentClass, loggingMode);
         client.addFilter(filter);
         createdFilters.put(client, filter);
         return filter;

@@ -1,19 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.entities.LoansEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.rpc.FetchLoanDetailsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger logger = new AggregationLogger(NordeaLoanFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final NordeaFIApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -31,8 +34,10 @@ public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private LoanAccount getLoanAccount(LoansEntity loansEntity) {
         FetchLoanDetailsResponse loanDetails = apiClient.fetchLoanDetails(loansEntity.getLoanId());
-        logger.infoExtraLong(
-                SerializationUtils.serializeToString(loanDetails), LogTags.LOAN_ACCOUNT);
+        logger.info(
+                "tag={} {}",
+                LogTags.LOAN_ACCOUNT,
+                SerializationUtils.serializeToString(loanDetails));
         return loanDetails.toTinkLoanAccount();
     }
 
