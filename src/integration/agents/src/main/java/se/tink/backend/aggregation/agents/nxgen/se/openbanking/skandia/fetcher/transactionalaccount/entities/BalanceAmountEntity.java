@@ -11,6 +11,6 @@ public class BalanceAmountEntity {
     private String currency;
 
     public ExactCurrencyAmount toAmount() {
-        return ExactCurrencyAmount.of(new BigDecimal(amount), currency);
+        return ExactCurrencyAmount.of(BigDecimal.valueOf(amount), currency);
     }
 }

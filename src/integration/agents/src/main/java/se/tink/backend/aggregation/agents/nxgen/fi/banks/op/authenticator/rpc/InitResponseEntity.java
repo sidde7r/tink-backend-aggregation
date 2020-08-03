@@ -18,17 +18,17 @@ public class InitResponseEntity extends OpBankResponseEntity {
         } else if (!this.isAppVersionAccepted()) {
             throw new IllegalStateException(
                     "App version not accepted, response: " + this.toString());
-        } else if (!this.isAppVersionAccepted()) {
+        } else if (!this.isOsVersionAccepted()) {
             throw new IllegalStateException(
                     "OS version not accepted, response: " + this.toString());
         }
     }
 
-    public boolean isOsVersionAccepted() {
+    private boolean isOsVersionAccepted() {
         return osVersionAccepted;
     }
 
-    public boolean isAppVersionAccepted() {
+    private boolean isAppVersionAccepted() {
         return appVersionAccepted;
     }
 

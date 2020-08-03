@@ -26,8 +26,6 @@ public class SantanderEsIdentityDataFetcher implements IdentityDataFetcher {
         EsIdentityDataBuilder builder = EsIdentityData.builder();
         if (getIdNumberType(userId) == IdNumberTypes.NIF) {
             builder.setNifNumber(userId);
-        } else if (getIdNumberType(userId) == IdNumberTypes.NIF) {
-            builder.setNieNumber(userId);
         } else {
             builder.setPassportNumber(userId);
         }
