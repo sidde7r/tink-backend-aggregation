@@ -53,7 +53,9 @@ public class BoursoramaApiClient {
                         BoursoramaConstants.Numpad.NUMPAD_MAX_NUMBER_OF_BUTTONS);
 
         return client.request(BoursoramaConstants.Urls.NUMPAD)
-                .header("Authorization", "Bearer " + BoursoramaConstants.Auth.API_KEY)
+                .header(
+                        BoursoramaConstants.Auth.AUTHORIZATION_HEADER,
+                        "Bearer " + BoursoramaConstants.Auth.API_KEY)
                 .body(generateMatrixRequest, MediaType.APPLICATION_JSON_TYPE)
                 .post(GenerateMatrixResponse.class);
     }
@@ -63,8 +65,12 @@ public class BoursoramaApiClient {
         try {
             response =
                     client.request(BoursoramaConstants.Urls.LOGIN)
-                            .header("Authorization", "Bearer " + BoursoramaConstants.Auth.API_KEY)
-                            .header("X-Session-Id", boursoramaPersistentStorage.getUdid())
+                            .header(
+                                    BoursoramaConstants.Auth.AUTHORIZATION_HEADER,
+                                    "Bearer " + BoursoramaConstants.Auth.API_KEY)
+                            .header(
+                                    BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
+                                    boursoramaPersistentStorage.getUdid())
                             .body(loginRequest, MediaType.APPLICATION_JSON_TYPE)
                             .post(HttpResponse.class);
         } catch (HttpResponseException hre) {
@@ -81,10 +87,10 @@ public class BoursoramaApiClient {
             throw new IllegalArgumentException(
                     "Missing user hash from login request, unable to continue.");
         }
-        if (!headers.containsKey("Authorization")) {
+        if (!headers.containsKey(BoursoramaConstants.Auth.AUTHORIZATION_HEADER)) {
             throw new IllegalArgumentException("Missing new Bearer token, unable to continue.");
         }
-        String newBearerToken = headers.getFirst("Authorization");
+        String newBearerToken = headers.getFirst(BoursoramaConstants.Auth.AUTHORIZATION_HEADER);
         sessionStorage.put(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN, newBearerToken);
 
         String userHash = headers.getFirst(BoursoramaConstants.Auth.USER_HASH_HEADER);
@@ -100,8 +106,10 @@ public class BoursoramaApiClient {
         String loggedInBearerToken =
                 sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
         return client.request(createUserHashUrl(BoursoramaConstants.UserUrls.LIST_ACCOUNTS))
-                .header("Authorization", loggedInBearerToken)
-                .header("X-Session-Id", boursoramaPersistentStorage.getUdid())
+                .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
+                .header(
+                        BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
+                        boursoramaPersistentStorage.getUdid())
                 .get(ListAccountsResponse.class);
     }
 
@@ -109,8 +117,10 @@ public class BoursoramaApiClient {
         String loggedInBearerToken =
                 sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
         return client.request(createUserHashUrl(BoursoramaConstants.UserUrls.IDENTITY_DATA))
-                .header("Authorization", loggedInBearerToken)
-                .header("X-Session-Id", boursoramaPersistentStorage.getUdid())
+                .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
+                .header(
+                        BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
+                        boursoramaPersistentStorage.getUdid())
                 .get(IdentityResponse.class);
     }
 
@@ -122,8 +132,10 @@ public class BoursoramaApiClient {
                                 createUserHashUrl(
                                         BoursoramaConstants.UserUrls.LIST_TRANSACTIONS_FROM_ACCOUNT
                                                 + accountKey))
-                        .header("Authorization", loggedInBearerToken)
-                        .header("X-Session-Id", boursoramaPersistentStorage.getUdid());
+                        .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
+                        .header(
+                                BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
+                                boursoramaPersistentStorage.getUdid());
         if (StringUtils.isNotEmpty(continuationToken)) {
             requestBuilder.queryParam(
                     BoursoramaConstants.Transaction.CONTINUATION_TOKEN_QUERY_KEY,
@@ -138,8 +150,10 @@ public class BoursoramaApiClient {
                 sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
         LogoutResponse logoutResponse =
                 client.request(createUserHashUrl(BoursoramaConstants.UserUrls.LOGOUT))
-                        .header("Authorization", loggedInBearerToken)
-                        .header("X-Session-Id", boursoramaPersistentStorage.getUdid())
+                        .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
+                        .header(
+                                BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
+                                boursoramaPersistentStorage.getUdid())
                         .post(LogoutResponse.class);
 
         if (!logoutResponse.isSuccess()) {
@@ -157,8 +171,10 @@ public class BoursoramaApiClient {
                 sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
         try {
             client.request(createUserHashUrl(BoursoramaConstants.UserUrls.KEEP_ALIVE))
-                    .header("Authorization", loggedInBearerToken)
-                    .header("X-Session-Id", boursoramaPersistentStorage.getUdid())
+                    .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
+                    .header(
+                            BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
+                            boursoramaPersistentStorage.getUdid())
                     .post(HttpResponse.class);
         } catch (HttpResponseException hre) {
             // 401: {"code":401,"message":"JWT Token not found"}

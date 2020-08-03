@@ -155,7 +155,8 @@ public class ClientConfigurationMetaInfoHandler {
             }
         } catch (ClassNotFoundException e) {
             log.error(
-                    "Could not find super class for specified class : " + fullyQualifiedClassName,
+                    "Could not find super class for specified class : {}",
+                    fullyQualifiedClassName,
                     e);
         }
         return Optional.empty();
@@ -165,7 +166,7 @@ public class ClientConfigurationMetaInfoHandler {
             searchForClosestConfigurationClassInSamePackageTree(
                     final String fullyQualifiedClassName) {
 
-        int lastIndexPackageSubdivider = fullyQualifiedClassName.lastIndexOf(".");
+        int lastIndexPackageSubdivider = fullyQualifiedClassName.lastIndexOf('.');
         String packageToScan = fullyQualifiedClassName.substring(0, lastIndexPackageSubdivider);
         Reflections reflectionsPackageToScan =
                 new Reflections(packageToScan, new SubTypesScanner(false));

@@ -16,7 +16,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class LansforsakringarAgentWireMockTest {
 
-    private final String CONFIGURATION_PATH =
+    private static final String CONFIGURATION_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/banks/lansforsakringar/mock/resources/configuration.yml";
 
     @Test

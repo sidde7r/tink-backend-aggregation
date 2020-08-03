@@ -120,6 +120,5 @@ public class AccountEntityTest {
         assertThat(account.getApiIdentifier()).isEqualTo("apiIdentifier");
         assertThat(account.getExactBalance())
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal(amount).negate(), currency));
-        System.out.println(new BigDecimal(amount).negate());
     }
 }
