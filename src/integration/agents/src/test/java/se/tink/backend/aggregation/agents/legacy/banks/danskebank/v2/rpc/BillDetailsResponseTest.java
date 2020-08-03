@@ -1,8 +1,9 @@
-package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
+package se.tink.backend.aggregation.agents.legacy.banks.danskebank.v2.rpc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.BillDetailsEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BillDetailsResponseTest {
