@@ -1,33 +1,41 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities;
 
 import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@NoArgsConstructor
+@AllArgsConstructor
 public class BalanceEntity {
 
     private AmountEntity balanceAmount;
-    private String balanceType;
-
-    public boolean isAvailable() {
-        return balanceType.equalsIgnoreCase("interimAvailable")
-                || balanceType.equalsIgnoreCase("forwardAvailable");
-    }
+    @Getter private String balanceType;
 
     public ExactCurrencyAmount toAmount() {
         return balanceAmount.toAmount();
     }
 
-    public boolean isExpected() {
-        return balanceType.equalsIgnoreCase("expected");
+    int getBookedBalanceMappingPriority() {
+        return Arrays.stream(BookedBalanceType.values())
+                .filter(
+                        enumBookedBalanceType ->
+                                enumBookedBalanceType.getValue().equalsIgnoreCase(balanceType))
+                .findAny()
+                .map(BookedBalanceType::getPriority)
+                .orElse(Integer.MAX_VALUE);
     }
 
-    public int getBalanceMappingPriority() {
-        return Arrays.stream(BalanceType.values())
-                .filter(enumBalanceType -> enumBalanceType.getValue().equalsIgnoreCase(balanceType))
+    int getAvailableBalanceMappingPriority() {
+        return Arrays.stream(AvailableBalanceType.values())
+                .filter(
+                        enumAvailableBalanceType ->
+                                enumAvailableBalanceType.getValue().equalsIgnoreCase(balanceType))
                 .findAny()
-                .map(BalanceType::getPriority)
+                .map(AvailableBalanceType::getPriority)
                 .orElse(Integer.MAX_VALUE);
     }
 }
