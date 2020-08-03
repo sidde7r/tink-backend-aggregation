@@ -24,7 +24,7 @@ public class BelfiusTransaction {
     // Will match "MAESTRO-BETALING 19/02-MERCHANT NAME BE 15,00   EUR KAART NR 1234 1234 1234 1234
     // - LASTNAME FIRSTNAME   REF. : 123456789 VAL. 20-02
     // Capturing "MERCHANT NAME" in one group, allowing us to parse it out.
-    private static Pattern MAESTRO_PURCHASE_FIRST_PART =
+    private static final Pattern MAESTRO_PURCHASE_FIRST_PART =
             Pattern.compile(
                     "^(MAESTRO-BETALING\\s*\\d\\d/\\d\\d-)(([\\w*\\s])*)(\\s\\w\\w\\s\\d\\d.*$)");
 
@@ -99,7 +99,7 @@ public class BelfiusTransaction {
         // as description since it's the merchant name without noise. For Maestro purchases we have
         // to parse
         // out the merchant name.
-        String trimmedDescriptionWithNewLinesRemoved = this.description.replaceAll("\\n", "");
+        String trimmedDescriptionWithNewLinesRemoved = this.description.replace("\\n", "");
         Matcher matcher =
                 MAESTRO_PURCHASE_FIRST_PART.matcher(
                         trimmedDescriptionWithNewLinesRemoved.toUpperCase());

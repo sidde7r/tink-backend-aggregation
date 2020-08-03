@@ -61,6 +61,8 @@ public class BoursoramaConstants {
         static final String API_KEY =
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJTMjU2In0.eyJqdGkiOiI2ZWRjZWE3ZWEwM2YxIiwic3ViIjoiYXBwbGljYXRpb24tZnItaW9zLXY2IiwiYXVkIjoiLipcXC5ib3Vyc29yYW1hXFwuY29tIiwiZXhwIjoxODQ2NzQ1NzQxLCJpYXQiOjE1MzEzODU3NDEsIm5iZiI6MTUzMTM4NTc0MSwic2Vzc2lvbiI6eyJsZXZlbCI6IlZJU0lUT1IifSwiaXNzIjoiQWRtaW4gSldUIEJvdXJzb3JhbWEiLCJvcmciOiJJUEhPTkUiLCJvYXV0aCI6ImYxOGI0ZDhiN2NhMTljNTFmY2RjMzliNDFmYTcxYzhiODhmNmRmNzgifQ.opYuHCI-_uQ5tBvWFUvYWLm2auL81hypWHN6zqe-qnM3114pZXShc8YFKmpzAGLjAcX2kHYoglEkMVZi3SyADbtRp4gg8U6UbS1TCNUowKXL1G7EFQD8qRdGoP4MRIP3dDcFP7-nQvaDQHE4B5xhrX0vPkyMp-Nw-4sRrfe5D_RMOBI2YAaSeNfqkIMADa0EWvKbYA0W1bWnarov-FCH6feJqHK05DKYxP9yjKs3YgJQUp1wgcObtykIdCNQF1q92CsfauST8H7rRwsIcMRKKQ0TwmolAh92rntHn1R56vZw84f0IZ2EC_dnhhkI1zs9LJNl9VP3KMzhkIjDHv_3FQ";
         public static final String FIRST_AUTH = "regular";
+        static final String AUTHORIZATION_HEADER = "Authorization";
+        static final String X_SESSION_ID_HEADER = "X-Session-Id";
         static final String USER_HASH_HEADER = "brsuserhash";
         // Verified to be `ckln` prepended for two ambassadors.
         static final String DEVICE_ENROLMENT_TOKEN_VALUE_PREFIX = "ckln";
