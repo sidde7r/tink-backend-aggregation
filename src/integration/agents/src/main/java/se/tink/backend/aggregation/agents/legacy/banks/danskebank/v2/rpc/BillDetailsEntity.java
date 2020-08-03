@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BillDetailsEntity {
     @JsonProperty("Amount")
     private double amount;
@@ -26,9 +28,6 @@ public class BillDetailsEntity {
 
     @JsonProperty("Reference")
     private String reference;
-
-    @JsonProperty("Fee")
-    private String fee;
 
     public double getAmount() {
         return amount;
@@ -92,13 +91,5 @@ public class BillDetailsEntity {
 
     public void setReference(String reference) {
         this.reference = reference;
-    }
-
-    public String getFee() {
-        return fee;
-    }
-
-    public void setFee(String fee) {
-        this.fee = fee;
     }
 }

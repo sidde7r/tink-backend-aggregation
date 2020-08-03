@@ -23,7 +23,6 @@ public class BillDetailsResponseTest {
                         + "}";
         BillDetailsEntity billDetailsEntity =
                 SerializationUtils.deserializeFromString(source, BillDetailsEntity.class);
-        assertThat(billDetailsEntity.getFee()).isEqualTo("1.5");
         assertThat(billDetailsEntity.getReference()).isEqualTo("2569055706");
     }
 }
