@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Objects;
 import java.util.UUID;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -18,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.en
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.rpc.RegisterDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.rpc.OmaspErrorResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -27,8 +29,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
-    private static final AggregationLogger logger =
-            new AggregationLogger(OmaspKeyCardAuthenticator.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final OmaspApiClient apiClient;
     private final PersistentStorage persistentStorage;

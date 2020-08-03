@@ -1,18 +1,20 @@
 package se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordea;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.commands.migrations.ClusterSafeAgentVersionMigration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final AggregationLogger logger =
-            new AggregationLogger(NordeaSanitizingMigration.class);
     private static final String OLD_AGENT = "banks.nordea.NordeaAgent";
     private static final String NEW_AGENT = "nxgen.se.banks.nordea.v30.NordeaSEAgent";
     private static final String PASSWORD_KEY = "password";
