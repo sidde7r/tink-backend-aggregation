@@ -6,22 +6,16 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.stream.IntStream;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.SupplementalDataKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.SupplementalDataLabels;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
 public class DkbSupplementalDataProvider {
-
-    static final String GENERATED_TAN_KEY = "generatedTAN";
-    private static final String GENERATED_TAN_LABEL = "Enter Generated TAN";
-
-    static final String SELECT_AUTH_METHOD_KEY = "selectAuthMethod";
-    private static final String SELECT_AUTH_METHOD_LABEL = "Authentication method index";
-    private static final String SELECT_AUTH_METHOD_INFO =
-            "Please insert authentication method index from 1 to %d \n";
-    private static final String SELECT_AUTH_METHOD_ERROR_MESSAGE =
-            "The value you entered is not valid";
 
     private final SupplementalInformationHelper supplementalInformationHelper;
 
@@ -30,21 +24,35 @@ public class DkbSupplementalDataProvider {
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
-    String getTanCode() throws SupplementalInfoException {
-        Map<String, String> supplementalInformation;
-        supplementalInformation =
-                supplementalInformationHelper.askSupplementalInformation(getFieldForGeneratedTan());
-        return supplementalInformation.get(GENERATED_TAN_KEY);
+    String getTanCode(List<String> challengeData) throws SupplementalInfoException {
+        return supplementalInformationHelper
+                .askSupplementalInformation(getFieldForGeneratedTan(challengeData))
+                .get(SupplementalDataKeys.GENERATED_TAN_KEY);
     }
 
-    private Field getFieldForGeneratedTan() {
+    Field getFieldForGeneratedTan(List<String> challengeData) {
         return Field.builder()
-                .description(GENERATED_TAN_LABEL)
-                .name(GENERATED_TAN_KEY)
+                .description(getDescription(challengeData))
+                .name(SupplementalDataKeys.GENERATED_TAN_KEY)
                 .numeric(false)
                 .minLength(1)
                 .maxLength(MAX_VALUE)
                 .build();
+    }
+
+    private String getDescription(List<String> challengeData) {
+        return challengeData.stream()
+                .filter(s -> SupplementalDataLabels.STARTCODE_CHIP_PATTERN.matcher(s).find())
+                .map(
+                        s -> {
+                            Matcher matcher =
+                                    SupplementalDataLabels.STARTCODE_CHIP_PATTERN.matcher(s);
+                            matcher.find();
+                            return matcher.group(1);
+                        })
+                .findFirst()
+                .map(s -> String.format(SupplementalDataLabels.CHIP_TAN_DESCRIPTION_LABEL, s))
+                .orElse(SupplementalDataLabels.GENERATED_TAN_LABEL);
     }
 
     String selectAuthMethod(List<? extends SelectableMethod> methods)
@@ -62,7 +70,11 @@ public class DkbSupplementalDataProvider {
 
     private String getSelectedAuthMethodId(
             Map<String, String> supplementalInformation, List<? extends SelectableMethod> methods) {
-        int index = Integer.parseInt(supplementalInformation.get(SELECT_AUTH_METHOD_KEY)) - 1;
+        int index =
+                Integer.parseInt(
+                                supplementalInformation.get(
+                                        SupplementalDataKeys.SELECT_AUTH_METHOD_KEY))
+                        - 1;
         return methods.get(index).getIdentifier();
     }
 
@@ -75,13 +87,15 @@ public class DkbSupplementalDataProvider {
                         .collect(joining(";\n"));
 
         return Field.builder()
-                .description(SELECT_AUTH_METHOD_LABEL)
-                .helpText(format(SELECT_AUTH_METHOD_INFO, maxNumber).concat(description))
-                .name(SELECT_AUTH_METHOD_KEY)
+                .description(SupplementalDataLabels.SELECT_AUTH_METHOD_LABEL)
+                .helpText(
+                        format(SupplementalDataLabels.SELECT_AUTH_METHOD_INFO, maxNumber)
+                                .concat(description))
+                .name(SupplementalDataKeys.SELECT_AUTH_METHOD_KEY)
                 .numeric(true)
                 .minLength(1)
                 .pattern(format("([1-%d])", maxNumber))
-                .patternError(SELECT_AUTH_METHOD_ERROR_MESSAGE)
+                .patternError(ErrorMessages.SELECT_AUTH_METHOD_ERROR_MESSAGE)
                 .build();
     }
 }
