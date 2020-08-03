@@ -110,7 +110,7 @@ public final class VersionConflictTest {
             classPath = path;
         }
 
-        return Arrays.asList(classPath.split("\\s+"));
+        return Arrays.asList(classPath.split(":"));
     }
 
     private static class JarEntry {
