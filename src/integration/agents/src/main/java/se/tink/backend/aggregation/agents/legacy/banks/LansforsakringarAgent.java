@@ -640,14 +640,11 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception {
-        switch (transfer.getType()) {
-            default:
-                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setMessage("Not implemented.")
-                        .setEndUserMessage("Not implemented.")
-                        .build();
-        }
+    public void update(Transfer transfer) {
+        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage("Not implemented.")
+                .setEndUserMessage("Not implemented.")
+                .build();
     }
 
     private void cancelUnsignedPayment(String uniqueId, Exception e)
