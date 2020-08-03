@@ -25,4 +25,11 @@ public class TransferTest {
         assertNull(transfer.getRemittanceInformation().getValue());
         assertFalse(transfer.isRemittanceInformationGenerated());
     }
+
+    @Test
+    public void isDestinationMessageGenerated_should_handleNullDestinationMessage(){
+        final Transfer transfer = new Transfer();
+
+        assertFalse(transfer.isDestinationMessageGenerated());
+    }
 }

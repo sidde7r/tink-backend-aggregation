@@ -393,7 +393,7 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
 
     @JsonIgnore
     public boolean isDestinationMessageGenerated() {
-        return isMessageGenerated(destinationMessage);
+        return !Strings.isNullOrEmpty(destinationMessage) && isMessageGenerated(destinationMessage);
     }
 
     @JsonIgnore
