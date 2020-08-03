@@ -18,13 +18,19 @@ public class XmlParser {
         try {
             ByteArrayInputStream input =
                     new ByteArrayInputStream(rawXmlData.getBytes(StandardCharsets.UTF_8));
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory =
+                    DocumentBuilderFactory.newInstance(
+                            "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl",
+                            null);
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(input);
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            TransformerFactory transformerFactory =
+                    TransformerFactory.newInstance(
+                            "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl",
+                            null);
             transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
