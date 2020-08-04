@@ -112,7 +112,7 @@ public class TransactionsResponse extends JsfUpdateResponse {
             transactionRows =
                     evaluateXPath(
                             transactions,
-                            "//table//tr[contains(@class,'movilDetalleMovimiento')]",
+                            "//table//tr[contains(@class,'movilDetalleMovimiento') and contains(@onclick,\"clickDetalle('true\")]",
                             NodeList.class);
         }
         return transactionRows;
