@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client;
 
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.QueryParamKeys;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.QueryParamValues;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.UriParams;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.Urls;
 
@@ -54,8 +55,8 @@ public class FetcherClient {
                 .baseAuthorizedRequest(
                         new URL(Urls.FETCH_CARD_TRANSACTIONS)
                                 .parameter(UriParams.URI_CARD_ID, cardId))
-                .queryParam("page", String.valueOf(page))
-                .queryParam("page_size", String.valueOf(100))
+                .queryParam(QueryParamKeys.PAGE, String.valueOf(page))
+                .queryParam(QueryParamKeys.PAGE_SIZE, QueryParamValues.PAGE_SIZE)
                 .get(CreditCardTransactionsResponse.class);
     }
 

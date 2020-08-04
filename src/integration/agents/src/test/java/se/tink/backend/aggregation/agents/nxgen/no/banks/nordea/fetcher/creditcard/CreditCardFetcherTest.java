@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditcard;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -43,7 +43,7 @@ public class CreditCardFetcherTest {
 
         assertThat(creditCardAccounts).hasSize(1);
         CreditCardAccount card = creditCardAccounts.iterator().next();
-        assertThat(card.isUniqueIdentifierEqual(MASKED_PAN));
+        assertThat(card.isUniqueIdentifierEqual(MASKED_PAN)).isTrue();
         assertThat(card.getApiIdentifier()).isEqualTo("2218836201");
         assertThat(card.getIdentifiers()).hasSize(1);
         assertThat(card.getIdentifiers().get(0).getType())

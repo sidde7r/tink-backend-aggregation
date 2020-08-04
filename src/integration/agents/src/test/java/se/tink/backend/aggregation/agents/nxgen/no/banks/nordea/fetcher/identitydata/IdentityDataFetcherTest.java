@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.identitydata;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 

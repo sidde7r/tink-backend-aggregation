@@ -27,6 +27,8 @@ public class NordeaNoConstants {
         public static final String PRODUCT_CODE = "product_code";
         public static final String CONTINUATION_KEY = "continuation_key";
         public static final String SESSION_ID = "session_id";
+        public static final String PAGE = "page";
+        public static final String PAGE_SIZE = "page_size";
     }
 
     public static class QueryParamValues {
@@ -48,6 +50,7 @@ public class NordeaNoConstants {
         public static final String APP_CHANNEL = "NDM_NO_IOS";
         public static final String ADOBE_MC =
                 "MCMID=72013651902555220792178724439960251443|MCORGID=9D193D565A0AFF460A495E66%40AdobeOrg|TS=1593772516";
+        public static final String PAGE_SIZE = "100";
     }
 
     public static class HeaderKeys {
