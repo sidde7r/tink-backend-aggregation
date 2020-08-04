@@ -10,7 +10,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
 public class TransferTest {
 
     @Test
-    public void isRemittanceInformationGenerated_should_handleNullRemittanceInformation() {
+    public void isRemittanceInformationGeneratedShouldReturnFalseWhenNullRemittanceInformation() {
         final Transfer transfer = new Transfer();
 
         assertNull(transfer.getRemittanceInformation());
@@ -18,7 +18,8 @@ public class TransferTest {
     }
 
     @Test
-    public void isRemittanceInformationGenerated_should_handleNullRemittanceInformationValue() {
+    public void
+            isRemittanceInformationGeneratedShouldReturnFalseWhenNullRemittanceInformationValue() {
         Transfer transfer = new Transfer();
         transfer.setRemittanceInformation(new RemittanceInformation());
 
@@ -27,7 +28,7 @@ public class TransferTest {
     }
 
     @Test
-    public void isDestinationMessageGenerated_should_handleNullDestinationMessage() {
+    public void isDestinationMessageGeneratedShouldReturnFalseWhenNullDestinationMessage() {
         final Transfer transfer = new Transfer();
 
         assertFalse(transfer.isDestinationMessageGenerated());
