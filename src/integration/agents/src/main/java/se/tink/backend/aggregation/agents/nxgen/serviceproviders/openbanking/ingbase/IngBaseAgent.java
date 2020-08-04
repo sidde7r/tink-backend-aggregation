@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
 import com.google.common.collect.ImmutableSet;
+import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
@@ -13,7 +14,6 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.IngBaseAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.IngBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.MarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseTransactionsFetcher;
@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseGatewayTimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
@@ -91,14 +92,20 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final AgentConfiguration<IngBaseConfiguration> ingBaseConfiguration =
-                getAgentConfiguration();
+        final AgentConfiguration<EmptyConfiguration> agentConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(EmptyConfiguration.class);
 
         EidasIdentity eidasIdentity =
                 new EidasIdentity(context.getClusterId(), context.getAppId(), this.getAgentClass());
 
-        apiClient.setConfiguration(
-                ingBaseConfiguration, configuration.getEidasProxy(), eidasIdentity);
+        try {
+            apiClient.setConfiguration(
+                    agentConfiguration, configuration.getEidasProxy(), eidasIdentity);
+        } catch (CertificateException e) {
+            throw new IllegalStateException(
+                    "Could not parse QSEALC properly while setting up ING agent", e);
+        }
+
         client.setEidasProxy(configuration.getEidasProxy());
 
         String clientId = persistentStorage.get(StorageKeys.CLIENT_ID);
@@ -106,10 +113,6 @@ public abstract class IngBaseAgent extends NextGenerationAgent
             ImmutableSet<String> whitelistedValues = ImmutableSet.of(clientId);
             context.getLogMasker().addAgentWhitelistedValues(whitelistedValues);
         }
-    }
-
-    protected AgentConfiguration<IngBaseConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(IngBaseConfiguration.class);
     }
 
     @Override

@@ -10,6 +10,7 @@ public final class IngBaseConstants {
     }
 
     public static class Urls {
+        public static final String BASE_URL = "https://api.ing.com";
         public static final String ACCOUNTS = "/v3/accounts";
         private static final String BASE_AUTH = "/oauth2";
         public static final String OAUTH = BASE_AUTH + "/authorization-server-url";
