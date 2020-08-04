@@ -168,7 +168,6 @@ import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -1936,25 +1935,8 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception {
-        if (Objects.equal(transfer.getType(), TransferType.EINVOICE)) {
-            // EInvoices are always submitted before signing as EINVOICE
-            approveEInvoice(transfer);
-        } else {
-            // EInvoices and payments are updated with type PAYMENT, which SEB doesn't support (they
-            // only support delete operation)
-            // This should never happen since we don't create an updatable transfer for payments or
-            // eInvoices in SEB
-            throw new IllegalStateException(
-                    "Should never happen, since transfers are not updatable in SEB");
-        }
-
-        // If we don't have this sleep we could get a problem when we refresh the account after a
-        // transfer/payment.
-        // SEB are slow in adding the transactions in upcoming so the date could be missing if the
-        // refresh comes
-        // to fast. This would make use try to parse an a date that is an empty string.
-        Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
+    public void update(Transfer transfer) {
+        throw new IllegalStateException("Not implemented.");
     }
 
     private void ensureIsValidSourceAccount(List<AccountEntity> accounts, Transfer transfer) {
@@ -1976,33 +1958,6 @@ public class SEBApiAgent extends AbstractAgent
             cancelTransfer(
                     catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE));
         }
-    }
-
-    private void ensureSourceAccountCanExecutePayment(Transfer transfer) {
-        SebResponse response = getTransferAccounts(EXTERNAL_PAYMENT_SOURCE_ACCOUNTS_URL);
-        List<AccountEntity> accountEntities = response.d.VODB.accountEntities;
-        ensureIsValidSourceAccount(accountEntities, transfer);
-    }
-
-    /**
-     * Note regarding post-execute of an eInvoice: They can only be signed once, then it will be
-     * gone if not visiting the internet bank. At the internet bank it's possible to reset the
-     * eInvoice to get it back in the eInvoice list, at which point a new execute needs to be done.
-     * (As of when this commit was created.)
-     */
-    private void approveEInvoice(Transfer transfer) throws Exception {
-        ensureNoUnsignedTransfers();
-        ensureSourceAccountCanExecutePayment(transfer);
-
-        Transfer originalTransfer = getOriginalTransfer(transfer);
-        EInvoiceListEntity matchingEInvoice = fetchMatchingEInvoice(originalTransfer);
-
-        if (isTransferModifyingEInvoice(matchingEInvoice, transfer)) {
-            matchingEInvoice = updateEInvoice(matchingEInvoice, transfer);
-        }
-
-        addEInvoiceToOutbox(matchingEInvoice);
-        signEInvoice(matchingEInvoice);
     }
 
     private EInvoiceListEntity fetchMatchingEInvoice(final Transfer transfer)
@@ -2055,36 +2010,6 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         return originalTransfer;
-    }
-
-    /** In SEB user can only change source account, date or amount, not OCR */
-    private boolean isTransferModifyingEInvoice(
-            EInvoiceListEntity eInvoiceEntity, Transfer transfer)
-            throws TransferExecutionException {
-        if (!Objects.equal(
-                transfer.getRemittanceInformation().getValue(),
-                eInvoiceEntity.getDestinationMessage())) {
-            cancelTransfer(
-                    catalog.getString(
-                            TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_MESSAGE));
-        }
-
-        Date currentDueDate;
-        try {
-            currentDueDate = eInvoiceEntity.getCurrentDueDate();
-        } catch (ParseException e) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(
-                            "Could not parse the due date of the eInvoice. This should never happen.")
-                    .setException(e)
-                    .build();
-        }
-
-        return !Objects.equal(transfer.getSource(), eInvoiceEntity.getSource())
-                || !Objects.equal(DateUtils.flattenTime(transfer.getDueDate()), currentDueDate)
-                || !Objects.equal(
-                        transfer.getAmount().toBigDecimal(),
-                        eInvoiceEntity.getCurrentAmount().toBigDecimal());
     }
 
     private EInvoiceListEntity updateEInvoice(
@@ -2191,14 +2116,6 @@ public class SEBApiAgent extends AbstractAgent
         TransferListEntity transferQueuedUp =
                 addSebTransferToOutbox(transfer.getType(), externalTransfer);
         signExternalPayment(externalTransfer, transferQueuedUp);
-    }
-
-    private void ensureNoUnsignedTransfers() {
-        if (getUnsignedTransfers().size() > 0) {
-            cancelTransfer(
-                    catalog.getString(
-                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS));
-        }
     }
 
     private void setRemittanceInformationType(
