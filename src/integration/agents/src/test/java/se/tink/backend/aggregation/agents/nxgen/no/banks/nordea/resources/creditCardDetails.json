@@ -1,0 +1,80 @@
+{
+  "atm_account_number": null,
+  "card_category": "credit",
+  "card_expiration": {
+    "date": "2023-02-28",
+    "formatted": "02/23"
+  },
+  "card_id": "2218836201",
+  "card_loyalty_group": null,
+  "card_status": "active",
+  "cardholder_name": "FIRST SECOND SURNAME",
+  "cardholder_type": "parallel",
+  "country_code": "NO",
+  "credit": {
+    "credit_available_balance": 1765.06,
+    "credit_booked_balance": 127.05,
+    "credit_limit": 10000,
+    "instalment_free_months": [],
+    "instalment_min_percent": null,
+    "interest": null,
+    "invoice": null,
+    "masked_credit_card_number": "5269 **** **** 3239",
+    "prev_min_instalment_amount": null
+  },
+  "currency": "NOK",
+  "debit": null,
+  "metadata": {
+    "geographical_zones": [
+      "norway",
+      "europe",
+      "nordic",
+      "baltic",
+      "americas",
+      "asia",
+      "oceania",
+      "africa"
+    ],
+    "limits": {
+      "atm_payment": 0,
+      "atm_payment_step": 0,
+      "atm_withdrawal": 7500,
+      "atm_withdrawal_step": 500,
+      "online_payment": 100000,
+      "online_payment_step": 500,
+      "pos_payment": 100000,
+      "pos_payment_step": 500
+    }
+  },
+  "nickname": null,
+  "notifications": null,
+  "pan_id": null,
+  "parallel_cards": null,
+  "permissions": {
+    "allowed_to_enroll_mobile_payments": true,
+    "transactions": true,
+    "transfer_from_credit": true,
+    "view_pin": true
+  },
+  "principal_cardholder_name": null,
+  "product_code": "NO0051",
+  "usage_limits": {
+    "contactless": null,
+    "daily_limits": null,
+    "internet": true,
+    "internet_non3d": null,
+    "monthly_credit_spending_limit": null,
+    "permanent_region": [
+      "norway",
+      "nordic",
+      "baltic",
+      "europe",
+      "americas",
+      "asia",
+      "africa",
+      "oceania"
+    ],
+    "temporary_region": null,
+    "weekly_limits": null
+  }
+}

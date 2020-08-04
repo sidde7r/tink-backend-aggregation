@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 import org.junit.Test;
@@ -18,12 +19,18 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class TransactionalAccountFetcherTest {
+    private static final String ACCOUNTS_DATA_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/nordea/resources/transactionalAccounts.json";
 
-    private static final String ACCOUNTS_DATA_JSON =
-            "{\"result\": [{\"account_id\": \"86011117947\", \"account_status\": \"open\", \"available_balance\": 1801.4, \"bic\": \"NDEANOKK\", \"booked_balance\": 1801.4, \"category\": \"transaction\", \"country_code\": \"NO\", \"credit_limit\": 22.0, \"currency\": \"NOK\", \"display_account_number\": \"8601.11.17947\", \"equivalent_balance\": 1801.4, \"equivalent_currency\": \"NOK\", \"iban\": \"NO9386011117947\", \"nickname\": \"Felleskonto\", \"permissions\": {\"can_deposit_to_account\": true, \"can_pay_from_account\": true, \"can_transfer_from_account\": true, \"can_transfer_to_account\": true, \"can_view\": true, \"can_view_transactions\": true }, \"product_code\": \"FORP\", \"product_name\": \"Brukskonto\", \"product_type\": \"KKT\", \"roles\": [{\"name\": \"GURO LARSEN ASDF\", \"role\": \"power_of_attorney\"}, {\"name\": \"First Second Surname\", \"role\": \"owner\"} ], \"statement_format\": \"electronic\", \"transaction_list_search_criteria\": {\"can_use_end_date\": true, \"can_use_free_text\": false, \"can_use_highest_amount\": false, \"can_use_lowest_amount\": false, \"can_use_start_date\": true } }, {\"account_id\": \"86022227947\", \"account_status\": \"open\", \"available_balance\": 102.22, \"bic\": \"NDEANOKK\", \"booked_balance\": 401.22, \"category\": \"savings\", \"country_code\": \"NO\", \"credit_limit\": 0.0, \"currency\": \"NOK\", \"display_account_number\": \"8602.22.27947\", \"equivalent_balance\": 1801.4, \"equivalent_currency\": \"NOK\", \"iban\": \"NO9386022227947\", \"nickname\": \"Felleskonto11111\", \"permissions\": {\"can_deposit_to_account\": true, \"can_pay_from_account\": true, \"can_transfer_from_account\": true, \"can_transfer_to_account\": true, \"can_view\": true, \"can_view_transactions\": true }, \"product_code\": \"FORP\", \"product_name\": \"Brukskonto123\", \"product_type\": \"KKT\", \"roles\": [{\"name\": \"GURO LARSEN ASDF\", \"role\": \"power_of_attorney\"}, {\"name\": \"First Second Surname\", \"role\": \"owner\"} ], \"statement_format\": \"electronic\", \"transaction_list_search_criteria\": {\"can_use_end_date\": true, \"can_use_free_text\": false, \"can_use_highest_amount\": false, \"can_use_lowest_amount\": false, \"can_use_start_date\": true } } ] }";
+    private static final String ACCOUNTS_NOT_TRANSACTIONAL_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/nordea/resources/notTransactionalAccounts.json";
 
-    private static final String ACCOUNTS_NOT_TRANSACTIONAL_DATA_JSON =
-            "{\"result\": [{\"account_id\": \"86011117947\", \"account_status\": \"open\", \"available_balance\": 1801.4, \"bic\": \"NDEANOKK\", \"booked_balance\": 1801.4, \"category\": \"jibberish\", \"country_code\": \"NO\", \"credit_limit\": 22.0, \"currency\": \"NOK\", \"display_account_number\": \"8601.11.17947\", \"equivalent_balance\": 1801.4, \"equivalent_currency\": \"NOK\", \"iban\": \"NO9386011117947\", \"nickname\": \"Felleskonto\", \"permissions\": {\"can_deposit_to_account\": true, \"can_pay_from_account\": true, \"can_transfer_from_account\": true, \"can_transfer_to_account\": true, \"can_view\": true, \"can_view_transactions\": true }, \"product_code\": \"FORP\", \"product_name\": \"Brukskonto\", \"product_type\": \"KKT\", \"roles\": [{\"name\": \"GURO LARSEN ASDF\", \"role\": \"power_of_attorney\"}, {\"name\": \"First Second Surname\", \"role\": \"owner\"} ], \"statement_format\": \"electronic\", \"transaction_list_search_criteria\": {\"can_use_end_date\": true, \"can_use_free_text\": false, \"can_use_highest_amount\": false, \"can_use_lowest_amount\": false, \"can_use_start_date\": true } }, {\"account_id\": \"86022227947\", \"account_status\": \"open\", \"available_balance\": 102.22, \"bic\": \"NDEANOKK\", \"booked_balance\": 401.22, \"category\": \"jibberish\", \"country_code\": \"NO\", \"credit_limit\": 0.0, \"currency\": \"NOK\", \"display_account_number\": \"8602.22.27947\", \"equivalent_balance\": 1801.4, \"equivalent_currency\": \"NOK\", \"iban\": \"NO9386022227947\", \"nickname\": \"Felleskonto11111\", \"permissions\": {\"can_deposit_to_account\": true, \"can_pay_from_account\": true, \"can_transfer_from_account\": true, \"can_transfer_to_account\": true, \"can_view\": true, \"can_view_transactions\": true }, \"product_code\": \"FORP\", \"product_name\": \"Brukskonto123\", \"product_type\": \"KKT\", \"roles\": [{\"name\": \"GURO LARSEN ASDF\", \"role\": \"power_of_attorney\"}, {\"name\": \"First Second Surname\", \"role\": \"owner\"} ], \"statement_format\": \"electronic\", \"transaction_list_search_criteria\": {\"can_use_end_date\": true, \"can_use_free_text\": false, \"can_use_highest_amount\": false, \"can_use_lowest_amount\": false, \"can_use_start_date\": true } } ] }";
+    private static final AccountsResponse ACCOUNTS_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    new File(ACCOUNTS_DATA_FILE_PATH), AccountsResponse.class);
+    private static final AccountsResponse ACCOUNTS_NOT_TRANSACTIONAL_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    new File(ACCOUNTS_NOT_TRANSACTIONAL_FILE_PATH), AccountsResponse.class);
 
     @Test
     public void shouldReturnProperlyMappedAccounts() {
@@ -32,10 +39,7 @@ public class TransactionalAccountFetcherTest {
         TransactionalAccountFetcher transactionalAccountFetcher =
                 new TransactionalAccountFetcher(fetcherClient);
 
-        given(fetcherClient.fetchAccounts())
-                .willReturn(
-                        SerializationUtils.deserializeFromString(
-                                ACCOUNTS_DATA_JSON, AccountsResponse.class));
+        given(fetcherClient.fetchAccounts()).willReturn(ACCOUNTS_RESPONSE);
         // when
         Collection<TransactionalAccount> transactionalAccounts =
                 transactionalAccountFetcher.fetchAccounts();
@@ -102,10 +106,7 @@ public class TransactionalAccountFetcherTest {
         TransactionalAccountFetcher transactionalAccountFetcher =
                 new TransactionalAccountFetcher(fetcherClient);
 
-        given(fetcherClient.fetchAccounts())
-                .willReturn(
-                        SerializationUtils.deserializeFromString(
-                                ACCOUNTS_NOT_TRANSACTIONAL_DATA_JSON, AccountsResponse.class));
+        given(fetcherClient.fetchAccounts()).willReturn(ACCOUNTS_NOT_TRANSACTIONAL_RESPONSE);
 
         // when
         Collection<TransactionalAccount> transactionalAccounts =

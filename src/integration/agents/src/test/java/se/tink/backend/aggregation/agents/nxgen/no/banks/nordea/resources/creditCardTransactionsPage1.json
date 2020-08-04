@@ -1,0 +1,46 @@
+{
+  "billing_period": null,
+  "page": 1,
+  "page_size": 2,
+  "size": 2,
+  "transactions": [
+    {
+      "amount": -4000,
+      "booked": false,
+      "booking_date": null,
+      "currency": "NOK",
+      "ecological_footprint": null,
+      "exchange_rate": null,
+      "invoice_status": null,
+      "invoiced_date": null,
+      "mcc": null,
+      "merchant_city": null,
+      "merchant_country": null,
+      "original_amount": null,
+      "original_currency": null,
+      "title": "Revolut**0873*",
+      "transaction_date": "2020-07-23",
+      "transaction_id": "003802",
+      "transaction_type": null
+    },
+    {
+      "amount": -597.05,
+      "booked": true,
+      "booking_date": "2020-07-17",
+      "currency": "NOK",
+      "ecological_footprint": null,
+      "exchange_rate": 1.0,
+      "invoice_status": null,
+      "invoiced_date": null,
+      "mcc": null,
+      "merchant_city": "London",
+      "merchant_country": "GB",
+      "original_amount": -597.05,
+      "original_currency": "NOK",
+      "title": "CRV*ST1 46101 ASKIM      London       GB",
+      "transaction_date": "2020-07-15",
+      "transaction_id": "2019901320011576",
+      "transaction_type": null
+    }
+  ]
+}

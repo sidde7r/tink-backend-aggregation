@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import java.io.File;
 import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.FetcherClient;
@@ -13,17 +14,17 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class IdentityDataFetcherTest {
 
-    private static final String IDENITY_DATA_JSON =
-            "{\"address\": {\"address_line1\": \"Somestreet 22\", \"city\": \"AwesomeCity\", \"country_code\": \"NO\", \"postal_code\": \"1234\"}, \"birth_date\": \"1922-01-29\", \"customer_id\": \"12345678901\", \"employee\": false, \"enrollment_date\": \"2009-05-16\", \"first_name\": \"First Second\", \"last_name\": \"Surname\", \"loyalty_group\": \"F-PLUSS\", \"person_id\": \"12345678901\", \"phone_number\": \"1234564785\", \"segment\": \"household\", \"us_resident\": false }";
+    private static final String IDENTITY_DATA_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/nordea/resources/identityData.json";
+    private static final IdentityDataResponse IDENTITY_DATA_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    new File(IDENTITY_DATA_FILE_PATH), IdentityDataResponse.class);
 
     @Test
     public void shouldReturnProperlyMappedIdentityData() {
         // given
         FetcherClient fetcherClient = mock(FetcherClient.class);
-        given(fetcherClient.fetchIdentityData())
-                .willReturn(
-                        SerializationUtils.deserializeFromString(
-                                IDENITY_DATA_JSON, IdentityDataResponse.class));
+        given(fetcherClient.fetchIdentityData()).willReturn(IDENTITY_DATA_RESPONSE);
         IdentityDataFetcher identityDataFetcher = new IdentityDataFetcher(fetcherClient);
 
         // when

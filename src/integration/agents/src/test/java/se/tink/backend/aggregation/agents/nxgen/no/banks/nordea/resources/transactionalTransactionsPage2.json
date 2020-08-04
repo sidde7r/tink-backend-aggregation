@@ -1,0 +1,22 @@
+{
+  "result": [
+    {
+      "amount": -548.5,
+      "archive_id": "*17326006",
+      "booked": true,
+      "booking_date": "2020-07-01",
+      "card": {
+        "card_number": "601114738571"
+      },
+      "description": "FFFFFE OBS SLITU  MORSTONG SLITU",
+      "exchange": {},
+      "transaction_date": "2020-06-30",
+      "transaction_id": "65080011511",
+      "transaction_type": {
+        "transaction_code": "NO0028",
+        "transaction_code_text": "VarekjÃ¸p"
+      }
+    }
+  ],
+  "total_size": 3
+}
