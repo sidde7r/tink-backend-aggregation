@@ -1871,7 +1871,7 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     @Override
-    public void execute(final Transfer transfer) throws Exception, TransferExecutionException {
+    public void execute(final Transfer transfer) throws Exception {
         List<TransferListEntity> unsignedTransfers = getUnsignedTransfers();
         if (!unsignedTransfers.isEmpty()) {
             deleteUnsignedTransfersFromOutbox(unsignedTransfers);
@@ -1936,7 +1936,7 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception, TransferExecutionException {
+    public void update(Transfer transfer) throws Exception {
         if (Objects.equal(transfer.getType(), TransferType.EINVOICE)) {
             // EInvoices are always submitted before signing as EINVOICE
             approveEInvoice(transfer);
