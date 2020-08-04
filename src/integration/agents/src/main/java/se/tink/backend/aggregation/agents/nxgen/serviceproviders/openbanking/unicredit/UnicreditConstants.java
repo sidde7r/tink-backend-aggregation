@@ -1,21 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 
-public final class UnicreditConstants {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class UnicreditConstants {
 
     public static final GenericTypeMapper<PaymentType, Pair<Type, Type>> PAYMENT_TYPE_MAPPER =
             GenericTypeMapper.<PaymentType, Pair<Type, Type>>genericBuilder()
                     .put(PaymentType.SEPA, new Pair<>(Type.IBAN, Type.IBAN))
                     .build();
 
-    private UnicreditConstants() {
-        throw new AssertionError();
-    }
-
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
@@ -28,6 +28,7 @@ public final class UnicreditConstants {
         public static final String MISSING_LINKS_ENTITY = "Response missing links entity";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Endpoints {
 
         public static final String CONSENTS = "/hydrogen/v1/consents";
@@ -42,6 +43,7 @@ public final class UnicreditConstants {
                 "/hydrogen/v1/payments/{payment-product}/{paymentId}";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PathParameters {
 
         public static final String CONSENT_ID = "consent-id";
@@ -50,24 +52,29 @@ public final class UnicreditConstants {
         public static final String PAYMENT_ID = "paymentId";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
         public static final String CONSENT_ID = "CONSENT_ID";
         public static final String STATE = "STATE";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryKeys {
 
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
+        public static final String ENTRY_REFERENCE_FROM = "entryReferenceFrom";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
         public static final String BOTH = "both";
         public static final String TRANSACTION_FROM_DATE = "1970-01-01";
         public static final int MAX_PERIOD_IN_DAYS = 89;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
 
         public static final String X_REQUEST_ID = "X-Request-ID";
@@ -80,12 +87,14 @@ public final class UnicreditConstants {
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
 
         public static final String CODE = "code";
         public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormValues {
 
         public static final String ALL_ACCOUNTS = "allAccounts";
@@ -93,13 +102,16 @@ public final class UnicreditConstants {
         public static final int CONSENT_VALIDATION_PERIOD_IN_DAYS = 90;
     }
 
-    public class Formats {
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Formats {
         public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ConsentStatusStates {
-
         public static final String VALID = "valid";
         public static final String VALID_PIS = "ACCP";
     }
+
+    public static final int MAX_NO_OF_TRANSACTIONS_IN_ONE_PAGE = 500;
 }

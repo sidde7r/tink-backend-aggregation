@@ -21,11 +21,12 @@ public class TransactionEntityTest {
         TransactionEntity entity = transactionAsJson(transactionEntityProps("123.45"));
 
         // when
-        Transaction result = entity.toTinkTransaction();
+        Transaction result = entity.toTinkTransaction(false);
 
         // then
         assertThat(result.getDescription()).isEqualTo("test-remittance-information-unstructured");
         assertThat(result.getExactAmount().getExactValue()).isEqualTo(new BigDecimal("123.45"));
+        assertThat(result.isPending()).isFalse();
     }
 
     private Properties transactionEntityProps(final String amount) {
