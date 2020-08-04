@@ -8,10 +8,9 @@ public final class FrameworkFatJarTest {
     @Test
     public void thirdPartyLibraryClassInFatJarIsRelocated() {
         Assertions.assertThatCode(
-                        () -> {
-                            Class.forName(
-                                    "agents_platform_framework.com.fasterxml.jackson.core.io.CharTypes");
-                        })
+                        () ->
+                                Class.forName(
+                                        "agents_platform_framework.com.fasterxml.jackson.core.io.CharTypes"))
                 .doesNotThrowAnyException();
     }
 }
