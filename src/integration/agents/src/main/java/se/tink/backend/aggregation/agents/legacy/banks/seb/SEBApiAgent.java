@@ -168,7 +168,6 @@ import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -181,7 +180,6 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -224,10 +222,6 @@ public class SEBApiAgent extends AbstractAgent
             API_URL + "PC_BankUppdatera01Bunt03.asmx/Execute";
 
     private static final String EINVOICES_URL = API_URL + "PC_BankLista11Egfaktura01.asmx/Execute";
-    private static final String EINVOICES_CHANGE_UNSIGNED_URL =
-            API_URL + "PC_BankAndraEgfaktura01.asmx/Execute";
-    private static final String EINVOICES_ADD_UNSIGNED_URL =
-            API_URL + "PC_BankSkickaEgfaktura01.asmx/Execute";
 
     private static final String LOAN_URL = API_URL + "PC_BankLista01Laninfo_privat03.asmx/Execute";
     private static final String ACTIVATE_URL = API_URL + "PC_BankAktivera01Session01.asmx/Execute";
@@ -288,11 +282,6 @@ public class SEBApiAgent extends AbstractAgent
 
     private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_TIMEOUT =
             input -> Objects.equal(input.ErrorCode, "RFA8");
-
-    // unused for the time being. Evaluating ignoring this error since we can still poll and succeed
-    // if bankId is signed
-    private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_ALREADY_IN_PROGRESS =
-            input -> Objects.equal(input.ErrorCode, "RFA3");
 
     private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
             TransferMessageLengthConfig.createWithMaxLength(12);
@@ -1871,7 +1860,7 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     @Override
-    public void execute(final Transfer transfer) throws Exception, TransferExecutionException {
+    public void execute(final Transfer transfer) throws Exception {
         List<TransferListEntity> unsignedTransfers = getUnsignedTransfers();
         if (!unsignedTransfers.isEmpty()) {
             deleteUnsignedTransfersFromOutbox(unsignedTransfers);
@@ -1936,25 +1925,8 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception, TransferExecutionException {
-        if (Objects.equal(transfer.getType(), TransferType.EINVOICE)) {
-            // EInvoices are always submitted before signing as EINVOICE
-            approveEInvoice(transfer);
-        } else {
-            // EInvoices and payments are updated with type PAYMENT, which SEB doesn't support (they
-            // only support delete operation)
-            // This should never happen since we don't create an updatable transfer for payments or
-            // eInvoices in SEB
-            throw new IllegalStateException(
-                    "Should never happen, since transfers are not updatable in SEB");
-        }
-
-        // If we don't have this sleep we could get a problem when we refresh the account after a
-        // transfer/payment.
-        // SEB are slow in adding the transactions in upcoming so the date could be missing if the
-        // refresh comes
-        // to fast. This would make use try to parse an a date that is an empty string.
-        Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
+    public void update(Transfer transfer) {
+        throw new IllegalStateException("Not implemented.");
     }
 
     private void ensureIsValidSourceAccount(List<AccountEntity> accounts, Transfer transfer) {
@@ -1975,167 +1947,6 @@ public class SEBApiAgent extends AbstractAgent
         if (!sourceAccount.get().isAllowedToTransferTo(destination)) {
             cancelTransfer(
                     catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE));
-        }
-    }
-
-    private void ensureSourceAccountCanExecutePayment(Transfer transfer) {
-        SebResponse response = getTransferAccounts(EXTERNAL_PAYMENT_SOURCE_ACCOUNTS_URL);
-        List<AccountEntity> accountEntities = response.d.VODB.accountEntities;
-        ensureIsValidSourceAccount(accountEntities, transfer);
-    }
-
-    /**
-     * Note regarding post-execute of an eInvoice: They can only be signed once, then it will be
-     * gone if not visiting the internet bank. At the internet bank it's possible to reset the
-     * eInvoice to get it back in the eInvoice list, at which point a new execute needs to be done.
-     * (As of when this commit was created.)
-     */
-    private void approveEInvoice(Transfer transfer) throws Exception {
-        ensureNoUnsignedTransfers();
-        ensureSourceAccountCanExecutePayment(transfer);
-
-        Transfer originalTransfer = getOriginalTransfer(transfer);
-        EInvoiceListEntity matchingEInvoice = fetchMatchingEInvoice(originalTransfer);
-
-        if (isTransferModifyingEInvoice(matchingEInvoice, transfer)) {
-            matchingEInvoice = updateEInvoice(matchingEInvoice, transfer);
-        }
-
-        addEInvoiceToOutbox(matchingEInvoice);
-        signEInvoice(matchingEInvoice);
-    }
-
-    private EInvoiceListEntity fetchMatchingEInvoice(final Transfer transfer)
-            throws TransferExecutionException {
-
-        List<EInvoiceListEntity> eInvoiceEntities = fetchEInvoiceEntities();
-
-        Optional<EInvoiceListEntity> matchingEInvoice =
-                eInvoiceEntities.stream()
-                        .filter(
-                                input -> {
-                                    Transfer eInvoice = EInvoiceListEntity.TO_TRANSFER.apply(input);
-                                    return eInvoice != null
-                                            && Objects.equal(
-                                                    eInvoice.getHash(), transfer.getHash());
-                                })
-                        .findFirst();
-
-        if (!matchingEInvoice.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
-                    .build();
-        }
-
-        return matchingEInvoice.get();
-    }
-
-    private static Transfer getUpdatedTransfer(Transfer transfer)
-            throws TransferExecutionException {
-        final Transfer updatedTransfer = getOriginalTransfer(transfer);
-        // just in case source account is changed
-        updatedTransfer.setSource(transfer.getSource());
-
-        return updatedTransfer;
-    }
-
-    private static Transfer getOriginalTransfer(Transfer transfer)
-            throws TransferExecutionException {
-        Transfer originalTransfer =
-                SerializationUtils.deserializeFromString(
-                        transfer.getPayload().get(TransferPayloadType.ORIGINAL_TRANSFER),
-                        Transfer.class);
-
-        if (originalTransfer == null) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("No original transfer on payload to compare with.")
-                    .build();
-        }
-
-        return originalTransfer;
-    }
-
-    /** In SEB user can only change source account, date or amount, not OCR */
-    private boolean isTransferModifyingEInvoice(
-            EInvoiceListEntity eInvoiceEntity, Transfer transfer)
-            throws TransferExecutionException {
-        if (!Objects.equal(
-                transfer.getRemittanceInformation().getValue(),
-                eInvoiceEntity.getDestinationMessage())) {
-            cancelTransfer(
-                    catalog.getString(
-                            TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_MESSAGE));
-        }
-
-        Date currentDueDate;
-        try {
-            currentDueDate = eInvoiceEntity.getCurrentDueDate();
-        } catch (ParseException e) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(
-                            "Could not parse the due date of the eInvoice. This should never happen.")
-                    .setException(e)
-                    .build();
-        }
-
-        return !Objects.equal(transfer.getSource(), eInvoiceEntity.getSource())
-                || !Objects.equal(DateUtils.flattenTime(transfer.getDueDate()), currentDueDate)
-                || !Objects.equal(
-                        transfer.getAmount().toBigDecimal(),
-                        eInvoiceEntity.getCurrentAmount().toBigDecimal());
-    }
-
-    private EInvoiceListEntity updateEInvoice(
-            EInvoiceListEntity eInvoiceEntity, Transfer transfer) {
-        eInvoiceEntity.setCurrentAmount(transfer.getAmount());
-        eInvoiceEntity.setCurrentDueDate(transfer.getDueDate());
-        eInvoiceEntity.setSource(transfer.getSource());
-
-        SebRequest sebRequest = new SebRequest();
-        sebRequest.request.VODB = new VODB();
-        sebRequest.request.VODB.EInvoices = Lists.newArrayList(eInvoiceEntity);
-        SebResponse sebResponse =
-                postAsJSON(EINVOICES_CHANGE_UNSIGNED_URL, sebRequest, SebResponse.class);
-        abortTransferIfErrorIsPresent(sebResponse);
-
-        final Transfer updatedTransfer = getUpdatedTransfer(transfer);
-        EInvoiceListEntity updatedEInvoiceEntity = fetchMatchingEInvoice(updatedTransfer);
-
-        if (isTransferModifyingEInvoice(updatedEInvoiceEntity, transfer)) {
-            cancelTransfer(
-                    catalog.getString(
-                            TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_FAILED));
-        }
-
-        return updatedEInvoiceEntity;
-    }
-
-    private void addEInvoiceToOutbox(EInvoiceListEntity eInvoiceEntity) {
-        eInvoiceEntity.setState(EInvoiceListEntity.State.OUTBOX);
-
-        SebRequest sebRequest = new SebRequest();
-        sebRequest.request.VODB = new VODB();
-        sebRequest.request.VODB.EInvoices = Lists.newArrayList(eInvoiceEntity);
-        SebResponse sebResponse =
-                postAsJSON(EINVOICES_ADD_UNSIGNED_URL, sebRequest, SebResponse.class);
-        abortTransferIfErrorIsPresent(sebResponse);
-    }
-
-    private void signEInvoice(EInvoiceListEntity matchingEInvoice) throws Exception {
-        List<TransferListEntity> unsignedTransfers = getUnsignedTransfers();
-        Preconditions.checkArgument(
-                unsignedTransfers.size() == 1, "Not expected number of transfers (!= 1)");
-
-        TransferListEntity eInvoiceTransferEntity = unsignedTransfers.get(0);
-
-        try {
-            initSignExternalPayment();
-            requestSupplementalBankId();
-            ensureExternalPaymentSignedOrThrow(matchingEInvoice, eInvoiceTransferEntity);
-        } catch (Exception e) {
-            deleteTransferAndThrowException(eInvoiceTransferEntity, e);
         }
     }
 
@@ -2191,14 +2002,6 @@ public class SEBApiAgent extends AbstractAgent
         TransferListEntity transferQueuedUp =
                 addSebTransferToOutbox(transfer.getType(), externalTransfer);
         signExternalPayment(externalTransfer, transferQueuedUp);
-    }
-
-    private void ensureNoUnsignedTransfers() {
-        if (getUnsignedTransfers().size() > 0) {
-            cancelTransfer(
-                    catalog.getString(
-                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS));
-        }
     }
 
     private void setRemittanceInformationType(
