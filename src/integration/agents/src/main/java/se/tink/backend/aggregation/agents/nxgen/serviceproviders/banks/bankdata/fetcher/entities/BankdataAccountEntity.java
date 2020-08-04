@@ -71,8 +71,14 @@ public class BankdataAccountEntity {
                 .build();
     }
 
-    private AccountTypes getType() {
-        return BankdataConstants.ACCOUNT_TYPE_MAPPER.translate(name).orElse(AccountTypes.CHECKING);
+    public AccountTypes getType() {
+        AccountTypes accountTypes =
+                BankdataConstants.ACCOUNT_TYPE_MAPPER.translate(name).orElse(AccountTypes.CHECKING);
+        return isLoanAccount(accountTypes) ? AccountTypes.LOAN : accountTypes;
+    }
+
+    private boolean isLoanAccount(AccountTypes accountTypes) {
+        return AccountTypes.CHECKING == accountTypes && drawingRight > 0;
     }
 
     private String constructUniqueIdentifier() {

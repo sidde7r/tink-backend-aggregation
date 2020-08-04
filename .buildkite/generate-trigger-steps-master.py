@@ -28,16 +28,14 @@ TRAIN_STEP = """
   command:
   - echo $$GOOGLE_CLOUD_ACCOUNT_JSON | base64 --decode > /root/credentials.json
   - GOOGLE_APPLICATION_CREDENTIALS=/root/credentials.json /go/bin/kubernetes-generator --mode push --version "{version}" --repo . --chart "{chart}"
-  soft_fail:
-  - exit_status: 1
+  concurrency: 1
+  concurrency_group: "upload-helm-gcs"
   plugins:
   - docker#v3.3.0:
       image: "gcr.io/tink-containers/kubernetes-generator:latest"
       always-pull: True
       environment:
       - "GOOGLE_CLOUD_ACCOUNT_JSON"
-      concurrency: 1
-      concurrency_group": "upload-helm-gcs"
 
 - name: "Trigger release-train for {chart}"
   trigger: "release-train"
@@ -56,6 +54,8 @@ TRAIN_STEP = """
         VERSION: "{version}"
         EXPERIMENTAL_CHART_CONTROL_ENABLED: "true"
         PULL_REQUESTS: "{pull_request_ids}"
+        CHART_REPO: "tink-charts/"
+        CHART_VERSION: "{version}"
 """
 
 SONAR_STEP = """
