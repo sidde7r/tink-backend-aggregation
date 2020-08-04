@@ -87,6 +87,13 @@ public class SwedbankDefaultApiClient {
     private BankProfileHandler bankProfileHandler;
     private final String organizationNumber;
 
+    private enum Method {
+        GET,
+        POST,
+        PUT,
+        DELETE
+    }
+
     protected SwedbankDefaultApiClient(
             TinkHttpClient client,
             SwedbankConfiguration configuration,
@@ -113,87 +120,95 @@ public class SwedbankDefaultApiClient {
         return base64.encodeAsString(componentProvider.getRandomValueGenerator().secureRandom(6));
     }
 
-    private <T> T makeGetRequest(URL url, Class<T> responseClass) {
-        return buildAbstractRequest(url).get(responseClass);
+    private <T> T makeGetRequest(URL url, Class<T> responseClass, boolean retry) {
+        return makeRequest(url, null, responseClass, Method.GET, retry);
     }
 
     private HttpResponse makeGetRequest(LinkEntity linkEntity, boolean retry) {
-        return makeRequest(linkEntity, HttpResponse.class, retry);
+        URL url = SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri());
+        return makeGetRequest(url, HttpResponse.class, retry);
     }
 
-    private <T> T makePostRequest(URL url, Object requestObject, Class<T> responseClass) {
-        return buildAbstractRequest(url).post(responseClass, requestObject);
+    private <T> T makePostRequest(
+            URL url, Object requestObject, Class<T> responseClass, boolean retry) {
+        return makeRequest(url, requestObject, responseClass, Method.POST, retry);
     }
 
-    private <T> T makePutRequest(URL url, Object requestObject, Class<T> responseClass) {
-        return buildAbstractRequest(url).put(responseClass, requestObject);
-    }
-
-    private <T> T makeDeleteRequest(URL url, Object requestObject, Class<T> responseClass) {
-        return buildAbstractRequest(url).delete(responseClass, requestObject);
+    private <T> T makePutRequest(
+            URL url, Object requestObject, Class<T> responseClass, boolean retry) {
+        return makeRequest(url, requestObject, responseClass, Method.PUT, retry);
     }
 
     protected <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass, boolean retry) {
-        return makeRequest(linkEntity, null, responseClass, retry, Retry.FIRST_ATTEMPT);
+        return makeRequest(linkEntity, null, responseClass, retry);
+    }
+
+    private <T> T makeRequest(
+            LinkEntity linkEntity, Object requestObject, Class<T> responseClass, boolean retry) {
+        return makeRequest(linkEntity, Collections.emptyMap(), requestObject, responseClass, retry);
     }
 
     private <T> T makeRequest(
             LinkEntity linkEntity,
+            Map<String, String> queryParams,
             Object requestObject,
             Class<T> responseClass,
-            boolean retry,
-            int attempt) {
-        try {
-            return makeRequest(linkEntity, requestObject, responseClass, Collections.emptyMap());
-        } catch (HttpResponseException hre) {
-            if (SwedbankApiErrors.isSessionTerminated(hre)) {
-                throw BankServiceError.SESSION_TERMINATED.exception(hre);
-            }
-
-            if (retry) {
-                return makeRequestWithRetry(hre, linkEntity, requestObject, responseClass, attempt);
-            } else {
-                throw hre;
-            }
-        }
-    }
-
-    private <T> T makeRequest(
-            LinkEntity linkEntity,
-            Object requestObject,
-            Class<T> responseClass,
-            Map<String, String> parameters) {
-        SwedbankBaseConstants.LinkMethod method = linkEntity.getMethodValue();
+            boolean retry) {
+        Method method = Enum.valueOf(Method.class, linkEntity.getMethodValue().toString());
         Preconditions.checkState(
                 linkEntity.isValid(),
                 "Create dynamic request failed - Cannot proceed without valid link entity - Method:[{}], Uri:[{}]",
                 method,
                 linkEntity.getUri());
 
+        URL url = SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), queryParams);
+        return makeRequest(url, requestObject, responseClass, method, retry);
+    }
+
+    private <T> T makeRequest(
+            URL url, Object requestObject, Class<T> responseClass, Method method, boolean retry) {
+        return makeRequest(url, requestObject, responseClass, method, retry, Retry.FIRST_ATTEMPT);
+    }
+
+    private <T> T makeRequest(
+            URL url,
+            Object requestObject,
+            Class<T> responseClass,
+            Method method,
+            boolean retry,
+            int attempt) {
+        try {
+            return executeRequest(url, method, requestObject, responseClass);
+        } catch (HttpResponseException hre) {
+            if (SwedbankApiErrors.isSessionTerminated(hre)) {
+                throw BankServiceError.SESSION_TERMINATED.exception(hre);
+            }
+
+            if (retry
+                    && hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                    && attempt <= Retry.MAX_RETRY_ATTEMPTS) {
+                log.info("SwedbankDefaultApiClient: Retrying operation to {}", url, hre);
+                return makeRequest(url, requestObject, responseClass, method, true, ++attempt);
+            } else {
+                throw hre;
+            }
+        }
+    }
+
+    private <T> T executeRequest(
+            URL url, Method method, Object requestObject, Class<T> responseClass) {
+        RequestBuilder requestBuilder = buildAbstractRequest(url);
         switch (method) {
-            case POST:
-                return makePostRequest(
-                        SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters),
-                        requestObject,
-                        responseClass);
             case GET:
-                return makeGetRequest(
-                        SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters),
-                        responseClass);
+                return requestBuilder.get(responseClass);
+            case POST:
+                return requestBuilder.post(responseClass, requestObject);
             case PUT:
-                return makePutRequest(
-                        SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters),
-                        requestObject,
-                        responseClass);
+                return requestBuilder.put(responseClass, requestObject);
             case DELETE:
-                return makeDeleteRequest(
-                        SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters),
-                        requestObject,
-                        responseClass);
+                return requestBuilder.delete(responseClass, requestObject);
             default:
-                log.warn(
-                        "Create dynamic request failed - Not implemented method - Method:[{}]",
-                        method);
+                log.warn("SwedbankDefaultApiClient: Invalid method - Method:[{}]", method);
                 throw new IllegalStateException();
         }
     }
@@ -209,29 +224,13 @@ public class SwedbankDefaultApiClient {
                 .cookie(new Cookie(SwedbankBaseConstants.Url.DSID_KEY, dsid));
     }
 
-    private <T> T makeRequestWithRetry(
-            HttpResponseException hre,
-            LinkEntity linkEntity,
-            Object requestObject,
-            Class<T> responseClass,
-            int attempt) {
-
-        if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-            if (attempt <= Retry.MAX_RETRY_ATTEMPTS) {
-                log.info("Retrying fetching {}", responseClass, hre);
-                return makeRequest(linkEntity, requestObject, responseClass, true, ++attempt);
-            }
-        }
-
-        throw hre;
-    }
-
     public InitBankIdResponse initBankId(String ssn) {
         try {
             return makePostRequest(
                     SwedbankBaseConstants.Url.INIT_BANKID.get(),
                     InitAuthenticationRequest.createFromUserId(ssn),
-                    InitBankIdResponse.class);
+                    InitBankIdResponse.class,
+                    true);
         } catch (HttpClientException hce) {
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
             if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
@@ -477,8 +476,7 @@ public class SwedbankDefaultApiClient {
                 RegisterPaymentRequest.createPayment(
                         amount, remittanceInformation, date, recipientId, fromAccountId),
                 RegisterTransferResponse.class,
-                false,
-                Retry.FIRST_ATTEMPT);
+                false);
     }
 
     public InitiateSignTransferResponse signExternalTransferBankId(LinkEntity linkEntity) {
@@ -486,8 +484,7 @@ public class SwedbankDefaultApiClient {
                 linkEntity,
                 InitiateSignTransferRequest.create(),
                 InitiateSignTransferResponse.class,
-                false,
-                Retry.FIRST_ATTEMPT);
+                false);
     }
 
     public InitiateSecurityTokenSignTransferResponse signExternalTransferSecurityToken(
@@ -511,14 +508,17 @@ public class SwedbankDefaultApiClient {
     }
 
     public TouchResponse touch() {
-        return makeGetRequest(SwedbankBaseConstants.Url.TOUCH.get(), TouchResponse.class);
+        return makeGetRequest(SwedbankBaseConstants.Url.TOUCH.get(), TouchResponse.class, false);
     }
 
     public boolean logout() {
         try {
             HttpResponse response =
                     makePutRequest(
-                            SwedbankBaseConstants.Url.LOGOUT.get(), null, HttpResponse.class);
+                            SwedbankBaseConstants.Url.LOGOUT.get(),
+                            null,
+                            HttpResponse.class,
+                            false);
             return response.getStatus() == HttpStatus.SC_OK;
         } catch (Exception e) {
             return false;
@@ -557,7 +557,11 @@ public class SwedbankDefaultApiClient {
         }
 
         return makeRequest(
-                menuItems.get(menuItemKey.getKey()), requestObject, responseClass, parameters);
+                menuItems.get(menuItemKey.getKey()),
+                parameters,
+                requestObject,
+                responseClass,
+                false);
     }
 
     private void ensureAuthorizationHeaderIsSet() {
@@ -686,7 +690,8 @@ public class SwedbankDefaultApiClient {
             return makePostRequest(
                     SwedbankBaseConstants.Url.INIT_TOKEN.get(),
                     InitAuthenticationRequest.createFromUserId(ssn),
-                    InitSecurityTokenChallengeResponse.class);
+                    InitSecurityTokenChallengeResponse.class,
+                    true);
         } catch (HttpClientException hce) {
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
             if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
@@ -720,8 +725,7 @@ public class SwedbankDefaultApiClient {
                     linkEntity,
                     SecurityTokenChallengeRequest.createFromChallengeResponse(challengeResponse),
                     responseClass,
-                    false,
-                    Retry.FIRST_ATTEMPT);
+                    true);
         } catch (HttpResponseException hre) {
             SwedbankApiErrors.handleTokenErrors(hre);
             // unknown error: rethrow
