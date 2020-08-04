@@ -393,7 +393,7 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
 
     @JsonIgnore
     public boolean isDestinationMessageGenerated() {
-        return isMessageGenerated(destinationMessage);
+        return !Strings.isNullOrEmpty(destinationMessage) && isMessageGenerated(destinationMessage);
     }
 
     @JsonIgnore
@@ -423,7 +423,11 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
 
     @JsonIgnore
     public boolean isRemittanceInformationGenerated() {
-        return isMessageGenerated(remittanceInformation.getValue());
+        if (remittanceInformation != null) {
+            return !Strings.isNullOrEmpty(remittanceInformation.getValue())
+                    && isMessageGenerated(remittanceInformation.getValue());
+        }
+        return false;
     }
 
     public String getOriginatingUserIp() {
