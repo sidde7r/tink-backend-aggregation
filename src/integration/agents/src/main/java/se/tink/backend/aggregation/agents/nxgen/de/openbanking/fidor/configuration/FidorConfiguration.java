@@ -19,7 +19,7 @@ public class FidorConfiguration implements ClientConfiguration {
     @Secret private String clientKeyPath;
     @Secret private String clientCertificatePath;
     @Secret private String clientKeyStorePath;
-    @SensitiveSecret private String clinetKeyStorePassword;
+    @SensitiveSecret private String clientKeyStorePassword;
     @Secret private String baseUrl;
     @AgentConfigParam private String redirectUrl;
 
@@ -33,11 +33,11 @@ public class FidorConfiguration implements ClientConfiguration {
         return clientKeyStorePath;
     }
 
-    public String getClinetKeyStorePassword() {
+    public String getClientKeyStorePassword() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(clinetKeyStorePassword),
+                Strings.emptyToNull(clientKeyStorePassword),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client key store password"));
-        return clinetKeyStorePassword;
+        return clientKeyStorePassword;
     }
 
     public String getClientId() {
