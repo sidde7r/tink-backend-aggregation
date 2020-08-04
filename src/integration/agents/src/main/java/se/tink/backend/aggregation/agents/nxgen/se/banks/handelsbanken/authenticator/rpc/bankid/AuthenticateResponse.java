@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
@@ -9,13 +12,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.BankIdErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class AuthenticateResponse extends BaseResponse {
-
-    private static final AggregationLogger logger =
-            new AggregationLogger(AuthenticateResponse.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public BankIdStatus toBankIdStatus() throws AuthenticationException {
         String authenticateResult = getResult();
@@ -58,7 +59,7 @@ public class AuthenticateResponse extends BaseResponse {
             return BankIdStatus.CANCELLED;
         }
 
-        logger.info("Status FAILED_UNKNOWN, message: " + message);
+        logger.info("Status FAILED_UNKNOWN, message: {}", message);
         return BankIdStatus.FAILED_UNKNOWN;
     }
 

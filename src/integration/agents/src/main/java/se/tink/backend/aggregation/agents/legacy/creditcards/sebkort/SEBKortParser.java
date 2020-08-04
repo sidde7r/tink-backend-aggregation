@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
+import java.lang.invoke.MethodHandles;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Collections;
@@ -17,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -30,7 +33,6 @@ import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionE
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionGroupEntity;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -53,7 +55,8 @@ public class SEBKortParser {
         public double debt;
     }
 
-    private static final AggregationLogger logger = new AggregationLogger(SEBKortParser.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private Double totalDebt;
     private Double unInvoicedDebt;
     private Set<String> transactionHashes = Sets.newHashSet();

@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date;
 
 import com.google.common.base.Preconditions;
+import java.lang.invoke.MethodHandles;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -16,8 +18,9 @@ import se.tink.libraries.date.DateUtils;
 
 public class TransactionDatePaginationController<A extends Account>
         implements TransactionPaginator<A> {
-    private static final AggregationLogger logger =
-            new AggregationLogger(TransactionDatePaginationController.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static final int DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES = 4;
     private static final int DEFAULT_MONTHS_TO_FETCH = 3;
 

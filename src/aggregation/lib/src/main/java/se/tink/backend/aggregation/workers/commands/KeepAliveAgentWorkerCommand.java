@@ -1,16 +1,19 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.lang.invoke.MethodHandles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class KeepAliveAgentWorkerCommand extends AgentWorkerCommand {
-    private static final AggregationLogger logger =
-            new AggregationLogger(KeepAliveAgentWorkerCommand.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private AgentWorkerCommandContext context;
 
     public KeepAliveAgentWorkerCommand(AgentWorkerCommandContext context) {

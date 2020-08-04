@@ -1,14 +1,20 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.DateUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
-    private static final AggregationLogger logger = new AggregationLogger(TransactionEntity.class);
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     protected double amount;
     protected String text;
     protected Date transactiondate;

@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher;
 
 import com.google.common.collect.Lists;
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
@@ -13,13 +16,12 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Co
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.HoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.PortfolioEntitiesResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class Sparebank1InvestmentsFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger logger =
-            new AggregationLogger(Sparebank1InvestmentsFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Sparebank1ApiClient apiClient;
 

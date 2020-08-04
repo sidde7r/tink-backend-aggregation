@@ -2,26 +2,30 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.Investments.INVESTMENTS;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 
 @JsonObject
 public class AssetsDetailGroupDto {
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private TypeValuePair total;
     private TypeValuePair label;
     private TypeValuePair groupId;
     private List<AssetsDetailSubGroupDto> subgroups;
-    private static final AggregationLogger logger =
-            new AggregationLogger(AssetsDetailGroupDto.class);
 
     public Double toTotalVale() {
         return Optional.ofNullable(total)

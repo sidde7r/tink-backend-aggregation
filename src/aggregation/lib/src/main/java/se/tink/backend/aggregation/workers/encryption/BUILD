@@ -12,7 +12,6 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/tpp_secrets_service/client",
         "//src/libraries/cache",
         "//src/libraries/encrypted-payload",
@@ -34,5 +33,6 @@ java_library(
         "//third_party:com_google_guava_guava",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_assertj_assertj_core",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )

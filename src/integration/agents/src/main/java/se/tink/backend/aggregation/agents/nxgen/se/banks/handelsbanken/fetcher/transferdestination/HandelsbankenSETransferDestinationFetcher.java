@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transferdestination;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
@@ -16,16 +19,14 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.Failu
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.HandelsbankenSEPaymentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 
 public class HandelsbankenSETransferDestinationFetcher implements TransferDestinationFetcher {
-
-    private static final AggregationLogger logger =
-            new AggregationLogger(HandelsbankenSETransferDestinationFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final HandelsbankenSEApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;

@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive;
 
 import com.google.common.collect.ImmutableList;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationServerClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationServerStandardClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationSpecification;
@@ -24,13 +25,12 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(OAuth2Authenticator.class);
     private static final String REFRESH_TOKEN_STEP_ID = "refreshAccessTokenStep";
     private static final String AUTOMATIC_AUTHORIZATION_STEP_ID = "authorizationStep";
     static final String AUTHORIZATION_SERVER_THIRD_PARTY_APP_STEP_ID = "issueAccessTokenStep";
-    private static final AggregationLogger logger =
-            new AggregationLogger(OAuth2Authenticator.class);
     private final List<AuthenticationStep> authSteps;
     private final OAuth2TokenStorage tokenStorage;
     private final OAuth2AuthorizationServerClient authorizationServerClient;
@@ -112,7 +112,7 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
                         authorizationServerClient.refreshAccessToken(token.getRefreshToken()));
                 return AuthenticationStepResponse.authenticationSucceeded();
             } catch (HttpResponseException | HttpClientException ex) {
-                LOG.debug(ex.getMessage(), ex);
+                logger.debug(ex.getMessage(), ex);
                 return AuthenticationStepResponse.executeStepWithId(
                         AUTHORIZATION_SERVER_THIRD_PARTY_APP_STEP_ID);
             }

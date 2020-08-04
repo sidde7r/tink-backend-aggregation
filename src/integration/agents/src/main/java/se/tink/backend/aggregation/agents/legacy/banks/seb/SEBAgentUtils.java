@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.banks.seb;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
+import java.lang.invoke.MethodHandles;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCard;
@@ -19,7 +21,6 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
@@ -189,8 +190,9 @@ public class SEBAgentUtils {
     }
 
     public static class AbroadTransactionParser {
-        private static final AggregationLogger logger =
-                new AggregationLogger(AbroadTransactionParser.class);
+        private static final Logger logger =
+                LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
         private Date date;
 
         // Description of the transaction.

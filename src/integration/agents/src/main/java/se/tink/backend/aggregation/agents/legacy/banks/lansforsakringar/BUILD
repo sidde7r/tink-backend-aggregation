@@ -7,7 +7,6 @@ java_library(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/models",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",

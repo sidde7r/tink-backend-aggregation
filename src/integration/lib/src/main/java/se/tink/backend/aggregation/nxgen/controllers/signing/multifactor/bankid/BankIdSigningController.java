@@ -2,19 +2,21 @@ package se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 
 public class BankIdSigningController<T> implements Signer<T> {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int MAX_ATTEMPTS = 90;
 
-    private static final AggregationLogger logger =
-            new AggregationLogger(BankIdSigningController.class);
     private final BankIdSigner<T> signer;
     private final SupplementalRequester supplementalRequester;
 

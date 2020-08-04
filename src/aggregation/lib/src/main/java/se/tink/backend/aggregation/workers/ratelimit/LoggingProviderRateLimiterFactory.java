@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.workers.ratelimit;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.util.concurrent.RateLimiter;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import java.lang.invoke.MethodHandles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoggingProviderRateLimiterFactory implements ProviderRateLimiterFactory {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final AggregationLogger logger =
-            new AggregationLogger(LoggingProviderRateLimiterFactory.class);
     private ProviderRateLimiterFactory delegate;
 
     public LoggingProviderRateLimiterFactory(ProviderRateLimiterFactory delegate) {

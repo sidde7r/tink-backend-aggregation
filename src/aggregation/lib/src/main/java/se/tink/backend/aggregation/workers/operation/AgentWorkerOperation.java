@@ -3,14 +3,16 @@ package se.tink.backend.aggregation.workers.operation;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -37,8 +39,8 @@ public class AgentWorkerOperation implements Runnable {
         }
     }
 
-    private static final AggregationLogger logger =
-            new AggregationLogger(AgentWorkerOperation.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private List<AgentWorkerCommand> commands;
     private AgentWorkerContext context;

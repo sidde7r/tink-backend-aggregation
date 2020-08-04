@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.rpc.ActivityListEntity;
@@ -16,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.rpc.TimelineResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.rpc.TransactionsRequest;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -24,7 +26,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AmericanExpressTransactionFetcher implements TransactionFetcher<CreditCardAccount> {
-    public final AggregationLogger logger;
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     protected final AmericanExpressApiClient apiClient;
     protected final AmericanExpressConfiguration config;
 
@@ -32,7 +35,6 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
             AmericanExpressApiClient apiClient, AmericanExpressConfiguration config) {
         this.apiClient = apiClient;
         this.config = config;
-        logger = new AggregationLogger(AmericanExpressTransactionFetcher.class);
     }
 
     @Override

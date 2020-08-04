@@ -1,19 +1,24 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.BaseResponse;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements.CardType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardList extends BaseResponse {
-    private static final AggregationLogger logger = new AggregationLogger(CardList.class);
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @JsonProperty("Response")
     public List<Card> cards;

@@ -2,11 +2,14 @@ package se.tink.backend.aggregation.agents.banks.sbab.client;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.client.Client;
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
@@ -14,12 +17,10 @@ import se.tink.backend.aggregation.agents.banks.sbab.exception.UnacceptedTermsAn
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class AuthenticationClient extends SBABClient {
-
-    private static final AggregationLogger logger =
-            new AggregationLogger(AuthenticationClient.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static ImmutableMap<String, BankIdStatus> BANKID_STATUS =
             ImmutableMap.<String, BankIdStatus>builder()

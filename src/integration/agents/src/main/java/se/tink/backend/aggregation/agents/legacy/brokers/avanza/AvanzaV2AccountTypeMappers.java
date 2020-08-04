@@ -3,21 +3,22 @@ package se.tink.backend.aggregation.agents.brokers.avanza;
 import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.AvanzaAccountTypes;
 import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.AvanzaFallbackAccountTypes;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.pair.Pair;
 
 public final class AvanzaV2AccountTypeMappers {
-    private static final AggregationLogger logger =
-            new AggregationLogger(AvanzaV2AccountTypeMappers.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private TypeMapper<AccountTypes> accountTypeMapper;
     private AccountTypePredicateMapper<String> accountTypeFallbackMapper;

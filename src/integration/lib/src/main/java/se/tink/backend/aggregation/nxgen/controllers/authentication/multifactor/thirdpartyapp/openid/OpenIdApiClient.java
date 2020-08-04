@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD;
@@ -29,6 +31,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpenIdApiClient {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     protected final TinkHttpClient httpClient;
     protected final SoftwareStatementAssertion softwareStatement;
@@ -44,7 +48,6 @@ public class OpenIdApiClient {
     private OpenIdAuthenticatedHttpFilter aisAuthFilter;
     private OpenIdAuthenticatedHttpFilter pisAuthFilter;
     private OpenIdError openIdError;
-    private static final AggregationLogger logger = new AggregationLogger(OpenIdApiClient.class);
 
     public OpenIdApiClient(
             TinkHttpClient httpClient,

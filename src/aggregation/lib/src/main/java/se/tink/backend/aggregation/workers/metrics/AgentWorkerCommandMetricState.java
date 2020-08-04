@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.workers.metrics;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
@@ -14,8 +16,8 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentWorkerCommandMetricState {
-    private static final AggregationLogger logger =
-            new AggregationLogger(AgentWorkerCommandMetricState.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final MetricRegistry metricRegistry;
     private final Provider provider;

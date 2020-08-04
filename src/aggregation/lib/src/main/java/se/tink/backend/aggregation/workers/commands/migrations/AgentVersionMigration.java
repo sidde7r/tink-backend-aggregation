@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands.migrations;
 
 import com.google.api.client.util.Lists;
 import com.sun.jersey.api.client.UniformInterfaceException;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -9,15 +10,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class AgentVersionMigration {
-    private final AggregationLogger logger = new AggregationLogger(AgentVersionMigration.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static final String DUPLICATE = "-duplicate-";
     private ControllerWrapper wrapper;

@@ -8,13 +8,15 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.backend.aggregation.annotations.JsonDouble;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.NonValidIdentifier;
@@ -31,7 +33,10 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EInvoiceListEntity implements MatchableTransferRequestEntity {
-    private static final AggregationLogger logger = new AggregationLogger(EInvoiceListEntity.class);
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static final SebAccountIdentifierFormatter ACCOUNT_IDENTIFIER_FORMATTER =
             new SebAccountIdentifierFormatter();
 

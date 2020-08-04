@@ -6,6 +6,7 @@ import java.net.URI;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.client.utils.URIBuilder;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.banks.crosskey.errors.CrossKeyErrorHandler;
@@ -19,7 +20,6 @@ import se.tink.backend.aggregation.agents.banks.crosskey.responses.BaseResponse;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.CrossKeyLoanDetails;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.TransactionsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class CrossKeyApiClient {
@@ -55,10 +55,10 @@ public class CrossKeyApiClient {
     // Constant Values
     private static final String VERSION_1_4_0 = "1.4.0-iOS";
 
-    private final AggregationLogger logger;
+    private final Logger logger;
 
     public CrossKeyApiClient(
-            Client client, Credentials credentials, AggregationLogger logger, String userAgent) {
+            Client client, Credentials credentials, Logger logger, String userAgent) {
         this.client = client;
         this.credentials = credentials;
         this.logger = logger;

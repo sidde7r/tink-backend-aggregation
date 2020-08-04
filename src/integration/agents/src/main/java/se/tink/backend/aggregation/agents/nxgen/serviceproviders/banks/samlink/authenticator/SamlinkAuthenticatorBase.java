@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.
 
 import java.util.Optional;
 import org.apache.commons.httpclient.HttpStatus;
+import org.slf4j.Logger;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -11,16 +12,14 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.rpc.ErrorResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SamlinkAuthenticatorBase {
     protected final Credentials credentials;
     protected final SamlinkApiClient apiClient;
-    private final AggregationLogger logger;
+    private final Logger logger;
 
-    SamlinkAuthenticatorBase(
-            AggregationLogger logger, Credentials credentials, SamlinkApiClient apiClient) {
+    SamlinkAuthenticatorBase(Logger logger, Credentials credentials, SamlinkApiClient apiClient) {
         this.logger = logger;
         this.credentials = credentials;
         this.apiClient = apiClient;

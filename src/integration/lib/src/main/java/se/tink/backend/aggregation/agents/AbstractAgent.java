@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -13,7 +15,6 @@ import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -28,7 +29,7 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
     protected final JerseyClientFactory clientFactory;
     protected final StatusUpdater statusUpdater;
     protected final FinancialDataCacher financialDataCacher;
-    protected final AggregationLogger log;
+    protected final Logger log;
 
     protected AbstractAgent(CredentialsRequest request, CompositeAgentContext context) {
         super(new AgentContextProviderImpl(request, context));
@@ -37,8 +38,8 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
         this.clientFactory =
                 new JerseyClientFactory(
                         context.getLogMasker(), LogMaskerImpl.shouldLog(request.getProvider()));
-
-        this.log = new AggregationLogger(getAgentClass());
+        // This is not a good practice, evaluate having loggers for each class as psf field
+        this.log = LoggerFactory.getLogger(getAgentClass());
     }
 
     /** Returns the certain date for this account (that is from when we know we have all data) */

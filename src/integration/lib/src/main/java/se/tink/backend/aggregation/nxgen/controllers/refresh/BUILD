@@ -8,7 +8,6 @@ java_library(
         "//src/integration/enums",
         "//src/integration/identity_data",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/automatic/type",
@@ -21,5 +20,6 @@ java_library(
         "//src/libraries/metrics:core",
         "//src/libraries/pair",
         "//third_party:com_google_guava_guava",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )

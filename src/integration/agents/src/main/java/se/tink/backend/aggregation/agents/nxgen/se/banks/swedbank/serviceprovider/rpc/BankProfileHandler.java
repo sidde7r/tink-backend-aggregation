@@ -3,25 +3,28 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
 public class BankProfileHandler {
+    @JsonIgnore
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @JsonProperty private List<BankProfile> bankProfiles = new ArrayList<>();
     @JsonProperty private BankProfile activeBankProfile;
     @JsonProperty private Map<String, MenuItemLinkEntity> menuItems;
-
-    @JsonIgnore
-    private final AggregationLogger logger = new AggregationLogger(BankProfileHandler.class);
 
     public BankProfileHandler setActiveBankProfile(BankProfile activeBankProfile) {
         this.activeBankProfile = activeBankProfile;

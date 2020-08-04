@@ -6,19 +6,21 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.dropwizard.cli.ConfiguredCommand;
 import io.dropwizard.setup.Bootstrap;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.guice.modules.AggregationCommonModule;
 import se.tink.backend.aggregation.configuration.guice.modules.AggregationConfigurationModule;
 import se.tink.backend.aggregation.configuration.guice.modules.AggregationRepositoryModule;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public abstract class AggregationServiceContextCommand<T extends AggregationServiceConfiguration>
         extends ConfiguredCommand<T> {
-    private static final AggregationLogger logger =
-            new AggregationLogger(AggregationServiceContextCommand.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     protected AggregationServiceContextCommand(String name, String description) {
         super(name, description);

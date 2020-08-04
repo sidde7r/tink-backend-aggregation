@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator;
 
 import com.google.api.client.http.HttpStatusCodes;
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -29,7 +32,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenti
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.VerifyCustomerResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.DeviceRegistrationResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -37,8 +39,9 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
 public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticatorNO {
-    private static final AggregationLogger logger =
-            new AggregationLogger(SparebankenSorMultiFactorAuthenticator.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static final String ACTIVATION_CODE_FIELD_KEY = "activationCode";
     private static final int ACTIVATION_CODE_LENGTH = 8;
 
