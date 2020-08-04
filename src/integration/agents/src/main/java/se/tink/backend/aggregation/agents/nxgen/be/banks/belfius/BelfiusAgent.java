@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -43,30 +44,13 @@ public class BelfiusAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
-
-        client.addFilter(
-                new TimeoutRetryFilter(
-                        BelfiusConstants.HttpClient.MAX_RETRIES,
-                        BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
-
-        if (agentsServiceConfiguration.isFeatureEnabled("beProxy")) {
-            // Setting proxy for Belgium via TPP
-            PasswordBasedProxyConfiguration proxyConfiguration =
-                    agentsServiceConfiguration.getCountryProxy("be");
-            client.setProductionProxy(
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername(),
-                    proxyConfiguration.getPassword());
-        }
-
+        configureHttpClient(agentsServiceConfiguration);
         this.belfiusSignatureCreator = new BelfiusSignatureCreator();
-
         this.apiClient =
                 new BelfiusApiClient(
                         this.client,
                         belfiusSessionStorage,
                         getBelfiusLocale(request.getUser().getLocale()));
-
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
@@ -109,6 +93,27 @@ public class BelfiusAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private void configureHttpClient(AgentsServiceConfiguration agentsServiceConfiguration) {
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        BelfiusConstants.HttpClient.MAX_RETRIES,
+                        BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+
+        if (agentsServiceConfiguration.isFeatureEnabled("beProxy")) {
+            // Setting proxy for Belgium via TPP
+            PasswordBasedProxyConfiguration proxyConfiguration =
+                    agentsServiceConfiguration.getCountryProxy("be");
+            client.setProductionProxy(
+                    proxyConfiguration.getHost(),
+                    proxyConfiguration.getUsername(),
+                    proxyConfiguration.getPassword());
+        } else {
+            final MultiIpGateway gateway =
+                    new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
+            gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
+        }
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
