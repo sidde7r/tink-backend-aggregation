@@ -48,6 +48,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner.Algorithm;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -78,6 +79,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         this.persistentStorage = persistentStorage;
         this.randomValueGenerator = randomValueGenerator;
         this.aisConfig = aisConfig;
+        addFilter(new ServiceUnavailableBankServiceErrorFilter());
     }
 
     private <T extends AccountPermissionResponse> T createAccountIntentId(Class<T> responseType) {

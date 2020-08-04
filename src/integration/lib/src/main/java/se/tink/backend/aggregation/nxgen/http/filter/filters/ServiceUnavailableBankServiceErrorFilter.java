@@ -9,7 +9,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 /**
- * Utility filter to throw a Tink {@link BankServiceError} when an API call responds with <code>
+ * ServiceUnavailableBankServiceErrorFilter Utility filter to throw a Tink {@link BankServiceError}
+ * when an API call responds with <code>
  * HTTP 503 Service Unavailable</code>.
  */
 public class ServiceUnavailableBankServiceErrorFilter extends Filter {
@@ -21,7 +22,10 @@ public class ServiceUnavailableBankServiceErrorFilter extends Filter {
 
         if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
             throw BankServiceError.NO_BANK_SERVICE.exception(
-                    "Http status: " + HttpStatus.SC_SERVICE_UNAVAILABLE);
+                    "Http status: "
+                            + response.getStatus()
+                            + ";Response: "
+                            + response.getBody(String.class));
         }
 
         return response;
