@@ -164,7 +164,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "e7cfe5c4ebc17f83c43cb04eac769ea77306f318",
+    commit = "6afcf7cb8680d9018c551301144548c37d5d575a",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1586908800 +0000",
 )
@@ -378,6 +378,19 @@ load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 protobuf_deps()
 
 OPENCENSUS_VERSION = "0.21.0"
+
+# Dependency shading
+# https://softwareengineering.stackexchange.com/questions/297276/what-is-a-shaded-java-dependency
+http_archive(
+    name = "com_github_johnynek_bazel_jar_jar",
+    sha256 = "97c5f862482a05f385bd8f9d28a9bbf684b0cf3fae93112ee96f3fb04d34b193",
+    strip_prefix = "bazel_jar_jar-171f268569384c57c19474b04aebe574d85fde0d",
+    url = "https://github.com/johnynek/bazel_jar_jar/archive/171f268569384c57c19474b04aebe574d85fde0d.tar.gz",
+)
+
+load("@com_github_johnynek_bazel_jar_jar//:jar_jar.bzl", "jar_jar_repositories")
+
+jar_jar_repositories()
 
 # Order matters: the first one listed is the default repo to fetch from
 MAVEN_REPOS = [

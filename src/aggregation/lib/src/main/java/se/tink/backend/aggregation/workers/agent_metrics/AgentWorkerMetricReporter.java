@@ -8,11 +8,14 @@ import java.util.Objects;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration.Tier;
+import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.core.MetricId.MetricLabels;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.counters.Counter;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class AgentWorkerMetricReporter {
     private final MetricRegistry registry;
@@ -74,7 +77,16 @@ public class AgentWorkerMetricReporter {
         this.providerTierConfiguration = providerTierConfiguration;
     }
 
-    private boolean isSuccessful(CredentialsStatus status) {
+    /*
+    Although it might look weird to count "user errors" (such as cancelled/auth_error)
+    as failed requests, we do this to ensure that we track anything that could potentially
+    be concluded to be an error on the bank side or the tink side.
+
+    This will cause our "success rate" to be lower than the KPI numbers will show, but as we want to
+    track the statistics over a longer period of time to discern standard deviation, we only care
+    that the number degrades to the point of the Z value being above 4.
+     */
+    private boolean isSuccessfulStatus(CredentialsStatus status) {
         switch (status) {
             case AUTHENTICATION_ERROR:
             case TEMPORARY_ERROR:
@@ -84,6 +96,29 @@ public class AgentWorkerMetricReporter {
         }
     }
 
+    private boolean isSuccessfulTransfer(TransferRequest request) {
+        SignableOperation operation = request.getSignableOperation();
+        switch (operation.getStatus()) {
+            case CANCELLED:
+            case FAILED:
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    private boolean isSuccessful(AgentWorkerCommandContext context) {
+        CredentialsRequest request = context.getRequest();
+        CredentialsStatus status = request.getCredentials().getStatus();
+        ArrayList<Boolean> successHints = new ArrayList<>();
+        if (request instanceof TransferRequest) {
+            successHints.add(isSuccessfulTransfer((TransferRequest) request));
+        }
+        successHints.add(isSuccessfulStatus(status));
+
+        return successHints.stream().allMatch(val -> val);
+    }
+
     private void reportMetrics(MetricLabels labels, Metric metric) {
         metric.get(registry, labels).inc();
     }
@@ -91,7 +126,6 @@ public class AgentWorkerMetricReporter {
     private List<MetricLabelPair> operationMetrics(
             AgentWorkerCommandContext context, String operationName) {
         final List<MetricLabelPair> metricLabelPairs = new ArrayList<>();
-        final CredentialsStatus status = context.getRequest().getCredentials().getStatus();
         final MetricLabels marketOperationLabels =
                 MetricLabels.from(
                         ImmutableMap.of(
@@ -108,13 +142,13 @@ public class AgentWorkerMetricReporter {
 
         metricLabelPairs.add(
                 new MetricLabelPair(
-                        isSuccessful(status)
+                        isSuccessful(context)
                                 ? Metric.marketsOperationsSuccessful
                                 : Metric.marketsOperationsFailed,
                         marketOperationLabels));
         metricLabelPairs.add(
                 new MetricLabelPair(
-                        isSuccessful(status)
+                        isSuccessful(context)
                                 ? Metric.operationsSuccessful
                                 : Metric.operationsFailed,
                         operationLabels));
@@ -123,7 +157,6 @@ public class AgentWorkerMetricReporter {
     }
 
     private List<MetricLabelPair> marketMetrics(AgentWorkerCommandContext context) {
-        final CredentialsStatus status = context.getRequest().getCredentials().getStatus();
         final List<MetricLabelPair> metricLabelPairs = new ArrayList<>();
         final MetricLabels marketLabels =
                 MetricLabels.from(
@@ -132,7 +165,7 @@ public class AgentWorkerMetricReporter {
         metricLabelPairs.add(new MetricLabelPair(Metric.marketsTotal, marketLabels));
         metricLabelPairs.add(
                 new MetricLabelPair(
-                        isSuccessful(status) ? Metric.marketsSuccessful : Metric.marketsFailed,
+                        isSuccessful(context) ? Metric.marketsSuccessful : Metric.marketsFailed,
                         marketLabels));
 
         return metricLabelPairs;
@@ -140,7 +173,6 @@ public class AgentWorkerMetricReporter {
 
     private List<MetricLabelPair> tierMetrics(AgentWorkerCommandContext context) {
         final List<MetricLabelPair> metricLabelPairs = new ArrayList<>();
-        final CredentialsStatus status = context.getRequest().getCredentials().getStatus();
         final String providerName = context.getRequest().getProvider().getName();
         final String market = context.getRequest().getProvider().getMarket();
         final Tier tier =
@@ -165,7 +197,7 @@ public class AgentWorkerMetricReporter {
         metricLabelPairs.add(new MetricLabelPair(Metric.tierMarketsTotal, tierLabels));
         metricLabelPairs.add(
                 new MetricLabelPair(
-                        isSuccessful(status)
+                        isSuccessful(context)
                                 ? Metric.tierMarketsSuccessful
                                 : Metric.tierMarketsFailed,
                         tierLabels));
@@ -174,7 +206,7 @@ public class AgentWorkerMetricReporter {
             metricLabelPairs.add(new MetricLabelPair(Metric.tierProviderTotal, tierProviderLabel));
             metricLabelPairs.add(
                     new MetricLabelPair(
-                            isSuccessful(status)
+                            isSuccessful(context)
                                     ? Metric.tierProviderSuccessful
                                     : Metric.tierProviderFailed,
                             tierProviderLabel));

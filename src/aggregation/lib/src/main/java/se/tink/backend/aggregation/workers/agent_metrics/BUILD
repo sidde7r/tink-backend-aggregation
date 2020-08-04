@@ -9,9 +9,13 @@ java_library(
     runtime_deps = [
     ],
     deps = [
+        "//src/aggregation/api",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/context",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//src/libraries/metrics:core",
         "//src/libraries/metrics:counters",
         "//src/libraries/metrics:registry",
