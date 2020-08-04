@@ -44,7 +44,11 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private static final String LOCK_FORMAT_BANKID_REFRESH =
             "/locks/aggregation/%s/bankid"; // % (userId)
-    private CredentialsStatus initialCredentialStatus;
+    private static final String CREDENTIAL_STATUS_PAYLOAD_LOG =
+            "Credentials contain - status payload: {}";
+    private static final String CREDENTIAL_SUPPLEMENTAL_INFO_LOG =
+            "Credentials contain - supplemental Information: {}";
+    private static final String CREDENTIAL_STATUS_LOG = "Credentials contain - status: {}";
 
     static class MetricName {
         static final String METRIC = "agent_login";
@@ -60,6 +64,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         static final String PERSIST_LOGIN_SESSION = "persist-login-session";
     }
 
+    private CredentialsStatus initialCredentialStatus;
     private final AgentWorkerCommandMetricState metrics;
     private final LoginAgentWorkerCommandState state;
     private final AgentWorkerCommandContext context;
@@ -114,15 +119,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
 
-        logger.info(
-                String.format(
-                        "Credentials contain - supplemental Information: {}: %s",
-                        credentials.getSupplementalInformation()));
-        logger.info(
-                String.format(
-                        "Credentials contain - status payload: {}: %s",
-                        credentials.getStatusPayload()));
-        logger.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+        logger.info(CREDENTIAL_SUPPLEMENTAL_INFO_LOG, credentials.getSupplementalInformation());
+        logger.info(CREDENTIAL_STATUS_PAYLOAD_LOG, credentials.getStatusPayload());
+        logger.info(CREDENTIAL_STATUS_LOG, credentials.getStatus());
 
         agent = context.getAgent();
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
@@ -159,27 +158,19 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             }
         } finally {
             metrics.stop();
-            logger.info(
-                    String.format(
-                            "Credentials contain - supplemental Information: {}: %s",
-                            credentials.getSupplementalInformation()));
-            logger.info(
-                    String.format(
-                            "Credentials contain - status payload: {}: %s",
-                            credentials.getStatusPayload()));
-            logger.info(
-                    String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+            logger.info(CREDENTIAL_SUPPLEMENTAL_INFO_LOG, credentials.getSupplementalInformation());
+            logger.info(CREDENTIAL_STATUS_PAYLOAD_LOG, credentials.getStatusPayload());
+            logger.info(CREDENTIAL_STATUS_LOG, credentials.getStatus());
         }
 
         logger.info(
-                String.format(
-                        "Credentials contain - status: {}: %s, credentialsId: {}: %s",
-                        credentials.getStatus(), credentials.getId()));
+                "Credentials contain - status: {}, credentialsId: {}",
+                credentials.getStatus(),
+                credentials.getId());
         logger.info(
-                String.format(
-                        "AgentWorkerCommandResult result : {}: %s, credentialsId: {}: %s",
-                        Optional.ofNullable(result).map(Enum::toString).orElse(null),
-                        credentials.getId()));
+                "AgentWorkerCommandResult: {}, credentialsId: {}",
+                Optional.ofNullable(result).map(Enum::toString).orElse(null),
+                credentials.getId());
         return result;
     }
 
@@ -192,9 +183,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             boolean result =
                     ((RefreshInformationRequest) context.getRequest()).isForceAuthenticate();
             logger.info(
-                    String.format(
-                            "RefreshInformationRequest contain - isForceAuthenticate: {}: %s, credentialsId: {}: %s",
-                            Boolean.toString(result), credentials.getId()));
+                    "RefreshInformationRequest contain - isForceAuthenticate: {}, credentialsId: {}",
+                    result,
+                    credentials.getId());
             return result;
         }
         return false;
@@ -240,7 +231,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 persistentAgent.clearLoginSession();
             }
         } catch (BankServiceException e) {
-            logger.info(String.format("Bank service exception: %s", e.getMessage()), e);
+            logger.info("Bank service exception: {}", e.getMessage(), e);
             action.unavailable();
             statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
             // couldn't determine isLoggedIn or not, return ABORT
@@ -260,14 +251,14 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             long timeLoadingSessionSeconds =
                     TimeUnit.SECONDS.convert(timeLoadingSession, TimeUnit.NANOSECONDS);
             logger.info(
-                    String.format(
-                            "Time loading session: %d s, time agent isLoggedIn: %d s",
-                            timeLoadingSessionSeconds, timeAgentIsLoggedInSeconds));
+                    "Time loading session: {} s, time agent isLoggedIn: {} s",
+                    timeLoadingSessionSeconds,
+                    timeAgentIsLoggedInSeconds);
         }
         logger.info(
-                String.format(
-                        "LoginAgentWorkerCommand - isLoggedIn: {}: %s, credentialsId: {}: %s",
-                        Boolean.toString(result), credentials.getId()));
+                "LoginAgentWorkerCommand - isLoggedIn: {}, credentialsId: {}",
+                result,
+                credentials.getId());
         return Optional.ofNullable(result);
     }
 
@@ -307,7 +298,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 new ManualOrAutoAuthenticationAgentVisitor(request);
         agent.accept(visitor);
         logger.info(
-                "Authentication requires user intervention: " + visitor.isManualAuthentication());
+                "Authentication requires user intervention: {}", visitor.isManualAuthentication());
         return visitor.isManualAuthentication();
     }
 
@@ -369,15 +360,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         // If we did not successfully execute in case when credentials has been just created,
         // there's no point in doing anything here.
 
-        logger.info(
-                String.format(
-                        "Credentials contain - supplemental Information: {}: %s",
-                        credentials.getSupplementalInformation()));
-        logger.info(
-                String.format(
-                        "Credentials contain - status payload: {}: %s",
-                        credentials.getStatusPayload()));
-        logger.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+        logger.info(CREDENTIAL_SUPPLEMENTAL_INFO_LOG, credentials.getSupplementalInformation());
+        logger.info(CREDENTIAL_STATUS_PAYLOAD_LOG, credentials.getStatusPayload());
+        logger.info(CREDENTIAL_STATUS_LOG, credentials.getStatus());
 
         if (agent == null || initialCredentialStatus == CredentialsStatus.CREATED) {
             return;
