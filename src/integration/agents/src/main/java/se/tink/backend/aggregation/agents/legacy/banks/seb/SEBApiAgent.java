@@ -222,10 +222,6 @@ public class SEBApiAgent extends AbstractAgent
             API_URL + "PC_BankUppdatera01Bunt03.asmx/Execute";
 
     private static final String EINVOICES_URL = API_URL + "PC_BankLista11Egfaktura01.asmx/Execute";
-    private static final String EINVOICES_CHANGE_UNSIGNED_URL =
-            API_URL + "PC_BankAndraEgfaktura01.asmx/Execute";
-    private static final String EINVOICES_ADD_UNSIGNED_URL =
-            API_URL + "PC_BankSkickaEgfaktura01.asmx/Execute";
 
     private static final String LOAN_URL = API_URL + "PC_BankLista01Laninfo_privat03.asmx/Execute";
     private static final String ACTIVATE_URL = API_URL + "PC_BankAktivera01Session01.asmx/Execute";
@@ -286,11 +282,6 @@ public class SEBApiAgent extends AbstractAgent
 
     private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_TIMEOUT =
             input -> Objects.equal(input.ErrorCode, "RFA8");
-
-    // unused for the time being. Evaluating ignoring this error since we can still poll and succeed
-    // if bankId is signed
-    private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_ALREADY_IN_PROGRESS =
-            input -> Objects.equal(input.ErrorCode, "RFA3");
 
     private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
             TransferMessageLengthConfig.createWithMaxLength(12);
