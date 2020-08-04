@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.CoreRegulatoryCl
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
@@ -40,6 +41,8 @@ public interface AggregationControllerAggregationClient {
     Response processAccounts(HostConfiguration hostConfiguration, ProcessAccountsRequest request);
 
     Response optOutAccounts(HostConfiguration hostConfiguration, OptOutAccountsRequest request);
+
+    Response restrictAccounts(HostConfiguration hostConfiguration, RestrictAccountsRequest request);
 
     Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request);

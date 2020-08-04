@@ -14,6 +14,7 @@ import se.tink.api.annotations.TeamOwnership;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
@@ -72,10 +73,17 @@ public interface UpdateService {
 
     @POST
     @Path("/accounts/opt-out")
-    @TeamOwnership(Team.AGGREGATION)
+    @TeamOwnership(Team.CORE_AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response optOutAccounts(OptOutAccountsRequest request);
+
+    @POST
+    @Path("/accounts/restrict")
+    @TeamOwnership(Team.CORE_AGGREGATION)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response restrictAccounts(RestrictAccountsRequest request);
 
     @POST
     @Path("/credentials/update")

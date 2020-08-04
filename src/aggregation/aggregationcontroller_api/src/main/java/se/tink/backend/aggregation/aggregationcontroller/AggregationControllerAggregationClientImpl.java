@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.CoreRegulatoryCl
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsSensitiveRequest;
@@ -190,6 +191,24 @@ public class AggregationControllerAggregationClientImpl
     }
 
     @Override
+    public Response restrictAccounts(
+            HostConfiguration hostConfiguration, RestrictAccountsRequest request) {
+        // if the Account Information Service is disabled then it means the environment is not ready
+        // and we won't be able to persist Psd2 Payment Account Classification
+        // so restriction should not happen
+        if (isAccountInformationServiceDisabled(hostConfiguration)) {
+            log.info(
+                    "Account Information Service is disabled on {} - won't restrict Accounts! credentialsId: {}",
+                    hostConfiguration.getClusterId(),
+                    request.getCredentialsId());
+            return Response.ok().build();
+        }
+        return requestExecuter(
+                () -> getUpdateService(hostConfiguration).restrictAccounts(request),
+                "Restrict Accounts");
+    }
+
+    @Override
     public Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
 
@@ -277,7 +296,9 @@ public class AggregationControllerAggregationClientImpl
     public AccountHolder updateAccountHolder(
             HostConfiguration hostConfiguration, UpdateAccountHolderRequest request) {
         if (isAccountInformationServiceDisabled(hostConfiguration)) {
-            log.info("Account Information Service is disabled - wont update Account Holder!");
+            log.info(
+                    "Account Information Service is disabled on {} - won't update Account Holder!",
+                    hostConfiguration.getClusterId());
             return request.getAccountHolder();
         }
 
@@ -291,7 +312,8 @@ public class AggregationControllerAggregationClientImpl
             HostConfiguration hostConfiguration, UpsertRegulatoryClassificationRequest request) {
         if (isAccountInformationServiceDisabled(hostConfiguration)) {
             log.info(
-                    "Account Information Service is disabled - wont upsert Regulatory classification!");
+                    "Account Information Service is disabled on {} - won't upsert Regulatory classification!",
+                    hostConfiguration.getClusterId());
             return request.getClassification();
         }
 

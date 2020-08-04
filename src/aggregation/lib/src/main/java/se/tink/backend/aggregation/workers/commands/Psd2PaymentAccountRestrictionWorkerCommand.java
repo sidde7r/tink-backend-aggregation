@@ -1,9 +1,15 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
 import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.Psd2PaymentAccountClassifier;
 import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.result.Psd2PaymentAccountClassificationResult;
 import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
@@ -21,18 +27,21 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
     private final RegulatoryRestrictions regulatoryRestrictions;
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
+    private final ControllerWrapper controllerWrapper;
 
     public Psd2PaymentAccountRestrictionWorkerCommand(
             AgentWorkerCommandContext context,
             CredentialsRequest request,
             RegulatoryRestrictions regulatoryRestrictions,
             Psd2PaymentAccountClassifier psd2PaymentAccountClassifier,
-            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
+            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
+            ControllerWrapper controllerWrapper) {
         this.context = context;
         this.refreshInformationRequest = request;
         this.regulatoryRestrictions = regulatoryRestrictions;
         this.psd2PaymentAccountClassifier = psd2PaymentAccountClassifier;
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
+        this.controllerWrapper = controllerWrapper;
     }
 
     private boolean filterRestrictedAccount(Account account) {
@@ -53,17 +62,25 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
         try {
+            List<Account> restrictedAccounts = new ArrayList<>();
             this.context
                     .getAccountDataCache()
                     .getFilteredAccountData()
                     .forEach(
-                            accountData -> {
+                            accountData -> { // we can't register the filter yet as we need to
+                                // figure out which has been restricted and delete
+                                // these
                                 // currently we do not want to restrict anything - just see this
                                 // command running
                                 Account account = accountData.getAccount();
-                                filterRestrictedAccount(account);
+                                boolean shouldBeFilteredOut = filterRestrictedAccount(account);
+                                if (shouldBeFilteredOut) {
+                                    restrictedAccounts.add(account);
+                                }
                                 sendEvents(account);
                             });
+            removeRestrictedAccounts(restrictedAccounts);
+            // TODO register account filtering https://tinkab.atlassian.net/browse/AGG-421
         } catch (RuntimeException e) {
             log.warn("Could not execute Psd2PaymentAccountRestrictionWorkerCommand", e);
         }
@@ -113,6 +130,21 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                 request.getCredentials().getId(),
                 account.getId(),
                 account.getSourceInfo());
+    }
+
+    private void removeRestrictedAccounts(List<Account> restrictedAccounts) {
+        Credentials credentials = context.getRequest().getCredentials();
+        List<String> restrictedAccountIds =
+                restrictedAccounts.stream().map(Account::getId).collect(Collectors.toList());
+
+        log.info(
+                "Restrict Accounts initiated for credentialsId: {}, for the following accounts: {}",
+                credentials.getId(),
+                restrictedAccountIds);
+
+        controllerWrapper.restrictAccounts(
+                RestrictAccountsRequest.of(
+                        credentials.getUserId(), credentials.getId(), restrictedAccountIds));
     }
 
     @Override

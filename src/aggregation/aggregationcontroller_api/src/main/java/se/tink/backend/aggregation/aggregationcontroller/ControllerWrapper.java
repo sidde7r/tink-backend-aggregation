@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.CoreRegulatoryCl
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
@@ -87,6 +88,10 @@ public class ControllerWrapper {
 
     public Response optOutAccounts(OptOutAccountsRequest request) {
         return client.optOutAccounts(configuration, request);
+    }
+
+    public Response restrictAccounts(RestrictAccountsRequest request) {
+        return client.restrictAccounts(configuration, request);
     }
 
     public Response updateCredentials(UpdateCredentialsStatusRequest request) {
