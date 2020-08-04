@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +19,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.ClientRegistration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.JsonWebKeySet;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenRequestForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -44,7 +43,6 @@ public class OpenIdApiClient {
 
     // Internal caching. Do not use these fields directly, always use the getters!
     private WellKnownResponse cachedWellKnownResponse;
-    private JsonWebKeySet cachedProviderKeys;
     private OpenIdAuthenticatedHttpFilter aisAuthFilter;
     private OpenIdAuthenticatedHttpFilter pisAuthFilter;
     private OpenIdError openIdError;
@@ -71,7 +69,7 @@ public class OpenIdApiClient {
             return cachedWellKnownResponse;
         }
 
-        /**
+        /*
          * Regarding the well-known URL endpoint, some bank APIs (such as FirstDirect) sends
          * response with wrong MIME type (such as octet-stream). If we want to cast the response
          * payload into WellKnownResponse directly, we fail as TinkHttpClient does not know how to
@@ -110,16 +108,8 @@ public class OpenIdApiClient {
         return providerConfiguration;
     }
 
-    public JsonWebKeySet getProviderKeys() {
-        if (Objects.nonNull(cachedProviderKeys)) {
-            return cachedProviderKeys;
-        }
-
-        WellKnownResponse providerConfiguration = getWellKnownConfiguration();
-        cachedProviderKeys =
-                httpClient.request(providerConfiguration.getJwksUri()).get(JsonWebKeySet.class);
-
-        return cachedProviderKeys;
+    public void addFilter(Filter filter) {
+        httpClient.addFilter(filter);
     }
 
     private TokenRequestForm createTokenRequestFormWithoutScope(String grantType) {
@@ -190,18 +180,18 @@ public class OpenIdApiClient {
     }
 
     private RequestBuilder createTokenRequest() {
-        WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
+        WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
 
         RequestBuilder requestBuilder =
                 httpClient
-                        .request(wellknownConfiguration.getTokenEndpoint())
+                        .request(wellKnownConfiguration.getTokenEndpoint())
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE);
 
         ClientInfo clientInfo = providerConfiguration.getClientInfo();
 
         TOKEN_ENDPOINT_AUTH_METHOD authMethod =
-                determineTokenEndpointAuthMethod(clientInfo, wellknownConfiguration);
+                determineTokenEndpointAuthMethod(clientInfo, wellKnownConfiguration);
 
         switch (authMethod) {
             case client_secret_basic:
@@ -271,8 +261,7 @@ public class OpenIdApiClient {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
         ClientInfo clientInfo = providerConfiguration.getClientInfo();
 
-        String responseType =
-                OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream().collect(Collectors.joining(" "));
+        String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
 
         String scope =
                 wellknownConfiguration
@@ -288,7 +277,6 @@ public class OpenIdApiClient {
 
         URL authorizationEndpoint =
                 Optional.ofNullable(authEndpoint)
-                        .filter(s -> s != null)
                         .orElse(wellknownConfiguration.getAuthorizationEndpoint());
 
         /*  'response_type=id_token' only supports 'response_mode=fragment',
