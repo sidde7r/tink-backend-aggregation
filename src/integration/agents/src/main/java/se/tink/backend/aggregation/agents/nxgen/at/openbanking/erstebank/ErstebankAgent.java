@@ -28,7 +28,7 @@ public final class ErstebankAgent
     protected ErstebankApiClient createApiClient() {
         return new ErstebankApiClient(
                 client,
-                sessionStorage,
+                persistentStorage,
                 getConfiguration().getProviderSpecificConfiguration(),
                 getConfiguration().getRedirectUrl());
     }

@@ -33,17 +33,17 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
 
 public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConfiguration> {
 
     ErstebankApiClient(
             final TinkHttpClient client,
-            final SessionStorage sessionStorage,
+            final PersistentStorage persistentStorage,
             final ErstebankConfiguration configuration,
             final String redirectUrl) {
-        super(client, sessionStorage, configuration, redirectUrl);
+        super(client, persistentStorage, configuration, redirectUrl);
     }
 
     public URL getAuthorizeUrl(final String state) {
@@ -161,7 +161,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
                 .header(HeaderKeys.SIGNATURE, getAuthorization(digest, reqId))
                 .header(HeaderKeys.CONSENT_ID, getConsentId())
                 .addBearerToken(
-                        sessionStorage
+                        persistentStorage
                                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                                 .orElseThrow(
                                         () ->
@@ -189,7 +189,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     private RequestBuilder buildRequestWithTokenAndConsent(final URL url) {
         return client.request(url)
                 .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
-                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN));
