@@ -43,6 +43,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -123,11 +124,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             if (agent instanceof TransferExecutor) {
                 TransferExecutor transferExecutor = (TransferExecutor) agent;
-                if (transferRequest.isUpdate()) {
-                    transferExecutor.update(transfer);
-                } else {
-                    transferExecutor.execute(transfer);
-                }
+                transferExecutor.execute(transfer);
             } else if (agent instanceof PaymentControllerable) {
                 PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
 
@@ -445,13 +442,13 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     }
 
     private String getTransferExecuteLogInfo(Transfer transfer) {
-        switch (transfer.getType()) {
-            case BANK_TRANSFER:
-                return "Creating a new bank transfer.";
-            case PAYMENT:
-                return "Creating a new payment.";
+        if (TransferType.BANK_TRANSFER.equals(transfer.getType())) {
+            return "Creating a new bank transfer.";
+        } else if (TransferType.PAYMENT.equals(transfer.getType())) {
+            return "Creating a new payment.";
+        } else {
+            return "Unrecognized transfer command.";
         }
-        return "Unrecognized transfer command.";
     }
 
     @Override
