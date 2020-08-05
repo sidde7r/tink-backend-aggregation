@@ -4,6 +4,7 @@ junit_test(
     name = "bbva",
     srcs = glob(["**/*.java"]),
     data = [
+        "//data:agent_unit_tests",
         "//data:aggregation_test",
         "//data:provider_configurations",
         "//etc:development",
@@ -25,6 +26,7 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/libraries/serialization",
         "//third_party:io_vavr",
+        "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )
