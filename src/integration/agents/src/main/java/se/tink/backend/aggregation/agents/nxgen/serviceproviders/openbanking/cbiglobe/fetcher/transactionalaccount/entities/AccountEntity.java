@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -17,9 +18,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @NoArgsConstructor
+@AllArgsConstructor
 public class AccountEntity {
-    @JsonProperty("_links")
-    private LinksEntity links;
 
     private String bban;
     private String iban;
@@ -42,7 +42,7 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getBalance(getBalancesResponse.getBalances())))
+                .withBalance(getBalanceModule(getBalancesResponse))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -55,11 +55,35 @@ public class AccountEntity {
                 .build();
     }
 
-    private ExactCurrencyAmount getBalance(List<BalanceEntity> balances) {
+    private BalanceModule getBalanceModule(GetBalancesResponse getBalancesResponse) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder()
+                        .withBalance(getBookedBalance(getBalancesResponse.getBalances()));
+        Optional<ExactCurrencyAmount> availableBalance =
+                getAvailableBalance(getBalancesResponse.getBalances());
+        availableBalance.ifPresent(balanceBuilderStep::setAvailableBalance);
+        return balanceBuilderStep.build();
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceEntity> balances) {
         return balances.stream()
-                .min(Comparator.comparing(BalanceEntity::getBalanceMappingPriority))
+                .filter(
+                        balanceEntity ->
+                                AvailableBalanceType.SUPPORTED_TYPES.contains(
+                                        balanceEntity.getBalanceType()))
+                .min(Comparator.comparing(BalanceEntity::getAvailableBalanceMappingPriority))
+                .map(BalanceEntity::toAmount);
+    }
+
+    private ExactCurrencyAmount getBookedBalance(List<BalanceEntity> balances) {
+        return balances.stream()
+                .filter(
+                        balanceEntity ->
+                                BookedBalanceType.SUPPORTED_TYPES.contains(
+                                        balanceEntity.getBalanceType()))
+                .min(Comparator.comparing(BalanceEntity::getBookedBalanceMappingPriority))
                 .map(BalanceEntity::toAmount)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.BALANCE_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessages.BALANCE_NOT_FOUND));
     }
 
     private String getName() {
