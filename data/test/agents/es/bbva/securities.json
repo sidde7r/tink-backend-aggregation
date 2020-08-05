@@ -1,0 +1,1431 @@
+{
+  "assetBalance": {
+    "amount": 2180.68,
+    "currency": {
+      "id": "EUR"
+    }
+  },
+  "familyBalances": [
+    {
+      "balance": {
+        "amount": 620.09,
+        "currency": {
+          "id": "EUR"
+        }
+      },
+      "id": "Account"
+    },
+    {
+      "balance": {
+        "amount": 1112.86,
+        "currency": {
+          "id": "EUR"
+        }
+      },
+      "id": "InternationalFundsPortfolio"
+    },
+    {
+      "balance": {
+        "amount": 20584.67,
+        "currency": {
+          "id": "EUR"
+        }
+      },
+      "id": "Loan"
+    },
+    {
+      "balance": {},
+      "id": "PrepaidCard"
+    },
+    {
+      "balance": {
+        "amount": 52201.12,
+        "currency": {
+          "id": "EUR"
+        }
+      },
+      "id": "Mortgage"
+    },
+    {
+      "balance": {
+        "amount": 891.34,
+        "currency": {
+          "id": "EUR"
+        }
+      },
+      "id": "Insurance"
+    },
+    {
+      "balance": {},
+      "id": "DebitCard"
+    },
+    {
+      "balance": {
+        "amount": 423.41,
+        "currency": {
+          "id": "EUR"
+        }
+      },
+      "id": "PensionPlan"
+    },
+    {
+      "balance": {
+        "amount": 0,
+        "currency": {
+          "id": "EUR"
+        }
+      },
+      "id": "SecuritiesPortfolio"
+    }
+  ],
+  "hasMoreData": false,
+  "isEnrolled": true,
+  "liabilityBalance": {
+    "amount": 72785.79,
+    "currency": {
+      "id": "EUR"
+    }
+  },
+  "positions": [
+    {
+      "balanceAgrupation": "Account",
+      "contract": {
+        "account": {
+          "availableBalance": {
+            "amount": 530.09,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "availableBalanceLocalCurrency": {
+            "amount": 530.09,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "bank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "2985"
+          },
+          "counterPart": "0020",
+          "country": "ES",
+          "currency": {
+            "id": "EUR"
+          },
+          "currentBalance": {
+            "amount": 530.09,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "currentBalanceLocalCurrency": {
+            "amount": 530.09,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "dueDate": "0001-01-01T00:00:00.000+0100",
+          "formats": {
+            "bocf": "00000000000000000000000000",
+            "ccc": "00000000000000000000",
+            "iban": "ES0000000000000000000000",
+            "iuc": "00000000000000000000000000"
+          },
+          "id": "ES0000000000000000000000000000000000XXXXXXXXX",
+          "joinType": {
+            "id": "0",
+            "name": "UNIPERSONAL"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "participants": [
+            {
+              "orden": 1,
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              }
+            }
+          ],
+          "product": {
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00004",
+                "name": "CUENTAS EN EUROS Y DIVISAS"
+              },
+              {
+                "id": "00056",
+                "name": "CUENTAS PERSONALES"
+              }
+            ],
+            "description": "LIBRETON",
+            "id": "0CA0000089",
+            "name": "CUENTAS PERSONALES"
+          },
+          "sublevel": " ",
+          "userCustomization": {
+            "alias": "XXXXX XXXXX",
+            "favorite": true
+          }
+        }
+      },
+      "isIncludedInMySituation": true,
+      "isLegacy": false,
+      "managementApplication": {
+        "id": "00",
+        "name": "GESTIONADO_POR_SU_APLICACION_NATURAL"
+      },
+      "userAccessControl": {
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      }
+    },
+    {
+      "balanceAgrupation": "Account",
+      "contract": {
+        "account": {
+          "availableBalance": {
+            "amount": 90,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "availableBalanceLocalCurrency": {
+            "amount": 90,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "bank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "2985"
+          },
+          "counterPart": "0020",
+          "country": "ES",
+          "currency": {
+            "id": "EUR"
+          },
+          "currentBalance": {
+            "amount": 90,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "currentBalanceLocalCurrency": {
+            "amount": 90,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "dueDate": "9999-12-31T00:00:00.000+0100",
+          "formats": {
+            "bocf": "00000000000000000000000000",
+            "ccc": "00000000000000000000",
+            "iban": "ES0000000000000000000000",
+            "iuc": "00000000000000000000000000"
+          },
+          "id": "ES0000000000000000000000000000000000XXXXXXXXX",
+          "joinType": {
+            "id": "0",
+            "name": "UNIPERSONAL"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "participants": [
+            {
+              "orden": 1,
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              }
+            }
+          ],
+          "product": {
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00004",
+                "name": "CUENTAS EN EUROS Y DIVISAS"
+              },
+              {
+                "id": "00056",
+                "name": "CUENTAS PERSONALES"
+              }
+            ],
+            "description": "CUENTA METAS",
+            "id": "0000011102",
+            "name": "CUENTAS PERSONALES"
+          },
+          "sublevel": " ",
+          "userCustomization": {
+            "alias": "XXXXX XXXXX",
+            "favorite": false
+          }
+        }
+      },
+      "isIncludedInMySituation": true,
+      "isLegacy": false,
+      "managementApplication": {
+        "id": "00",
+        "name": "GESTIONADO_POR_SU_APLICACION_NATURAL"
+      },
+      "userAccessControl": {
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      }
+    },
+    {
+      "balanceAgrupation": "InternationalFundsPortfolio",
+      "contract": {
+        "internationalFundsPortfolio": {
+          "balance": {
+            "amount": 1112.86,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "bank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "2985"
+          },
+          "counterPart": "0930",
+          "country": "ES",
+          "currency": {
+            "id": "EUR"
+          },
+          "formats": {
+            "bocf": "00000000000000000000000000",
+            "iuc": "00000000000000000000000000"
+          },
+          "funds": [
+            {
+              "activeType": {
+                "id": "2"
+              },
+              "availableBalance": {
+                "amount": 1112.86,
+                "currency": {
+                  "id": "EUR"
+                }
+              },
+              "availableBalanceMarketCurrency": {
+                "amount": 1112.86,
+                "currency": {
+                  "id": "EUR"
+                }
+              },
+              "availableShares": 4.994,
+              "bank": {
+                "id": "0182"
+              },
+              "batch": "000000001",
+              "branch": {
+                "id": "2985"
+              },
+              "classSecurities": {
+                "id": "A"
+              },
+              "counterPart": "0930",
+              "country": "ES",
+              "currency": {
+                "id": "EUR"
+              },
+              "enviroment": "0006",
+              "evaluateDate": "2020-08-03T00:00:00.000+0200",
+              "evaluateType": {
+                "id": "C"
+              },
+              "formats": {
+                "bocf": "00000000000000000000000000",
+                "iuc": "00000000000000000000000000"
+              },
+              "id": "LU0996179007_CRED",
+              "internalMarket": "0058",
+              "isin": "LU0996179007",
+              "joinType": {
+                "id": "1",
+                "name": "SOLIDARIO"
+              },
+              "marketCurrency": {
+                "id": "EUR"
+              },
+              "marketName": "999",
+              "marketRic": "999",
+              "marketerBank": {
+                "id": "0182"
+              },
+              "mic": "CRED",
+              "name": "AMUNDI SICAV-INDEX SP 500",
+              "participants": [
+                {
+                  "orden": 1,
+                  "relationship": {
+                    "type": {
+                      "id": "TIT",
+                      "name": "TITULAR"
+                    }
+                  }
+                }
+              ],
+              "positioningId": "ES0000000000000000000000000000000000XXXXXXXXX",
+              "product": {
+                "comertialClassifications": [
+                  {
+                    "id": "00001",
+                    "name": "INVERSION"
+                  },
+                  {
+                    "id": "00008",
+                    "name": "FONDOS DE INVERSION"
+                  },
+                  {
+                    "id": "00026",
+                    "name": "FONDOS INTERNACIONALES"
+                  }
+                ],
+                "id": " ",
+                "name": "FONDOS INTERNACIONALES"
+              },
+              "productType": {
+                "id": "1"
+              },
+              "ricCode": "",
+              "seoOriginated": false,
+              "shareAmount": {
+                "amount": 1112.86,
+                "currency": {
+                  "id": "EUR"
+                }
+              },
+              "shares": 4.994,
+              "sharesType": {
+                "id": "T"
+              },
+              "sublevel": " ",
+              "totalAmountMarketCurrency": {
+                "amount": 1112.86,
+                "currency": {
+                  "id": "EUR"
+                }
+              },
+              "userCustomization": {
+                "alias": "XXXXX XXXXX",
+                "favorite": false
+              }
+            }
+          ],
+          "id": "ES0000000000000000000000000000000000XXXXXXXXX",
+          "joinType": {
+            "id": "1",
+            "name": "SOLIDARIO"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "participants": [
+            {
+              "orden": 1,
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              }
+            }
+          ],
+          "product": {
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00008",
+                "name": "FONDOS DE INVERSION"
+              },
+              {
+                "id": "00026",
+                "name": "FONDOS INTERNACIONALES"
+              }
+            ],
+            "id": " ",
+            "name": "FONDOS INTERNACIONALES"
+          },
+          "sublevel": " ",
+          "userCustomization": {
+            "alias": "XXXXX XXXXX",
+            "favorite": false
+          }
+        }
+      },
+      "isIncludedInMySituation": true,
+      "userAccessControl": {
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      }
+    },
+    {
+      "balanceAgrupation": "Loan",
+      "contract": {
+        "loan": {
+          "awardedAmount": {
+            "amount": 26152.87,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "bank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "2985"
+          },
+          "counterPart": "0083",
+          "country": "ES",
+          "currency": {
+            "id": "EUR"
+          },
+          "digit": "00000000000000000000",
+          "dueDate": "2026-08-31T00:00:00.000+0200",
+          "finalFee": {
+            "amount": 315.5,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "formats": {
+            "bocf": "00000000000000000000000000",
+            "iuc": "00000000000000000000000000"
+          },
+          "id": "ES0000000000000000000000000000000000XXXXXXXXX",
+          "joinType": {
+            "id": "1",
+            "name": "SOLIDARIO"
+          },
+          "loanType": {
+            "id": "00021"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "nextFee": {
+            "amount": 315.5,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "nextPaymentDate": "2020-08-31T00:00:00.000+0200",
+          "participants": [
+            {
+              "orden": 1,
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              }
+            }
+          ],
+          "pendingamount": {
+            "amount": 20584.67,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "product": {
+            "comertialClassifications": [
+              {
+                "id": "00002",
+                "name": "FINANCIACION"
+              },
+              {
+                "id": "00018",
+                "name": "PRESTAMO"
+              }
+            ],
+            "description": "VARIABLE EURIBOR +4 CON COMISION DE APERTURA",
+            "id": "0000005254",
+            "name": "PRESTAMO"
+          },
+          "redeemedBalance": {
+            "amount": 5568.2,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "sublevel": " ",
+          "userCustomization": {
+            "alias": "XXXXX XXXXX",
+            "favorite": false
+          }
+        }
+      },
+      "isIncludedInMySituation": true,
+      "isLegacy": false,
+      "managementApplication": {
+        "id": "00",
+        "name": "GESTIONADO_POR_SU_APLICACION_NATURAL"
+      },
+      "userAccessControl": {
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      }
+    },
+    {
+      "balanceAgrupation": "PrepaidCard",
+      "contract": {
+        "prepaidCard": {
+          "availableBalance": {
+            "amount": 24.32,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "bank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "2985"
+          },
+          "consolidatedBalance": {
+            "amount": 0,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "counterPart": "0616",
+          "country": "ES",
+          "currency": {
+            "id": "EUR"
+          },
+          "dueDate": "0001-01-01T00:00:00.000+0100",
+          "formats": {
+            "bocf": "00000000000000000000000000",
+            "iuc": "00000000000000000000000000",
+            "pan": "0000000000000000"
+          },
+          "id": "ES0000000000000000000000000000000000XXXXXXXXX",
+          "indicators": {
+            "isReloadable": true
+          },
+          "joinType": {
+            "id": "1",
+            "name": "SOLIDARIO"
+          },
+          "legacyProduct": {
+            "offer": "0000",
+            "product": "2306"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "migrationType": " ",
+          "operativeLimit": {
+            "amount": 0,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "pan": "0000000000000000",
+          "participants": [
+            {
+              "orden": 1,
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              }
+            }
+          ],
+          "paymentMethod": {
+            "type": {
+              "id": "V"
+            }
+          },
+          "product": {
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00006",
+                "name": "TARJETAS PREPAGO"
+              },
+              {
+                "id": "00024",
+                "name": "VIRTUALES"
+              }
+            ],
+            "description": "TARJETA VIRTUAL BBVA",
+            "id": "0000007686",
+            "name": "VIRTUALES"
+          },
+          "stampDate": "2020-08-04T00:00:00.000+0200",
+          "status": {
+            "id": " "
+          },
+          "sublevel": "000000001",
+          "type": {
+            "id": "P"
+          },
+          "userCustomization": {
+            "alias": "XXXXX XXXXX",
+            "favorite": false
+          }
+        }
+      },
+      "isIncludedInMySituation": true,
+      "isLegacy": true,
+      "userAccessControl": {
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      }
+    },
+    {
+      "balanceAgrupation": "Mortgage",
+      "contract": {
+        "mortgage": {
+          "bank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "2985"
+          },
+          "counterPart": "0083",
+          "country": "ES",
+          "currency": {
+            "id": "EUR"
+          },
+          "dueDate": "2037-03-31T00:00:00.000+0200",
+          "finalFee": {
+            "amount": 299.17,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "formats": {
+            "bocf": "00000000000000000000000000",
+            "iuc": "00000000000000000000000000"
+          },
+          "grantedAmount": {
+            "amount": 70000,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "id": "ES0000000000000000000000000000000000XXXXXXXXX",
+          "joinType": {
+            "id": "0",
+            "name": "UNIPERSONAL"
+          },
+          "lastPaymentDate": "2020-07-31T00:00:00.000+0200",
+          "marketerBank": {
+            "id": "0182"
+          },
+          "nextFee": {
+            "amount": 299.17,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "nextPaymentDate": "2020-08-31T00:00:00.000+0200",
+          "participants": [
+            {
+              "orden": 1,
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              }
+            }
+          ],
+          "pendingBalance": {
+            "amount": 52201.12,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "product": {
+            "comertialClassifications": [
+              {
+                "id": "00002",
+                "name": "FINANCIACION"
+              },
+              {
+                "id": "00017",
+                "name": "PRESTAMO HIPOTECARIO"
+              }
+            ],
+            "description": "HIPOTECA VENTA DE ACTIVOS BBVA",
+            "id": "0GV0002275",
+            "name": "PRESTAMO HIPOTECARIO"
+          },
+          "redeemedBalance": {
+            "amount": 17798.88,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "sublevel": " ",
+          "userCustomization": {
+            "alias": "XXXXX XXXXX",
+            "favorite": false
+          }
+        }
+      },
+      "isIncludedInMySituation": true,
+      "isLegacy": false,
+      "managementApplication": {
+        "id": "00",
+        "name": "GESTIONADO_POR_SU_APLICACION_NATURAL"
+      },
+      "userAccessControl": {
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      }
+    },
+    {
+      "balanceAgrupation": "Insurance",
+      "contract": {
+        "insurance": {
+          "bank": {
+            "id": "0901"
+          },
+          "branch": {
+            "id": "2985"
+          },
+          "comertialProduct": "9695",
+          "counterPart": "0312",
+          "country": "ES",
+          "currency": {
+            "id": "EUR"
+          },
+          "dueDate": "2023-08-12T00:00:00.000+0200",
+          "formats": {
+            "bocf": "00000000000000000000000000",
+            "insurance": "00000000000000",
+            "iuc": "00000000000000000000000000"
+          },
+          "id": "ES0000000000000000000000000000000000XXXXXXXXX",
+          "joinType": {
+            "id": "1",
+            "name": "SOLIDARIO"
+          },
+          "lastReceiptType": {
+            "id": "PUF",
+            "name": "VENCIMIENTO"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "nextPaymentDate": "2023-08-12T00:00:00.000+0200",
+          "participants": [
+            {
+              "orden": 1,
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              }
+            }
+          ],
+          "premium": {
+            "amount": 891.34,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "product": {
+            "comertialClassifications": [
+              {
+                "id": "00003",
+                "name": "SEGUROS"
+              },
+              {
+                "id": "00020",
+                "name": "SEGUROS (RIESGO)"
+              },
+              {
+                "id": "00041",
+                "name": "SEGUROS DE PROTECCION PAGOS CONSUMO"
+              }
+            ],
+            "description": "SEGURO PP. CONSUMO PUF",
+            "id": "0000006412",
+            "name": "SEGURO PP. CONSUMO PUF"
+          },
+          "relatedContracts": [
+            {
+              "formats": {
+                "bocf": "00000000000000000000000000"
+              }
+            }
+          ],
+          "status": {
+            "date": "2023-08-12T00:00:00.000+0200",
+            "id": "E",
+            "name": "No incluible"
+          },
+          "sublevel": " ",
+          "technicalProduct": "PP_ESP5",
+          "userCustomization": {
+            "alias": "XXXXX XXXXX",
+            "favorite": false
+          }
+        }
+      },
+      "isIncludedInMySituation": true,
+      "isLegacy": false,
+      "managementApplication": {
+        "id": "00",
+        "name": "GESTIONADO_POR_SU_APLICACION_NATURAL"
+      },
+      "userAccessControl": {
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      }
+    },
+    {
+      "balanceAgrupation": "DebitCard",
+      "contract": {
+        "debitCard": {
+          "availableBalance": {
+            "amount": 0,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "bank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "2985"
+          },
+          "counterPart": "0616",
+          "country": "ES",
+          "currency": {
+            "id": "EUR"
+          },
+          "dueDate": "0001-01-01T00:00:00.000+0100",
+          "formats": {
+            "bocf": "00000000000000000000000000",
+            "iuc": "00000000000000000000000000",
+            "pan": "0000000000000000"
+          },
+          "id": "ES0000000000000000000000000000000000XXXXXXXXX",
+          "indicators": {
+            "isReloadable": true
+          },
+          "joinType": {
+            "id": "1",
+            "name": "SOLIDARIO"
+          },
+          "legacyProduct": {
+            "offer": "0000",
+            "product": "9929"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "migrationType": " ",
+          "pan": "0000000000000000",
+          "participants": [
+            {
+              "orden": 1,
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              }
+            }
+          ],
+          "paymentMethod": {
+            "type": {
+              "id": "I"
+            }
+          },
+          "product": {
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00005",
+                "name": "TARJETAS DE DEBITO"
+              },
+              {
+                "id": "00022",
+                "name": "DEBITO"
+              }
+            ],
+            "description": "TARJETA AHORA MASTERCARD",
+            "id": "0000009719",
+            "name": "DEBITO"
+          },
+          "stampDate": "2018-09-21T00:00:00.000+0200",
+          "status": {
+            "id": " "
+          },
+          "sublevel": "000000001",
+          "type": {
+            "id": "P"
+          },
+          "userCustomization": {
+            "alias": "XXXXX XXXXX",
+            "favorite": false
+          }
+        }
+      },
+      "isIncludedInMySituation": true,
+      "isLegacy": true,
+      "userAccessControl": {
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      }
+    },
+    {
+      "balanceAgrupation": "PensionPlan",
+      "contract": {
+        "pensionPlan": {
+          "balance": {
+            "amount": 423.41,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "bank": {
+            "id": "7765"
+          },
+          "branch": {
+            "id": "6054"
+          },
+          "counterPart": "0800",
+          "country": "ES",
+          "currency": {
+            "id": " "
+          },
+          "dueDate": "0001-01-01T00:00:00.000+0100",
+          "formats": {
+            "bocf": "00000000000000000000000000",
+            "iuc": "00000000000000000000000000"
+          },
+          "id": "ES7765080000000000000000000096522068XXXXXXXXX",
+          "joinType": {
+            "id": "1",
+            "name": "SOLIDARIO"
+          },
+          "liquidValue": {
+            "amount": 1.61956,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "participants": [
+            {
+              "orden": 1,
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              }
+            }
+          ],
+          "product": {
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00009",
+                "name": "PLANES DE PENSIONES"
+              },
+              {
+                "id": "00027",
+                "name": "PLANES INDIVIDUALES"
+              }
+            ],
+            "description": "P. P. DE LA ADMINISTRACION GENERAL DEL ESTADO",
+            "id": " ",
+            "name": "P. P. DE LA ADMINISTRACION GENERAL DEL ESTADO"
+          },
+          "shares": 261.4377272,
+          "sublevel": " ",
+          "userCustomization": {
+            "alias": "XXXXX XXXXX",
+            "favorite": false
+          }
+        }
+      },
+      "isIncludedInMySituation": true,
+      "isLegacy": true,
+      "userAccessControl": {
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      }
+    },
+    {
+      "balanceAgrupation": "SecuritiesPortfolio",
+      "contract": {
+        "securitiesPortfolio": {
+          "balance": {
+            "amount": 0,
+            "currency": {
+              "id": "EUR"
+            }
+          },
+          "bank": {
+            "id": "0182"
+          },
+          "branch": {
+            "id": "2985"
+          },
+          "counterPart": "0930",
+          "country": "ES",
+          "currency": {
+            "id": "EUR"
+          },
+          "dueDate": "0001-01-01T00:00:00.000+0100",
+          "formats": {
+            "bocf": "00000000000000000000000000",
+            "ccc": "00000000000000000000",
+            "iuc": "00000000000000000000000000"
+          },
+          "id": "ES0000000000000000000000000000000000XXXXXXXXX",
+          "joinType": {
+            "id": "1",
+            "name": "SOLIDARIO"
+          },
+          "marketerBank": {
+            "id": "0182"
+          },
+          "participants": [
+            {
+              "orden": 1,
+              "relationship": {
+                "type": {
+                  "id": "TIT",
+                  "name": "TITULAR"
+                }
+              }
+            }
+          ],
+          "product": {
+            "comertialClassifications": [
+              {
+                "id": "00001",
+                "name": "INVERSION"
+              },
+              {
+                "id": "00010",
+                "name": "CUENTAS DE VALORES"
+              }
+            ],
+            "id": " ",
+            "name": "CUENTAS DE VALORES"
+          },
+          "sublevel": " ",
+          "userCustomization": {
+            "alias": "XXXXX XXXXX",
+            "favorite": false
+          }
+        }
+      },
+      "isIncludedInMySituation": true,
+      "isLegacy": true,
+      "userAccessControl": {
+        "isManaged": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ],
+        "isVisible": [
+          {
+            "channelId": "BBVANet",
+            "granted": true
+          },
+          {
+            "channelId": "CAJEROS",
+            "granted": true
+          },
+          {
+            "channelId": "BANCA_TELEFONICA",
+            "granted": true
+          }
+        ]
+      }
+    }
+  ]
+}

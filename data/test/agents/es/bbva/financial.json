@@ -1,0 +1,36 @@
+{
+  "filterRanges": [
+    {
+      "startDateRange": "2019-12-17T23:00:00.000+0000",
+      "endDateRange": "2020-08-04T11:44:01.938+0000",
+      "isGroupByDate": false,
+      "isProfitabilityFilter": true
+    }
+  ],
+  "investments": [
+    {
+      "id": "ES0000000000000000000000000000000000XXXXXXXXX",
+      "numberFormats": [
+        {
+          "number": "000000000000",
+          "numberType": {
+            "id": "ISIN"
+          }
+        }
+      ],
+      "stockMarkets": [
+        {
+          "id": "0000"
+        }
+      ],
+      "investmentValues": [
+        {
+          "investmentValueAmount": {
+            "amount": 0,
+            "currency": "EUR"
+          }
+        }
+      ]
+    }
+  ]
+}
