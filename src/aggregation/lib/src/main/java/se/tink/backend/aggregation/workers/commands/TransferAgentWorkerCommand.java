@@ -113,12 +113,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         log.info("[transferId: {}] Executing transfer.", UUIDUtils.toTinkUUID(transfer.getId()));
         MetricAction metricAction =
                 metrics.buildAction(
-                        new MetricId.MetricLabels()
-                                .add(
-                                        "action",
-                                        transferRequest.isUpdate()
-                                                ? MetricName.UPDATE_TRANSFER
-                                                : MetricName.EXECUTE_TRANSFER));
+                        new MetricId.MetricLabels().add("action", MetricName.EXECUTE_TRANSFER));
         Optional<String> operationStatusMessage = Optional.empty();
         try {
             log.info(
@@ -478,8 +473,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
     private static class MetricName {
         private static final String METRIC = "agent_transfer";
-
-        private static final String UPDATE_TRANSFER = "update";
         private static final String EXECUTE_TRANSFER = "execute";
     }
 }
