@@ -27,11 +27,11 @@ public class BeneficiaryEntity {
 
     @JsonCreator
     private BeneficiaryEntity(
-            String id,
-            Boolean isTrusted,
-            FinancialInstitutionIdentificationEntity creditorAgent,
-            PartyIdentificationEntity creditor,
-            AccountIdentificationEntity creditorAccount) {
+            @JsonProperty("id") String id,
+            @JsonProperty("isTrusted") Boolean isTrusted,
+            @JsonProperty("creditorAgent") FinancialInstitutionIdentificationEntity creditorAgent,
+            @JsonProperty("creditor") PartyIdentificationEntity creditor,
+            @JsonProperty("creditorAccount") AccountIdentificationEntity creditorAccount) {
         this.id = id;
         this.isTrusted = isTrusted;
         this.creditorAgent = creditorAgent;

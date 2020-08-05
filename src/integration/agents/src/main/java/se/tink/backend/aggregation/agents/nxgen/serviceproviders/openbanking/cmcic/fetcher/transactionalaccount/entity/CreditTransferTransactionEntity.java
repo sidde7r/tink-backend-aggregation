@@ -47,6 +47,12 @@ public class CreditTransferTransactionEntity {
     private StatusReasonInformationEntity statusReasonInformation = null;
 
     @JsonCreator
+    public CreditTransferTransactionEntity(
+            @JsonProperty("instructedAmount") AmountTypeEntity instructedAmount) {
+
+        this.instructedAmount = instructedAmount;
+    }
+
     private CreditTransferTransactionEntity(
             PaymentIdentificationEntity paymentId,
             String requestedExecutionDate,
