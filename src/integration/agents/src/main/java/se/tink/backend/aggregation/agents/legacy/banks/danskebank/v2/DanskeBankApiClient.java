@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
@@ -37,8 +35,6 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.ChallengeRespo
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.ChallengeResponseResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.CreateSessionRequest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.CreateSessionResponse;
-import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceApproveRequest;
-import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceApproveResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceDetailsResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceListResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.InitBankIdRequest;
@@ -304,14 +300,6 @@ public class DanskeBankApiClient {
         sendChallengeResponse(DanskeBankUrl.BILL_CONFIRMATION, challengeResponseRequest);
     }
 
-    public void confirmEInvoice(
-            ChallengeResponseRequest challengeResponseRequest, String transactionId)
-            throws UnsupportedEncodingException {
-        Preconditions.checkNotNull(Strings.emptyToNull(transactionId));
-        sendChallengeResponse(
-                DanskeBankUrl.eInvoiceApproveChallenge(transactionId), challengeResponseRequest);
-    }
-
     private void sendChallengeResponse(String url, ChallengeResponseRequest request) {
         ChallengeResponseResponse response = post(url, ChallengeResponseResponse.class, request);
 
@@ -336,19 +324,6 @@ public class DanskeBankApiClient {
         String detailsUrl = DanskeBankUrl.eInvoiceDetails(transactionId);
 
         EInvoiceDetailsResponse response = get(detailsUrl, EInvoiceDetailsResponse.class);
-        return response;
-    }
-
-    public EInvoiceApproveResponse approveEInvoice(
-            EInvoiceApproveRequest request, String transactionId) throws IOException {
-        // Hack to ensure Jersey/Jackson doesn't escape stuff.
-        String requestSerialized = MAPPER.writeValueAsString(request).replace("\\\\", "\\");
-
-        String approveUrl = DanskeBankUrl.eInvoiceApprove(transactionId);
-
-        EInvoiceApproveResponse response =
-                post(approveUrl, EInvoiceApproveResponse.class, requestSerialized);
-        handleGenericErrors(response);
         return response;
     }
 
