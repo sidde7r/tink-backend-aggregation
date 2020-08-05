@@ -7,11 +7,8 @@ public class DanskeBankUrl {
     private static final String BASE_URL_MB = "https://mb.danskebank.dk/smartphones/gmb.svc";
     private static final String BASE_URL_PRIVATESERVICE = "https://privateservice01.danskebank.com";
 
-    public static final String EINVOICE_APPROVE_CHALLENGE_FORMAT =
-            BASE_URL_MB + "/eInvoices/%s/Approve/Challenge";
     public static final String EINVOICE_DETAILS_FORMAT =
             BASE_URL_MB + "/eInvoices/%s/Approve/Details";
-    public static final String EINVOICE_APPROVE_FORMAT = BASE_URL_MB + "/eInvoices/%s/Approve";
     public static final String EINVOICE_LIST = BASE_URL_MB + "/eInvoices";
     public static final String SERVICE_ACCOUNTS_ID_TRANSACTION_FUTURE =
             BASE_URL_MB + "/Service/Accounts/%s/Transactions/Future";
@@ -35,18 +32,8 @@ public class DanskeBankUrl {
     public static final String PORTFOLIOS = BASE_URL_MB + "/Portfolios";
     public static final String PORTFOLIO_PAPERS = PORTFOLIOS + "/%s/Papers";
 
-    public static String eInvoiceApproveChallenge(String eInvoiceId)
-            throws UnsupportedEncodingException {
-        return String.format(
-                EINVOICE_APPROVE_CHALLENGE_FORMAT, URLEncoder.encode(eInvoiceId, "UTF-8"));
-    }
-
     public static String eInvoiceDetails(String eInvoiceId) throws UnsupportedEncodingException {
         return String.format(EINVOICE_DETAILS_FORMAT, URLEncoder.encode(eInvoiceId, "UTF-8"));
-    }
-
-    public static String eInvoiceApprove(String eInvoiceId) throws UnsupportedEncodingException {
-        return String.format(EINVOICE_APPROVE_FORMAT, URLEncoder.encode(eInvoiceId, "UTF-8"));
     }
 
     public static String portfolioPapers(String portfolioId) {
