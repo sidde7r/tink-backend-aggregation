@@ -248,9 +248,6 @@ public class DanskeBankV2Agent extends AbstractAgent
                 case PAYMENT:
                     executePayment(transfer);
                     break;
-                case EINVOICE:
-                    throw new IllegalStateException(
-                            "Should never happen, einvoices are approved through update");
                 default:
                     throw new IllegalStateException(
                             "Should never happen, not recognized transfer type");
