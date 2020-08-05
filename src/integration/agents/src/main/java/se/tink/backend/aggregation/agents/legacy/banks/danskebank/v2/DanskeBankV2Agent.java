@@ -60,8 +60,6 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.BillRequest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.BillResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.ChallengeResponseRequest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.CreateSessionResponse;
-import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceApproveRequest;
-import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceApproveResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceDetailsResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceListResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceListTransactionEntity;
@@ -119,7 +117,6 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -251,9 +248,6 @@ public class DanskeBankV2Agent extends AbstractAgent
                 case PAYMENT:
                     executePayment(transfer);
                     break;
-                case EINVOICE:
-                    throw new IllegalStateException(
-                            "Should never happen, einvoices are approved through update");
                 default:
                     throw new IllegalStateException(
                             "Should never happen, not recognized transfer type");
@@ -264,23 +258,8 @@ public class DanskeBankV2Agent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception {
-        try {
-            switch (transfer.getType()) {
-                case EINVOICE:
-                    approveEInvoice(transfer);
-                    break;
-                case PAYMENT:
-                    throw new IllegalStateException("Not implemented");
-                case BANK_TRANSFER:
-                    throw new IllegalStateException("Not implemented");
-                default:
-                    throw new IllegalStateException(
-                            "Should never happen, not recognized transfer type");
-            }
-        } catch (BankIdException bankIdException) {
-            throw toTransferExecutionException(bankIdException);
-        }
+    public void update(Transfer transfer) {
+        throw new IllegalStateException("Not implemented");
     }
 
     private TransferExecutionException toTransferExecutionException(
@@ -316,158 +295,6 @@ public class DanskeBankV2Agent extends AbstractAgent
                     .setMessage(logMessage)
                     .build();
         }
-    }
-
-    private void approveEInvoice(final Transfer transfer)
-            throws BankIdException, IOException, AuthenticationException {
-        Transfer originalTransfer = getOriginalTransfer(transfer);
-
-        ensureValidUpdate(originalTransfer, transfer);
-
-        String transactionId = getTransactionId(originalTransfer);
-
-        EInvoiceDetailsResponse eInvoiceDetails = getEInvoiceDetailsOrThrow(transactionId);
-        String fromAccountId = getFromAccountId(transfer, eInvoiceDetails);
-
-        updateAndSignEInvoice(transactionId, fromAccountId, transfer);
-    }
-
-    private static Transfer getOriginalTransfer(Transfer transfer) {
-        Optional<Transfer> originalTransfer = transfer.getOriginalTransfer();
-
-        if (!originalTransfer.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("No original transfer on payload to compare with.")
-                    .build();
-        }
-
-        return originalTransfer.get();
-    }
-
-    private String getTransactionId(Transfer originalTransfer) {
-        String transactionId =
-                originalTransfer
-                        .getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID)
-                        .orElse(null);
-
-        if (Strings.isNullOrEmpty(transactionId)) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Missing PROVIDER_UNIQUE_ID on transfer payload")
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
-                    .build();
-        }
-
-        return transactionId;
-    }
-
-    private EInvoiceDetailsResponse getEInvoiceDetailsOrThrow(String transactionId) {
-        EInvoiceDetailsResponse eInvoiceDetails;
-
-        try {
-            eInvoiceDetails = apiClient.getEInvoiceDetails(transactionId);
-        } catch (Exception fetchException) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
-                    .setMessage("Got exception while fetching details of einvoice. Missing?")
-                    .setException(fetchException)
-                    .build();
-        }
-
-        if (eInvoiceDetails.isInvalidEInvoice()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
-                    .setMessage(
-                            String.format(
-                                    "Invalid einvoice: %s",
-                                    eInvoiceDetails.getStatus().getStatusText()))
-                    .build();
-        }
-        return eInvoiceDetails;
-    }
-
-    private String getFromAccountId(Transfer transfer, EInvoiceDetailsResponse eInvoiceDetails) {
-        final AccountIdentifier source = transfer.getSource();
-        List<AccountEntity> fromAccounts = eInvoiceDetails.getFromAccounts();
-
-        Optional<AccountEntity> sourceAccountMatch =
-                fromAccounts.stream()
-                        .filter(
-                                fromAccount ->
-                                        Objects.equals(
-                                                EInvoiceDetailsResponse.toAccountIdentifier(
-                                                        fromAccount),
-                                                source))
-                        .findFirst();
-
-        if (!sourceAccountMatch.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.INVALID_SOURCE))
-                    .setMessage("No source account found")
-                    .build();
-        }
-
-        return sourceAccountMatch.get().getAccountId();
-    }
-
-    /** Only from-account, date and amount is possible to modify on einvoices */
-    private void ensureValidUpdate(Transfer originalTransfer, Transfer transfer) {
-        if (!Objects.equals(
-                transfer.getDestinationMessage(), originalTransfer.getDestinationMessage())) {
-            throwFailed(TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_MESSAGE);
-        } else if (!Objects.equals(transfer.getDestination(), originalTransfer.getDestination())) {
-            throwFailed(TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_DESTINATION);
-        }
-    }
-
-    private void throwFailed(TransferExecutionException.EndUserMessage endUserMessage) {
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setEndUserMessage(catalog.getString(endUserMessage))
-                .build();
-    }
-
-    private void updateAndSignEInvoice(
-            String transactionId, String fromAccountId, Transfer transfer)
-            throws BankIdException, IOException, AuthenticationException {
-        EInvoiceApproveRequest eInvoiceApproveRequest =
-                new EInvoiceApproveRequest(fromAccountId, transfer);
-        EInvoiceApproveResponse eInvoiceApproveResponse =
-                apiClient.approveEInvoice(eInvoiceApproveRequest, transactionId);
-
-        if (eInvoiceApproveResponse.getStatus().getStatusCode() != 0) {
-            String statusText = eInvoiceApproveResponse.getStatus().getStatusText();
-            String errorMessage =
-                    statusText != null
-                            ? statusText
-                            : catalog.getString(
-                                    TransferExecutionException.EndUserMessage.EINVOICE_SIGN_FAILED);
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(
-                            String.format(
-                                    "Failed to sign einvoice. (statuscode: %d, statustext: %s)",
-                                    eInvoiceApproveResponse.getStatus().getStatusCode(),
-                                    eInvoiceApproveResponse.getStatus().getStatusText()))
-                    .setEndUserMessage(errorMessage)
-                    .build();
-        }
-
-        if (!eInvoiceApproveResponse.isChallengeNeeded()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("No challenge required for DanskeBank e-invoice!")
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.EINVOICE_SIGN_FAILED))
-                    .build();
-        }
-
-        apiClient.confirmEInvoice(requestChallenge(eInvoiceApproveResponse), transactionId);
     }
 
     private void executeBankTransfer(final Transfer transfer)
