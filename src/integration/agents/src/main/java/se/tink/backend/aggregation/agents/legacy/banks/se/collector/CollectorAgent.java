@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -202,11 +201,6 @@ public class CollectorAgent extends AbstractAgent
         }
 
         apiClient.clearAccountsCache();
-    }
-
-    @Override
-    public void update(Transfer transfer) {
-        throw new NotImplementedException("Update not implemented");
     }
 
     private void makeWithdrawal(Transfer transfer) {
