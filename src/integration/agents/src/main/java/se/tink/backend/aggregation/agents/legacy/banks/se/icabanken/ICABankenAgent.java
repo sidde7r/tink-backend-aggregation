@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
@@ -19,12 +18,10 @@ import com.sun.jersey.api.client.WebResource.Builder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -47,7 +44,6 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.icabanken.IcaBankenAccountIdentifierFormatter;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AcceptEInvoiceTransferRequest;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AccountsResponse;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AssignmentsResponse;
@@ -59,9 +55,6 @@ import se.tink.backend.aggregation.agents.banks.se.icabanken.model.CollectBankId
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.CollectBankIdResponseBody;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.DepotEntity;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.DepotsResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.EInvoiceEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.EInvoiceResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.EndBankIdAuthenticationRequest;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.EngagementResponse;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.EngagementResponseBody;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.FundDetails;
@@ -92,8 +85,6 @@ import se.tink.backend.aggregation.agents.banks.se.icabanken.model.TransferRespo
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpcomingTransactionsBody;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpcomingTransactionsResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpdateEInvoiceRequest;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.ValidateEInvoiceRequest;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.ValidateEInvoiceResponse;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.types.IcaDestinationType;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.types.IcaSourceType;
@@ -125,7 +116,6 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.DateUtils;
@@ -137,7 +127,6 @@ import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -240,16 +229,6 @@ public class ICABankenAgent extends AbstractAgent
                         context.getCatalog(),
                         TRANSFER_MESSAGE_LENGTH_CONFIG,
                         new StringNormalizerSwedish(".-?!/+%"));
-    }
-
-    private static Transfer getOriginalTransfer(Transfer transfer) {
-        return transfer.getOriginalTransfer()
-                .orElseThrow(
-                        () ->
-                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                        .setMessage(
-                                                "No original transfer on payload to compare with.")
-                                        .build());
     }
 
     private Optional<String> fetchDestinationNameFor(String giroNumber) {
@@ -411,224 +390,13 @@ public class ICABankenAgent extends AbstractAgent
                 || transfer.getType().equals(TransferType.PAYMENT)) {
             executeTransfer(transfer);
         } else {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Not implemented.")
-                    .setEndUserMessage("Not implemented.")
-                    .build();
+            TransferExecutionException.throwIf(true);
         }
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception {
-
-        switch (transfer.getType()) {
-            case EINVOICE:
-                approveEInvoice(transfer);
-                break;
-            default:
-                throw new IllegalArgumentException(
-                        String.format("Unhandled transfer type: %s", transfer.getType()));
-        }
-    }
-
-    private void approveEInvoice(final Transfer transfer)
-            throws ExecutionException, RetryException, BankIdException, LoginException,
-                    AuthorizationException {
-        validateNoUnsignedTransfers();
-
-        String invoiceId = getInvoiceIdFrom(transfer);
-        Transfer originalTransfer = getOriginalTransfer(transfer);
-
-        // In the ICA-banken app a user can change amount and due date of the e-invoice. If the
-        // change occurs after
-        // a refresh we might have the wrong data for those fields when displaying the e-invoice to
-        // the user.
-        //
-        // We check if the e-invoice have been modified, if so the user must refresh their
-        // credentials so that we
-        // display the latest version of the e-invoice. This is so that the user doesn't approve
-        // something else than
-        // what is shown in the Tink app.
-
-        final AccountEntity sourceAccount = fetchSourceAccountFor(transfer);
-        final EInvoiceEntity eInvoice = findMatchingEInvoice(invoiceId, originalTransfer);
-        final Transfer bankTransfer = eInvoice.toTinkTransfer(catalog);
-
-        // Important validateEInvoiceOnOurSide() is called _before_ validateEInvoiceOnTheirSide(...)
-        // since the latter
-        // might auto-correct due date (or other things). If in wrong order, due date validation on
-        // our side will fail.
-        validateEInvoiceOnOurSide(transfer, bankTransfer);
-        updateIfNecessary(transfer, bankTransfer, invoiceId);
-        validateEInvoiceOnTheirSide(sourceAccount, invoiceId);
-
-        if (!eInvoice.isRecipientConfirmed()) {
-            signInvoice(invoiceId);
-        }
-
-        acceptEInvoiceTransfer(sourceAccount.getAccountId(), invoiceId);
-    }
-
-    private void validateEInvoiceOnOurSide(
-            final Transfer potentiallyModifiedTransfer, final Transfer bankTransfer) {
-
-        // Destination account.
-        validateFieldsMatch(
-                bankTransfer.getDestination(),
-                potentiallyModifiedTransfer.getDestination(),
-                EndUserMessage.EINVOICE_MODIFY_DESTINATION,
-                "Destination account cannot be changed.");
-
-        // Type
-        Preconditions.checkState(
-                Objects.equal(bankTransfer.getType(), potentiallyModifiedTransfer.getType()));
-
-        // Source message
-        validateFieldsMatch(
-                bankTransfer.getSourceMessage(),
-                potentiallyModifiedTransfer.getSourceMessage(),
-                EndUserMessage.EINVOICE_MODIFY_SOURCE_MESSAGE,
-                "Source message cannot be changed.");
-
-        // Destination message
-        validateFieldsMatch(
-                bankTransfer.getDestinationMessage(),
-                potentiallyModifiedTransfer.getDestinationMessage(),
-                EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE,
-                "Destination message cannot be changed.");
-    }
-
-    private void validateFieldsMatch(
-            Object oldField,
-            Object potentiallyModifiedField,
-            EndUserMessage endUserMessage,
-            String internalMessage) {
-        if (!Objects.equal(oldField, potentiallyModifiedField)) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(catalog.getString(endUserMessage))
-                    .setMessage(
-                            String.format(
-                                    "%s Old: %s Current: %s",
-                                    internalMessage,
-                                    potentiallyModifiedField,
-                                    potentiallyModifiedField))
-                    .build();
-        }
-    }
-
-    private void updateIfNecessary(
-            final Transfer potentiallyModifiedTransfer,
-            final Transfer bankTransfer,
-            String invoiceId) {
-        boolean shouldUpdate = false;
-        Amount amountForUpdate = bankTransfer.getAmount();
-        Date dueDateForUpdate = bankTransfer.getDueDate();
-
-        // Amount
-        if (!Objects.equal(bankTransfer.getAmount(), potentiallyModifiedTransfer.getAmount())) {
-            amountForUpdate = potentiallyModifiedTransfer.getAmount();
-            shouldUpdate = true;
-        }
-
-        // Due date
-        if (!Objects.equal(bankTransfer.getDueDate(), potentiallyModifiedTransfer.getDueDate())) {
-            dueDateForUpdate = potentiallyModifiedTransfer.getDueDate();
-            shouldUpdate = true;
-        }
-
-        if (shouldUpdate) {
-            updateEInvoice(dueDateForUpdate, amountForUpdate, invoiceId);
-        }
-    }
-
-    private void updateEInvoice(Date dueDate, Amount amount, String invoiceId) {
-        UpdateEInvoiceRequest updateEInvoiceRequest = new UpdateEInvoiceRequest();
-
-        updateEInvoiceRequest.setPayDate(ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate));
-        updateEInvoiceRequest.setFormattedAmount(amount.getValue());
-        updateEInvoiceRequest.setInvoiceId(invoiceId);
-
-        ValidateEInvoiceResponse response =
-                createClientRequest(UPDATE_INVOICE_URL)
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .put(ValidateEInvoiceResponse.class, updateEInvoiceRequest);
-
-        if (response.isValidationError()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(String.format("Could not update invoice: %s", response))
-                    .setEndUserMessage(
-                            getEndUserMessage(response, EndUserMessage.PAYMENT_UPDATE_FAILED))
-                    .build();
-        }
-    }
-
-    private void validateEInvoiceOnTheirSide(final AccountEntity account, final String invoiceId)
-            throws ExecutionException, RetryException {
-
-        ValidateEInvoiceResponse validateResponse =
-                WHILE_ICABANKEN_CORRECTS_VALIDATION_ERROR_RETRYER.call(
-                        () -> validateEInvoice(account.getAccountId(), invoiceId));
-
-        if (validateResponse.isValidationError()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(String.format("Could not validate invoice: %s", validateResponse))
-                    .setEndUserMessage(
-                            getEndUserMessage(
-                                    validateResponse, EndUserMessage.EINVOICE_VALIDATE_FAILED))
-                    .build();
-        }
-    }
-
-    private void signInvoice(final String invoiceId)
-            throws BankIdException, LoginException, AuthorizationException {
-        String requestId = initBankIDSignEInvoice(invoiceId);
-
-        collectBankID(String.format(SIGN_TRANSFER_COLLECT_URL, requestId));
-
-        endBankIDAuthentication(requestId, invoiceId);
-    }
-
-    private ValidateEInvoiceResponse validateEInvoice(
-            final String accountId, final String eInvoiceId) {
-        // Might return 409 - Angivet datum har ändrats till närmast möjliga dag. See
-        // WHILE_ICABANKEN_CORRECTS_VALIDATION_ERROR_RETRYER.
-
-        ValidateEInvoiceRequest validateRequest = new ValidateEInvoiceRequest();
-        validateRequest.setAccountId(accountId);
-        validateRequest.setInvoiceId(eInvoiceId);
-
-        ClientResponse response =
-                createClientRequest(VALIDATE_INVOICE_URL)
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .post(ClientResponse.class, validateRequest);
-        try {
-            return response.getEntity(ValidateEInvoiceResponse.class);
-        } finally {
-            response.close();
-        }
-    }
-
-    /** End the bankid authentication. */
-    private void endBankIDAuthentication(String requestId, String invoiceId) {
-        EndBankIdAuthenticationRequest request = new EndBankIdAuthenticationRequest();
-        request.setRequestId(requestId);
-        request.setInvoiceId(invoiceId);
-
-        createClientRequest(END_BANKID_AUTHENTICATION_URL)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .post(ClientResponse.class, request)
-                .close();
-    }
-
-    private void acceptEInvoiceTransfer(String accountId, String invoiceId) {
-        AcceptEInvoiceTransferRequest request = new AcceptEInvoiceTransferRequest();
-        request.setDebitAccountId(accountId);
-        request.setInvoiceId(invoiceId);
-
-        createClientRequest(ACCEPT_EINVOICE_URL)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .post(ClientResponse.class, request)
-                .close();
+    public void update(Transfer transfer) {
+        TransferExecutionException.throwIf(true);
     }
 
     private void executeTransfer(final Transfer transfer) throws Exception {
@@ -746,12 +514,6 @@ public class ICABankenAgent extends AbstractAgent
                 .collect(Collectors.toList());
     }
 
-    private EInvoiceResponse fetchEInvoices() {
-        return createClientRequest(EINVOICES_URL)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .get(EInvoiceResponse.class);
-    }
-
     private FundDetails fetchFundDetails(String fundId) {
         FundsResponse fundsResponse =
                 createClientRequest(String.format(FUNDS_URL, fundId)).get(FundsResponse.class);
@@ -789,11 +551,6 @@ public class ICABankenAgent extends AbstractAgent
                                                                                         .getIdentifier(
                                                                                                 ACCOUNT_IDENTIFIER_FORMATTER))
                                                                 .build()));
-    }
-
-    private AccountEntity fetchSourceAccountFor(Transfer transfer) {
-        List<AccountEntity> accounts = fetchAccounts();
-        return findSourceAccount(transfer.getSource(), accounts);
     }
 
     private AccountEntity findSourceAccount(
@@ -1321,11 +1078,6 @@ public class ICABankenAgent extends AbstractAgent
         return initBankID(url, true);
     }
 
-    private String initBankIDSignEInvoice(String invoiceId) throws BankIdException {
-        String url = String.format(INIT_EINVOICE_SIGN_URL, invoiceId);
-        return initBankID(url, true);
-    }
-
     private String initBankIDSignTransfer() throws BankIdException {
         return initBankID(INIT_TRANSFER_SIGN_URL, true);
     }
@@ -1363,47 +1115,6 @@ public class ICABankenAgent extends AbstractAgent
                 "Couldn't initialize BankID, requestId was null or empty");
 
         return requestId;
-    }
-
-    private String getInvoiceIdFrom(Transfer transfer) {
-        final Optional<String> invoiceId =
-                transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID);
-
-        if (!invoiceId.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Missing PROVIDER_UNIQUE_ID on transfer payload")
-                    .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_NO_MATCHES))
-                    .build();
-        }
-
-        return invoiceId.get();
-    }
-
-    private EInvoiceEntity findMatchingEInvoice(String invoiceId, Transfer originalTransfer) {
-        final EInvoiceEntity eInvoice = findEInvoice(invoiceId);
-        Transfer transferAtBank = eInvoice.toTinkTransfer(catalog);
-
-        if (!Objects.equal(originalTransfer.getHash(), transferAtBank.getHash())) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(UserMessage.EINVOICE_MODIFIED_IN_BANK_APP.getKey().get())
-                    .build();
-        }
-
-        return eInvoice;
-    }
-
-    private EInvoiceEntity findEInvoice(String invoiceId) {
-        EInvoiceResponse response = fetchEInvoices();
-        Optional<EInvoiceEntity> invoiceEntity = response.getBody().getInvoiceById(invoiceId);
-
-        if (!invoiceEntity.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Could not find the selected invoice.")
-                    .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_NO_MATCHES))
-                    .build();
-        }
-
-        return invoiceEntity.get();
     }
 
     private SignedAssignmentList getSignedAssignmentsList(String requestId) {
