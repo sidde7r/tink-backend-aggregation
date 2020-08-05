@@ -78,7 +78,8 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         CrosskeyBaseAuthCodeAuthenticator.getInstanceForAis(apiClient),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,
@@ -140,7 +141,8 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         CrosskeyBaseAuthCodeAuthenticator.getInstanceForPis(apiClient),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         CrossKeyPaymentExecutor crossKeyPaymentExecutor =
                 new CrossKeyPaymentExecutor(

@@ -51,7 +51,8 @@ public final class NordeaNoAgent extends NordeaBaseAgent
                         supplementalInformationHelper,
                         authenticator,
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
         return new AutoAuthenticationController(
                 request,
                 context,

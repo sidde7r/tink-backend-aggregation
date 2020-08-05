@@ -101,7 +101,8 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new BnpParibasAuthenticator(apiClient, sessionStorage, agentConfiguration),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

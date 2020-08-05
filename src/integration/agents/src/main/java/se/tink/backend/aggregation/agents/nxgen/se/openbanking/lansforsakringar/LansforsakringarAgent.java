@@ -85,7 +85,8 @@ public final class LansforsakringarAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         lansforsakringarAuthenticator,
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

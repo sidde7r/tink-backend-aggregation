@@ -73,7 +73,8 @@ public abstract class BankdataAgent extends NextGenerationAgent
                                 apiClient,
                                 getAgentConfiguration().getProviderSpecificConfiguration()),
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,

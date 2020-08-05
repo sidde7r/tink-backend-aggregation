@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LansforsakringarAuthController extends OAuth2AuthenticationController {
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -21,13 +22,15 @@ public class LansforsakringarAuthController extends OAuth2AuthenticationControll
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
             Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState strongAuthenticationState,
+            CredentialsRequest request) {
         super(
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
                 credentials,
-                strongAuthenticationState);
+                strongAuthenticationState,
+                request);
 
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.strongAuthenticationStateSupplementalKey =

@@ -125,7 +125,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         ingBaseAuthenticator,
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
         authenticator =
                 new AutoAuthenticationController(
                         request,

@@ -84,7 +84,8 @@ public abstract class RedsysAgent extends NextGenerationAgent
                         new RedsysAuthenticator(apiClient, sessionStorage),
                         consentController,
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,
