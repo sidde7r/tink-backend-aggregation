@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.nxgen.agents;
 import java.security.Security;
 import java.util.Optional;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.CreateBeneficiaryControllerable;
@@ -45,6 +47,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         Security.addProvider(new BouncyCastleProvider());
     }
 
+    private static final Logger log = LoggerFactory.getLogger(SubsequentGenerationAgent.class);
     protected final Catalog catalog;
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
@@ -95,6 +98,11 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         this.strongAuthenticationState =
                 new StrongAuthenticationState(
                         request.getAppUriId(), componentProvider.getRandomValueGenerator());
+        log.info(
+                "[forceAuthenticate] strongAuthenticationState for credentials: {}, appUriId: {}, state: {}",
+                request.getCredentials().getId(),
+                request.getAppUriId(),
+                this.strongAuthenticationState.getState());
     }
 
     protected EidasIdentity getEidasIdentity() {
