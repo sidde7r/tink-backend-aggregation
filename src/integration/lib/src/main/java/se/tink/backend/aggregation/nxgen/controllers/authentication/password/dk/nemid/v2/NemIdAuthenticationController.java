@@ -15,8 +15,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class NemIdAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
 
-    public static final String NEMID_PASSWORD_FIELD_NAME = "nemid-password";
-
     private final NemIdIFrameController iFrameController;
     private final NemIdAuthenticatorV2 authenticator;
     private final Storage storage;
@@ -36,7 +34,7 @@ public class NemIdAuthenticationController
 
         final String username = credentials.getField(Field.Key.USERNAME);
         final String pinCode = credentials.getField(Field.Key.ACCESS_PIN);
-        final String password = credentials.getField(NEMID_PASSWORD_FIELD_NAME);
+        final String password = credentials.getField(Field.Key.PASSWORD);
 
         if (Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
