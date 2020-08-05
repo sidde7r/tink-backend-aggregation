@@ -272,11 +272,12 @@ public class CmcicApiClient implements FrAispApiClient {
         return createPispRequestInSession(
                         new URL(baseUrl),
                         String.format(
-                                "%s%s%s%s%s",
+                                "%s%s%s%s%s%s",
                                 basePath,
                                 Urls.PAYMENT_REQUESTS,
                                 "/",
                                 uniqueId,
+                                "/",
                                 Urls.PIS_CONFIRMATION_PATH),
                         body)
                 .type(MediaType.APPLICATION_JSON)

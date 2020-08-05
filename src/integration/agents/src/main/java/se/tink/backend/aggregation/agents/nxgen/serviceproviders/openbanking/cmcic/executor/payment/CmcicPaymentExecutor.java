@@ -149,7 +149,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             throws PaymentException {
         PaymentMultiStepResponse paymentMultiStepResponse = null;
         Payment payment = paymentMultiStepRequest.getPayment();
-        String paymentId = payment.getUniqueId();
+        String paymentId = getPaymentId(sessionStorage.get(StorageKeys.AUTH_URL));
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
                 openThirdPartyApp(new URL(sessionStorage.get(StorageKeys.AUTH_URL)));
@@ -271,8 +271,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         return new PaymentResponse(
                 new Payment.Builder()
                         .withUniqueId(payment.getResourceId())
-                        .withStatus(
-                                payment.getPaymentInformationStatusCode().mapToTinkPaymentStatus())
+                        .withStatus(payment.getPaymentInformationStatusCode().getPaymentStatus())
                         .withCreditor(
                                 new Creditor(
                                         new IbanIdentifier(
@@ -316,6 +315,18 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         } catch (ParseException e) {
             return OffsetDateTime.parse(date).toLocalDateTime();
         }
+    }
+
+    private String getPaymentId(String authorizationUrl) throws PaymentException {
+        int index = authorizationUrl.lastIndexOf('=');
+        if (index < 0) {
+            logger.error("Payment failed due to missing paymentId");
+            throw new PaymentException(
+                    TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
+                            .getKey()
+                            .get());
+        }
+        return authorizationUrl.substring(index + 1);
     }
 
     private PaymentRequestResourceEntity buildPaymentRequest(PaymentRequest paymentRequest) {

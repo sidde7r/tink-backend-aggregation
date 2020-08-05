@@ -2,45 +2,36 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.EnumMap;
-import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum PaymentInformationStatusCodeEntity {
-    ACCP("ACCP"),
-    ACSC("ACSC"),
-    ACSP("ACSP"),
-    ACTC("ACTC"),
-    ACWC("ACWC"),
-    ACWP("ACWP"),
-    PART("PART"),
-    RCVD("RCVD"),
-    PDNG("PDNG"),
-    CANC("CANC"),
-    RJCT("RJCT");
+    ACCP("ACCP", PaymentStatus.SIGNED),
+    ACSC("ACSC", PaymentStatus.SIGNED),
+    ACSP("ACSP", PaymentStatus.SIGNED),
+    ACTC("ACTC", PaymentStatus.PENDING),
+    ACWC("ACWC", PaymentStatus.PENDING),
+    ACWP("ACWP", PaymentStatus.PENDING),
+    PART("PART", PaymentStatus.PENDING),
+    RCVD("RCVD", PaymentStatus.CREATED),
+    PDNG("PDNG", PaymentStatus.SIGNED),
+    CANC("CANC", PaymentStatus.CANCELLED),
+    RJCT("RJCT", PaymentStatus.REJECTED),
+    UNKNOWN("UNKNOWN", PaymentStatus.UNDEFINED);
 
     private String value;
+    private PaymentStatus paymentStatus;
 
-    PaymentInformationStatusCodeEntity(String value) {
+    PaymentInformationStatusCodeEntity(String value, PaymentStatus paymentStatus) {
         this.value = value;
+        this.paymentStatus = paymentStatus;
     }
 
-    private static EnumMap<PaymentInformationStatusCodeEntity, PaymentStatus>
-            paymentStatusToTinkMapper = new EnumMap<>(PaymentInformationStatusCodeEntity.class);
+    public String getValue() {
+        return value;
+    }
 
-    static {
-        paymentStatusToTinkMapper.put(ACCP, PaymentStatus.SIGNED);
-        paymentStatusToTinkMapper.put(ACSC, PaymentStatus.SIGNED);
-        paymentStatusToTinkMapper.put(ACSP, PaymentStatus.SIGNED);
-        paymentStatusToTinkMapper.put(ACTC, PaymentStatus.PENDING);
-        paymentStatusToTinkMapper.put(ACWC, PaymentStatus.PENDING);
-        paymentStatusToTinkMapper.put(ACWP, PaymentStatus.PENDING);
-        paymentStatusToTinkMapper.put(PART, PaymentStatus.PENDING);
-        paymentStatusToTinkMapper.put(RCVD, PaymentStatus.CREATED);
-        paymentStatusToTinkMapper.put(RJCT, PaymentStatus.REJECTED);
-        paymentStatusToTinkMapper.put(CANC, PaymentStatus.CANCELLED);
-        paymentStatusToTinkMapper.put(PDNG, PaymentStatus.SIGNED);
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
     }
 
     @JsonCreator
@@ -51,18 +42,6 @@ public enum PaymentInformationStatusCodeEntity {
             }
         }
         return null;
-    }
-
-    public PaymentStatus mapToTinkPaymentStatus() {
-        return Optional.ofNullable(
-                        paymentStatusToTinkMapper.get(
-                                Enum.valueOf(PaymentInformationStatusCodeEntity.class, value)))
-                .orElseThrow(
-                        () ->
-                                new IllegalArgumentException(
-                                        String.format(
-                                                CmcicConstants.ErrorMessages.MAPPING,
-                                                value.toString())));
     }
 
     @Override
