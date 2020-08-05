@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.rholder.retry.Retryer;
-import com.github.rholder.retry.RetryerBuilder;
-import com.github.rholder.retry.StopStrategies;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -85,7 +82,6 @@ import se.tink.backend.aggregation.agents.banks.se.icabanken.model.TransferRespo
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpcomingTransactionsBody;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpcomingTransactionsResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.ValidateEInvoiceResponse;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.types.IcaDestinationType;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.types.IcaSourceType;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
@@ -149,8 +145,6 @@ public class ICABankenAgent extends AbstractAgent
     private static final String INIT_BANKID_LOGIN_URL = BASE_URL + "/api/session/login/bankid/%s";
     private static final String INIT_TRANSFER_SIGN_URL =
             BASE_URL + "/api/assignments/bundle/bankid/init";
-    private static final String INIT_EINVOICE_SIGN_URL =
-            BASE_URL + "/api/egiro/recipient/bankId/init/%s";
     private static final String AUTHENTICATE_COLLECT_URL =
             BASE_URL + "/api/session/login/bankid/%s";
     private static final String SIGN_TRANSFER_COLLECT_URL =
@@ -166,17 +160,11 @@ public class ICABankenAgent extends AbstractAgent
             BASE_URL + "/api/accounts/%s/reservedTransactions";
     private static final String TRANSACTIONS_URL =
             BASE_URL + "/api/accounts/%s/transactions?toDate=%s";
-    private static final String EINVOICES_URL = BASE_URL + "/api/egiro/invoices";
     private static final String DELETE_UNSIGNED_TRANSFER_URL =
             BASE_URL + "/api/assignments/bundle/%s";
     private static final String TRANSFER_BANKS_URL = BASE_URL + "/api/accounts/transferBanks";
     private static final String GIRO_DESTINATION_NAME =
             BASE_URL + "/api/recipients/pgBgRecipientName/%s";
-    private static final String END_BANKID_AUTHENTICATION_URL =
-            BASE_URL + "/api/egiro/recipient/bankId";
-    private static final String ACCEPT_EINVOICE_URL = BASE_URL + "/api/egiro/invoice/accept";
-    private static final String VALIDATE_INVOICE_URL = BASE_URL + "/api/egiro/invoice/validate";
-    private static final String UPDATE_INVOICE_URL = BASE_URL + "/api/egiro/invoice/update";
     private static final String LOANS_URL = BASE_URL + "/api/engagement/loans";
     private static final String LOGOUT_URL = BASE_URL + "/api/session/logout";
     private static final String DEPOTS_URL = BASE_URL + "/api/depots";
@@ -196,14 +184,6 @@ public class ICABankenAgent extends AbstractAgent
             new DefaultAccountIdentifierFormatter();
     private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
             TransferMessageLengthConfig.createWithMaxLength(25, 12, 25);
-    private static final Retryer<ValidateEInvoiceResponse>
-            WHILE_ICABANKEN_CORRECTS_VALIDATION_ERROR_RETRYER =
-                    RetryerBuilder.<ValidateEInvoiceResponse>newBuilder()
-                            .retryIfResult(
-                                    ValidateEInvoiceResponse::isInvalidButICABankenCorrectedIt)
-                            // Upper retry bound is important to avoid infinite loop.
-                            .withStopStrategy(StopStrategies.stopAfterAttempt(3))
-                            .build();
     private final TinkApacheHttpClient4 client;
     private final Credentials credentials;
     private final TransferMessageFormatter transferMessageFormatter;
