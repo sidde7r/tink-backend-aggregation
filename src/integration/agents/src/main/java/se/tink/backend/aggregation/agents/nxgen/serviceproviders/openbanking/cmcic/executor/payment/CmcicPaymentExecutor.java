@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledExc
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.DateFormat;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.PaymentSteps;
@@ -415,7 +416,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                         strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES);
 
         if (information.isPresent()) {
-            String psuAuthenticationFactor = information.get().get("psuAuthenticationFactor");
+            String psuAuthenticationFactor =
+                    information.get().get(CmcicConstants.QueryKeys.PSU_AUTHENTICATION_FACTOR);
             if (Strings.isNullOrEmpty(psuAuthenticationFactor)) {
                 handelAuthFactorError();
             }

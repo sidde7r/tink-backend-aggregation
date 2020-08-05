@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
-import java.util.List;
-
 @JsonObject
 @JsonInclude(Include.NON_NULL)
 @Getter

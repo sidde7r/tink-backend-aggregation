@@ -45,6 +45,7 @@ public final class CmcicConstants {
         public static final String STATE = "state";
         public static final String CODE_CHALLENGE = "code_challenge";
         public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
+        public static final String PSU_AUTHENTICATION_FACTOR = "psuAF";
     }
 
     public static class QueryValues {
