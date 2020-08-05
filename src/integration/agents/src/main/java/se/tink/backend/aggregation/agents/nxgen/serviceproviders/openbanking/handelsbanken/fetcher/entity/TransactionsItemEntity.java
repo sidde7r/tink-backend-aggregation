@@ -66,6 +66,10 @@ public class TransactionsItemEntity {
         return bookingDate;
     }
 
+    public Boolean hasDate() {
+        return !Strings.isNullOrEmpty(transactionDate) || !Strings.isNullOrEmpty(valueDate);
+    }
+
     public String getDebtorName() {
         return debtorName;
     }

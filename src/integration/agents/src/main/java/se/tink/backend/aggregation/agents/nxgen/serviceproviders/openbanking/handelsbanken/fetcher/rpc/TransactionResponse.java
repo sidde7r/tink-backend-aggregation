@@ -21,6 +21,7 @@ public class TransactionResponse implements PaginatorResponse {
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.stream()
+                .filter(e -> e.hasDate())
                 .map(TransactionsItemEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
