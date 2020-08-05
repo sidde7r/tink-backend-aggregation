@@ -27,7 +27,7 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
     protected SamlinkApiClient createApiClient() {
         return new SamlinkApiClient(
                 client,
-                sessionStorage,
+                persistentStorage,
                 qsealcSigner,
                 getConfiguration().getProviderSpecificConfiguration(),
                 getConfiguration().getRedirectUrl());
