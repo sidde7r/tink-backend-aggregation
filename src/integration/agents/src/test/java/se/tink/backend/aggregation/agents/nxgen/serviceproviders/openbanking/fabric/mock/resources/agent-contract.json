@@ -3,8 +3,7 @@
     {
       "accountExclusion": "NONE",
       "accountNumber": "IT71U0300203280244168953997",
-      "availableBalance": null,
-      "balance": 123456.0,
+      "balance": 234567.0,
       "bankId": "IT71U0300203280244168953997",
       "certainDate": null,
       "closed": false,
@@ -13,10 +12,17 @@
       "details": null,
       "exactBalance": {
         "currencyCode": "EUR",
-        "doubleValue": 123456.0,
-        "exactValue": 123456.0,
+        "doubleValue": 234567.0,
+        "exactValue": 234567.0,
         "scale": 1,
-        "unscaledValue": 1234560
+        "unscaledValue": 2345670
+      },
+      "availableBalance": {
+        "currencyCode": "EUR",
+        "doubleValue": 234567.0,
+        "exactValue": 234567.0,
+        "scale": 1,
+        "unscaledValue": 2345670
       },
       "excluded": false,
       "favored": false,

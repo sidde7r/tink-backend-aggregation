@@ -25,7 +25,7 @@ public class FabricAccountFetcher implements AccountFetcher<TransactionalAccount
         List<AccountEntity> accounts = new ArrayList<>();
         for (AccountEntity accountEntity : accountResponse.getAccounts()) {
             AccountDetailsResponse accountDetails =
-                    apiClient.getAccountDetails(accountEntity.getAccountDetialsLink());
+                    apiClient.getAccountDetails(accountEntity.getAccountDetailsLink());
             BalanceResponse balanceResponse =
                     apiClient.getBalances(accountEntity.getBalancesLink());
             accountDetails.setBalances(balanceResponse.getBalances());
