@@ -12,6 +12,7 @@ import java.util.Objects;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints;
@@ -31,6 +32,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     private final List<String> additionalPermissions;
     private IdentityDataEntity identityData;
     private String holderName;
+    private AccountOwnershipType allowedAccountOwnershipType;
 
     private UKOpenBankingAis(
             URL apiBaseURL,
@@ -40,7 +42,8 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
             boolean partyEndpointEnabled,
             boolean accountPartyEndpointEnabled,
             boolean accountPartiesEndpointEnabled,
-            List<String> additionalPermissions) {
+            List<String> additionalPermissions,
+            AccountOwnershipType allowedAccountOwnershipType) {
         this.apiBaseURL = apiBaseURL;
         this.wellKnownURL = wellKnownURL;
         this.identityDataURL = identityDataURL;
@@ -49,6 +52,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         this.accountPartyEndpointEnabled = accountPartyEndpointEnabled;
         this.accountPartiesEndpointEnabled = accountPartiesEndpointEnabled;
         this.additionalPermissions = additionalPermissions;
+        this.allowedAccountOwnershipType = allowedAccountOwnershipType;
     }
 
     @Override
@@ -103,6 +107,11 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         return String.format(ACCOUNT_TRANSACTIONS_REQUEST, accountId);
     }
 
+    @Override
+    public AccountOwnershipType getAllowedAccountOwnershipType() {
+        return allowedAccountOwnershipType;
+    }
+
     // TODO replace with lombok builder
     public static final class Builder {
 
@@ -114,6 +123,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         private boolean partyEndpointEnabled;
         private boolean accountPartyEndpointEnabled;
         private boolean accountPartiesEndpointEnabled;
+        private AccountOwnershipType allowedAccountOwnershipType = AccountOwnershipType.PERSONAL;
 
         public Builder() {}
 
@@ -160,11 +170,9 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
             return this;
         }
 
-        public Builder withAdditionalPermissions(final List<String> additionalPermissions) {
-            if (Objects.isNull(this.additionalPermissions)) {
-                this.additionalPermissions = new ArrayList<>();
-            }
-            this.additionalPermissions.addAll(additionalPermissions);
+        public Builder withAllowedAccountOwnershipType(
+                final AccountOwnershipType allowedAccountOwnershipType) {
+            this.allowedAccountOwnershipType = allowedAccountOwnershipType;
             return this;
         }
 
@@ -178,7 +186,8 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
                     partyEndpointEnabled,
                     accountPartyEndpointEnabled,
                     accountPartiesEndpointEnabled,
-                    additionalPermissions);
+                    additionalPermissions,
+                    allowedAccountOwnershipType);
         }
     }
 }

@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices;
@@ -86,6 +87,11 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     @Override
     public String getHolderName() {
         return holderName;
+    }
+
+    @Override
+    public AccountOwnershipType getAllowedAccountOwnershipType() {
+        return AccountOwnershipType.PERSONAL;
     }
 
     @Override
@@ -180,15 +186,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
                 this.additionalPermissions = new ArrayList<>();
             }
             this.additionalPermissions.add(additionalPermission);
-            return this;
-        }
-
-        public DanskebankAisConfiguration.Builder withAdditionalPermissions(
-                final List<String> additionalPermissions) {
-            if (Objects.isNull(this.additionalPermissions)) {
-                this.additionalPermissions = new ArrayList<>();
-            }
-            this.additionalPermissions.addAll(additionalPermissions);
             return this;
         }
 

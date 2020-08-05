@@ -19,7 +19,9 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.CreditCardFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.PartyFixtures;
@@ -37,8 +39,9 @@ public class AccountV31FetcherTest {
 
     @Before
     public void setUp() {
-
         Account mockedAccount = mock(Account.class);
+        UkOpenBankingAisConfig aisConfig = mock(UkOpenBankingAisConfig.class);
+        when(aisConfig.getAllowedAccountOwnershipType()).thenReturn(AccountOwnershipType.PERSONAL);
         accountMapper = mock(AccountMapper.class);
         when(accountMapper.map(any(), anyCollection(), anyCollection()))
                 .thenReturn(Optional.of(mockedAccount));
@@ -49,7 +52,7 @@ public class AccountV31FetcherTest {
 
         accountFetcher =
                 new AccountV31Fetcher(
-                        apiClient, partyFetcher, new AccountTypeMapper(), accountMapper);
+                        apiClient, partyFetcher, new AccountTypeMapper(aisConfig), accountMapper);
     }
 
     @Test

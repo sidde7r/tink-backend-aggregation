@@ -86,7 +86,7 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                 new AccountV31Fetcher<>(
                         apiClient,
                         defaultPartyDataFetcher(apiClient, ukOpenBankingAisConfig),
-                        new AccountTypeMapper(),
+                        new AccountTypeMapper(ukOpenBankingAisConfig),
                         transactionalAccountMapper));
     }
 
@@ -120,7 +120,7 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                 new AccountV31Fetcher<>(
                         apiClient,
                         defaultPartyDataFetcher(apiClient, ukOpenBankingAisConfig),
-                        new AccountTypeMapper(),
+                        new AccountTypeMapper(ukOpenBankingAisConfig),
                         creditCardAccountMapper));
     }
 

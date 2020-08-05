@@ -27,6 +27,7 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
     @Override
     public Collection<T> fetchAccounts() {
         return Observable.fromIterable(apiClient.fetchV31Accounts())
+                .filter(accountTypeMapper::supportsAccountOwnershipType)
                 .filter(
                         acc ->
                                 accountMapper.supportsAccountType(
