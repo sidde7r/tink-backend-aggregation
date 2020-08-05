@@ -87,7 +87,10 @@ public class CreditCardEntity extends AbstractContractDetailsEntity {
                         CreditCardModule.builder()
                                 .withCardNumber(accountNumber)
                                 .withBalance(getBalance())
-                                .withAvailableCredit(availableBalance.toTinkAmount())
+                                .withAvailableCredit(
+                                        availableBalance == null
+                                                ? ExactCurrencyAmount.inEUR(0.00)
+                                                : availableBalance.toTinkAmount())
                                 .withCardAlias(accountName)
                                 .build())
                 .withInferredAccountFlags()
@@ -106,7 +109,9 @@ public class CreditCardEntity extends AbstractContractDetailsEntity {
 
     private ExactCurrencyAmount getBalance() {
         // this allows taking into account pending transactions
-        return availableBalance.toTinkAmount().subtract(limit.toTinkAmount());
+        return availableBalance == null
+                ? ExactCurrencyAmount.inEUR(0.00)
+                : availableBalance.toTinkAmount().subtract(limit.toTinkAmount());
     }
 
     @JsonIgnore
