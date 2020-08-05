@@ -119,7 +119,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             log.info(
                     "[transferId: {}] {}",
                     UUIDUtils.toTinkUUID(transfer.getId()),
-                    getTransferExecuteLogInfo(transfer, transferRequest.isUpdate()));
+                    getTransferExecuteLogInfo(transfer));
 
             if (agent instanceof TransferExecutor) {
                 TransferExecutor transferExecutor = (TransferExecutor) agent;
@@ -444,24 +444,12 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         // Deliberately left empty.
     }
 
-    private String getTransferExecuteLogInfo(Transfer transfer, boolean isUpdate) {
+    private String getTransferExecuteLogInfo(Transfer transfer) {
         switch (transfer.getType()) {
-            case EINVOICE:
-                if (isUpdate) {
-                    return "Approving e-invoice.";
-                }
-                break;
             case BANK_TRANSFER:
-                if (!isUpdate) {
-                    return "Creating a new bank transfer.";
-                }
-                break;
+                return "Creating a new bank transfer.";
             case PAYMENT:
-                if (isUpdate) {
-                    return "Updating an upcoming payment.";
-                } else {
-                    return "Creating a new payment.";
-                }
+                return "Creating a new payment.";
         }
         return "Unrecognized transfer command.";
     }
