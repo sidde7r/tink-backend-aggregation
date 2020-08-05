@@ -12,6 +12,8 @@ public final class CmcicConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String NO_PIS_OAUTH_TOKEN_IN_STORAGE = "No PIS Oauth Token In Storage";
+        public static final String MAPPING =
+                "Cannot map payment status: %s to Tink payment status.";
     }
 
     public static class Urls {
@@ -24,7 +26,7 @@ public final class CmcicConstants {
         public static final String PAYMENT_REQUESTS = BASE_API_PATH + "/payment-requests";
         public static final String SUCCESS_REPORT_PATH = "?code=123&state=";
         public static final String BENEFICIARIES_PATH = "/trusted-beneficiaries";
-        public static final String PIS_CONFIRMATION_PATH = BASE_API_PATH + "/confirmation";
+        public static final String PIS_CONFIRMATION_PATH = "/confirmation";
     }
 
     public static class StorageKeys {
