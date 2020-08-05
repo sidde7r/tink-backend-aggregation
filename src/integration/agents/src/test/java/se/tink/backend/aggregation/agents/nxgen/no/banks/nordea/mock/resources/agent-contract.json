@@ -1,6 +1,6 @@
 {
   "accounts" : [ {
-    "accountNumber" : "5269********3239",
+    "accountNumber" : "5269 **** **** 3239",
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
       "currencyCode" : "NOK",
@@ -20,7 +20,7 @@
     "bankId" : "52693239",
     "excluded" : false,
     "favored" : false,
-    "name" : "5269********3239",
+    "name" : "5269 **** **** 3239",
     "ownership" : 1.0,
     "type" : "CREDIT_CARD",
     "userModifiedExcluded" : false,

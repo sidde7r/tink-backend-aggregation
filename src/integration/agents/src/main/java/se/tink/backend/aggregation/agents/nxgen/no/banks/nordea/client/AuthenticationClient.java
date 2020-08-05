@@ -11,6 +11,8 @@ import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoC
 
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoStorage;
@@ -34,11 +36,7 @@ public class AuthenticationClient {
 
     // Not sure if needed at all.
     public String initializeNordeaSession(
-            String codeChallenge,
-            String state,
-            String nonce,
-            String mobileNumber,
-            String dateOfBirth) {
+            String codeChallenge, String state, String nonce, Credentials credentials) {
         RequestBuilder request =
                 baseClient
                         .request(Urls.NORDEA_AUTH_BASE_URL)
@@ -60,8 +58,8 @@ public class AuthenticationClient {
                                 QueryParamKeys.LOGIN_HINT,
                                 String.format(
                                         QueryParamValues.LOGIN_HINT_FORMAT,
-                                        mobileNumber,
-                                        dateOfBirth))
+                                        credentials.getField(Field.Key.MOBILENUMBER),
+                                        credentials.getField(Field.Key.DATE_OF_BIRTH)))
                         .queryParam(QueryParamKeys.APP_CHANNEL, QueryParamValues.APP_CHANNEL)
                         .queryParam(QueryParamKeys.ADOBE_MC, QueryParamValues.ADOBE_MC);
         String res = request.getUrl().toString();
@@ -90,8 +88,7 @@ public class AuthenticationClient {
             String referer,
             String integrationUrl,
             String sessionId,
-            String mobileNumber,
-            String dateOfBirth) {
+            Credentials credentials) {
 
         return baseClient
                 .request(Urls.BANKID_AUTHENTICATION_INIT)
@@ -117,8 +114,8 @@ public class AuthenticationClient {
                         QueryParamKeys.LOGIN_HINT,
                         String.format(
                                 QueryParamValues.LOGIN_HINT_SHORT_FORMAT,
-                                mobileNumber,
-                                dateOfBirth))
+                                credentials.getField(Field.Key.MOBILENUMBER),
+                                credentials.getField(Field.Key.DATE_OF_BIRTH)))
                 .header(HeaderKeys.REFERER, referer)
                 .get(HttpResponse.class);
     }

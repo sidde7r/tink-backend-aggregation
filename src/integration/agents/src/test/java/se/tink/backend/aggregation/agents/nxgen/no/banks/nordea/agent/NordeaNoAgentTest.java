@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 public class NordeaNoAgentTest {
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {
-        USERNAME,
+        DATE_OF_BIRTH,
         PASSWORD(true),
         MOBILENUMBER(true);
 
@@ -40,7 +40,7 @@ public class NordeaNoAgentTest {
     @Test
     public void testRefreshBankId() throws Exception {
         new AgentIntegrationTest.Builder("no", "no-nordea-bankid")
-                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.DATE_OF_BIRTH, manager.get(Arg.DATE_OF_BIRTH))
                 .addCredentialField(Field.Key.MOBILENUMBER, manager.get(Arg.MOBILENUMBER))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)

@@ -43,19 +43,16 @@ public class SetupSessionStep implements AuthenticationStep {
         }
 
         Credentials credentials = request.getCredentials();
-        String mobileNumber = credentials.getField(Field.Key.MOBILENUMBER);
-        String dateOfBirth = credentials.getField(Field.Key.USERNAME);
 
-        String state = generateState();
-        String nonce = generateNonce();
-        String codeVerifier = generateCodeVerifier();
+        String state = randomValueGenerator.generateRandomBase64UrlEncoded(26);
+        String nonce = randomValueGenerator.generateRandomBase64UrlEncoded(26);
+        String codeVerifier = randomValueGenerator.generateRandomBase64UrlEncoded(86);
         String codeChallenge = calculateCodeChallenge(codeVerifier);
 
         storage.storeCodeVerifier(codeVerifier);
-
         String referer =
                 authenticationClient.initializeNordeaSession(
-                        codeChallenge, state, nonce, mobileNumber, dateOfBirth);
+                        codeChallenge, state, nonce, credentials);
         storage.storeReferer(referer);
 
         AuthenticationsResponse authenticationResponse =
@@ -71,8 +68,7 @@ public class SetupSessionStep implements AuthenticationStep {
                         referer,
                         authenticationResponse.getBankidIntegrationUrl(),
                         sessionId,
-                        mobileNumber,
-                        dateOfBirth);
+                        credentials);
 
         OidcSessionDetails oidcSessionDetails =
                 extractBankIdSessionDetails(bankIdInitializationResponse);
@@ -92,20 +88,8 @@ public class SetupSessionStep implements AuthenticationStep {
                 new SupplementInformationRequester.Builder().withFields(confirm).build());
     }
 
-    private String generateCodeVerifier() {
-        return randomValueGenerator.generateRandomBase64UrlEncoded(86);
-    }
-
     private String calculateCodeChallenge(String codeVerifier) {
         return EncodingUtils.encodeAsBase64UrlSafe(Hash.sha256(codeVerifier));
-    }
-
-    private String generateNonce() {
-        return randomValueGenerator.generateRandomBase64UrlEncoded(26);
-    }
-
-    private String generateState() {
-        return randomValueGenerator.generateRandomBase64UrlEncoded(26);
     }
 
     private OidcSessionDetails extractBankIdSessionDetails(

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.mock;
 
+import static se.tink.backend.agents.rpc.Field.Key.DATE_OF_BIRTH;
 import static se.tink.backend.agents.rpc.Field.Key.MOBILENUMBER;
-import static se.tink.backend.agents.rpc.Field.Key.USERNAME;
 import static se.tink.libraries.enums.MarketCode.NO;
 
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class NordeaNoMockServerAgentTest {
                 AgentWireMockRefreshTest.builder(NO, "no-nordea-bankid", wireMockFilePath)
                         .addCallbackData("wot", "wat")
                         .addCredentialField(MOBILENUMBER.getFieldKey(), "96325874")
-                        .addCredentialField(USERNAME.getFieldKey(), "121290")
+                        .addCredentialField(DATE_OF_BIRTH.getFieldKey(), "121290")
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .dumpContentForContractFile()

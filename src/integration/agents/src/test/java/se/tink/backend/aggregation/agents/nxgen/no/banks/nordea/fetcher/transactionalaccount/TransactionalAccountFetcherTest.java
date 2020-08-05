@@ -47,35 +47,39 @@ public class TransactionalAccountFetcherTest {
         // then
         assertThat(transactionalAccounts).hasSize(2);
         Iterator<TransactionalAccount> iterator = transactionalAccounts.iterator();
+        TransactionalAccount account = iterator.next();
         assertThatAccountIsProperlyMapped(
-                iterator.next(),
+                account,
                 AccountTypes.CHECKING,
                 "86011117947",
-                ExactCurrencyAmount.of(1801.4, "NOK"),
-                ExactCurrencyAmount.of(1801.4, "NOK"),
-                ExactCurrencyAmount.of(22.0, "NOK"),
                 "NO9386011117947",
                 "Brukskonto",
                 "Felleskonto");
+        assertThatBalancesAreProperlyMapped(
+                account,
+                ExactCurrencyAmount.of(1801.4, "NOK"),
+                ExactCurrencyAmount.of(1801.4, "NOK"),
+                ExactCurrencyAmount.of(22.0, "NOK"));
+
+        account = iterator.next();
         assertThatAccountIsProperlyMapped(
-                iterator.next(),
+                account,
                 AccountTypes.SAVINGS,
                 "86022227947",
-                ExactCurrencyAmount.of(401.22, "NOK"),
-                ExactCurrencyAmount.of(102.22, "NOK"),
-                ExactCurrencyAmount.of(0.0, "NOK"),
                 "NO9386022227947",
                 "Brukskonto123",
                 "Felleskonto11111");
+        assertThatBalancesAreProperlyMapped(
+                account,
+                ExactCurrencyAmount.of(401.22, "NOK"),
+                ExactCurrencyAmount.of(102.22, "NOK"),
+                ExactCurrencyAmount.of(0.0, "NOK"));
     }
 
     private void assertThatAccountIsProperlyMapped(
             TransactionalAccount account,
             AccountTypes expectedType,
             String expectedApiIdentifier,
-            ExactCurrencyAmount expectedBookedBalance,
-            ExactCurrencyAmount expectedAvailableBalance,
-            ExactCurrencyAmount expectedCreditLimit,
             String expectedIban,
             String expectedProductName,
             String expectedAccountName) {
@@ -83,10 +87,6 @@ public class TransactionalAccountFetcherTest {
         assertThat(account.getApiIdentifier()).isEqualTo(expectedApiIdentifier);
         assertThat(account.getHolders()).hasSize(1);
         assertThat(account.getHolders().get(0)).isEqualTo(Holder.of("First Second Surname"));
-
-        assertThat(account.getExactBalance()).isEqualTo(expectedBookedBalance);
-        assertThat(account.getExactAvailableBalance()).isEqualTo(expectedAvailableBalance);
-        assertThat(account.getExactCreditLimit()).isEqualTo(expectedCreditLimit);
 
         assertThat(account.isUniqueIdentifierEqual(expectedIban)).isTrue();
 
@@ -97,6 +97,16 @@ public class TransactionalAccountFetcherTest {
                 .containsExactlyInAnyOrder(
                         new NorwegianIdentifier(expectedApiIdentifier),
                         new IbanIdentifier("NDEANOKK", expectedIban));
+    }
+
+    private void assertThatBalancesAreProperlyMapped(
+            TransactionalAccount account,
+            ExactCurrencyAmount expectedBookedBalance,
+            ExactCurrencyAmount expectedAvailableBalance,
+            ExactCurrencyAmount expectedCreditLimit) {
+        assertThat(account.getExactBalance()).isEqualTo(expectedBookedBalance);
+        assertThat(account.getExactAvailableBalance()).isEqualTo(expectedAvailableBalance);
+        assertThat(account.getExactCreditLimit()).isEqualTo(expectedCreditLimit);
     }
 
     @Test
