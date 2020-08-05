@@ -16,7 +16,8 @@ public class AccountIdentificationEntity {
     private String currency = null;
 
     @JsonCreator
-    public AccountIdentificationEntity(String iban, String currency) {
+    public AccountIdentificationEntity(
+            @JsonProperty("iban") String iban, @JsonProperty("currency") String currency) {
         this.iban = iban;
         this.currency = currency;
     }
