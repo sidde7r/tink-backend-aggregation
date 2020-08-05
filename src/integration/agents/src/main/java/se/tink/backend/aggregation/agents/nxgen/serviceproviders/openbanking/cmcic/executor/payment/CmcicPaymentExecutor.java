@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentIdentificationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentInformationStatusCodeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentRequestResourceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentTypeInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.ServiceLevelCodeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.StatusReasonInformationEntity;
@@ -133,11 +134,11 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         HalPaymentRequestEntity paymentRequestEntity =
                 apiClient.fetchPayment(paymentRequest.getPayment().getUniqueId());
 
-        PaymentRequestResourceEntity payment = paymentRequestEntity.getPaymentRequest();
+        PaymentResponseEntity payment = paymentRequestEntity.getPaymentRequest();
 
         return getPaymentResponse(payment);
     }
@@ -188,7 +189,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             HalPaymentRequestEntity paymentResponse, String nextStep) throws PaymentException {
         PaymentMultiStepResponse paymentMultiStepResponse = null;
         PaymentInformationStatusCodeEntity paymentStatus =
-                paymentResponse.getPaymentRequest().getPaymentInformationStatus();
+                paymentResponse.getPaymentRequest().getPaymentInformationStatusCode();
         switch (paymentStatus) {
             case ACCP:
                 if (nextStep.equals(AuthenticationStepConstants.STEP_FINALIZE)) {
@@ -264,10 +265,26 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 new PaymentCancelledException());
     }
 
+    private PaymentResponse getPaymentResponse(PaymentResponseEntity payment) {
+
+        return new PaymentResponse(
+                new Payment.Builder()
+                        .withUniqueId(payment.getResourceId())
+                        .withStatus(
+                                payment.getPaymentInformationStatusCode().mapToTinkPaymentStatus())
+                        .withCreditor(
+                                new Creditor(
+                                        new IbanIdentifier(
+                                                payment.getBeneficiary()
+                                                        .getCreditorAccount()
+                                                        .getIban()),
+                                        payment.getBeneficiary().getCreditor().getName()))
+                        .build());
+    }
+
     private PaymentResponse getPaymentResponse(PaymentRequestResourceEntity payment) {
         AmountTypeEntity amountTypeEntity =
                 payment.getCreditTransferTransaction().get(0).getInstructedAmount();
-
         return new PaymentResponse(
                 new Payment.Builder()
                         .withUniqueId(payment.getResourceId())
