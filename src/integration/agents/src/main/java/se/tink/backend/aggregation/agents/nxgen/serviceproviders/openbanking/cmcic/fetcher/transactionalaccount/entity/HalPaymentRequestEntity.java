@@ -6,24 +6,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class HalPaymentRequestEntity {
     @JsonProperty("paymentRequest")
-    private PaymentRequestResourceEntity paymentRequest = null;
+    private PaymentResponseEntity paymentRequest = null;
 
-    @JsonProperty("_links")
-    private PaymentRequestLinksEntity links = null;
-
-    public PaymentRequestResourceEntity getPaymentRequest() {
+    public PaymentResponseEntity getPaymentRequest() {
         return paymentRequest;
     }
 
-    public void setPaymentRequest(PaymentRequestResourceEntity paymentRequest) {
+    public void setPaymentRequest(PaymentResponseEntity paymentRequest) {
         this.paymentRequest = paymentRequest;
-    }
-
-    public PaymentRequestLinksEntity getLinks() {
-        return links;
-    }
-
-    public void setLinks(PaymentRequestLinksEntity links) {
-        this.links = links;
     }
 }

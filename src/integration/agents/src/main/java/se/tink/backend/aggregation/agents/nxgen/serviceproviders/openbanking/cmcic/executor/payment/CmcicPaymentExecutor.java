@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledExc
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.DateFormat;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.PaymentSteps;
@@ -42,6 +43,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentIdentificationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentInformationStatusCodeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentRequestResourceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentTypeInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.ServiceLevelCodeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.StatusReasonInformationEntity;
@@ -133,11 +135,11 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         HalPaymentRequestEntity paymentRequestEntity =
                 apiClient.fetchPayment(paymentRequest.getPayment().getUniqueId());
 
-        PaymentRequestResourceEntity payment = paymentRequestEntity.getPaymentRequest();
+        PaymentResponseEntity payment = paymentRequestEntity.getPaymentRequest();
 
         return getPaymentResponse(payment);
     }
@@ -147,7 +149,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             throws PaymentException {
         PaymentMultiStepResponse paymentMultiStepResponse = null;
         Payment payment = paymentMultiStepRequest.getPayment();
-        String paymentId = payment.getUniqueId();
+        String paymentId = getPaymentId(sessionStorage.get(StorageKeys.AUTH_URL));
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
                 openThirdPartyApp(new URL(sessionStorage.get(StorageKeys.AUTH_URL)));
@@ -188,7 +190,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             HalPaymentRequestEntity paymentResponse, String nextStep) throws PaymentException {
         PaymentMultiStepResponse paymentMultiStepResponse = null;
         PaymentInformationStatusCodeEntity paymentStatus =
-                paymentResponse.getPaymentRequest().getPaymentInformationStatus();
+                paymentResponse.getPaymentRequest().getPaymentInformationStatusCode();
         switch (paymentStatus) {
             case ACCP:
                 if (nextStep.equals(AuthenticationStepConstants.STEP_FINALIZE)) {
@@ -264,10 +266,25 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 new PaymentCancelledException());
     }
 
+    private PaymentResponse getPaymentResponse(PaymentResponseEntity payment) {
+
+        return new PaymentResponse(
+                new Payment.Builder()
+                        .withUniqueId(payment.getResourceId())
+                        .withStatus(payment.getPaymentInformationStatusCode().getPaymentStatus())
+                        .withCreditor(
+                                new Creditor(
+                                        new IbanIdentifier(
+                                                payment.getBeneficiary()
+                                                        .getCreditorAccount()
+                                                        .getIban()),
+                                        payment.getBeneficiary().getCreditor().getName()))
+                        .build());
+    }
+
     private PaymentResponse getPaymentResponse(PaymentRequestResourceEntity payment) {
         AmountTypeEntity amountTypeEntity =
                 payment.getCreditTransferTransaction().get(0).getInstructedAmount();
-
         return new PaymentResponse(
                 new Payment.Builder()
                         .withUniqueId(payment.getResourceId())
@@ -298,6 +315,18 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         } catch (ParseException e) {
             return OffsetDateTime.parse(date).toLocalDateTime();
         }
+    }
+
+    private String getPaymentId(String authorizationUrl) throws PaymentException {
+        int index = authorizationUrl.lastIndexOf('=');
+        if (index < 0) {
+            logger.error("Payment failed due to missing paymentId");
+            throw new PaymentException(
+                    TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
+                            .getKey()
+                            .get());
+        }
+        return authorizationUrl.substring(index + 1);
     }
 
     private PaymentRequestResourceEntity buildPaymentRequest(PaymentRequest paymentRequest) {
@@ -398,7 +427,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                         strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES);
 
         if (information.isPresent()) {
-            String psuAuthenticationFactor = information.get().get("psuAuthenticationFactor");
+            String psuAuthenticationFactor =
+                    information.get().get(CmcicConstants.QueryKeys.PSU_AUTHENTICATION_FACTOR);
             if (Strings.isNullOrEmpty(psuAuthenticationFactor)) {
                 handelAuthFactorError();
             }
