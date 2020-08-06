@@ -99,10 +99,11 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                 new StrongAuthenticationState(
                         request.getAppUriId(), componentProvider.getRandomValueGenerator());
         log.info(
-                "[forceAuthenticate] strongAuthenticationState for credentials: {}, appUriId: {}, state: {}",
+                "[forceAuthenticate] strongAuthenticationState for credentials: {}, appUriId: {}, state: {}, request: {}",
                 request.getCredentials().getId(),
                 request.getAppUriId(),
-                this.strongAuthenticationState.getState());
+                this.strongAuthenticationState.getState(),
+                request.getClass().getSimpleName());
     }
 
     protected EidasIdentity getEidasIdentity() {
