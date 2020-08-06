@@ -12,10 +12,6 @@ public class UnicreditConfiguration implements ClientConfiguration {
 
     @Secret private String baseUrl;
 
-    private String clientKeyStorePath;
-
-    private String clientKeyStorePassword;
-
     @Secret private String psuIdType;
 
     public String getBaseUrl() {
@@ -24,22 +20,6 @@ public class UnicreditConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
 
         return baseUrl;
-    }
-
-    public String getClientKeyStorePath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientKeyStorePath),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Key Store Path"));
-
-        return clientKeyStorePath;
-    }
-
-    public String getClientKeyStorePassword() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientKeyStorePassword),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Key Store Password"));
-
-        return clientKeyStorePassword;
     }
 
     public String getPsuIdType() {

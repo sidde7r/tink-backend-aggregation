@@ -9,8 +9,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionsWrapperEntity {
 
     private List<TransactionEntity> booked;
+    private List<TransactionEntity> pending;
 
     public List<TransactionEntity> getBooked() {
         return Optional.ofNullable(booked).orElse(Collections.emptyList());
+    }
+
+    public List<TransactionEntity> getPending() {
+        return Optional.ofNullable(pending).orElse(Collections.emptyList());
     }
 }

@@ -38,7 +38,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -223,15 +222,24 @@ public abstract class UnicreditBaseApiClient {
                 .get(AccountDetailsResponse.class);
     }
 
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account) {
-        return createRequestInSession(
-                        new URL(getConfiguration().getBaseUrl() + Endpoints.TRANSACTIONS)
-                                .parameter(PathParameters.ACCOUNT_ID, account.getApiIdentifier()))
-                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                .queryParam(QueryKeys.DATE_FROM, getTransactionsDateFrom())
-                .queryParam(
-                        QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
-                .get(TransactionsResponse.class);
+    public TransactionsResponse getTransactionsFor(TransactionalAccount account) {
+        URL transactionsUrl =
+                new URL(getConfiguration().getBaseUrl() + Endpoints.TRANSACTIONS)
+                        .parameter(PathParameters.ACCOUNT_ID, account.getApiIdentifier());
+
+        RequestBuilder transactionRequestBuilder =
+                createRequestInSession(transactionsUrl)
+                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
+                        .queryParam(QueryKeys.DATE_FROM, getTransactionsDateFrom())
+                        .queryParam(
+                                QueryKeys.DATE_TO,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()));
+
+        return transactionRequestBuilder.get(TransactionsResponse.class);
+    }
+
+    public TransactionsResponse getTransactionsForNextUrl(URL nextUrl) {
+        return createRequestInSession(nextUrl).get(TransactionsResponse.class);
     }
 
     public void removeConsentFromPersistentStorage() {

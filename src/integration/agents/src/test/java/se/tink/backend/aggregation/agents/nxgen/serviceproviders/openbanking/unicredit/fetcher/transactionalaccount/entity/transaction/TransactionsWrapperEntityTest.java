@@ -39,7 +39,7 @@ public class TransactionsWrapperEntityTest {
 
         // then
         for (TransactionEntity transaction : result) {
-            assertThat(transaction.transactionId)
+            assertThat(transaction.getTransactionId())
                     .isIn("test-transaction-id-1", "test-transaction-id-2");
         }
     }
