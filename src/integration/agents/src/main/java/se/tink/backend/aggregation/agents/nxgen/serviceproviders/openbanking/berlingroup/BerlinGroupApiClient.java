@@ -18,13 +18,13 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RequiredArgsConstructor
 public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupConfiguration> {
 
     protected final TinkHttpClient client;
-    protected final SessionStorage sessionStorage;
+    protected final PersistentStorage persistentStorage;
 
     @Getter private final TConfiguration configuration;
     @Getter private final String redirectUrl;
@@ -43,7 +43,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
         return client.request(url)
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
-                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .type(MediaType.APPLICATION_JSON);
     }
 
@@ -57,7 +57,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
         return client.request(url)
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID));
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
     }
 
     protected RequestBuilder getPaymentRequestBuilder(final URL url) {
@@ -66,7 +66,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
-                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress());
     }
 
@@ -89,7 +89,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
             final String redirectUrl) {
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
 
-        sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
+        persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
 
         return getAuthorizeUrl(url, state, clientId, redirectUrl)
@@ -99,12 +99,12 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
     }
 
     protected OAuth2Token getTokenFromSession(final String storageKey) {
-        return sessionStorage
+        return persistentStorage
                 .get(storageKey, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
     public void setTokenToSession(final OAuth2Token token, final String storageKey) {
-        sessionStorage.put(storageKey, token);
+        persistentStorage.put(storageKey, token);
     }
 }

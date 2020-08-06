@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration> {
 
@@ -39,18 +39,18 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
 
     public SamlinkApiClient(
             final TinkHttpClient client,
-            final SessionStorage sessionStorage,
+            final PersistentStorage persistentStorage,
             final QsealcSigner qsealcSigner,
             final SamlinkConfiguration configuration,
             final String redirectUrl) {
-        super(client, sessionStorage, configuration, redirectUrl);
+        super(client, persistentStorage, configuration, redirectUrl);
 
         this.qsealcSigner = qsealcSigner;
     }
 
     public URL getAuthorizeUrl(final String state) {
         final String consentId = getConsentId();
-        sessionStorage.put(StorageKeys.CONSENT_ID, consentId);
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
         final String authUrl = getConfiguration().getBaseUrl() + Urls.AUTH;
         return getAuthorizeUrlWithCode(
                         authUrl,
@@ -82,7 +82,7 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
                 .header(
                         SamlinkConstants.HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
                         getConfiguration().getCertificate())
-                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .header(
                         SamlinkConstants.HeaderKeys.SUBSCRIPTION_KEY,
                         getConfiguration().getSubscriptionKey());

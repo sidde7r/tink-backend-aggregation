@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
@@ -51,12 +50,11 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
     public KbcApiClient(
             final TinkHttpClient client,
-            final SessionStorage sessionStorage,
             final KbcConfiguration configuration,
             final String redirectUrl,
             final Credentials credentials,
             final PersistentStorage persistentStorage) {
-        super(client, sessionStorage, configuration, redirectUrl);
+        super(client, persistentStorage, configuration, redirectUrl);
 
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
@@ -126,7 +124,7 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
                         code,
                         getRedirectUrl(),
                         getConfiguration().getClientId(),
-                        sessionStorage.get(StorageKeys.CODE_VERIFIER));
+                        persistentStorage.get(StorageKeys.CODE_VERIFIER));
 
         return client.request(getConfiguration().getBaseUrl() + Urls.TOKEN)
                 .addBasicAuth(getConfiguration().getClientId())

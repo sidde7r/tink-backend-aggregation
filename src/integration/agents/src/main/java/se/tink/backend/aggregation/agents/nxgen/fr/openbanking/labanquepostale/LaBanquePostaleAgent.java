@@ -56,7 +56,7 @@ public final class LaBanquePostaleAgent
     protected LaBanquePostaleApiClient createApiClient() {
         return new LaBanquePostaleApiClient(
                 client,
-                sessionStorage,
+                persistentStorage,
                 qsealcSigner,
                 getConfiguration().getProviderSpecificConfiguration(),
                 getConfiguration().getRedirectUrl());

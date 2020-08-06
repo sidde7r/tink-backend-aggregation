@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfiguration> {
 
@@ -40,11 +40,11 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     TriodosApiClient(
             final TinkHttpClient client,
-            final SessionStorage sessionStorage,
+            final PersistentStorage persistentStorage,
             final TriodosConfiguration configuration,
             final String redirectUrl,
             final Credentials credentials) {
-        super(client, sessionStorage, configuration, redirectUrl);
+        super(client, persistentStorage, configuration, redirectUrl);
 
         this.credentials = credentials;
     }
@@ -67,9 +67,9 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     public URL getAuthorizeUrl(final String state) {
         final String consentId = getConsentId();
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
-        sessionStorage.put(BerlinGroupConstants.StorageKeys.CODE_VERIFIER, codeVerifier);
+        persistentStorage.put(BerlinGroupConstants.StorageKeys.CODE_VERIFIER, codeVerifier);
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
-        sessionStorage.put(BerlinGroupConstants.StorageKeys.CONSENT_ID, consentId);
+        persistentStorage.put(BerlinGroupConstants.StorageKeys.CONSENT_ID, consentId);
         final String authUrl = getConfiguration().getBaseUrl() + Urls.AUTH;
 
         return getAuthorizeUrl(authUrl, state, getConfiguration().getClientId(), getRedirectUrl())
@@ -111,7 +111,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     @Override
     public OAuth2Token getToken(final String code) {
         final String codeVerifier =
-                sessionStorage.get(BerlinGroupConstants.StorageKeys.CODE_VERIFIER);
+                persistentStorage.get(BerlinGroupConstants.StorageKeys.CODE_VERIFIER);
         final String body =
                 Form.builder()
                         .put(FormKeys.GRANT_TYPE, FormValues.CLIENT_CREDENTIALS)
@@ -143,8 +143,8 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
         final String digest = Psd2Headers.calculateDigest(consentsRequest.toData());
         if (StringUtils.isNotEmpty(
-                sessionStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID))) {
-            return sessionStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID);
+                persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID))) {
+            return persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID);
         }
         final URL url = new URL(getConfiguration().getBaseUrl() + Urls.CONSENT);
         final ConsentResponse consentResponse =
@@ -153,9 +153,9 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                         .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                         .post(ConsentResponse.class);
 
-        sessionStorage.put(
+        persistentStorage.put(
                 BerlinGroupConstants.StorageKeys.CONSENT_ID, consentResponse.getConsentId());
-        sessionStorage.put(
+        persistentStorage.put(
                 TriodosConstants.HeaderKeys.AUTHORIZATION_ID, consentResponse.getAuthorisationId());
 
         return consentResponse.getConsentId();
@@ -167,9 +167,9 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                         getConfiguration().getBaseUrl()
                                 + String.format(
                                         Urls.AUTHORIZE_CONSENT,
-                                        sessionStorage.get(
+                                        persistentStorage.get(
                                                 BerlinGroupConstants.StorageKeys.CONSENT_ID),
-                                        sessionStorage.get(StorageKeys.AUTHORIZATION_ID)));
+                                        persistentStorage.get(StorageKeys.AUTHORIZATION_ID)));
         createRequestInSession(url, FormValues.EMPTY).put(String.class);
     }
 

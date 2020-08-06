@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class KbcApiClientTest {
 
@@ -35,7 +34,6 @@ public class KbcApiClientTest {
     @Before
     public void setUp() {
         final TinkHttpClient httpClientMock = mock(TinkHttpClient.class);
-        final SessionStorage sessionStorageMock = mock(SessionStorage.class);
         final PersistentStorage persistentStorageMock = mock(PersistentStorage.class);
         final KbcConfiguration kbcConfigurationMock = mock(KbcConfiguration.class);
 
@@ -49,7 +47,6 @@ public class KbcApiClientTest {
         kbcApiClient =
                 new KbcApiClient(
                         httpClientMock,
-                        sessionStorageMock,
                         kbcConfigurationMock,
                         REDIRECT_URL,
                         credentialsMock,
