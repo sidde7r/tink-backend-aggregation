@@ -28,6 +28,6 @@ public class AmountEntity {
 
     @JsonIgnore
     public Amount toTinkAmount() {
-        return Amount.valueOf(currency, Double.valueOf(amount * 100).longValue(), 2);
+        return Amount.valueOf(currency, (long) (amount * 100), 2);
     }
 }
