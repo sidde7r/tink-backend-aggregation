@@ -306,24 +306,6 @@ ECLIPSE_JETTY_VERSION = "9.0.7.v20131107"
 
 ALT_ECLIPSE_JETTY_VERSION = "9.2.13.v20150730"
 
-http_file(
-    name = "protoc_gen_grpc_java_linux_x86_64",
-    sha256 = "b3823d7bca0c3513d48ef43de63f6a48410040f5f7b16d5eceea0adb98d07f42",
-    urls = ["https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-linux-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
-)
-
-http_file(
-    name = "protoc_gen_grpc_java_macosx",
-    sha256 = "e5e514c76264f3cd8f26c19628a6fc5db2c355b1d285d252aa9b91c136b0f025",
-    urls = ["https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-osx-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
-)
-
-http_file(
-    name = "protoc_gen_grpc_java_windows_x86_64",
-    sha256 = "8e8b2b3a0b5b083cf5fc0268da7dd6b305762e591ec4a468e5e688f77c32e63f",
-    urls = ["https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-windows-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
-)
-
 # rules_proto will not be builtin in to Bazel in v1.0 and later
 # prepare us for that, and use the out-ot-repo version
 http_archive(
