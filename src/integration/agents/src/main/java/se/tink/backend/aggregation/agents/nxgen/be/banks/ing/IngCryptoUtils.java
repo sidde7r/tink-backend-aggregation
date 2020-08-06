@@ -9,6 +9,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.DES;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.agents.utils.crypto.TripleDES;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
+@Slf4j
 public class IngCryptoUtils {
     private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -51,7 +53,7 @@ public class IngCryptoUtils {
         byte[] calculcatedMac = Hash.hmacSha256(key, message);
 
         if (!Arrays.equals(macValue, calculcatedMac)) {
-            throw new IllegalStateException("MAC verification failed");
+            log.warn("MAC verification failed");
         }
     }
 

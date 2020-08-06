@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import java.util.Collection;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.exception.OutOfSessionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -32,7 +33,7 @@ public class TransactionsResponseTest {
         }
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = OutOfSessionException.class)
     public void testOutOfSessionResponses() {
         TransactionsResponse transactionsResponse =
                 SerializationUtils.deserializeFromString(

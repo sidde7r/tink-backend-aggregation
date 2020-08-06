@@ -1,0 +1,13 @@
+agentsServiceConfiguration:
+  integrations:
+    1282ff29350d443caf6fd86a1078343c:
+      tink:
+        eidasOrgNmr: SE-FINA-44059
+        eidasQwac: Tink
+        keyId: https://cdn.tink.se/eidas/jwks.json
+        redirectUrl: "https://api.tink.com/api/v1/credentials/third-party/callback"
+        clientId: "DUMMY_ID"
+        clientSecret: "DUMMY_SECRET"
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

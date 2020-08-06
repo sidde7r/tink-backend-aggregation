@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
 import java.util.Optional;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.MobileHelloResponseEntity;
@@ -18,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.M
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.PrepareEnrollResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.TrustBuilderRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.BaseMobileResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.exception.OutOfSessionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.rpc.PortfolioRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.rpc.PortfolioResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.PendingPaymentsResponseEntity;
@@ -32,15 +35,14 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientExcept
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@RequiredArgsConstructor
 public class IngApiClient {
-    private final TinkHttpClient client;
-    private final String aggregator;
 
-    public IngApiClient(final TinkHttpClient client, final String aggregator) {
-        this.client = client;
-        this.aggregator = aggregator;
-    }
+    private final TinkHttpClient client;
+    private final PersistentStorage persistentStorage;
+    private final String aggregator;
 
     public MobileHelloResponseEntity mobileHello() {
         MobileHelloRequestBody mobileHelloRequestBody = new MobileHelloRequestBody();
@@ -170,13 +172,7 @@ public class IngApiClient {
     }
 
     public Optional<AccountsResponse> fetchAccounts(LoginResponseEntity loginResponse) {
-        return loginResponse
-                .findAccountRequest()
-                .map(
-                        accountsUrl ->
-                                this.client
-                                        .request(getUrlWithQueryParams(accountsUrl))
-                                        .post(AccountsResponse.class, new BaseBody()));
+        return getHttpResponseForAccountsFetch(loginResponse).flatMap(this::getAccountsResponse);
     }
 
     public PortfolioResponse fetchInvestmentPortfolio(URL url, String bbanNumber) {
@@ -216,6 +212,24 @@ public class IngApiClient {
                                         "Could not find pending payments request in list of requests."));
     }
 
+    private Optional<HttpResponse> getHttpResponseForAccountsFetch(
+            LoginResponseEntity loginResponse) {
+        return loginResponse
+                .findAccountRequest()
+                .map(
+                        accountsUrl ->
+                                this.client
+                                        .request(getUrlWithQueryParams(accountsUrl))
+                                        .post(HttpResponse.class, new BaseBody()))
+                .filter(
+                        httpResponse ->
+                                httpResponse.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE))
+                .filter(
+                        httpResponse ->
+                                httpResponse.getHeaders().get(HttpHeaders.CONTENT_TYPE).size()
+                                        == 1);
+    }
+
     private URL getUrlWithQueryParams(URL url) {
         return url.queryParam(
                         IngConstants.Session.ValuePairs.APP_NAME.getKey(),
@@ -223,5 +237,46 @@ public class IngApiClient {
                 .queryParam(
                         IngConstants.Session.ValuePairs.USER_PROFILE.getKey(),
                         IngConstants.Session.ValuePairs.USER_PROFILE.getValue());
+    }
+
+    private Optional<AccountsResponse> getAccountsResponse(HttpResponse httpResponse) {
+        verifyIsInSession(httpResponse);
+
+        return Optional.of(httpResponse)
+                .filter(IngApiClient::isAccountsResponse)
+                .map(response -> response.getBody(AccountsResponse.class));
+    }
+
+    private void verifyIsInSession(HttpResponse httpResponse) {
+        try {
+            checkOutOfSession(httpResponse);
+        } catch (OutOfSessionException ex) {
+            handleOutOfSessionException();
+        }
+    }
+
+    private void handleOutOfSessionException() {
+        this.persistentStorage.put(IngConstants.Storage.IS_MANUAL_AUTHENTICATION, Boolean.TRUE);
+
+        throw BankServiceError.SESSION_TERMINATED.exception();
+    }
+
+    private static boolean isAccountsResponse(HttpResponse httpResponse) {
+        return hasContentType(httpResponse, MediaType.TEXT_XML);
+    }
+
+    private static void checkOutOfSession(HttpResponse httpResponse) throws OutOfSessionException {
+        if (hasContentType(httpResponse, MediaType.APPLICATION_JSON)) {
+            final BaseResponse baseResponse = httpResponse.getBody(BaseResponse.class);
+
+            baseResponse.getMobileResponse();
+        }
+    }
+
+    private static boolean hasContentType(HttpResponse httpResponse, String expectedContentType) {
+        final String actualContentType =
+                httpResponse.getHeaders().get(HttpHeaders.CONTENT_TYPE).get(0).toLowerCase();
+
+        return actualContentType.startsWith(expectedContentType.toLowerCase());
     }
 }

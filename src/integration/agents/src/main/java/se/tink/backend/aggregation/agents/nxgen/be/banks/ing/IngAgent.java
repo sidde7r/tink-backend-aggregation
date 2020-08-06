@@ -54,7 +54,10 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
         super(componentProvider);
         configureHttpClient(client);
         this.apiClient =
-                new IngApiClient(client, context.getAggregatorInfo().getAggregatorIdentifier());
+                new IngApiClient(
+                        client,
+                        persistentStorage,
+                        context.getAggregatorInfo().getAggregatorIdentifier());
         this.ingHelper = new IngHelper(sessionStorage);
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
