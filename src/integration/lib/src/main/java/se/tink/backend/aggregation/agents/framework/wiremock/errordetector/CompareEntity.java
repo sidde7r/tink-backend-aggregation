@@ -60,38 +60,20 @@ public class CompareEntity {
         }
 
         public CompareEntity build() {
-            return new CompareEntity(
-                    givenRequest,
-                    expectedRequest,
-                    areUrlsMatching,
-                    areHTTPMethodsMatching,
-                    missingHeaderKeysInGivenRequest,
-                    headerKeysWithDifferentValues,
-                    missingQueryParametersInGivenRequest,
-                    queryParametersWithDifferentValues,
-                    bodyComparisonReporter);
+            return new CompareEntity(this);
         }
     }
 
-    private CompareEntity(
-            String givenRequest,
-            String expectedRequest,
-            boolean areUrlsMatching,
-            boolean areMethodsMatching,
-            Set<String> missingHeaderKeysInGivenRequest,
-            Set<String> headerKeysWithDifferentValues,
-            Set<String> missingQueryParametersInGivenRequest,
-            Set<String> queryParametersWithDifferentValues,
-            ComparisonReporter reporter) {
-        this.givenRequest = givenRequest;
-        this.expectedRequest = expectedRequest;
-        this.areUrlsMatching = areUrlsMatching;
-        this.areMethodsMatching = areMethodsMatching;
-        this.missingHeaderKeysInGivenRequest = missingHeaderKeysInGivenRequest;
-        this.headerKeysWithDifferentValues = headerKeysWithDifferentValues;
-        this.missingQueryParametersInGivenRequest = missingQueryParametersInGivenRequest;
-        this.queryParametersWithDifferentValues = queryParametersWithDifferentValues;
-        this.bodyComparisonReporter = reporter;
+    private CompareEntity(CompareEntity.Builder builder) {
+        this.givenRequest = builder.givenRequest;
+        this.expectedRequest = builder.expectedRequest;
+        this.areUrlsMatching = builder.areUrlsMatching;
+        this.areMethodsMatching = builder.areHTTPMethodsMatching;
+        this.missingHeaderKeysInGivenRequest = builder.missingHeaderKeysInGivenRequest;
+        this.headerKeysWithDifferentValues = builder.headerKeysWithDifferentValues;
+        this.missingQueryParametersInGivenRequest = builder.missingQueryParametersInGivenRequest;
+        this.queryParametersWithDifferentValues = builder.queryParametersWithDifferentValues;
+        this.bodyComparisonReporter = builder.bodyComparisonReporter;
     }
 
     private String givenRequest;
