@@ -23,6 +23,9 @@ public class FraudCompanyDirector {
 
     @Override
     public boolean equals(Object obj) {
+        if (!(obj instanceof FraudCompanyDirector)) {
+            return false;
+        }
         FraudCompanyDirector director = (FraudCompanyDirector) obj;
         return (director.getName().equals(this.getName())
                 && director.getRole().equals(this.getRole()));
