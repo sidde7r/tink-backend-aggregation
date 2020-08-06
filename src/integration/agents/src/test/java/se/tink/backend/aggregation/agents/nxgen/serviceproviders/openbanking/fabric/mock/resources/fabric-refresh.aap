@@ -105,7 +105,7 @@ Vary: User-Agent
 Content-Type: application/json;charset=utf-8
 Content-Length: 423
 
-{"account":{"iban":"IT71U0300203280244168953997","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"123456.0"},"balanceType":"interimBooked","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":"2020-06-04"},{"balanceAmount":{"currency":"EUR","amount":"123456.0"},"balanceType":"interimAvailable","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":"2020-06-04"}]}
+{"account":{"iban":"IT71U0300203280244168953997","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"123456.0"},"balanceType":"interimBooked","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":"2020-06-04"},{"balanceAmount":{"currency":"EUR","amount":"234567.0"},"balanceType":"interimAvailable","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":"2020-06-04"}]}
 
 REQUEST 6
 GET https://psdgw-sella-ttt.fabrick.com/api/fabrick/psd2/v1/accounts/123456/transactions?dateFrom=1992-01-16&dateTo=1992-04-10

@@ -80,6 +80,11 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
+        log.info(
+                "[forceAuthenticate] constructRedirectAuthenticator, credentials: {}, request.appUriId: {}, state: {}",
+                request.getCredentials().getId(),
+                request.getAppUriId(),
+                strongAuthenticationState.getState());
         // Note: It's on purpose that this agent does not use the
         // AgentConfigurationController to get the callbackUri/redirectUri.
         // This is only for customers to test the callbackUri without
