@@ -19,6 +19,7 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
     private List<SecurityEntity> securities;
     private AmountEntity balance;
 
+    @JsonIgnore
     public List<SecurityEntity> getSecurities() {
         return securities != null ? securities : List.empty();
     }
