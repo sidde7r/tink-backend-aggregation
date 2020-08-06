@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -105,19 +106,19 @@ public class N26PaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     private String fetchToken(TokenRequest tokenRequest) {
         TokenResponse tokenResponse = apiClient.tokenRequest(tokenRequest);
 
-        Map<String, String> callbackData =
-                openThirdPartyAppAndGetCallbackData(
-                        URL.of(
-                                        configuration
-                                                .getProviderSpecificConfiguration()
-                                                .getAuthorizationUrl())
-                                .parameter(TOKEN_ID, tokenResponse.getTokenRequest().getId()));
+        Map<String, String> callbackData = new CaseInsensitiveMap<>(getCallbackData(tokenResponse));
 
         if (!callbackData.containsKey(TOKEN_ID)) {
             throw new IllegalArgumentException("callbackData didn't contain tokenId");
         }
 
         return callbackData.get(TOKEN_ID);
+    }
+
+    private Map<String, String> getCallbackData(TokenResponse tokenResponse) {
+        return openThirdPartyAppAndGetCallbackData(
+                URL.of(configuration.getProviderSpecificConfiguration().getAuthorizationUrl())
+                        .parameter(TOKEN_ID, tokenResponse.getTokenRequest().getId()));
     }
 
     private Map<String, String> openThirdPartyAppAndGetCallbackData(URL authorizationUrl) {
