@@ -63,15 +63,15 @@ public final class TargobankApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_Request_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.API_KEY, getConfiguration().getApiKey());
     }
 
     private RequestBuilder createAuthenticationRequest(URL url) {
         return createRequest(url)
                 .header(HeaderKeys.PSU_ID, HeaderValues.PSU_ID)
-                .header(HeaderKeys.PSU_IP_Address, getConfiguration().getPsuIpAddress())
-                .header(HeaderKeys.TPP_Redirect_URI, getConfiguration().getRedirectUrl());
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl());
     }
 
     public ConsentResponse createConsent() {
@@ -147,13 +147,13 @@ public final class TargobankApiClient {
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
         return createRequest(SandboxUrls.CREATE_PAYMENT)
-                .header(HeaderKeys.PSU_IP_Address, getConfiguration().getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public GetPaymentResponse getPayment(String uniqueId) {
         return createRequest(SandboxUrls.FETCH_PAYMENT.parameter(PathVariable.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.PSU_IP_Address, getConfiguration().getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .get(GetPaymentResponse.class);
     }
 }

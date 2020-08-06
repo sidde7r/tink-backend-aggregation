@@ -32,18 +32,19 @@ public final class TargobankConstants {
     }
 
     private static class SandboxEndpoints {
-        private static String BASE = "https://www.sandbox-bvxs2a.de/targobank/v1";
-        private static String CREATE_CONSENT = BASE + "/consents";
-        private static String FETCH_ACCOUNTS = BASE + "/accounts";
-        private static String CREATE_PAYMENT = BASE + "/payments/sepa-credit-transfers/";
-        private static String FETCH_PAYMENT = BASE + "/payments/sepa-credit-transfers/{paymentId}";
+        private static final String BASE = "https://www.sandbox-bvxs2a.de/targobank/v1";
+        private static final String CREATE_CONSENT = BASE + "/consents";
+        private static final String FETCH_ACCOUNTS = BASE + "/accounts";
+        private static final String CREATE_PAYMENT = BASE + "/payments/sepa-credit-transfers/";
+        private static final String FETCH_PAYMENT =
+                BASE + "/payments/sepa-credit-transfers/{paymentId}";
     }
 
     public static class SandboxUrls {
-        public static URL CREATE_CONSENT = new URL(SandboxEndpoints.CREATE_CONSENT);
-        public static URL FETCH_ACCOUNTS = new URL(SandboxEndpoints.FETCH_ACCOUNTS);
-        public static URL CREATE_PAYMENT = new URL(SandboxEndpoints.CREATE_PAYMENT);
-        public static URL FETCH_PAYMENT = new URL(SandboxEndpoints.FETCH_PAYMENT);
+        public static final URL CREATE_CONSENT = new URL(SandboxEndpoints.CREATE_CONSENT);
+        public static final URL FETCH_ACCOUNTS = new URL(SandboxEndpoints.FETCH_ACCOUNTS);
+        public static final URL CREATE_PAYMENT = new URL(SandboxEndpoints.CREATE_PAYMENT);
+        public static final URL FETCH_PAYMENT = new URL(SandboxEndpoints.FETCH_PAYMENT);
     }
 
     public static class StorageKeys {
@@ -63,16 +64,16 @@ public final class TargobankConstants {
     }
 
     public static class HeaderKeys {
-        public static String PSU_ID = "PSU-ID";
-        public static String PSU_IP_Address = "PSU-IP-Address";
-        public static String X_Request_ID = "X-Request-ID";
-        public static String API_KEY = "X-bvpsd2-test-apikey";
-        public static String TPP_Redirect_URI = "TPP-Redirect-URI";
-        public static String CONSENT_ID = "Consent-ID";
+        public static final String PSU_ID = "PSU-ID";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+        public static final String X_REQUEST_ID = "X-Request-ID";
+        public static final String API_KEY = "X-bvpsd2-test-apikey";
+        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
+        public static final String CONSENT_ID = "Consent-ID";
     }
 
     public static class HeaderValues {
-        public static String PSU_ID = "PSD2TEST2";
+        public static final String PSU_ID = "PSD2TEST2";
     }
 
     public static class ScaStatuses {
