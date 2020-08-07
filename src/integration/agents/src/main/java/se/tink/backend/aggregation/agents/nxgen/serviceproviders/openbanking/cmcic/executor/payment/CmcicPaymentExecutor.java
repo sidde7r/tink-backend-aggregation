@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
@@ -422,29 +424,29 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     }
 
     private void waitForSupplementalInformation() throws PaymentAuthenticationException {
-        Optional<Map<String, String>> information =
-                this.supplementalInformationHelper.waitForSupplementalInformation(
-                        strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES);
+        Map<String, String> callbackData =
+                this.supplementalInformationHelper
+                        .waitForSupplementalInformation(
+                                strongAuthenticationState.getSupplementalKey(),
+                                9L,
+                                TimeUnit.MINUTES)
+                        .orElseThrow(
+                                () ->
+                                        AuthorizationError.UNAUTHORIZED.exception(
+                                                "callbackData wasn't received"));
 
-        if (information.isPresent()) {
-            String psuAuthenticationFactor =
-                    information.get().get(CmcicConstants.QueryKeys.PSU_AUTHENTICATION_FACTOR);
-            information
-                    .get()
-                    .forEach(
-                            (key, value) ->
-                                    logger.info(
-                                            "Supplement Info details,key: {} & value: {}",
-                                            key,
-                                            value));
-            if (Strings.isNullOrEmpty(psuAuthenticationFactor)) {
-                handelAuthFactorError();
-            }
-            sessionStorage.put(StorageKeys.AUTH_FACTOR, psuAuthenticationFactor);
-        } else {
-            logger.error("Supplement Information was empty");
+        // Query parameters can be case insesitive returned by bank,this is to take care of that
+        // situation and we avoid failing the payment.
+        Map<String, String> caseInsensitiveCallbackData = new CaseInsensitiveMap<>(callbackData);
+
+        String psuAuthenticationFactor =
+                caseInsensitiveCallbackData.get(CmcicConstants.QueryKeys.PSU_AUTHENTICATION_FACTOR);
+        caseInsensitiveCallbackData.forEach(
+                (key, value) -> logger.info("Supplement Info details,key: {}", key));
+        if (Strings.isNullOrEmpty(psuAuthenticationFactor)) {
             handelAuthFactorError();
         }
+        sessionStorage.put(StorageKeys.AUTH_FACTOR, psuAuthenticationFactor);
     }
 
     private void handelAuthFactorError() throws PaymentAuthenticationException {
