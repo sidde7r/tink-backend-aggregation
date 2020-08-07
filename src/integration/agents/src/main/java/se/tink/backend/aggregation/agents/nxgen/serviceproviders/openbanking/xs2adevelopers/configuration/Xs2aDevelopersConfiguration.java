@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.annotations.Secret;
-import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+public class Xs2aDevelopersConfiguration {
+    private String baseUrl;
+    private String clientId;
+    private String redirectUrl;
 
-@JsonObject
-public class Xs2aDevelopersConfiguration implements ClientConfiguration {
-
-    @JsonProperty @Secret private String clientId;
-    @JsonProperty @Secret private String baseUrl;
+    public Xs2aDevelopersConfiguration(String clientId, String baseUrl, String redirectUrl) {
+        this.clientId = clientId;
+        this.baseUrl = baseUrl;
+        this.redirectUrl = redirectUrl;
+    }
 
     public String getClientId() {
         return clientId;
@@ -17,5 +17,9 @@ public class Xs2aDevelopersConfiguration implements ClientConfiguration {
 
     public String getBaseUrl() {
         return baseUrl;
+    }
+
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 }

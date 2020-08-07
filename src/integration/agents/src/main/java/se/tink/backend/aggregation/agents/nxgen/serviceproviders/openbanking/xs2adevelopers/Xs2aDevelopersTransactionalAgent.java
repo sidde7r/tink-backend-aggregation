@@ -1,20 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
+import java.security.cert.CertificateException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -24,26 +26,24 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+
+    protected final Xs2aDevelopersConfiguration configuration;
 
     protected final TransactionalAccountRefreshController transactionalAccountRefreshController;
     protected Xs2aDevelopersApiClient apiClient;
     protected Xs2aDevelopersAuthenticator oauth2Authenticator;
 
     protected Xs2aDevelopersTransactionalAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            AgentComponentProvider componentProvider, String baseUrl) {
+        super(componentProvider);
 
-        final AgentConfiguration<Xs2aDevelopersConfiguration> xs2aDevelopersConfiguration =
-                getAgentConfiguration();
-        apiClient =
-                new Xs2aDevelopersApiClient(client, persistentStorage, xs2aDevelopersConfiguration);
+        configuration = getConfiguration(baseUrl);
+        apiClient = new Xs2aDevelopersApiClient(client, persistentStorage, configuration);
         oauth2Authenticator =
-                new Xs2aDevelopersAuthenticator(
-                        apiClient, persistentStorage, getAgentConfiguration());
+                new Xs2aDevelopersAuthenticator(apiClient, persistentStorage, configuration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -53,9 +53,18 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
-    private AgentConfiguration<Xs2aDevelopersConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(Xs2aDevelopersConfiguration.class);
+    private Xs2aDevelopersConfiguration getConfiguration(String baseUrl) {
+        AgentConfiguration<EmptyConfiguration> agentConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(EmptyConfiguration.class);
+        String organizationIdentifier;
+        try {
+            organizationIdentifier =
+                    CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+        } catch (CertificateException e) {
+            throw new IllegalStateException("Could not extract organization identifier!", e);
+        }
+        String redirectUrl = agentConfiguration.getRedirectUrl();
+        return new Xs2aDevelopersConfiguration(organizationIdentifier, baseUrl, redirectUrl);
     }
 
     @Override
@@ -117,7 +126,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                         persistentStorage,
                         supplementalInformationHelper,
                         new Xs2aDevelopersPaymentAuthenticator(
-                                apiClient, persistentStorage, getAgentConfiguration()),
+                                apiClient, persistentStorage, configuration),
                         credentials,
                         strongAuthenticationState,
                         request);

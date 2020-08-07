@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.axa;
 
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersTransactionalAgent;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 public final class AxaAgent extends Xs2aDevelopersTransactionalAgent {
 
-    public AxaAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public AxaAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider, "https://api-dailybanking.axabank.be");
     }
 }
