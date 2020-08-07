@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.exception.OutOfSessionException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -53,6 +54,6 @@ public class BaseMobileResponseEntity {
     }
 
     public void validateSession() {
-        if (isOutOfSession()) throw new IllegalStateException("Out of session");
+        if (isOutOfSession()) throw new OutOfSessionException();
     }
 }

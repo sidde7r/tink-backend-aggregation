@@ -19,8 +19,10 @@ public class URLEncodedBodyEntity implements BodyEntity {
         Arrays.asList(rawData.split("&"))
                 .forEach(
                         element -> {
-                            String key = element.split("=")[0];
-                            String value = element.split("=")[1];
+                            final String[] elements = element.split("=");
+                            final String key = elements[0];
+                            final String value = (elements.length > 1) ? elements[1] : "";
+
                             body.put(key, value);
                         });
 

@@ -39,6 +39,8 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
 
+        validateAutoAuthenticationIsPossible();
+
         MobileHelloResponseEntity mobileHelloResponseEntity = this.apiClient.mobileHello();
         this.ingHelper.addRequestUrls(mobileHelloResponseEntity.getRequests());
 
@@ -73,6 +75,18 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
         }
 
         this.ingHelper.persist(loginResponseEntity);
+    }
+
+    private void validateAutoAuthenticationIsPossible() throws SessionException {
+        final boolean isManualAuthNeeded =
+                this.persistentStorage
+                        .get(IngConstants.Storage.IS_MANUAL_AUTHENTICATION, Boolean.class)
+                        .orElse(Boolean.FALSE);
+
+        if (isManualAuthNeeded) {
+            logger.info("Auto authentication is not possible.");
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     private void validateBuilderLoginResponse(HttpResponse response) throws SessionException {

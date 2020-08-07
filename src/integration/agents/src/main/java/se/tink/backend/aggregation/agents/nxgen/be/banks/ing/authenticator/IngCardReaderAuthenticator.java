@@ -131,6 +131,7 @@ public class IngCardReaderAuthenticator {
 
         validateResponseHeader(loginResponseEntity);
         this.ingHelper.persist(loginResponseEntity);
+        this.persistentStorage.put(IngConstants.Storage.IS_MANUAL_AUTHENTICATION, Boolean.FALSE);
     }
 
     private void validateResponseHeader(BaseMobileResponseEntity responseEntity)

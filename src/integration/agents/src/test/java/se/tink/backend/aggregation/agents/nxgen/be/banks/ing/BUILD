@@ -1,17 +1,13 @@
-load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:junit_old.bzl", "junit_test")
 
 junit_test(
     name = "ing",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["manual/**/*.java"],
+    ),
     data = [
         "//data:aggregation_test",
-        "//data:cryptography_test",
-        "//data:provider_configurations",
-        "//etc:development",
-    ],
-    tags = [
-        "external",
-        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [

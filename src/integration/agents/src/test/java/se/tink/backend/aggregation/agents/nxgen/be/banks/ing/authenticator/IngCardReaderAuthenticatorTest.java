@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -58,10 +57,7 @@ public class IngCardReaderAuthenticatorTest {
     public void throwRegisterDeviceErrorWhenAccessNotAllowedToBankingService()
             throws AuthenticationException, AuthorizationException {
         when(apiClient.mobileHello()).thenReturn(new MobileHelloResponseEntity());
-        doNothing()
-                .when(apiClient)
-                .trustBuilderEnroll(
-                        anyString(), anyString(), anyString(), anyString(), anyString());
+
         HttpResponse initEnrollResponse = mock(HttpResponse.class);
 
         when(apiClient.initEnroll(any(), anyString(), anyString(), anyString()))

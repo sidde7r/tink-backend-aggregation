@@ -58,6 +58,7 @@ public class IngConstants {
         public static final String SESSION_KEY_IN_HEX = "sessionKey";
         public static final String SESSION_KEY_AUTH_IN_HEX = "sessionKeyAuth";
         public static final String LOGIN_RESPONSE = "loginResponse";
+        public static final String IS_MANUAL_AUTHENTICATION = "isAuthManual";
     }
 
     public static final class RequestNames {

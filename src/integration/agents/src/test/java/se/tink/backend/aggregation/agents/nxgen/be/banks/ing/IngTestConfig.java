@@ -59,7 +59,7 @@ public class IngTestConfig {
         TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.setFollowRedirects(false);
         httpClient.setUserAgent(USER_AGENT);
-        return new IngApiClient(httpClient, "Tink");
+        return new IngApiClient(httpClient, this.persistentStorage, "Tink");
     }
 
     private void populatePersistentStorage() {
