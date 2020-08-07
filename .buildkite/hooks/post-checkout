@@ -9,8 +9,8 @@ if [ "$BUILDKITE_PIPELINE_SLUG" = "build-tink-backend-aggregation" ]; then
     export GIT_COMMITTER_EMAIL=buildkite@tink.se
 
     if [ "$BUILDKITE_PULL_REQUEST" != false ]; then
-        git fetch origin master
-        git merge --no-commit origin/master
+        git fetch origin $BUILDKITE_PULL_REQUEST_BASE_BRANCH
+        git merge --no-commit origin/$BUILDKITE_PULL_REQUEST_BASE_BRANCH
         git submodule update
         git status
     fi
