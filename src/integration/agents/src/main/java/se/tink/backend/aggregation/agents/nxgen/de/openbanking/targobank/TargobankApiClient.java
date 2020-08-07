@@ -40,6 +40,7 @@ public final class TargobankApiClient {
     private final TinkHttpClient client;
     private TargobankConfiguration configuration;
     private PersistentStorage persistentStorage;
+    private String redirectUrl;
 
     public TargobankApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -53,6 +54,7 @@ public final class TargobankApiClient {
 
     protected void setConfiguration(AgentConfiguration<TargobankConfiguration> configuration) {
         this.configuration = configuration.getProviderSpecificConfiguration();
+        this.redirectUrl = configuration.getRedirectUrl();
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -67,7 +69,7 @@ public final class TargobankApiClient {
         return createRequest(url)
                 .header(HeaderKeys.PSU_ID, HeaderValues.PSU_ID)
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl());
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
     }
 
     public ConsentResponse createConsent() {

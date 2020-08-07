@@ -56,7 +56,6 @@ public final class FidorAgent extends NextGenerationAgent
                         strongAuthenticationState,
                         apiClient,
                         persistentStorage,
-                        getAgentConfiguration().getProviderSpecificConfiguration(),
                         credentials);
         return new AutoAuthenticationController(
                 request,

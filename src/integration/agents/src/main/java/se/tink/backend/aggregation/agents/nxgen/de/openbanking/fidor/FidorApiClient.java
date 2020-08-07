@@ -34,6 +34,7 @@ public final class FidorApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private FidorConfiguration configuration;
+    private String redirectUrl;
 
     public FidorApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -47,6 +48,7 @@ public final class FidorApiClient {
 
     protected void setConfiguration(AgentConfiguration<FidorConfiguration> configuration) {
         this.configuration = configuration.getProviderSpecificConfiguration();
+        this.redirectUrl = configuration.getRedirectUrl();
     }
 
     public TokenResponse getToken(String username, String password) {
@@ -113,7 +115,7 @@ public final class FidorApiClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
-                .header(HeaderKeys.TPP_REDIRECT_URI, new URL(configuration.getRedirectUri()))
+                .header(HeaderKeys.TPP_REDIRECT_URI, new URL(redirectUrl))
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
                 .addBearerToken(authToken);
     }

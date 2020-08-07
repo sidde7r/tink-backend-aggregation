@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.configurat
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.ErrorMessages;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -16,7 +15,6 @@ public class FidorConfiguration implements ClientConfiguration {
 
     @Secret @ClientIdConfiguration private String clientId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @AgentConfigParam private String redirectUrl;
 
     public String getClientId() {
         checkNotNull(clientId, "Client ID");
@@ -26,11 +24,6 @@ public class FidorConfiguration implements ClientConfiguration {
     public String getClientSecret() {
         checkNotNull(clientSecret, "Client Secret");
         return clientSecret;
-    }
-
-    public String getRedirectUri() {
-        checkNotNull(redirectUrl, "RedirectUri");
-        return redirectUrl;
     }
 
     private void checkNotNull(String secret, String secretName) {
