@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public abstract class DeutscheBankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    protected DeutscheBankApiClient apiClient;
+    protected final DeutscheBankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public DeutscheBankAgent(AgentComponentProvider componentProvider) {
