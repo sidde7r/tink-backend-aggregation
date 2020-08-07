@@ -3,13 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PasswordArgumentEnum;
 
 public class TargobankAgentTest {
-    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> manager =
-            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
+    private final ArgumentManager<PasswordArgumentEnum> manager =
+            new ArgumentManager<>(PasswordArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @Before
@@ -17,13 +18,14 @@ public class TargobankAgentTest {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("de", "de-targobank-ob")
-                        .loadCredentialsBefore(
-                                Boolean.parseBoolean(
-                                        manager.get(LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                        .addCredentialField(
+                                Field.Key.PASSWORD,
+                                manager.get(ArgumentManager.PasswordArgumentEnum.PASSWORD))
+                        .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
-                        .saveCredentialsAfter(
-                                Boolean.parseBoolean(
-                                        manager.get(LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
+                        .saveCredentialsAfter(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("targobank");
     }
 
     @Test
@@ -34,6 +36,5 @@ public class TargobankAgentTest {
     @AfterClass
     public static void cleanup() {
         ArgumentManager.afterClass();
-        ;
     }
 }

@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authent
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.configuration.SantanderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.SantanderPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount.SantanderTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -23,7 +25,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class SantanderAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final SantanderApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -32,24 +33,28 @@ public final class SantanderAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         apiClient = new SantanderApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        apiClient.setConfiguration(getClientConfiguration());
     }
 
-    protected SantanderConfiguration getClientConfiguration() {
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration agentsServiceConfiguration) {
+        super.setConfiguration(agentsServiceConfiguration);
+        apiClient.setConfiguration(getAgentConfiguration());
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+    }
+
+    private AgentConfiguration<SantanderConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        SantanderConstants.INTEGRATION_NAME,
-                        clientName,
-                        SantanderConfiguration.class);
+                .getAgentConfiguration(SantanderConfiguration.class);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SantanderAuthenticator(apiClient, persistentStorage, getClientConfiguration());
+        return new SantanderAuthenticator(
+                apiClient,
+                persistentStorage,
+                getAgentConfiguration().getProviderSpecificConfiguration(),
+                credentials.getField(SantanderConstants.CredentialKeys.IBAN));
     }
 
     @Override

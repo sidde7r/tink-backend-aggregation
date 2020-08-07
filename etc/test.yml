@@ -6089,10 +6089,7 @@ agentsServiceConfiguration:
     dc5eceed69b748439a49ec1e4feb1c1c:
       tink:
         apiKey: dummyApiKey
-        clientKeyStorePassword: dummyClientKeyStorePassword
-        clientKeyStorePath: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        scaPassword: dummyScaPassword
     dc834b09ff10476e87c8c554d951447c:
       tink:
         clientId: dummyClientId
@@ -7038,13 +7035,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     fidor:
       tink:
-        baseUrl: https://xs2a.sandbox.fidorsolutions.cloud
-        clientCertificatePath: data/test/cryptography/fidor/psd2-cert.crt
         clientId: PSDDE-BAFIN-123001
-        clientKeyPath: data/test/cryptography/triodos/psd2.key
-        clientKeyStorePath: data/test/cryptography/fidor/keystore.p12
         clientSecret: PSDDE-BAFIN-123001
-        clinetKeyStorePassword: '123456'
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     fiducia:
       tink:
@@ -7424,8 +7416,6 @@ agentsServiceConfiguration:
       tink:
         clientId: 9034c12b-9114-4acf-9ddc-2740607fac4e
         clientSecret: L4iY8aG3lO6sR5bJ1rU4kU5cR3xL5oT4rA0mO2iT7wL8jC3vF3
-        currency: EUR
-        iban: DE74310108330000009001
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     santander-pt:
       tink:
@@ -7551,13 +7541,7 @@ agentsServiceConfiguration:
     targobank:
       tink:
         apiKey: tUfZ5KOHRTFrikZUsmSMUabKw09UIzGE
-        clientKeyStorePassword: '123456'
-        clientKeyStorePath: data/test/cryptography/targobank/client.p12
-        clientSigningCertificatePath: data/test/cryptography/targobank/signing.cer
-        clientSigningKeyPath: data/test/cryptography/targobank/signing.key
-        psuIpAddress: 192.168.8.78
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        scaPassword: '123456'
     targobankSpain:
       tink:
         authBaseUrl: https://www.targobank.es/oauth2/en/banque/oauth2_authorization.aspx

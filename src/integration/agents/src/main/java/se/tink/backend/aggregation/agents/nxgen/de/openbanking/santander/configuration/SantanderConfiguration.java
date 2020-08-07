@@ -17,46 +17,25 @@ public class SantanderConfiguration implements ClientConfiguration {
     @Secret @ClientIdConfiguration private String clientId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @AgentConfigParam private String redirectUrl;
-    private String iban;
-    private String currency;
 
     public String getClientId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
-
+        checkNotNull(clientId, "Client ID");
         return clientId;
     }
 
     public String getClientSecret() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSecret),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
-
+        checkNotNull(clientSecret, "Client Secret");
         return clientSecret;
     }
 
     public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
+        checkNotNull(redirectUrl, "Redirect URL");
         return redirectUrl;
     }
 
-    public String getIBAN() {
+    private void checkNotNull(String secret, String secretName) {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(iban),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "IBAN"));
-
-        return iban;
-    }
-
-    public String getCurrency() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(currency),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Currency"));
-
-        return currency;
+                Strings.emptyToNull(secret),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, secretName));
     }
 }

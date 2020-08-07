@@ -14,14 +14,17 @@ public class SantanderAuthenticator implements Authenticator {
     private final SantanderApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SantanderConfiguration configuration;
+    private final String iban;
 
     public SantanderAuthenticator(
             SantanderApiClient apiClient,
             PersistentStorage persistentStorage,
-            SantanderConfiguration configuration) {
+            SantanderConfiguration configuration,
+            String iban) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;
+        this.iban = iban;
     }
 
     /*ToDo Add Metrics when flow is done*/
@@ -29,6 +32,6 @@ public class SantanderAuthenticator implements Authenticator {
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         apiClient.setTokenToStorage(apiClient.getToken());
-        persistentStorage.put(StorageKeys.CONSENT_ID, apiClient.getConsentId());
+        persistentStorage.put(StorageKeys.CONSENT_ID, apiClient.getConsentId(iban));
     }
 }

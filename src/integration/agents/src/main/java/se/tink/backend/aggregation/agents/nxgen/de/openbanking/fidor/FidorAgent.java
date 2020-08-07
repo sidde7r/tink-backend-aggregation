@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticat
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.configuration.FidorConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.FidorAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.FidorTransactionFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -24,10 +24,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class FidorAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final FidorApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private FidorConfiguration fidorConfiguration;
 
     public FidorAgent(
             CredentialsRequest request,
@@ -35,21 +33,19 @@ public final class FidorAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         apiClient = new FidorApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        fidorConfiguration = getClientConfiguration();
-        apiClient.setConfiguration(fidorConfiguration);
-        final EidasProxyConfiguration eidasProxyConfiguration =
-                agentsServiceConfiguration.getEidasProxy();
-        client.setEidasProxy(eidasProxyConfiguration);
     }
 
-    protected FidorConfiguration getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        FidorConstants.INTEGRATION_NAME, clientName, FidorConfiguration.class);
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration agentsServiceConfiguration) {
+        super.setConfiguration(agentsServiceConfiguration);
+        apiClient.setConfiguration(getAgentConfiguration());
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+    }
+
+    private AgentConfiguration<FidorConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController().getAgentConfiguration(FidorConfiguration.class);
     }
 
     @Override
@@ -60,7 +56,7 @@ public final class FidorAgent extends NextGenerationAgent
                         strongAuthenticationState,
                         apiClient,
                         persistentStorage,
-                        getClientConfiguration(),
+                        getAgentConfiguration().getProviderSpecificConfiguration(),
                         credentials);
         return new AutoAuthenticationController(
                 request,

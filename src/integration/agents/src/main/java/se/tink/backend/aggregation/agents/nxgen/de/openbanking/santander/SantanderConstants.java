@@ -88,6 +88,10 @@ public final class SantanderConstants {
         public static final String IBAN = "iban";
     }
 
+    public static class CredentialValues {
+        public static final String CURRENCY = "EUR";
+    }
+
     public static class PaymentDetails {
         public static final String CREDITOR_NAME = "Creditor name";
         public static final String CREDITOR_AGENT = "Creditor agent";

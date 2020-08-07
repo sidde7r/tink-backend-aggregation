@@ -4,6 +4,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.ScaStatuses;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.StorageKeys;
@@ -37,7 +38,8 @@ public class TargobankSandboxAuthenticator implements Authenticator {
                 createAuthorisationResponse.getLinks().getUpdatePsuAuthentication().getHref();
 
         PasswordAuthenticationResponse authenticationResponse =
-                apiClient.authenticateAuthorisationsPassword(authorisationLink);
+                apiClient.authenticateAuthorisationsPassword(
+                        authorisationLink, credentials.getField(CredentialKeys.PASSWORD));
 
         ChooseScaMethodResponse scaResponse =
                 apiClient.chooseScaMethod(

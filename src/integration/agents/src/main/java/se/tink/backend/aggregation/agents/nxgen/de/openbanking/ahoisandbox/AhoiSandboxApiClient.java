@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authe
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.configuration.AhoiSandboxConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -45,8 +46,8 @@ public final class AhoiSandboxApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(AhoiSandboxConfiguration configuration) {
-        this.configuration = configuration;
+    protected void setConfiguration(AgentConfiguration<AhoiSandboxConfiguration> configuration) {
+        this.configuration = configuration.getProviderSpecificConfiguration();
     }
 
     private RequestBuilder createRequest(URL url) {

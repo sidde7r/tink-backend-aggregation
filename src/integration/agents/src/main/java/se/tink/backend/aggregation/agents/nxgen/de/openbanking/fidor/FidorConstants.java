@@ -28,7 +28,7 @@ public final class FidorConstants {
     }
 
     public static class Urls {
-        private static final String BASE_URL = "https://xs2a.fidor.de";
+        public static final String BASE_URL = "https://xs2a.fidor.de";
         public static final String CONSENTS = BASE_URL + "/v1/consents";
         public static final String OAUTH_PASSWORD = BASE_URL + "/oauth/token";
         public static final String FETCH_ACCOUNTS = BASE_URL + "/v1/accounts";
