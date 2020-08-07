@@ -429,11 +429,20 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         if (information.isPresent()) {
             String psuAuthenticationFactor =
                     information.get().get(CmcicConstants.QueryKeys.PSU_AUTHENTICATION_FACTOR);
+            information
+                    .get()
+                    .forEach(
+                            (key, value) ->
+                                    logger.info(
+                                            "Supplement Info details,key: {} & value: {}",
+                                            key,
+                                            value));
             if (Strings.isNullOrEmpty(psuAuthenticationFactor)) {
                 handelAuthFactorError();
             }
             sessionStorage.put(StorageKeys.AUTH_FACTOR, psuAuthenticationFactor);
         } else {
+            logger.error("Supplement Information was empty");
             handelAuthFactorError();
         }
     }
