@@ -10,10 +10,12 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditca
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditcard.rpc.CreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.identitydata.rpc.IdentityDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.investment.rpc.InvestmentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.rpc.LoanDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @AllArgsConstructor
@@ -60,13 +62,26 @@ public class FetcherClient {
                 .get(CreditCardTransactionsResponse.class);
     }
 
-    public HttpResponse fetchInvestments() {
-        return baseClient.baseAuthorizedRequest(Urls.FETCH_INVESTMENTS).get(HttpResponse.class);
+    public InvestmentsResponse fetchInvestments() {
+        return baseClient
+                .baseAuthorizedRequest(Urls.FETCH_INVESTMENTS)
+                .get(InvestmentsResponse.class);
     }
 
     public IdentityDataResponse fetchIdentityData() {
         return baseClient
                 .baseAuthorizedRequest(Urls.FETCH_IDENTITY_DATA)
                 .get(IdentityDataResponse.class);
+    }
+
+    public LoansResponse fetchLoans() {
+        return baseClient.baseAuthorizedRequest(Urls.FETCH_LOANS).get(LoansResponse.class);
+    }
+
+    public LoanDetailsResponse fetchLoanDetails(String loanId) {
+        return baseClient
+                .baseAuthorizedRequest(
+                        new URL(Urls.FETCH_LOAN_DETAILS).parameter(UriParams.URI_LOAN_ID, loanId))
+                .get(LoanDetailsResponse.class);
     }
 }

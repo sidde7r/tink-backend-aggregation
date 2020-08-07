@@ -116,6 +116,7 @@ public class NordeaNoConstants {
         public static final String URI_SESSION_ID = "sessionId";
         public static final String URI_ACCOUNT_ID = "accountId";
         public static final String URI_CARD_ID = "cardId";
+        public static final String URI_LOAN_ID = "loanId";
     }
 
     public static class Urls {
@@ -147,6 +148,9 @@ public class NordeaNoConstants {
                 NORDEA_PRIVATE_BASE_URL
                         + "api/dbf/ca/accounts-v2/accounts/{accountId}/transactions";
 
+        public static final String FETCH_IDENTITY_DATA =
+                NORDEA_PRIVATE_BASE_URL + "/api/dbf/no/customerinfo-v2/customers/info";
+
         public static final String FETCH_CARDS =
                 NORDEA_PRIVATE_BASE_URL + "api/dbf/ca/cards-v4/cards";
         public static final String FETCH_CARD_DETAILS =
@@ -156,7 +160,8 @@ public class NordeaNoConstants {
 
         public static final String FETCH_INVESTMENTS =
                 NORDEA_PRIVATE_BASE_URL + "/api/dbf/ca/savings-v1/savings/custodies";
-        public static final String FETCH_IDENTITY_DATA =
-                NORDEA_PRIVATE_BASE_URL + "/api/dbf/no/customerinfo-v2/customers/info";
+
+        public static final String FETCH_LOANS = "/api/dbf/ca/loans-v1/loans/";
+        public static final String FETCH_LOAN_DETAILS = "/api/dbf/ca/loans-v1/loans/{loanId}";
     }
 }
