@@ -127,38 +127,44 @@ public class TransactionsResponseTest {
             final Properties account,
             final Collection<Properties> transactions,
             boolean shouldAddLinks) {
-        Properties booked = new Properties();
-        booked.put("booked", transactions);
-
         Gson gsonObj = new Gson();
 
         try {
             if (shouldAddLinks) {
+                Properties links = prepareLinksSection();
+
                 return OBJECT_MAPPER.readValue(
                         "{\"account\":"
                                 + gsonObj.toJson(account)
-                                + ", \"transactions\":"
-                                + gsonObj.toJson(booked)
-                                + ", \"_links\": {\n"
-                                + "      \"next\": {\n"
-                                + "        \"href\": \""
-                                + SAMPLE_HREF
-                                + "\""
-                                + "      }"
-                                + "   }"
+                                + ", \"transactions\": {"
+                                + "\"booked\":"
+                                + gsonObj.toJson(transactions)
+                                + ", \"_links\":"
+                                + gsonObj.toJson(links)
+                                + "  }"
                                 + "}",
                         TransactionsResponse.class);
             } else {
                 return OBJECT_MAPPER.readValue(
                         "{\"account\":"
                                 + gsonObj.toJson(account)
-                                + ", \"transactions\":"
-                                + gsonObj.toJson(booked)
+                                + ", \"transactions\": {"
+                                + "\"booked\":"
+                                + gsonObj.toJson(transactions)
+                                + "  }"
                                 + "}",
                         TransactionsResponse.class);
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    private static Properties prepareLinksSection() {
+        Properties links = new Properties();
+        Properties next = new Properties();
+        next.setProperty("href", SAMPLE_HREF);
+        links.put("next", next);
+        return links;
     }
 }
