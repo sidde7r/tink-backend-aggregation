@@ -25,9 +25,9 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
 
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
-
     @Getter private final TConfiguration configuration;
     @Getter private final String redirectUrl;
+    @Getter private final String qSealc;
 
     public abstract BerlinGroupAccountResponse fetchAccounts();
 
