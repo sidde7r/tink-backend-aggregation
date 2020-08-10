@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fa
 import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -11,15 +12,14 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.FabricAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.FabricRedirectAuthenticationController;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.configuration.FabricConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.FabricPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.FabricAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.FabricTransactionFetcher;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -37,10 +37,11 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.account.AccountIdentifier;
 
-public class FabricAgent extends NextGenerationAgent
+public abstract class FabricAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshTransferDestinationExecutor {
+                RefreshTransferDestinationExecutor,
+                UrlProvider {
 
     protected final String clientName;
     protected final FabricApiClient apiClient;
@@ -50,12 +51,15 @@ public class FabricAgent extends NextGenerationAgent
     public FabricAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
+        Objects.requireNonNull(getBaseUrl());
         apiClient =
                 new FabricApiClient(
                         client,
                         persistentStorage,
                         componentProvider.getRandomValueGenerator(),
-                        sessionStorage);
+                        sessionStorage,
+                        getBaseUrl());
+
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(
@@ -69,16 +73,8 @@ public class FabricAgent extends NextGenerationAgent
         client.setEidasProxy(configuration.getEidasProxy());
     }
 
-    protected AgentConfiguration<FabricConfiguration> getAgentConfiguration() {
-        AgentConfiguration<FabricConfiguration> fabricConfiguration;
-        try {
-            fabricConfiguration =
-                    getAgentConfigurationController()
-                            .getAgentConfiguration(FabricConfiguration.class);
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION);
-        }
-        return fabricConfiguration;
+    protected AgentConfiguration<EmptyConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController().getAgentConfiguration(EmptyConfiguration.class);
     }
 
     @Override
