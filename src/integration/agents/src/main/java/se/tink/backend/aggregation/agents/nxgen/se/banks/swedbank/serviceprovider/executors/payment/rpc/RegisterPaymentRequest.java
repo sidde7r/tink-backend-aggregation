@@ -48,24 +48,6 @@ public class RegisterPaymentRequest {
         this.einvoiceReference = eInvoiceReference;
     }
 
-    public static RegisterPaymentRequest createEinvoicePayment(
-            double amount,
-            RemittanceInformation remittanceInformation,
-            Date date,
-            String recipientId,
-            String fromAccountId,
-            String eInvoiceReference) {
-
-        return RegisterPaymentRequest.create(
-                amount,
-                remittanceInformation,
-                date,
-                recipientId,
-                fromAccountId,
-                SwedbankBaseConstants.PaymentType.EINVOICE,
-                eInvoiceReference);
-    }
-
     public static RegisterPaymentRequest createPayment(
             double amount,
             RemittanceInformation remittanceInformation,
@@ -73,32 +55,13 @@ public class RegisterPaymentRequest {
             String recipientId,
             String fromAccountId) {
 
-        return RegisterPaymentRequest.create(
-                amount,
-                remittanceInformation,
-                date,
-                recipientId,
-                fromAccountId,
-                SwedbankBaseConstants.PaymentType.DOMESTIC,
-                null);
-    }
-
-    private static RegisterPaymentRequest create(
-            double amount,
-            RemittanceInformation remittanceInformation,
-            Date date,
-            String recipientId,
-            String fromAccountId,
-            String type,
-            String eInvoiceReference) {
-
         return new RegisterPaymentRequest(
                 amount,
                 ReferenceEntity.create(remittanceInformation),
                 date,
                 recipientId,
                 fromAccountId,
-                type,
-                eInvoiceReference);
+                SwedbankBaseConstants.PaymentType.DOMESTIC,
+                null);
     }
 }

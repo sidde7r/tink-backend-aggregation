@@ -51,21 +51,6 @@ public class RegisteredTransfersResponse {
         }
     }
 
-    public void noUnsignedTransfersOrThrow() {
-        List<TransferTransactionEntity> registeredTransactionEntities =
-                Optional.ofNullable(registeredTransactions).orElseGet(Collections::emptyList);
-
-        if (!registeredTransactionEntities.isEmpty()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(
-                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS
-                                    .getKey()
-                                    .get())
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.UNSIGNED_TRANFERS)
-                    .build();
-        }
-    }
-
     public Optional<String> getIdToConfirm() {
         return Optional.ofNullable(registeredTransactions).orElseGet(Collections::emptyList)
                 .stream()
