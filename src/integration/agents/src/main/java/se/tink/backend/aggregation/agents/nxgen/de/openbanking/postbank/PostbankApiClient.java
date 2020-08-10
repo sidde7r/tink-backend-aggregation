@@ -13,32 +13,26 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class PostbankApiClient extends DeutscheBankApiClient {
 
-    private final TinkHttpClient apiClient;
-
-    public PostbankApiClient(
+    PostbankApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            AgentConfiguration<DeutscheBankConfiguration> configuration) {
-        super(client, sessionStorage, configuration);
-        this.apiClient = client;
+            String redirectUrl,
+            DeutscheMarketConfiguration marketConfiguration) {
+        super(client, sessionStorage, redirectUrl, marketConfiguration);
     }
 
     public ConsentResponse getConsents(String iban, String psuId) {
         ConsentBaseRequest consentBaseRequest = new ConsentBaseRequest(iban);
-        DeutscheBankConfiguration configuration = getConfiguration();
-
-        return apiClient
-                .request(new URL(configuration.getBaseUrl() + Urls.CONSENT))
+        return createRequest(new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_ID_TYPE, configuration.getPsuIdType())
+                .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                 .header(HeaderKeys.PSU_ID, psuId)
                 .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
                 .type(MediaType.APPLICATION_JSON)
@@ -51,20 +45,18 @@ public class PostbankApiClient extends DeutscheBankApiClient {
         StartAuthorisationRequest startAuthorisationRequest =
                 new StartAuthorisationRequest(
                         new PsuDataEntity(encryptedPassword.createJWT(password)));
-        DeutscheBankConfiguration configuration = getConfiguration();
 
         return createRequest(url)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_ID_TYPE, configuration.getPsuIdType())
+                .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                 .header(HeaderKeys.PSU_ID, psuId)
                 .put(AuthorisationResponse.class, startAuthorisationRequest.toData());
     }
 
     public AuthorisationResponse getAuthorisation(URL url, String psuId) {
-        DeutscheBankConfiguration configuration = getConfiguration();
         return createRequest(url)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_ID_TYPE, configuration.getPsuIdType())
+                .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                 .header(HeaderKeys.PSU_ID, psuId)
                 .get(AuthorisationResponse.class);
     }
@@ -84,11 +76,9 @@ public class PostbankApiClient extends DeutscheBankApiClient {
 
     private AuthorisationResponse updateAuthorisation(
             URL url, String psuId, UpdateAuthorisationRequest body) {
-        DeutscheBankConfiguration configuration = getConfiguration();
-
         return createRequest(url)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_ID_TYPE, configuration.getPsuIdType())
+                .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                 .header(HeaderKeys.PSU_ID, psuId)
                 .put(AuthorisationResponse.class, body);
     }

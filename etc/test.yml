@@ -6176,14 +6176,9 @@ agentsServiceConfiguration:
         redirectUri: https://127.0.0.1:7357/api/v1/thirdparty/callback
     deutschebank-be:
       tink:
-        baseUrl: https://xs2a.db.com/ais/BE/DB
-        psuIdType: BE_ONLB_DB
-        psuIpAddress: 127.0.0.1
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     deutschebank-de:
       tink:
-        baseUrl: https://xs2a.db.com/ais/DE/PFB
-        psuIdType: DE_ONLB_DB
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     df1d601b810c4cca963d90679950a7ab:
       tink:
@@ -7328,8 +7323,7 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     postbank:
       tink:
-        baseUrl: https://xs2a.db.com/ais/DE/Postbank
-        psuIdType: DE_ONLB_POBA
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     rabobank:
       abnamro:
         baseUrl: https://api.rabobank.nl/openapi

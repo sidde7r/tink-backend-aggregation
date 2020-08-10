@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -16,13 +15,13 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class PostbankAuthenticator implements AutoAuthenticator {
 
-    private PostbankApiClient postbankApiClient;
+    private final PostbankApiClient postbankApiClient;
     private final SessionStorage sessionStorage;
     private final String iban;
 
     public PostbankAuthenticator(
-            DeutscheBankApiClient apiClient, SessionStorage sessionStorage, String iban) {
-        this.postbankApiClient = (PostbankApiClient) apiClient;
+            PostbankApiClient apiClient, SessionStorage sessionStorage, String iban) {
+        this.postbankApiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.iban = iban;
     }
@@ -32,29 +31,26 @@ public final class PostbankAuthenticator implements AutoAuthenticator {
         ConsentResponse consentsResponse = postbankApiClient.getConsents(iban, username);
         sessionStorage.put(StorageKeys.CONSENT_ID, consentsResponse.getConsentId());
 
-        AuthorisationResponse authorisationResponse =
-                postbankApiClient.startAuthorisation(
-                        new URL(
-                                consentsResponse
-                                        .getLinksEntity()
-                                        .getStartAuthorisationWithEncryptedPsuAuthenticationEntity()
-                                        .getHref()),
-                        username,
-                        password);
-
-        return authorisationResponse;
+        return postbankApiClient.startAuthorisation(
+                new URL(
+                        consentsResponse
+                                .getLinksEntity()
+                                .getStartAuthorisationWithEncryptedPsuAuthenticationEntity()
+                                .getHref()),
+                username,
+                password);
     }
 
-    public AuthorisationResponse selectScaMethod(String methodId, String username, String url) {
+    AuthorisationResponse selectScaMethod(String methodId, String username, String url) {
         return postbankApiClient.updateAuthorisationForScaMethod(new URL(url), username, methodId);
     }
 
-    public AuthorisationResponse authenticateWithOtp(String otp, String username, String url)
+    AuthorisationResponse authenticateWithOtp(String otp, String username, String url)
             throws AuthenticationException, AuthorizationException {
         return postbankApiClient.updateAuthorisationForOtp(new URL(url), username, otp);
     }
 
-    public AuthorisationResponse checkStatus(String username, String url) {
+    AuthorisationResponse checkStatus(String username, String url) {
         return postbankApiClient.getAuthorisation(new URL(url), username);
     }
 

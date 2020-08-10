@@ -4,54 +4,42 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Configuration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DeutscheBankBEApiClient extends DeutscheBankApiClient {
 
-    private final TinkHttpClient client;
-    private final DeutscheBankConfiguration configuration;
-    private final String redirectUrl;
-
-    public DeutscheBankBEApiClient(
+    DeutscheBankBEApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            AgentConfiguration<DeutscheBankConfiguration> agentConfiguration) {
-        super(client, sessionStorage, agentConfiguration);
-        this.client = client;
-        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
-        this.redirectUrl = agentConfiguration.getRedirectUrl();
+            String redirectUrl,
+            DeutscheMarketConfiguration marketConfiguration) {
+        super(client, sessionStorage, redirectUrl, marketConfiguration);
     }
 
     @Override
     public ConsentBaseResponse getConsent(String state, String iban, String psuId) {
-        String currency = DeutscheBankConstants.FormValues.CURRENCY_TYPE;
+        String currency = FormValues.CURRENCY_TYPE;
         ConsentBaseRequest consentBaseRequest = new ConsentBaseRequest(iban, currency);
-        return client.request(
-                        new URL(
-                                configuration
-                                        .getBaseUrl()
-                                        .concat(DeutscheBankConstants.Urls.CONSENT)))
-                .header(DeutscheBankConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(DeutscheBankConstants.HeaderKeys.PSU_ID_TYPE, configuration.getPsuIdType())
-                .header(DeutscheBankConstants.HeaderKeys.PSU_ID, psuId)
+        return client.request(new URL(marketConfiguration.getBaseUrl().concat(Urls.CONSENT)))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
+                .header(HeaderKeys.PSU_ID, psuId)
+                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
                 .header(
-                        DeutscheBankConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        Configuration.PSU_IP_ADDRESS)
+                        HeaderKeys.TPP_REDIRECT_URI,
+                        new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
                 .header(
-                        DeutscheBankConstants.HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(redirectUrl)
-                                .queryParam(DeutscheBankConstants.QueryKeys.STATE, state))
-                .header(
-                        DeutscheBankConstants.HeaderKeys.TPP_NOK_REDIRECT_URI,
-                        new URL(redirectUrl)
-                                .queryParam(DeutscheBankConstants.QueryKeys.STATE, state))
+                        HeaderKeys.TPP_NOK_REDIRECT_URI,
+                        new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
                 .type(MediaType.APPLICATION_JSON)
                 .post(ConsentBaseResponse.class, consentBaseRequest);
     }

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -12,7 +12,7 @@ public class AccessEntity {
     @JsonIgnore private final List<IbanEntity> ibans;
 
     public AccessEntity(String iban) {
-        ibans = Arrays.asList(new IbanEntity(iban));
+        ibans = Collections.singletonList(new IbanEntity(iban));
     }
 
     @JsonGetter

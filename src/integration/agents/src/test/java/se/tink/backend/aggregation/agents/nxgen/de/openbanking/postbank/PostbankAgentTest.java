@@ -27,7 +27,7 @@ public class PostbankAgentTest {
         ibanManager.before();
         usernamePasswordManager.before();
         builder =
-                new AgentIntegrationTest.Builder("de", "de-postbank-ob")
+                new AgentIntegrationTest.Builder("de", "de-postbank-berlin-ob")
                         .addCredentialField(
                                 CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
                         .addCredentialField(
