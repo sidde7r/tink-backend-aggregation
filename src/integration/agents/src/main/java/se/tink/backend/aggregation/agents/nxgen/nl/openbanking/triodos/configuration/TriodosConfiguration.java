@@ -10,14 +10,11 @@ import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 @JsonObject
 public class TriodosConfiguration implements BerlinGroupConfiguration {
 
-    @JsonProperty @Secret private String apiKey;
-    @JsonProperty @Secret private String psuIpAddress;
-    @JsonProperty @Secret private String oauthBaseUrl;
-    @JsonProperty @Secret private String baseUrl;
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
@@ -39,28 +36,14 @@ public class TriodosConfiguration implements BerlinGroupConfiguration {
         return clientSecret;
     }
 
+    // The below fields will be removed when BerlinGroup agent is refactored
     @Override
     public String getBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(baseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
-
-        return baseUrl;
+        throw new NotImplementedException("The value is set in constant");
     }
 
+    @Override
     public String getPsuIpAddress() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(psuIpAddress),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "PsuIpAddress"));
-
-        return psuIpAddress;
-    }
-
-    public String getApiKey() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(apiKey),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "ApiKey"));
-
-        return apiKey;
+        throw new NotImplementedException("The value is set in constant");
     }
 }
