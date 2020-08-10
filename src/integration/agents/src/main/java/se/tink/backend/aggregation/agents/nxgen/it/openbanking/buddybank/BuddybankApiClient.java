@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -24,15 +25,16 @@ public class BuddybankApiClient extends UnicreditBaseApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             Credentials credentials,
-            boolean manualRequest) {
-        super(client, persistentStorage, credentials, manualRequest);
+            boolean manualRequest,
+            UnicreditProviderConfiguration providerConfiguration) {
+        super(client, persistentStorage, credentials, manualRequest, providerConfiguration);
     }
 
     public BuddybankCreateConsentResponse createConsent(String state) {
         BuddybankCreateConsentResponse consentResponse =
-                createRequest(new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENTS))
+                createRequest(new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENTS))
                         .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(HeaderKeys.PSU_ID_TYPE, getConfiguration().getPsuIdType())
+                        .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(getRedirectUrl())
@@ -54,7 +56,7 @@ public class BuddybankApiClient extends UnicreditBaseApiClient {
 
     @Override
     protected URL getScaRedirectUrlFromConsentResponse(ConsentResponse consentResponse) {
-        return new URL(getConfiguration().getBaseUrl() + consentResponse.getScaRedirect());
+        return new URL(providerConfiguration.getBaseUrl() + consentResponse.getScaRedirect());
     }
 
     @Override
@@ -65,7 +67,7 @@ public class BuddybankApiClient extends UnicreditBaseApiClient {
     @Override
     protected String getScaRedirectUrlFromCreatePaymentResponse(
             CreatePaymentResponse consentResponse) {
-        return getConfiguration().getBaseUrl() + consentResponse.getScaRedirect();
+        return providerConfiguration.getBaseUrl() + consentResponse.getScaRedirect();
     }
 
     public PaymentStatusResponse getConsentStatus(URL url) {
