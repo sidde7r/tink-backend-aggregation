@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric;
 
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.IdTags;
@@ -15,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.configuration.FabricConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationStatus;
@@ -25,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -39,32 +37,23 @@ public class FabricApiClient {
     private final PersistentStorage persistentStorage;
     private final RandomValueGenerator randomValueGenerator;
     private final SessionStorage sessionStorage;
-    private FabricConfiguration configuration;
     private String redirectUrl;
+    private String baseUrl;
 
     FabricApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             RandomValueGenerator randomValueGenerator,
-            SessionStorage sessionStorage) {
+            SessionStorage sessionStorage,
+            String baseUrl) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.randomValueGenerator = randomValueGenerator;
         this.sessionStorage = sessionStorage;
+        this.baseUrl = baseUrl;
     }
 
-    private FabricConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    private String getRedirectUrl() {
-        return Optional.ofNullable(redirectUrl)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    protected void setConfiguration(AgentConfiguration<FabricConfiguration> agentConfiguration) {
-        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
+    protected void setConfiguration(AgentConfiguration<EmptyConfiguration> agentConfiguration) {
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
@@ -81,8 +70,7 @@ public class FabricApiClient {
     }
 
     public CreateConsentResponse getConsent(String state) {
-        final String baseUrl = getConfiguration().getBaseUrl();
-        final URL redirectUri = new URL(getRedirectUrl()).queryParam(QueryKeys.STATE, state);
+        final URL redirectUri = new URL(redirectUrl).queryParam(QueryKeys.STATE, state);
 
         return client.request(new URL(baseUrl + Urls.CONSENT))
                 .type(MediaType.APPLICATION_JSON)
@@ -93,7 +81,6 @@ public class FabricApiClient {
     }
 
     public ConsentStatusResponse getConsentStatus(String consentId) {
-        final String baseUrl = getConfiguration().getBaseUrl();
         return createRequest(
                         new URL(baseUrl + Urls.GET_CONSENT_STATUS)
                                 .parameter(IdTags.CONSENT_ID, consentId))
@@ -101,7 +88,6 @@ public class FabricApiClient {
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentId) {
-        final String baseUrl = getConfiguration().getBaseUrl();
         return createRequest(
                         new URL(baseUrl + Urls.GET_CONSENT_DETAILS)
                                 .parameter(IdTags.CONSENT_ID, consentId))
@@ -109,29 +95,21 @@ public class FabricApiClient {
     }
 
     public AccountResponse fetchAccounts() {
-        final String baseUrl = getConfiguration().getBaseUrl();
-
         return createRequestInSession(new URL(baseUrl + Urls.GET_ACCOUNTS))
                 .get(AccountResponse.class);
     }
 
     public BalanceResponse getBalances(String url) {
-        String baseUrl = getConfiguration().getBaseUrl();
-
         return createRequestInSession(new URL(baseUrl + Urls.API_PSD2_URL + url))
                 .get(BalanceResponse.class);
     }
 
     public AccountDetailsResponse getAccountDetails(String url) {
-        final String baseUrl = getConfiguration().getBaseUrl();
-
         return createRequestInSession(new URL(baseUrl + Urls.API_PSD2_URL + url))
                 .get(AccountDetailsResponse.class);
     }
 
     public TransactionResponse fetchTransactions(String resourceId, Date fromDate, Date toDate) {
-        String baseUrl = getConfiguration().getBaseUrl();
-
         return createRequestInSession(
                         new URL(baseUrl + Urls.GET_TRANSACTIONS)
                                 .parameter(IdTags.ACCOUNT_ID, resourceId))
@@ -152,7 +130,7 @@ public class FabricApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(getRedirectUrl())
+                        new URL(redirectUrl)
                                 .queryParam(QueryKeys.CODE, FabricConstants.QueryValues.CODE)
                                 .queryParam(QueryKeys.STATE, sessionStorage.get(QueryKeys.STATE)))
                 .post(CreatePaymentResponse.class, createPaymentRequest);

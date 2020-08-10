@@ -1,28 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank;
 
+import com.google.inject.Inject;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.BuddybankPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentExecutor;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BuddybankAgent extends UnicreditBaseAgent {
 
-    public BuddybankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    private static final UnicreditProviderConfiguration PROVIDER_CONFIG =
+            new UnicreditProviderConfiguration("ALL", "https://api.buddybank.it");
+
+    @Inject
+    public BuddybankAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
     }
 
     @Override
     protected UnicreditBaseApiClient getApiClient(boolean manualRequest) {
-        return new BuddybankApiClient(client, persistentStorage, credentials, manualRequest);
+        return new BuddybankApiClient(
+                client, persistentStorage, credentials, manualRequest, PROVIDER_CONFIG);
     }
 
     @Override

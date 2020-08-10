@@ -162,7 +162,6 @@ public class ChebancaApiClient {
         requireNonNull(config);
         requireNonNull(Strings.emptyToNull(config.getClientId()));
         requireNonNull(Strings.emptyToNull(config.getClientSecret()));
-        requireNonNull(Strings.emptyToNull(config.getCertificateId()));
         requireNonNull(Strings.emptyToNull(config.getApplicationId()));
         return config;
     }
