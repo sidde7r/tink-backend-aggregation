@@ -29,6 +29,8 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
 
     @JsonIgnore private static final String EMPTY_STRING = "";
 
+    @JsonIgnore private static final String UNEXPECTED_TYPE_ERROR = "Unexpected transfer type: {}";
+
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Stockholm")
     private Date bookedDate;
 
@@ -124,7 +126,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
                         .map(ReferenceEntity::getValue)
                         .orElse(EMPTY_STRING);
             default:
-                log.warn("Unexpected transfer type: {}", type);
+                log.warn(UNEXPECTED_TYPE_ERROR, type);
                 return null;
         }
     }
@@ -153,7 +155,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
                                 .orElse(EMPTY_STRING));
                 return remittanceInformation;
             default:
-                log.warn("Unexpected transfer type: {}", type);
+                log.warn(UNEXPECTED_TYPE_ERROR, type);
                 throw new IllegalStateException("Unexpected transfer type: " + type);
         }
     }
@@ -179,7 +181,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
                         .map(PayeeEntity::getName)
                         .orElse(EMPTY_STRING);
             default:
-                log.warn("Unexpected transfer type: {}", type);
+                log.warn(UNEXPECTED_TYPE_ERROR, type);
                 return null;
         }
     }
@@ -201,7 +203,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
                         .map(PaymentEntity::getPayee)
                         .map(PayeeEntity::generalGetAccountIdentifier);
             default:
-                log.warn("Unexpected transfer type: {}", type);
+                log.warn(UNEXPECTED_TYPE_ERROR, type);
                 return Optional.empty();
         }
     }
@@ -218,7 +220,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
             case SwedbankBaseConstants.TransactionType.PAYMENT:
                 return TransferType.PAYMENT;
             default:
-                log.warn("Unexpected transfer type: {}", type);
+                log.warn(UNEXPECTED_TYPE_ERROR, type);
                 return null;
         }
     }
