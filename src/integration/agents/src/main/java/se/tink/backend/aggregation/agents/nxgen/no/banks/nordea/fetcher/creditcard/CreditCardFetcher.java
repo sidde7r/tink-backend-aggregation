@@ -22,7 +22,7 @@ public class CreditCardFetcher implements AccountFetcher<CreditCardAccount> {
     public Collection<CreditCardAccount> fetchAccounts() {
         return fetcherClient.fetchCreditCards().getCards().stream()
                 .filter(CreditCardEntity::isCreditCard)
-                .map(x -> fetcherClient.fetchCreditCardDetails(x.getCardId()))
+                .map(card -> fetcherClient.fetchCreditCardDetails(card.getCardId()))
                 .map(this::toTinkCreditCardAccount)
                 .collect(Collectors.toList());
     }

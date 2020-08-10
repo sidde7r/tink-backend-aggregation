@@ -22,7 +22,7 @@ public class NordeaNoMockServerAgentTest {
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.builder(NO, "no-nordea-bankid", wireMockFilePath)
-                        .addCallbackData("wot", "wat")
+                        .addCallbackData("name", "name")
                         .addCredentialField(MOBILENUMBER.getFieldKey(), "96325874")
                         .addCredentialField(DATE_OF_BIRTH.getFieldKey(), "121290")
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())

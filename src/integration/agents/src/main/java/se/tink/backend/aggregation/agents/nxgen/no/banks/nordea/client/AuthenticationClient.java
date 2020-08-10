@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.CodeExchangeReqResp;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.OauthTokenResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
-import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -34,45 +33,11 @@ public class AuthenticationClient {
     private BaseClient baseClient;
     private final NordeaNoStorage storage;
 
-    // Not sure if needed at all.
-    public String initializeNordeaSession(
-            String codeChallenge, String state, String nonce, Credentials credentials) {
-        RequestBuilder request =
-                baseClient
-                        .request(Urls.NORDEA_AUTH_BASE_URL)
-                        .queryParam(QueryParamKeys.CLIENT_ID, QueryParamValues.CLIENT_ID)
-                        .queryParam(QueryParamKeys.CODE_CHALLENGE, codeChallenge)
-                        .queryParam(
-                                QueryParamKeys.CODE_CHALLENGE_METHOD,
-                                QueryParamValues.CODE_CHALLENGE_METHOD)
-                        .queryParam(QueryParamKeys.STATE, state)
-                        .queryParam(QueryParamKeys.NONCE, nonce)
-                        .queryParam(QueryParamKeys.REDIRECT_URI, QueryParamValues.REDIRECT_URI)
-                        .queryParam(QueryParamKeys.RESPONSE_TYPE, QueryParamValues.RESPONSE_TYPE)
-                        .queryParam(QueryParamKeys.UI_LOCALES, QueryParamValues.UI_LOCALES)
-                        .queryParam(QueryParamKeys.AV, QueryParamValues.AV)
-                        .queryParam(QueryParamKeys.DM, QueryParamValues.DM)
-                        .queryParam(QueryParamKeys.INSTALLED_APPS, QueryParamValues.INSTALLED_APPS)
-                        .queryParam(QueryParamKeys.SCOPE, QueryParamValues.SCOPE)
-                        .queryParam(
-                                QueryParamKeys.LOGIN_HINT,
-                                String.format(
-                                        QueryParamValues.LOGIN_HINT_FORMAT,
-                                        credentials.getField(Field.Key.MOBILENUMBER),
-                                        credentials.getField(Field.Key.DATE_OF_BIRTH)))
-                        .queryParam(QueryParamKeys.APP_CHANNEL, QueryParamValues.APP_CHANNEL)
-                        .queryParam(QueryParamKeys.ADOBE_MC, QueryParamValues.ADOBE_MC);
-        String res = request.getUrl().toString();
-        request.get(HttpResponse.class);
-        return res;
-    }
-
     public AuthenticationsResponse getNordeaSessionDetails(
-            String codeChallenge, String state, String nonce, String referer) {
+            String codeChallenge, String state, String nonce) {
         AuthenticationParams request = new AuthenticationParams(codeChallenge, nonce, state);
         return baseClient
                 .request(Urls.NORDEA_AUTHENTICATION_START)
-                .header(HeaderKeys.REFERER, referer)
                 .header(HeaderKeys.DEVICE_MODEL, HeaderValues.DEVICE_MODEL)
                 .header(HeaderKeys.PLATFORM_TYPE, HeaderValues.PLATFORM_TYPE)
                 .header(HeaderKeys.DEVICE_EC, HeaderValues.DEVICE_EC)
@@ -85,7 +50,6 @@ public class AuthenticationClient {
             String codeChallenge,
             String state,
             String nonce,
-            String referer,
             String integrationUrl,
             String sessionId,
             Credentials credentials) {
@@ -116,7 +80,6 @@ public class AuthenticationClient {
                                 QueryParamValues.LOGIN_HINT_SHORT_FORMAT,
                                 credentials.getField(Field.Key.MOBILENUMBER),
                                 credentials.getField(Field.Key.DATE_OF_BIRTH)))
-                .header(HeaderKeys.REFERER, referer)
                 .get(HttpResponse.class);
     }
 
@@ -135,14 +98,12 @@ public class AuthenticationClient {
                 .get(HttpResponse.class);
     }
 
-    public AuthenticationsPatchResponse authenticationsPatch(
-            String bidCode, String sessionId, String referer) {
+    public AuthenticationsPatchResponse authenticationsPatch(String bidCode, String sessionId) {
         AuthenticationsPatchRequest request = new AuthenticationsPatchRequest(bidCode);
         return baseClient
                 .request(
                         new URL(Urls.NORDEA_AUTHENTICATION_PATCH)
                                 .parameter(UriParams.URI_SESSION_ID, sessionId))
-                .header(HeaderKeys.REFERER, referer)
                 .header(HeaderKeys.APP_VERSION, HeaderValues.APP_VERSION)
                 .header(HeaderKeys.DEVICE_MODEL, HeaderValues.DEVICE_MODEL)
                 .header(HeaderKeys.PLATFORM_TYPE, HeaderValues.PLATFORM_TYPE)
@@ -151,11 +112,10 @@ public class AuthenticationClient {
                 .patch(AuthenticationsPatchResponse.class, request);
     }
 
-    public CodeExchangeReqResp codeExchange(String code, String referer) {
+    public CodeExchangeReqResp codeExchange(String code) {
         CodeExchangeReqResp request = new CodeExchangeReqResp(code);
         return baseClient
                 .request(Urls.NORDEA_AUTHORIZATION)
-                .header(HeaderKeys.REFERER, referer)
                 .header(HeaderKeys.APP_VERSION, HeaderValues.APP_VERSION)
                 .header(HeaderKeys.DEVICE_MODEL, HeaderValues.DEVICE_MODEL)
                 .header(HeaderKeys.PLATFORM_TYPE, HeaderValues.PLATFORM_TYPE)

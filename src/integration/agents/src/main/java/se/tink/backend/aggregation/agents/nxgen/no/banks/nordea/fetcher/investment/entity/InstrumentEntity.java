@@ -15,12 +15,13 @@ public class InstrumentEntity {
     private static final String EQUITY_TYPE = "EQUITY";
     private static final String DERIVATIVE_TYPE = "DERIVATIVE";
 
-    private String currency;
     private String id;
+    private String currency;
     private String isin;
     private String issuer;
-    private double price;
     private String instrumentType;
+
+    private double price;
 
     public boolean isFund() {
         return FUND_TYPE.equals(instrumentType);

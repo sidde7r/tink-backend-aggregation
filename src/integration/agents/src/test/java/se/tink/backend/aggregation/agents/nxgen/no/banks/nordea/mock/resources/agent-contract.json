@@ -4,17 +4,17 @@
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
       "currencyCode" : "NOK",
-      "doubleValue" : 1765.06,
       "exactValue" : 1765.06,
       "scale" : 2,
-      "unscaledValue" : 176506
+      "unscaledValue" : 176506,
+      "doubleValue" : 1765.06
     },
     "exactBalance" : {
       "currencyCode" : "NOK",
-      "doubleValue" : 127.05,
       "exactValue" : 127.05,
       "scale" : 2,
-      "unscaledValue" : 12705
+      "unscaledValue" : 12705,
+      "doubleValue" : 127.05
     },
     "currencyCode" : "NOK",
     "bankId" : "52693239",
@@ -36,25 +36,25 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "NOK",
-      "doubleValue" : 1801.4,
       "exactValue" : 1801.4,
       "scale" : 2,
-      "unscaledValue" : 180140
+      "unscaledValue" : 180140,
+      "doubleValue" : 1801.4
     },
     "currencyCode" : "NOK",
     "availableBalance" : {
       "currencyCode" : "NOK",
-      "doubleValue" : 1801.4,
       "exactValue" : 1801.4,
       "scale" : 2,
-      "unscaledValue" : 180140
+      "unscaledValue" : 180140,
+      "doubleValue" : 1801.4
     },
     "creditLimit" : {
       "currencyCode" : "NOK",
-      "doubleValue" : 0.0,
       "exactValue" : 0.0,
       "scale" : 2,
-      "unscaledValue" : 0
+      "unscaledValue" : 0,
+      "doubleValue" : 0.0
     },
     "bankId" : "NO9386011117947",
     "excluded" : false,
@@ -79,6 +79,31 @@
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
     "availableCredit" : 0.0,
     "balance" : 1801.4
+  }, {
+    "accountNumber" : "6320.82.123456",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "NOK",
+      "exactValue" : 2654170.0,
+      "scale" : 1,
+      "unscaledValue" : 26541700,
+      "doubleValue" : 2654170.0
+    },
+    "currencyCode" : "NOK",
+    "bankId" : "632082123456",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Lån",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 2654170.0
   } ],
   "transactions" : [ {
     "amount" : -10.0,
@@ -422,6 +447,7 @@
     "dateOfBirth" : {
       "year" : 1984,
       "month" : "AUGUST",
+      "era" : "CE",
       "dayOfWeek" : "WEDNESDAY",
       "leapYear" : true,
       "dayOfYear" : 242,
@@ -430,8 +456,7 @@
         "calendarType" : "iso8601"
       },
       "monthValue" : 8,
-      "dayOfMonth" : 29,
-      "era" : "CE"
+      "dayOfMonth" : 29
     }
   }
 }

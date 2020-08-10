@@ -52,7 +52,6 @@ public class VerifySessionStep implements AuthenticationStep {
             throws AuthenticationException, AuthorizationException {
         String sessionId = storage.retrieveSessionId();
         String oidcSessionId = storage.retrievOidcSessionId();
-        String referer = storage.retrieveReferer();
         String codeVerifier = storage.retrieveCodeVerifier();
 
         // Keep checking if approved by user
@@ -68,11 +67,11 @@ public class VerifySessionStep implements AuthenticationStep {
 
         // Patch the authentication in identify.nordea.com, sending them bidCode
         AuthenticationsPatchResponse authenticationsPatchResponse =
-                authenticationClient.authenticationsPatch(bidCode, sessionId, referer);
+                authenticationClient.authenticationsPatch(bidCode, sessionId);
 
         // post authorization in identify.nordea.com, swapping one code for another
         CodeExchangeReqResp codeExchangeReqResp =
-                authenticationClient.codeExchange(authenticationsPatchResponse.getCode(), referer);
+                authenticationClient.codeExchange(authenticationsPatchResponse.getCode());
 
         // Exchange that code for oauth token
         String deviceId = generateDeviceId();

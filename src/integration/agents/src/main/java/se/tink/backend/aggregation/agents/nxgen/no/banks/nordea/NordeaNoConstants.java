@@ -13,22 +13,19 @@ public class NordeaNoConstants {
         public static final String METHOD_ID = "method_id";
         public static final String LANG = "lang";
         public static final String RESPONSE_TYPE = "response_type";
-        public static final String UI_LOCALES = "ui_locales";
         public static final String AV = "av";
         public static final String DM = "dm";
         public static final String EC = "ec";
-        public static final String INSTALLED_APPS = "installed_apps";
         public static final String INTEGRATION_URL = "integration_url";
         public static final String SCOPE = "scope";
         public static final String LOGIN_HINT = "login_hint";
-        public static final String APP_CHANNEL = "app_channel";
-        public static final String ADOBE_MC = "adobe_mc";
         public static final String NONCE = "nonce";
         public static final String PRODUCT_CODE = "product_code";
         public static final String CONTINUATION_KEY = "continuation_key";
         public static final String SESSION_ID = "session_id";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
+        public static final String TYPE = "type";
     }
 
     public static class QueryParamValues {
@@ -39,18 +36,13 @@ public class NordeaNoConstants {
         public static final String METHOD_ID = "bankidm_no";
         public static final String LANG = "en";
         public static final String RESPONSE_TYPE = "code";
-        public static final String UI_LOCALES = "en";
         public static final String AV = "3.13.2.1092";
         public static final String DM = "iPhone9,3";
         public static final String EC = "0";
-        public static final String INSTALLED_APPS = "bankid nemid";
         public static final String SCOPE = "openid ndf agreement offline_access";
-        public static final String LOGIN_HINT_FORMAT = "bankidm_no:%s:%s";
         public static final String LOGIN_HINT_SHORT_FORMAT = "BIM:%s:%s";
-        public static final String APP_CHANNEL = "NDM_NO_IOS";
-        public static final String ADOBE_MC =
-                "MCMID=72013651902555220792178724439960251443|MCORGID=9D193D565A0AFF460A495E66%40AdobeOrg|TS=1593772516";
         public static final String PAGE_SIZE = "100";
+        public static final String TYPE = "TOTAL";
     }
 
     public static class HeaderKeys {
@@ -83,7 +75,7 @@ public class NordeaNoConstants {
         public static final String APP_COUNTRY = "NO";
         public static final String HOUSEHOLD_APP_SEGMENT = "household";
         public static final String PLATFORM_VERSION = "12.4.0";
-        public static final String ACCEPT_LANGUAGE = "en-us";
+        public static final String ACCEPT_LANGUAGE = "en-no";
     }
 
     public static class FormKeys {
@@ -161,7 +153,9 @@ public class NordeaNoConstants {
         public static final String FETCH_INVESTMENTS =
                 NORDEA_PRIVATE_BASE_URL + "/api/dbf/ca/savings-v1/savings/custodies";
 
-        public static final String FETCH_LOANS = "/api/dbf/ca/loans-v1/loans/";
-        public static final String FETCH_LOAN_DETAILS = "/api/dbf/ca/loans-v1/loans/{loanId}";
+        public static final String FETCH_LOANS =
+                NORDEA_PRIVATE_BASE_URL + "/api/dbf/ca/loans-v1/loans";
+        public static final String FETCH_LOAN_DETAILS =
+                NORDEA_PRIVATE_BASE_URL + "/api/dbf/ca/loans-v1/loans/{loanId}";
     }
 }

@@ -65,6 +65,7 @@ public class FetcherClient {
     public InvestmentsResponse fetchInvestments() {
         return baseClient
                 .baseAuthorizedRequest(Urls.FETCH_INVESTMENTS)
+                .queryParam(QueryParamKeys.TYPE, QueryParamValues.TYPE)
                 .get(InvestmentsResponse.class);
     }
 

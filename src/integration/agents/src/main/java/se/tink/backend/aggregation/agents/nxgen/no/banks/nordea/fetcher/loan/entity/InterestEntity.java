@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;

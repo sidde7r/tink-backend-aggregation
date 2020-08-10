@@ -50,13 +50,9 @@ public class SetupSessionStep implements AuthenticationStep {
         String codeChallenge = calculateCodeChallenge(codeVerifier);
 
         storage.storeCodeVerifier(codeVerifier);
-        String referer =
-                authenticationClient.initializeNordeaSession(
-                        codeChallenge, state, nonce, credentials);
-        storage.storeReferer(referer);
 
         AuthenticationsResponse authenticationResponse =
-                authenticationClient.getNordeaSessionDetails(codeChallenge, state, nonce, referer);
+                authenticationClient.getNordeaSessionDetails(codeChallenge, state, nonce);
         String sessionId = authenticationResponse.getSessionId();
         storage.storeSessionId(sessionId);
 
@@ -65,7 +61,6 @@ public class SetupSessionStep implements AuthenticationStep {
                         codeChallenge,
                         state,
                         nonce,
-                        referer,
                         authenticationResponse.getBankidIntegrationUrl(),
                         sessionId,
                         credentials);

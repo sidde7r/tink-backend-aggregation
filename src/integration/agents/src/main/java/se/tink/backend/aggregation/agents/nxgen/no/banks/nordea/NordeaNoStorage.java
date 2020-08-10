@@ -12,7 +12,6 @@ public class NordeaNoStorage {
     private static final String OAUTH_TOKEN = "token";
     private static final String NORDEA_SESSION_ID = "sessionId";
     private static final String OIDC_SESSION_ID = "oidcSessionId";
-    private static final String REFERER = "referer";
     private static final String CODE_VERIFIER = "codeVerifier";
     private static final String DEVICE_ID = "deviceId";
 
@@ -29,14 +28,6 @@ public class NordeaNoStorage {
 
     public void storeCodeVerifier(String codeVerifier) {
         sessionStorage.put(CODE_VERIFIER, codeVerifier);
-    }
-
-    public void storeReferer(String referer) {
-        sessionStorage.put(REFERER, referer);
-    }
-
-    public String retrieveReferer() {
-        return sessionStorage.get(REFERER);
     }
 
     public String retrieveCodeVerifier() {
