@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.trans
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +30,9 @@ public class TransactionalDetailsResponse implements PaginatorResponse {
     @Override
     @JsonIgnore
     public Collection<? extends Transaction> getTinkTransactions() {
+        if (transactions == null || transactions.isEmpty()) {
+            return Collections.emptyList();
+        }
         return transactions.stream()
                 .map(TransactionDetailsEntity::toTinkTransaction)
                 .collect(Collectors.toList());
