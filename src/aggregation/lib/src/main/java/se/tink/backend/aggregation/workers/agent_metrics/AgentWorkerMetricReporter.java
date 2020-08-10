@@ -88,22 +88,22 @@ public class AgentWorkerMetricReporter {
      */
     private boolean isSuccessfulStatus(CredentialsStatus status) {
         switch (status) {
-            case AUTHENTICATION_ERROR:
-            case TEMPORARY_ERROR:
-                return false;
-            default:
+            case UPDATED:
+            case UPDATING:
                 return true;
+            default:
+                return false;
         }
     }
 
     private boolean isSuccessfulTransfer(TransferRequest request) {
         SignableOperation operation = request.getSignableOperation();
         switch (operation.getStatus()) {
-            case CANCELLED:
-            case FAILED:
-                return false;
-            default:
+            case EXECUTED:
+            case EXECUTING:
                 return true;
+            default:
+                return false;
         }
     }
 
