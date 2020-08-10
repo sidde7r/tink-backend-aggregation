@@ -13,7 +13,6 @@ import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifier
 public class SwedbankBasePredicates {
     private static final AccountIdentifierFormatter DEFAULT_FORMAT =
             new DefaultAccountIdentifierFormatter();
-    private static final String EMPTY_STRING = "";
 
     public static Predicate<BankEntity> filterBankId(String bankId) {
         Preconditions.checkNotNull(bankId, "You must provide a bankId for comparison.");
