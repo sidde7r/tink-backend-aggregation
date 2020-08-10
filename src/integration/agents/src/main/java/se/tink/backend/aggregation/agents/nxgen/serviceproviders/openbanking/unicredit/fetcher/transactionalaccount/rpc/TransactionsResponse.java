@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +18,6 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<URL
 
     private TransactionsWrapperEntity transactions;
 
-    @JsonProperty("_links")
-    private TransactionsLinksEntity links;
-
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         List<Transaction> booked = getTinkTransactions(transactions.getBooked(), false);
@@ -39,11 +35,13 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<URL
 
     @Override
     public Optional<Boolean> canFetchMore() {
+        TransactionsLinksEntity links = transactions.getLinks();
         return Optional.of(links != null && links.hasNext());
     }
 
     @Override
     public URL nextKey() {
+        TransactionsLinksEntity links = transactions.getLinks();
         return links != null && links.hasNext() ? new URL(links.getNext()) : null;
     }
 }
