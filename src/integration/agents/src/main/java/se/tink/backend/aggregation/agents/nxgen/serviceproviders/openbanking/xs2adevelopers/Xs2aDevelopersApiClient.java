@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -46,16 +45,14 @@ public class Xs2aDevelopersApiClient {
     protected final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final Xs2aDevelopersConfiguration configuration;
-    private final String redirectUrl;
 
     public Xs2aDevelopersApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration) {
+            Xs2aDevelopersConfiguration configuration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
-        this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.configuration = configuration;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -88,7 +85,7 @@ public class Xs2aDevelopersApiClient {
 
     public PostConsentResponse createConsent(PostConsentBody postConsentBody) {
         return createRequest(new URL(configuration.getBaseUrl() + ApiServices.POST_CONSENT))
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .header(HeaderKeys.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .body(postConsentBody)
@@ -101,7 +98,7 @@ public class Xs2aDevelopersApiClient {
 
         return new URL(href)
                 .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
+                .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.SCOPE, scope)
                 .queryParam(QueryKeys.CODE_CHALLENGE, getCodeChallenge(code))
@@ -143,8 +140,7 @@ public class Xs2aDevelopersApiClient {
                             .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                             .get(GetTransactionsResponse.class);
             fetchedTransactions.addAll(response.toTinkTransactions());
-            transactionFetchUrl =
-                    response.getTransactions().getLinks().getNext().map(next -> new URL(next));
+            transactionFetchUrl = response.getTransactions().getLinks().getNext().map(URL::new);
         } while (transactionFetchUrl.isPresent());
         return fetchedTransactions;
     }
@@ -163,7 +159,7 @@ public class Xs2aDevelopersApiClient {
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
         return createRequest(new URL(configuration.getBaseUrl() + ApiServices.CREATE_PAYMENT))
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .header(HeaderKeys.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .body(createPaymentRequest)

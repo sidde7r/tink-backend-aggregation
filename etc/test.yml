@@ -5721,15 +5721,9 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     comdirect:
       tink:
-        baseUrl: https://xs2a-api.comdirect.de
-        certificateId: Tink
-        clientId: PSDSE-FINA-44059
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     commerzbank:
       tink:
-        baseUrl: https://psd2.api.commerzbank.com
-        certificateId: Tink
-        clientId: PSDSE-FINA-44059
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     credem:
       tink:

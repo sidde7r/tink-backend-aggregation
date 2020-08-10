@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues.SCOPE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.OAUTH_TOKEN;
 
@@ -13,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -56,28 +59,21 @@ public class Xs2aDevelopersAuthenticatorTest {
 
     private Xs2aDevelopersApiClient apiClient;
     private Xs2aDevelopersAuthenticator authenticator;
-    private AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration;
-    private Xs2aDevelopersConfiguration configuration;
     private PersistentStorage storage;
 
     @Before
     public void init() {
         apiClient = mock(Xs2aDevelopersApiClient.class);
         storage = mock(PersistentStorage.class);
-        configuration = mock(Xs2aDevelopersConfiguration.class);
-        agentConfiguration =
-                new AgentConfiguration.Builder<Xs2aDevelopersConfiguration>()
-                        .setProviderSpecificConfiguration(configuration)
-                        .setRedirectUrl(REDIRECT_URL)
-                        .build();
-        authenticator = new Xs2aDevelopersAuthenticator(apiClient, storage, agentConfiguration);
+        Xs2aDevelopersConfiguration configuration =
+                new Xs2aDevelopersConfiguration(CLIENT_ID, BASE_URL, REDIRECT_URL);
+        authenticator = new Xs2aDevelopersAuthenticator(apiClient, storage, configuration);
     }
 
     @Test
     public void shouldRefreshAccessTokenAndConvertItToTinkModel() throws SessionException {
         // given
         when(apiClient.getToken(any())).thenReturn(GET_TOKEN_RESPONSE);
-        when(configuration.getClientId()).thenReturn(CLIENT_ID);
 
         // when
         OAuth2Token oAuth2Token = authenticator.refreshAccessToken(REFRESH_TOKEN);
@@ -107,7 +103,6 @@ public class Xs2aDevelopersAuthenticatorTest {
     public void shouldExchangeAuthorizationCodeAndConvertItToTinkModel() {
         // given
         when(apiClient.getToken(any())).thenReturn(GET_TOKEN_RESPONSE);
-        when(configuration.getClientId()).thenReturn(CLIENT_ID);
 
         // when
         OAuth2Token oAuth2Token = authenticator.exchangeAuthorizationCode(CODE);
@@ -126,8 +121,6 @@ public class Xs2aDevelopersAuthenticatorTest {
         when(apiClient.createConsent(any())).thenReturn(POST_CONSENT_RESPONSE);
         when(apiClient.buildAuthorizeUrl(STATE, AIS_CONSENT_ID, SCA_OAUTH))
                 .thenReturn(new URL(API_CLIENT_AUTHORIZE_URL));
-        when(configuration.getClientId()).thenReturn(CLIENT_ID);
-        when(configuration.getBaseUrl()).thenReturn(BASE_URL);
 
         // when
         URL authorizeUrl = authenticator.buildAuthorizeUrl(STATE);
