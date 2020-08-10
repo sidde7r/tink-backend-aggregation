@@ -160,7 +160,7 @@ public class CertificateUtils {
         return certs;
     }
 
-    private static ArrayList<X509Certificate> getX509CertificatesFromBase64EncodedCert(
+    public static ArrayList<X509Certificate> getX509CertificatesFromBase64EncodedCert(
             String base64EncodedCertificates) throws CertificateException {
         return CertificateFactory.getInstance("X.509")
                 .generateCertificates(
