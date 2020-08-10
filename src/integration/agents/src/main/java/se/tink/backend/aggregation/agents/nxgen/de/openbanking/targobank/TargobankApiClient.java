@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.util.TargoBankUtils;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -40,6 +40,7 @@ public final class TargobankApiClient {
     private final TinkHttpClient client;
     private TargobankConfiguration configuration;
     private PersistentStorage persistentStorage;
+    private String redirectUrl;
 
     public TargobankApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -51,12 +52,9 @@ public final class TargobankApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(TargobankConfiguration configuration) {
-        this.configuration = configuration;
-
-        client.setSslClientCertificate(
-                TargoBankUtils.readFile(configuration.getClientKeyStorePath()),
-                configuration.getClientKeyStorePassword());
+    protected void setConfiguration(AgentConfiguration<TargobankConfiguration> configuration) {
+        this.configuration = configuration.getProviderSpecificConfiguration();
+        this.redirectUrl = configuration.getRedirectUrl();
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -70,8 +68,8 @@ public final class TargobankApiClient {
     private RequestBuilder createAuthenticationRequest(URL url) {
         return createRequest(url)
                 .header(HeaderKeys.PSU_ID, HeaderValues.PSU_ID)
-                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
-                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl());
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
     }
 
     public ConsentResponse createConsent() {
@@ -85,10 +83,10 @@ public final class TargobankApiClient {
         return createAuthenticationRequest(new URL(url)).post(CreateAuthorisationResponse.class);
     }
 
-    public PasswordAuthenticationResponse authenticateAuthorisationsPassword(String url) {
+    public PasswordAuthenticationResponse authenticateAuthorisationsPassword(
+            String url, String password) {
         PasswordAuthenticationRequest request =
-                new PasswordAuthenticationRequest(
-                        new PsuDataEntity(getConfiguration().getScaPassword()));
+                new PasswordAuthenticationRequest(new PsuDataEntity(password));
         return createAuthenticationRequest(new URL(url))
                 .put(PasswordAuthenticationResponse.class, request);
     }
@@ -147,13 +145,13 @@ public final class TargobankApiClient {
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
         return createRequest(SandboxUrls.CREATE_PAYMENT)
-                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public GetPaymentResponse getPayment(String uniqueId) {
         return createRequest(SandboxUrls.FETCH_PAYMENT.parameter(PathVariable.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .get(GetPaymentResponse.class);
     }
 }

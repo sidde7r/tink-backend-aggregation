@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authe
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.configuration.AhoiSandboxConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.fetcher.transactionalaccount.AhoiSandboxTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.fetcher.transactionalaccount.AhoiSandboxTransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -22,7 +24,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class AhoiSandboxAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final AhoiSandboxApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -32,23 +33,23 @@ public final class AhoiSandboxAgent extends NextGenerationAgent
         configureHttpClient(client);
 
         apiClient = new AhoiSandboxApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        apiClient.setConfiguration(getClientConfiguration());
     }
 
     private void configureHttpClient(TinkHttpClient client) {
         client.setTimeout((int) Duration.ofSeconds(60).toMillis());
     }
 
-    protected AhoiSandboxConfiguration getClientConfiguration() {
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration agentsServiceConfiguration) {
+        super.setConfiguration(agentsServiceConfiguration);
+        apiClient.setConfiguration(getAgentConfiguration());
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+    }
+
+    private AgentConfiguration<AhoiSandboxConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        AhoiSandboxConstants.INTEGRATION_NAME,
-                        clientName,
-                        AhoiSandboxConfiguration.class);
+                .getAgentConfiguration(AhoiSandboxConfiguration.class);
     }
 
     @Override
@@ -56,7 +57,9 @@ public final class AhoiSandboxAgent extends NextGenerationAgent
 
         return new PasswordAuthenticationController(
                 new AhoiSandboxAuthenticator(
-                        apiClient, getClientConfiguration(), persistentStorage));
+                        apiClient,
+                        getAgentConfiguration().getProviderSpecificConfiguration(),
+                        persistentStorage));
     }
 
     @Override

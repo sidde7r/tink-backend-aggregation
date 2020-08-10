@@ -74,9 +74,14 @@ public final class TargobankConstants {
 
     public static class HeaderValues {
         public static final String PSU_ID = "PSD2TEST2";
+        public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class ScaStatuses {
         public static final String FINALISED = "finalised";
+    }
+
+    public static class CredentialKeys {
+        public static final String PASSWORD = "password";
     }
 }

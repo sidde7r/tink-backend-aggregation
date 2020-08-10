@@ -7,11 +7,9 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.FieldKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc.ConsentRedirectResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.configuration.FidorConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -34,29 +32,20 @@ public class FidorAuthenticator
     private SupplementalInformationHelper supplementalInformationHelper;
     private final FidorApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final FidorConfiguration configuration;
     private Credentials credentials;
-
-    ConsentRedirectResponse consentResponse;
+    private ConsentRedirectResponse consentResponse;
 
     public FidorAuthenticator(
             SupplementalInformationHelper supplementalInformationHelper,
             StrongAuthenticationState strongAuthenticationState,
             FidorApiClient apiClient,
             PersistentStorage persistentStorage,
-            FidorConfiguration configuration,
             Credentials credentials) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.strongAuthenticationState = strongAuthenticationState;
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
         this.credentials = credentials;
-    }
-
-    private FidorConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override

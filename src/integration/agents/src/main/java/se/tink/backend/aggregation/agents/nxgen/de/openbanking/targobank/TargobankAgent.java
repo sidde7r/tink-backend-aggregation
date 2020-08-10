@@ -10,7 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.configu
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.TargobankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher.TargobankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher.TargobankTransactionFetcher;
-import se.tink.backend.aggregation.configuration.Environment;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -20,25 +21,19 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class TargobankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor {
 
-    private final String clientName;
     private final TargobankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private TargobankConfiguration targobankConfiguration;
 
     public TargobankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new TargobankApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        apiClient.setConfiguration(getClientConfiguration());
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
@@ -56,23 +51,22 @@ public final class TargobankAgent extends NextGenerationAgent
                         new TransactionDatePaginationController<>(transactionFetcher)));
     }
 
-    protected TargobankConfiguration getClientConfiguration() {
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration agentsServiceConfiguration) {
+        super.setConfiguration(agentsServiceConfiguration);
+        apiClient.setConfiguration(getAgentConfiguration());
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+    }
+
+    private AgentConfiguration<TargobankConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        TargobankConstants.INTEGRATION_NAME,
-                        clientName,
-                        TargobankConfiguration.class);
+                .getAgentConfiguration(TargobankConfiguration.class);
     }
 
     /*ToDo Add Metrics when flow is done*/
     @Override
     protected Authenticator constructAuthenticator() {
-        if (targobankConfiguration.getEnvironment() == Environment.SANDBOX) {
-            return new TargobankSandboxAuthenticator(apiClient, persistentStorage);
-        } else {
-            // TODO : Put production Authenticator here
-            throw new NotImplementedException("Production authenticator is not implemented");
-        }
+        return new TargobankSandboxAuthenticator(apiClient, persistentStorage);
     }
 
     @Override

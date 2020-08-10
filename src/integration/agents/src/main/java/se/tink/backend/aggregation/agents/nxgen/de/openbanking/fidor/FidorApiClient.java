@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.configurati
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.rpc.AccountFetchResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.rpc.BalanceFetchResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.rpc.TransactionFetchResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -33,6 +34,7 @@ public final class FidorApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private FidorConfiguration configuration;
+    private String redirectUrl;
 
     public FidorApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -44,8 +46,9 @@ public final class FidorApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(FidorConfiguration configuration) {
-        this.configuration = configuration;
+    protected void setConfiguration(AgentConfiguration<FidorConfiguration> configuration) {
+        this.configuration = configuration.getProviderSpecificConfiguration();
+        this.redirectUrl = configuration.getRedirectUrl();
     }
 
     public TokenResponse getToken(String username, String password) {
@@ -62,12 +65,11 @@ public final class FidorApiClient {
     }
 
     public AuthorizationConsentResponse authorizeConsent(
-            String scaAuthenticationData, String authroizationLink) {
-        final String baseUrl = getConfiguration().getBaseUrl();
+            String scaAuthenticationData, String authorizationLink) {
         AutorizationConsentRequest requestBody =
                 new AutorizationConsentRequest(scaAuthenticationData);
 
-        return createRequestInSession(new URL(baseUrl + authroizationLink))
+        return createRequestInSession(new URL(Urls.BASE_URL + authorizationLink))
                 .put(AuthorizationConsentResponse.class, requestBody);
     }
 
@@ -113,7 +115,7 @@ public final class FidorApiClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
-                .header(HeaderKeys.TPP_REDIRECT_URI, new URL(configuration.getRedirectUri()))
+                .header(HeaderKeys.TPP_REDIRECT_URI, new URL(redirectUrl))
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
                 .addBearerToken(authToken);
     }

@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -43,8 +44,8 @@ public final class SantanderApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(SantanderConfiguration configuration) {
-        this.configuration = configuration;
+    protected void setConfiguration(AgentConfiguration<SantanderConfiguration> configuration) {
+        this.configuration = configuration.getProviderSpecificConfiguration();
     }
 
     public OAuth2Token getToken() {
@@ -58,11 +59,11 @@ public final class SantanderApiClient {
                 .toTinkToken();
     }
 
-    public String getConsentId() {
-        final String IBAN = getConfiguration().getIBAN();
-        final String currency = getConfiguration().getCurrency();
+    public String getConsentId(String iban) {
         final ConsentRequest consentsRequest = new ConsentRequest();
-        consentsRequest.getAccess().addAccessEntity(IBAN, currency);
+        consentsRequest
+                .getAccess()
+                .addAccessEntity(iban, SantanderConstants.CredentialValues.CURRENCY);
 
         return client.request(Urls.CONSENT)
                 .addBearerToken(getTokenFromStorage())

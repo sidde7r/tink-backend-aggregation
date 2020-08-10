@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.Santand
 
 public class SantanderAgentTest {
 
-    // --jvmopt=-Dtink.IBAN=DE74310108330000009001 configuration
     private final ArgumentManager<IbanArgumentEnum> manager =
             new ArgumentManager<>(IbanArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
@@ -29,7 +28,9 @@ public class SantanderAgentTest {
                         .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("santander");
     }
 
     @Test
