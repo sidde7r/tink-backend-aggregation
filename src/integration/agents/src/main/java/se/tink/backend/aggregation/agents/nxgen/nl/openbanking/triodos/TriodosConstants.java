@@ -31,4 +31,8 @@ public final class TriodosConstants {
     public static class HeaderKeys {
         public static final String AUTHORIZATION_ID = "authorizationId";
     }
+
+    public static class HeaderValues {
+        public static final String TENANT = "nl";
+    }
 }
