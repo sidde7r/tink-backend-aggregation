@@ -26,8 +26,7 @@ public class AuthenticatorTestBase {
         AgentConfiguration<ChebancaConfiguration> agentConfiguration =
                 mock(AgentConfiguration.class);
         when(apiClient.createToken(any())).thenReturn(response);
-        ChebancaConfiguration config =
-                new ChebancaConfiguration(CLIENT_ID, CLIENT_SECRET, CERTIFICATE_ID, APP_ID);
+        ChebancaConfiguration config = new ChebancaConfiguration(CLIENT_ID, CLIENT_SECRET, APP_ID);
         when(agentConfiguration.getProviderSpecificConfiguration()).thenReturn(config);
         when(agentConfiguration.getRedirectUrl()).thenReturn(REDIRECT_URL);
         StrongAuthenticationState state = new StrongAuthenticationState(CLIENT_STATE);
