@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankDefaultBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankTokenGeneratorAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.einvoice.SwedbankDefaultApproveEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.SwedbankDefaultPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.SwedbankDefaultBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
@@ -259,11 +258,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         SwedbankDefaultPaymentExecutor paymentExecutor =
                 new SwedbankDefaultPaymentExecutor(
                         catalog, apiClient, transferHelper, swedbankStorage, dateUtils);
-        SwedbankDefaultApproveEInvoiceExecutor approveEInvoiceExecutor =
-                new SwedbankDefaultApproveEInvoiceExecutor(apiClient, transferHelper, dateUtils);
-        return Optional.of(
-                new TransferController(
-                        paymentExecutor, transferExecutor, approveEInvoiceExecutor, null));
+        return Optional.of(new TransferController(paymentExecutor, transferExecutor, null, null));
     }
 
     @Override
