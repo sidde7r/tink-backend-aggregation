@@ -464,21 +464,6 @@ public class SwedbankDefaultApiClient {
         return makeRequest(linkEntity, PaymentDetailsResponse.class, false);
     }
 
-    public RegisterTransferResponse updatePayment(
-            LinkEntity linkEntity,
-            double amount,
-            RemittanceInformation remittanceInformation,
-            Date date,
-            String recipientId,
-            String fromAccountId) {
-        return makeRequest(
-                linkEntity,
-                RegisterPaymentRequest.createPayment(
-                        amount, remittanceInformation, date, recipientId, fromAccountId),
-                RegisterTransferResponse.class,
-                false);
-    }
-
     public InitiateSignTransferResponse signExternalTransferBankId(LinkEntity linkEntity) {
         return makeRequest(
                 linkEntity,
@@ -592,12 +577,6 @@ public class SwedbankDefaultApiClient {
         BankProfile foundBankProfile = getBankProfileHandler().findProfile(requestedBankProfile);
 
         return activateProfile(foundBankProfile);
-    }
-
-    public void selectTransferProfile() {
-        BankProfile transferProfile = getBankProfileHandler().findTransferProfile();
-
-        selectProfile(transferProfile);
     }
 
     // activate a profile at backend
