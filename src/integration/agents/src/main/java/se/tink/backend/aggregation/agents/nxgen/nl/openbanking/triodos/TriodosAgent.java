@@ -18,7 +18,6 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
         implements RefreshIdentityDataExecutor {
 
     private final QsealcSigner qsealcSigner;
-    private final String qSealc;
 
     @Inject
     public TriodosAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {

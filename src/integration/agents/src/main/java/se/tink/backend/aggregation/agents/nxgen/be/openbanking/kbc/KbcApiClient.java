@@ -53,8 +53,9 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
             final KbcConfiguration configuration,
             final String redirectUrl,
             final Credentials credentials,
-            final PersistentStorage persistentStorage) {
-        super(client, persistentStorage, configuration, redirectUrl);
+            final PersistentStorage persistentStorage,
+            final String qSealc) {
+        super(client, persistentStorage, configuration, redirectUrl, qSealc);
 
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;

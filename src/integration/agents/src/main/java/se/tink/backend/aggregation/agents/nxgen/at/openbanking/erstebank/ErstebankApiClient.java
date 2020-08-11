@@ -42,8 +42,9 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
             final TinkHttpClient client,
             final PersistentStorage persistentStorage,
             final ErstebankConfiguration configuration,
-            final String redirectUrl) {
-        super(client, persistentStorage, configuration, redirectUrl);
+            final String redirectUrl,
+            final String qSealc) {
+        super(client, persistentStorage, configuration, redirectUrl, qSealc);
     }
 
     public URL getAuthorizeUrl(final String state) {

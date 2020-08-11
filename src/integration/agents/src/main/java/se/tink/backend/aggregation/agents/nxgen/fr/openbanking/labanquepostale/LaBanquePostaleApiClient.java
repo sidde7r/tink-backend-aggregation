@@ -51,8 +51,9 @@ public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePosta
             PersistentStorage persistentStorage,
             QsealcSigner qsealcSigner,
             LaBanquePostaleConfiguration configuration,
-            String redirectUrl) {
-        super(client, persistentStorage, configuration, redirectUrl);
+            String redirectUrl,
+            String qSealc) {
+        super(client, persistentStorage, configuration, redirectUrl, qSealc);
 
         this.qsealcSigner = qsealcSigner;
     }

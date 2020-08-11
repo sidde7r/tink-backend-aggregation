@@ -34,7 +34,8 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
                 getConfiguration().getProviderSpecificConfiguration(),
                 getConfiguration().getRedirectUrl(),
                 credentials,
-                persistentStorage);
+                persistentStorage,
+                getConfiguration().getQsealc());
     }
 
     @Override

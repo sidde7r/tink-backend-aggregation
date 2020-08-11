@@ -42,8 +42,9 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
             final PersistentStorage persistentStorage,
             final QsealcSigner qsealcSigner,
             final SamlinkConfiguration configuration,
-            final String redirectUrl) {
-        super(client, persistentStorage, configuration, redirectUrl);
+            final String redirectUrl,
+            final String qSealc) {
+        super(client, persistentStorage, configuration, redirectUrl, qSealc);
 
         this.qsealcSigner = qsealcSigner;
     }

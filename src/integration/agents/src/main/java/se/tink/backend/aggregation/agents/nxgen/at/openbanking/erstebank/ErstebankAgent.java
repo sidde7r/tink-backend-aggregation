@@ -30,7 +30,8 @@ public final class ErstebankAgent
                 client,
                 persistentStorage,
                 getConfiguration().getProviderSpecificConfiguration(),
-                getConfiguration().getRedirectUrl());
+                getConfiguration().getRedirectUrl(),
+                getConfiguration().getQsealc());
     }
 
     @Override
