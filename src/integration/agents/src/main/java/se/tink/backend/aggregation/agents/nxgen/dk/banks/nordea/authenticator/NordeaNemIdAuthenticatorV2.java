@@ -88,6 +88,7 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             }
             throw e;
         }
+        fetchLoans();
     }
 
     public AuthenticationStepResponse autoAuthenticate() {
@@ -115,7 +116,24 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             log.info("Refresh token missing or invalid, proceeding to manual authentication");
             return AuthenticationStepResponse.executeNextStep();
         }
+        fetchLoans();
         return AuthenticationStepResponse.authenticationSucceeded();
+    }
+
+    /*
+      Done due to: https://tinkab.atlassian.net/browse/ITE-452
+      Currently we do not have any ambassador, with whom loans can be tested.
+      We want to record traffic on PROD env to check loans on real users and afterwards make the development.
+    */
+    private void fetchLoans() {
+        try {
+            String loans = bankClient.getLoans();
+            if (loans.length() > 15) {
+                log.info("Loans available for Nordea DK");
+            }
+        } catch (HttpResponseException e) {
+            log.error("Exception while getting loans", e);
+        }
     }
 
     @Override

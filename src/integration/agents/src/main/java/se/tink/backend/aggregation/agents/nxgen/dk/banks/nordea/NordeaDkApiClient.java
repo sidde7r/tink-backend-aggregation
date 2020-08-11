@@ -196,8 +196,11 @@ public class NordeaDkApiClient {
     }
 
     public AccountsResponse getAccounts() {
-
         return baseAuthorizedRequest(URLs.FETCH_ACCOUNTS).get(AccountsResponse.class);
+    }
+
+    public String getLoans() {
+        return baseAuthorizedRequest(URLs.FETCH_LOANS).get(String.class);
     }
 
     public TransactionsResponse getAccountTransactions(

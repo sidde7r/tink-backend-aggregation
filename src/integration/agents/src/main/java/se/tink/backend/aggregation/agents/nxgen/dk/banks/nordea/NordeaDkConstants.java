@@ -14,6 +14,8 @@ public class NordeaDkConstants {
         public static final String NORDEA_PRIVATE_BASE_URL = "https://private.nordea.dk/";
         public static final String FETCH_ACCOUNTS =
                 NORDEA_PRIVATE_BASE_URL + "api/dbf/ca/accounts-v3/accounts";
+        public static final String FETCH_LOANS =
+                NORDEA_PRIVATE_BASE_URL + "api/dbf/ca/loans-v1/loans";
         public static final String EXCHANGE_TOKEN =
                 NORDEA_AUTH_BASE_URL + "api/dbf/ca/token-service-v3/oauth/token";
         public static final String FETCH_ACCOUNT_TRANSACTIONS_FORMAT =
