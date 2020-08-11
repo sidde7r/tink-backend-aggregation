@@ -1,0 +1,90 @@
+{
+  "card_id": "9638527410963852",
+  "card_category": "credit",
+  "card_status": "active",
+  "card_expiration": {
+    "date": "2022-10-31",
+    "formatted": "10/22"
+  },
+  "cardholder_name": "TEST USER",
+  "cardholder_type": "principal",
+  "principal_cardholder_name": "TEST USER",
+  "product_code": "DK0072",
+  "card_loyalty_group": null,
+  "country_code": "DK",
+  "currency": "DKK",
+  "nickname": null,
+  "pan_id": "43066705",
+  "atm_account_number": null,
+  "credit": {
+    "masked_credit_card_number": "1234 **** **** 5678",
+    "credit_limit": 50000.00,
+    "credit_booked_balance": 10000.00,
+    "credit_available_balance": 40000.00,
+    "prev_min_instalment_amount": null,
+    "instalment_min_percent": null,
+    "instalment_free_months": [],
+    "interest": {
+      "reference_rate_type": null,
+      "margin": null,
+      "reference_rate": null,
+      "billing_period_rate": 0.00
+    },
+    "invoice": {
+      "next_sum": null,
+      "next_date": "2020-04-01",
+      "prev_total": null,
+      "prev_date": null,
+      "due_day_of_month": 1,
+      "reference_number": null
+    }
+  },
+  "debit": {
+    "masked_debit_card_number": "1234 **** **** 5678",
+    "debit_account_balance": null,
+    "debit_account_number": "7418529630",
+    "debit_account_name": "Opsparing",
+    "debit_account_key": null
+  },
+  "parallel_cards": null,
+  "usage_limits": {
+    "internet": true,
+    "internet_non3d": null,
+    "contactless": null,
+    "daily_limits": {
+      "atm_pay": null,
+      "atm_withdrawal": 0.00
+    },
+    "weekly_limits": null,
+    "monthly_credit_spending_limit": null,
+    "permanent_region": [
+      "denmark"
+    ],
+    "temporary_region": null
+  },
+  "permissions": {
+    "transactions": true,
+    "transfer_from_credit": false,
+    "view_pin": true,
+    "allowed_to_enroll_mobile_payments": null
+  },
+  "notifications": null,
+  "metadata": {
+    "geographical_zones": [
+      "denmark",
+      "europe",
+      "nordic",
+      "baltic",
+      "americas",
+      "asia",
+      "oceania",
+      "africa"
+    ],
+    "limits": {
+      "atm_payment": 0,
+      "atm_payment_step": 0,
+      "atm_withdrawal": 10000,
+      "atm_withdrawal_step": 500
+    }
+  }
+}

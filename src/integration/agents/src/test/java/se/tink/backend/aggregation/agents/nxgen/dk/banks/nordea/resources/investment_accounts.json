@@ -1,0 +1,226 @@
+{
+  "accounts": [
+    {
+      "account_number": "4321 321 321",
+      "cash_amount": 0.0,
+      "classification": "FREE",
+      "currency": "DKK",
+      "custody_tags": [
+        "EXCHANGE_TRADING"
+      ],
+      "details_available": true,
+      "has_additional_info": false,
+      "has_fund_allocation_plan": false,
+      "has_reports": false,
+      "holdings": [],
+      "id": "BMS:4321321321",
+      "market_value": 0.0,
+      "market_value_in_local_currrency": 0.0,
+      "name": "Depot",
+      "owner_id": "7894561230",
+      "owner_name": "TEST USER",
+      "profit_loss": 0.0,
+      "profit_loss_applicable": true,
+      "profit_loss_percentage": 0,
+      "profit_loss_valid": true,
+      "tags": [],
+      "todays_change": 0.0,
+      "todays_change_percentage": 0.0,
+      "todays_change_valid": true,
+      "todays_changes_applicable": true,
+      "type": "CUSTODY",
+      "wrapper": false
+    },
+    {
+      "account_number": "1234 123 456",
+      "cash_amount": 0.32,
+      "classification": "FREE",
+      "currency": "DKK",
+      "custody_tags": [],
+      "details_available": true,
+      "has_additional_info": false,
+      "has_fund_allocation_plan": false,
+      "has_reports": true,
+      "holdings": [
+        {
+          "avg_purchase_price": 0.9898,
+          "currency": "DKK",
+          "custody_key": "DKWRAP:1234123456",
+          "fx_rate": 1.0,
+          "id": "DKWRAP:1234123456+BMS-DK9876543210-UNOT-null",
+          "instrument": {
+            "buy_allowed": false,
+            "currency": "DKK",
+            "details_available": true,
+            "dividend_paying": false,
+            "document_types": [],
+            "flag_code": "DK",
+            "fund_category": "Global",
+            "fund_type": "Multi-Asset",
+            "id": "IMC-DK9876543210-DKOTC-DKK",
+            "instrument_name": "Nora Fund Five (DKK)",
+            "instrument_type": "FUND",
+            "isin": "DK9876543210",
+            "issuer": "Nordea Funds Ltd",
+            "lot_size": 1.0,
+            "main_sector_code": "GICS45",
+            "management_fee": 0.0,
+            "price": 0.98,
+            "price_precision": 2,
+            "price_time": 1583708400000,
+            "price_time_iso": "2020-03-08T23:00:00Z",
+            "region_allocation": [
+              {
+                "code": "USA",
+                "value": 51.11
+              },
+              {
+                "code": "EUROPE",
+                "value": 25.21
+              },
+              {
+                "code": "FAR_EAST_EM",
+                "value": 15.48
+              },
+              {
+                "code": "JAPAN",
+                "value": 6.52
+              },
+              {
+                "code": "HOME_BIAS",
+                "value": 0.86
+              },
+              {
+                "code": "OTHER",
+                "value": 0.82
+              }
+            ],
+            "returns": {
+              "five_years": 0.0,
+              "one_day": -5.77,
+              "one_year": -1.26,
+              "three_years": 0.0,
+              "year_to_date": -13.86
+            },
+            "risk": 5,
+            "sector_allocation": [
+              {
+                "code": "GICS45",
+                "value": 17.54
+              },
+              {
+                "code": "GICS40",
+                "value": 16.12
+              },
+              {
+                "code": "GICS35",
+                "value": 11.46
+              },
+              {
+                "code": "GICS25",
+                "value": 11.08
+              },
+              {
+                "code": "GICS20",
+                "value": 10.57
+              },
+              {
+                "code": "GICS50",
+                "value": 8.7
+              },
+              {
+                "code": "GICS30",
+                "value": 8.2
+              },
+              {
+                "code": "GICS10",
+                "value": 4.94
+              },
+              {
+                "code": "GICS15",
+                "value": 4.65
+              },
+              {
+                "code": "GICS55",
+                "value": 3.5
+              },
+              {
+                "code": "GICS0",
+                "value": 3.24
+              }
+            ],
+            "sell_allowed": false,
+            "switch_allowed": false,
+            "use_native_trading_flow": false
+          },
+          "market_value": 9785.3,
+          "name": "Nora Fund Five (DKK)",
+          "profit_loss": -98.24,
+          "profit_loss_percentage": -0.99,
+          "purchase_value": 9883.54,
+          "quantity": 9985.0,
+          "show_profit_loss": true,
+          "tags": []
+        },
+        {
+          "currency": "DKK",
+          "custody_key": "DKWRAP:1234123456",
+          "fx_rate": 1.0,
+          "id": "DKWRAP:1234123456+IMC-DKK-DKK-DKK",
+          "instrument": {
+            "buy_allowed": false,
+            "currency": "DKK",
+            "details_available": false,
+            "flag_code": "",
+            "id": "IMC-DKK-DKK-DKK",
+            "instrument_name": "Kontant beholdning 1234 123 456 DKK",
+            "instrument_type": "CASH",
+            "isin": "DKK",
+            "issuer": "-",
+            "main_sector_code": "GICS0",
+            "price_precision": 2,
+            "region_allocation": [],
+            "sector_allocation": [
+              {
+                "code": "GICS0",
+                "value": 100.0
+              }
+            ],
+            "sell_allowed": false,
+            "switch_allowed": false,
+            "use_native_trading_flow": false
+          },
+          "market_value": 0.32,
+          "name": "Kontant beholdning 1234 123 456 DKK",
+          "quantity": 0.32,
+          "show_profit_loss": false,
+          "tags": []
+        }
+      ],
+      "id": "DKWRAP:1234123456",
+      "market_value": 9785.62,
+      "market_value_in_local_currrency": 9785.62,
+      "name": "NORA depot",
+      "owner_id": "7894561230",
+      "owner_name": "TEST USER",
+      "profit_loss": -98.24,
+      "profit_loss_applicable": true,
+      "profit_loss_percentage": -0.99,
+      "profit_loss_valid": true,
+      "tags": [],
+      "todays_change": 0.0,
+      "todays_change_percentage": 0.0,
+      "todays_change_valid": false,
+      "todays_changes_applicable": true,
+      "type": "CUSTODY",
+      "wrapper": false
+    }
+  ],
+  "legacy_errors": [],
+  "read_only_access": false,
+  "totals": {
+    "todays_change": 0.0,
+    "todays_change_pct": 0.0,
+    "todays_change_valid": false
+  }
+}

@@ -1,0 +1,380 @@
+{
+  "result": [
+    {
+      "account_id": "NAID-DK-DKK-1234567890",
+      "account_status": "open",
+      "available_balance": 0.00,
+      "bic": "NDEADKKK",
+      "booked_balance": 0.00,
+      "category": "transaction",
+      "country_code": "DK",
+      "credit_limit": 0.00,
+      "currency": "DKK",
+      "display_account_number": "1234567890",
+      "iban": "DK2020001234567890",
+      "interest_info": {
+        "interests": [
+          {
+            "accumulated_amount": 0.00,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [
+              {
+                "from_amount": 0.00,
+                "rate": 0.1000,
+                "to_amount": 4999.99
+              },
+              {
+                "from_amount": 5000.00,
+                "rate": 0.1000,
+                "to_amount": 9999999999999999.99
+              }
+            ],
+            "rate_type": "credit"
+          },
+          {
+            "accumulated_amount": 0.00,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [],
+            "rate_type": "debit"
+          },
+          {
+            "accumulated_amount": 0.00,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [
+              {
+                "from_amount": 0.00,
+                "rate": 17.2500,
+                "to_amount": -0.01
+              },
+              {
+                "from_amount": -0.02,
+                "rate": 21.2500,
+                "to_amount": -9999999999999999.99
+              }
+            ],
+            "rate_type": "overdraft"
+          }
+        ]
+      },
+      "latest_transaction_date": "2020-01-14",
+      "nickname": "Forbrug",
+      "permissions": {
+        "can_deposit_to_account": true,
+        "can_pay_from_account": true,
+        "can_transfer_from_account": true,
+        "can_transfer_to_account": true,
+        "can_view": true,
+        "can_view_transactions": true,
+        "require_4eye_signing": false
+      },
+      "product_code": "UNG28",
+      "product_name": "Lønkonto+",
+      "product_type": "308",
+      "registration_number": "2316",
+      "roles": [
+        {
+          "name": "TEST USER",
+          "role": "owner"
+        }
+      ],
+      "transaction_list_search_criteria": {
+        "can_use_end_date": true,
+        "can_use_free_text": false,
+        "can_use_highest_amount": false,
+        "can_use_lowest_amount": false,
+        "can_use_start_date": true,
+        "sort_by_list": [
+          "transaction_date_desc"
+        ]
+      }
+    },
+    {
+      "account_id": "NAID-DK-DKK-9876543210",
+      "account_status": "open",
+      "available_balance": 337.00,
+      "bic": "NDEADKKK",
+      "booked_balance": 337.00,
+      "category": "transaction",
+      "country_code": "DK",
+      "credit_limit": 0.00,
+      "currency": "DKK",
+      "display_account_number": "9876543210",
+      "iban": "DK3120009876543210",
+      "interest_info": {
+        "interests": [
+          {
+            "accumulated_amount": 0.13,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [
+              {
+                "from_amount": 0.00,
+                "rate": 0.1000,
+                "to_amount": 4999.99
+              },
+              {
+                "from_amount": 5000.00,
+                "rate": 0.1000,
+                "to_amount": 9999999999999999.99
+              }
+            ],
+            "rate_type": "credit"
+          },
+          {
+            "accumulated_amount": 0.00,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [],
+            "rate_type": "debit"
+          },
+          {
+            "accumulated_amount": 0.00,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [
+              {
+                "from_amount": 0.00,
+                "rate": 17.2500,
+                "to_amount": -0.01
+              },
+              {
+                "from_amount": -0.02,
+                "rate": 21.2500,
+                "to_amount": -9999999999999999.99
+              }
+            ],
+            "rate_type": "overdraft"
+          }
+        ]
+      },
+      "latest_transaction_date": "2020-03-08",
+      "nickname": "Nordea Pay",
+      "permissions": {
+        "can_deposit_to_account": true,
+        "can_pay_from_account": true,
+        "can_transfer_from_account": true,
+        "can_transfer_to_account": true,
+        "can_view": true,
+        "can_view_transactions": true,
+        "require_4eye_signing": false
+      },
+      "product_code": "UNG28",
+      "product_name": "Lønkonto+",
+      "product_type": "308",
+      "registration_number": "2316",
+      "roles": [
+        {
+          "name": "TEST USER",
+          "role": "owner"
+        }
+      ],
+      "transaction_list_search_criteria": {
+        "can_use_end_date": true,
+        "can_use_free_text": false,
+        "can_use_highest_amount": false,
+        "can_use_lowest_amount": false,
+        "can_use_start_date": true,
+        "sort_by_list": [
+          "transaction_date_desc"
+        ]
+      }
+    },
+    {
+      "account_id": "NAID-DK-DKK-7418529630",
+      "account_status": "open",
+      "available_balance": 91844.66,
+      "bic": "NDEADKKK",
+      "booked_balance": 91844.66,
+      "category": "savings",
+      "country_code": "DK",
+      "credit_limit": 0.00,
+      "currency": "DKK",
+      "display_account_number": "7418529630",
+      "iban": "DK4520007418529630",
+      "interest_info": {
+        "interests": [
+          {
+            "accumulated_amount": 27.86,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [
+              {
+                "from_amount": 0.00,
+                "rate": 0.1000,
+                "to_amount": 9999999999999999.99
+              }
+            ],
+            "rate_type": "credit"
+          },
+          {
+            "accumulated_amount": 0.00,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [],
+            "rate_type": "debit"
+          },
+          {
+            "accumulated_amount": 0.00,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [
+              {
+                "from_amount": 0.00,
+                "rate": 21.2500,
+                "to_amount": -9999999999999999.99
+              }
+            ],
+            "rate_type": "overdraft"
+          }
+        ]
+      },
+      "latest_transaction_date": "2020-03-05",
+      "nickname": "Opsparing",
+      "permissions": {
+        "can_deposit_to_account": true,
+        "can_pay_from_account": true,
+        "can_transfer_from_account": true,
+        "can_transfer_to_account": true,
+        "can_view": true,
+        "can_view_transactions": true,
+        "require_4eye_signing": false
+      },
+      "product_code": "UNGOPS",
+      "product_name": "Nordea Opsparing",
+      "product_type": "493",
+      "registration_number": "2316",
+      "roles": [
+        {
+          "name": "TEST USER",
+          "role": "owner"
+        }
+      ],
+      "transaction_list_search_criteria": {
+        "can_use_end_date": true,
+        "can_use_free_text": false,
+        "can_use_highest_amount": false,
+        "can_use_lowest_amount": false,
+        "can_use_start_date": true,
+        "sort_by_list": [
+          "transaction_date_desc"
+        ]
+      }
+    },
+    {
+      "account_id": "NAID-DK-DKK-2551697498",
+      "main_account_number": null,
+      "display_account_number": "2551697498",
+      "source_account_number": null,
+      "iban": "DK9320002551697498",
+      "bic": "NDEADKKK",
+      "registration_number": "2360",
+      "country_code": "DK",
+      "product_code": "KRED2",
+      "product_name": "Grundkonto med kredit",
+      "nickname": "Grundkonto med kredit",
+      "product_type": "294",
+      "category": "transaction",
+      "account_status": "open",
+      "booked_balance": -10349.23,
+      "credit_limit": 10500.00,
+      "available_balance": 150.77,
+      "equivalent_balance": null,
+      "currency": "DKK",
+      "equivalent_currency": null,
+      "remaining_free_withdrawals": null,
+      "latest_transaction_date": "2020-07-30",
+      "statement_format": null,
+      "maturity_due_date": null,
+      "covered_by_deposit_guarantee": null,
+      "roles": [
+        {
+          "name": "TEST USER",
+          "role": "owner",
+          "current_user": true
+        }
+      ],
+      "permissions": {
+        "can_view": true,
+        "can_view_transactions": true,
+        "can_pay_from_account": true,
+        "can_transfer_from_account": true,
+        "can_transfer_to_account": true,
+        "can_deposit_to_account": true,
+        "can_pay_pgbg_from_account": null,
+        "require_4eye_signing": false,
+        "require_physically_present_all_eye_signing": null
+      },
+      "interest_info": {
+        "interests": [
+          {
+            "rate_type": "credit",
+            "accumulated_amount": 0.00,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [
+              {
+                "from_amount": 0.00,
+                "to_amount": 4999.99,
+                "rate": 0.0000
+              },
+              {
+                "from_amount": 5000.00,
+                "to_amount": 9999999999999999.99,
+                "rate": 0.0000
+              }
+            ]
+          },
+          {
+            "rate_type": "debit",
+            "accumulated_amount": -98.58,
+            "accumulated_year_amount": -504.32,
+            "interest_intervals": [
+              {
+                "from_amount": 0.00,
+                "to_amount": -49999.99,
+                "rate": 11.9500
+              },
+              {
+                "from_amount": -50000.00,
+                "to_amount": -124999.99,
+                "rate": 11.9500
+              },
+              {
+                "from_amount": -125000.00,
+                "to_amount": -9999999999999999.99,
+                "rate": 11.9500
+              }
+            ]
+          },
+          {
+            "rate_type": "overdraft",
+            "accumulated_amount": -1.17,
+            "accumulated_year_amount": 0.00,
+            "interest_intervals": [
+              {
+                "from_amount": 0.00,
+                "to_amount": -0.01,
+                "rate": 13.9500
+              },
+              {
+                "from_amount": -0.02,
+                "to_amount": -9999999999999999.99,
+                "rate": 17.9500
+              }
+            ]
+          }
+        ]
+      },
+      "flexi_deposit": null,
+      "transaction_list_search_criteria": {
+        "can_use_start_date": true,
+        "min_start_date": null,
+        "can_use_end_date": true,
+        "can_use_lowest_amount": false,
+        "can_use_highest_amount": false,
+        "can_use_free_text": false,
+        "sort_by_list": [
+          "transaction_date_desc"
+        ]
+      },
+      "commission_rate": null,
+      "deposit_limit_current_year": null,
+      "source_system": "accounts_dk_domestic",
+      "data_retrieved_from": "from_source_system"
+    }
+  ],
+  "sub_system_errors": []
+}
