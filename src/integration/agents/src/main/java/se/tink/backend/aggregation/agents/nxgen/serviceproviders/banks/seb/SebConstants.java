@@ -189,6 +189,7 @@ public class SebConstants {
                         .put(
                                 Answer.NO,
                                 AccountTypeCode.ENKLA_SPARKONTOT,
+                                AccountTypeCode.ENKLA_SPARKONTOT_FORETAG,
                                 AccountTypeCode.SPECIALINLANINGSKONTO,
                                 AccountTypeCode.PLACERINGSKONTO,
                                 AccountTypeCode.ISK_KAPITALKONTO,
@@ -205,6 +206,7 @@ public class SebConstants {
                                 AccountTypeCode.ENKLA_SPARKONTOT,
                                 AccountTypeCode.SPECIALINLANINGSKONTO,
                                 AccountTypeCode.PLACERINGSKONTO,
+                                AccountTypeCode.ENKLA_SPARKONTOT_FORETAG,
                                 AccountTypeCode.ISK_KAPITALKONTO,
                                 AccountTypeCode.IPS,
                                 AccountTypeCode.OTHER_NOTARIATKONTO)
@@ -217,7 +219,8 @@ public class SebConstants {
                                 AccountTypeCode.PRIVATKONTO,
                                 AccountTypeCode.PERSONALLONEKONTO,
                                 AccountTypeCode.ENKLA_SPARKONTOT,
-                                AccountTypeCode.ISK_KAPITALKONTO)
+                                AccountTypeCode.ISK_KAPITALKONTO,
+                                AccountTypeCode.ENKLA_SPARKONTOT_FORETAG)
                         .put(
                                 Answer.NO,
                                 AccountTypeCode.SPECIALINLANINGSKONTO,
@@ -232,7 +235,8 @@ public class SebConstants {
                                 AccountTypeCode.PRIVATKONTO,
                                 AccountTypeCode.PERSONALLONEKONTO,
                                 AccountTypeCode.ENKLA_SPARKONTOT,
-                                AccountTypeCode.ISK_KAPITALKONTO)
+                                AccountTypeCode.ISK_KAPITALKONTO,
+                                AccountTypeCode.ENKLA_SPARKONTOT_FORETAG)
                         .put(
                                 Answer.NO,
                                 AccountTypeCode.SPECIALINLANINGSKONTO,
