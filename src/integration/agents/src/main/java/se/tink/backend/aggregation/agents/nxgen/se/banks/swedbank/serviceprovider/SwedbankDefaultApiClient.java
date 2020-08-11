@@ -39,13 +39,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.InitiateSecurityTokenSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.InitiateSignTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.InitiateSignTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.PaymentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.PaymentsConfirmedResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.RegisterTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.RegisteredTransfersResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.rpc.RegisterTransferRecipientRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.rpc.RegisterTransferRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.rpc.RegisterTransferRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.updatepayment.rpc.PaymentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.updatepayment.rpc.PaymentsConfirmedResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard.rpc.DetailedCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.einvoice.rpc.EInvoiceDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.einvoice.rpc.EInvoiceEntity;
@@ -417,25 +417,6 @@ public class SwedbankDefaultApiClient {
                 RegisterTransferResponse.class);
     }
 
-    public RegisterTransferResponse registerEInvoice(
-            double amount,
-            RemittanceInformation remittanceInformation,
-            Date date,
-            String eInvoiceId,
-            String destinationAccountId,
-            String sourceAccountId) {
-        return makeMenuItemRequest(
-                SwedbankBaseConstants.MenuItemKey.REGISTER_PAYMENT,
-                RegisterPaymentRequest.createEinvoicePayment(
-                        amount,
-                        remittanceInformation,
-                        date,
-                        destinationAccountId,
-                        sourceAccountId,
-                        eInvoiceId),
-                RegisterTransferResponse.class);
-    }
-
     public RegisteredTransfersResponse registeredTransfers() {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.PAYMENT_REGISTERED,
@@ -462,21 +443,6 @@ public class SwedbankDefaultApiClient {
 
     public PaymentDetailsResponse paymentDetails(LinkEntity linkEntity) {
         return makeRequest(linkEntity, PaymentDetailsResponse.class, false);
-    }
-
-    public RegisterTransferResponse updatePayment(
-            LinkEntity linkEntity,
-            double amount,
-            RemittanceInformation remittanceInformation,
-            Date date,
-            String recipientId,
-            String fromAccountId) {
-        return makeRequest(
-                linkEntity,
-                RegisterPaymentRequest.createPayment(
-                        amount, remittanceInformation, date, recipientId, fromAccountId),
-                RegisterTransferResponse.class,
-                false);
     }
 
     public InitiateSignTransferResponse signExternalTransferBankId(LinkEntity linkEntity) {
@@ -592,12 +558,6 @@ public class SwedbankDefaultApiClient {
         BankProfile foundBankProfile = getBankProfileHandler().findProfile(requestedBankProfile);
 
         return activateProfile(foundBankProfile);
-    }
-
-    public void selectTransferProfile() {
-        BankProfile transferProfile = getBankProfileHandler().findTransferProfile();
-
-        selectProfile(transferProfile);
     }
 
     // activate a profile at backend

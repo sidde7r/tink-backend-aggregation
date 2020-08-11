@@ -23,10 +23,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankDefaultBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankTokenGeneratorAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.einvoice.SwedbankDefaultApproveEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.SwedbankDefaultPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.SwedbankDefaultBankTransferExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.updatepayment.SwedbankDefaultUpdatePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard.SwedbankDefaultCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.einvoice.SwedbankDefaultEinvoiceFetcher;
@@ -260,16 +258,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         SwedbankDefaultPaymentExecutor paymentExecutor =
                 new SwedbankDefaultPaymentExecutor(
                         catalog, apiClient, transferHelper, swedbankStorage, dateUtils);
-        SwedbankDefaultApproveEInvoiceExecutor approveEInvoiceExecutor =
-                new SwedbankDefaultApproveEInvoiceExecutor(apiClient, transferHelper, dateUtils);
-        SwedbankDefaultUpdatePaymentExecutor updatePaymentExecutor =
-                new SwedbankDefaultUpdatePaymentExecutor(apiClient, transferHelper, dateUtils);
-        return Optional.of(
-                new TransferController(
-                        paymentExecutor,
-                        transferExecutor,
-                        approveEInvoiceExecutor,
-                        updatePaymentExecutor));
+        return Optional.of(new TransferController(paymentExecutor, transferExecutor, null, null));
     }
 
     @Override

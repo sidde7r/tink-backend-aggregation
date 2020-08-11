@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.updatepayment.rpc;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,9 +9,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.AbstractExecutorTransactionEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.ToAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.TransferEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.PayeeEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -31,6 +28,8 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
     private static final Logger log = LoggerFactory.getLogger(ConfirmedTransactionEntity.class);
 
     @JsonIgnore private static final String EMPTY_STRING = "";
+
+    @JsonIgnore private static final String UNEXPECTED_TYPE_ERROR = "Unexpected transfer type: {}";
 
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Stockholm")
     private Date bookedDate;
@@ -127,7 +126,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
                         .map(ReferenceEntity::getValue)
                         .orElse(EMPTY_STRING);
             default:
-                log.warn("Unexpected transfer type: {}", type);
+                log.warn(UNEXPECTED_TYPE_ERROR, type);
                 return null;
         }
     }
@@ -156,7 +155,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
                                 .orElse(EMPTY_STRING));
                 return remittanceInformation;
             default:
-                log.warn("Unexpected transfer type: {}", type);
+                log.warn(UNEXPECTED_TYPE_ERROR, type);
                 throw new IllegalStateException("Unexpected transfer type: " + type);
         }
     }
@@ -182,7 +181,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
                         .map(PayeeEntity::getName)
                         .orElse(EMPTY_STRING);
             default:
-                log.warn("Unexpected transfer type: {}", type);
+                log.warn(UNEXPECTED_TYPE_ERROR, type);
                 return null;
         }
     }
@@ -204,7 +203,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
                         .map(PaymentEntity::getPayee)
                         .map(PayeeEntity::generalGetAccountIdentifier);
             default:
-                log.warn("Unexpected transfer type: {}", type);
+                log.warn(UNEXPECTED_TYPE_ERROR, type);
                 return Optional.empty();
         }
     }
@@ -221,7 +220,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
             case SwedbankBaseConstants.TransactionType.PAYMENT:
                 return TransferType.PAYMENT;
             default:
-                log.warn("Unexpected transfer type: {}", type);
+                log.warn(UNEXPECTED_TYPE_ERROR, type);
                 return null;
         }
     }

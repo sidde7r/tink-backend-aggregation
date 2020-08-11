@@ -319,9 +319,6 @@ public class SwedbankBaseConstants {
                 "Number of unsigned transfers not equal to one - Cancelling to not sign more than one transfer.";
         public static final String UNSIGNED_TRANFERS =
                 "Existing unsigned transfers - Cancelling to not sign more than one transfer.";
-        public static final String EINVOICE_NO_UNIQUE_ID =
-                "Could not get unique id from transfer object.";
-        public static final String EINVOICE_NO_MATCH = "Could not find a matching eInvoice.";
         public static final String NEEDS_EXTENDED_USE =
                 "Activation of extended use for BankId required";
         public static final String CONNECT_TIMEOUT = "connect timed out";
@@ -367,14 +364,8 @@ public class SwedbankBaseConstants {
         public static final String PAYMENT = "payment";
     }
 
-    public enum ReferenceType {
-        OCR,
-        MESSAGE
-    }
-
     public static class PaymentType {
         public static final String DOMESTIC = "DOMESTIC";
-        public static final String EINVOICE = "EINVOICE";
     }
 
     public static class PaymentStatus {
