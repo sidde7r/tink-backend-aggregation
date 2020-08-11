@@ -72,19 +72,22 @@ public class LoginErrorResponse {
 
     public void throwException() throws LoginException, AuthorizationException {
 
-        if (errorCode == 112) {
-
-            if (numberOfLoginAttemptsLeft == 1) {
-                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception(getUserMessage());
-            }
-
-            if (blocked) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(getUserMessage());
-            }
-
-            throw LoginError.INCORRECT_CREDENTIALS.exception(getUserMessage());
+        if (numberOfLoginAttemptsLeft == 1) {
+            throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception(getUserMessage());
         }
 
-        throw new IllegalStateException(String.format("Unknown error code %d", errorCode));
+        if (blocked) {
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception(getUserMessage());
+        }
+
+        switch (errorCode) {
+            case 109:
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(getUserMessage());
+            case 112:
+                throw LoginError.INCORRECT_CREDENTIALS.exception(getUserMessage());
+            default:
+                throw LoginError.DEFAULT_MESSAGE.exception(
+                        new LocalizableKey(String.format("Unknown error code %d", errorCode)));
+        }
     }
 }
