@@ -66,7 +66,7 @@ public class CertificateUtils {
      */
     public static String getDerEncodedCertFromBase64EncodedCertificate(
             String base64EncodedCertificates) throws CertificateException {
-        ArrayList<X509Certificate> certs =
+        List<X509Certificate> certs =
                 getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
         if (certs.isEmpty()) {
             throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
@@ -83,7 +83,7 @@ public class CertificateUtils {
      */
     public static String getPublicKeyPem(String base64EncodedCertificates)
             throws CertificateException {
-        ArrayList<X509Certificate> certs =
+        List<X509Certificate> certs =
                 getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
         if (certs.isEmpty()) {
             throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
@@ -102,7 +102,7 @@ public class CertificateUtils {
      */
     public static String getSerialNumber(String base64EncodedCertificates, int radix)
             throws CertificateException {
-        ArrayList<X509Certificate> certs =
+        List<X509Certificate> certs =
                 getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
         if (certs.isEmpty()) {
             throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
@@ -119,7 +119,7 @@ public class CertificateUtils {
      */
     public static String getOrganizationIdentifier(String base64EncodedCertificates)
             throws CertificateException {
-        ArrayList<X509Certificate> certs =
+        List<X509Certificate> certs =
                 getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
         if (certs.isEmpty()) {
             throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
@@ -160,7 +160,7 @@ public class CertificateUtils {
         return certs;
     }
 
-    private static ArrayList<X509Certificate> getX509CertificatesFromBase64EncodedCert(
+    public static List<X509Certificate> getX509CertificatesFromBase64EncodedCert(
             String base64EncodedCertificates) throws CertificateException {
         return CertificateFactory.getInstance("X.509")
                 .generateCertificates(
