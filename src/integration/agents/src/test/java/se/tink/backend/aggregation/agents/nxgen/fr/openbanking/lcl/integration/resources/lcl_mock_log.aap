@@ -1,0 +1,79 @@
+REQUEST 1
+POST https://psd.lcl.fr/token
+Content-Type: application/x-www-form-urlencoded
+User-Agent : Tink (+https://www.tink.se/; noc@tink.se)
+X-Aggregator : Tink Testing
+
+client_id=DUMMY_CLIENT_ID&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&grant_type=authorization_code&code=DUMMY_AUTH_CODE
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":900,"state":"f2533843-785d-4499-b92f-61711101feed","scope":"aisp","refresh_token":"DUMMY_REFRESH_TOKEN"}
+
+REQUEST 2
+GET https://psd.lcl.fr/aisp/end-user-identity
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"connectedPsu":"DUMMY_USER","_links":{"self":{"href":"/end-user-identity"},"parent-list":{"href":"/accounts"}}}
+
+REQUEST 3
+GET https://psd.lcl.fr/aisp/accounts
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","bicFi":"SOGEFRPP","accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC","balances":[{"name":"Solde instantané au 04/05/2020","balanceAmount":{"currency":"EUR","amount":"27873.93"},"balanceType":"XPCD","lastChangeDateTime":"2020-05-04T00:00:00Z","referenceDate":"2020-05-04"}],"psuStatus":"Account Holder","_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}],"_links":{"self":{"href":"/accounts"},"endUserIdentity":{"href":"/end-user-identity"},"beneficiaries":{"href":"/trusted-beneficiaries"}}}
+
+REQUEST 4
+GET https://psd.lcl.fr/aisp/accounts/DUMMY_RESOURCE_ID/transactions
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+RESPONSE 4 SET TRANSACTIONS_FIRST_PAGE_LOADED
+200
+Content-Type: application/json
+
+{"transactions":[{"entryReference":"6548161a-3396-4781-b0db-31e00887618b","transactionAmount":{"currency":"EUR","amount":"-47.57"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"04/05/2020","valueDate":"04/05/2020","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_1"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"first":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"next":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d2","templated":true},"last":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true}}}
+
+REQUEST 5 MATCH TRANSACTIONS_FIRST_PAGE_LOADED
+GET https://psd.lcl.fr/aisp/accounts/DUMMY_RESOURCE_ID/transactions?page=2
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Content-Type: application/json
+
+{"transactions":[{"entryReference":"77287da0-d5c6-4d57-af74-eaea4579b119","transactionAmount":{"currency":"EUR","amount":"0.80"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"02/05/2020","valueDate":"02/05/2020","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_2"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"first":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"last":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true}}}
+
+REQUEST 6
+GET https://psd.lcl.fr/aisp/trusted-beneficiaries
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+RESPONSE 6 SET BENEFICIARIES_FIRST_PAGE_LOADED
+200
+Content-Type: application/json
+
+{"beneficiaries":[{"creditor":{"name":"MON COMPTE JOINT 1"},"creditorAccount":{"iban":"FR7612548029981234567890161"}}],"_links":{"self":{"href":"https://psd.lcl.fr/aisp/trusted-beneficiaries?page\u003d1","templated":true},"parent-list":{"href":"https://psd.lcl.fr/aisp/accounts"},"first":{"href":"https://psd.lcl.fr/aisp/trusted-beneficiaries?page\u003d1","templated":true},"last":{"href":"https://psd.lcl.fr/aisp/trusted-beneficiaries?page\u003d2","templated":true},"next":{"href":"https://psd.lcl.fr/aisp/trusted-beneficiaries?page\u003d2","templated":true}}}
+
+REQUEST 7 MATCH BENEFICIARIES_FIRST_PAGE_LOADED
+GET https://psd.lcl.fr/aisp/trusted-beneficiaries?page=2
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Content-Type: application/json
+
+{"beneficiaries":[{"creditor":{"name":"MON COMPTE JOINT 2"},"creditorAccount":{"iban":"FR7610278001110002007680247"}}],"_links":{"self":{"href":"https://psd.lcl.fr/aisp/trusted-beneficiaries?page\u003d2","templated":true},"parent-list":{"href":"https://psd.lcl.fr/aisp/accounts"},"first":{"href":"https://psd.lcl.fr/aisp/trusted-beneficiaries?page\u003d1","templated":true},"last":{"href":"https://psd.lcl.fr/aisp/trusted-beneficiaries?page\u003d2","templated":true},"prev":{"href":"https://psd.lcl.fr/aisp/trusted-beneficiaries?page\u003d1","templated":true}}}
