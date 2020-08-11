@@ -6,6 +6,7 @@ import com.google.common.base.Strings;
 import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthenticationsPatchResponse;
@@ -33,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.CredentialsAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -40,6 +43,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticator
         implements NemIdParametersFetcher {
 
+    private static final String INVALID_GRANT = "invalid_grant";
     private static final String NEM_ID_SCRIPT_FORMAT =
             "<script type=\"text/x-nemid\" id=\"nemid_parameters\">%s</script>";
     private static final Logger log = LoggerFactory.getLogger(NordeaNemIdAuthenticatorV2.class);
@@ -65,12 +69,25 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
                 || Strings.isNullOrEmpty(credentials.getField(Field.Key.USERNAME))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
+        try {
+            String token = iFrameController.doLoginWith(credentials);
 
-        String token = iFrameController.doLoginWith(credentials);
+            final String code = exchangeNemIdToken(token);
 
-        final String code = exchangeNemIdToken(token);
-
-        saveToken(exchangeOauthToken(code));
+            saveToken(exchangeOauthToken(code));
+        } catch (HttpResponseException e) {
+            String nemIdErrorCode =
+                    (String) e.getResponse().getBody(Map.class).get("nemid_error_code");
+            // source:
+            // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Error%20Codes.pdf
+            if ("SRV006".equals(nemIdErrorCode)) {
+                throw NemIdError.TIMEOUT.exception();
+            }
+            if ("CAN007".equals(nemIdErrorCode)) {
+                throw NemIdError.REJECTED.exception();
+            }
+            throw e;
+        }
     }
 
     public AuthenticationStepResponse autoAuthenticate() {
@@ -87,6 +104,13 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
                             .toOauthToken()
                             .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
             saveToken(newToken);
+        } catch (HttpResponseException e) {
+            String error = (String) e.getResponse().getBody(Map.class).get("error");
+            if (e.getResponse().getStatus() == 400 && INVALID_GRANT.equals(error)) {
+                // refresh token expired
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+            throw e;
         } catch (AuthenticationException e) {
             log.info("Refresh token missing or invalid, proceeding to manual authentication");
             return AuthenticationStepResponse.executeNextStep();

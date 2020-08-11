@@ -182,6 +182,9 @@ public class NemIdIFrameController {
                         .map(WebElement::getText)
                         .filter(e -> !e.isEmpty());
         if (errorText.isPresent()) {
+            log.error(
+                    "Error occured when validating NemID credentials for page:\n"
+                            + driver.getPageSource());
             throwError(errorText.get());
         }
     }
