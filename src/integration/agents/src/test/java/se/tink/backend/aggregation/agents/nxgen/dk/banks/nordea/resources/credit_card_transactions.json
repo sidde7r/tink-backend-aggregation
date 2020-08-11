@@ -1,0 +1,64 @@
+{
+  "billing_period": {
+    "billing_period_end_date": "2020-02-17",
+    "billing_period_start_date": "2020-01-18",
+    "last_invoiced_sum": 3600.5,
+    "non_invoiced_sum": null
+  },
+  "page": 1,
+  "page_size": 100,
+  "size": 3,
+  "transactions": [
+    {
+      "amount": -410.00,
+      "booked": true,
+      "booking_date": "2020-02-17",
+      "currency": "DKK",
+      "exchange_rate": null,
+      "invoice_status": "paid",
+      "invoiced_date": null,
+      "merchant_city": "Aarhus C",
+      "merchant_country": "DNK",
+      "original_amount": null,
+      "original_currency": null,
+      "title": "Very good pizza",
+      "transaction_date": "2020-02-14",
+      "transaction_id": "230407857",
+      "transaction_type": null
+    },
+    {
+      "amount": -578.00,
+      "booked": true,
+      "booking_date": "2020-02-15",
+      "currency": "DKK",
+      "exchange_rate": null,
+      "invoice_status": "paid",
+      "invoiced_date": null,
+      "merchant_city": "CARRICKMACROS",
+      "merchant_country": "IRL",
+      "original_amount": null,
+      "original_currency": null,
+      "title": "Awesome burger",
+      "transaction_date": "2020-02-14",
+      "transaction_id": "230163349",
+      "transaction_type": null
+    },
+    {
+      "amount": -1347.50,
+      "booked": true,
+      "booking_date": "2020-02-13",
+      "currency": "DKK",
+      "exchange_rate": null,
+      "invoice_status": "paid",
+      "invoiced_date": null,
+      "merchant_city": "ARHUS C",
+      "merchant_country": "DNK",
+      "original_amount": null,
+      "original_currency": null,
+      "title": "Some other thingy",
+      "transaction_date": "2020-02-11",
+      "transaction_id": "229937819",
+      "transaction_type": null
+    }
+  ]
+}

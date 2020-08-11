@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transac
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,9 +18,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Getter
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AccountEntity {
+
+    @JsonIgnore private final BalanceHelper balanceHelper = new BalanceHelper();
 
     private String accountId;
     private String iban;
@@ -30,13 +35,16 @@ public class AccountEntity {
     private Double bookedBalance;
     private Double availableBalance;
     private Double creditLimit;
+    private String currency;
     private PermissionsEntity permissions;
 
     public Optional<TransactionalAccount> toTinkAccount() {
         BalanceModule balanceModule =
                 BalanceModule.builder()
-                        .withBalance(getBalance())
-                        .setCreditLimit(ExactCurrencyAmount.of(creditLimit, "DKK"))
+                        .withBalance(balanceHelper.getExactBalance())
+                        .setAvailableCredit(balanceHelper.getAvailableCredit())
+                        .setAvailableBalance(balanceHelper.calculateAvailableBalance())
+                        .setCreditLimit(balanceHelper.getCreditLimit())
                         .build();
         IdModule idModule =
                 IdModule.builder()
@@ -58,13 +66,6 @@ public class AccountEntity {
                 .setApiIdentifier(accountId)
                 .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();
-    }
-
-    private ExactCurrencyAmount getBalance() {
-        if (availableBalance != null) {
-            return ExactCurrencyAmount.of(availableBalance, "DKK");
-        }
-        return ExactCurrencyAmount.of(bookedBalance, "DKK");
     }
 
     @JsonIgnore
@@ -124,39 +125,55 @@ public class AccountEntity {
         return AccountCapabilities.Answer.From(permissions.getCanTransferToAccount());
     }
 
-    public String getAccountId() {
-        return accountId;
-    }
+    private class BalanceHelper {
+        private ExactCurrencyAmount getExactBalance() {
+            return isCreditAccount() ? getBookedBalance() : tryAvailableBalanceOrBooked();
+        }
 
-    public String getIban() {
-        return iban;
-    }
+        private boolean isCreditAccount() {
+            return getCreditLimit().getExactValue().compareTo(BigDecimal.ZERO) > 0;
+        }
 
-    public String getNickname() {
-        return nickname;
-    }
+        private ExactCurrencyAmount tryAvailableBalanceOrBooked() {
+            return availableBalance != null ? getAvailableBalance() : getBookedBalance();
+        }
 
-    public String getDisplayAccountNumber() {
-        return displayAccountNumber;
-    }
+        private ExactCurrencyAmount calculateAvailableBalance() {
+            if (isCreditAccount()) {
+                if (hasUsedAllOwnMoney()) {
+                    return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
+                } else {
+                    return getAvailableBalance().subtract(getCreditLimit());
+                }
+            }
+            return tryAvailableBalanceOrBooked();
+        }
 
-    public String getProductCode() {
-        return productCode;
-    }
+        private boolean hasUsedAllOwnMoney() {
+            return getBookedBalance().compareTo(BigDecimal.ZERO) < 0;
+        }
 
-    public String getProductName() {
-        return productName;
-    }
+        private ExactCurrencyAmount getAvailableCredit() {
+            if (isCreditAccount()) {
+                if (hasUsedAllOwnMoney()) {
+                    return getAvailableBalance();
+                } else {
+                    return getCreditLimit();
+                }
+            }
+            return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
+        }
 
-    public Double getBookedBalance() {
-        return bookedBalance;
-    }
+        private ExactCurrencyAmount getAvailableBalance() {
+            return ExactCurrencyAmount.of(availableBalance, currency);
+        }
 
-    public Double getAvailableBalance() {
-        return availableBalance;
-    }
+        private ExactCurrencyAmount getBookedBalance() {
+            return ExactCurrencyAmount.of(bookedBalance, currency);
+        }
 
-    public Double getCreditLimit() {
-        return creditLimit;
+        private ExactCurrencyAmount getCreditLimit() {
+            return ExactCurrencyAmount.of(creditLimit, currency);
+        }
     }
 }

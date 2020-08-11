@@ -1,0 +1,156 @@
+{
+  "cards": [
+    {
+      "atm_account_number": null,
+      "card_category": "credit",
+      "card_expiration": {
+        "date": "2022-10-31",
+        "formatted": "10/22"
+      },
+      "card_id": "9638527410963852",
+      "card_loyalty_group": null,
+      "card_status": "active",
+      "cardholder_name": "TEST USER",
+      "cardholder_type": "principal",
+      "country_code": "DK",
+      "credit": {
+        "credit_available_balance": null,
+        "credit_booked_balance": null,
+        "credit_limit": null,
+        "instalment_free_months": [],
+        "instalment_min_percent": null,
+        "interest": null,
+        "invoice": null,
+        "masked_credit_card_number": "1234 **** **** 5678",
+        "prev_min_instalment_amount": null
+      },
+      "currency": "DKK",
+      "debit": null,
+      "metadata": null,
+      "nickname": null,
+      "notifications": null,
+      "pan_id": null,
+      "parallel_cards": null,
+      "permissions": {
+        "allowed_to_enroll_mobile_payments": null,
+        "transactions": true,
+        "transfer_from_credit": false,
+        "view_pin": true
+      },
+      "principal_cardholder_name": "TEST USER",
+      "product_code": "DK0072",
+      "usage_limits": null
+    },
+    {
+      "atm_account_number": null,
+      "card_category": "debit",
+      "card_expiration": {
+        "date": "2021-07-31",
+        "formatted": "07/21"
+      },
+      "card_id": "81c43ca32d7beb0554c4fe6ca8a43ab9975755da",
+      "card_loyalty_group": null,
+      "card_status": "active",
+      "cardholder_name": "TEST USER",
+      "cardholder_type": null,
+      "country_code": "DK",
+      "credit": null,
+      "currency": "DKK",
+      "debit": {
+        "debit_account_balance": null,
+        "debit_account_key": null,
+        "debit_account_name": null,
+        "debit_account_number": null,
+        "masked_debit_card_number": "1111 **** **** 2222"
+      },
+      "metadata": null,
+      "nickname": null,
+      "notifications": null,
+      "pan_id": null,
+      "parallel_cards": null,
+      "permissions": {
+        "allowed_to_enroll_mobile_payments": null,
+        "transactions": true,
+        "transfer_from_credit": false,
+        "view_pin": true
+      },
+      "principal_cardholder_name": null,
+      "product_code": "DK0036",
+      "usage_limits": null
+    },
+    {
+      "atm_account_number": null,
+      "card_category": "debit",
+      "card_expiration": {
+        "date": "2022-11-30",
+        "formatted": "11/22"
+      },
+      "card_id": "5f820c4271cea591ef05cc0c2dcbba05b828a086",
+      "card_loyalty_group": null,
+      "card_status": "active",
+      "cardholder_name": "TEST USER",
+      "cardholder_type": null,
+      "country_code": "DK",
+      "credit": null,
+      "currency": "DKK",
+      "debit": {
+        "debit_account_balance": null,
+        "debit_account_key": null,
+        "debit_account_name": null,
+        "debit_account_number": null,
+        "masked_debit_card_number": "3333 **** **** 4444"
+      },
+      "metadata": null,
+      "nickname": null,
+      "notifications": null,
+      "pan_id": null,
+      "parallel_cards": null,
+      "permissions": {
+        "allowed_to_enroll_mobile_payments": null,
+        "transactions": true,
+        "transfer_from_credit": false,
+        "view_pin": true
+      },
+      "principal_cardholder_name": null,
+      "product_code": "DK0040",
+      "usage_limits": null
+    },
+    {
+      "atm_account_number": null,
+      "card_category": "debit",
+      "card_expiration": {
+        "date": "2020-12-31",
+        "formatted": "12/20"
+      },
+      "card_id": "76ec8f53ebdb5012bac46616faaeb151233bd383",
+      "card_loyalty_group": null,
+      "card_status": "active",
+      "cardholder_name": "TEST USER",
+      "cardholder_type": null,
+      "country_code": "DK",
+      "credit": null,
+      "currency": "DKK",
+      "debit": {
+        "debit_account_balance": null,
+        "debit_account_key": null,
+        "debit_account_name": null,
+        "debit_account_number": null,
+        "masked_debit_card_number": "5555 **** **** 6666"
+      },
+      "metadata": null,
+      "nickname": null,
+      "notifications": null,
+      "pan_id": null,
+      "parallel_cards": null,
+      "permissions": {
+        "allowed_to_enroll_mobile_payments": null,
+        "transactions": true,
+        "transfer_from_credit": false,
+        "view_pin": true
+      },
+      "principal_cardholder_name": null,
+      "product_code": "DK0036",
+      "usage_limits": null
+    }
+  ]
+}

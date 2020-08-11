@@ -1,0 +1,35 @@
+{
+    "result": [
+        {
+            "amount": -1000.00,
+            "balance_after": 56295.44,
+            "booked": true,
+            "booking_date": "2019-07-22",
+            "currency": "DKK",
+            "description": "Bgs Forbrug",
+            "has_details": true,
+            "interest_date": "2019-07-20",
+            "reconciliation_id": "UDY4OTc2NDcwNzcyMDE5MDcyMjAwMDAwMDAzNjY",
+            "reconciliation_status": "not_done",
+            "title": "Forbrug",
+            "transaction_date": "2019-07-22",
+            "transaction_id": "flRyYmE-CZ60YOY9AKzeHUHb37ZYIsU8unRhLUQvpI4.a2V5PTU5MTY3MjU5NzMgMjAxOTA3MjImZHM9QkdTJmluY29taW5nPWZhbHNl"
+        },
+        {
+            "amount": 60.00,
+            "balance_after": 57295.44,
+            "booked": true,
+            "booking_date": "2019-07-22",
+            "currency": "DKK",
+            "description": "MobilePay: Pernille",
+            "has_details": true,
+            "interest_date": "2019-07-21",
+            "reconciliation_id": "UDY4OTc2NDcwNzcyMDE5MDcyMjAwMDAwMDAzNjU",
+            "reconciliation_status": "not_done",
+            "title": "MobilePay: Pernille",
+            "transaction_date": "2019-07-22",
+            "transaction_id": "Q-EMsXJ6B0n99CVh108_6ZqkT2hLNn3IxkN7KtRQM4M.a2V5PTE5MTYyMjMyNTE5MjAzNjg5NzY0NzA3NzIyMDcyMDE5JmRzPUFEVklTJmluY29taW5nPXRydWU"
+        }
+    ],
+    "sub_system_errors": []
+}
