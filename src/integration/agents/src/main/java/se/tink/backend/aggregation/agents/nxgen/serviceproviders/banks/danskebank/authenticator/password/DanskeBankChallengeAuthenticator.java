@@ -509,8 +509,7 @@ public class DanskeBankChallengeAuthenticator
                 this.apiClient.listOtpInformation(ListOtpRequest.create(null));
         return listOtpResponse
                 .getPreferredDevice()
-                .orElseThrow(
-                        () -> new IllegalStateException("User does not have a preferred device."));
+                .orElseThrow(LoginError.NO_AVAILABLE_SCA_METHODS::exception);
     }
 
     private void setupBindChallengeResponseBody() {
