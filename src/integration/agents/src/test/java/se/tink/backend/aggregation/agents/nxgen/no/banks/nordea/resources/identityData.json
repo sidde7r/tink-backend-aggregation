@@ -1,0 +1,19 @@
+{
+  "address": {
+    "address_line1": "Somestreet 22",
+    "city": "AwesomeCity",
+    "country_code": "NO",
+    "postal_code": "1234"
+  },
+  "birth_date": "1922-01-29",
+  "customer_id": "12345678901",
+  "employee": false,
+  "enrollment_date": "2009-05-16",
+  "first_name": "First Second",
+  "last_name": "Surname",
+  "loyalty_group": "F-PLUSS",
+  "person_id": "12345678901",
+  "phone_number": "1234564785",
+  "segment": "household",
+  "us_resident": false
+}

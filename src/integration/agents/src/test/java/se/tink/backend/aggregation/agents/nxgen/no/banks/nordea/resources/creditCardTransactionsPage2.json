@@ -1,0 +1,27 @@
+{
+  "billing_period": null,
+  "page": 2,
+  "page_size": 2,
+  "size": 1,
+  "transactions": [
+    {
+      "amount": -173.5,
+      "booked": true,
+      "booking_date": "2020-07-01",
+      "currency": "NOK",
+      "ecological_footprint": null,
+      "exchange_rate": 1.0,
+      "invoice_status": null,
+      "invoiced_date": null,
+      "mcc": null,
+      "merchant_city": "Stathelle",
+      "merchant_country": "NO",
+      "original_amount": -173.5,
+      "original_currency": "NOK",
+      "title": "EUROSPAR RUGTVE          Stathelle    NO",
+      "transaction_date": "2020-06-29",
+      "transaction_id": "2018301320009896",
+      "transaction_type": null
+    }
+  ]
+}

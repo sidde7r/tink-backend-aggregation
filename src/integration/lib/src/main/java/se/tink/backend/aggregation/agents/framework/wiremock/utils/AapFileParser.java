@@ -16,7 +16,7 @@ import se.tink.libraries.pair.Pair;
 public class AapFileParser implements RequestResponseParser {
 
     // Matches everything up until the third '/' in url.
-    private static final String HTTP_HOST_REGEX = "^.*//[^/]+";
+    private static final String HTTP_HOST_REGEX = "^.*?//[^/]+";
 
     private final List<String> lines;
 

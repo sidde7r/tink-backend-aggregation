@@ -62,6 +62,7 @@ ignoredAgentsForCapabilityTest:
   - nxgen.nl.openbanking.abnamro.AbnAmroAgent
   - nxgen.nl.openbanking.ing.IngAgent
   - nxgen.nl.openbanking.knab.KnabAgent
+  - nxgen.no.banks.nordea.NordeaNoAgent
   - nxgen.pt.banks.montepio.MontepioAgent
   - nxgen.ro.banks.raiffeisen.RaiffeisenAgent
   - nxgen.se.banks.volvofinans.VolvoFinansAgent

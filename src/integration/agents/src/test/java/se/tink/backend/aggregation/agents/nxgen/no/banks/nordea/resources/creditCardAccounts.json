@@ -1,0 +1,79 @@
+{
+  "cards": [
+    {
+      "atm_account_number": null,
+      "card_category": "credit",
+      "card_expiration": {
+        "date": "2023-02-28",
+        "formatted": "02/23"
+      },
+      "card_id": "2218836201",
+      "card_loyalty_group": null,
+      "card_status": "active",
+      "cardholder_name": "ASDF",
+      "cardholder_type": "parallel",
+      "country_code": "NO",
+      "credit": {
+        "credit_available_balance": 9375.33,
+        "credit_booked_balance": null,
+        "credit_limit": null,
+        "instalment_free_months": [],
+        "instalment_min_percent": null,
+        "interest": null,
+        "invoice": null,
+        "masked_credit_card_number": "5269 **** **** 3239",
+        "prev_min_instalment_amount": null
+      },
+      "currency": "NOK",
+      "debit": null,
+      "metadata": null,
+      "nickname": null,
+      "notifications": null,
+      "pan_id": null,
+      "parallel_cards": null,
+      "permissions": {
+        "allowed_to_enroll_mobile_payments": true,
+        "transactions": true,
+        "transfer_from_credit": true,
+        "view_pin": true
+      },
+      "principal_cardholder_name": null,
+      "product_code": "NO0051",
+      "usage_limits": null
+    },
+    {
+      "atm_account_number": null,
+      "card_category": "debit",
+      "card_expiration": null,
+      "card_id": "KHOP197",
+      "card_loyalty_group": null,
+      "card_status": "active",
+      "cardholder_name": "ASDF ASDF ASDF",
+      "cardholder_type": null,
+      "country_code": "NO",
+      "credit": null,
+      "currency": "NOK",
+      "debit": {
+        "debit_account_balance": null,
+        "debit_account_key": null,
+        "debit_account_name": null,
+        "debit_account_number": null,
+        "masked_debit_card_number": "4002 **** **** 4549"
+      },
+      "metadata": null,
+      "nickname": null,
+      "notifications": null,
+      "pan_id": null,
+      "parallel_cards": null,
+      "permissions": {
+        "allowed_to_enroll_mobile_payments": true,
+        "transactions": false,
+        "transfer_from_credit": false,
+        "view_pin": true
+      },
+      "principal_cardholder_name": null,
+      "product_code": "NOECB",
+      "usage_limits": null
+    }
+  ]
+}

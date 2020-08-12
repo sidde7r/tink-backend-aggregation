@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.errordetector;
 
 import com.github.tomakehurst.wiremock.http.MultiValue;
+import com.github.tomakehurst.wiremock.http.QueryParameter;
 import com.github.tomakehurst.wiremock.matching.MatchResult;
 import com.github.tomakehurst.wiremock.matching.MultiValuePattern;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
@@ -52,6 +53,42 @@ public class ErrorDetector {
         Set<String> result = new HashSet<>(collection1);
         result.retainAll(collection2);
         return result;
+    }
+
+    private void checkQueryParametersAndUpdateBuilder(
+            LoggedRequest givenRequest,
+            RequestPattern expectedRequest,
+            CompareEntity.Builder builder) {
+        Map<String, MultiValuePattern> queryParametersInExpectedRequest =
+                expectedRequest.getQueryParameters();
+        if (queryParametersInExpectedRequest == null
+                || queryParametersInExpectedRequest.isEmpty()) {
+            // We don't expect anything, leave early
+            return;
+        }
+        queryParametersInExpectedRequest.keySet().stream()
+                .filter(x -> !givenRequest.queryParameter(x).isPresent())
+                .forEach(builder::addMissingQueryParameterInGivenRequest);
+
+        queryParametersInExpectedRequest.keySet().stream()
+                .filter(x -> givenRequest.queryParameter(x).isPresent())
+                .forEach(
+                        key -> {
+                            QueryParameter queryParameterValueForGivenRequest =
+                                    givenRequest.queryParameter(key);
+                            MatchResult compareResultForQueryParametersValues =
+                                    queryParametersInExpectedRequest
+                                            .get(key)
+                                            .match(
+                                                    new MultiValue(
+                                                            key,
+                                                            queryParameterValueForGivenRequest
+                                                                    .values()));
+
+                            if (!compareResultForQueryParametersValues.isExactMatch()) {
+                                builder.addQueryParameterWithDifferentValue(key);
+                            }
+                        });
     }
 
     private void checkHeadersAndUpdateBuilder(
@@ -136,6 +173,7 @@ public class ErrorDetector {
                                 givenRequest.getMethod().equals(expectedRequest.getMethod()));
 
         checkHeadersAndUpdateBuilder(givenRequest, expectedRequest, builder);
+        checkQueryParametersAndUpdateBuilder(givenRequest, expectedRequest, builder);
         checkRequestBodiesAndUpdateBuilder(givenRequest, expectedRequest, builder);
         return builder.build();
     }

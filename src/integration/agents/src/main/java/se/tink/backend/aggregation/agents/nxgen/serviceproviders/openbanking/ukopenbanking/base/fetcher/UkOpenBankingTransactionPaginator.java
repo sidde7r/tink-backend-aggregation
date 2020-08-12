@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -102,10 +103,11 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         }
 
         try {
+            LocalDateTime requestTime = localDateTimeSource.now();
             TransactionKeyPaginatorResponse<String> response =
                     transactionConverter.toPaginatorResponse(
                             apiClient.fetchAccountTransactions(key, responseType), account);
-            setFetchingTransactionsUntil(account.getApiIdentifier());
+            setFetchingTransactionsUntil(account.getApiIdentifier(), requestTime);
             return response;
         } catch (HttpResponseException e) {
 
@@ -140,10 +142,11 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                                         localDateTimeSource
                                                 .now()
                                                 .minusDays(DEFAULT_MAX_ALLOWED_DAYS));
+                LocalDateTime requestTime = localDateTimeSource.now();
                 TransactionKeyPaginatorResponse<String> response =
                         transactionConverter.toPaginatorResponse(
                                 apiClient.fetchAccountTransactions(key, responseType), account);
-                setFetchingTransactionsUntil(account.getApiIdentifier());
+                setFetchingTransactionsUntil(account.getApiIdentifier(), requestTime);
                 return response;
             }
 
@@ -161,35 +164,33 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         paginationCount++;
     }
 
-    private void setFetchingTransactionsUntil(String accountId) {
-        final String fetchedUntilDate =
-                OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    private void setFetchingTransactionsUntil(String accountId, LocalDateTime requestTime) {
+        final String fetchedUntilDate = requestTime.format(DateTimeFormatter.ISO_DATE_TIME);
         persistentStorage.put(FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
     }
 
     private Optional<OffsetDateTime> fetchedTransactionsUntil(String accountId) {
         String dateString = persistentStorage.get(FETCHED_TRANSACTIONS_UNTIL + accountId);
         return Optional.ofNullable(dateString)
-                .map(s -> OffsetDateTime.parse(dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                .map(
+                        date ->
+                                LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+                                        .atOffset(ZoneOffset.UTC));
     }
 
     private OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
         final Optional<OffsetDateTime> lastTransactionsFetchedDate =
                 fetchedTransactionsUntil(accountId);
 
+        LocalDateTime now = localDateTimeSource.now();
+
         final OffsetDateTime defaultRefreshDate =
-                localDateTimeSource
-                        .now()
-                        .minusDays(DEFAULT_MAX_ALLOWED_DAYS)
-                        .atOffset(ZoneOffset.UTC);
+                now.minusDays(DEFAULT_MAX_ALLOWED_DAYS).atOffset(ZoneOffset.UTC);
         if (lastTransactionsFetchedDate.isPresent()
                 && lastTransactionsFetchedDate.get().isAfter(defaultRefreshDate)) {
             return defaultRefreshDate;
         } else {
-            return localDateTimeSource
-                    .now()
-                    .minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS)
-                    .atOffset(ZoneOffset.UTC);
+            return now.minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS).atOffset(ZoneOffset.UTC);
         }
     }
 }

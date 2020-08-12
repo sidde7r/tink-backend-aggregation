@@ -1,50 +1,40 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator;
 
-import java.util.Objects;
-import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.collect.BankIdCollectResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.init.BankIdInitResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.authenticator.NordeaV17Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoStorage;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class NordeaNoAuthenticator extends NordeaV17Authenticator<NordeaNoApiClient>
-        implements BankIdAuthenticatorNO {
-    private String sessionId;
+@Slf4j
+public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
 
-    public NordeaNoAuthenticator(NordeaNoApiClient client) {
-        super(client);
+    private NordeaNoStorage storage;
+    private List<AuthenticationStep> mySteps;
+
+    public NordeaNoAuthenticator(
+            AuthenticationClient authenticationClient,
+            NordeaNoStorage storage,
+            RandomValueGenerator randomValueGenerator) {
+        this.storage = storage;
+
+        mySteps =
+                ImmutableList.of(
+                        new SetupSessionStep(authenticationClient, storage, randomValueGenerator),
+                        new VerifySessionStep(authenticationClient, storage, randomValueGenerator));
     }
 
     @Override
-    public String init(String nationalId, String dob, String mobilenumber)
-            throws AuthenticationException, AuthorizationException {
-        BankIdInitResponse bankIdInitResponse = client.initiateBankId(dob, mobilenumber);
-
-        if (bankIdInitResponse.isAlreadyInProgress()) {
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
-        }
-
-        sessionId = bankIdInitResponse.getSessionId();
-
-        String authToken = bankIdInitResponse.getToken();
-        client.setToken(authToken);
-
-        return bankIdInitResponse.getMerchantReference();
+    public List<AuthenticationStep> authenticationSteps() {
+        return mySteps;
     }
 
     @Override
-    public BankIdStatus collect() throws AuthenticationException, AuthorizationException {
-        BankIdCollectResponse bankIdPollResponse = client.pollBankId(sessionId);
-        BankIdStatus status = bankIdPollResponse.getStatus();
-
-        if (Objects.equals(status, BankIdStatus.DONE)) {
-            client.setToken(bankIdPollResponse.getToken());
-        }
-
-        return status;
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        return !storage.retrieveOauthToken().isPresent();
     }
 }

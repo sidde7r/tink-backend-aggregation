@@ -34,7 +34,6 @@ public final class MockSupplementalInformationController
     @Override
     public Map<String, String> askSupplementalInformation(final Field... fields)
             throws SupplementalInfoException {
-
         return Stream.of(fields)
                 .map(Field::getName)
                 .filter(Objects::nonNull)
