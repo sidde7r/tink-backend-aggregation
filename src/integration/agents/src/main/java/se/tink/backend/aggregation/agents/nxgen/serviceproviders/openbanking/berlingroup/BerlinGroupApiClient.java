@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
 public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupConfiguration> {
@@ -26,6 +27,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     @Getter private final TConfiguration configuration;
+    @Getter private final CredentialsRequest request;
     @Getter private final String redirectUrl;
     @Getter private final String qSealc;
 
