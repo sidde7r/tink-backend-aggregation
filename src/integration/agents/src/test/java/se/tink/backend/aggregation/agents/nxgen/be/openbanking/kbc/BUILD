@@ -34,6 +34,7 @@ junit_test(
         "//third_party:asm_asm",
     ],
     deps = [
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/kbc",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/berlingroup",
         "//src/integration/amount",
