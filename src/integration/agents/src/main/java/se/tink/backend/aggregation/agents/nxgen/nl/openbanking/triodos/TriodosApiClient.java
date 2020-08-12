@@ -63,7 +63,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     @Override
     public AccountsBaseResponseBerlinGroup fetchAccounts() {
         final String digest = Psd2Headers.calculateDigest(FormValues.EMPTY);
-        final URL accountsUrl = new URL(getConfiguration().getBaseUrl() + Urls.ACCOUNTS);
+        final URL accountsUrl = new URL(TriodosConstants.BASE_URL + Urls.ACCOUNTS);
         AccountsBaseResponseBerlinGroup res =
                 createRequestInSession(accountsUrl, digest)
                         .get(AccountsBaseResponseBerlinGroup.class);
@@ -80,7 +80,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         persistentStorage.put(BerlinGroupConstants.StorageKeys.CODE_VERIFIER, codeVerifier);
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         persistentStorage.put(BerlinGroupConstants.StorageKeys.CONSENT_ID, consentId);
-        final String authUrl = getConfiguration().getBaseUrl() + Urls.AUTH;
+        final String authUrl = TriodosConstants.BASE_URL + Urls.AUTH;
 
         return getAuthorizeUrl(authUrl, state, getConfiguration().getClientId(), getRedirectUrl())
                 .queryParam(QueryKeys.SCOPE, TriodosConstants.QueryValues.SCOPE + consentId)
@@ -93,7 +93,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         final String digest = Psd2Headers.calculateDigest(FormValues.EMPTY);
         final URL url =
                 new URL(
-                        getConfiguration().getBaseUrl()
+                        TriodosConstants.BASE_URL
                                 + Urls.AIS_BASE
                                 + accountBaseEntity.getBalancesLink());
         final List<BalanceBaseEntity> balances =
@@ -108,7 +108,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     @Override
     public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
         final String digest = Psd2Headers.calculateDigest(FormValues.EMPTY);
-        final URL fullUrl = new URL(getConfiguration().getBaseUrl() + Urls.AIS_BASE + url);
+        final URL fullUrl = new URL(TriodosConstants.BASE_URL + Urls.AIS_BASE + url);
 
         return createRequestInSession(fullUrl, digest)
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
@@ -131,7 +131,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                         .build()
                         .serialize();
         final TokenBaseResponse token =
-                client.request(getConfiguration().getBaseUrl() + Urls.TOKEN)
+                client.request(TriodosConstants.BASE_URL + Urls.TOKEN)
                         .addBasicAuth(
                                 getConfiguration().getClientId(),
                                 getConfiguration().getClientSecret())
@@ -157,12 +157,12 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
             return persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID);
         }
 
-        final URL url = new URL(getConfiguration().getBaseUrl() + Urls.CONSENT);
+        final URL url = new URL(TriodosConstants.BASE_URL + Urls.CONSENT);
 
         final ConsentResponse consentResponse =
                 createRequest(url, digest)
                         .body(consentsRequest.toData())
-                        .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                        .header(HeaderKeys.PSU_IP_ADDRESS, TriodosConstants.PSU_IPADDRESS)
                         .post(ConsentResponse.class);
 
         persistentStorage.put(
@@ -176,7 +176,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     private void authorizeConsent() {
         final URL url =
                 new URL(
-                        getConfiguration().getBaseUrl()
+                        TriodosConstants.BASE_URL
                                 + String.format(
                                         Urls.AUTHORIZE_CONSENT,
                                         persistentStorage.get(
@@ -201,12 +201,12 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                         .build()
                         .serialize();
 
-        return client.request(getConfiguration().getBaseUrl() + Urls.TOKEN)
+        return client.request(TriodosConstants.BASE_URL + Urls.TOKEN)
                 .addBasicAuth(
                         getConfiguration().getClientId(), getConfiguration().getClientSecret())
                 .header(
                         BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        getConfiguration().getPsuIpAddress())
+                        TriodosConstants.PSU_IPADDRESS)
                 .body(body, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenBaseResponse.class)
                 .toTinkToken();
@@ -256,7 +256,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                                 getTokenFromSession(BerlinGroupConstants.StorageKeys.OAUTH_TOKEN));
 
         if (isManual) {
-            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress());
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, TriodosConstants.PSU_IPADDRESS);
         }
         return requestBuilder;
     }
