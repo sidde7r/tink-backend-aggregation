@@ -75,6 +75,7 @@ public class SwedbankTransferHelper {
                                             bankIdSignResponse.getImageChallengeData());
                             final String autoStartToken =
                                     QrCodeParser.decodeBankIdQrCode(encodedImage);
+                            log.info("Got autoStartToken from encodedImage: {}", autoStartToken);
                             supplementalRequester.openBankId(autoStartToken, false);
                         } else {
                             supplementalRequester.openBankId(null, false);
