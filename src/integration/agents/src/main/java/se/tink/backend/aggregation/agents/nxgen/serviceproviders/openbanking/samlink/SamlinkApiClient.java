@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration> {
 
@@ -42,9 +43,10 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
             final PersistentStorage persistentStorage,
             final QsealcSigner qsealcSigner,
             final SamlinkConfiguration configuration,
+            final CredentialsRequest request,
             final String redirectUrl,
             final String qSealc) {
-        super(client, persistentStorage, configuration, redirectUrl, qSealc);
+        super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
 
         this.qsealcSigner = qsealcSigner;
     }

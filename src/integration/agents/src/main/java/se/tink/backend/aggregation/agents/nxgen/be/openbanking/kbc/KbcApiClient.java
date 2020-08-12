@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
@@ -51,11 +52,12 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
     public KbcApiClient(
             final TinkHttpClient client,
             final KbcConfiguration configuration,
+            final CredentialsRequest request,
             final String redirectUrl,
             final Credentials credentials,
             final PersistentStorage persistentStorage,
             final String qSealc) {
-        super(client, persistentStorage, configuration, redirectUrl, qSealc);
+        super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
 
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
