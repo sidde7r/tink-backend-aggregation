@@ -41,14 +41,10 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
     public AgentWorkerCommandResult execute() throws Exception {
 
         log.info(
-                String.format(
-                        "Credentials contain - supplemental Information: {}: %s",
-                        credentials.getSupplementalInformation()));
-        log.info(
-                String.format(
-                        "Credentials contain - status payload: {}: %s",
-                        credentials.getStatusPayload()));
-        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+                "Credentials contain - supplemental Information: {}",
+                credentials.getSupplementalInformation());
+        log.info("Credentials contain - status payload: {}", credentials.getStatusPayload());
+        log.info("Credentials contain - status: {}", credentials.getStatus());
 
         if (Objects.equals(CredentialsStatus.AUTHENTICATING, credentials.getStatus())) {
             return AgentWorkerCommandResult.CONTINUE;
@@ -66,14 +62,11 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
         }
 
         log.info(
-                String.format(
-                        "Credentials contain - supplemental Information: {}: %s",
-                        credentials.getSupplementalInformation()));
-        log.info(
-                String.format(
-                        "Credentials contain - status payload: {}: %s",
-                        credentials.getStatusPayload()));
-        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+                "Credentials contain - supplemental Information: {}",
+                credentials.getSupplementalInformation());
+        log.info("Credentials contain - status payload: {}", credentials.getStatusPayload());
+
+        log.info("Credentials contain - status: {}", credentials.getStatus());
 
         if (CredentialsStatus.FAILED_OPERATION_STATUSES.contains(credentials.getStatus())) {
             log.info(
