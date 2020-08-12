@@ -183,7 +183,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
                 confirmResponse.getPayment().getPayees().stream()
                         .filter(
                                 payee ->
-                                        payee.getType().toLowerCase().equals(newPayeeType)
+                                        payee.getType().equalsIgnoreCase(newPayeeType)
                                                 && payee.getAccountNumber()
                                                         .replaceAll("[^0-9]", "")
                                                         .equals(newPayeeAccountNumber))

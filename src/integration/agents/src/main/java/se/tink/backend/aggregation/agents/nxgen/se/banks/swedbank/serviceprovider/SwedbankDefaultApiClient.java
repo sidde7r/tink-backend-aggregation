@@ -23,6 +23,8 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Retry;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitAuthenticationRequest;
@@ -286,6 +288,15 @@ public class SwedbankDefaultApiClient {
         return makeRequest(linkEntity, EngagementTransactionsResponse.class, true);
     }
 
+    public LoanOverviewResponse loanOverview() {
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.LOANS, LoanOverviewResponse.class);
+    }
+
+    public LoanDetailsResponse loanDetails(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, LoanDetailsResponse.class, true);
+    }
+
     public DetailedCardAccountResponse cardAccountDetails(LinkEntity linkEntity) {
         return makeRequest(linkEntity, DetailedCardAccountResponse.class, true);
     }
@@ -504,9 +515,9 @@ public class SwedbankDefaultApiClient {
 
         Map<String, MenuItemLinkEntity> profileMenuItems =
                 fetchProfile(bankProfile.getBank().getProfile().getLinks().getNextOrThrow());
-
+        getBankProfileHandler().setMenuItems(profileMenuItems);
         getBankProfileHandler().setActiveBankProfile(bankProfile);
-
+        swedbankStorage.setBankProfileHandler(getBankProfileHandler());
         return getBankProfileHandler().getActiveBankProfile();
     }
 
