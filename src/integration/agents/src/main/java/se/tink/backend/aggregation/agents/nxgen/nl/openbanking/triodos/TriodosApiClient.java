@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
@@ -38,9 +37,11 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfiguration> {
 
+    private final boolean isManual;
     private final Credentials credentials;
     private final QsealcSigner qsealcSigner;
 
@@ -48,13 +49,14 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
             final TinkHttpClient client,
             final PersistentStorage persistentStorage,
             final TriodosConfiguration configuration,
+            final CredentialsRequest request,
             final String redirectUrl,
-            final Credentials credentials,
             final QsealcSigner qsealcSigner,
             final String qSealc) {
-        super(client, persistentStorage, configuration, redirectUrl, qSealc);
+        super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
 
-        this.credentials = credentials;
+        this.isManual = request.isManual();
+        this.credentials = request.getCredentials();
         this.qsealcSigner = qsealcSigner;
     }
 
@@ -62,7 +64,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     public AccountsBaseResponseBerlinGroup fetchAccounts() {
         final String digest = Psd2Headers.calculateDigest(FormValues.EMPTY);
         final URL accountsUrl = new URL(getConfiguration().getBaseUrl() + Urls.ACCOUNTS);
-        final AccountsBaseResponseBerlinGroup res =
+        AccountsBaseResponseBerlinGroup res =
                 createRequestInSession(accountsUrl, digest)
                         .get(AccountsBaseResponseBerlinGroup.class);
 
@@ -230,7 +232,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     }
 
     private RequestBuilder createRequest(final URL url, final String digest) {
-        final String requestId = UUID.randomUUID().toString();
+        final String requestId = Psd2Headers.getRequestId();
 
         return client.request(url)
                 .type(MediaType.APPLICATION_JSON)
@@ -246,9 +248,17 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     }
 
     private RequestBuilder createRequestInSession(final URL url, final String digest) {
-        return createRequest(url, digest)
-                .header(HeaderKeys.CONSENT_ID, getConsentId())
-                .addBearerToken(getTokenFromSession(BerlinGroupConstants.StorageKeys.OAUTH_TOKEN));
+
+        RequestBuilder requestBuilder =
+                createRequest(url, digest)
+                        .header(HeaderKeys.CONSENT_ID, getConsentId())
+                        .addBearerToken(
+                                getTokenFromSession(BerlinGroupConstants.StorageKeys.OAUTH_TOKEN));
+
+        if (isManual) {
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress());
+        }
+        return requestBuilder;
     }
 
     private X509Certificate getX509Certificate() {
