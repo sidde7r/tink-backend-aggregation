@@ -4,6 +4,9 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbCon
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import lombok.Setter;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -20,8 +23,17 @@ public class DkbConfiguration implements ClientConfiguration {
     @Secret @ClientIdConfiguration private String clientId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
-    @Secret private String consumerId;
-    @SensitiveSecret private String consumerSecret;
+    @JsonSchemaTitle("Consumer Id")
+    @JsonSchemaExamples("NTlXp_uMZGvFIWY0ouB3vKDRBQgp")
+    @JsonSchemaDescription("Application identifier set up in DKB developer portal")
+    @Secret
+    private String consumerId;
+
+    @JsonSchemaTitle("Consumer Secret")
+    @JsonSchemaExamples("ufGs5_Ff3bOpD79F_9VTjjO_Y6QL")
+    @JsonSchemaDescription("Application secret set up in DKB developer portal")
+    @SensitiveSecret
+    private String consumerSecret;
 
     public String getBaseUrl() {
         return BASE_URL;
