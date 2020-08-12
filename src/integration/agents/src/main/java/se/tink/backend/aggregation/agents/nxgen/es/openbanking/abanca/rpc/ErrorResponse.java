@@ -14,6 +14,6 @@ public class ErrorResponse {
     public Optional<ErrorsEntity> getChallengeError() {
         return errors == null
                 ? Optional.empty()
-                : errors.stream().filter(ErrorsEntity::challengeRequired).findFirst();
+                : errors.stream().filter(ErrorsEntity::isChallengeError).findFirst();
     }
 }
