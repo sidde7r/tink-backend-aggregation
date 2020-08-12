@@ -1,10 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.utils;
+package se.tink.backend.aggregation.utils;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.utils.RangeRegex;
 
 public class RangeRegexUtilsTest {
 

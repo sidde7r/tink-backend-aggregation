@@ -53,7 +53,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         NotImplementedException.throwIf(
-                !Objects.equals(credentials.getType(), this.getType()),
+                !Objects.equals(credentials.getType(), getType()),
                 String.format(
                         "Authentication method not implemented for CredentialsType: %s",
                         credentials.getType()));
@@ -61,7 +61,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         String password = credentials.getField(Field.Key.PASSWORD);
 
         if (!Strings.isNullOrEmpty(username) && !Strings.isNullOrEmpty(password)) {
-            AuthorisationResponse initValues = this.authenticator.init(username, password);
+            AuthorisationResponse initValues = authenticator.init(username, password);
             credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
             List<ScaMethodEntity> scaMethods = initValues.getScaMethods();
             ScaMethodEntity chosenScaMethod = initValues.getChosenScaMethodEntity();
@@ -69,13 +69,13 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
             // Select SCA method when user has more than one device.
             if (chosenScaMethod == null && CollectionUtils.isNotEmpty(scaMethods)) {
                 Map<String, String> supplementalInformation =
-                        this.supplementalInformationHelper.askSupplementalInformation(
-                                new Field[] {this.getChosenScaMethod(scaMethods)});
+                        supplementalInformationHelper.askSupplementalInformation(
+                                getChosenScaMethod(scaMethods));
 
-                int index = Integer.valueOf(supplementalInformation.get(CHOSEN_SCA_METHOD)) - 1;
+                int index = Integer.parseInt(supplementalInformation.get(CHOSEN_SCA_METHOD)) - 1;
                 chosenScaMethod = scaMethods.get(index);
                 initValues =
-                        this.authenticator.selectScaMethod(
+                        authenticator.selectScaMethod(
                                 chosenScaMethod.getAuthenticationMethodId(),
                                 username,
                                 initValues.getLinksEntity().getScaStatusEntity().getHref());
@@ -84,16 +84,14 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
             if (chosenScaMethod != null && initValues.getChallengeDataEntity() != null) {
                 // SMS_OTP or CHIP_OTP is selected
                 Map<String, String> supplementalInformation =
-                        this.supplementalInformationHelper.askSupplementalInformation(
-                                new Field[] {
-                                    this.getOtpField(
-                                            initValues.getChallengeDataEntity().getOtpMaxLength(),
-                                            initValues
-                                                    .getChosenScaMethodEntity()
-                                                    .getAuthenticationType())
-                                });
+                        supplementalInformationHelper.askSupplementalInformation(
+                                getOtpField(
+                                        initValues.getChallengeDataEntity().getOtpMaxLength(),
+                                        initValues
+                                                .getChosenScaMethodEntity()
+                                                .getAuthenticationType()));
                 initValues =
-                        this.authenticator.authenticateWithOtp(
+                        authenticator.authenticateWithOtp(
                                 supplementalInformation.get(OTP_VALUE_FIELD_KEY),
                                 username,
                                 initValues
@@ -130,7 +128,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
         return Field.builder()
                 .description(String.format("Select from 1 to %d", maxNumber))
-                .helpText("Please select SCA method" + "\n" + this.catalog.getString(description))
+                .helpText("Please select SCA method" + "\n" + catalog.getString(description))
                 .name(CHOSEN_SCA_METHOD)
                 .numeric(true)
                 .minLength(1)
@@ -142,7 +140,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private Field getOtpField(int otpValueLength, String otpType) {
         return Field.builder()
-                .description(this.catalog.getString("Verification code"))
+                .description(catalog.getString("Verification code"))
                 .helpText(otpType)
                 .name(OTP_VALUE_FIELD_KEY)
                 .numeric(true)
@@ -158,7 +156,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         for (int i = 0; i < PollStatus.MAX_POLL_ATTEMPTS; i++) {
             Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
 
-            AuthorisationResponse response = this.authenticator.checkStatus(username, url);
+            AuthorisationResponse response = authenticator.checkStatus(username, url);
             switch (response.getScaStatus()) {
                 case PollStatus.FINALISED:
                     return;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;
