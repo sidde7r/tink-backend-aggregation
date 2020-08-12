@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tra
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasApiClient;
@@ -20,34 +21,18 @@ public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<Tra
     }
 
     private Optional<TransactionalAccount> convertToTinkCheckingAccount(
-            AccountEntity accountEntity) {
-        List<TransactionAccountEntity> accountIbanDetails = apiClient.getAccountIbanDetails();
-        String iban =
-                accountIbanDetails.stream()
-                        .filter(
-                                transactionAccountEntity ->
-                                        transactionAccountEntity
-                                                .getIbanKey()
-                                                .equals(accountEntity.getIbanKey()))
-                        .findFirst()
-                        .map(TransactionAccountEntity::getIban)
-                        .orElse(null);
+            AccountEntity accountEntity, Map<String, String> ibansByKey) {
+
+        final String iban = ibansByKey.get(accountEntity.getIbanKey());
+
         return accountEntity.toTinkCheckingAccount(iban);
     }
 
     private Optional<TransactionalAccount> convertToTinkSavingsAccount(
-            AccountEntity accountEntity) {
-        List<TransactionAccountEntity> accountIbanDetails = apiClient.getAccountIbanDetails();
-        String iban =
-                accountIbanDetails.stream()
-                        .filter(
-                                transactionAccountEntity ->
-                                        transactionAccountEntity
-                                                .getIbanKey()
-                                                .equals(accountEntity.getIbanKey()))
-                        .findFirst()
-                        .map(TransactionAccountEntity::getIban)
-                        .orElse(null);
+            AccountEntity accountEntity, Map<String, String> ibansByKey) {
+
+        final String iban = ibansByKey.get(accountEntity.getIbanKey());
+
         return accountEntity.toTinkSavingsAccount(iban);
     }
 
@@ -56,15 +41,22 @@ public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<Tra
         InfoUdcEntity infoUdc = apiClient.getAccounts();
         List<TransactionalAccount> accounts = new ArrayList<>();
 
+        final Map<String, String> ibansByKey =
+                apiClient.getAccountIbanDetails().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        TransactionAccountEntity::getIbanKey,
+                                        TransactionAccountEntity::getIban));
+
         List<TransactionalAccount> checking =
                 infoUdc.getCheckingsAccounts().stream()
-                        .map(this::convertToTinkCheckingAccount)
+                        .map(account -> convertToTinkCheckingAccount(account, ibansByKey))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList());
         List<TransactionalAccount> savings =
                 infoUdc.getSavingsAccounts().stream()
-                        .map(this::convertToTinkSavingsAccount)
+                        .map(account -> convertToTinkSavingsAccount(account, ibansByKey))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList());

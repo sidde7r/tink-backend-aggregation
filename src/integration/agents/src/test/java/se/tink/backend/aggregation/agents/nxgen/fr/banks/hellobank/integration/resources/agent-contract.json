@@ -1,0 +1,62 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "DUMMY_IBAN_1",
+      "accountExclusion":"NONE",
+      "exactBalance":{
+        "currencyCode":"EUR",
+        "doubleValue":0.9,
+        "scale":1,
+        "unscaledValue":9,
+        "exactValue":0.9
+      },
+      "currencyCode":"EUR",
+      "bankId":"DUMMYIBAN1",
+      "name":"Compte de chèques",
+      "ownership":1.0,
+      "type":"CHECKING",
+      "identifiers":"[]",
+      "closed":false,
+      "holderName":"DUMMY_NAME DUMMY_NAME",
+      "flags":"[]",
+      "availableCredit":0.0,
+      "balance":0.9
+    },
+    {
+      "accountNumber": "DUMMY_IBAN_2",
+      "accountExclusion":"NONE",
+      "exactBalance":{
+        "currencyCode":"EUR",
+        "doubleValue":10.01,
+        "scale":2,
+        "unscaledValue":1001,
+        "exactValue":10.01
+      },
+      "currencyCode":"EUR",
+      "bankId":"DUMMYIBAN2",
+      "name":"Compte d'épargne",
+      "ownership":1.0,
+      "type":"SAVINGS",
+      "identifiers":"[]",
+      "closed":false,
+      "holderName":"DUMMY_NAME DUMMY_NAME",
+      "flags":"[]",
+      "availableCredit":0.0,
+      "balance":10.01
+    }
+  ],
+  "transactions": [
+    {
+      "amount":0.01,
+      "date":1577790000000,
+      "description":" REMUNERATION NETTE",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    }
+  ]
+}

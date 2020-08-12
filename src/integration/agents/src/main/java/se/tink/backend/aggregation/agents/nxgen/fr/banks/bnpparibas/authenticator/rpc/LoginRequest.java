@@ -1,52 +1,60 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.rpc;
 
+import lombok.Builder;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.storage.BnpParibasPersistentStorage;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
+@Builder
 public class LoginRequest extends AbstractForm {
+
+    private String username;
+    private String gridId;
+    private String passwordIndices;
+    private String userAgent;
+    private String gridType;
+    private String idFaValue;
+    private String idFvValue;
+    private String distId;
+    private String appVersion;
+    private String buildNumber;
 
     private LoginRequest(
             String username,
             String gridId,
             String passwordIndices,
-            BnpParibasPersistentStorage bnpParibasPersistentStorage) {
-        this.put(
-                BnpParibasConstants.Auth.AUTH,
-                buildAuthFormValue(username, gridId, passwordIndices, bnpParibasPersistentStorage));
+            String userAgent,
+            String gridType,
+            String idFaValue,
+            String idFvValue,
+            String distId,
+            String appVersion,
+            String buildNumber) {
+        this.username = username;
+        this.gridId = gridId;
+        this.passwordIndices = passwordIndices;
+        this.userAgent = userAgent;
+        this.gridType = gridType;
+        this.idFaValue = idFaValue;
+        this.idFvValue = idFvValue;
+        this.distId = distId;
+        this.appVersion = appVersion;
+        this.buildNumber = buildNumber;
+
+        this.put(BnpParibasConstants.Auth.AUTH, buildAuthFormValue());
     }
 
-    public static LoginRequest create(
-            String username,
-            String gridId,
-            String passwordIndices,
-            BnpParibasPersistentStorage bnpParibasPersistentStorage) {
-        return new LoginRequest(username, gridId, passwordIndices, bnpParibasPersistentStorage);
-    }
+    private String buildAuthFormValue() {
 
-    private String buildAuthFormValue(
-            String username,
-            String gridId,
-            String passwordIndices,
-            BnpParibasPersistentStorage bnpParibasPersistentStorage) {
-
-        String challengeResponseString =
-                buildChallengeResponseString(username, gridId, passwordIndices);
+        String challengeResponseString = buildChallengeResponseString();
         String userAgentString = buildUserAgentString();
-        String deviceInfoString = buildDeviceInfoString(bnpParibasPersistentStorage);
+        String deviceInfoString = buildDeviceInfoString();
         String appString = buildAppString();
 
-        return new StringBuilder()
-                .append(challengeResponseString)
-                .append(userAgentString)
-                .append(deviceInfoString)
-                .append(appString)
-                .toString();
+        return challengeResponseString + userAgentString + deviceInfoString + appString;
     }
 
-    private String buildChallengeResponseString(
-            String username, String gridId, String passwordIndices) {
+    private String buildChallengeResponseString() {
         String b64EncodedUsername = EncodingUtils.encodeAsBase64String(username);
 
         return String.format(
@@ -82,7 +90,7 @@ public class LoginRequest extends AbstractForm {
                         + "<CHALLENGE>%s</CHALLENGE>"
                         + "<AUTH_FACTOR_ID>[%s]</AUTH_FACTOR_ID>"
                         + "</CHALLENGE_RESPONSE>",
-                BnpParibasConstants.AuthFormValues.DIST_ID,
+                distId,
                 BnpParibasConstants.AuthFormValues.MEAN_ID,
                 BnpParibasConstants.AuthFormValues.MEAN_ID,
                 b64EncodedUsername,
@@ -90,18 +98,18 @@ public class LoginRequest extends AbstractForm {
                 gridId,
                 BnpParibasConstants.AuthFormValues.ID_GRILLE,
                 gridId,
-                BnpParibasConstants.Auth.GRID_TYPE_V4iOS,
+                gridType,
                 BnpParibasConstants.Auth.GRID_TYPE,
-                BnpParibasConstants.Auth.GRID_TYPE_V4iOS,
+                gridType,
                 passwordIndices,
                 BnpParibasConstants.AuthFormValues.POS_SELECT,
                 passwordIndices,
                 BnpParibasConstants.AuthFormValues.VALUE_1,
                 BnpParibasConstants.AuthFormValues.IDB64,
                 BnpParibasConstants.AuthFormValues.VALUE_1,
-                BnpParibasConstants.AuthFormValues.BRACKETS_HCE,
                 BnpParibasConstants.AuthFormValues.HCE,
-                BnpParibasConstants.AuthFormValues.BRACKETS_HCE);
+                BnpParibasConstants.AuthFormValues.HCE,
+                BnpParibasConstants.AuthFormValues.HCE);
     }
 
     private String buildUserAgentString() {
@@ -110,10 +118,10 @@ public class LoginRequest extends AbstractForm {
                         + "<VALUE>%s</VALUE>"
                         + "<IPADDRESS>%s</IPADDRESS>"
                         + "</USER_AGENT>",
-                BnpParibasConstants.Auth.USER_AGENT, BnpParibasConstants.AuthFormValues.IP_ADDRESS);
+                userAgent, BnpParibasConstants.AuthFormValues.IP_ADDRESS);
     }
 
-    private String buildDeviceInfoString(BnpParibasPersistentStorage bnpParibasPersistentStorage) {
+    private String buildDeviceInfoString() {
         return String.format(
                 "<DEVICE_INFO>"
                         + "<SCREEN>"
@@ -152,8 +160,8 @@ public class LoginRequest extends AbstractForm {
                 BnpParibasConstants.AuthFormValues.DEVICE,
                 BnpParibasConstants.AuthFormValues.BRAND,
                 BnpParibasConstants.AuthFormValues.LANGUAGE,
-                bnpParibasPersistentStorage.getIdfaValue(),
-                bnpParibasPersistentStorage.getIdfVValue());
+                idFaValue,
+                idFvValue);
     }
 
     private String buildAppString() {
@@ -163,8 +171,6 @@ public class LoginRequest extends AbstractForm {
                         + "<BUILD_NUMBER>%s</BUILD_NUMBER>"
                         + "<PLATEFORM>%s</PLATEFORM>"
                         + "</APP>",
-                BnpParibasConstants.AuthFormValues.APP_VERSION,
-                BnpParibasConstants.AuthFormValues.BUILD_NUMBER,
-                BnpParibasConstants.AuthFormValues.PLATFORM);
+                appVersion, buildNumber, BnpParibasConstants.AuthFormValues.PLATFORM);
     }
 }

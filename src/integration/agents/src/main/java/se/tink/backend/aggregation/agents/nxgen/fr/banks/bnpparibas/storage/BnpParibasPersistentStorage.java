@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.storage;
 
-import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -23,11 +22,12 @@ public class BnpParibasPersistentStorage {
         return persistentStorage.get(BnpParibasConstants.Storage.LOGIN_ID);
     }
 
-    public void createAndSaveIdfaAndIdfvValues() {
-        persistentStorage.put(
-                BnpParibasConstants.Storage.IDFA_UUID, UUID.randomUUID().toString().toUpperCase());
-        persistentStorage.put(
-                BnpParibasConstants.Storage.IDFV_UUID, UUID.randomUUID().toString().toUpperCase());
+    public void storeIdfaValue(String idfa) {
+        persistentStorage.put(BnpParibasConstants.Storage.IDFA_UUID, idfa);
+    }
+
+    public void storeIdfvValue(String idfv) {
+        persistentStorage.put(BnpParibasConstants.Storage.IDFV_UUID, idfv);
     }
 
     public String getIdfaValue() {
