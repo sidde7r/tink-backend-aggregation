@@ -45,28 +45,17 @@ public class TransferControllerTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void ensureNullPointerExceptionIsThrown_whenNullIsInjectedToUpdate() {
-        transferControllerWithAllExecutors.update(null);
-    }
-
-    @Test(expected = NullPointerException.class)
     public void ensureNullPointerExceptionIsThrown_whenBankTransferExecutorIsNull() {
         BankTransferExecutor transferExecutor = null;
 
         TransferController transferController =
-                new TransferController(
-                        paymentExecutor,
-                        transferExecutor,
-                        approveEInvoiceExecutor,
-                        updatePaymentExecutor);
+                new TransferController(paymentExecutor, transferExecutor);
         transferController.execute(createTransfer(TransferType.BANK_TRANSFER));
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureNullPointerExceptionIsThrown_whenPaymentExecutorIsNull() {
-        TransferController transferController =
-                new TransferController(
-                        null, bankTransferExecutor, approveEInvoiceExecutor, updatePaymentExecutor);
+        TransferController transferController = new TransferController(null, bankTransferExecutor);
 
         transferController.execute(createTransfer(TransferType.PAYMENT));
     }
@@ -74,19 +63,5 @@ public class TransferControllerTest {
     @Test(expected = TransferExecutionException.class)
     public void ensureTransferExecutionExceptionIsThrown_whenExecuteOfNotImplementedType() {
         transferControllerWithAllExecutors.execute(createTransfer(TransferType.EINVOICE));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void ensureNullPointerExceptionIsThrown_whenUpdatePaymentExecutorIsNull() {
-        TransferController transferController =
-                new TransferController(
-                        paymentExecutor, bankTransferExecutor, approveEInvoiceExecutor, null);
-
-        transferController.update(createTransfer(TransferType.PAYMENT));
-    }
-
-    @Test(expected = TransferExecutionException.class)
-    public void ensureTransferExecutionExceptionIsThrown_whenUpdateOfNotImplementedType() {
-        transferControllerWithAllExecutors.update(createTransfer(TransferType.BANK_TRANSFER));
     }
 }
