@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePostaleConfiguration>
         implements FrAispApiClient {
@@ -51,8 +52,10 @@ public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePosta
             PersistentStorage persistentStorage,
             QsealcSigner qsealcSigner,
             LaBanquePostaleConfiguration configuration,
-            String redirectUrl) {
-        super(client, persistentStorage, configuration, redirectUrl);
+            CredentialsRequest request,
+            String redirectUrl,
+            String qSealc) {
+        super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
 
         this.qsealcSigner = qsealcSigner;
     }

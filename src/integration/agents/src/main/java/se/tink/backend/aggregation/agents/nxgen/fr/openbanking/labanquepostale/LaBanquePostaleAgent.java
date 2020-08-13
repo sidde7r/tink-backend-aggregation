@@ -59,7 +59,9 @@ public final class LaBanquePostaleAgent
                 persistentStorage,
                 qsealcSigner,
                 getConfiguration().getProviderSpecificConfiguration(),
-                getConfiguration().getRedirectUrl());
+                request,
+                getConfiguration().getRedirectUrl(),
+                getConfiguration().getQsealc());
     }
 
     @Override

@@ -1,19 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
 
 import com.google.inject.Inject;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.TriodosAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configuration.TriodosConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 
+@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, TriodosConfiguration> {
 
+    private final QsealcSigner qsealcSigner;
+
     @Inject
-    public TriodosAgent(AgentComponentProvider componentProvider) {
+    public TriodosAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
+        this.qsealcSigner = qsealcSigner;
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -24,8 +31,10 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
                 client,
                 persistentStorage,
                 getConfiguration().getProviderSpecificConfiguration(),
+                request,
                 getConfiguration().getRedirectUrl(),
-                this.request.getCredentials());
+                qsealcSigner,
+                getConfiguration().getQsealc());
     }
 
     @Override
@@ -35,7 +44,7 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
                 systemUpdater,
                 persistentStorage,
                 supplementalInformationHelper,
-                new TriodosAuthenticator(apiClient),
+                new TriodosAuthenticator(apiClient, persistentStorage),
                 credentials,
                 strongAuthenticationState);
     }

@@ -6,6 +6,9 @@ public final class TriodosConstants {
         throw new AssertionError();
     }
 
+    public static final String BASE_URL = "https://api-ma.triodos.com";
+    public static final String PSU_IPADDRESS = "0.0.0.0";
+
     public static class Urls {
         public static final String CONSENT = "/xs2a-bg/nl/v1/consents";
         public static final String AUTHORIZE_CONSENT = CONSENT + "/%s/authorisations/%s";
@@ -30,5 +33,9 @@ public final class TriodosConstants {
 
     public static class HeaderKeys {
         public static final String AUTHORIZATION_ID = "authorizationId";
+    }
+
+    public static class HeaderValues {
+        public static final String TENANT = "nl";
     }
 }

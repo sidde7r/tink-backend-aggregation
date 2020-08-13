@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
 public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConfiguration> {
+
     private final QsealcSigner qsealcSigner;
 
     public SamlinkAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
@@ -30,7 +31,9 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
                 persistentStorage,
                 qsealcSigner,
                 getConfiguration().getProviderSpecificConfiguration(),
-                getConfiguration().getRedirectUrl());
+                request,
+                getConfiguration().getRedirectUrl(),
+                getConfiguration().getQsealc());
     }
 
     @Override

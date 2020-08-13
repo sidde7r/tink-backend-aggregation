@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateFormat;
 
 public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConfiguration> {
@@ -42,8 +43,10 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
             final TinkHttpClient client,
             final PersistentStorage persistentStorage,
             final ErstebankConfiguration configuration,
-            final String redirectUrl) {
-        super(client, persistentStorage, configuration, redirectUrl);
+            final CredentialsRequest request,
+            final String redirectUrl,
+            final String qSealc) {
+        super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
     }
 
     public URL getAuthorizeUrl(final String state) {

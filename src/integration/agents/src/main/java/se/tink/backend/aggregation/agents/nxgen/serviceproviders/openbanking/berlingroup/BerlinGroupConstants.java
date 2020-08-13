@@ -76,6 +76,7 @@ public abstract class BerlinGroupConstants {
 
     public static class HeaderKeys {
 
+        public static final String TENANT = "tenant";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String DATE = "Date";
         public static final String DIGEST = "Digest";

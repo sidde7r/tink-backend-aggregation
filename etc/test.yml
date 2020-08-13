@@ -7542,16 +7542,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     triodos:
       tink:
-        apiKey: SN=1,CN=TestSelfSignedCA, O=TriodosBank, L=Zeist, C=NL
-        baseUrl: https://xs2a-sandbox.triodos.com
-        clientId: PSDES-BDE-3DFD21
-        clientKeyStorePassword: '123456'
-        clientKeyStorePath: data/test/cryptography/triodos/keystore.p12
-        clientSecret: phkA83EIUbAQOS4TP15By-xQC-d3PvyCTybWSmjfaYc5xlimWvy8h_J404kOWxS_0MO-ZBetu01wXAsgerWaxg
-        clientSigningCertificatePath: data/test/cryptography/triodos/certificate.pem
-        clientSigningKeyPath: data/test/cryptography/triodos/privatekey.key
-        psuIpAddress: 192.168.0.1
-        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        clientId: ''
+        clientSecret: ''
     ubi:
       tink:
         aspspCode: '03111'

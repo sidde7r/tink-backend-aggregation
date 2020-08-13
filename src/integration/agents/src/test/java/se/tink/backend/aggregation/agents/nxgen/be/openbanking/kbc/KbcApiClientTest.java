@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class KbcApiClientTest {
 
@@ -26,9 +27,9 @@ public class KbcApiClientTest {
     private static final String CONSENT_URL = BASE_URL + "/psd2/v2/consents";
     private static final String PSU_IP_ADDR = "0.0.0.0";
     private static final String CONSENT_ID = "1234";
+    private static final String QSEALC = "QSEALC";
 
     private KbcApiClient kbcApiClient;
-
     private Credentials credentialsMock;
 
     @Before
@@ -36,6 +37,7 @@ public class KbcApiClientTest {
         final TinkHttpClient httpClientMock = mock(TinkHttpClient.class);
         final PersistentStorage persistentStorageMock = mock(PersistentStorage.class);
         final KbcConfiguration kbcConfigurationMock = mock(KbcConfiguration.class);
+        final CredentialsRequest requestMock = mock(CredentialsRequest.class);
 
         when(kbcConfigurationMock.getBaseUrl()).thenReturn(BASE_URL);
         when(kbcConfigurationMock.getPsuIpAddress()).thenReturn(PSU_IP_ADDR);
@@ -48,9 +50,11 @@ public class KbcApiClientTest {
                 new KbcApiClient(
                         httpClientMock,
                         kbcConfigurationMock,
+                        requestMock,
                         REDIRECT_URL,
                         credentialsMock,
-                        persistentStorageMock);
+                        persistentStorageMock,
+                        QSEALC);
     }
 
     @Test
