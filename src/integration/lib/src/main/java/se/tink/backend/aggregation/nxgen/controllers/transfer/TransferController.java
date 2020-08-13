@@ -59,13 +59,6 @@ public class TransferController {
 
         paymentExecutor.executePayment(transfer);
     }
-
-    private void approveEInvoice(final Transfer transfer) {
-        Preconditions.checkNotNull(approveEInvoiceExecutor);
-
-        approveEInvoiceExecutor.approveEInvoice(transfer);
-    }
-
     private void updatePayment(final Transfer transfer) {
         Preconditions.checkNotNull(updatePaymentExecutor);
 
