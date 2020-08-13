@@ -295,9 +295,6 @@ public class DemoAgent extends AbstractAgent
         }
     }
 
-    @Override
-    public void update(Transfer transfer) throws Exception, TransferExecutionException {}
-
     private Account findAccountForIdentifier(AccountIdentifier transferAccountIdentifier)
             throws IOException {
         for (Account account :

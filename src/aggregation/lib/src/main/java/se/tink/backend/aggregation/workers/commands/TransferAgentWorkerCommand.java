@@ -43,6 +43,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -113,26 +114,17 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         log.info("[transferId: {}] Executing transfer.", UUIDUtils.toTinkUUID(transfer.getId()));
         MetricAction metricAction =
                 metrics.buildAction(
-                        new MetricId.MetricLabels()
-                                .add(
-                                        "action",
-                                        transferRequest.isUpdate()
-                                                ? MetricName.UPDATE_TRANSFER
-                                                : MetricName.EXECUTE_TRANSFER));
+                        new MetricId.MetricLabels().add("action", MetricName.EXECUTE_TRANSFER));
         Optional<String> operationStatusMessage = Optional.empty();
         try {
             log.info(
                     "[transferId: {}] {}",
                     UUIDUtils.toTinkUUID(transfer.getId()),
-                    getTransferExecuteLogInfo(transfer, transferRequest.isUpdate()));
+                    getTransferExecuteLogInfo(transfer));
 
             if (agent instanceof TransferExecutor) {
                 TransferExecutor transferExecutor = (TransferExecutor) agent;
-                if (transferRequest.isUpdate()) {
-                    transferExecutor.update(transfer);
-                } else {
-                    transferExecutor.execute(transfer);
-                }
+                transferExecutor.execute(transfer);
             } else if (agent instanceof PaymentControllerable) {
                 PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
 
@@ -449,26 +441,14 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         // Deliberately left empty.
     }
 
-    private String getTransferExecuteLogInfo(Transfer transfer, boolean isUpdate) {
-        switch (transfer.getType()) {
-            case EINVOICE:
-                if (isUpdate) {
-                    return "Approving e-invoice.";
-                }
-                break;
-            case BANK_TRANSFER:
-                if (!isUpdate) {
-                    return "Creating a new bank transfer.";
-                }
-                break;
-            case PAYMENT:
-                if (isUpdate) {
-                    return "Updating an upcoming payment.";
-                } else {
-                    return "Creating a new payment.";
-                }
+    private String getTransferExecuteLogInfo(Transfer transfer) {
+        if (TransferType.BANK_TRANSFER.equals(transfer.getType())) {
+            return "Creating a new bank transfer.";
+        } else if (TransferType.PAYMENT.equals(transfer.getType())) {
+            return "Creating a new payment.";
+        } else {
+            return "Unrecognized transfer command.";
         }
-        return "Unrecognized transfer command.";
     }
 
     @Override
@@ -478,8 +458,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
     private static class MetricName {
         private static final String METRIC = "agent_transfer";
-
-        private static final String UPDATE_TRANSFER = "update";
         private static final String EXECUTE_TRANSFER = "execute";
     }
 }

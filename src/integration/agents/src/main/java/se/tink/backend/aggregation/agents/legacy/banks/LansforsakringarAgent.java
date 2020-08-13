@@ -625,14 +625,6 @@ public class LansforsakringarAgent extends AbstractAgent
         }
     }
 
-    @Override
-    public void update(Transfer transfer) {
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage("Not implemented.")
-                .setEndUserMessage("Not implemented.")
-                .build();
-    }
-
     private void cancelUnsignedPayment(String uniqueId, Exception e)
             throws TransferExecutionException {
         log.info("Removing e-invoice/payment from inbox since signing failed.", e);

@@ -430,12 +430,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         testTransfer(createCredentials(username, password, credentialsType), transfer);
     }
 
-    protected void testUpdateTransfer(
-            String username, String password, CredentialsTypes credentialsType, Transfer transfer)
-            throws Exception {
-        testUpdateTransfer(createCredentials(username, password, credentialsType), transfer);
-    }
-
     protected void testTransfer(Credentials credentials, Transfer transfer) throws Exception {
         // Create a regular agent.
         AgentTestContext testContext = new AgentTestContext(credentials);
@@ -476,55 +470,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
             } finally {
                 httpFilter.removeClientFilters();
             }
-
-            agent.logout();
-        } finally {
-            agent.close();
-        }
-    }
-
-    protected void testUpdateTransfer(Credentials credentials, Transfer transfer) throws Exception {
-        // Create a regular agent.
-        AgentTestContext testContext = new AgentTestContext(credentials);
-
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
-
-        try {
-            Assert.assertTrue("Agent could not login successfully", agent.login());
-
-            // Test the transfer.
-            SignableOperation signableOperation = new SignableOperation(transfer);
-            SignableOperationStatuses outcome = SignableOperationStatuses.EXECUTED;
-
-            ClientFilterFactory httpFilter =
-                    getHttpLogFilter(credentials, (HttpLoggableExecutor) agent);
-            try {
-                if (agent instanceof TransferExecutor) {
-                    TransferExecutor transferExecutor = (TransferExecutor) agent;
-                    transferExecutor.attachHttpFilters(httpFilter);
-                    transferExecutor.update(transfer);
-                } else if (agent instanceof TransferExecutorNxgen) {
-                    TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
-                    transferExecutorNxgen.attachHttpFilters(httpFilter);
-                    transferExecutorNxgen.update(transfer);
-                }
-            } catch (TransferExecutionException e) {
-                logger.error("Could not execute transfer", e);
-                outcome = e.getSignableOperationStatus();
-            } finally {
-                httpFilter.removeClientFilters();
-            }
-            signableOperation.setStatus(outcome);
-
-            Assert.assertEquals(
-                    "Transfer failed to execute: "
-                            + signableOperation.getStatus()
-                            + (Strings.isNullOrEmpty(signableOperation.getStatusMessage())
-                                    ? ""
-                                    : " (" + signableOperation.getStatusMessage() + ")"),
-                    SignableOperationStatuses.EXECUTED,
-                    signableOperation.getStatus());
 
             agent.logout();
         } finally {

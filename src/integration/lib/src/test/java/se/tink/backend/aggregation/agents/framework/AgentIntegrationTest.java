@@ -571,22 +571,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
     }
 
-    private void doBankTransfer(Agent agent, Transfer transfer, boolean isUpdate) throws Exception {
+    private void doBankTransfer(Agent agent, Transfer transfer) throws Exception {
         log.info("Executing bank transfer.");
 
         if (agent instanceof TransferExecutorNxgen) {
-            if (isUpdate) {
-                ((TransferExecutorNxgen) agent).update(transfer);
-            } else {
-                ((TransferExecutorNxgen) agent).execute(transfer);
-            }
+            ((TransferExecutorNxgen) agent).execute(transfer);
         } else if (agent instanceof TransferExecutor) {
-            if (isUpdate) {
-                ((TransferExecutor) agent).update(transfer);
-            } else {
-                ((TransferExecutor) agent).execute(transfer);
-            }
-
+            ((TransferExecutor) agent).execute(transfer);
         } else {
             throw new AssertionError(
                     String.format(
@@ -701,14 +692,14 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         System.out.println();
     }
 
-    private void testBankTransfer(Transfer transfer, boolean isUpdate) throws Exception {
+    public void testBankTransfer(Transfer transfer) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
         Agent agent = createAgent(credentialsRequest);
         try {
             login(agent, credentialsRequest);
-            doBankTransfer(agent, transfer, isUpdate);
+            doBankTransfer(agent, transfer);
             if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
                 printMaskedDebugLog(agent);
             }
@@ -724,14 +715,14 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
-    public void testBankTransferUK(Transfer transfer, boolean isUpdate) throws Exception {
+    public void testBankTransferUK(Transfer transfer) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
         Agent agent = createAgent(credentialsRequest);
         try {
             // login(agent, credentialsRequest);
-            doBankTransfer(agent, transfer, isUpdate);
+            doBankTransfer(agent, transfer);
             if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
                 printMaskedDebugLog(agent);
             }
@@ -745,14 +736,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         context.printCollectedData();
-    }
-
-    public void testBankTransfer(Transfer transfer) throws Exception {
-        testBankTransfer(transfer, false);
-    }
-
-    public void testUpdateTransfer(Transfer transfer) throws Exception {
-        testBankTransfer(transfer, true);
     }
 
     public void testGenericPayment(List<Payment> paymentList) throws Exception {

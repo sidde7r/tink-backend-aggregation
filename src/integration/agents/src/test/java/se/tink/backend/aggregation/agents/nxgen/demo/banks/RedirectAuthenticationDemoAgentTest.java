@@ -60,7 +60,7 @@ public class RedirectAuthenticationDemoAgentTest {
                 .setFinancialInstitutionId("dummy")
                 .setAppId("dummy")
                 .build()
-                .testBankTransferUK(transfer, false);
+                .testBankTransferUK(transfer);
     }
 
     @Test

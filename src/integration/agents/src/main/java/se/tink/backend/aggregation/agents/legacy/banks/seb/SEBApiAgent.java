@@ -1924,11 +1924,6 @@ public class SEBApiAgent extends AbstractAgent
         }
     }
 
-    @Override
-    public void update(Transfer transfer) {
-        throw new IllegalStateException("Not implemented.");
-    }
-
     private void ensureIsValidSourceAccount(List<AccountEntity> accounts, Transfer transfer) {
         if (accounts == null || accounts.isEmpty()) {
             failTransfer(

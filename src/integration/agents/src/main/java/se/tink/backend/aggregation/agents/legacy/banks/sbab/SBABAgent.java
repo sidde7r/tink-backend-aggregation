@@ -190,11 +190,6 @@ public class SBABAgent extends AbstractAgent
         }
     }
 
-    @Override
-    public void update(Transfer transfer) throws Exception {
-        throw new UnsupportedTransferException(transfer.getType());
-    }
-
     private BankIdStatus loginWithMobileBankId() throws BankIdException, AuthorizationException {
         InitBankIdResponse initBankIdResponse = authenticationClient.initiateBankIdLogin();
         String pendingAuthCode = initBankIdResponse.getPendingAuthorizationCode();

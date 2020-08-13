@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -229,47 +228,6 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
     public void testFetchEInvoicesBankId() throws Exception {
         this.featureFlags = ImmutableList.of(FeatureFlags.TRANSFERS);
         fetchEInvoices(TestSSN.FH);
-    }
-
-    @Test
-    public void testSignEInvoice() throws Exception {
-        this.featureFlags = ImmutableList.of(FeatureFlags.TRANSFERS);
-        List<Transfer> transfers = fetchEInvoices(TestSSN.FH);
-        Assertions.assertThat(transfers.size()).isGreaterThan(0);
-
-        Transfer originalTransfer = transfers.get(0);
-
-        Transfer transferToSign =
-                TransferMock.eInvoice()
-                        .createUpdateTransferFromOriginal(originalTransfer)
-                        .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
-                        .withAmount(originalTransfer.getAmount())
-                        .withDueDate(originalTransfer.getDueDate())
-                        .build();
-
-        testUpdateTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transferToSign);
-    }
-
-    @Test
-    public void testSignEInvoiceWhenUserHasModifiedAmount() throws Exception {
-        this.featureFlags = ImmutableList.of(FeatureFlags.TRANSFERS);
-        List<Transfer> transfers = fetchEInvoices(TestSSN.FH);
-        Assertions.assertThat(transfers.size()).isGreaterThan(0);
-
-        Transfer originalTransfer = transfers.get(0);
-
-        // Update with minimal change
-        Amount originalAmountPlus1SEK = Amount.inSEK(originalTransfer.getAmount().getValue() + 1);
-
-        Transfer transferToSign =
-                TransferMock.eInvoice()
-                        .createUpdateTransferFromOriginal(originalTransfer)
-                        .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
-                        .withAmount(originalAmountPlus1SEK)
-                        .withDueDate(originalTransfer.getDueDate())
-                        .build();
-
-        testUpdateTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transferToSign);
     }
 
     public static class TransferMessageFormatting extends AbstractAgentTest<ICABankenAgent> {
