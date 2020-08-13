@@ -18,13 +18,14 @@ public class NordeaDkConstants {
                 NORDEA_PRIVATE_BASE_URL + "api/dbf/ca/loans-v1/loans";
         public static final String EXCHANGE_TOKEN =
                 NORDEA_AUTH_BASE_URL + "api/dbf/ca/token-service-v3/oauth/token";
+        public static final String TRANSACTIONS = "/%s/transactions";
         public static final String FETCH_ACCOUNT_TRANSACTIONS_FORMAT =
-                FETCH_ACCOUNTS + "/%s/transactions";
+                FETCH_ACCOUNTS + TRANSACTIONS;
+        public static final String FETCH_LOANS_TRANSACTIONS_FORMAT = FETCH_LOANS + TRANSACTIONS;
         public static final String FETCH_CARDS =
                 NORDEA_PRIVATE_BASE_URL + "api/dbf/ca/cards-v4/cards";
         public static final String FETCH_CARD_DETAILS_FORMAT = FETCH_CARDS + "/%s";
-        public static final String FETCH_CARD_TRANSACTIONS_FORMAT =
-                FETCH_CARDS + "/%s/transactions";
+        public static final String FETCH_CARD_TRANSACTIONS_FORMAT = FETCH_CARDS + TRANSACTIONS;
         public static final String FETCH_INVESTMENTS =
                 NORDEA_PRIVATE_BASE_URL + "/api/dbf/ca/savings-v1/savings/custodies";
     }
