@@ -374,11 +374,6 @@ public class ICABankenAgent extends AbstractAgent
         }
     }
 
-    @Override
-    public void update(Transfer transfer) {
-        TransferExecutionException.throwIf(true);
-    }
-
     private void executeTransfer(final Transfer transfer) throws Exception {
         validateNoUnsignedTransfers();
 
