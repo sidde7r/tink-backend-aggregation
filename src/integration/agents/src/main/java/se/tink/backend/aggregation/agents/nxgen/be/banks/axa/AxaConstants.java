@@ -7,9 +7,19 @@ public final class AxaConstants {
         throw new AssertionError();
     }
 
+    private static class Headers {
+        private static final String HOST = "Host";
+        private static final String CONTENT_TYPE = "Content-Type";
+        private static final String USER_AGENT = "User-Agent";
+        private static final String AXA_VERSION = "Axa-Version";
+        private static final String AUTHORIZATION = "Authorization";
+        private static final String X_TS_CLIENT_VERSION = "X-TS-Client-Version";
+    }
+
     public static class Url {
-        private static String BASE = "https://mobile.axabank.be/";
-        private static String AUTH_BASE = BASE + "AXA_BANK_TransmitApi/api/v2/auth/";
+        private static final String HOST = "mobile.axabank.be";
+        private static final String BASE = "https://" + HOST + "/";
+        private static final String AUTH_BASE = BASE + "AXA_BANK_TransmitApi/api/v2/auth/";
 
         static final String ANONYMOUS_INVOKE = AUTH_BASE + "anonymous_invoke?aid=mobile";
         static final String ASSERT = AUTH_BASE + "assert?aid=mobile";
@@ -18,47 +28,43 @@ public final class AxaConstants {
 
         public static final String LOGON = BASE + "AXA_BE_MOBILE_logon03";
         public static final String FETCH_ACCOUNTS = BASE + "AXA_BE_MOBILE_getAccounts01";
-        public static final String FETCH_TRANSACTIONS = BASE + "AXA_BE_MOBILE_getAccountHistory01";
+        public static final String FETCH_TRANSACTIONS = BASE + "AXA_BE_MOBILE_getAccountHistory02";
     }
 
     public static final ImmutableMap<String, Object> AUTH_HEADERS_JSON =
             ImmutableMap.<String, Object>builder()
-                    .put("Host", "mobile.axabank.be")
-                    .put("User-Agent", "axamobileiOS/2.30.7 (iPhone; iOS 13.3.1; Scale/2.00)")
-                    .put("Content-Type", "application/json")
+                    .put(Headers.HOST, Url.HOST)
+                    .put(Headers.USER_AGENT, "axamobileiOS/2.32.4 (iPhone; iOS 13.3.1; Scale/2.00)")
+                    .put(Headers.CONTENT_TYPE, "application/json")
                     .put(
-                            "Authorization",
+                            Headers.AUTHORIZATION,
                             "TSToken 3b20ff25-4b71-4736-8c72-7533f861e4e9; tid=mobile")
-                    .put("X-TS-Client-Version", "3.6.13;[1,2,3,6,7,8,10,11,12,14,19]")
+                    .put(Headers.X_TS_CLIENT_VERSION, Request.TS_CLIENT_VERSION)
                     .build();
 
     public static final ImmutableMap<String, Object> HEADERS_JSON =
             ImmutableMap.<String, Object>builder()
-                    .put("Host", "mobile.axabank.be")
-                    .put("User-Agent", Request.USER_AGENT)
-                    .put("Axa-Version", Request.AXA_VERSION)
-                    .put("Content-Type", "application/json; charset=utf-8")
+                    .put(Headers.HOST, Url.HOST)
+                    .put(Headers.USER_AGENT, Request.USER_AGENT)
+                    .put(Headers.AXA_VERSION, Request.AXA_VERSION)
+                    .put(Headers.CONTENT_TYPE, "application/json; charset=utf-8")
                     .build();
 
     public static final ImmutableMap<String, Object> HEADERS_FORM =
             ImmutableMap.<String, Object>builder()
-                    .put("Host", "mobile.axabank.be")
-                    .put("User-Agent", Request.USER_AGENT)
-                    .put("Axa-Version", Request.AXA_VERSION)
-                    .put("Content-Type", "application/x-www-form-urlencoded")
+                    .put(Headers.HOST, Url.HOST)
+                    .put(Headers.USER_AGENT, Request.USER_AGENT)
+                    .put(Headers.AXA_VERSION, Request.AXA_VERSION)
+                    .put(Headers.CONTENT_TYPE, "application/x-www-form-urlencoded")
                     .build();
 
     public static class Request {
-        public static final String TS_CLIENT_VERSION = "3.6.13;[1,2,3,6,7,8,10,11,12,14,19]";
+        public static final String TS_CLIENT_VERSION = "4.2.4;[1,2,3,6,7,8,10,11,12,14,19]";
         public static final String USER_AGENT = "AXA mobile API-v1.0 (axa-mobile-2.30)";
         public static final String APPL_CD = "MOBILEBANK";
         public static final String AXA_VERSION = "05";
         public static final String BASIC_AUTH =
                 "NDNiNzQzMWMtZWI0Mi00ZWRjLTgxODYtNjczNzE4NDE5NDQ4OjdlMzk0NjliLTA1ZTQtNDk0OS1hZTMwLWNiOTUxOGZhYWRkYQ==";
-        public static final String DIRECTION_FLAG = "1";
-        public static final String REFERENCE_NUMBER = "";
-        public static final String TRANSACTION_CODE = "";
-        public static final String UPDATE_TIMESTAMP = "";
     }
 
     public static class Response {

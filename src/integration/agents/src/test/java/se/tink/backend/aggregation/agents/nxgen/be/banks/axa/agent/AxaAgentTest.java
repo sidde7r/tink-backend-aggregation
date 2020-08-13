@@ -40,6 +40,7 @@ public class AxaAgentTest {
 
         testBuilder =
                 new AgentIntegrationTest.Builder("be", "be-axa-cardreader")
+                        .expectLoggedIn(false)
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.CARD_NUMBER))
                         .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                         .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));

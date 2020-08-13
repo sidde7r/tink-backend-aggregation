@@ -41,7 +41,7 @@ public final class GenerateChallengeRequest {
 
         public GenerateChallengeRequest build() {
             InputEntity entity = new InputEntity();
-            entity.setuCRid(ucrid);
+            entity.setUCRid(ucrid);
             entity.setApplCd(applcd);
             entity.setLanguage(language);
             return new GenerateChallengeRequest(entity);

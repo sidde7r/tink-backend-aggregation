@@ -25,18 +25,12 @@ public final class AxaTransactionFetcher implements TransactionFetcher<Transacti
 
         final GetTransactionsResponse response =
                 apiClient.postGetTransactions(
-                        customerId,
-                        accessToken,
-                        extractBBANFromIBAN(account.getAccountNumber()),
-                        locale);
+                        customerId, accessToken, stripIBAN(account.getAccountNumber()), locale);
 
         return response.getTransactions();
     }
 
-    private String extractBBANFromIBAN(String maybeIBAN) {
-        if (maybeIBAN.length() == 16) {
-            return maybeIBAN.substring(4);
-        }
-        return maybeIBAN;
+    private String stripIBAN(String iban) {
+        return iban.replaceAll("\\s+", "");
     }
 }

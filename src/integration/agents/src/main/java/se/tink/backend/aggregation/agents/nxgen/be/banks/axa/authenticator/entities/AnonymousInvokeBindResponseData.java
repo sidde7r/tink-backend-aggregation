@@ -12,7 +12,6 @@ public class AnonymousInvokeBindResponseData {
     private Boolean assertionsComplete;
     private String challenge;
     private List<ControlFlowEntity> controlFlow;
-    private String data;
     private String state;
 
     public Boolean getAssertionsComplete() {
@@ -25,10 +24,6 @@ public class AnonymousInvokeBindResponseData {
 
     public List<ControlFlowEntity> getControlFlow() {
         return controlFlow;
-    }
-
-    public String getData() {
-        return data;
     }
 
     public String getState() {

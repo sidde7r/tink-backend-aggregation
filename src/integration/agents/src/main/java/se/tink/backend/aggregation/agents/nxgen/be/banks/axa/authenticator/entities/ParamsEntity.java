@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonInclude(Include.NON_NULL)
 public class ParamsEntity {
 
-    private String appVersion = "2.30";
+    private String appVersion = "2.32";
     private String clientLanguage = "nl";
     private String transactionType;
     private String sessionId;
