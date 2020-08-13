@@ -14,8 +14,6 @@ public class TransferControllerTest {
     private TransferController transferControllerWithAllExecutors;
     private PaymentExecutor paymentExecutor;
     private BankTransferExecutor bankTransferExecutor;
-    private ApproveEInvoiceExecutor approveEInvoiceExecutor;
-    private UpdatePaymentExecutor updatePaymentExecutor;
 
     @Rule public ExpectedException expectedException = ExpectedException.none();
 
@@ -23,14 +21,8 @@ public class TransferControllerTest {
     public void setup() {
         paymentExecutor = mock(PaymentExecutor.class);
         bankTransferExecutor = mock(BankTransferExecutor.class);
-        approveEInvoiceExecutor = mock(ApproveEInvoiceExecutor.class);
-        updatePaymentExecutor = mock(UpdatePaymentExecutor.class);
         transferControllerWithAllExecutors =
-                new TransferController(
-                        paymentExecutor,
-                        bankTransferExecutor,
-                        approveEInvoiceExecutor,
-                        updatePaymentExecutor);
+                new TransferController(paymentExecutor, bankTransferExecutor);
     }
 
     private Transfer createTransfer(TransferType transferType) {
