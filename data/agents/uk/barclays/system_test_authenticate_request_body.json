@@ -1,6 +1,7 @@
 {
     "manual": true,
     "create": true,
+    "forceAuthenticate": false,
     "callbackUri": "callbackUri",
     "appUriId": "appUriId",
     "userDeviceId": "userDeviceId",

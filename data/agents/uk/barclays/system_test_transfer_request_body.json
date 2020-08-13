@@ -11,6 +11,7 @@
     },
     "update": true,
     "create": true,
+    "forceAuthenticate": false,
     "skipRefresh": true,
     "userDeviceId": "userDeviceId",
     "callbackUri": "callbackUri",

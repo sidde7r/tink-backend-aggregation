@@ -1,5 +1,6 @@
 {
     "manual": true,
+    "forceAuthenticate": false,
     "refreshId": "dummyId",
     "itemsToRefresh": [
         "CHECKING_ACCOUNTS",
