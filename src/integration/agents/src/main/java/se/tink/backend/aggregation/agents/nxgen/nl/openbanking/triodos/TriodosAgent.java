@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
 
 import com.google.inject.Inject;
-import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
-import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.TriodosAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configuration.TriodosConfiguration;
@@ -14,8 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, TriodosConfiguration>
-        implements RefreshIdentityDataExecutor {
+public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, TriodosConfiguration> {
 
     private final QsealcSigner qsealcSigner;
 
@@ -50,11 +47,6 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
                 new TriodosAuthenticator(apiClient, persistentStorage),
                 credentials,
                 strongAuthenticationState);
-    }
-
-    @Override
-    public FetchIdentityDataResponse fetchIdentityData() {
-        return null;
     }
 
     @Override
