@@ -38,16 +38,6 @@ public class TransferController {
         return Optional.empty();
     }
 
-    public void update(Transfer transfer) {
-        Preconditions.checkNotNull(transfer);
-
-        if (transfer.getType() == TransferType.PAYMENT) {
-            updatePayment(transfer);
-        } else {
-            TransferExecutionException.throwIf(true);
-        }
-    }
-
     private Optional<String> executeBankTransfer(final Transfer transfer) {
         Preconditions.checkNotNull(bankTransferExecutor);
 
