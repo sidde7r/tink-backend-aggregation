@@ -390,6 +390,15 @@ public class OpenIdAuthenticationController
         boolean shouldForceAuthentication =
                 credentialsRequest instanceof RefreshInformationRequest
                         && ((RefreshInformationRequest) credentialsRequest).isForceAuthenticate();
+
+        logger.info(
+                "[forceAuthenticate] Should force authentication for credentials: {}, {}",
+                Optional.ofNullable(credentialsRequest)
+                        .map(CredentialsRequest::getCredentials)
+                        .map(Credentials::getId)
+                        .orElse(null),
+                shouldForceAuthentication);
+
         return shouldForceAuthentication;
     }
 
