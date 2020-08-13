@@ -36,7 +36,8 @@ public class OpenIdAuthenticationFlow {
                         strongAuthenticationState,
                         request.getCallbackUri(),
                         appToAppRedirectURL,
-                        randomValueGenerator);
+                        randomValueGenerator,
+                        request);
 
         return new AutoAuthenticationController(
                 request,
