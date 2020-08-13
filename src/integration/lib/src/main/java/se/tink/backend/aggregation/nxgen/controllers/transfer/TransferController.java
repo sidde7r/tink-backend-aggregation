@@ -3,24 +3,16 @@ package se.tink.backend.aggregation.nxgen.controllers.transfer;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
-import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferController {
     private final PaymentExecutor paymentExecutor;
     private final BankTransferExecutor bankTransferExecutor;
-    private final ApproveEInvoiceExecutor approveEInvoiceExecutor;
-    private final UpdatePaymentExecutor updatePaymentExecutor;
 
     public TransferController(
-            PaymentExecutor paymentExecutor,
-            BankTransferExecutor bankTransferExecutor,
-            ApproveEInvoiceExecutor approveEInvoiceExecutor,
-            UpdatePaymentExecutor updatePaymentExecutor) {
+            PaymentExecutor paymentExecutor, BankTransferExecutor bankTransferExecutor) {
         this.paymentExecutor = paymentExecutor;
         this.bankTransferExecutor = bankTransferExecutor;
-        this.approveEInvoiceExecutor = approveEInvoiceExecutor;
-        this.updatePaymentExecutor = updatePaymentExecutor;
     }
 
     public Optional<String> execute(final Transfer transfer) {
