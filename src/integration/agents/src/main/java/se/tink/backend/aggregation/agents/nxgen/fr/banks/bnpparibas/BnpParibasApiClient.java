@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.entites.LoginDataEntity;
@@ -32,20 +32,21 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 
+@Slf4j
+@RequiredArgsConstructor
 public class BnpParibasApiClient {
-    private final TinkHttpClient client;
-    private static final Logger log = LoggerFactory.getLogger(BnpParibasApiClient.class);
+
     private static final int RETRY_POLICY_MAX_ATTEMPTS = 3;
 
-    public BnpParibasApiClient(TinkHttpClient client) {
-        this.client = client;
-    }
+    private final TinkHttpClient client;
+    private final BnpParibasConfigurationBase configuration;
+    private final BnpParibasPersistentStorage bnpParibasPersistentStorage;
 
     public NumpadDataEntity getNumpadParams() {
-        NumpadRequest formBody = NumpadRequest.create();
+        NumpadRequest formBody = new NumpadRequest(configuration.getGridType());
 
         NumpadResponse response =
-                client.request(BnpParibasConstants.Urls.NUMPAD)
+                client.request(createUrl(BnpParibasConstants.Urls.NUMPAD))
                         .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(NumpadResponse.class);
 
@@ -53,17 +54,25 @@ public class BnpParibasApiClient {
         return response.getData();
     }
 
-    public LoginDataEntity login(
-            String username,
-            String gridId,
-            String passwordIndices,
-            BnpParibasPersistentStorage bnpParibasPersistentStorage)
+    public LoginDataEntity login(String username, String gridId, String passwordIndices)
             throws LoginException {
+
         LoginRequest formBody =
-                LoginRequest.create(username, gridId, passwordIndices, bnpParibasPersistentStorage);
+                LoginRequest.builder()
+                        .username(username)
+                        .gridId(gridId)
+                        .passwordIndices(passwordIndices)
+                        .userAgent(configuration.getUserAgent())
+                        .gridType(configuration.getGridType())
+                        .distId(configuration.getDistId())
+                        .appVersion(configuration.getAppVersion())
+                        .buildNumber(configuration.getBuildNumber())
+                        .idFaValue(bnpParibasPersistentStorage.getIdfaValue())
+                        .idFvValue(bnpParibasPersistentStorage.getIdfVValue())
+                        .build();
 
         LoginResponse response =
-                client.request(BnpParibasConstants.Urls.LOGIN)
+                client.request(createUrl(BnpParibasConstants.Urls.LOGIN))
                         .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(LoginResponse.class);
 
@@ -78,7 +87,8 @@ public class BnpParibasApiClient {
 
     public void keepAlive() {
         BaseResponse response =
-                client.request(BnpParibasConstants.Urls.KEEP_ALIVE).get(BaseResponse.class);
+                client.request(createUrl(BnpParibasConstants.Urls.KEEP_ALIVE))
+                        .get(BaseResponse.class);
 
         response.assertReturnCodeOk();
     }
@@ -86,14 +96,22 @@ public class BnpParibasApiClient {
     public Collection<Transaction> getTransactionalAccountTransactions(
             Date fromDate, Date toDate, String ibanKey) {
         TransactionalAccountTransactionsRequest request =
-                TransactionalAccountTransactionsRequest.create(fromDate, toDate, ibanKey);
+                TransactionalAccountTransactionsRequest.create(
+                        configuration.getTriAvValue(),
+                        fromDate,
+                        toDate,
+                        ibanKey,
+                        configuration.getPastOrPendingValue());
 
         TransactionalAccountTransactionsResponse response = null;
         int tries = 0;
-        for (tries = 0; tries < RETRY_POLICY_MAX_ATTEMPTS; tries++) {
+        for (; tries < RETRY_POLICY_MAX_ATTEMPTS; tries++) {
             try {
                 response =
-                        client.request(BnpParibasConstants.Urls.TRANSACTIONAL_ACCOUNT_TRANSACTIONS)
+                        client.request(
+                                        createUrl(
+                                                BnpParibasConstants.Urls
+                                                        .TRANSACTIONAL_ACCOUNT_TRANSACTIONS))
                                 .type(MediaType.APPLICATION_JSON_TYPE)
                                 .post(TransactionalAccountTransactionsResponse.class, request);
                 break;
@@ -121,7 +139,8 @@ public class BnpParibasApiClient {
 
     public InfoUdcEntity getAccounts() {
         AccountsResponse response =
-                client.request(BnpParibasConstants.Urls.LIST_ACCOUNTS).get(AccountsResponse.class);
+                client.request(createUrl(BnpParibasConstants.Urls.LIST_ACCOUNTS))
+                        .get(AccountsResponse.class);
 
         response.assertReturnCodeOk();
 
@@ -133,12 +152,16 @@ public class BnpParibasApiClient {
                 new AccountIbanDetailsRequest(
                         BnpParibasConstants.AccountIbanDetails.MODE_BENEFICIAIRE_TRUE);
         IbanDetailsResponse ibanDetailsResponse =
-                client.request(BnpParibasConstants.Urls.LIST_IBANS)
+                client.request(createUrl(BnpParibasConstants.Urls.LIST_IBANS))
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .post(IbanDetailsResponse.class, request);
 
         ibanDetailsResponse.assertReturnCodeOk();
 
         return ibanDetailsResponse.getData().getTransferInfo().getCreditAccountsList();
+    }
+
+    private String createUrl(String path) {
+        return configuration.getHost() + path;
     }
 }
