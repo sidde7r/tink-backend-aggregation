@@ -133,11 +133,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                             paymentControllerable.getPaymentController().get(), transferRequest);
                 } else {
                     TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
-                    if (transferRequest.isUpdate()) {
-                        transferExecutorNxgen.update(transfer);
-                    } else {
-                        operationStatusMessage = transferExecutorNxgen.execute(transfer);
-                    }
+                    operationStatusMessage = transferExecutorNxgen.execute(transfer);
                 }
             }
 
