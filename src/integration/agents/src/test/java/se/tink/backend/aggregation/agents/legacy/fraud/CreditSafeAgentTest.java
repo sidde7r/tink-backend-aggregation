@@ -163,14 +163,17 @@ public class CreditSafeAgentTest extends AbstractAgentTest<CreditSafeAgent> {
         UserProfile profile = new UserProfile();
         profile.setLocale("sv_SE");
         user.setProfile(profile);
+        String originatingUserIp = "127.0.0.1";
 
         CredentialsRequest informationRefreshRequest =
-                new RefreshInformationRequest(
-                        CoreUserMapper.toAggregationUser(user),
-                        constructProvider(),
-                        credentials,
-                        true,
-                        false);
+                RefreshInformationRequest.builder()
+                        .user(CoreUserMapper.toAggregationUser(user))
+                        .provider(constructProvider())
+                        .credentials(credentials)
+                        .originatingUserIp(originatingUserIp)
+                        .manual(true)
+                        .forceAuthenticate(false)
+                        .build();
         AgentTestContext testContext = new AgentTestContext(credentials);
 
         CreditSafeAgent creditSafeAgent =

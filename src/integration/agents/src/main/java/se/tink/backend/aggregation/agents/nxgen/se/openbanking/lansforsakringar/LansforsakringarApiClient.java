@@ -54,16 +54,19 @@ public final class LansforsakringarApiClient {
     private String redirectUrl;
     private final Credentials credentials;
     private final PersistentStorage persistentStorage;
+    private final String originatingUserIp;
 
     LansforsakringarApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             Credentials credentials,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage,
+            String originatingUserIp) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
+        this.originatingUserIp = originatingUserIp;
     }
 
     public Credentials getCredentials() {
@@ -91,7 +94,9 @@ public final class LansforsakringarApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(
+                        HeaderKeys.PSU_IP_ADDRESS,
+                        originatingUserIp == null ? HeaderValues.PSU_IP_ADDRESS : originatingUserIp)
                 .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());

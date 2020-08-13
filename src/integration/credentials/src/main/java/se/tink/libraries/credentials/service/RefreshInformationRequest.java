@@ -16,31 +16,73 @@ public class RefreshInformationRequest extends CredentialsRequest {
     @JsonProperty("forceAuthenticate")
     private boolean forceAuthenticate;
 
-    public RefreshInformationRequest() {}
-
-    public RefreshInformationRequest(
-            User user,
-            Provider provider,
-            Credentials credentials,
-            boolean manual,
-            boolean create,
-            boolean update,
-            boolean forceAuthenticate) {
-        super(user, provider, credentials);
-
-        this.manual = manual;
-        this.create = create;
-        this.update = update;
-        this.forceAuthenticate = forceAuthenticate;
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public RefreshInformationRequest(
-            User user,
-            Provider provider,
-            Credentials credentials,
-            boolean manual,
-            boolean forceAuthenticate) {
-        this(user, provider, credentials, manual, false, false, forceAuthenticate);
+    public static class Builder {
+        private Credentials credentials;
+        private User user;
+        private Provider provider;
+        private String originatingUserIp;
+        private boolean manual;
+        private boolean create = false;
+        private boolean update = false;
+        private boolean forceAuthenticate;
+
+        public Builder credentials(Credentials credentials) {
+            this.credentials = credentials;
+            return this;
+        }
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Builder provider(Provider provider) {
+            this.provider = provider;
+            return this;
+        }
+
+        public Builder originatingUserIp(String originatingUserIp) {
+            this.originatingUserIp = originatingUserIp;
+            return this;
+        }
+
+        public Builder manual(boolean manual) {
+            this.manual = manual;
+            return this;
+        }
+
+        public Builder create(boolean create) {
+            this.create = create;
+            return this;
+        }
+
+        public Builder update(boolean update) {
+            this.update = update;
+            return this;
+        }
+
+        public Builder forceAuthenticate(boolean forceAuthenticate) {
+            this.forceAuthenticate = forceAuthenticate;
+            return this;
+        }
+
+        public RefreshInformationRequest build() {
+            RefreshInformationRequest refreshInformationRequest = new RefreshInformationRequest();
+
+            refreshInformationRequest.setCredentials(credentials);
+            refreshInformationRequest.setUser(user);
+            refreshInformationRequest.setProvider(provider);
+            refreshInformationRequest.setOriginatingUserIp(originatingUserIp);
+            refreshInformationRequest.setManual(manual);
+            refreshInformationRequest.setCreate(create);
+            refreshInformationRequest.setUpdate(update);
+            refreshInformationRequest.setForceAuthenticate(forceAuthenticate);
+            return refreshInformationRequest;
+        }
     }
 
     @Override

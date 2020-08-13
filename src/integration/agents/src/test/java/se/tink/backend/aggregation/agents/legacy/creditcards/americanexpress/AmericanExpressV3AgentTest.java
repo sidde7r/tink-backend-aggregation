@@ -44,6 +44,7 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
     private User user = new User();
     private Credentials credentials = new Credentials();
     private Provider provider = new Provider();
+    private String originatingUserIp = "127.0.0.1";
 
     public AmericanExpressV3AgentTest() {
         super(AmericanExpressV3Agent.class);
@@ -102,8 +103,14 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
 
         context = new AgentTestContext(credentials);
         CredentialsRequest request =
-                new RefreshInformationRequest(
-                        CoreUserMapper.toAggregationUser(user), provider, credentials, true, false);
+                RefreshInformationRequest.builder()
+                        .user(CoreUserMapper.toAggregationUser(user))
+                        .provider(provider)
+                        .credentials(credentials)
+                        .originatingUserIp(originatingUserIp)
+                        .manual(true)
+                        .forceAuthenticate(false)
+                        .build();
         AmericanExpressV3ApiClient apiClient =
                 new AmericanExpressV3ApiClient(client, "SE", "Tink", credentials);
 

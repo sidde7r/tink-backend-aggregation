@@ -112,8 +112,14 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
     protected RefreshInformationRequest createRefreshInformationRequest(
             Credentials credentials, Provider provider) {
-        return new RefreshInformationRequest(
-                createUser(credentials), provider, credentials, true, false);
+        return RefreshInformationRequest.builder()
+                .user(createUser(credentials))
+                .provider(provider)
+                .credentials(credentials)
+                .originatingUserIp("127.0.0.1")
+                .manual(true)
+                .forceAuthenticate(false)
+                .build();
     }
 
     protected User createUser(Credentials credentials) {

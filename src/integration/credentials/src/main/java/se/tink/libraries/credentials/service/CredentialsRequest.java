@@ -27,6 +27,7 @@ public abstract class CredentialsRequest {
     private List<Account> accounts;
     private String appUriId;
     private String callbackUri;
+    private String originatingUserIp;
 
     // TODO: Remove with new AgentWorker
     protected boolean create;
@@ -45,9 +46,15 @@ public abstract class CredentialsRequest {
     public CredentialsRequest() {}
 
     public CredentialsRequest(User user, Provider provider, Credentials credentials) {
+        this(user, provider, credentials, null);
+    }
+
+    public CredentialsRequest(
+            User user, Provider provider, Credentials credentials, String originatingUserIp) {
         this.user = user;
         this.provider = provider;
         this.credentials = credentials;
+        this.originatingUserIp = originatingUserIp;
     }
 
     public Credentials getCredentials() {
@@ -175,5 +182,13 @@ public abstract class CredentialsRequest {
     public void setDataFetchingRestrictions(
             List<DataFetchingRestrictions> dataFetchingRestrictions) {
         this.dataFetchingRestrictions = dataFetchingRestrictions;
+    }
+
+    public String getOriginatingUserIp() {
+        return originatingUserIp;
+    }
+
+    public void setOriginatingUserIp(String originatingUserIp) {
+        this.originatingUserIp = originatingUserIp;
     }
 }

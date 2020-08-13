@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.AUTHORIZE_URL;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.CLIENT_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.CLUSTER_ID;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.ORIGINATING_USER_IP;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.REDIRECT_URL;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -83,7 +84,14 @@ public abstract class IntegrationTestBase {
         final Provider provider = getProvider();
         final Credentials credentials = createCredentials(user, provider);
 
-        return new RefreshInformationRequest(user, provider, credentials, false, false);
+        return RefreshInformationRequest.builder()
+                .user(user)
+                .provider(provider)
+                .credentials(credentials)
+                .originatingUserIp(ORIGINATING_USER_IP)
+                .manual(false)
+                .forceAuthenticate(false)
+                .build();
     }
 
     private AgentContext createAgentContext(CredentialsRequest credentialsRequest) {

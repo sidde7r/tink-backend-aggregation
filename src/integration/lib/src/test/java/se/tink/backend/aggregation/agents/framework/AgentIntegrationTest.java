@@ -116,6 +116,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private final String redirectUrl;
     private final String clusterIdForSecretsService;
     private Credentials credential;
+    private final String originatingUserIp;
     // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
@@ -125,6 +126,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.provider = builder.getProvider();
         this.user = builder.getUser();
         this.credential = builder.getCredential();
+        this.originatingUserIp = builder.getOriginatingUserIp();
         this.loadCredentialsBefore = builder.isLoadCredentialsBefore();
         this.saveCredentialsAfter = builder.isSaveCredentialsAfter();
         this.requestFlagCreate = builder.getRequestFlagCreate();
@@ -191,15 +193,18 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     private RefreshInformationRequest createRefreshInformationRequest() {
+
         RefreshInformationRequest refreshInformationRequest =
-                new RefreshInformationRequest(
-                        user,
-                        provider,
-                        credential,
-                        requestFlagManual,
-                        requestFlagCreate,
-                        requestFlagUpdate,
-                        false);
+                RefreshInformationRequest.builder()
+                        .user(user)
+                        .provider(provider)
+                        .credentials(credential)
+                        .originatingUserIp(originatingUserIp)
+                        .manual(requestFlagManual)
+                        .create(requestFlagCreate)
+                        .update(requestFlagUpdate)
+                        .forceAuthenticate(false)
+                        .build();
 
         refreshInformationRequest.setCallbackUri(redirectUrl);
 
@@ -1051,6 +1056,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private final Provider provider;
         private User user = createDefaultUser();
         private Credentials credential = createDefaultCredential();
+        private String originatingUserIp = "127.0.0.1";
 
         private int transactionsToPrint = 32;
         private boolean loadCredentialsBefore = false;
@@ -1304,6 +1310,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public boolean isDumpContentForContractFile() {
             return this.dumpContentForContractFile;
+        }
+
+        public String getOriginatingUserIp() {
+            return originatingUserIp;
+        }
+
+        public Builder setOriginatingUserIp(String originatingUserIp) {
+            this.originatingUserIp = originatingUserIp;
+            return this;
         }
 
         public AgentIntegrationTest build() {

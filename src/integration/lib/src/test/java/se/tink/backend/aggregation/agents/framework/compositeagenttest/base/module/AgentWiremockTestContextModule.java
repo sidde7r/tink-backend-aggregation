@@ -36,6 +36,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
     private static final String DEFAULT_USER_ID = "deadbeefdeadbeefdeadbeefdeadbeef";
     private static final String DEFAULT_LOCALE = "sv_SE";
     private static final String DEFAULT_APP_ID = "tink";
+    private static final String DEFAULT_ORIGINATING_USER_IP = "127.0.0.1";
 
     private final MarketCode marketCode;
     private final String providerName;
@@ -122,6 +123,12 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
                 Field.Key.PERSISTENT_STORAGE,
                 SerializationUtils.serializeToString(persistentStorageData));
         return credential;
+    }
+
+    @Provides
+    @Singleton
+    private String provideOriginatingUserIp() {
+        return DEFAULT_ORIGINATING_USER_IP;
     }
 
     @Provides
