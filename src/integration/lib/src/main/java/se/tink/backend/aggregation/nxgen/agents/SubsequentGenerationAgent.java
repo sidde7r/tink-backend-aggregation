@@ -157,14 +157,6 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) {
-        Optional<TransferController> transferController = getTransferController();
-        TransferExecutionException.throwIf(!transferController.isPresent());
-
-        transferController.get().update(transfer);
-    }
-
-    @Override
     public void attachHttpFilters(ClientFilterFactory filterFactory) {
         filterFactory.addClientFilter(client.getInternalClient());
     }
