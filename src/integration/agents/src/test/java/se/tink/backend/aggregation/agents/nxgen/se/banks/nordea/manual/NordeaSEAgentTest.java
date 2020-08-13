@@ -15,7 +15,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -149,24 +148,5 @@ public class NordeaSEAgentTest {
         builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                 .build()
                 .testBankTransfer(transfer);
-    }
-
-    @Test
-    public void testApproveEInvoice() throws Exception {
-        Transfer transfer = new Transfer();
-        transfer.setSource(
-                AccountIdentifier.create(AccountIdentifier.Type.SE, manager.get(Arg.FROMACCOUNT)));
-        transfer.setDestination(
-                AccountIdentifier.create(Type.SE_BG, manager.get(Arg.EINVOICEBGACCOUNT)));
-        transfer.setAmount(Amount.inSEK(2d));
-        transfer.setType(TransferType.EINVOICE);
-        Calendar c = Calendar.getInstance();
-        transfer.setDueDate(c.getTime());
-        transfer.setDestinationMessage(manager.get(Arg.EINVOICEOCR));
-        transfer.addPayload(TransferPayloadType.PROVIDER_UNIQUE_ID, manager.get(Arg.EINVOICEID));
-
-        builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                .build()
-                .testUpdateTransfer(transfer);
     }
 }
