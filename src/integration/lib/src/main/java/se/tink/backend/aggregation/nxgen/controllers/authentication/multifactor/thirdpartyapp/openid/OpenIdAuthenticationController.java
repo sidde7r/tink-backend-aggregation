@@ -38,6 +38,8 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -66,6 +68,7 @@ public class OpenIdAuthenticationController
     private OAuth2Token clientOAuth2Token;
     private final URL appToAppRedirectURL;
     private final RandomValueGenerator randomValueGenerator;
+    private final CredentialsRequest credentialsRequest;
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -76,7 +79,8 @@ public class OpenIdAuthenticationController
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
             URL appToAppRedirectURL,
-            RandomValueGenerator randomValueGenerator) {
+            RandomValueGenerator randomValueGenerator,
+            CredentialsRequest credentialsRequest) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -88,7 +92,8 @@ public class OpenIdAuthenticationController
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT,
                 appToAppRedirectURL,
-                randomValueGenerator);
+                randomValueGenerator,
+                credentialsRequest);
     }
 
     public OpenIdAuthenticationController(
@@ -102,7 +107,8 @@ public class OpenIdAuthenticationController
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit,
             URL appToAppRedirectURL,
-            RandomValueGenerator randomValueGenerator) {
+            RandomValueGenerator randomValueGenerator,
+            CredentialsRequest credentialsRequest) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
@@ -119,6 +125,11 @@ public class OpenIdAuthenticationController
 
         this.nonce = randomValueGenerator.generateRandomHexEncoded(8);
         this.appToAppRedirectURL = appToAppRedirectURL;
+        this.credentialsRequest = credentialsRequest;
+
+        if (shouldForceAuthentication()) {
+            invalidateToken();
+        }
     }
 
     @Override
@@ -373,5 +384,25 @@ public class OpenIdAuthenticationController
 
         throw new IllegalStateException(
                 String.format("Unknown error: %s:%s.", errorType, errorDescription));
+    }
+
+    private boolean shouldForceAuthentication() {
+        boolean shouldForceAuthentication =
+                credentialsRequest instanceof RefreshInformationRequest
+                        && ((RefreshInformationRequest) credentialsRequest).isForceAuthenticate();
+
+        logger.info(
+                "[forceAuthenticate] Should force authentication for credentials: {}, {}",
+                Optional.ofNullable(credentialsRequest)
+                        .map(CredentialsRequest::getCredentials)
+                        .map(Credentials::getId)
+                        .orElse(null),
+                shouldForceAuthentication);
+
+        return shouldForceAuthentication;
+    }
+
+    private void invalidateToken() {
+        persistentStorage.remove(OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN);
     }
 }

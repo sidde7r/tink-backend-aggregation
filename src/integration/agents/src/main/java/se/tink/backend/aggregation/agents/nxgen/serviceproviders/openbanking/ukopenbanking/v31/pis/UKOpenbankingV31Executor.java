@@ -194,7 +194,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                         strongAuthenticationState,
                         null,
                         appToAppRedirectURL,
-                        randomValueGenerator);
+                        randomValueGenerator,
+                        null);
 
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(
