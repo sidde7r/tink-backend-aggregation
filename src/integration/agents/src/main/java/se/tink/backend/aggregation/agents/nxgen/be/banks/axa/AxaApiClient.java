@@ -77,18 +77,14 @@ public final class AxaApiClient {
     public GetTransactionsResponse postGetTransactions(
             final int customerId,
             final String accessToken,
-            final String accountNumber,
+            final String accountReferenceNumber,
             final String locale) {
         final GetTransactionsRequest body =
                 GetTransactionsRequest.builder()
                         .setApplCd(AxaConstants.Request.APPL_CD)
                         .setLanguage(locale)
                         .setCustomerId(customerId)
-                        .setDirectionFlag(AxaConstants.Request.DIRECTION_FLAG)
-                        .setAccountNumber(accountNumber)
-                        .setReferenceNumber(AxaConstants.Request.REFERENCE_NUMBER)
-                        .setTransactionCode(AxaConstants.Request.TRANSACTION_CODE)
-                        .setUpdateTimestamp(AxaConstants.Request.UPDATE_TIMESTAMP)
+                        .setAccountReferenceNumber(accountReferenceNumber)
                         .build();
         return httpClient
                 .request(AxaConstants.Url.FETCH_TRANSACTIONS)

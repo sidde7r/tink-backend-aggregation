@@ -25,7 +25,6 @@ public final class AxaStorage {
     private static final String DEVICE_ID = "deviceId";
     private static final String DEVICE_NAME = "deviceName";
     private static final String PARAMS_SESSION_ID = "paramsSessionId";
-    private static final String LOGON_RESPONSE = "logonResponse";
     private static final String ACCESS_TOKEN = "accessToken";
     private static final String TOKEN = "token";
     private static final String ASSERTION_ID = "assertionId";
@@ -143,19 +142,14 @@ public final class AxaStorage {
     }
 
     public void storeValuesFromCardNumberAssertFormResponse(AssertFormResponse response) {
+        persistentStorage.put(UID, response.getData().getData().getJsonData().getGuid());
         sessionStorage.put(
-                ASSERTION_ID,
-                response.getData()
-                        .getControlFlow()
-                        .get(0)
-                        .getMethods()
-                        .get(0)
-                        .getChannels()
-                        .get(0)
-                        .getAssertionId());
+                TRANSMIT_TICKET_ID,
+                response.getData().getData().getJsonData().getTransmitTicketId());
         sessionStorage.put(
-                OTP_CHALLENGE,
-                response.getData().getData().getOtpFormat().getData().getChallenge());
+                PAN_SEQUENCE_NUMBER,
+                response.getData().getData().getJsonData().getPanSequenceNumber());
+        sessionStorage.put(FIRST_NAME, response.getData().getData().getJsonData().getFirstName());
     }
 
     public String getOtpChallenge() {
@@ -171,14 +165,8 @@ public final class AxaStorage {
     }
 
     public void storeValuesFromFirstOtpResponse(AssertFormResponse response) {
-        persistentStorage.put(UID, response.getData().getData().getJsonData().getGuid());
-        sessionStorage.put(FIRST_NAME, response.getData().getData().getJsonData().getFirstName());
         sessionStorage.put(
-                PAN_SEQUENCE_NUMBER,
-                response.getData().getData().getJsonData().getPanSequenceNumber());
-        sessionStorage.put(
-                TRANSMIT_TICKET_ID,
-                response.getData().getData().getJsonData().getTransmitTicketId());
+                ASSERTION_ID, response.getData().getControlFlow().get(0).getAssertionId());
     }
 
     public String getPanSequenceNumber() {
@@ -201,7 +189,25 @@ public final class AxaStorage {
 
     public void storeValuesFromBindResponse(BindResponse response) {
         sessionStorage.put(
-                ASSERTION_ID, response.getData().getControlFlow().get(0).getAssertionId());
+                ASSERTION_ID,
+                response.getData()
+                        .getControlFlow()
+                        .get(0)
+                        .getMethods()
+                        .get(0)
+                        .getChannels()
+                        .get(0)
+                        .getAssertionId());
+        sessionStorage.put(
+                OTP_CHALLENGE,
+                response.getData()
+                        .getControlFlow()
+                        .get(0)
+                        .getMethods()
+                        .get(0)
+                        .getOtpFormat()
+                        .getData()
+                        .getChallenge());
         sessionStorage.put(RESPONSE_CHALLENGE, response.getData().getChallenge());
         persistentStorage.put(HEADER_DEVICE_ID, response.getDeviceId());
         persistentStorage.put(HEADER_SESSION_ID, response.getSessionId());

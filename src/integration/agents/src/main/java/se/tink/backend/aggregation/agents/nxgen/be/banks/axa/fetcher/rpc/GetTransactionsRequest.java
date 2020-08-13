@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc;
 
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.AccountHistoryParameters;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.InputEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.PagingCriteria;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -19,11 +21,7 @@ public final class GetTransactionsRequest {
         private String applCd;
         private int customerId;
         private String language;
-        private String directionFlag;
-        private String accountNumber;
-        private String referenceNumber;
-        private String transactionCode;
-        private String updateTimestamp;
+        private String accountReferenceNumber;
 
         public Builder setApplCd(String applCd) {
             this.applCd = applCd;
@@ -40,28 +38,8 @@ public final class GetTransactionsRequest {
             return this;
         }
 
-        public Builder setDirectionFlag(String directionFlag) {
-            this.directionFlag = directionFlag;
-            return this;
-        }
-
-        public Builder setAccountNumber(String accountNumber) {
-            this.accountNumber = accountNumber;
-            return this;
-        }
-
-        public Builder setReferenceNumber(String referenceNumber) {
-            this.referenceNumber = referenceNumber;
-            return this;
-        }
-
-        public Builder setTransactionCode(String transactionCode) {
-            this.transactionCode = transactionCode;
-            return this;
-        }
-
-        public Builder setUpdateTimestamp(String updateTimestamp) {
-            this.updateTimestamp = updateTimestamp;
+        public Builder setAccountReferenceNumber(String accountReferenceNumber) {
+            this.accountReferenceNumber = accountReferenceNumber;
             return this;
         }
 
@@ -70,11 +48,13 @@ public final class GetTransactionsRequest {
             entity.setApplCd(applCd);
             entity.setCustomerId(customerId);
             entity.setLanguage(language);
-            entity.setDirectionFlag(directionFlag);
-            entity.setAccountNumber(accountNumber);
-            entity.setReferenceNumber(referenceNumber);
-            entity.setTransactionCode(transactionCode);
-            entity.setUpdateTimestamp(updateTimestamp);
+            entity.setAccountReferenceNumber(accountReferenceNumber);
+            entity.setIncludePendingOrders(true);
+            entity.setIncludeRefusedTransfers(true);
+            entity.setIncludeSavingOrders(true);
+            entity.setIncludeStandingOrders(true);
+            entity.setIncludeTransactionsInExecution(true);
+            entity.setAccountHistoryParameters(new AccountHistoryParameters(new PagingCriteria()));
             return new GetTransactionsRequest(entity);
         }
     }

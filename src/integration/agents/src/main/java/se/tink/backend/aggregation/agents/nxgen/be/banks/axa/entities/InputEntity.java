@@ -2,9 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.DeviceInfoEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
+@Setter
 @JsonObject
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class InputEntity {
@@ -21,143 +25,19 @@ public final class InputEntity {
     private String serialNo;
     private String derivationCd;
     private Integer customerId;
-    private String directionFlag;
 
     @JsonProperty("UCRid")
     private String uCRid;
 
     private String encryptedServerNonce;
 
-    private String accountNumber;
-    private String referenceNumber;
-    private String transactionCode;
-    private String updateTimestamp;
+    private String accountReferenceNumber;
 
-    public String getPanNumberFull() {
-        return panNumberFull;
-    }
+    private Boolean includeStandingOrders;
+    private Boolean includeSavingOrders;
+    private Boolean includeTransactionsInExecution;
+    private Boolean includeRefusedTransfers;
+    private Boolean includePendingOrders;
 
-    public void setPanNumberFull(String panNumberFull) {
-        this.panNumberFull = panNumberFull;
-    }
-
-    public String getChallenge() {
-        return challenge;
-    }
-
-    public void setChallenge(String challenge) {
-        this.challenge = challenge;
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
-    public String getuCRid() {
-        return uCRid;
-    }
-
-    public void setuCRid(String uCRid) {
-        this.uCRid = uCRid;
-    }
-
-    public String getClientInitialVector() {
-        return clientInitialVector;
-    }
-
-    public void setClientInitialVector(String clientInitialVector) {
-        this.clientInitialVector = clientInitialVector;
-    }
-
-    public String getEncryptedClientPublicKeyAndNonce() {
-        return encryptedClientPublicKeyAndNonce;
-    }
-
-    public void setEncryptedClientPublicKeyAndNonce(String encryptedClientPublicKeyAndNonce) {
-        this.encryptedClientPublicKeyAndNonce = encryptedClientPublicKeyAndNonce;
-    }
-
-    public String getDeviceBrand() {
-        return deviceBrand;
-    }
-
-    public void setDeviceBrand(String deviceBrand) {
-        this.deviceBrand = deviceBrand;
-    }
-
-    public String getDeviceModel() {
-        return deviceModel;
-    }
-
-    public void setDeviceModel(String deviceModel) {
-        this.deviceModel = deviceModel;
-    }
-
-    public DeviceInfoEntity getDeviceInfo() {
-        return deviceInfo;
-    }
-
-    public void setDeviceInfo(DeviceInfoEntity deviceInfo) {
-        this.deviceInfo = deviceInfo;
-    }
-
-    public String getApplCd() {
-        return applCd;
-    }
-
-    public void setApplCd(String applCd) {
-        this.applCd = applCd;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getSerialNo() {
-        return serialNo;
-    }
-
-    public void setSerialNo(String serialNo) {
-        this.serialNo = serialNo;
-    }
-
-    public void setDerivationCd(String derivationCd) {
-        this.derivationCd = derivationCd;
-    }
-
-    public void setEncryptedServerNonce(String encryptedServerNonce) {
-        this.encryptedServerNonce = encryptedServerNonce;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
-
-    public void setDirectionFlag(String directionFlag) {
-        this.directionFlag = directionFlag;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public void setReferenceNumber(String referenceNumber) {
-        this.referenceNumber = referenceNumber;
-    }
-
-    public void setTransactionCode(String transactionCode) {
-        this.transactionCode = transactionCode;
-    }
-
-    public void setUpdateTimestamp(String updateTimestamp) {
-        this.updateTimestamp = updateTimestamp;
-    }
+    private AccountHistoryParameters accountHistoryParameters;
 }

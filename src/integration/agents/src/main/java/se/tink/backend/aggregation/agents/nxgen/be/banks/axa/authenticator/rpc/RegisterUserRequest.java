@@ -129,7 +129,7 @@ public final class RegisterUserRequest {
             entity.setLanguage(language);
             entity.setPanNumberFull(panNumberFull);
             entity.setResponse(response);
-            entity.setuCRid(ucrid);
+            entity.setUCRid(ucrid);
 
             return new RegisterUserRequest(entity);
         }

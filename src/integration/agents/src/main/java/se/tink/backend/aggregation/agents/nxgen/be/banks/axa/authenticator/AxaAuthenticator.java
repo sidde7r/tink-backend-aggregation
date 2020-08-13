@@ -88,9 +88,9 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
         steps.add(
                 new AutomaticAuthenticationStep(
                         this::processCardNumberAssertForm, "cardNumberAssertFormStep"));
+        steps.add(new AutomaticAuthenticationStep(this::processBind, "bindStep"));
         steps.add(new AxaLoginAuthenticationStep(supplementalInformationFormer, storage));
         steps.add(new AutomaticAuthenticationStep(this::processFirstOtp, "firstOtpStep"));
-        steps.add(new AutomaticAuthenticationStep(this::processBind, "bindStep"));
         steps.add(
                 new AutomaticAuthenticationStep(
                         this::processProfileNameAssertForm, "profileNameAssertFormStep"));
@@ -133,7 +133,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     private AuthenticationStepResponse processFirstOtp() {
-        storage.storeValuesFromFirstOtpResponse(sendOtpRequest(false));
+        storage.storeValuesFromFirstOtpResponse(sendOtpRequest(true));
         return AuthenticationStepResponse.executeNextStep();
     }
 

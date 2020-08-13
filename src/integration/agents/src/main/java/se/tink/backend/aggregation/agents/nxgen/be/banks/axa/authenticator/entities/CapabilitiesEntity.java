@@ -4,8 +4,12 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
+@Setter
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CapabilitiesEntity {
@@ -17,6 +21,6 @@ public class CapabilitiesEntity {
     private boolean fingerPrintSupported;
     private String hostProvidedFeatures = "19";
     private boolean imageAcquisitionSupported;
-    private List installedPlugins = Collections.EMPTY_LIST;
+    private List<String> installedPlugins = Collections.emptyList();
     private boolean persistentKeysSupported;
 }
