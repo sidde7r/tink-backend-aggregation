@@ -257,11 +257,6 @@ public class DanskeBankV2Agent extends AbstractAgent
         }
     }
 
-    @Override
-    public void update(Transfer transfer) {
-        throw new IllegalStateException("Not implemented");
-    }
-
     private TransferExecutionException toTransferExecutionException(
             BankIdException bankIdException) {
         BankIdResponse bankIdResponse = bankIdException.getResponse();
