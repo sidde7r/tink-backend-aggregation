@@ -313,6 +313,11 @@ public class NordeaSEConstants {
             addType("SE46101210", "Bonuskonto 2012 utgåva 10", TransactionalAccountType.CHECKING);
             addType("SE46101211", "Bonuskonto 2012 utgåva 11", TransactionalAccountType.CHECKING);
             addType("SE46101212", "Bonuskonto 2012 utgåva 12", TransactionalAccountType.CHECKING);
+
+            addType(
+                    "Företagslån Nordea Bank",
+                    "Företagslån Nordea Bank",
+                    TransactionalAccountType.SAVINGS);
         }
 
         public static String getAccountNameForCode(String code) {

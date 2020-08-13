@@ -62,7 +62,6 @@ public class AccountDetailsEntity {
                         .withAccountNumber(account.getProductNumber())
                         .withAccountName(getAccountName(account))
                         .addIdentifier(new IbanIdentifier(getIbanFormatted()))
-                        .addIdentifier(new SwedishIdentifier(longAccountNumber))
                         .setProductName(
                                 AccountType.getAccountNameForCode(
                                         account.getProductTypeExtension()));
@@ -71,6 +70,9 @@ public class AccountDetailsEntity {
             if (plusGiroIdentifier.getGiroNumber() != null) {
                 idModule.addIdentifier(plusGiroIdentifier);
             }
+        }
+        if (!Strings.isNullOrEmpty(longAccountNumber)) {
+            idModule.addIdentifier(new SwedishIdentifier(longAccountNumber));
         }
         return idModule.build();
     }
