@@ -75,7 +75,7 @@ public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent
         PasswordDemoTransferExecutor transferExecutor =
                 new PasswordDemoTransferExecutor(credentials, supplementalRequester);
 
-        return Optional.of(new TransferController(null, transferExecutor, null, null));
+        return Optional.of(new TransferController(null, transferExecutor));
     }
 
     @Override
