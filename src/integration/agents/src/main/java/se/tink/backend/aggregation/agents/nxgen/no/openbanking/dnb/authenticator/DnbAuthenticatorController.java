@@ -38,7 +38,9 @@ public class DnbAuthenticatorController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        throw SessionError.SESSION_EXPIRED.exception();
+        if (!authenticator.isConsentValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     @Override

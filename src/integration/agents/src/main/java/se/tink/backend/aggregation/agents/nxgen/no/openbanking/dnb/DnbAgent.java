@@ -11,14 +11,13 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.DnbAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.DnbAuthenticatorController;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.configuration.DnbConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.DnbPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.DnbPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbTransactionFetcher;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -48,16 +47,18 @@ public final class DnbAgent extends NextGenerationAgent
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         final Credentials credentials = request.getCredentials();
-        apiClient = new DnbApiClient(client, sessionStorage, credentials);
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+        apiClient =
+                new DnbApiClient(
+                        client, sessionStorage, persistentStorage, credentials, getRedirectUrl());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        apiClient.setConfiguration(
-                getAgentConfiguration(), agentsServiceConfiguration.getEidasProxy());
         creditCardRefreshController = getCardAccountRefreshController();
     }
 
-    private AgentConfiguration<DnbConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(DnbConfiguration.class);
+    private String getRedirectUrl() {
+        return getAgentConfigurationController()
+                .getAgentConfiguration(EmptyConfiguration.class)
+                .getRedirectUrl();
     }
 
     @Override

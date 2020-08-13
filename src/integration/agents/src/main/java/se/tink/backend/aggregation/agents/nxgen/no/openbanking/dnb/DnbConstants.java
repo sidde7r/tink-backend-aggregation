@@ -20,6 +20,7 @@ public final class DnbConstants {
 
     public static class Urls {
         public static final String CONSENTS = "/v1/consents";
+        public static final String CONSENT_STATUS = "/v1/consents/{consentId}";
         public static final String ACCOUNTS = "/v1/accounts";
         public static final String BALANCES = ACCOUNTS + "/%s/balances";
         public static final String TRANSACTIONS = ACCOUNTS + "/%s/transactions";
@@ -31,6 +32,7 @@ public final class DnbConstants {
 
     public static class StorageKeys {
         public static final String CONSENT_OBJECT = "consentObject";
+        public static final String CONSENT_ID = "consentId";
         public static final String STATE = "state";
     }
 
@@ -72,10 +74,14 @@ public final class DnbConstants {
 
     public static class ConsentRequestValues {
         public static final int FREQUENCY_PER_DAY = 4;
+        public static final int CONSENT_DAYS_VALID = 89;
+        public static final boolean RECURRING = true;
+        public static final boolean COMBINED_SERVICE = false;
     }
 
     public static class IdTags {
         public static final String PAYMENT_TYPE = "paymentType";
         public static final String PAYMENT_ID = "paymentId";
+        public static final String CONSENT_ID = "consentId";
     }
 }

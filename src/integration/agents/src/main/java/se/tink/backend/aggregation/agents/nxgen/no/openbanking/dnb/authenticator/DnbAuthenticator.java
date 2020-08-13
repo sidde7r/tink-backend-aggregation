@@ -14,4 +14,8 @@ public class DnbAuthenticator {
     public URL buildAuthorizeUrl(final String state) {
         return apiClient.getAuthorizeUrl(state);
     }
+
+    public boolean isConsentValid() {
+        return apiClient.isConsentValid();
+    }
 }

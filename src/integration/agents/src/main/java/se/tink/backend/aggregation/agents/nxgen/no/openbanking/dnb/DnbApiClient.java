@@ -1,16 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb;
 
-import static org.apache.commons.lang3.CharEncoding.UTF_8;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Calendar;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.CredentialsKeys;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.HeaderKeys;
@@ -22,15 +19,13 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.entity.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.entity.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.configuration.DnbConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.entity.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.enums.DnbPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.CreditCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.TransactionResponse;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -39,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -46,39 +42,27 @@ public class DnbApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final Credentials credentials;
-    private String redirectUrl;
+    private final String redirectUrl;
 
     public DnbApiClient(
             final TinkHttpClient client,
             final SessionStorage sessionStorage,
-            final Credentials credentials) {
+            final PersistentStorage persistentStorage,
+            final Credentials credentials,
+            String redirectUrl) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.credentials = credentials;
-    }
-
-    public void setConfiguration(
-            AgentConfiguration<DnbConfiguration> agentConfiguration,
-            EidasProxyConfiguration eidasProxyConfiguration) {
-        Objects.requireNonNull(agentConfiguration);
-        this.redirectUrl = agentConfiguration.getRedirectUrl();
-        this.client.setEidasProxy(eidasProxyConfiguration);
-    }
-
-    private String getRedirectUrl() {
-        return Optional.ofNullable(redirectUrl)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        String.format(
-                                                ErrorMessages.INVALID_CONFIGURATION,
-                                                "Redirect URL")));
+        this.redirectUrl = redirectUrl;
     }
 
     public URL getAuthorizeUrl(final String state) {
         sessionStorage.put(StorageKeys.STATE, state);
-        final ConsentResponse consentResponse = getConsent();
+        ConsentResponse consentResponse = createConsent();
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
         return new URL(consentResponse.getScaRedirectLink()).queryParam(QueryKeys.STATE, state);
     }
 
@@ -162,6 +146,28 @@ public class DnbApiClient {
                 .get(GetPaymentResponse.class);
     }
 
+    private RequestBuilder createRequestWithRedirectAndState(final URL url) {
+        final URL tppRedirectUrl =
+                new URL(redirectUrl)
+                        .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE));
+
+        return createRequestWithoutRedirectHeader(url)
+                .header(HeaderKeys.TPP_REDIRECT_URI, decodeUrl(tppRedirectUrl));
+    }
+
+    private String decodeUrl(final URL url) {
+        try {
+            return URLDecoder.decode(url.toString(), StandardCharsets.UTF_8.toString());
+        } catch (final UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(ErrorMessages.URL_ENCODING_ERROR);
+        }
+    }
+
+    private RequestBuilder createRequest(final URL url) {
+        return createRequestWithoutRedirectHeader(url)
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+    }
+
     private RequestBuilder createRequestWithoutRedirectHeader(final URL url) {
         final String requestId = UUID.randomUUID().toString();
 
@@ -174,61 +180,30 @@ public class DnbApiClient {
                         credentials.getField(CredentialsKeys.PSU_ID));
     }
 
-    private RequestBuilder createRequest(final URL url) {
-        return createRequestWithoutRedirectHeader(url)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl());
+    public boolean isConsentValid() {
+        return persistentStorage
+                .get(StorageKeys.CONSENT_ID, String.class)
+                .map(consentId -> fetchConsentStatus(consentId).isValid())
+                .orElse(false);
     }
 
-    private RequestBuilder createRequestWithRedirectStateAndCode(final URL url) {
-        final URL tppRedirectUrl =
-                new URL(getRedirectUrl())
-                        .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE));
-
-        return createRequestWithoutRedirectHeader(url)
-                .header(HeaderKeys.TPP_REDIRECT_URI, decodeUrl(tppRedirectUrl));
+    private ConsentStatusResponse fetchConsentStatus(String consentId) {
+        return createRequestWithoutRedirectHeader(
+                        new URL(DnbConstants.BASE_URL.concat(Urls.CONSENT_STATUS))
+                                .parameter(IdTags.CONSENT_ID, consentId))
+                .get(ConsentStatusResponse.class);
     }
 
-    private String decodeUrl(final URL url) {
-        try {
-            return URLDecoder.decode(url.toString(), UTF_8);
-        } catch (final UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(ErrorMessages.URL_ENCODING_ERROR);
-        }
-    }
-
-    private ConsentResponse getConsent() {
-        return sessionStorage
-                .get(StorageKeys.CONSENT_OBJECT, ConsentResponse.class)
-                .orElseGet(
-                        () -> {
-                            final ConsentResponse consentResponse = fetchConsent();
-                            sessionStorage.put(StorageKeys.CONSENT_OBJECT, consentResponse);
-                            return consentResponse;
-                        });
-    }
-
-    private ConsentResponse fetchConsent() {
-        final ConsentRequest consentsRequest =
-                ConsentRequest.builder()
-                        .frequencyPerDay(DnbConstants.ConsentRequestValues.FREQUENCY_PER_DAY)
-                        .recurringIndicator(true)
-                        .combinedServiceIndicator(false)
-                        .validUntil(getValidUntilForConsent())
-                        .build();
-        final URL url = new URL(DnbConstants.BASE_URL.concat(Urls.CONSENTS));
-
-        return createRequestWithRedirectStateAndCode(url)
-                .body(consentsRequest.toData())
-                .post(ConsentResponse.class);
-    }
-
-    private Date getValidUntilForConsent() {
-        final Calendar now = Calendar.getInstance();
-        now.add(Calendar.MONTH, 2);
-        return now.getTime();
+    private ConsentResponse createConsent() {
+        ConsentRequest consentsRequest = new ConsentRequest();
+        return createRequestWithRedirectAndState(
+                        new URL(DnbConstants.BASE_URL.concat(Urls.CONSENTS)))
+                .post(ConsentResponse.class, consentsRequest);
     }
 
     private String getConsentId() {
-        return getConsent().getConsentId();
+        return persistentStorage
+                .get(StorageKeys.CONSENT_ID, String.class)
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 }
