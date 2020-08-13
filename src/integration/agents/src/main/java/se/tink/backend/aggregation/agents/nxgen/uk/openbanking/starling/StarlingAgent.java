@@ -122,9 +122,8 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                                 redirectUrl,
                                 credentials,
                                 strongAuthenticationState,
-                                supplementalInformationProvider.getSupplementalInformationHelper()),
-                        null,
-                        null));
+                                supplementalInformationProvider
+                                        .getSupplementalInformationHelper())));
     }
 
     @Override
