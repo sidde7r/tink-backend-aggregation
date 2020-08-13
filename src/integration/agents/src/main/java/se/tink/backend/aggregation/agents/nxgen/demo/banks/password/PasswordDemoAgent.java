@@ -78,7 +78,7 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent
                 new PasswordDemoTransferExecutor(credentials, supplementalRequester);
         PasswordDemoPaymentExecutor paymentExecutor = new PasswordDemoPaymentExecutor();
 
-        return Optional.of(new TransferController(paymentExecutor, transferExecutor, null, null));
+        return Optional.of(new TransferController(paymentExecutor, transferExecutor));
     }
 
     @Override
