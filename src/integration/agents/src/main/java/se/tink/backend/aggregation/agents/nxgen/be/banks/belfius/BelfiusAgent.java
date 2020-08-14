@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
 import com.google.common.base.Strings;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@Slf4j
 public class BelfiusAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
@@ -102,13 +104,17 @@ public class BelfiusAgent extends NextGenerationAgent
                         BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
 
         if (agentsServiceConfiguration.isFeatureEnabled("beProxy")) {
-            // Setting proxy for Belgium via TPP
-            PasswordBasedProxyConfiguration proxyConfiguration =
-                    agentsServiceConfiguration.getCountryProxy("be");
+            final PasswordBasedProxyConfiguration proxyConfiguration =
+                    agentsServiceConfiguration.getCountryProxy(
+                            "be", credentials.getUserId().hashCode());
             client.setProductionProxy(
                     proxyConfiguration.getHost(),
                     proxyConfiguration.getUsername(),
                     proxyConfiguration.getPassword());
+            log.info(
+                    "Using proxy {} with username {}",
+                    proxyConfiguration.getHost(),
+                    proxyConfiguration.getUsername());
         } else {
             final MultiIpGateway gateway =
                     new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
