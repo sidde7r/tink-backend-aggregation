@@ -11,7 +11,6 @@ public class ConsentResponse {
     @JsonProperty("_links")
     private ConsentLinks links;
 
-    private String consentStatus;
     private String consentId;
 
     public ConsentLinks getConsentLinks() {
