@@ -449,7 +449,7 @@ sendDataTrackingEvents: true
 
 featureFlags:
   esProxy: true
-  beProxy: false
+  beProxy: true
   createBeneficiary: true
 
 providerConfigurationServiceConfiguration:
