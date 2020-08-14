@@ -345,7 +345,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                         paymentRequest.getPayment().getDebtor().getAccountNumber(), null);
 
         PartyIdentificationEntity creditor =
-                new PartyIdentificationEntity(FormValues.BENEFICIARY_NAME, null, null, null);
+                new PartyIdentificationEntity(
+                        getPresetOrDefaultCreditorName(paymentRequest), null, null, null);
 
         AccountIdentificationEntity creditorAccount =
                 new AccountIdentificationEntity(
@@ -441,12 +442,15 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
 
         String psuAuthenticationFactor =
                 caseInsensitiveCallbackData.get(CmcicConstants.QueryKeys.PSU_AUTHENTICATION_FACTOR);
-        caseInsensitiveCallbackData.forEach(
-                (key, value) -> logger.info("Supplement Info details,key: {}", key));
         if (Strings.isNullOrEmpty(psuAuthenticationFactor)) {
             handelAuthFactorError();
         }
         sessionStorage.put(StorageKeys.AUTH_FACTOR, psuAuthenticationFactor);
+    }
+
+    private String getPresetOrDefaultCreditorName(PaymentRequest paymentRequest) {
+        String creditorName = paymentRequest.getPayment().getCreditor().getName();
+        return Strings.isNullOrEmpty(creditorName) ? FormValues.BENEFICIARY_NAME : creditorName;
     }
 
     private void handelAuthFactorError() throws PaymentAuthenticationException {
