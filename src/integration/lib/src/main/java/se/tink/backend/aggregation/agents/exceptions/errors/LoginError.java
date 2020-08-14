@@ -39,7 +39,7 @@ public enum LoginError implements AgentError {
                     "Your existing credentials have been invalidated, Please delete this credentials and create a new one.")),
     DEFAULT_MESSAGE(new LocalizableKey("Something went wrong during login process.")),
     NO_AVAILABLE_SCA_METHODS(
-            new LocalizableKey("There are not any Authentication methods possible."));
+            new LocalizableKey("There aren't any Authentication methods available."));
 
     private LocalizableKey userMessage;
 
