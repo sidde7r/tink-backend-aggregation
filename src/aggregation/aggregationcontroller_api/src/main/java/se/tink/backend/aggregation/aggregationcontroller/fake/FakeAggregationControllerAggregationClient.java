@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.CoreRegulatoryCl
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
@@ -113,6 +114,12 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response optOutAccounts(
             HostConfiguration hostConfiguration, OptOutAccountsRequest request) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Response restrictAccounts(
+            HostConfiguration hostConfiguration, RestrictAccountsRequest request) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
