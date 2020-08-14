@@ -7,6 +7,12 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public final class BecConstants {
 
+    public static final class ScaOptions {
+        public static final String CODEAPP_OPTION = "codeapp";
+        public static final String KEYCARD_OPTION = "keycard";
+        public static final String SCA_OPTION_KEY = "sca-option-key";
+    }
+
     public static final class Url {
         static final String APP_SYNC = "/appsync";
         static final String PREPARE_SCA = "/logon/SCAprepare";
@@ -37,18 +43,18 @@ public final class BecConstants {
                 "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI/e+AAFbsYSUMkj1Hq6gloeE5iC/Vt8DmkwiPwxAHkXE19pkcrTiOPVeME4kvEUey4Qb2ty8zIjvy1SoxAKk0Nku0xu4EGyJn+/1CDRYp4xOZyfXHVk4y18+4amRrGgLFDh4wg3cesCaJ5ETxoM7lvqb/R+zsg3ZtweJsD1pBxxFdjc7B9BKfDnVUk08CPAZhM9DGZ5HpiBV//sz+TusDZTvWtYtZGBZP6Bc4ApKOd3fS6NFE2IP8c2vJ7j2oeP0aDh/WW8ad5BY/sW0iKTiqi3FFxf1ooDjBpfmCcmlEcST4cWZyPfu5p8SZXyKGZ3rtKRoPdMkYBHcLXDweHvSMgAAAAAx";
     }
 
-    static final class Meta {
+    public static final class Meta {
 
-        static final String APP_TYPE = "mb0";
-        static final String APP_VERSION = "5.1.0";
-        static final String LOCALE = "en-GB";
-        static final String OS_VERSION = "Android 6.0";
-        static final String DEVICE_TYPE =
+        public static final String APP_TYPE = "mb0";
+        public static final String APP_VERSION = "5.1.0";
+        public static final String LOCALE = "en-GB";
+        public static final String OS_VERSION = "Android 6.0";
+        public static final String DEVICE_TYPE =
                 "HTC / HTC One_M8 / MRA58K release-keys / htc_europe / htc_m8 / htc / htc/htc_europe/htc_m8:6.0/MRA58K/662736.4:user/release-keys / htc_m8 / qcom";
-        static final String SCREEN_SIZE = "1440*2392";
+        public static final String SCREEN_SIZE = "1440*2392";
 
-        static final String LABEL = "MB0-000";
-        static final String CIPHER = "AES/CBC/PKCS5Padding";
+        public static final String LABEL = "MB0-000";
+        public static final String CIPHER = "AES/CBC/PKCS5Padding";
     }
 
     public static final class Header {
@@ -77,6 +83,13 @@ public final class BecConstants {
         public static final String LOAN_NO_DETAILS_EXIST = "no details exist";
         public static final String FUNCTION_NOT_AVAILABLE =
                 "the required function is not currently available. try again later.";
+    }
+
+    public static final class StorageKeys {
+        public static final String KEY_CARD_NUMBER_STORAGE_KEY = "key-card-number";
+        public static final String CHALLENGE_STORAGE_KEY = "challenge-number";
+        public static final String DEVICE_ID_STORAGE_KEY = "device-id";
+        public static final String SCA_TOKEN_STORAGE_KEY = "sca-token";
     }
 
     public static final class Log {

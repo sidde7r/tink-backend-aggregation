@@ -181,7 +181,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
             // Generate a JSON with response and device serial number and encode with base64
             String validateStepUpTrustedDeviceInput =
                     BASE64_ENCODER.encodeToString(
-                            getValidateStepUpTrustedDeviceJson(responseData.replaceAll("\"", ""))
+                            getValidateStepUpTrustedDeviceJson(responseData.replace("\"", ""))
                                     .getBytes());
 
             // Execute a final Js to get the step up token
@@ -335,7 +335,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
                     bindDeviceResponse.getDeviceSerialNumber());
             this.persistentStorage.put(
                     DanskeBankConstants.Persist.DEVICE_SECRET,
-                    decryptedDeviceSecret.replaceAll("\"", ""));
+                    decryptedDeviceSecret.replace("\"", ""));
         } finally {
             if (driver != null) {
                 driver.quit();

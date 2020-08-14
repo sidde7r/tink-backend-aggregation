@@ -26,8 +26,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppScaEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppTokenEncryptedPayload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.EncryptedPayloadAndroidEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.LoggedInEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.PayloadAndroidEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.ScaOptionsEncryptedPayload;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.SecondFactorOperationsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.rpc.EncryptedResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.rpc.NemIdPollResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.BecErrorResponse;
@@ -320,38 +322,6 @@ public class BecApiClientTest {
     }
 
     @Test
-    public void scaPrepareShouldThrowNemIdExceptionWhenCodeappIsNotRegisteredOption() {
-        // given
-        given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
-        // and
-        BaseBecRequest baseBecRequest = baseBecRequest();
-        baseBecRequest.setEncryptedPayload(ENCRYPTED_PAYLOAD);
-        // and
-        given(requestBuilder.post(eq(EncryptedResponse.class), eq(baseBecRequest)))
-                .willReturn(
-                        SerializationUtils.deserializeFromString(
-                                "{\"encryptedPayload\":\"" + ENCRYPTED_PAYLOAD + "\"}",
-                                EncryptedResponse.class));
-        // and
-        given(securityHelper.decrypt(ENCRYPTED_PAYLOAD))
-                .willReturn("{\"secondFactorOptions\":[\"non_codeapp_option\"]}");
-
-        // when
-        Throwable t = catchThrowable(() -> becApiClient.scaPrepare(USERNAME, PASSWORD));
-
-        // then
-        assertThat(t)
-                .isInstanceOf(NemIdException.class)
-                .hasMessage("Cause: NemIdError.CODEAPP_NOT_REGISTERED");
-        // and
-        verify(securityHelper)
-                .encrypt(
-                        argThat(
-                                new SecurityHelperEncryptVerifier(
-                                        PASSWORD, USERNAME, DEFAULT_2FA)));
-    }
-
-    @Test
     public void scaPrepare2ShouldReturnPossible2faOptions() throws NemIdException {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
@@ -462,6 +432,73 @@ public class BecApiClientTest {
                                         USERNAME,
                                         CODEAPP_2FA,
                                         new CodeAppScaEntity(TOKEN_VALUE))));
+    }
+
+    @Test
+    public void postKeyCardPrepareAndDecryptResponseShouldGetChallengeValue() {
+        // given
+        given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
+        // and
+        BaseBecRequest baseBecRequest = baseBecRequest();
+        baseBecRequest.setEncryptedPayload(ENCRYPTED_PAYLOAD);
+        // and
+        given(requestBuilder.post(eq(EncryptedResponse.class), eq(baseBecRequest)))
+                .willReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\"encryptedPayload\":\"encrypted payload\"}",
+                                EncryptedResponse.class));
+        // and
+        given(securityHelper.decrypt(ENCRYPTED_PAYLOAD))
+                .willReturn(
+                        "{\n"
+                                + "  \"secondFactorOptions\": [\n"
+                                + "    \"keycard\"\n"
+                                + "  ],\n"
+                                + "  \"keycard\": {\n"
+                                + "    \"keycardNo\": \"F123-123-123\",\n"
+                                + "    \"nemidChallenge\": \"1234\"\n"
+                                + "  }\n"
+                                + "}");
+        SecondFactorOperationsEntity secondFactorOperationsEntity =
+                becApiClient.postKeyCardPrepareAndDecryptResponse(USERNAME, PASSWORD, "deviceId");
+
+        assertThat(secondFactorOperationsEntity.getSecondFactorOptions().size()).isEqualTo(1);
+        assertThat(secondFactorOperationsEntity.getSecondFactorOptions().get(0))
+                .isEqualTo("keycard");
+        assertThat(secondFactorOperationsEntity.getKeycard().getKeycardNo())
+                .isEqualTo("F123-123-123");
+        assertThat(secondFactorOperationsEntity.getKeycard().getNemidChallenge()).isEqualTo("1234");
+    }
+
+    @Test
+    public void postKeyCardChallengeAndDecryptResponseShouldReturnScaToken() {
+        // given
+        given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
+        // and
+        BaseBecRequest baseBecRequest = baseBecRequest();
+        baseBecRequest.setEncryptedPayload(ENCRYPTED_PAYLOAD);
+        // and
+        given(requestBuilder.post(eq(EncryptedResponse.class), eq(baseBecRequest)))
+                .willReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\"encryptedPayload\":\"encrypted payload\"}",
+                                EncryptedResponse.class));
+        // and
+        given(securityHelper.decrypt(ENCRYPTED_PAYLOAD))
+                .willReturn(
+                        "{\n"
+                                + "  \"lastUsed\": \"2020-08-07\",\n"
+                                + "  \"username\": \"Name Name\",\n"
+                                + "  \"bankReference\": \"1234567890\",\n"
+                                + "  \"scaToken\": \"AAAA1111A1A111AA11A111111A11A1\",\n"
+                                + "  \"authCodes\": [1, 2]\n"
+                                + "}");
+        LoggedInEntity loggedInEntity =
+                becApiClient.postKeyCardChallengeAndDecryptResponse(
+                        USERNAME, PASSWORD, "challengeValue", "nemidChallenge", "deviceId");
+        assertThat(loggedInEntity.getBankReference()).isEqualTo("1234567890");
+        assertThat(loggedInEntity.getLastUsed()).isEqualTo("2020-08-07");
+        assertThat(loggedInEntity.getScaToken()).isEqualTo("AAAA1111A1A111AA11A111111A11A1");
     }
 
     @Test

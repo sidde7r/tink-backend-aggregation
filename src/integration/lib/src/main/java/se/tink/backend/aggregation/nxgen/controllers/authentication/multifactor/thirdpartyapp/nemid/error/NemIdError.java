@@ -13,6 +13,9 @@ public enum NemIdError implements AgentError {
     CODEAPP_NOT_REGISTERED(
             new LocalizableKey(
                     "NemID Code App is not registered option to use. Contact bank support.")),
+    SECOND_FACTOR_NOT_REGISTERED(
+            new LocalizableKey(
+                    "Second factor is not registered option to use. Contact bank support.")),
     LOCKED_PIN(
             new LocalizableKey(
                     "Your chosen PIN code is locked. The PIN code must be changed in your Netbank before you can log on."));
