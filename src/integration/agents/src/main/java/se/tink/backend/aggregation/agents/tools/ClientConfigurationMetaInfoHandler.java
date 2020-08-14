@@ -162,6 +162,23 @@ public class ClientConfigurationMetaInfoHandler {
         return Optional.empty();
     }
 
+    private Set<Class<? extends ClientConfiguration>> removeSuperClasses(
+            Set<Class<? extends ClientConfiguration>> classes) {
+        if (classes.size() < 2) {
+            return classes;
+        }
+
+        final Set<Class<?>> superClasses =
+                classes.stream()
+                        .filter(clazz -> classes.contains(clazz.getSuperclass()))
+                        .map(Class::getSuperclass)
+                        .collect(Collectors.toSet());
+
+        return classes.stream()
+                .filter(clazz -> !superClasses.contains(clazz))
+                .collect(Collectors.toSet());
+    }
+
     private Optional<Class<? extends ClientConfiguration>>
             searchForClosestConfigurationClassInSamePackageTree(
                     final String fullyQualifiedClassName) {
@@ -171,9 +188,10 @@ public class ClientConfigurationMetaInfoHandler {
         Reflections reflectionsPackageToScan =
                 new Reflections(packageToScan, new SubTypesScanner(false));
         Set<Class<? extends ClientConfiguration>> clientConfigurationClassForAgentSet =
-                reflectionsPackageToScan.getSubTypesOf(ClientConfiguration.class).stream()
-                        .filter(clazz -> !clazz.isInterface())
-                        .collect(Collectors.toSet());
+                removeSuperClasses(
+                        reflectionsPackageToScan.getSubTypesOf(ClientConfiguration.class).stream()
+                                .filter(clazz -> !clazz.isInterface())
+                                .collect(Collectors.toSet()));
 
         if (clientConfigurationClassForAgentSet.size() > 1) {
             throw new IllegalStateException(
