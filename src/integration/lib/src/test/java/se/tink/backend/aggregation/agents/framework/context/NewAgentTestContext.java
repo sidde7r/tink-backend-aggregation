@@ -6,14 +6,12 @@ import com.google.common.collect.Lists;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -48,6 +46,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -63,11 +62,6 @@ public final class NewAgentTestContext extends AgentContext {
     public static final String TEST_APPID = "5f98e87106384b2981c0354a33b51590";
 
     private final AccountDataCache accountDataCache;
-    private final Map<String, Account> accountsByBankId = new HashMap<>();
-    private final Map<String, AccountFeatures> accountFeaturesByBankId = new HashMap<>();
-    private final Map<String, List<Transaction>> transactionsByAccountBankId = new HashMap<>();
-    private final Map<String, List<TransferDestinationPattern>>
-            transferDestinationPatternsByAccountBankId = new HashMap<>();
     private final List<Transfer> transfers = new ArrayList<>();
     private IdentityData identityData = null;
 
@@ -111,32 +105,27 @@ public final class NewAgentTestContext extends AgentContext {
     @Override
     public void clear() {
         super.clear();
-
         accountDataCache.clear();
-        accountsByBankId.clear();
-        accountFeaturesByBankId.clear();
-        transactionsByAccountBankId.clear();
-        transferDestinationPatternsByAccountBankId.clear();
         transfers.clear();
     }
 
     public List<Account> getUpdatedAccounts() {
-        return Lists.newArrayList(accountsByBankId.values());
+        return Lists.newArrayList(accountDataCache.getProcessedAccounts());
     }
 
     public List<Transaction> getTransactions() {
-        return transactionsByAccountBankId.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+        return accountDataCache.getTransactionsToBeProcessed();
     }
 
     public Optional<IdentityData> getIdentityData() {
         return Optional.ofNullable(identityData);
     }
 
-    public Map<String, List<Transaction>> getTransactionsByAccountBankId() {
-        return transactionsByAccountBankId;
+    public List<Transaction> getTransactionsToProcessByBankAccountId(String bankAccountId) {
+        return accountDataCache
+                .getProcessedAccountDataByBankAccountId(bankAccountId)
+                .map(AccountData::getTransactions)
+                .orElse(Lists.newArrayList());
     }
 
     public List<Transfer> getTransfers() {
@@ -144,9 +133,8 @@ public final class NewAgentTestContext extends AgentContext {
     }
 
     public List<TransferDestinationPattern> getTransferDestinationPatterns() {
-        return transferDestinationPatternsByAccountBankId.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .flatMap(List::stream)
+        return accountDataCache.getTransferDestinationPatternsToBeProcessed().values().stream()
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
@@ -177,40 +165,34 @@ public final class NewAgentTestContext extends AgentContext {
         accountDataCache.cacheAccount(account);
         accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
 
-        accountsByBankId.put(account.getBankId(), account);
-
-        AccountFeatures accountFeaturesToCache = accountFeatures;
-
-        if (accountFeaturesByBankId.containsKey(account.getBankId())) {
-            // FIXME: this check mirrors the check done in AgentWorkerContext.cacheAccount that is
-            // needed
-            // FIXME: because some agents still need to call updateTransactions, which still needs
-            // to call the
-            // FIXME: default cacheAccount method, which then clobbers the existing AccountFeatures
-            // cache.
-            // FIXME: Once the problem has been fixed in production code, we can remove this check
-            // as well.
-            AccountFeatures existingAccountFeatures =
-                    accountFeaturesByBankId.get(account.getBankId());
-            if (accountFeatures.isEmpty() && !existingAccountFeatures.isEmpty()) {
-                accountFeaturesToCache = existingAccountFeatures;
-            }
-        }
-
-        accountFeaturesByBankId.put(account.getBankId(), accountFeaturesToCache);
+        // Automatically process it when cached. This is because we don't have a WorkerCommand doing
+        // this for us.
+        sendAccountToUpdateService(account.getBankId());
     }
 
     public Account sendAccountToUpdateService(String bankAccountId) {
-        return accountsByBankId.get(bankAccountId);
+        Optional<AccountData> optionalAccountData =
+                accountDataCache.getFilteredAccountDataByBankAccountId(bankAccountId);
+        if (!optionalAccountData.isPresent()) {
+            log.warn(
+                    "Trying to send a filtered or non-existent Account to update service! Agents should not do this on their own.");
+            return null;
+        }
+
+        AccountData accountData = optionalAccountData.get();
+        if (accountData.isProcessed()) {
+            // Already updated/processed, do not do it twice.
+            return accountData.getAccount();
+        }
+
+        Account account = accountData.getAccount();
+        accountDataCache.setProcessedTinkAccountId(bankAccountId, account.getId());
+        return account;
     }
 
     @Override
     public AccountHolder sendAccountHolderToUpdateService(Account processedAccount) {
-        return accountsByBankId.values().stream()
-                .filter(a -> Objects.equals(processedAccount.getId(), a.getId()))
-                .findFirst()
-                .map(Account::getAccountHolder)
-                .orElse(null);
+        return processedAccount.getAccountHolder();
     }
 
     @Override
@@ -223,17 +205,6 @@ public final class NewAgentTestContext extends AgentContext {
                     accountDataCache.cacheTransferDestinationPatterns(
                             account.getBankId(), patterns);
                 });
-
-        for (Account account : transferDestinationPatterns.keySet()) {
-            if (transferDestinationPatternsByAccountBankId.containsKey(account.getBankId())) {
-                transferDestinationPatternsByAccountBankId
-                        .get(account.getBankId())
-                        .addAll(transferDestinationPatterns.get(account));
-            } else {
-                transferDestinationPatternsByAccountBankId.put(
-                        account.getBankId(), transferDestinationPatterns.get(account));
-            }
-        }
     }
 
     @Override
@@ -262,23 +233,15 @@ public final class NewAgentTestContext extends AgentContext {
     @Deprecated // Use cacheTransactions instead
     public Account updateTransactions(Account account, List<Transaction> transactions) {
         cacheAccount(account);
-        final Account updatedAccount = sendAccountToUpdateService(account.getBankId());
-
-        for (Transaction updatedTransaction : transactions) {
-            updatedTransaction.setAccountId(updatedAccount.getId());
-            updatedTransaction.setCredentialsId(updatedAccount.getCredentialsId());
-            updatedTransaction.setUserId(updatedAccount.getUserId());
-        }
-
-        cacheTransactions(updatedAccount.getBankId(), transactions);
-        return updatedAccount;
+        cacheTransactions(account.getBankId(), transactions);
+        return account;
     }
 
     @Override
     public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
-        transactionsByAccountBankId.put(accountUniqueId, transactions);
+
         accountDataCache.cacheTransactions(accountUniqueId, transactions);
     }
 
@@ -328,9 +291,8 @@ public final class NewAgentTestContext extends AgentContext {
 
     public void validateFetchedData(AisValidator validator) {
         validator.validate(
-                accountsByBankId.values(),
-                transactionsByAccountBankId.values().stream()
-                        .collect(ArrayList::new, List::addAll, List::addAll),
+                accountDataCache.getProcessedAccounts(),
+                accountDataCache.getTransactionsToBeProcessed(),
                 identityData);
     }
 
@@ -441,7 +403,7 @@ public final class NewAgentTestContext extends AgentContext {
         CliPrintUtils.printTable(4, "identifiers", identifierList);
     }
 
-    private void printAccountInformation(Account account) {
+    private void printAccountInformation(Account account, AccountFeatures accountFeatures) {
         Map<String, String> row = new LinkedHashMap<>();
 
         row.put("accountId", account.getBankId());
@@ -470,8 +432,6 @@ public final class NewAgentTestContext extends AgentContext {
 
         printAccountIdentifiers(account);
 
-        AccountFeatures accountFeatures = accountFeaturesByBankId.get(account.getBankId());
-
         switch (account.getType()) {
             case LOAN:
             case MORTGAGE:
@@ -498,9 +458,9 @@ public final class NewAgentTestContext extends AgentContext {
         }
     }
 
-    private void printTransactions(String bankId) {
+    private void printTransactions(List<Transaction> transactions) {
         List<Map<String, String>> table =
-                transactionsByAccountBankId.getOrDefault(bankId, Collections.emptyList()).stream()
+                transactions.stream()
                         .sorted(Comparator.comparing(Transaction::getDate))
                         .map(
                                 transaction -> {
@@ -514,10 +474,10 @@ public final class NewAgentTestContext extends AgentContext {
         CliPrintUtils.printTable(4, "transactions", table, transactionsToPrint);
     }
 
-    private void printTransferDestinations(String bankId) {
+    private void printTransferDestinations(
+            List<TransferDestinationPattern> transferDestinationPatterns) {
         List<Map<String, String>> table =
-                transferDestinationPatternsByAccountBankId
-                        .getOrDefault(bankId, Collections.emptyList()).stream()
+                transferDestinationPatterns.stream()
                         .map(
                                 transferDestination -> {
                                     Map<String, String> row = new LinkedHashMap<>();
@@ -589,13 +549,16 @@ public final class NewAgentTestContext extends AgentContext {
     }
 
     public void printCollectedData() {
-        accountsByBankId.forEach(
-                (bankId, account) -> {
-                    printAccountInformation(account);
-                    printTransactions(bankId);
-                    printTransferDestinations(bankId);
-                    System.out.println();
-                });
+        accountDataCache
+                .getProcessedAccountData()
+                .forEach(
+                        accountData -> {
+                            printAccountInformation(
+                                    accountData.getAccount(), accountData.getAccountFeatures());
+                            printTransactions(accountData.getTransactions());
+                            printTransferDestinations(accountData.getTransferDestinationPatterns());
+                            System.out.println();
+                        });
 
         printIdentityData();
         printTransfers();
@@ -603,17 +566,16 @@ public final class NewAgentTestContext extends AgentContext {
 
     public CredentialDataDao dumpCollectedData() {
         List<AccountDataDao> accountDataList = new ArrayList<>();
-        accountsByBankId.forEach(
-                (bankId, account) -> {
-                    List<Transaction> transactions =
-                            transactionsByAccountBankId.getOrDefault(
-                                    bankId, Collections.emptyList());
-                    List<TransferDestinationPattern> transferDestinationPatterns =
-                            transferDestinationPatternsByAccountBankId.getOrDefault(
-                                    bankId, Collections.emptyList());
-                    accountDataList.add(
-                            new AccountDataDao(account, transactions, transferDestinationPatterns));
-                });
+        accountDataCache
+                .getProcessedAccountData()
+                .forEach(
+                        accountData -> {
+                            accountDataList.add(
+                                    new AccountDataDao(
+                                            accountData.getAccount(),
+                                            accountData.getTransactions(),
+                                            accountData.getTransferDestinationPatterns()));
+                        });
         return new CredentialDataDao(accountDataList, transfers, identityData);
     }
 

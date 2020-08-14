@@ -110,6 +110,16 @@ public class AccountDataCache {
         return getFilteredAccountDataStream().filter(AccountData::isProcessed);
     }
 
+    public Optional<AccountData> getProcessedAccountDataByBankAccountId(String bankAccountId) {
+        return getProcessedAccountDataStream()
+                .filter(
+                        processedAccountData ->
+                                Objects.equals(
+                                        processedAccountData.getAccount().getBankId(),
+                                        bankAccountId))
+                .findFirst();
+    }
+
     public List<AccountData> getAllAccountData() {
         return new ArrayList<>(accountDataByBankAccountId.values());
     }
@@ -118,6 +128,10 @@ public class AccountDataCache {
         return getFilteredAccountDataStream()
                 .map(AccountData::getAccount)
                 .collect(Collectors.toList());
+    }
+
+    public List<AccountData> getProcessedAccountData() {
+        return getProcessedAccountDataStream().collect(Collectors.toList());
     }
 
     public List<Account> getProcessedAccounts() {

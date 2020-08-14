@@ -4,11 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
@@ -33,6 +31,7 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -49,10 +48,6 @@ public class AgentTestContext extends AgentContext {
     private final TinkHttpClient supplementalClient;
 
     private final AccountDataCache accountDataCache;
-    private Map<String, Account> accountsByBankId = Maps.newHashMap();
-    private Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
-    private Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount =
-            Maps.newHashMap();
     private List<FraudDetailsContent> detailsContents;
     private List<Transfer> transfers = Lists.newArrayList();
     private Credentials credentials;
@@ -79,31 +74,23 @@ public class AgentTestContext extends AgentContext {
     public void clear() {
         super.clear();
         accountDataCache.clear();
-        accountsByBankId.clear();
-        transactionsByAccountBankId.clear();
         transfers.clear();
     }
 
+    public AccountDataCache getAccountDataCache() {
+        return accountDataCache;
+    }
+
     public List<Account> getUpdatedAccounts() {
-        return Lists.newArrayList(accountsByBankId.values());
+        return Lists.newArrayList(accountDataCache.getProcessedAccounts());
     }
 
     public List<FraudDetailsContent> getDetailsContents() {
         return detailsContents;
     }
 
-    public Map<String, List<Transaction>> getTransactionsByAccountBankId() {
-        return transactionsByAccountBankId;
-    }
-
     public List<Transaction> getTransactions() {
-        List<Transaction> transactions = Lists.newArrayList();
-
-        for (String accountId : transactionsByAccountBankId.keySet()) {
-            transactions.addAll(transactionsByAccountBankId.get(accountId));
-        }
-
-        return transactions;
+        return accountDataCache.getTransactionsToBeProcessed();
     }
 
     public List<Transfer> getTransfers() {
@@ -120,33 +107,31 @@ public class AgentTestContext extends AgentContext {
     public void processTransactions() {
         log.info("Processing transactions");
 
-        int numberOfAccounts = 0;
-        int numberOfTransactions = 0;
-
-        try {
-            for (String bankId : accountsByBankId.keySet()) {
-                numberOfAccounts++;
-
-                log.info(mapper.writeValueAsString(accountsByBankId.get(bankId)));
-
-                if (transactionsByAccountBankId.containsKey(bankId)) {
-                    for (Transaction transaction : transactionsByAccountBankId.get(bankId)) {
-                        log.info("\t" + mapper.writeValueAsString(transaction));
-                        numberOfTransactions++;
-                    }
-                }
-
-                log.info("");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        accountDataCache
+                .getTransactionsByAccountToBeProcessed()
+                .forEach(
+                        (account, transactions) -> {
+                            try {
+                                log.info(mapper.writeValueAsString(account));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            transactions.forEach(
+                                    transaction -> {
+                                        try {
+                                            log.info("\t" + mapper.writeValueAsString(transaction));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+                            log.info("");
+                        });
 
         log.info(
                 "Processed "
-                        + numberOfAccounts
+                        + accountDataCache.getProcessedAccounts().size()
                         + " accounts and "
-                        + numberOfTransactions
+                        + accountDataCache.getTransactionsToBeProcessed().size()
                         + " transactions.");
     }
 
@@ -192,10 +177,12 @@ public class AgentTestContext extends AgentContext {
             // NOOP.
         }
 
-        accountsByBankId.put(account.getBankId(), account);
-
         accountDataCache.cacheAccount(account);
         accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
+
+        // Automatically process it when cached. This is because we don't have a WorkerCommand doing
+        // this for us.
+        sendAccountToUpdateService(account.getBankId());
     }
 
     @Override
@@ -210,16 +197,28 @@ public class AgentTestContext extends AgentContext {
     }
 
     public Account sendAccountToUpdateService(String bankAccountId) {
-        return accountsByBankId.get(bankAccountId);
+        Optional<AccountData> optionalAccountData =
+                accountDataCache.getFilteredAccountDataByBankAccountId(bankAccountId);
+        if (!optionalAccountData.isPresent()) {
+            log.warn(
+                    "Trying to send a filtered or non-existent Account to update service! Agents should not do this on their own.");
+            return null;
+        }
+
+        AccountData accountData = optionalAccountData.get();
+        if (accountData.isProcessed()) {
+            // Already updated/processed, do not do it twice.
+            return accountData.getAccount();
+        }
+
+        Account account = accountData.getAccount();
+        accountDataCache.setProcessedTinkAccountId(bankAccountId, account.getId());
+        return account;
     }
 
     @Override
     public AccountHolder sendAccountHolderToUpdateService(Account processedAccount) {
-        return accountsByBankId.values().stream()
-                .filter(a -> Objects.equals(processedAccount.getId(), a.getId()))
-                .findFirst()
-                .map(Account::getAccountHolder)
-                .orElse(null);
+        return processedAccount.getAccountHolder();
     }
 
     @Override
@@ -232,24 +231,10 @@ public class AgentTestContext extends AgentContext {
                     accountDataCache.cacheAccount(account);
                     accountDataCache.cacheTransferDestinationPatterns(
                             account.getBankId(), patterns);
+
+                    log.info("\t" + account.toString());
+                    patterns.forEach(pattern -> log.info("\t\t" + pattern.toString()));
                 });
-
-        for (Account account : transferDestinationPatterns.keySet()) {
-            if (transferDestinationPatternsByAccount.containsKey(account)) {
-                transferDestinationPatternsByAccount
-                        .get(account)
-                        .addAll(transferDestinationPatterns.get(account));
-            } else {
-                transferDestinationPatternsByAccount.put(
-                        account, transferDestinationPatterns.get(account));
-            }
-
-            log.info("\t" + account.toString());
-
-            for (TransferDestinationPattern pattern : transferDestinationPatterns.get(account)) {
-                log.info("\t\t" + pattern.toString());
-            }
-        }
     }
 
     @Override
@@ -277,14 +262,6 @@ public class AgentTestContext extends AgentContext {
         }
 
         cacheAccount(account);
-        account = sendAccountToUpdateService(account.getBankId());
-
-        for (Transaction updatedTransaction : transactions) {
-            updatedTransaction.setAccountId(account.getId());
-            updatedTransaction.setCredentialsId(account.getCredentialsId());
-            updatedTransaction.setUserId(account.getUserId());
-        }
-
         cacheTransactions(account.getBankId(), transactions);
         return account;
     }
@@ -293,7 +270,6 @@ public class AgentTestContext extends AgentContext {
     public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
-        transactionsByAccountBankId.put(accountUniqueId, transactions);
         accountDataCache.cacheTransactions(accountUniqueId, transactions);
     }
 
@@ -367,7 +343,9 @@ public class AgentTestContext extends AgentContext {
         try {
             log.info(
                     "------------------------------------------------------------TRANSFER DESTINATIONS----------------------------------------------------------------");
-            log.info(mapper.writeValueAsString(transferDestinationPatternsByAccount));
+            log.info(
+                    mapper.writeValueAsString(
+                            accountDataCache.getTransferDestinationPatternsToBeProcessed()));
             log.info(
                     "------------------------------------------------------------TRANSFER DESTINATIONS----------------------------------------------------------------");
         } catch (JsonProcessingException e) {
