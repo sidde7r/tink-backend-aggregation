@@ -75,10 +75,7 @@ public final class SkandiaApiClient {
         return createRequest(url)
                 .addBearerToken(authToken)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.CLIENT_ID, clientId)
-                .header(
-                        HeaderKeys.X_CLIENT_CERTIFICATE,
-                        getConfiguration().getxClientCertificate());
+                .header(HeaderKeys.CLIENT_ID, clientId);
     }
 
     public URL getAuthorizeUrl(String state) {

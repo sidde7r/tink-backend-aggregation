@@ -1,10 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.manual;
 
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-// @Ignore
 public class SkandiaAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -15,7 +14,7 @@ public class SkandiaAgentTest {
                 new AgentIntegrationTest.Builder("se", "se-skandiabanken-ob")
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("skandiabanken")
-                        .setClusterId("oxford-staging")
+                        .setClusterId("oxford-preprod")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
