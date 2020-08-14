@@ -220,9 +220,7 @@ public class IcaBankenAgent extends NextGenerationAgent
         return Optional.of(
                 new TransferController(
                         new IcaBankenPaymentExecutor(apiClient, executorHelper),
-                        new IcaBankenBankTransferExecutor(apiClient, executorHelper, catalog),
-                        null,
-                        null));
+                        new IcaBankenBankTransferExecutor(apiClient, executorHelper, catalog)));
     }
 
     @Override

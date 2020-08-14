@@ -183,7 +183,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                         supplementalInformationHelper,
                         thirdPartyAppAuthenticationController);
 
-        return Optional.of(new TransferController(null, transferExecutor, null, null));
+        return Optional.of(new TransferController(null, transferExecutor));
     }
 
     @Override

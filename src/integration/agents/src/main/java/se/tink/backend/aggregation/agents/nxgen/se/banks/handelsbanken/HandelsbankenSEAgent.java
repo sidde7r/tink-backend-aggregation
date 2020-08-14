@@ -166,7 +166,7 @@ public class HandelsbankenSEAgent
                         catalog,
                         paymentExecutor);
 
-        return Optional.of(new TransferController(paymentExecutor, transferExecutor, null, null));
+        return Optional.of(new TransferController(paymentExecutor, transferExecutor));
     }
 
     @Override

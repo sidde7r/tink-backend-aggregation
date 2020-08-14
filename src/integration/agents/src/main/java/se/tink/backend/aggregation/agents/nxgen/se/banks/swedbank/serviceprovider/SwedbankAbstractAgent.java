@@ -258,7 +258,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         SwedbankDefaultPaymentExecutor paymentExecutor =
                 new SwedbankDefaultPaymentExecutor(
                         catalog, apiClient, transferHelper, swedbankStorage, dateUtils);
-        return Optional.of(new TransferController(paymentExecutor, transferExecutor, null, null));
+        return Optional.of(new TransferController(paymentExecutor, transferExecutor));
     }
 
     @Override
