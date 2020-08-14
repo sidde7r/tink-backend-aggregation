@@ -1420,5 +1420,5 @@ msgid ""
 "customer of Handelsbanken to be able to use the service."
 msgstr ""
 
-msgid "There are not any Authentication methods possible."
+msgid "There aren't any Authentication methods available."
 msgstr ""
