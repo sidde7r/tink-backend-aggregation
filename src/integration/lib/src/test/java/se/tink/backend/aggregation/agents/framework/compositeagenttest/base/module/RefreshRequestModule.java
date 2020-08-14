@@ -39,16 +39,18 @@ public final class RefreshRequestModule extends AbstractModule {
     @Provides
     @Singleton
     protected RefreshInformationRequest provideRefreshInformationRequest(
-            User user, Credentials credential, Provider provider) {
+            User user, Credentials credential, Provider provider, String originatingUserIp) {
         RefreshInformationRequest refreshInformationRequest =
-                new RefreshInformationRequest(
-                        user,
-                        provider,
-                        credential,
-                        requestFlagManual,
-                        requestFlagCreate,
-                        requestFlagUpdate,
-                        false);
+                RefreshInformationRequest.builder()
+                        .user(user)
+                        .provider(provider)
+                        .credentials(credential)
+                        .originatingUserIp(originatingUserIp)
+                        .manual(requestFlagManual)
+                        .create(requestFlagCreate)
+                        .update(requestFlagUpdate)
+                        .forceAuthenticate(false)
+                        .build();
         refreshInformationRequest.setItemsToRefresh(refreshableItems);
         return refreshInformationRequest;
     }

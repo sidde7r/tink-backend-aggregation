@@ -54,6 +54,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     protected final SessionStorage sessionStorage;
     protected final Credentials credentials;
     protected final Provider provider;
+    protected final String originatingUserIp;
     protected final TransactionPaginationHelper transactionPaginationHelper;
     protected final UpdateController updateController;
     protected final MetricRefreshController metricRefreshController;
@@ -78,6 +79,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                 .addSensitiveValuesSetObservable(sessionStorage.getSensitiveValuesObservable());
         this.credentials = request.getCredentials();
         this.provider = request.getProvider();
+        this.originatingUserIp = request.getOriginatingUserIp();
         this.updateController = new UpdateController(provider, request.getUser());
 
         this.client = componentProvider.getTinkHttpClient();
@@ -99,11 +101,12 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                 new StrongAuthenticationState(
                         request.getAppUriId(), componentProvider.getRandomValueGenerator());
         log.info(
-                "[forceAuthenticate] strongAuthenticationState for credentials: {}, appUriId: {}, state: {}, request: {}",
+                "[forceAuthenticate] strongAuthenticationState for credentials: {}, appUriId: {}, state: {}, request: {}, originatingUserIp: {}",
                 request.getCredentials().getId(),
                 request.getAppUriId(),
                 this.strongAuthenticationState.getState(),
-                request.getClass().getSimpleName());
+                request.getClass().getSimpleName(),
+                request.getOriginatingUserIp());
     }
 
     protected EidasIdentity getEidasIdentity() {

@@ -28,6 +28,7 @@ class AgentTestFixtures {
 
     private static final String CREDENTIAL_ID = "cafebabecafebabecafebabecafebabe";
     private static final String USER_ID = "deadbeefdeadbeefdeadbeefdeadbeef";
+    private static final String ORIGINATING_USER_IP = "127.0.0.1";
     private static final int TRANSACTIONS_TO_PRINT = 32;
     private static final String DEFAULT_LOCALE = "sv_SE";
 
@@ -46,8 +47,15 @@ class AgentTestFixtures {
     static CredentialsRequest givenCredentialsRequest(
             String market, String providerName, Map<String, String> credentialFields) {
         Provider provider = givenProvider(market, providerName);
-        return new RefreshInformationRequest(
-                givenUser(), provider, givenCredentials(credentialFields, provider), true, false);
+
+        return RefreshInformationRequest.builder()
+                .user(givenUser())
+                .provider(provider)
+                .credentials(givenCredentials(credentialFields, provider))
+                .originatingUserIp(ORIGINATING_USER_IP)
+                .manual(true)
+                .forceAuthenticate(false)
+                .build();
     }
 
     static AgentContext givenAgentContext(

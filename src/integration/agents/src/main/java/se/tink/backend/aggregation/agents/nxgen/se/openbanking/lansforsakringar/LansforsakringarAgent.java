@@ -54,7 +54,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
         apiClient =
                 new LansforsakringarApiClient(
-                        client, sessionStorage, credentials, persistentStorage);
+                        client, sessionStorage, credentials, persistentStorage, originatingUserIp);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();

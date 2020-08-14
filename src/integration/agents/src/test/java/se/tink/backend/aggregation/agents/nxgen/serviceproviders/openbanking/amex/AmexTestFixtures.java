@@ -46,6 +46,7 @@ public class AmexTestFixtures {
     public static final String EXPIRED_REFRESH_TOKEN = "68aa65df-5d9f-4919-9a97-a443e473355e";
     public static final String ACCOUNT_NUMBER_1 = "XXXX-XXXXXX-81007";
     public static final String ACCOUNT_NUMBER_2 = "XXXX-XXXXXX-82009";
+    public static final String ORIGINATING_USER_IP = "127.0.0.1";
 
     public static HmacMultiToken createMultiTokenWithExpiredAccessToken() {
         final HmacToken validHmacToken =
