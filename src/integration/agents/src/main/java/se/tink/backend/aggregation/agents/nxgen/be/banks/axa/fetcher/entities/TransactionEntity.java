@@ -1,42 +1,54 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public final class TransactionEntity {
-    private String accountReference;
-    private String amount;
-    private String channelCode;
-    private String companyCode;
-    private String counterparty; // Observed values: empty and non-empty strings
-    private String creationTimeStamp;
+    private BigDecimal amount;
+    private String counterpartyName;
+    private String description;
+    private String processedDateTime;
     private String currency;
-    private String date;
-    private String detail; // Observed values: Non-empty strings
-    private String detailCd;
-    private String identificationNumber;
-    private String sequenceNumber;
-    private String typeCode;
-    private String valDt;
-    private String verDt;
+    private String orginatorAccountNumber;
+    private String counterPartyAccountNumber;
+    private Date transactionDate;
+    private BigDecimal balanceAmount;
 
-    public String getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
     public String getCounterparty() {
-        return counterparty;
+        return counterpartyName;
     }
 
     public String getCreationTimeStamp() {
-        return creationTimeStamp;
+        return processedDateTime;
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public String getDetails() {
-        return detail;
+    public String getDescription() {
+        return description;
+    }
+
+    public String getOrginatorAccountNumber() {
+        return orginatorAccountNumber;
+    }
+
+    public String getCounterPartyAccountNumber() {
+        return counterPartyAccountNumber;
+    }
+
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+
+    public BigDecimal getBalanceAmount() {
+        return balanceAmount;
     }
 }
