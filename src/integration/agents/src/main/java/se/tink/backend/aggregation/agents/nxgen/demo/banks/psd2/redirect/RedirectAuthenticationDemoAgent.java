@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -127,21 +128,18 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
             @Override
             public void keepAlive() throws SessionException {
-                if (request instanceof RefreshInformationRequest
-                        && ((RefreshInformationRequest) request).isForceAuthenticate()) {
-                    log.info(
-                            String.format(
-                                    "[forceAuthenticate] RedirectAuthenticationDemoAgent:refresh for credentials: %s, forceAuthenticate: %s, isInstanceOf RefreshInformationRequest: %s",
-                                    credentials.getId(),
-                                    ((RefreshInformationRequest) request).isForceAuthenticate(),
-                                    request instanceof RefreshInformationRequest));
+                boolean shouldForceAuthenticate =
+                        ForceAuthentication.shouldForceAuthentication(request);
+                log.info(
+                        String.format(
+                                "[forceAuthenticate] RedirectAuthenticationDemoAgent:refresh for credentials: %s, forceAuthenticate: %s, isInstanceOf RefreshInformationRequest: %s",
+                                credentials.getId(),
+                                shouldForceAuthenticate,
+                                request instanceof RefreshInformationRequest));
+                if (shouldForceAuthenticate) {
                     persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
                     throw SessionError.SESSION_EXPIRED.exception();
                 } else {
-                    log.info(
-                            String.format(
-                                    "[forceAuthenticate] RedirectAuthenticationDemoAgent:refresh for credentials: %s, reusing oAuth token from persistent storage",
-                                    credentials.getId()));
                     persistentStorage
                             .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                             .filter(t -> !t.hasAccessExpired())

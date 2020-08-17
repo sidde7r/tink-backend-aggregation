@@ -74,7 +74,7 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
                                 new IngCardReaderAuthenticator(
                                         apiClient, persistentStorage, ingHelper),
                                 supplementalInformationFormer),
-                        new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper));
+                        new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper, request));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {

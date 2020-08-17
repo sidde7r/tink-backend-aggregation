@@ -34,7 +34,8 @@ public class JyskeKeyCardAgent extends BankdataAgent {
         JyskePersistentStorage jyskePersistentStorage =
                 new JyskePersistentStorage(persistentStorage);
         JyskeKeyCardAuthenticator jyskeKeyCardAuthenticator =
-                new JyskeKeyCardAuthenticator(apiClient, jyskePersistentStorage, credentials);
+                new JyskeKeyCardAuthenticator(
+                        apiClient, jyskePersistentStorage, credentials, request);
 
         return new AutoAuthenticationController(
                 request,

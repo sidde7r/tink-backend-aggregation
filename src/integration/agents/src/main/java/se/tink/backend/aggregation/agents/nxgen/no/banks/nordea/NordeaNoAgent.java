@@ -69,7 +69,10 @@ public class NordeaNoAgent extends SubsequentProgressiveGenerationAgent
 
         this.authenticator =
                 new NordeaNoAuthenticator(
-                        authenticationClient, storage, componentProvider.getRandomValueGenerator());
+                        authenticationClient,
+                        storage,
+                        componentProvider.getRandomValueGenerator(),
+                        request);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();

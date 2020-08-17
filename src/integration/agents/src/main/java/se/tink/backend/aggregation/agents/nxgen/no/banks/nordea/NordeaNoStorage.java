@@ -55,6 +55,10 @@ public class NordeaNoStorage {
         this.sessionStorage.put(OAUTH_TOKEN, oauthToken);
     }
 
+    public void invalidateOauthToken() {
+        this.persistentStorage.remove(OAUTH_TOKEN);
+    }
+
     public Optional<OAuth2Token> retrieveOauthToken() {
         return persistentStorage.get(OAUTH_TOKEN, OAuth2Token.class);
     }
