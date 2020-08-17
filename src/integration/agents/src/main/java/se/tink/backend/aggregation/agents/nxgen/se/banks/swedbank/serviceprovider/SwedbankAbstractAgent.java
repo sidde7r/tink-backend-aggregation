@@ -5,18 +5,12 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
-import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.TimeoutFilter;
@@ -27,10 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.SwedbankDefaultBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard.SwedbankDefaultCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.einvoice.SwedbankDefaultEinvoiceFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.identitydata.SwedbankIdentityDataFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.investment.SwedbankDefaultInvestmentFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.loan.SwedbankDefaultLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transactional.SwedbankDefaultTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.SwedbankDefaultTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankBaseHttpFilter;
@@ -44,9 +35,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -60,9 +48,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
 
 public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
-                RefreshEInvoiceExecutor,
-                RefreshInvestmentAccountsExecutor,
-                RefreshLoanAccountsExecutor,
                 RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
@@ -70,9 +55,6 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
 
     protected final SwedbankConfiguration swedbankConfiguration;
     protected final SwedbankDefaultApiClient apiClient;
-    private EInvoiceRefreshController eInvoiceRefreshController;
-    private final InvestmentRefreshController investmentRefreshController;
-    private final LoanRefreshController loanRefreshController;
     private TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -95,20 +77,6 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         this.apiClient =
                 apiClientProvider.getApiAgent(
                         client, configuration, credentials, swedbankStorage, componentProvider);
-        eInvoiceRefreshController = null;
-
-        SwedbankDefaultInvestmentFetcher investmentFetcher =
-                new SwedbankDefaultInvestmentFetcher(
-                        apiClient, request.getProvider().getCurrency());
-        investmentRefreshController =
-                new InvestmentRefreshController(
-                        metricRefreshController, updateController, investmentFetcher);
-
-        loanRefreshController =
-                new LoanRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new SwedbankDefaultLoanFetcher(apiClient));
 
         creditCardRefreshController = constructCreditCardRefreshController();
 
@@ -212,26 +180,6 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     }
 
     @Override
-    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
-        return investmentRefreshController.fetchInvestmentAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchInvestmentTransactions() {
-        return investmentRefreshController.fetchInvestmentTransactions();
-    }
-
-    @Override
-    public FetchLoanAccountsResponse fetchLoanAccounts() {
-        return loanRefreshController.fetchLoanAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchLoanTransactions() {
-        return loanRefreshController.fetchLoanTransactions();
-    }
-
-    @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
@@ -259,18 +207,6 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                 new SwedbankDefaultPaymentExecutor(
                         catalog, apiClient, transferHelper, swedbankStorage, dateUtils);
         return Optional.of(new TransferController(paymentExecutor, transferExecutor));
-    }
-
-    @Override
-    public FetchEInvoicesResponse fetchEInvoices() {
-        eInvoiceRefreshController =
-                Optional.ofNullable(eInvoiceRefreshController)
-                        .orElseGet(
-                                () ->
-                                        new EInvoiceRefreshController(
-                                                metricRefreshController,
-                                                new SwedbankDefaultEinvoiceFetcher(apiClient)));
-        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
     @Override

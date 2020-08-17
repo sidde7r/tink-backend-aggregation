@@ -16,13 +16,10 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.PaymentsConfirmedResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.investment.rpc.PensionPortfoliosResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.investment.rpc.PortfolioHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.SavingAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
@@ -45,7 +42,6 @@ public class SwedbankDefaultTransactionalAccountFetcher
 
     private final SwedbankDefaultApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private List<String> investmentAccountNumbers;
 
     // FIX temporary for Swedbanks problem with pagination
     // store transactions ids we have already seen by account
@@ -83,21 +79,10 @@ public class SwedbankDefaultTransactionalAccountFetcher
                             .collect(Collectors.toList()));
             accounts.addAll(
                     engagementOverviewResponse.getSavingAccounts().stream()
-                            // have not found any other way to filter out investment accounts from
-                            // savings accounts
-                            .filter(
-                                    account ->
-                                            !getInvestmentAccountNumbers()
-                                                    .contains(account.getFullyFormattedNumber()))
-                            .map(
-                                    account -> {
-                                        tryAccessPensionPortfoliosIfPensionType(account);
-                                        return account.toTransactionalAccount(bankProfile);
-                                    })
+                            .map(account -> account.toTransactionalAccount(bankProfile))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toList()));
-            investmentAccountNumbers = null;
         }
 
         if (apiClient.getBankProfiles().size() > 1) {
@@ -107,22 +92,8 @@ public class SwedbankDefaultTransactionalAccountFetcher
         return accounts;
     }
 
-    private void tryAccessPensionPortfoliosIfPensionType(SavingAccountEntity account) {
-        if (SwedbankBaseConstants.SavingAccountTypes.PENSION.equalsIgnoreCase(account.getType())) {
-            try {
-                PensionPortfoliosResponse pensionPortfolios = apiClient.getPensionPortfolios();
-                if (pensionPortfolios.hasPensionHoldings()) {
-                    log.info("Holdings found for pension portfolios");
-                }
-            } catch (Exception e) {
-                // Log that we got an exception here so we know about weird behaviour
-                log.info("Couldn't fetch pension portfolios: Cause: ", e);
-            }
-        }
-    }
-
     // DEBUG to see why refresh transactions fails
-    private void debugLogAccounts(List<TransactionalAccount> accounts) {
+    protected void debugLogAccounts(List<TransactionalAccount> accounts) {
         try {
             for (TransactionalAccount account : accounts) {
                 String accountNumber = account.getAccountNumber();
@@ -233,19 +204,6 @@ public class SwedbankDefaultTransactionalAccountFetcher
 
             throw hre;
         }
-    }
-
-    // fetch all account number from investment accounts BUT savings accounts, this is because we
-    // want savings accounts
-    // to be fetched by transactional fetcher to get any transactions
-    private List<String> getInvestmentAccountNumbers() {
-
-        if (investmentAccountNumbers == null) {
-            PortfolioHoldingsResponse portfolioHoldings = apiClient.portfolioHoldings();
-            investmentAccountNumbers = portfolioHoldings.investmentAccountNumbers();
-        }
-
-        return investmentAccountNumbers;
     }
 
     //
