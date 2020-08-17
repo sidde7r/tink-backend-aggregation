@@ -99,6 +99,13 @@ public class SwedbankTransferHelper {
                                     TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE)
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_TIMEOUT)
                             .build();
+                case ALREADY_IN_PROGRESS:
+                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                            .setEndUserMessage(
+                                    TransferExecutionException.EndUserMessage
+                                            .BANKID_ANOTHER_IN_PROGRESS)
+                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                            .build();
                 default:
                     throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                             .setEndUserMessage(
