@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 
+import java.util.Base64;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Urls;
@@ -62,14 +63,18 @@ public class EncapClient {
         messageUtils.encryptSoapAndSend(Urls.SOAP_AUTHENTICATION, authenticationBody);
 
         String activationBody = soapUtils.buildActivationSessionUpdateRequest(activationCode);
-        String soapResponse = messageUtils.encryptSoapAndSend(Urls.SOAP_ACTIVATION, activationBody);
+        final String soapResponse =
+                messageUtils.encryptSoapAndSend(Urls.SOAP_ACTIVATION, activationBody);
 
         String activationSessionId =
                 EncapSoapUtils.getActivationSessionId(soapResponse)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                "Could not get activationSessionId"));
+                                                "Could not get activationSessionId: "
+                                                        + Base64.getEncoder()
+                                                                .encodeToString(
+                                                                        soapResponse.getBytes())));
 
         String registrationMessage = messageUtils.buildRegistrationMessage();
         RegistrationResponse registrationResponse =
@@ -92,9 +97,10 @@ public class EncapClient {
         String activateDeviceBody =
                 soapUtils.buildActivationCreateRequest(
                         username, activationSessionId, samlObjectB64);
-        soapResponse = messageUtils.encryptSoapAndSend(Urls.SOAP_ACTIVATION, activateDeviceBody);
+        String activateDeviceSoapResponse =
+                messageUtils.encryptSoapAndSend(Urls.SOAP_ACTIVATION, activateDeviceBody);
 
-        return createDeviceRegistrationResponse(soapResponse);
+        return createDeviceRegistrationResponse(activateDeviceSoapResponse);
     }
 
     public DeviceAuthenticationResponse authenticateDevice(
