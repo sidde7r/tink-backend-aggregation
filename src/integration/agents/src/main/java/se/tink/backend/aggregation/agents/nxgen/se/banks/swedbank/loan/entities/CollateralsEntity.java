@@ -7,12 +7,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CollateralsEntity extends LoanEntity {
     private String description;
+    private AmountEntity totalDebt;
     private List<LoanEntity> loans;
     private boolean moreCollateralsExists;
-    private AmountEntity totalDebt;
 
     public String getDescription() {
         return description;
+    }
+
+    public AmountEntity getTotalDebt() {
+        return totalDebt;
     }
 
     public List<LoanEntity> getLoans() {
@@ -21,9 +25,5 @@ public class CollateralsEntity extends LoanEntity {
 
     public boolean isMoreCollateralsExists() {
         return moreCollateralsExists;
-    }
-
-    public AmountEntity getTotalDebt() {
-        return totalDebt;
     }
 }

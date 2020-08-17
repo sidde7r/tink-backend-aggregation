@@ -57,16 +57,6 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
     }
 
     @Override
-    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
-        return investmentRefreshController.fetchInvestmentAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchInvestmentTransactions() {
-        return investmentRefreshController.fetchInvestmentTransactions();
-    }
-
-    @Override
     public FetchLoanAccountsResponse fetchLoanAccounts() {
         return loanRefreshController.fetchLoanAccounts();
     }
@@ -74,6 +64,16 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return loanRefreshController.fetchLoanTransactions();
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override

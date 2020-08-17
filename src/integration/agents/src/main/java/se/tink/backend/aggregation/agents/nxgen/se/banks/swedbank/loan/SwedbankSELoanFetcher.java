@@ -9,7 +9,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.SwedbankDefaultLoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.CollateralsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.CollateralsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate.BaseAbstractLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate.CarLoanEntity;
@@ -17,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate.ConsumptionLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate.LoanEntityFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;

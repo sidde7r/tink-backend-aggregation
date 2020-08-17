@@ -6,15 +6,12 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.entities.OccupationalPensionInsurancesEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.entities.PensionInsuranceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.entities.PrivatePensionInsurancesEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class PensionPortfoliosResponse {
     private PrivatePensionInsurancesEntity privatePensionInsurances;
     private OccupationalPensionInsurancesEntity occupationalPensionInsurances;
-    private String serverTime;
-    private AmountEntity totalValue;
 
     /**
      * Temporary method to know if a user has holdings so that we can look at the responses in the
