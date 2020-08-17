@@ -1,24 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.httpclient.HttpStatus;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.ChallengeType;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.SupplementalFields;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.UserMessage;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.configuration.AbancaConfiguration;
@@ -26,9 +24,11 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.tr
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.rpc.entity.DetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.rpc.entity.ErrorsEntity;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -36,33 +36,33 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class AbancaApiClient {
-
+    private static final Logger log = LoggerFactory.getLogger(AbancaApiClient.class);
     private final TinkHttpClient client;
-    private final Catalog catalog;
     private final AbancaConfiguration configuration;
     private final String redirectUrl;
     private final SessionStorage sessionStorage;
-    private final Credentials credentials;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final Map<String, Field> supplementalFields;
+    private final boolean isManualRequest;
 
     public AbancaApiClient(
             TinkHttpClient client,
-            Catalog catalog,
             AgentConfiguration<AbancaConfiguration> agentConfiguration,
             SessionStorage sessionStorage,
-            Credentials credentials,
-            SupplementalRequester supplementalRequester) {
+            SupplementalInformationHelper supplementalInformationHelper,
+            List<Field> supplementalFields,
+            boolean isManualRequest) {
         this.client = client;
-        this.catalog = catalog;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.sessionStorage = sessionStorage;
-        this.credentials = credentials;
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.supplementalFields =
+                supplementalFields.stream()
+                        .collect(Collectors.toMap(Field::getName, field -> field));
+        this.isManualRequest = isManualRequest;
     }
 
     private String getRedirectUrl() {
@@ -105,11 +105,11 @@ public final class AbancaApiClient {
                                     .getChallengeError()
                                     .orElseThrow(() -> e);
 
-                    String challengeSolution = requestChallengeSolution();
-                    if (Strings.isNullOrEmpty(challengeSolution)) {
-                        throw new RuntimeException(
-                                catalog.getString(UserMessage.INVALID_CHALLENGE_RESPONSE));
+                    if (!isManualRequest) {
+                        log.warn("SCA request in non-manual refresh, this will time out");
                     }
+                    String challengeSolution =
+                            requestChallengeSolution(challengeError.getDetails());
 
                     return request.header(
                                     HeaderKeys.CHALLENGE_ID,
@@ -122,23 +122,31 @@ public final class AbancaApiClient {
         }
     }
 
-    private String requestChallengeSolution() {
-        Field challengeField =
-                Field.builder()
-                        .description(
-                                catalog.getString(UserMessage.GET_CHALLENGE_RESPONSE_DESCRIPTION))
-                        .name("response")
-                        .build();
-        List<Field> fields = Lists.newArrayList(challengeField);
+    private String requestChallengeSolution(DetailsEntity challengeDetails) {
+        final String challengeType = challengeDetails.getType();
+        final Field descriptionField;
+        final Field inputField = supplementalFields.get(SupplementalFields.CHALLENGE_RESPONSE);
 
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
-        String supplemental =
-                supplementalRequester.requestSupplementalInformation(credentials, true);
-        Map<String, String> answers =
-                SerializationUtils.deserializeFromString(
-                        supplemental, new TypeReference<Map<String, String>>() {});
-        return answers.get("response");
+        log.info("SCA type {}", challengeType);
+        if (challengeType.equalsIgnoreCase(ChallengeType.OTP_SMS)) {
+            // hint is masked phone number
+            descriptionField = supplementalFields.get(SupplementalFields.OTP_SMS_DESCRIPTION);
+            descriptionField.setValue(challengeDetails.getSolutionHint());
+        } else if (challengeType.equalsIgnoreCase(ChallengeType.OTP_MOBILE)) {
+            // hint can be entered in app to generate code if push notification is not received
+            descriptionField = supplementalFields.get(SupplementalFields.OTP_MOBILE_DESCRIPTION);
+            descriptionField.setValue(challengeDetails.getSolutionHint());
+        } else if (challengeType.equalsIgnoreCase(ChallengeType.OTP_DEVICE)) {
+            // no hint, OTP generated with device
+            descriptionField = supplementalFields.get(SupplementalFields.OTP_DEVICE_DESCRIPTION);
+        } else {
+            throw new IllegalStateException(
+                    String.format("Unknown challenge type %s", challengeType));
+        }
+
+        return supplementalInformationHelper
+                .askSupplementalInformation(descriptionField, inputField)
+                .get(inputField.getName());
     }
 
     public AccountsResponse fetchAccounts() {

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.rpc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.ResponseErrorCodes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -34,14 +33,17 @@ public class ErrorsEntity {
     }
 
     @JsonIgnore
-    public boolean challengeRequired() {
-        if (Strings.isNullOrEmpty(code)) {
-            return false;
-        }
-        if (code.trim().equalsIgnoreCase(ResponseErrorCodes.CHALLENGE_REQUIRED)
-                || code.trim().equalsIgnoreCase(ResponseErrorCodes.INVALID_CHALLENGE_VALUE)) {
-            return true;
-        }
-        return false;
+    public boolean isChallengeError() {
+        return isChallengeRequired() || isChallengeInvalid();
+    }
+
+    @JsonIgnore
+    public boolean isChallengeRequired() {
+        return ResponseErrorCodes.CHALLENGE_REQUIRED.equalsIgnoreCase(code);
+    }
+
+    @JsonIgnore
+    public boolean isChallengeInvalid() {
+        return ResponseErrorCodes.INVALID_CHALLENGE_VALUE.equalsIgnoreCase(code);
     }
 }

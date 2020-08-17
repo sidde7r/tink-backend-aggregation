@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
 
 public final class AbancaConstants {
 
@@ -80,20 +78,16 @@ public final class AbancaConstants {
         public static final String INVALID_CHALLENGE_VALUE = "API_00006";
     }
 
-    public enum UserMessage implements LocalizableEnum {
-        GET_CHALLENGE_RESPONSE_DESCRIPTION(
-                new LocalizableKey("Enter the code you received from the bank")),
-        INVALID_CHALLENGE_RESPONSE(new LocalizableKey("Failed to read user input"));
+    public static class ChallengeType {
+        public static final String OTP_SMS = "otp_sms";
+        public static final String OTP_MOBILE = "otp_mobile";
+        public static final String OTP_DEVICE = "otp_device";
+    }
 
-        private final LocalizableKey userMessage;
-
-        UserMessage(LocalizableKey userMessage) {
-            this.userMessage = userMessage;
-        }
-
-        @Override
-        public LocalizableKey getKey() {
-            return this.userMessage;
-        }
+    public static class SupplementalFields {
+        public static final String OTP_SMS_DESCRIPTION = "otp_sms_description";
+        public static final String OTP_MOBILE_DESCRIPTION = "otp_mobile_description";
+        public static final String OTP_DEVICE_DESCRIPTION = "otp_device_description";
+        public static final String CHALLENGE_RESPONSE = "response";
     }
 }

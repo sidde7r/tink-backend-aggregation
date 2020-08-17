@@ -39,11 +39,11 @@ public final class AbancaAgent extends NextGenerationAgent
         apiClient =
                 new AbancaApiClient(
                         client,
-                        agentComponentProvider.getContext().getCatalog(),
                         agentConfiguration,
                         sessionStorage,
-                        credentials,
-                        supplementalRequester);
+                        supplementalInformationHelper,
+                        provider.getSupplementalFields(),
+                        agentComponentProvider.getCredentialsRequest().isManual());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
