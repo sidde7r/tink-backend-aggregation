@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import javax.ws.rs.core.Cookie;
+import lombok.Getter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc.RegisterPayeeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc.RegisterRecipientResponse;
@@ -68,6 +70,7 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class SwedbankDefaultApiClient {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultApiClient.class);
+    @Getter private final String host;
     protected final TinkHttpClient client;
     private final SwedbankConfiguration configuration;
     private final String username;
@@ -103,6 +106,7 @@ public class SwedbankDefaultApiClient {
                                         .getField(Key.CORPORATE_ID))
                         .orElse("");
         ensureAuthorizationHeaderIsSet();
+        this.host = configuration.getHost();
     }
 
     private String generateDSID() {
@@ -115,7 +119,7 @@ public class SwedbankDefaultApiClient {
     }
 
     protected HttpResponse makeGetRequest(LinkEntity linkEntity, boolean retry) {
-        URL url = SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri());
+        URL url = SwedbankBaseConstants.Url.createDynamicUrl(host, linkEntity.getUri());
         return makeGetRequest(url, HttpResponse.class, retry);
     }
 
@@ -151,7 +155,8 @@ public class SwedbankDefaultApiClient {
                 method,
                 linkEntity.getUri());
 
-        URL url = SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), queryParams);
+        URL url =
+                SwedbankBaseConstants.Url.createDynamicUrl(host, linkEntity.getUri(), queryParams);
         return makeRequest(url, requestObject, responseClass, method, retry);
     }
 
@@ -217,7 +222,7 @@ public class SwedbankDefaultApiClient {
     public InitBankIdResponse initBankId(String ssn) {
         try {
             return makePostRequest(
-                    SwedbankBaseConstants.Url.INIT_BANKID.get(),
+                    SwedbankBaseConstants.Url.INIT_BANKID.get(host),
                     InitAuthenticationRequest.createFromUserId(ssn),
                     InitBankIdResponse.class,
                     true);
@@ -407,14 +412,15 @@ public class SwedbankDefaultApiClient {
     }
 
     public TouchResponse touch() {
-        return makeGetRequest(SwedbankBaseConstants.Url.TOUCH.get(), TouchResponse.class, false);
+        return makeGetRequest(
+                SwedbankBaseConstants.Url.TOUCH.get(host), TouchResponse.class, false);
     }
 
     public boolean logout() {
         try {
             HttpResponse response =
                     makePutRequest(
-                            SwedbankBaseConstants.Url.LOGOUT.get(),
+                            SwedbankBaseConstants.Url.LOGOUT.get(host),
                             null,
                             HttpResponse.class,
                             false);
@@ -581,7 +587,7 @@ public class SwedbankDefaultApiClient {
     public InitSecurityTokenChallengeResponse initTokenGenerator(String ssn) {
         try {
             return makePostRequest(
-                    SwedbankBaseConstants.Url.INIT_TOKEN.get(),
+                    SwedbankBaseConstants.Url.INIT_TOKEN.get(host),
                     InitAuthenticationRequest.createFromUserId(ssn),
                     InitSecurityTokenChallengeResponse.class,
                     true);

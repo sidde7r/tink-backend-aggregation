@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferConstants;
-import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.strings.StringUtils;
@@ -43,53 +43,49 @@ public class SwedbankBaseConstants {
                 ImmutableSet.of("ÖVF VIA INTERNET", "SKYDDAT BELOPP");
     }
 
-    public enum Url implements UrlEnum {
-        INIT_BANKID(createUrlWithHost("/v5/identification/bankid/mobile")),
-        INIT_TOKEN(createUrlWithHost("/v5/identification/securitytoken/challenge")),
-        TOUCH(createUrlWithHost("/v5/identification/touch")),
-        LOGOUT(createUrlWithHost("/v5/identification/logout")),
+    public enum Url {
+        INIT_BANKID("/v5/identification/bankid/mobile"),
+        INIT_TOKEN("/v5/identification/securitytoken/challenge"),
+        TOUCH("/v5/identification/touch"),
+        LOGOUT("/v5/identification/logout"),
         PROFILE("/v5/profile/");
 
-        public static final String IDENTIFICATION = createUrlWithHost("/v5/identification");
+        public static final String IDENTIFICATION = "/v5/identification";
         public static final String DSID_KEY = "dsid";
         private URL url;
+        private String path;
 
-        Url(String url) {
-            this.url = new URL(url);
+        Url(String path) {
+            this.path = path;
         }
 
-        @Override
-        public URL get() {
-            return url;
+        public URL get(String host) {
+            return new URL(createUrlWithHost(host, path));
         }
 
-        @Override
         public URL parameter(String key, String value) {
             return url.parameter(key, value);
         }
 
-        @Override
         public URL queryParam(String key, String value) {
             return url.queryParam(key, value);
         }
 
-        private static final String HOST =
-                "https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api";
-
-        private static String createUrlWithHost(String path) {
-            return HOST + path;
+        private static String createUrlWithHost(String host, String path) {
+            return host + path;
         }
 
-        public static URL createDynamicUrl(String path) {
-            return new URL(createUrlWithHost(path));
+        public static URL createDynamicUrl(String host, String path) {
+            return new URL(createUrlWithHost(host, path));
         }
 
-        public static URL createDynamicUrl(String path, Map<String, String> parameters) {
+        public static URL createDynamicUrl(
+                String host, String path, Map<String, String> parameters) {
             if (parameters == null || parameters.isEmpty()) {
-                return createDynamicUrl(path);
+                return createDynamicUrl(host, path);
             }
 
-            URL url = new URL(createUrlWithHost(path));
+            URL url = new URL(createUrlWithHost(host, path));
 
             for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
                 url = url.parameter(parameterEntry.getKey(), parameterEntry.getValue());

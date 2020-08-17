@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankDefaultBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankTokenGeneratorAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.SwedbankDefaultPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.SwedbankDefaultBankTransferExecutor;
