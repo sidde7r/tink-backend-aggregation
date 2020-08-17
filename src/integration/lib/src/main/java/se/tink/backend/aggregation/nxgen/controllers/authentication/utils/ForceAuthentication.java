@@ -11,6 +11,10 @@ public class ForceAuthentication {
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static boolean shouldForceAuthentication(CredentialsRequest request) {
+        if (request == null) {
+            return false; // payments reuse lots of aggregation functionality and they do not
+            // populate credentials request
+        }
         boolean shouldForceAuthentication =
                 request instanceof RefreshInformationRequest
                         && ((RefreshInformationRequest) request).isForceAuthenticate();
