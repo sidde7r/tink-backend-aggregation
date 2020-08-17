@@ -25,6 +25,11 @@ agentsServiceConfiguration:
     beProxy: false
     esProxy: false
   integrations:
+    6f4c3c0062b145918fc69afd621be0f1:
+      tink:
+        clientId: dummyClientId
+        clientSecret: dummyClientSecret
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     004685af33dd4a74995ba16d3f066acb:
       tink:
         clientId: dummyClientId
