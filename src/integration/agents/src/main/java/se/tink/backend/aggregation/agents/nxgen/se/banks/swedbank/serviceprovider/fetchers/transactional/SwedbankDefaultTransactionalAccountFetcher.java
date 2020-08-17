@@ -219,6 +219,7 @@ public class SwedbankDefaultTransactionalAccountFetcher
             // PersistentStorage is used for setting mark
             if (key != null
                     && (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                            || response.getStatus() == HttpStatus.SC_NOT_FOUND
                             || response.getStatus() == HttpStatus.SC_UNAUTHORIZED)) {
                 // mark credential with PAGINATION_ERROR in persistent storage
                 persistentStorage.put(
