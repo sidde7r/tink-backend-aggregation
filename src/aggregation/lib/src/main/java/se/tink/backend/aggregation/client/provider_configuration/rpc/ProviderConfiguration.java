@@ -42,7 +42,8 @@ public class ProviderConfiguration {
 
     public enum AuthenticationUserType {
         PERSONAL,
-        BUSINESS
+        BUSINESS,
+        CORPORATE
     }
 
     @SuppressWarnings("serial")
