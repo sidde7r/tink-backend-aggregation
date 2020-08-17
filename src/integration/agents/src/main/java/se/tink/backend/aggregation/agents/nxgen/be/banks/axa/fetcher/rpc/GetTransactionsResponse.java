@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.Tr
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public final class GetTransactionsResponse {
@@ -33,22 +33,20 @@ public final class GetTransactionsResponse {
             final TransactionEntity transactionsEntity) {
         final String description = extractDescription(transactionsEntity);
         final Date date = timestampToDate(transactionsEntity.getCreationTimeStamp());
-        final Amount balance =
-                new Amount(
-                        transactionsEntity.getCurrency(),
-                        Double.parseDouble(transactionsEntity.getAmount()));
-
+        final ExactCurrencyAmount amount =
+                ExactCurrencyAmount.of(
+                        transactionsEntity.getAmount(), transactionsEntity.getCurrency());
         return Transaction.builder()
                 .setDescription(description)
                 .setDate(date)
-                .setAmount(balance)
+                .setAmount(amount)
                 .build();
     }
 
     private static String extractDescription(final TransactionEntity transactionsEntity) {
         final StringJoiner joiner = new StringJoiner(" | ");
         final String counterparty = transactionsEntity.getCounterparty();
-        final String details = transactionsEntity.getDetails();
+        final String details = transactionsEntity.getDescription();
         if (!Strings.isNullOrEmpty(counterparty)) {
             joiner.add(counterparty);
         }
