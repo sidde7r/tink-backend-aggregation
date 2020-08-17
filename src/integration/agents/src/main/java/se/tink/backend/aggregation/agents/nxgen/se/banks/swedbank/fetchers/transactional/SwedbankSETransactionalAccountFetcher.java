@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class SwedbankSETransactionalAccountFetcher
         extends SwedbankDefaultTransactionalAccountFetcher {
     private static final Logger log =
-        LoggerFactory.getLogger(SwedbankSETransactionalAccountFetcher.class);
+            LoggerFactory.getLogger(SwedbankSETransactionalAccountFetcher.class);
 
     private SwedbankSEApiClient apiClient;
     private List<String> investmentAccountNumbers;
@@ -41,33 +41,33 @@ public class SwedbankSETransactionalAccountFetcher
             EngagementOverviewResponse engagementOverviewResponse = apiClient.engagementOverview();
 
             accounts.addAll(
-                engagementOverviewResponse.getTransactionAccounts().stream()
-                    .map(account -> account.toTransactionalAccount(bankProfile))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList()));
+                    engagementOverviewResponse.getTransactionAccounts().stream()
+                            .map(account -> account.toTransactionalAccount(bankProfile))
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toList()));
             accounts.addAll(
-                engagementOverviewResponse.getTransactionDisposalAccounts().stream()
-                    .map(account -> account.toTransactionalAccount(bankProfile))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList()));
+                    engagementOverviewResponse.getTransactionDisposalAccounts().stream()
+                            .map(account -> account.toTransactionalAccount(bankProfile))
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toList()));
             accounts.addAll(
-                engagementOverviewResponse.getSavingAccounts().stream()
-                    // have not found any other way to filter out investment accounts from
-                    // savings accounts
-                    .filter(
-                        account ->
-                            !getInvestmentAccountNumbers()
-                                .contains(account.getFullyFormattedNumber()))
-                    .map(
-                        account -> {
-                            tryAccessPensionPortfoliosIfPensionType(account);
-                            return account.toTransactionalAccount(bankProfile);
-                        })
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList()));
+                    engagementOverviewResponse.getSavingAccounts().stream()
+                            // have not found any other way to filter out investment accounts from
+                            // savings accounts
+                            .filter(
+                                    account ->
+                                            !getInvestmentAccountNumbers()
+                                                    .contains(account.getFullyFormattedNumber()))
+                            .map(
+                                    account -> {
+                                        tryAccessPensionPortfoliosIfPensionType(account);
+                                        return account.toTransactionalAccount(bankProfile);
+                                    })
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toList()));
             investmentAccountNumbers = null;
         }
 
@@ -104,5 +104,4 @@ public class SwedbankSETransactionalAccountFetcher
 
         return investmentAccountNumbers;
     }
-
 }

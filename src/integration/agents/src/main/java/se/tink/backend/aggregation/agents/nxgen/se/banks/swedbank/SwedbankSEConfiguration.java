@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank;
 
 import com.google.common.base.Preconditions;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileParameters;
 
 public class SwedbankSEConfiguration implements SwedbankConfiguration {
@@ -11,6 +11,11 @@ public class SwedbankSEConfiguration implements SwedbankConfiguration {
         this.profileParameters =
                 Preconditions.checkNotNull(
                         SwedbankSEConstants.PROFILE_PARAMETERS.get(bankProviderPayload));
+    }
+
+    @Override
+    public String getHost() {
+        return SwedbankSEConstants.HOST;
     }
 
     @Override
