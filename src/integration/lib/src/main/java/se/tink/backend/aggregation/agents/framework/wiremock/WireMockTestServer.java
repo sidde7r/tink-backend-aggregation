@@ -136,13 +136,27 @@ public class WireMockTestServer {
     private void registerRequestResponsePairs(
             Set<Pair<HTTPRequest, HTTPResponse>> pairs,
             Map<HTTPRequest, HTTPResponse> registeredPairs) {
-        /* Register requests with parameters last, to prevent mismatch when the same URL is registered with and without query parameters */
+        // By default, WireMock will use the most recently added matching stub to satisfy the
+        // request. To prevent mismatches when several requests have the same URL but different
+        // subsets of parameters, headers and/or state, more specific requests should be added after
+        // the more general ones.
         final List<Pair<HTTPRequest, HTTPResponse>> sortedPairs =
                 pairs.stream()
                         .sorted(
                                 Comparator.comparingInt(
-                                        (Pair<HTTPRequest, HTTPResponse> p) ->
-                                                p.first.getQuery().size()))
+                                                // Expected state after no state
+                                                (Pair<HTTPRequest, HTTPResponse> p) ->
+                                                        p.first.getExpectedState().isPresent()
+                                                                ? 1
+                                                                : 0)
+                                        .thenComparingInt(
+                                                // More parameters after fewer parameters
+                                                (Pair<HTTPRequest, HTTPResponse> p) ->
+                                                        p.first.getQuery().size())
+                                        .thenComparingInt(
+                                                // More headers after fewer headers
+                                                (Pair<HTTPRequest, HTTPResponse> p) ->
+                                                        p.first.getRequestHeaders().size()))
                         .collect(Collectors.toList());
 
         for (Pair<HTTPRequest, HTTPResponse> pair : sortedPairs) {
