@@ -46,14 +46,14 @@ public abstract class CredentialsRequest {
     public CredentialsRequest() {}
 
     public CredentialsRequest(User user, Provider provider, Credentials credentials) {
-        this(user, provider, credentials, null);
+        this.user = user;
+        this.provider = provider;
+        this.credentials = credentials;
     }
 
     public CredentialsRequest(
             User user, Provider provider, Credentials credentials, String originatingUserIp) {
-        this.user = user;
-        this.provider = provider;
-        this.credentials = credentials;
+        this(user, provider, credentials);
         this.originatingUserIp = originatingUserIp;
     }
 
