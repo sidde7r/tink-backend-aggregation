@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.auth
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ScaOptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.LoggedInEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.ScaOptionsEncryptedPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
@@ -27,9 +27,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     private static final Logger log = LoggerFactory.getLogger(BecAuthenticator.class);
-
-    static final String USERNAME_STORAGE_KEY = "username";
-    static final String PASSWORD_STORAGE_KEY = "password";
 
     private static final Pattern USERNAME_PATTERN = Pattern.compile("\\d{10,11}");
     private static final Pattern MOBILECODE_PATTERN = Pattern.compile("\\d{4}");
@@ -53,16 +50,23 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         return ImmutableList.of(
+                new ScaTokenAuthenticationStep(apiClient, persistentStorage, getDeviceId()),
                 new AutomaticAuthenticationStep(this::syncAppDetails, "syncApp"),
                 new UsernamePasswordAuthenticationStep(this::fetchScaOptions),
                 new DecisionAuthStep(sessionStorage),
                 new CombinedNemIdAuthenticationStep(
-                        sessionStorage, apiClient, supplementalRequester),
-                new KeyCardAuthenticationStep(sessionStorage, persistentStorage, apiClient),
+                        apiClient,
+                        supplementalRequester,
+                        sessionStorage,
+                        persistentStorage,
+                        getDeviceId()),
+                new KeyCardAuthenticationStep(sessionStorage, apiClient, getDeviceId()),
                 new SingleSupplementalFieldAuthenticationStep(
                         SingleSupplementalFieldAuthenticationStep.class.getName(),
                         this::keyCardAuth,
-                        prepareKeyCardField()));
+                        prepareKeyCardField()),
+                new FinalKeyCardAuthenticationStep(
+                        sessionStorage, persistentStorage, apiClient, getDeviceId()));
     }
 
     private AuthenticationStepResponse syncAppDetails() {
@@ -73,14 +77,13 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     private void fetchScaOptions(String username, String password)
             throws LoginException, NemIdException {
         auditCredentials(username, password);
-        ScaOptionsEncryptedPayload payload = apiClient.scaPrepare(username, password);
-        sessionStorage.put(USERNAME_STORAGE_KEY, username);
-        sessionStorage.put(PASSWORD_STORAGE_KEY, password);
+        ScaOptionsEncryptedPayload payload =
+                apiClient.getScaOptions(username, password, getDeviceId());
 
         if (payload.getSecondFactorOptions().contains(ScaOptions.CODEAPP_OPTION))
-            sessionStorage.put(ScaOptions.SCA_OPTION_KEY, ScaOptions.CODEAPP_OPTION);
+            sessionStorage.put(StorageKeys.SCA_OPTION_KEY, ScaOptions.CODEAPP_OPTION);
         else if (payload.getSecondFactorOptions().contains(ScaOptions.KEYCARD_OPTION))
-            sessionStorage.put(ScaOptions.SCA_OPTION_KEY, ScaOptions.KEYCARD_OPTION);
+            sessionStorage.put(StorageKeys.SCA_OPTION_KEY, ScaOptions.KEYCARD_OPTION);
         else throw NemIdError.SECOND_FACTOR_NOT_REGISTERED.exception();
     }
 
@@ -95,20 +98,9 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     private AuthenticationStepResponse keyCardAuth(String challengeResponseValue) {
-        String nemidChallenge = sessionStorage.get(StorageKeys.CHALLENGE_STORAGE_KEY);
-        String userName = sessionStorage.get(USERNAME_STORAGE_KEY);
-        String password = sessionStorage.get(PASSWORD_STORAGE_KEY);
+        sessionStorage.put(StorageKeys.KEY_CARD_CHALLENGE_RESPONSE_KEY, challengeResponseValue);
 
-        LoggedInEntity loggedInEntity =
-                apiClient.postKeyCardChallengeAndDecryptResponse(
-                        userName,
-                        password,
-                        challengeResponseValue,
-                        nemidChallenge,
-                        persistentStorage.get(StorageKeys.DEVICE_ID_STORAGE_KEY));
-        persistentStorage.put(StorageKeys.SCA_TOKEN_STORAGE_KEY, loggedInEntity.getScaToken());
-
-        return AuthenticationStepResponse.authenticationSucceeded();
+        return AuthenticationStepResponse.executeStepWithId(FinalKeyCardAuthenticationStep.STEP_ID);
     }
 
     private Field prepareKeyCardField() {
@@ -127,5 +119,20 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
                 .hint("NNNNNN")
                 .pattern("([0-9]{4})")
                 .build();
+    }
+
+    private String getDeviceId() {
+        String deviceId = persistentStorage.get(StorageKeys.DEVICE_ID_STORAGE_KEY);
+        if (deviceId != null) {
+            return deviceId;
+        } else {
+            String generatedDeviceId = generateDeviceId();
+            persistentStorage.put(StorageKeys.DEVICE_ID_STORAGE_KEY, generatedDeviceId);
+            return generatedDeviceId;
+        }
+    }
+
+    private String generateDeviceId() {
+        return UUID.randomUUID().toString();
     }
 }

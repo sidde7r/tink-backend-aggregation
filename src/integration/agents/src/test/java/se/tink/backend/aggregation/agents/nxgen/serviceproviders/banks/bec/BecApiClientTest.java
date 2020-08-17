@@ -3,18 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import javax.ws.rs.core.MediaType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
-import org.mockito.ArgumentMatcher;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
@@ -23,9 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecAuthenticationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecSecurityHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.BaseBecRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppScaEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppTokenEncryptedPayload;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.EncryptedPayloadAndroidEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.LoggedInEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.PayloadAndroidEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.ScaOptionsEncryptedPayload;
@@ -50,8 +46,9 @@ public class BecApiClientTest {
     private static final String USERNAME = "sample username";
     private static final String PASSWORD = "sample password";
 
-    private static final String DEFAULT_2FA = "default";
     private static final String CODEAPP_2FA = "codeapp";
+
+    private static final String DEVICE_ID = "deviceId";
 
     private static final String WRONG_CREDENTIALS = "wrong credentials";
 
@@ -70,6 +67,15 @@ public class BecApiClientTest {
     private static final String LOGOUT_URL = URL_PREFIX + PAYLOAD + ".prod.bec.dk/mobilbank/logoff";
 
     private static final String SECURITY_KEY = "sample security key";
+
+    private static final String LOGGED_IN_ENTITY =
+            "{\n"
+                    + "  \"lastUsed\": \"2020-08-07\",\n"
+                    + "  \"username\": \"Name Name\",\n"
+                    + "  \"bankReference\": \"1234567890\",\n"
+                    + "  \"scaToken\": \"AAAA1111A1A111AA11A111111A11A1\",\n"
+                    + "  \"authCodes\": [1, 2]\n"
+                    + "}";
 
     private BecApiClient becApiClient;
 
@@ -213,7 +219,8 @@ public class BecApiClientTest {
     }
 
     @Test
-    public void scaPrepareShouldReturnPossible2faOptions() throws LoginException, NemIdException {
+    public void getScaOptionsShouldReturnPossible2faOptions()
+            throws LoginException, NemIdException {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -230,20 +237,15 @@ public class BecApiClientTest {
                 .willReturn("{\"secondFactorOptions\":[\"" + CODEAPP_2FA + "\"]}");
 
         // when
-        ScaOptionsEncryptedPayload result = becApiClient.scaPrepare(USERNAME, PASSWORD);
+        ScaOptionsEncryptedPayload result =
+                becApiClient.getScaOptions(USERNAME, PASSWORD, DEVICE_ID);
 
         // then
         assertThat(result.getSecondFactorOptions()).containsOnly(CODEAPP_2FA);
-        // and
-        verify(securityHelper)
-                .encrypt(
-                        argThat(
-                                new SecurityHelperEncryptVerifier(
-                                        PASSWORD, USERNAME, DEFAULT_2FA)));
     }
 
     @Test
-    public void scaPrepareShouldThrowLoginExceptionWhenUserProvidesWrongCredentials() {
+    public void getScaOptionsShouldThrowLoginExceptionWhenUserProvidesWrongCredentials() {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -254,21 +256,16 @@ public class BecApiClientTest {
                 .willThrow(new BecAuthenticationException(WRONG_CREDENTIALS));
 
         // when
-        Throwable t = catchThrowable(() -> becApiClient.scaPrepare(USERNAME, PASSWORD));
+        Throwable t =
+                catchThrowable(() -> becApiClient.getScaOptions(USERNAME, PASSWORD, DEVICE_ID));
 
         // then
         assertThat(t).isInstanceOf(LoginException.class).hasMessage(WRONG_CREDENTIALS);
-        // and
-        verify(securityHelper)
-                .encrypt(
-                        argThat(
-                                new SecurityHelperEncryptVerifier(
-                                        PASSWORD, USERNAME, DEFAULT_2FA)));
     }
 
     @Test
     public void
-            scaPrepareShouldThrowNemIdExceptionWhenLockedPinIsAMessageOfBecAuthenticationException() {
+            getScaOptionsShouldThrowNemIdExceptionWhenLockedPinIsAMessageOfBecAuthenticationException() {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -281,21 +278,16 @@ public class BecApiClientTest {
                 .willThrow(new BecAuthenticationException(pinLockedMsg));
 
         // when
-        Throwable t = catchThrowable(() -> becApiClient.scaPrepare(USERNAME, PASSWORD));
+        Throwable t =
+                catchThrowable(() -> becApiClient.getScaOptions(USERNAME, PASSWORD, DEVICE_ID));
 
         // then
         assertThat(t).isInstanceOf(NemIdException.class).hasMessage("Cause: NemIdError.LOCKED_PIN");
-        // and
-        verify(securityHelper)
-                .encrypt(
-                        argThat(
-                                new SecurityHelperEncryptVerifier(
-                                        PASSWORD, USERNAME, DEFAULT_2FA)));
     }
 
     @Test
     public void
-            scaPrepareShouldThrowNemIdExceptionWhenBlockedNemIdIsAMessageOfBecAuthenticationException() {
+            getScaOptionsShouldThrowNemIdExceptionWhenBlockedNemIdIsAMessageOfBecAuthenticationException() {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -307,22 +299,17 @@ public class BecApiClientTest {
                 .willThrow(new BecAuthenticationException(pinLockedMsg));
 
         // when
-        Throwable t = catchThrowable(() -> becApiClient.scaPrepare(USERNAME, PASSWORD));
+        Throwable t =
+                catchThrowable(() -> becApiClient.getScaOptions(USERNAME, PASSWORD, DEVICE_ID));
 
         // then
         assertThat(t)
                 .isInstanceOf(NemIdException.class)
                 .hasMessage("Cause: NemIdError.CODEAPP_NOT_REGISTERED");
-        // and
-        verify(securityHelper)
-                .encrypt(
-                        argThat(
-                                new SecurityHelperEncryptVerifier(
-                                        PASSWORD, USERNAME, DEFAULT_2FA)));
     }
 
     @Test
-    public void scaPrepare2ShouldReturnPossible2faOptions() throws NemIdException {
+    public void getNemIdTokenShouldReturnPossible2faOptions() throws NemIdException {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -339,21 +326,16 @@ public class BecApiClientTest {
                 .willReturn("{\"codeapp\":{\"token\": \"sample token x\", \"pollTimeout\": 300}}");
 
         // when
-        CodeAppTokenEncryptedPayload result = becApiClient.scaPrepare2(USERNAME, PASSWORD);
+        CodeAppTokenEncryptedPayload result =
+                becApiClient.getNemIdToken(USERNAME, PASSWORD, DEVICE_ID);
 
         // then
         assertThat(result.getCodeappTokenDetails().getPollTimeout()).isEqualTo(300);
         assertThat(result.getCodeappTokenDetails().getToken()).isEqualTo("sample token x");
-        // and
-        verify(securityHelper)
-                .encrypt(
-                        argThat(
-                                new SecurityHelperEncryptVerifier(
-                                        PASSWORD, USERNAME, CODEAPP_2FA)));
     }
 
     @Test
-    public void scaPrepare2ShouldThrowNemIdExceptionWhen2ndScaRequestThrowsBecAuthException() {
+    public void getNemIdToken2ShouldThrowNemIdExceptionWhen2ndScaRequestThrowsBecAuthException() {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -364,74 +346,54 @@ public class BecApiClientTest {
                 .willThrow(new BecAuthenticationException(""));
 
         // when
-        Throwable t = catchThrowable(() -> becApiClient.scaPrepare2(USERNAME, PASSWORD));
+        Throwable t =
+                catchThrowable(() -> becApiClient.getNemIdToken(USERNAME, PASSWORD, DEVICE_ID));
 
         // then
         assertThat(t)
                 .isInstanceOf(NemIdException.class)
                 .hasMessage("Cause: NemIdError.CODEAPP_NOT_REGISTERED");
-        // and
-        verify(securityHelper)
-                .encrypt(
-                        argThat(
-                                new SecurityHelperEncryptVerifier(
-                                        PASSWORD, USERNAME, CODEAPP_2FA)));
     }
 
     @Test
-    public void scaShouldPostBaseRequest() throws ThirdPartyAppException {
+    public void authCodeAppPostBaseRequest() throws ThirdPartyAppException {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
+
         // and
         BaseBecRequest baseBecRequest = baseBecRequest();
+        // and
+        given(requestBuilder.post(eq(EncryptedResponse.class), eq(baseBecRequest)))
+                .willReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\"encryptedPayload\":\"encrypted payload\"}",
+                                EncryptedResponse.class));
+        // and
+        given(securityHelper.decrypt(ENCRYPTED_PAYLOAD)).willReturn(LOGGED_IN_ENTITY);
+
         baseBecRequest.setEncryptedPayload(ENCRYPTED_PAYLOAD);
 
         // when
-        becApiClient.sca(USERNAME, PASSWORD, TOKEN_VALUE);
+        LoggedInEntity loggedInEntity =
+                becApiClient.authCodeApp(USERNAME, PASSWORD, TOKEN_VALUE, DEVICE_ID);
 
-        // and
-        verify(client).request(SCA_URL);
-        verify(requestBuilder)
-                .header(BecConstants.Header.PRAGMA_KEY, BecConstants.Header.PRAGMA_VALUE);
-        verify(requestBuilder).type(MediaType.APPLICATION_JSON_TYPE);
-        verify(requestBuilder).post(baseBecRequest);
-        // and
-        verify(securityHelper)
-                .encrypt(
-                        argThat(
-                                new SecurityHelperEncryptVerifier(
-                                        PASSWORD,
-                                        USERNAME,
-                                        CODEAPP_2FA,
-                                        new CodeAppScaEntity(TOKEN_VALUE))));
+        assertLoggedInEntity(loggedInEntity);
     }
 
     @Test
-    public void scaShouldThrowThirdPartyAppExceptionWhenScaRespondWithAuthException() {
+    public void authCodeAppShouldThrowThirdPartyAppExceptionWhenScaRespondWithAuthException() {
         // given
-        given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
-        // and
-        BaseBecRequest baseBecRequest = baseBecRequest();
-        baseBecRequest.setEncryptedPayload(ENCRYPTED_PAYLOAD);
-        // and
-        doThrow(new BecAuthenticationException("auth exception"))
-                .when(requestBuilder)
-                .post(baseBecRequest);
+
+        when(requestBuilder.post(eq(EncryptedResponse.class), any()))
+                .thenThrow(new BecAuthenticationException("auth exception"));
 
         // when
-        Throwable t = catchThrowable(() -> becApiClient.sca(USERNAME, PASSWORD, TOKEN_VALUE));
+        Throwable t =
+                catchThrowable(
+                        () -> becApiClient.authCodeApp(USERNAME, PASSWORD, TOKEN_VALUE, DEVICE_ID));
 
-        // and
+        // then
         assertThat(t).isInstanceOf(ThirdPartyAppException.class).hasMessage("auth exception");
-        // and
-        verify(securityHelper)
-                .encrypt(
-                        argThat(
-                                new SecurityHelperEncryptVerifier(
-                                        PASSWORD,
-                                        USERNAME,
-                                        CODEAPP_2FA,
-                                        new CodeAppScaEntity(TOKEN_VALUE))));
     }
 
     @Test
@@ -460,7 +422,7 @@ public class BecApiClientTest {
                                 + "  }\n"
                                 + "}");
         SecondFactorOperationsEntity secondFactorOperationsEntity =
-                becApiClient.postKeyCardPrepareAndDecryptResponse(USERNAME, PASSWORD, "deviceId");
+                becApiClient.postKeyCardValuesAndDecryptResponse(USERNAME, PASSWORD, DEVICE_ID);
 
         assertThat(secondFactorOperationsEntity.getSecondFactorOptions().size()).isEqualTo(1);
         assertThat(secondFactorOperationsEntity.getSecondFactorOptions().get(0))
@@ -471,7 +433,7 @@ public class BecApiClientTest {
     }
 
     @Test
-    public void postKeyCardChallengeAndDecryptResponseShouldReturnScaToken() {
+    public void authKeyCardShouldReturnScaToken() {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -484,21 +446,37 @@ public class BecApiClientTest {
                                 "{\"encryptedPayload\":\"encrypted payload\"}",
                                 EncryptedResponse.class));
         // and
-        given(securityHelper.decrypt(ENCRYPTED_PAYLOAD))
-                .willReturn(
-                        "{\n"
-                                + "  \"lastUsed\": \"2020-08-07\",\n"
-                                + "  \"username\": \"Name Name\",\n"
-                                + "  \"bankReference\": \"1234567890\",\n"
-                                + "  \"scaToken\": \"AAAA1111A1A111AA11A111111A11A1\",\n"
-                                + "  \"authCodes\": [1, 2]\n"
-                                + "}");
+        given(securityHelper.decrypt(ENCRYPTED_PAYLOAD)).willReturn(LOGGED_IN_ENTITY);
+
+        // when
         LoggedInEntity loggedInEntity =
-                becApiClient.postKeyCardChallengeAndDecryptResponse(
-                        USERNAME, PASSWORD, "challengeValue", "nemidChallenge", "deviceId");
-        assertThat(loggedInEntity.getBankReference()).isEqualTo("1234567890");
-        assertThat(loggedInEntity.getLastUsed()).isEqualTo("2020-08-07");
-        assertThat(loggedInEntity.getScaToken()).isEqualTo("AAAA1111A1A111AA11A111111A11A1");
+                becApiClient.authKeyCard(
+                        USERNAME, PASSWORD, "challengeValue", "nemidChallenge", DEVICE_ID);
+
+        assertLoggedInEntity(loggedInEntity);
+    }
+
+    @Test
+    public void authScaTokenShouldReturnScaToken() {
+        // given
+        given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
+        // and
+        BaseBecRequest baseBecRequest = baseBecRequest();
+        baseBecRequest.setEncryptedPayload(ENCRYPTED_PAYLOAD);
+        // and
+        given(requestBuilder.post(eq(EncryptedResponse.class), eq(baseBecRequest)))
+                .willReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\"encryptedPayload\":\"encrypted payload\"}",
+                                EncryptedResponse.class));
+        // and
+        given(securityHelper.decrypt(ENCRYPTED_PAYLOAD)).willReturn(LOGGED_IN_ENTITY);
+
+        // when
+        LoggedInEntity loggedInEntity =
+                becApiClient.authScaToken(USERNAME, PASSWORD, "scaToken", DEVICE_ID);
+
+        assertLoggedInEntity(loggedInEntity);
     }
 
     @Test
@@ -600,52 +578,10 @@ public class BecApiClientTest {
         payloadAndroidEntity.setDeviceType(BecConstants.Meta.DEVICE_TYPE);
         return payloadAndroidEntity;
     }
-}
 
-class SecurityHelperEncryptVerifier implements ArgumentMatcher<byte[]> {
-
-    private final String password;
-    private final String username;
-    private final String secondFa;
-    private final CodeAppScaEntity codeAppScaEntity;
-
-    SecurityHelperEncryptVerifier(String password, String username, String secondFa) {
-        this(password, username, secondFa, null);
-    }
-
-    SecurityHelperEncryptVerifier(
-            String password, String username, String secondFa, CodeAppScaEntity codeAppScaEntity) {
-        this.password = password;
-        this.username = username;
-        this.secondFa = secondFa;
-        this.codeAppScaEntity = codeAppScaEntity;
-    }
-
-    @Override
-    public boolean matches(byte[] argument) {
-        EncryptedPayloadAndroidEntity entity =
-                SerializationUtils.deserializeFromBytes(
-                        argument, EncryptedPayloadAndroidEntity.class);
-
-        return entity.getPincode().equals(password)
-                && entity.getUserId().equals(username)
-                && entity.getSecondFactor().equals(secondFa)
-                && entity.getAppType().equals("mb0")
-                && entity.getAppVersion().equals("5.1.0")
-                && entity.getLocale().equals("en-GB")
-                && entity.getOsVersion().equals("Android 6.0")
-                && entity.getDeviceType()
-                        .equals(
-                                "HTC / HTC One_M8 / MRA58K release-keys / htc_europe / htc_m8 / htc / htc/htc_europe/htc_m8:6.0/MRA58K/662736.4:user/release-keys / htc_m8 / qcom")
-                && entity.getScreenSize().equals("1440*2392")
-                && codeAppMatch(entity.getCodeapp());
-    }
-
-    private boolean codeAppMatch(CodeAppScaEntity entityCodeApp) {
-        if (codeAppScaEntity != null && entityCodeApp != null) {
-            return entityCodeApp.equals(codeAppScaEntity);
-        } else {
-            return codeAppScaEntity == null && entityCodeApp == null;
-        }
+    private void assertLoggedInEntity(LoggedInEntity loggedInEntity) {
+        assertThat(loggedInEntity.getBankReference()).isEqualTo("1234567890");
+        assertThat(loggedInEntity.getLastUsed()).isEqualTo("2020-08-07");
+        assertThat(loggedInEntity.getScaToken()).isEqualTo("AAAA1111A1A111AA11A111111A11A1");
     }
 }

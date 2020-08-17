@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities;
 
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ScaOptions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class KeyCardPayloadScaEntity extends KeyCardPayload {
+public class KeyCardPayloadScaEntity extends GeneralPayload {
     private KeyCardChallengeEntity keycard;
 
     public KeyCardPayloadScaEntity(
@@ -11,7 +12,7 @@ public class KeyCardPayloadScaEntity extends KeyCardPayload {
             String pincode,
             String deviceId,
             KeyCardChallengeEntity keyCardChallengeEntity) {
-        super(userId, pincode, deviceId);
+        super(userId, pincode, deviceId, ScaOptions.KEYCARD_OPTION);
         keycard = keyCardChallengeEntity;
     }
 

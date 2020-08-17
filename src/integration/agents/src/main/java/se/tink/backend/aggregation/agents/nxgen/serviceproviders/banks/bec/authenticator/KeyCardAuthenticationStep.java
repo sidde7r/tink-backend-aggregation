@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator;
 
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
@@ -14,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.SingleSupplementalFieldAuthenticationStep;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @AllArgsConstructor
@@ -23,8 +21,8 @@ public class KeyCardAuthenticationStep implements AuthenticationStep {
     public static final String KEY_CARD_STEP_NAME = "keyCardStep";
 
     private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
     private final BecApiClient apiClient;
+    private final String deviceId;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -32,10 +30,10 @@ public class KeyCardAuthenticationStep implements AuthenticationStep {
         Credentials credentials = request.getCredentials();
 
         SecondFactorOperationsEntity secondFactorOperationsEntity =
-                apiClient.postKeyCardPrepareAndDecryptResponse(
+                apiClient.postKeyCardValuesAndDecryptResponse(
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD),
-                        getDeviceId());
+                        deviceId);
         KeyCardEntity keyCardEntity = secondFactorOperationsEntity.getKeycard();
         sessionStorage.put(StorageKeys.KEY_CARD_NUMBER_STORAGE_KEY, keyCardEntity.getKeycardNo());
         sessionStorage.put(StorageKeys.CHALLENGE_STORAGE_KEY, keyCardEntity.getNemidChallenge());
@@ -47,20 +45,5 @@ public class KeyCardAuthenticationStep implements AuthenticationStep {
     @Override
     public String getIdentifier() {
         return KEY_CARD_STEP_NAME;
-    }
-
-    private String getDeviceId() {
-        String deviceId = persistentStorage.get(StorageKeys.DEVICE_ID_STORAGE_KEY);
-        if (deviceId != null) {
-            return deviceId;
-        } else {
-            String macAddress = generateDeviceId();
-            persistentStorage.put(StorageKeys.DEVICE_ID_STORAGE_KEY, macAddress);
-            return macAddress;
-        }
-    }
-
-    private String generateDeviceId() {
-        return UUID.randomUUID().toString();
     }
 }

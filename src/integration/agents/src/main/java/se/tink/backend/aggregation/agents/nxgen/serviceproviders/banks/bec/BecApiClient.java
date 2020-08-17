@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ScaOptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities.FetchAccountTransactionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.FetchAccountResponse;
@@ -25,15 +26,17 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecAuthenticationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecSecurityHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.BaseBecRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppPayloadScaEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppScaEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppTokenEncryptedPayload;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.EncryptedPayloadAndroidEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.GeneralPayload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.KeyCardChallengeEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.KeyCardPayload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.KeyCardPayloadScaEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.LoggedInEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.PayloadAndroidEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.ScaOptionsEncryptedPayload;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.ScaTokenAuthEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.ScaTokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.SecondFactorOperationsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.rpc.EncryptedResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.rpc.NemIdPollResponse;
@@ -110,28 +113,13 @@ public class BecApiClient {
                 .post(EncryptedResponse.class, request);
     }
 
-    public ScaOptionsEncryptedPayload scaPrepare(String username, String password)
-            throws LoginException, NemIdException {
-        logger.info("SCA prepare -> get available options");
-        BaseBecRequest request = baseRequest();
-        EncryptedPayloadAndroidEntity payloadEntity = scaPrepareRequest(username, password);
-        request.setEncryptedPayload(
-                securityHelper.encrypt(
-                        SerializationUtils.serializeToString(payloadEntity).getBytes()));
-        ScaOptionsEncryptedPayload payload = postScaPrepareAndDecryptResponse(request);
-        logger.info(
-                String.format(
-                        "SCA prepare -> available login options: %s",
-                        payload.getSecondFactorOptions()));
-        return payload;
-    }
-
-    public SecondFactorOperationsEntity postKeyCardPrepareAndDecryptResponse(
+    public SecondFactorOperationsEntity postKeyCardValuesAndDecryptResponse(
             String username, String password, String deviceId)
             throws LoginException, NemIdException {
         try {
             BaseBecRequest request = baseRequest();
-            KeyCardPayload payloadEntity = new KeyCardPayload(username, password, deviceId);
+            GeneralPayload payloadEntity =
+                    new GeneralPayload(username, password, deviceId, ScaOptions.KEYCARD_OPTION);
             request.setEncryptedPayload(
                     securityHelper.encrypt(
                             SerializationUtils.serializeToString(payloadEntity).getBytes()));
@@ -148,7 +136,23 @@ public class BecApiClient {
         }
     }
 
-    public LoggedInEntity postKeyCardChallengeAndDecryptResponse(
+    public LoggedInEntity authCodeApp(
+            String username, String password, String token, String deviceId)
+            throws ThirdPartyAppException {
+        logger.info("SCA -> authenticate");
+        try {
+            CodeAppPayloadScaEntity payloadEntity =
+                    new CodeAppPayloadScaEntity(
+                            username, password, deviceId, new CodeAppScaEntity(token));
+
+            return logonScaAndDecryptResponse(SerializationUtils.serializeToString(payloadEntity));
+        } catch (BecAuthenticationException e) {
+            logger.error("SCA CodeApp-> error auth response: {}", e.getMessage(), e);
+            throw ThirdPartyAppError.TIMED_OUT.exception(e.getMessage());
+        }
+    }
+
+    public LoggedInEntity authKeyCard(
             String username,
             String password,
             String challengeResponseValue,
@@ -156,62 +160,59 @@ public class BecApiClient {
             String deviceId)
             throws LoginException, NemIdException {
         try {
-            BaseBecRequest request = baseRequest();
             KeyCardPayloadScaEntity payloadEntity =
                     new KeyCardPayloadScaEntity(
                             username,
                             password,
                             deviceId,
                             new KeyCardChallengeEntity(nemidChallenge, challengeResponseValue));
-
-            request.setEncryptedPayload(
-                    securityHelper.encrypt(
-                            SerializationUtils.serializeToString(payloadEntity).getBytes()));
-            EncryptedResponse encryptedResponse =
-                    createRequest(agentUrl.getSca())
-                            .type(MediaType.APPLICATION_JSON_TYPE)
-                            .post(EncryptedResponse.class, request);
-            String decryptedResponse =
-                    securityHelper.decrypt(encryptedResponse.getEncryptedPayload());
-            return SerializationUtils.deserializeFromString(
-                    decryptedResponse, LoggedInEntity.class);
+            return logonScaAndDecryptResponse(SerializationUtils.serializeToString(payloadEntity));
         } catch (BecAuthenticationException e) {
+            logger.error("SCA KeyCard-> error auth response: {}", e.getMessage(), e);
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e.getMessage());
         }
     }
 
-    private ScaOptionsEncryptedPayload postScaPrepareAndDecryptResponse(BaseBecRequest request)
-            throws NemIdException, LoginException {
+    public LoggedInEntity authScaToken(
+            String username, String password, String scaToken, String deviceId) {
         try {
-            EncryptedResponse response =
-                    createRequest(this.agentUrl.getPrepareSca())
-                            .type(MediaType.APPLICATION_JSON_TYPE)
-                            .post(EncryptedResponse.class, request);
-            String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
-
-            return SerializationUtils.deserializeFromString(
-                    decryptedResponse, ScaOptionsEncryptedPayload.class);
+            ScaTokenAuthEntity payloadEntity =
+                    new ScaTokenAuthEntity(
+                            username, password, deviceId, new ScaTokenEntity(scaToken));
+            return logonScaAndDecryptResponse(SerializationUtils.serializeToString(payloadEntity));
         } catch (BecAuthenticationException e) {
-            logger.error("SCA prepare -> error get options response: " + e.getMessage());
-            if (e.getMessage().startsWith("Your chosen PIN code is locked.")) {
-                throw new NemIdException(NemIdError.LOCKED_PIN);
-            } else if (e.getMessage().startsWith("NemID is blocked. Contact support.")) {
-                // This is guessing (!!!) based on similar message when user tries to auth 2fa using
-                // method which one does not have registered. So it is possible if no 2fa nemid
-                // option is registered it might result in such a message in this place.
-                throw new NemIdException(NemIdError.CODEAPP_NOT_REGISTERED);
-            } else {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
-            }
+            logger.error("SCA ScaToken-> error auth response: {}", e.getMessage(), e);
+            throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
         }
     }
 
-    public CodeAppTokenEncryptedPayload scaPrepare2(String username, String password)
-            throws NemIdException {
+    public ScaOptionsEncryptedPayload getScaOptions(
+            String username, String password, String deviceId)
+            throws LoginException, NemIdException {
+        logger.info("SCA prepare -> get available options");
+        BaseBecRequest request = baseRequest();
+        GeneralPayload payloadEntity =
+                new GeneralPayload(username, password, deviceId, ScaOptions.DEFAULT_OPTION);
+
+        request.setEncryptedPayload(
+                securityHelper.encrypt(
+                        SerializationUtils.serializeToString(payloadEntity).getBytes()));
+        ScaOptionsEncryptedPayload payload = postScaOptionsAndDecryptResponse(request);
+        logger.info(
+                String.format(
+                        "SCA prepare -> available login options: %s",
+                        payload.getSecondFactorOptions()));
+        return payload;
+    }
+
+    public CodeAppTokenEncryptedPayload getNemIdToken(
+            String username, String password, String deviceId) throws NemIdException {
         try {
             logger.info("SCA prepare -> get token");
             BaseBecRequest request = baseRequest();
-            EncryptedPayloadAndroidEntity payloadEntity = scaPrepare2Request(username, password);
+            GeneralPayload payloadEntity =
+                    new GeneralPayload(username, password, deviceId, ScaOptions.CODEAPP_OPTION);
+
             request.setEncryptedPayload(
                     securityHelper.encrypt(
                             SerializationUtils.serializeToString(payloadEntity).getBytes()));
@@ -223,7 +224,7 @@ public class BecApiClient {
             return SerializationUtils.deserializeFromString(
                     decryptedResponse, CodeAppTokenEncryptedPayload.class);
         } catch (BecAuthenticationException e) {
-            logger.error("SCA prepare -> error get token response: " + e.getMessage());
+            logger.error("SCA prepare -> error get token response: {}", e.getMessage());
             throw new NemIdException(NemIdError.CODEAPP_NOT_REGISTERED);
         }
     }
@@ -245,69 +246,6 @@ public class BecApiClient {
                                     "Unknown error occured.");
                         })
                 .accept();
-    }
-
-    public void sca(String username, String password, String token) throws ThirdPartyAppException {
-        logger.info("SCA -> authenticate");
-        try {
-            BaseBecRequest request = baseRequest();
-            EncryptedPayloadAndroidEntity payloadEntity = scaRequest(username, password, token);
-            request.setEncryptedPayload(
-                    securityHelper.encrypt(
-                            SerializationUtils.serializeToString(payloadEntity).getBytes()));
-            createRequest(this.agentUrl.getSca())
-                    .type(MediaType.APPLICATION_JSON_TYPE)
-                    .post(request);
-        } catch (BecAuthenticationException e) {
-            logger.error("SCA -> error auth response: " + e.getMessage());
-            throw ThirdPartyAppError.TIMED_OUT.exception(e.getMessage());
-        }
-    }
-
-    private EncryptedPayloadAndroidEntity scaRequest(
-            String username, String password, String token) {
-        EncryptedPayloadAndroidEntity result = scaPrepareRequest(username, password);
-        result.setSecondFactor(BecConstants.ScaOptions.CODEAPP_OPTION);
-        result.setCodeapp(new CodeAppScaEntity(token));
-        return result;
-    }
-
-    private EncryptedPayloadAndroidEntity scaPrepareRequest(String username, String password) {
-
-        EncryptedPayloadAndroidEntity payloadAndroidEntity =
-                baseScaPrepareRequest(username, password);
-        payloadAndroidEntity.setSecondFactor("default");
-        return payloadAndroidEntity;
-    }
-
-    private EncryptedPayloadAndroidEntity baseScaPrepareRequest(String username, String password) {
-        EncryptedPayloadAndroidEntity payloadAndroidEntity = new EncryptedPayloadAndroidEntity();
-        payloadAndroidEntity.setAppType(BecConstants.Meta.APP_TYPE);
-        payloadAndroidEntity.setAppVersion(BecConstants.Meta.APP_VERSION);
-        payloadAndroidEntity.setLocale(BecConstants.Meta.LOCALE);
-        payloadAndroidEntity.setOsVersion(BecConstants.Meta.OS_VERSION);
-        payloadAndroidEntity.setDeviceType(BecConstants.Meta.DEVICE_TYPE);
-        payloadAndroidEntity.setScreenSize(BecConstants.Meta.SCREEN_SIZE);
-
-        payloadAndroidEntity.setPincode(password);
-        payloadAndroidEntity.setUserId(username);
-
-        return payloadAndroidEntity;
-    }
-
-    private EncryptedPayloadAndroidEntity scaPrepare2Request(String username, String password) {
-        EncryptedPayloadAndroidEntity payloadAndroidEntity =
-                baseScaPrepareRequest(username, password);
-        payloadAndroidEntity.setSecondFactor(BecConstants.ScaOptions.CODEAPP_OPTION);
-        return payloadAndroidEntity;
-    }
-
-    private BaseBecRequest baseRequest() {
-        BaseBecRequest request = new BaseBecRequest();
-        request.setLabel(BecConstants.Meta.LABEL);
-        request.setCipher(BecConstants.Meta.CIPHER);
-        request.setKey(securityHelper.getKey());
-        return request;
     }
 
     public BecErrorResponse parseBodyAsError(HttpResponse response) {
@@ -436,9 +374,54 @@ public class BecApiClient {
         createRequest(this.agentUrl.getLogout()).type(MediaType.APPLICATION_JSON_TYPE).post();
     }
 
+    private ScaOptionsEncryptedPayload postScaOptionsAndDecryptResponse(BaseBecRequest request)
+            throws NemIdException, LoginException {
+        try {
+            EncryptedResponse response =
+                    createRequest(this.agentUrl.getPrepareSca())
+                            .type(MediaType.APPLICATION_JSON_TYPE)
+                            .post(EncryptedResponse.class, request);
+            String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
+
+            return SerializationUtils.deserializeFromString(
+                    decryptedResponse, ScaOptionsEncryptedPayload.class);
+        } catch (BecAuthenticationException e) {
+            logger.error("SCA prepare -> error get options response: " + e.getMessage());
+            if (e.getMessage().startsWith("Your chosen PIN code is locked.")) {
+                throw new NemIdException(NemIdError.LOCKED_PIN);
+            } else if (e.getMessage().startsWith("NemID is blocked. Contact support.")) {
+                // This is guessing (!!!) based on similar message when user tries to auth 2fa using
+                // method which one does not have registered. So it is possible if no 2fa nemid
+                // option is registered it might result in such a message in this place.
+                throw new NemIdException(NemIdError.CODEAPP_NOT_REGISTERED);
+            } else {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
+            }
+        }
+    }
+
+    private BaseBecRequest baseRequest() {
+        BaseBecRequest request = new BaseBecRequest();
+        request.setLabel(BecConstants.Meta.LABEL);
+        request.setCipher(BecConstants.Meta.CIPHER);
+        request.setKey(securityHelper.getKey());
+        return request;
+    }
+
     private RequestBuilder createRequest(String url) {
         return this.apiClient
                 .request(url)
                 .header(BecConstants.Header.PRAGMA_KEY, BecConstants.Header.PRAGMA_VALUE);
+    }
+
+    private LoggedInEntity logonScaAndDecryptResponse(String serializedEntity) {
+        BaseBecRequest request = baseRequest();
+        request.setEncryptedPayload(securityHelper.encrypt(serializedEntity.getBytes()));
+        EncryptedResponse encryptedResponse =
+                createRequest(agentUrl.getSca())
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .post(EncryptedResponse.class, request);
+        String decryptedResponse = securityHelper.decrypt(encryptedResponse.getEncryptedPayload());
+        return SerializationUtils.deserializeFromString(decryptedResponse, LoggedInEntity.class);
     }
 }
