@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import java.util.regex.Pattern;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -21,6 +22,8 @@ public final class DkbConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MAPING_DKB_PAYMENT_TO_TINK_PAYMENT_ERROR =
                 "Cannot map Dkb payment status: %s to Tink payment status.";
+        public static final String SELECT_AUTH_METHOD_ERROR_MESSAGE =
+                "The value you entered is not valid";
     }
 
     @NoArgsConstructor(access = PRIVATE)
@@ -137,5 +140,24 @@ public final class DkbConstants {
 
         public static final String INSTANT_SEPA_CREDIT_TRANSFER = "instant-sepa-credit-transfers";
         public static final String CROSS_BORDER_CREDIT_TRANSFERS = "cross-border-credit-transfers";
+    }
+
+    @NoArgsConstructor(access = PRIVATE)
+    public static class SupplementalDataLabels {
+
+        public static final String GENERATED_TAN_LABEL = "Enter Generated TAN";
+        public static final String CHIP_TAN_DESCRIPTION_LABEL =
+                "Please insert card to TAN-Generator and press “TAN”. Then insert start code %s and press “OK”";
+        public static final String SELECT_AUTH_METHOD_LABEL = "Authentication method index";
+        public static final String SELECT_AUTH_METHOD_INFO =
+                "Please insert authentication method index from 1 to %d \n";
+        public static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode (\\d+)");
+    }
+
+    @NoArgsConstructor(access = PRIVATE)
+    public static class SupplementalDataKeys {
+
+        public static final String GENERATED_TAN_KEY = "generatedTAN";
+        public static final String SELECT_AUTH_METHOD_KEY = "selectAuthMethod";
     }
 }

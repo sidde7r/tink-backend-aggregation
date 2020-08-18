@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticato
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.MAX_CONSENT_VALIDITY_DAYS;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -110,7 +111,8 @@ public class DkbAuthenticator implements PasswordAuthenticator {
         log.info(
                 "AuthTypeSelected is [{}], so TAN needs to be provided from external resource",
                 previousResult.getAuthTypeSelected());
-        return supplementalDataProvider.getTanCode();
+        return supplementalDataProvider.getTanCode(
+                Collections.singletonList(previousResult.getChallenge()));
     }
 
     private void getConsent() throws AuthenticationException {
@@ -134,30 +136,30 @@ public class DkbAuthenticator implements PasswordAuthenticator {
     }
 
     private void authorizeConsent(String consentId) throws AuthenticationException {
-        ConsentAuthorization consentAuth = startConsentAuthorization(consentId);
-        selectConsentAuthorizationMethodIfNeeded(
-                consentId, consentAuth.getAuthorisationId(), consentAuth);
-        provide2ndFactorConsentAuthorization(consentId, consentAuth.getAuthorisationId());
-    }
-
-    private ConsentAuthorization startConsentAuthorization(String consentId) throws LoginException {
-        return authApiClient.startConsentAuthorization(consentId);
+        ConsentAuthorization consentAuth = authApiClient.startConsentAuthorization(consentId);
+        ConsentAuthorization consentAuthWithSelectedMethod =
+                selectConsentAuthorizationMethodIfNeeded(consentId, consentAuth);
+        consentAuthWithSelectedMethod.checkIfChallengeDataIsAllowed();
+        provide2ndFactorConsentAuthorization(
+                consentId, consentAuth.getAuthorisationId(), consentAuthWithSelectedMethod);
     }
 
     private ConsentAuthorization selectConsentAuthorizationMethodIfNeeded(
-            String consentId, String authorizationId, ConsentAuthorization previousResult)
-            throws AuthenticationException {
+            String consentId, ConsentAuthorization previousResult) throws AuthenticationException {
         if (!previousResult.isScaMethodSelectionRequired()) {
             return previousResult;
         }
 
-        String methodId = supplementalDataProvider.selectAuthMethod(previousResult.getScaMethods());
-        return authApiClient.selectConsentAuthorizationMethod(consentId, authorizationId, methodId);
+        String methodId =
+                supplementalDataProvider.selectAuthMethod(previousResult.getAllowedScaMethods());
+        return authApiClient.selectConsentAuthorizationMethod(
+                consentId, previousResult.getAuthorisationId(), methodId);
     }
 
-    private void provide2ndFactorConsentAuthorization(String consentId, String authorizationId)
+    private void provide2ndFactorConsentAuthorization(
+            String consentId, String authorisationId, ConsentAuthorization consentAuth)
             throws SupplementalInfoException, LoginException {
-        String code = supplementalDataProvider.getTanCode();
-        authApiClient.consentAuthorization2ndFactor(consentId, authorizationId, code);
+        String code = supplementalDataProvider.getTanCode(consentAuth.getChallengeData().getData());
+        authApiClient.consentAuthorization2ndFactor(consentId, authorisationId, code);
     }
 }
