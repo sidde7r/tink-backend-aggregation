@@ -104,7 +104,7 @@ public class CaixaConstants {
         public static final String ACCEPT = "*/*";
         public static final String DEVICE_NAME = "is2";
         public static final String APP_NAME = "APP_CAIXADIRECTA";
-        public static final String APP_VERSION = "1.4.5";
+        public static final String APP_VERSION = "1.11.1";
     }
 
     public static class STORAGE {
