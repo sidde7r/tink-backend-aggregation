@@ -136,7 +136,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+    protected TransactionalAccountRefreshController
+            constructTransactionalAccountRefreshController() {
         SwedbankDefaultTransactionalAccountFetcher transactionalFetcher =
                 new SwedbankDefaultTransactionalAccountFetcher(apiClient, persistentStorage);
 

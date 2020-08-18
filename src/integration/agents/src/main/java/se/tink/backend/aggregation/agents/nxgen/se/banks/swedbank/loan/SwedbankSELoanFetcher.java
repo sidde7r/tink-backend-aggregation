@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.SwedbankDefaultLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.CollateralsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
@@ -21,15 +20,15 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.Detai
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
-public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
+public class SwedbankSELoanFetcher implements AccountFetcher<LoanAccount> {
 
     private final SwedbankSEApiClient apiClient;
     private final LoanEntityFactory loanEntityFactory = new LoanEntityFactory();
 
     public SwedbankSELoanFetcher(SwedbankSEApiClient apiClient) {
-        super(apiClient);
         this.apiClient = apiClient;
     }
 

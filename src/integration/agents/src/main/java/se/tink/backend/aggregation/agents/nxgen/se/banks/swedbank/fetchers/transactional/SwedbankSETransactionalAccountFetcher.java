@@ -29,6 +29,7 @@ public class SwedbankSETransactionalAccountFetcher
     public SwedbankSETransactionalAccountFetcher(
             SwedbankSEApiClient apiClient, PersistentStorage persistentStorage) {
         super(apiClient, persistentStorage);
+        this.apiClient = apiClient;
     }
 
     @Override
