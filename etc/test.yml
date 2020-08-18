@@ -6921,6 +6921,9 @@ agentsServiceConfiguration:
     fd013d51e9f843969696b3015ec96e47:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    fe0c6d6af42a4423b08ee0a8019e01e4:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     fe13ce5d893f4c0fada67d74d7511655:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback

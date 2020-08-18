@@ -139,7 +139,7 @@ public final class RaiffeisenConstants {
                 "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"; // Constant for sandbox
         public static final String CACHE_CONTROL = "no-cache";
         public static final String X_TINK_DEBUG_TRUST_ALL = "trust_all";
-        public static final String PSU_IP_ADDRESS = "192.168.65.37";
+        public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class IdTags {
