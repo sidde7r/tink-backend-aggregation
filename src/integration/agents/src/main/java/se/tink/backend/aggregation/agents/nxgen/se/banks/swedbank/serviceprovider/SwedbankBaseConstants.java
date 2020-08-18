@@ -52,7 +52,6 @@ public class SwedbankBaseConstants {
 
         public static final String IDENTIFICATION = "/v5/identification";
         public static final String DSID_KEY = "dsid";
-        private URL url;
         private String path;
 
         Url(String path) {
@@ -63,12 +62,8 @@ public class SwedbankBaseConstants {
             return new URL(createUrlWithHost(host, path));
         }
 
-        public URL parameter(String key, String value) {
-            return url.parameter(key, value);
-        }
-
-        public URL queryParam(String key, String value) {
-            return url.queryParam(key, value);
+        public URL getPath() {
+            return new URL(path);
         }
 
         private static String createUrlWithHost(String host, String path) {
