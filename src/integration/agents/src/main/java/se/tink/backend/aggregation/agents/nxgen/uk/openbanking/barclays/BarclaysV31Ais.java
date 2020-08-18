@@ -31,7 +31,7 @@ public class BarclaysV31Ais implements UkOpenBankingAis {
     public AccountFetcher<TransactionalAccount> makeTransactionalAccountFetcher(
             UkOpenBankingApiClient apiClient) {
 
-        AccountTypeMapper accountTypeMapper = new AccountTypeMapper();
+        AccountTypeMapper accountTypeMapper = new AccountTypeMapper(aisConfig);
         BarclaysPartyDataFetcher accountPartyFetcher =
                 new BarclaysPartyDataFetcher(
                         accountTypeMapper,
@@ -61,7 +61,7 @@ public class BarclaysV31Ais implements UkOpenBankingAis {
     public AccountFetcher<CreditCardAccount> makeCreditCardAccountFetcher(
             UkOpenBankingApiClient apiClient) {
 
-        AccountTypeMapper accountTypeMapper = new AccountTypeMapper();
+        AccountTypeMapper accountTypeMapper = new AccountTypeMapper(aisConfig);
         BarclaysPartyDataFetcher accountPartyFetcher =
                 new BarclaysPartyDataFetcher(
                         accountTypeMapper,

@@ -5,6 +5,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints;
@@ -36,9 +37,7 @@ public class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
                         .withWellKnownURL(V31.BUSINESS_WELL_KNOWN_URL)
                         .withIdentityDataURL(
                                 PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
-                        .withAdditionalPermission(
-                                PartyEndpoints.partyEndpointsPermissionMap.get(
-                                        PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES))
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

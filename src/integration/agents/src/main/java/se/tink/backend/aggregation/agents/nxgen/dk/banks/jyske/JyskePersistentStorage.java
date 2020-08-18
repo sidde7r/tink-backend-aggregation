@@ -24,6 +24,10 @@ public class JyskePersistentStorage {
         return persistentStorage.get(JyskeConstants.Storage.TOKEN, Token.class);
     }
 
+    public void invalidateToken() {
+        persistentStorage.remove(JyskeConstants.Storage.TOKEN);
+    }
+
     public void setUserId(String userId) {
         persistentStorage.put(JyskeConstants.Storage.USER_ID, userId);
     }

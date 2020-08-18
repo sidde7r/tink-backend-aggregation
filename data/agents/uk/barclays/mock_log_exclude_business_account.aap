@@ -113,7 +113,7 @@ Server: Apache
 Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store,private
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"Account":[{"Account":[{"Identification":"00000000000000","SchemeName":"UK.OBIE.SortCodeAccountNumber"}],"AccountId":"DUMMY_ACCOUNT_ID","Currency":"GBP","AccountType":"Personal","AccountSubType":"CurrentAccount"}]},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts"},"Meta":{}}
+{"Data":{"Account":[{"Account":[{"Identification":"00000000000000","SchemeName":"UK.OBIE.SortCodeAccountNumber"}],"AccountId":"DUMMY_ACCOUNT_ID","Currency":"GBP","AccountType":"Business","AccountSubType":"CurrentAccount"}]},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts"},"Meta":{}}
 
 REQUEST 6
 GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/parties
@@ -153,7 +153,7 @@ Server: Apache
 Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store,private
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"Account":[{"Account":[{"Identification":"00000000000000","SchemeName":"UK.OBIE.SortCodeAccountNumber"}],"AccountId":"DUMMY_ACCOUNT_ID","Currency":"GBP","AccountType":"Personal","AccountSubType":"CurrentAccount"}]},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts"},"Meta":{}}
+{"Data":{"Account":[{"Account":[{"Identification":"00000000000000","SchemeName":"UK.OBIE.SortCodeAccountNumber"}],"AccountId":"DUMMY_ACCOUNT_ID","Currency":"GBP","AccountType":"Business","AccountSubType":"CurrentAccount"}]},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts"},"Meta":{}}
 
 REQUEST 8
 GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/balances

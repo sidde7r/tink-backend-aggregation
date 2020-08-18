@@ -1,10 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper;
 
+import com.google.common.base.Preconditions;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class AccountTypeMapper {
+
+    private UkOpenBankingAisConfig aisConfig;
+
+    public AccountTypeMapper(UkOpenBankingAisConfig aisConfig) {
+        this.aisConfig = Preconditions.checkNotNull(aisConfig);
+    }
 
     private static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
@@ -40,5 +49,9 @@ public class AccountTypeMapper {
                         () ->
                                 new IllegalArgumentException(
                                         "Unexpected account type:" + rawAccountType));
+    }
+
+    public boolean supportsAccountOwnershipType(AccountEntity accountEntity) {
+        return aisConfig.getAllowedAccountOwnershipType() == getAccountOwnershipType(accountEntity);
     }
 }

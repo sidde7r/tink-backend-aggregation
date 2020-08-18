@@ -39,7 +39,7 @@ public class JyskeNemidAgent extends BankdataAgent {
 
         JyskeNemidAuthenticator jyskeNemidAuthenticator =
                 new JyskeNemidAuthenticator(
-                        apiClient, client, persistentStorage, username, password);
+                        apiClient, client, persistentStorage, username, password, request);
 
         return new AutoAuthenticationController(
                 request,

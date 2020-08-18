@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.workers.commands.login.LoginExecutor;
@@ -33,7 +34,6 @@ import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMe
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.types.timers.Timer.Context;
 import se.tink.libraries.user.rpc.User;
@@ -179,16 +179,12 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     public boolean shouldForceAuthenticate() {
-        if (context.getRequest() instanceof RefreshInformationRequest) {
-            boolean result =
-                    ((RefreshInformationRequest) context.getRequest()).isForceAuthenticate();
-            logger.info(
-                    "RefreshInformationRequest contain - isForceAuthenticate: {}, credentialsId: {}",
-                    result,
-                    credentials.getId());
-            return result;
-        }
-        return false;
+        boolean result = ForceAuthentication.shouldForceAuthentication(context.getRequest());
+        logger.info(
+                "RefreshInformationRequest contain - isForceAuthenticate: {}, credentialsId: {}",
+                result,
+                credentials.getId());
+        return result;
     }
 
     private Optional<Boolean> isLoggedIn() throws Exception {
