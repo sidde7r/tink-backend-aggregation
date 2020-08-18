@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 
 import java.util.Base64;
 import javax.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Urls;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.IdentificationEntity;
@@ -27,6 +29,8 @@ public class EncapClient {
     private final EncapStorage storage;
     private final EncapSoapUtils soapUtils;
     private final EncapMessageUtils messageUtils;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EncapClient.class);
 
     public EncapClient(
             AgentContext context,
@@ -69,12 +73,15 @@ public class EncapClient {
         String activationSessionId =
                 EncapSoapUtils.getActivationSessionId(soapResponse)
                         .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Could not get activationSessionId: "
-                                                        + Base64.getEncoder()
-                                                                .encodeToString(
-                                                                        soapResponse.getBytes())));
+                                () -> {
+                                    LOGGER.warn(
+                                            "Could not get activationSessionId. Soap response: "
+                                                    + Base64.getEncoder()
+                                                            .encodeToString(
+                                                                    soapResponse.getBytes()));
+                                    throw new IllegalStateException(
+                                            "Could not get activationSessionId");
+                                });
 
         String registrationMessage = messageUtils.buildRegistrationMessage();
         RegistrationResponse registrationResponse =
