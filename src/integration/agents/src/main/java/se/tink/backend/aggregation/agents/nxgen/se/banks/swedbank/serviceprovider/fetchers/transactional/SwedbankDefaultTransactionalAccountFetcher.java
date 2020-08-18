@@ -218,9 +218,8 @@ public class SwedbankDefaultTransactionalAccountFetcher
             // this temporary fix when we now Swedbank provides a working paginating endpoint again
             // NB! We mark the credentials receiving this error for future clean up activities.
             // PersistentStorage is used for setting mark
-            if (key != null
-                    && (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                            || response.getStatus() == HttpStatus.SC_UNAUTHORIZED)) {
+            if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                    || response.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                 // mark credential with PAGINATION_ERROR in persistent storage
                 persistentStorage.put(
                         SwedbankBaseConstants.PaginationError.PAGINATION_ERROR,
