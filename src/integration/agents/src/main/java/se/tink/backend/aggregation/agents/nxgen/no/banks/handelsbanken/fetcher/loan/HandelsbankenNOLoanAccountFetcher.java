@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan;
 
+import com.google.common.collect.ImmutableMap;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan.entities.DetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan.entities.LoanAccountEntity;
@@ -25,6 +28,12 @@ public class HandelsbankenNOLoanAccountFetcher implements AccountFetcher<LoanAcc
     private static final String REPAYMENT_PLAN_LINK_KEY = "repayment_plan";
     private static final String NOK_CURRENCY_CODE = "NOK";
     private final HandelsbankenNOApiClient handelsbankenNOApiClient;
+
+    private static final Map<String, LoanDetails.Type> LOANS_DESCRIPTIONS =
+            ImmutableMap.<String, LoanDetails.Type>builder()
+                    .put("bolig", LoanDetails.Type.MORTGAGE)
+                    .put("Fast 7 år annu ek", LoanDetails.Type.MORTGAGE)
+                    .build();
 
     public HandelsbankenNOLoanAccountFetcher(HandelsbankenNOApiClient handelsbankenNOApiClient) {
         this.handelsbankenNOApiClient = handelsbankenNOApiClient;
@@ -49,9 +58,7 @@ public class HandelsbankenNOLoanAccountFetcher implements AccountFetcher<LoanAcc
         return LoanAccount.nxBuilder()
                 .withLoanDetails(
                         LoanModule.builder()
-                                .withType(
-                                        LoanDetails.Type
-                                                .DERIVE_FROM_NAME) /* For now we don't have specified loan type, endpoint address suggests it is always "loan" */
+                                .withType(getLoanType(loanEntity.getAccountDescription()))
                                 .withBalance(
                                         ExactCurrencyAmount.of(
                                                 loanEntity.getBalance(), NOK_CURRENCY_CODE))
@@ -96,6 +103,14 @@ public class HandelsbankenNOLoanAccountFetcher implements AccountFetcher<LoanAcc
 
         return handelsbankenNOApiClient.fetchLoanDetails(
                 loanEntity.getLinks().get(REPAYMENT_PLAN_LINK_KEY).getHref());
+    }
+
+    private LoanDetails.Type getLoanType(String description) {
+        return LOANS_DESCRIPTIONS.entrySet().stream()
+                .filter(entry -> StringUtils.containsIgnoreCase(description, entry.getKey()))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(LoanDetails.Type.DERIVE_FROM_NAME);
     }
 
     private BigDecimal getInstalment(LoanDetailsResponse loanDetailsResponse) {
