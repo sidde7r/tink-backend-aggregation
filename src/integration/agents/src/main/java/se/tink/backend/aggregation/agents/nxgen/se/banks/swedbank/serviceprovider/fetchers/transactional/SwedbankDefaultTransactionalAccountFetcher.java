@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.PaymentsConfirmedResponse;
@@ -217,10 +218,8 @@ public class SwedbankDefaultTransactionalAccountFetcher
             // this temporary fix when we now Swedbank provides a working paginating endpoint again
             // NB! We mark the credentials receiving this error for future clean up activities.
             // PersistentStorage is used for setting mark
-            if (key != null
-                    && (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                            || response.getStatus() == HttpStatus.SC_NOT_FOUND
-                            || response.getStatus() == HttpStatus.SC_UNAUTHORIZED)) {
+            if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                    || response.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                 // mark credential with PAGINATION_ERROR in persistent storage
                 persistentStorage.put(
                         SwedbankBaseConstants.PaginationError.PAGINATION_ERROR,
@@ -230,6 +229,11 @@ public class SwedbankDefaultTransactionalAccountFetcher
 
                 // return fetching is "done"
                 return new EngagementTransactionsResponse();
+            }
+            // http error 404 that occurs rarely during pagination, but it will work if the user
+            // tries again.
+            if (response.getStatus() == HttpStatus.SC_NOT_FOUND) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
 
             throw hre;
