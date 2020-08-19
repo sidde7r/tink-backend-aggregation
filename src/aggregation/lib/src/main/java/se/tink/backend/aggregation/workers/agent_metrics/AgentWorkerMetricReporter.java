@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration.Tier;
@@ -20,6 +22,7 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class AgentWorkerMetricReporter {
     private final MetricRegistry registry;
     private final ProviderTierConfiguration providerTierConfiguration;
+    private static final Logger log = LoggerFactory.getLogger(AgentWorkerMetricReporter.class);
 
     private enum Metric {
         TOTAL_OPERATIONS(MetricId.newId("aggregation_total_operations")),
@@ -179,6 +182,7 @@ public class AgentWorkerMetricReporter {
         final Tier tier =
                 providerTierConfiguration.getTierForProvider(market, providerName).orElse(Tier.T3);
         final String tierName = tier.toString();
+        log.info("[AgentWorkerMetricReporter] Tier: {} Provider: {}", tierName, providerName);
 
         final MetricLabels tierLabels =
                 MetricLabels.from(
