@@ -146,7 +146,6 @@ public final class NordeaBaseConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String PAYMENT_TYPE_NOT_FOUND =
                 "No PaymentType found for your AccountIdentifiers pair ";
-        public static final String UNKNOWN_AGENT_TYPE = "Unknown agent type.";
         public static final String TOKEN_EXPIRED = "Bearer token is not valid anymore";
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be null";

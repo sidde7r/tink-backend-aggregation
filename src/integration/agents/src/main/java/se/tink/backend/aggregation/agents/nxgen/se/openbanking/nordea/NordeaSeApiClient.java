@@ -11,7 +11,7 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
 
     public NordeaSeApiClient(
             TinkHttpClient client, PersistentStorage persistentStorage, QsealcSigner qsealcSigner) {
-        super(client, persistentStorage, qsealcSigner);
+        super(client, persistentStorage, qsealcSigner, false);
 
         this.client.addFilter(new NordeaSeFilter());
         this.client.addFilter(new TimeoutFilter());

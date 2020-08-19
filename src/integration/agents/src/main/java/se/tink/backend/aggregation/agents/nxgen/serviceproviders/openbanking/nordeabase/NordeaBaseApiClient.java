@@ -16,10 +16,14 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ApiService;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
@@ -38,7 +42,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.util.SignatureUtil;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -58,31 +62,30 @@ public class NordeaBaseApiClient implements TokenInterface {
     protected NordeaBaseConfiguration configuration;
     protected String redirectUrl;
     private QsealcSigner qsealcSigner;
+    private boolean corporate;
 
     public NordeaBaseApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, QsealcSigner qsealcSigner) {
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            QsealcSigner qsealcSigner,
+            boolean corporate) {
         this.client = client;
         this.persistentStorage = persistentStorage;
 
         this.client.addFilter(new BankSideFailureFilter());
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         this.qsealcSigner = qsealcSigner;
+        this.corporate = corporate;
     }
 
     public NordeaBaseConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        NordeaBaseConstants.ErrorMessages.MISSING_CONFIGURATION));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     public String getRedirectUrl() {
         return Optional.ofNullable(redirectUrl)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        NordeaBaseConstants.ErrorMessages.MISSING_CONFIGURATION));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     public void setConfiguration(AgentConfiguration<NordeaBaseConfiguration> agentConfiguration) {
@@ -119,32 +122,26 @@ public class NordeaBaseApiClient implements TokenInterface {
         OAuth2Token token = getStoredToken();
         return createRequest(url, httpMethod, body)
                 .header(
-                        NordeaBaseConstants.HeaderKeys.AUTHORIZATION,
+                        HeaderKeys.AUTHORIZATION,
                         token.getTokenType() + " " + token.getAccessToken());
     }
 
     private RequestBuilder createTokenRequest(String body) {
-        return createRequest(NordeaBaseConstants.Urls.GET_TOKEN, HttpMethod.POST, body);
+        return createRequest(Urls.GET_TOKEN, HttpMethod.POST, body);
     }
 
     public URL getAuthorizeUrl(String state, String country) {
         return client.request(
-                        NordeaBaseConstants.Urls.AUTHORIZE
-                                .queryParam(
-                                        NordeaBaseConstants.QueryKeys.CLIENT_ID,
-                                        configuration.getClientId())
-                                .queryParam(NordeaBaseConstants.QueryKeys.STATE, state)
-                                .queryParam(
-                                        NordeaBaseConstants.QueryKeys.DURATION,
-                                        NordeaBaseConstants.QueryValues.DURATION_MINUTES)
-                                .queryParam(NordeaBaseConstants.QueryKeys.COUNTRY, country)
-                                .queryParam(NordeaBaseConstants.QueryKeys.SCOPE, getScopes())
+                        Urls.AUTHORIZE
+                                .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
+                                .queryParam(QueryKeys.STATE, state)
+                                .queryParam(QueryKeys.DURATION, QueryValues.DURATION_MINUTES)
+                                .queryParam(QueryKeys.COUNTRY, country)
+                                .queryParam(QueryKeys.SCOPE, getScopes())
                                 .queryParam(
                                         QueryKeys.MAX_TX_HISTORY,
                                         QueryValues.FETCH_NUMBER_OF_MONTHS)
-                                .queryParam(
-                                        NordeaBaseConstants.QueryKeys.REDIRECT_URI,
-                                        getRedirectUrl()))
+                                .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl()))
                 .getUrl();
     }
 
@@ -166,13 +163,11 @@ public class NordeaBaseApiClient implements TokenInterface {
 
     public GetAccountsResponse getAccounts() {
         return requestRefreshableGet(
-                createRequestInSession(NordeaBaseConstants.Urls.GET_ACCOUNTS, HttpMethod.GET, null),
+                createRequestInSession(
+                        corporate ? Urls.GET_CORPORATE_ACCOUNTS : Urls.GET_ACCOUNTS,
+                        HttpMethod.GET,
+                        null),
                 GetAccountsResponse.class);
-    }
-
-    public GetAccountsResponse getCorporateAccounts() {
-        return createRequestInSession(Urls.GET_CORPORATE_ACCOUNTS, HttpMethod.GET, null)
-                .get(GetAccountsResponse.class);
     }
 
     public GetTransactionsResponse getCorporateTransactions(
@@ -181,21 +176,26 @@ public class NordeaBaseApiClient implements TokenInterface {
                 Optional.ofNullable(key)
                         .map(k -> new URL(Urls.BASE_CORPORATE_URL + k))
                         .orElse(
-                                NordeaBaseConstants.Urls.GET_CORPORATE_TRANSACTIONS.parameter(
-                                        NordeaBaseConstants.IdTags.ACCOUNT_ID,
-                                        account.getApiIdentifier()));
+                                Urls.GET_CORPORATE_TRANSACTIONS.parameter(
+                                        IdTags.ACCOUNT_ID, account.getApiIdentifier()));
 
         return createRequestInSession(url, HttpMethod.GET, null).get(GetTransactionsResponse.class);
+    }
+
+    private URL getUrlWithKey(String key) {
+        return new URL((corporate ? Urls.BASE_CORPORATE_URL : Urls.BASE_URL) + key);
+    }
+
+    private URL getTransactionsUrl(String accountId) {
+        return (corporate ? Urls.GET_CORPORATE_TRANSACTIONS : Urls.GET_TRANSACTIONS)
+                .parameter(IdTags.ACCOUNT_ID, accountId);
     }
 
     public <T> T getTransactions(TransactionalAccount account, String key, Class<T> responseClass) {
         URL url =
                 Optional.ofNullable(key)
-                        .map(k -> new URL(NordeaBaseConstants.Urls.BASE_URL + k))
-                        .orElse(
-                                NordeaBaseConstants.Urls.GET_TRANSACTIONS.parameter(
-                                        NordeaBaseConstants.IdTags.ACCOUNT_ID,
-                                        account.getApiIdentifier()));
+                        .map(this::getUrlWithKey)
+                        .orElse(getTransactionsUrl(account.getApiIdentifier()));
 
         RequestBuilder request = createRequestInSession(url, HttpMethod.GET, null);
 
@@ -204,14 +204,13 @@ public class NordeaBaseApiClient implements TokenInterface {
 
     @Override
     public void storeToken(OAuth2Token token) {
-        persistentStorage.rotateStorageValue(
-                OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, token);
+        persistentStorage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, token);
     }
 
     @Override
     public OAuth2Token getStoredToken() {
         return persistentStorage
-                .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
+                .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
     }
 
@@ -221,9 +220,8 @@ public class NordeaBaseApiClient implements TokenInterface {
         String body = SerializationUtils.serializeToString(createPaymentRequest);
         try {
             return createRequestInSession(
-                            NordeaBaseConstants.Urls.INITIATE_PAYMENT.parameter(
-                                    NordeaBaseConstants.IdTags.PAYMENT_TYPE,
-                                    paymentType.toString()),
+                            Urls.INITIATE_PAYMENT.parameter(
+                                    IdTags.PAYMENT_TYPE, paymentType.toString()),
                             HttpMethod.POST,
                             body)
                     .post(CreatePaymentResponse.class, createPaymentRequest);
@@ -237,11 +235,9 @@ public class NordeaBaseApiClient implements TokenInterface {
             throws PaymentException {
         try {
             return createRequestInSession(
-                            NordeaBaseConstants.Urls.CONFIRM_PAYMENT
-                                    .parameter(
-                                            NordeaBaseConstants.IdTags.PAYMENT_TYPE,
-                                            paymentType.toString())
-                                    .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId),
+                            Urls.CONFIRM_PAYMENT
+                                    .parameter(IdTags.PAYMENT_TYPE, paymentType.toString())
+                                    .parameter(IdTags.PAYMENT_ID, paymentId),
                             HttpMethod.PUT,
                             null)
                     .put(ConfirmPaymentResponse.class);
@@ -255,11 +251,9 @@ public class NordeaBaseApiClient implements TokenInterface {
             throws PaymentException {
         try {
             return createRequestInSession(
-                            NordeaBaseConstants.Urls.GET_PAYMENT
-                                    .parameter(
-                                            NordeaBaseConstants.IdTags.PAYMENT_TYPE,
-                                            paymentType.toString())
-                                    .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId),
+                            Urls.GET_PAYMENT
+                                    .parameter(IdTags.PAYMENT_TYPE, paymentType.toString())
+                                    .parameter(IdTags.PAYMENT_ID, paymentId),
                             HttpMethod.GET,
                             null)
                     .get(GetPaymentResponse.class);
@@ -272,9 +266,8 @@ public class NordeaBaseApiClient implements TokenInterface {
     public GetPaymentsResponse fetchPayments(PaymentType paymentType) throws PaymentException {
         try {
             return createRequestInSession(
-                            NordeaBaseConstants.Urls.GET_PAYMENTS.parameter(
-                                    NordeaBaseConstants.IdTags.PAYMENT_TYPE,
-                                    paymentType.toString()),
+                            Urls.GET_PAYMENTS.parameter(
+                                    IdTags.PAYMENT_TYPE, paymentType.toString()),
                             HttpMethod.GET,
                             null)
                     .get(GetPaymentsResponse.class);
@@ -328,10 +321,8 @@ public class NordeaBaseApiClient implements TokenInterface {
         if (response.getStatus() == HttpStatus.SC_UNAUTHORIZED && response.hasBody()) {
             String body = response.getBody(String.class);
             if (!Strings.isNullOrEmpty(body)
-                    && body.toLowerCase()
-                            .contains(NordeaBaseConstants.ErrorMessages.TOKEN_EXPIRED.toLowerCase())
-                    && body.toLowerCase()
-                            .contains(NordeaBaseConstants.ErrorCodes.TOKEN_EXPIRED.toLowerCase())) {
+                    && body.toLowerCase().contains(ErrorMessages.TOKEN_EXPIRED.toLowerCase())
+                    && body.toLowerCase().contains(ErrorCodes.TOKEN_EXPIRED.toLowerCase())) {
                 return;
             }
         }
@@ -340,16 +331,14 @@ public class NordeaBaseApiClient implements TokenInterface {
 
     private String getScopes() {
         List<String> scopes = configuration.getScopes();
-        if (scopes.stream()
-                .allMatch(scope -> NordeaBaseConstants.Scopes.AIS.equalsIgnoreCase(scope))) {
+        if (scopes.stream().allMatch(scope -> Scopes.AIS.equalsIgnoreCase(scope))) {
             // Return only AIS scopes
             return SCOPE_WITHOUT_PAYMENT;
         } else if (scopes.stream()
                 .allMatch(
                         scope ->
-                                NordeaBaseConstants.Scopes.AIS.equalsIgnoreCase(scope)
-                                        || NordeaBaseConstants.Scopes.PIS.equalsIgnoreCase(
-                                                scope))) {
+                                Scopes.AIS.equalsIgnoreCase(scope)
+                                        || Scopes.PIS.equalsIgnoreCase(scope))) {
             // Return AIS + PIS scopes
             return SCOPE;
         } else {

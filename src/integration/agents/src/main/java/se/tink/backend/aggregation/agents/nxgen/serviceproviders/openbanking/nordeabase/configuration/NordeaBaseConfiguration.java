@@ -10,7 +10,6 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInject;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInt;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.AgentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
@@ -44,7 +43,6 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
     @JsonSchemaExamples("AIS")
     private List<String> scopes;
 
-    @JsonProperty private AgentType agentType = AgentType.PERSONAL;
 
     public String getClientId() {
         return clientId;
@@ -52,10 +50,6 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
 
     public String getClientSecret() {
         return clientSecret;
-    }
-
-    public AgentType getAgentType() {
-        return agentType;
     }
 
     public List<String> getScopes() {
