@@ -62,8 +62,8 @@ public class SwedbankBaseConstants {
             return new URL(createUrlWithHost(host, path));
         }
 
-        public URL getPath() {
-            return new URL(path);
+        public String getPath() {
+            return path;
         }
 
         private static String createUrlWithHost(String host, String path) {

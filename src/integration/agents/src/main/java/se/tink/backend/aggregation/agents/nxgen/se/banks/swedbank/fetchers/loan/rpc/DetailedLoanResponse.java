@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc;
 
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.InterestSpecificationEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanDetailsAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanInfoEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.UpcomingInvoiceEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.InterestSpecificationEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.LoanDetailsAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.LoanInfoEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.UpcomingInvoiceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 

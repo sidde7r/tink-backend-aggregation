@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.utils;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
