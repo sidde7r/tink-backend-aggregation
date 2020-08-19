@@ -102,9 +102,6 @@ public class OAuth2AuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        logger.info(
-                "[forceAuthenticate] OAuth2AuthenticationController.autoAuthenticate for credentials: {}",
-                credentials.getId());
         OAuth2Token oAuth2Token =
                 persistentStorage
                         .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)

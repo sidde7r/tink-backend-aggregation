@@ -132,12 +132,6 @@ public class AggregationServiceResource implements AggregationService {
         if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
-        logger.info(
-                "[forceAuthenticate] configureWhitelistInformation for credentials {}, isForceAuthenticate {}, isManual: {}, originatingUserIp: {}",
-                Optional.ofNullable(request.getCredentials()).map(Credentials::getId).orElse(null),
-                request.isForceAuthenticate(),
-                request.isManual(),
-                request.getOriginatingUserIp());
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationConfigureWhitelist(request, clientInfo));
     }
@@ -162,12 +156,6 @@ public class AggregationServiceResource implements AggregationService {
         if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
-        logger.info(
-                "[forceAuthenticate] refreshWhitelistInformation for credentials {}, isForceAuthenticate {}, isManual: {}, originatingUserIp: {}",
-                Optional.ofNullable(request.getCredentials()).map(Credentials::getId).orElse(null),
-                request.isForceAuthenticate(),
-                request.isManual(),
-                request.getOriginatingUserIp());
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationWhitelistRefresh(request, clientInfo));
     }
@@ -175,12 +163,6 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void refreshInformation(final RefreshInformationRequest request, ClientInfo clientInfo)
             throws Exception {
-        logger.info(
-                "[forceAuthenticate] refreshInformation for credentials {}, isForceAuthenticate: {}, isManual: {}, originatingUserIp: {}",
-                Optional.ofNullable(request.getCredentials()).map(Credentials::getId).orElse(null),
-                request.isForceAuthenticate(),
-                request.isManual(),
-                request.getOriginatingUserIp());
         if (request.isManual()) {
             agentWorker.execute(
                     agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
