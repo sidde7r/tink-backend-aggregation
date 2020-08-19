@@ -20,6 +20,11 @@ public class UsernamePasswordAuthenticationStep extends AbstractAuthenticationSt
         this.processor = processor;
     }
 
+    public UsernamePasswordAuthenticationStep(CallbackProcessor processor, String stepId) {
+        super(stepId);
+        this.processor = processor;
+    }
+
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {

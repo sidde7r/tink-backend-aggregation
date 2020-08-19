@@ -13,7 +13,7 @@ public class IspAgentTest {
             new ArgumentManager<>(ArgumentManager.UsernamePasswordArgumentEnum.values());
 
     private final AgentIntegrationTest.Builder builder =
-            new AgentIntegrationTest.Builder("it", "it-ispprivatebanking-password")
+            new AgentIntegrationTest.Builder("it", "it-isp-password")
                     .loadCredentialsBefore(false)
                     .saveCredentialsAfter(false);
 
