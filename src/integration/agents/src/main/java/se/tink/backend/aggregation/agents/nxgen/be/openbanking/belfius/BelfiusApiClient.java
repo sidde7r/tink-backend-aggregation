@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderValues;
@@ -20,14 +18,13 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.utils.CryptoUtils;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.utils.TimeUtils;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class BelfiusApiClient {
 
@@ -41,12 +38,16 @@ public final class BelfiusApiClient {
     private final TinkHttpClient client;
     private final BelfiusConfiguration configuration;
     private final String redirectUrl;
+    private final RandomValueGenerator randomValueGenerator;
 
     public BelfiusApiClient(
-            TinkHttpClient client, AgentConfiguration<BelfiusConfiguration> agentConfiguration) {
+            TinkHttpClient client,
+            AgentConfiguration<BelfiusConfiguration> agentConfiguration,
+            final RandomValueGenerator randomValueGenerator) {
         this.client = client;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -60,7 +61,7 @@ public final class BelfiusApiClient {
         return createRequest(url)
                 .header(HeaderKeys.CLIENT_ID, configuration.getClientId())
                 .header(HeaderKeys.REDIRECT_URI, redirectUrl)
-                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID());
+                .header(HeaderKeys.REQUEST_ID, randomValueGenerator.getUUID());
     }
 
     public List<ConsentResponse> getConsent(URL url, String iban, String code) {
@@ -78,7 +79,7 @@ public final class BelfiusApiClient {
     public TokenResponse postToken(URL url, String tokenEntity) {
         return createRequest(url)
                 .addBasicAuth(configuration.getClientId(), configuration.getClientSecret())
-                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID())
+                .header(HeaderKeys.REQUEST_ID, randomValueGenerator.getUUID())
                 .body(tokenEntity, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class);
     }
@@ -92,22 +93,14 @@ public final class BelfiusApiClient {
     }
 
     public FetchTransactionsResponse fetchTransactionsForAccount(
-            Date toDate, OAuth2Token oAuth2Token, String logicalId) {
+            OAuth2Token oAuth2Token, String key, String logicalId) {
         final URL url =
                 new URL(configuration.getBaseUrl() + Urls.FETCH_TRANSACTIONS_PATH)
-                        .parameter(StorageKeys.LOGICAL_ID, logicalId);
+                        .parameter(StorageKeys.LOGICAL_ID, logicalId)
+                        .queryParam(QueryKeys.NEXT, key);
 
         HttpResponse httpResponse =
-                createRequestInSession(url)
-                        .addBearerToken(oAuth2Token)
-                        .queryParam(
-                                QueryKeys.FROM_DATE,
-                                ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                        TimeUtils.get90DaysDate(toDate)))
-                        .queryParam(
-                                QueryKeys.TO_DATE,
-                                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                        .get(HttpResponse.class);
+                createRequestInSession(url).addBearerToken(oAuth2Token).get(HttpResponse.class);
 
         try {
             return OBJECT_MAPPER.readValue(

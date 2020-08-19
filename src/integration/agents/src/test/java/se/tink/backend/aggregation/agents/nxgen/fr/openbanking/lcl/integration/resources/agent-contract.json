@@ -1,0 +1,60 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "DUMMY_IBAN",
+      "accountExclusion":"NONE",
+      "exactBalance":{
+        "currencyCode":"EUR",
+        "doubleValue":27873.93,
+        "scale":2,
+        "unscaledValue":2787393,
+        "exactValue":27873.93
+      },
+      "currencyCode":"EUR",
+      "bankId":"DUMMYIBAN",
+      "name":"DUMMY_NAME",
+      "ownership":1.0,
+      "type":"CHECKING",
+      "identifiers":"[]",
+      "closed":false,
+      "holderName":null,
+      "flags":"[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "availableCredit":0.0,
+      "balance":27873.93
+    }
+  ],
+  "transactions": [
+    {
+      "amount":-47.57,
+      "date":1588586400000,
+      "description":"DUMMY_DESCRIPTION_1",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{"DETAILS":"6548161a-3396-4781-b0db-31e00887618b"},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    },
+    {
+      "amount":0.8,
+      "date":1588413600000,
+      "description":"DUMMY_DESCRIPTION_2",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{"DETAILS":"77287da0-d5c6-4d57-af74-eaea4579b119"},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    }
+  ],
+  "identityData": {
+    "nameElements": [
+      {
+        "type": "FULLNAME",
+        "value": "DUMMY_USER"
+      }
+    ]
+  }
+}

@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
+import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.BelfiusPaymentController;
@@ -14,14 +14,17 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.t
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class BelfiusAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
@@ -29,21 +32,22 @@ public final class BelfiusAgent extends NextGenerationAgent
     private final BelfiusApiClient apiClient;
     private final AgentConfiguration<BelfiusConfiguration> agentConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final RandomValueGenerator randomValueGenerator;
 
-    public BelfiusAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-
+    @Inject
+    public BelfiusAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(BelfiusConfiguration.class);
-        super.setConfiguration(agentsServiceConfiguration);
-
-        this.apiClient = new BelfiusApiClient(client, agentConfiguration);
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
+        this.apiClient = new BelfiusApiClient(client, agentConfiguration, randomValueGenerator);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
 
-        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
@@ -94,7 +98,12 @@ public final class BelfiusAgent extends NextGenerationAgent
                 new BelfiusTransactionalAccountFetcher(apiClient, persistentStorage);
 
         return new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, accountFetcher, accountFetcher);
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(accountFetcher)));
     }
 
     @Override
