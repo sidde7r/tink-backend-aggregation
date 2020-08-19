@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 
+import com.google.common.collect.ImmutableSet;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -131,7 +133,7 @@ public class EvoBancoConstants {
                 DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         public static final int OTP_VALUE_LENGTH = 7;
         public static final int DEVICE_ID_LENGTH = 25;
-        public static final String CREDIT_TRANSACTION_TYPE = "1";
+        public static final Set<String> CREDIT_TRANSACTION_TYPES = ImmutableSet.of("1", "2");
         public static final String ACCOUNT_TRANSACTION_PLUS_SIGN = "H";
     }
 
