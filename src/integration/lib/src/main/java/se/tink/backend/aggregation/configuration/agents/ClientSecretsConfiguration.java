@@ -11,8 +11,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
 @JsonSchemaDescription(
-        " The client_secret is a secret known only to the application and the authorization server.")
-@JsonSchemaTitle("Client Secrets")
+        "The client secret is a secret known only to the application and the authorization server.")
+@JsonSchemaTitle("Client Secret")
 @JsonSchemaExamples("555d5513cb123456789050b90f06a18b21234567890a9cce977c5513734d3f41")
 @JsonProperty(required = true)
 public @interface ClientSecretsConfiguration {}
