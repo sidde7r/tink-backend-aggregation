@@ -58,7 +58,6 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.identitydata.NameElement;
 
 public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
@@ -81,11 +80,6 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        log.info(
-                "[forceAuthenticate] constructRedirectAuthenticator, credentials: {}, request.appUriId: {}, state: {}",
-                request.getCredentials().getId(),
-                request.getAppUriId(),
-                strongAuthenticationState.getState());
         // Note: It's on purpose that this agent does not use the
         // AgentConfigurationController to get the callbackUri/redirectUri.
         // This is only for customers to test the callbackUri without
@@ -130,12 +124,6 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
             public void keepAlive() throws SessionException {
                 boolean shouldForceAuthenticate =
                         ForceAuthentication.shouldForceAuthentication(request);
-                log.info(
-                        String.format(
-                                "[forceAuthenticate] RedirectAuthenticationDemoAgent:refresh for credentials: %s, forceAuthenticate: %s, isInstanceOf RefreshInformationRequest: %s",
-                                credentials.getId(),
-                                shouldForceAuthenticate,
-                                request instanceof RefreshInformationRequest));
                 if (shouldForceAuthenticate) {
                     persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
                     throw SessionError.SESSION_EXPIRED.exception();
