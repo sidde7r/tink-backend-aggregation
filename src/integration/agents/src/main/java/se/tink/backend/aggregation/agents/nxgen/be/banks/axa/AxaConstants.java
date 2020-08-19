@@ -72,6 +72,10 @@ public final class AxaConstants {
         // Contact Center (03/286.66.56)"
         public static final String DEVICES_LIMIT_REACHED_CODE = "MB0027";
 
+        // "De ingevoerde 'RESPONSE' code is niet correct. Gelieve opnieuw te proberen.
+        // Opgelet: Uit veiligheidsoverwegingen is het aantal pogingen beperkt tot 5 keer."
+        public static final String INVALID_OTP_CODE = "MB0007";
+
         // "Sie haben eine falsche Kartennummer eingegeben. Bitte, kontrollieren Sie die Daten Ihrer
         // AXA Bankkarte und versuchen Sie es nochmals, oder kontaktieren Sie das Contact Center
         // (03/286.66.56)."
