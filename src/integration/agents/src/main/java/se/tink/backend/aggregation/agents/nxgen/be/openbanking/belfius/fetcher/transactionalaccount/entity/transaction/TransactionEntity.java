@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -126,5 +128,13 @@ public class TransactionEntity {
 
     public void setTransactionRef(String transactionRef) {
         this.transactionRef = transactionRef;
+    }
+
+    public Transaction toTinkTransaction() {
+        return Transaction.builder()
+                .setDescription(remittanceInfo)
+                .setAmount(ExactCurrencyAmount.of(amount, currency))
+                .setDate(executionDate)
+                .build();
     }
 }

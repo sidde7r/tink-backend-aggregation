@@ -2,25 +2,22 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.error.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BelfiusTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>, TransactionFetcher<TransactionalAccount> {
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, String> {
 
     private final BelfiusApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -50,29 +47,17 @@ public class BelfiusTransactionalAccountFetcher
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-
-        final String logicalId = persistentStorage.get(StorageKeys.LOGICAL_ID);
-
-        try {
-            return apiClient
-                    .fetchTransactionsForAccount(new Date(), getOauth2Token(), logicalId)
-                    .toTinkTransactions();
-        } catch (HttpResponseException e) {
-            ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);
-            if (ErrorCodes.TRANSACTION_TOO_OLD.equals(response.getErrorCode())) {
-                return Collections.emptyList();
-            } else {
-                throw e;
-            }
-        }
-    }
-
     private OAuth2Token getOauth2Token() {
         return persistentStorage
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+    }
+
+    @Override
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String key) {
+        final String logicalId = persistentStorage.get(StorageKeys.LOGICAL_ID);
+        return apiClient.fetchTransactionsForAccount(getOauth2Token(), key, logicalId);
     }
 }
