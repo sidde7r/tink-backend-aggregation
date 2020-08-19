@@ -33,8 +33,7 @@ public class SwedbankSeSerializationUtils {
         if (!matcher.find()) {
             throw new IllegalArgumentException("Cannot parse interest rate: " + interest);
         }
-        Double interestRate = StringUtils.parseAmount(matcher.group(1)) / 100d;
-        return interestRate;
+        return StringUtils.parseAmount(matcher.group(1)) / 100d;
     }
 
     /** Converts a time string into a number of months, e.g. 3 mån -> 3 and 5 år -> 60. */
