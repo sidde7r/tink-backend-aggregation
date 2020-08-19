@@ -20,5 +20,6 @@ java_library(
         "//src/libraries/metrics:counters",
         "//src/libraries/metrics:registry",
         "//third_party:com_google_guava_guava",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )

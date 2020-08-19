@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration.Tier;
@@ -20,27 +22,29 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class AgentWorkerMetricReporter {
     private final MetricRegistry registry;
     private final ProviderTierConfiguration providerTierConfiguration;
+    private static final Logger log = LoggerFactory.getLogger(AgentWorkerMetricReporter.class);
 
     private enum Metric {
-        operationsTotal(MetricId.newId("aggregation_total_operations")),
-        operationsFailed(MetricId.newId("aggregation_failed_operations")),
-        operationsSuccessful(MetricId.newId("aggregation_successful_operations")),
+        TOTAL_OPERATIONS(MetricId.newId("aggregation_total_operations")),
+        FAILED_OPERATIONS(MetricId.newId("aggregation_failed_operations")),
+        SUCCESSFUL_OPERATIONS(MetricId.newId("aggregation_successful_operations")),
 
-        marketsTotal(MetricId.newId("aggregation_total_market")),
-        marketsFailed(MetricId.newId("aggregation_failed_market")),
-        marketsSuccessful(MetricId.newId("aggregation_successful_market")),
+        TOTAL_MARKET(MetricId.newId("aggregation_total_market")),
+        FAILED_MARKET(MetricId.newId("aggregation_failed_market")),
+        SUCCESSFUL_MARKET(MetricId.newId("aggregation_successful_market")),
 
-        marketsOperationsTotal(MetricId.newId("aggregation_total_market_operations")),
-        marketsOperationsFailed(MetricId.newId("aggregation_failed_market_operations")),
-        marketsOperationsSuccessful(MetricId.newId("aggregation_successful_market_operations")),
+        TOTAL_MARKET_OPERATIONS(MetricId.newId("aggregation_total_market_operations")),
+        FAILED_MARKET_OPERATIONS(MetricId.newId("aggregation_failed_market_operations")),
+        SUCCESSFUL_MARKET_OPERATIONS(MetricId.newId("aggregation_successful_market_operations")),
 
-        tierMarketsTotal(MetricId.newId("aggregation_total_market")),
-        tierMarketsFailed(MetricId.newId("aggregation_failed_market")),
-        tierMarketsSuccessful(MetricId.newId("aggregation_successful_market")),
+        TOTAL_TIER_MARKET(MetricId.newId("aggregation_total_market_tier")),
+        FAILED_TIER_MARKET(MetricId.newId("aggregation_failed_market_tier")),
+        SUCCESSFUL_TIER_MARKET(MetricId.newId("aggregation_successful_market_tier")),
 
-        tierProviderTotal(MetricId.newId("aggregation_total_market_tier")),
-        tierProviderFailed(MetricId.newId("aggregation_failed_market_tier")),
-        tierProviderSuccessful(MetricId.newId("aggregation_successful_market_tier"));
+        TOTAL_MARKET_TIER_PROVIDER(MetricId.newId("aggregation_total_market_tier_provider")),
+        FAILED_MARKET_TIER_PROVIDER(MetricId.newId("aggregation_failed_market_tier_provider")),
+        SUCCESSFUL_MARKET_TIER_PROVIDER(
+                MetricId.newId("aggregation_successful_market_tier_provider"));
 
         private MetricId metricId;
 
@@ -137,20 +141,20 @@ public class AgentWorkerMetricReporter {
                 MetricLabels.from(ImmutableMap.of("operation", operationName));
 
         metricLabelPairs.add(
-                new MetricLabelPair(Metric.marketsOperationsTotal, marketOperationLabels));
-        metricLabelPairs.add(new MetricLabelPair(Metric.operationsTotal, operationLabels));
+                new MetricLabelPair(Metric.TOTAL_MARKET_OPERATIONS, marketOperationLabels));
+        metricLabelPairs.add(new MetricLabelPair(Metric.TOTAL_OPERATIONS, operationLabels));
 
         metricLabelPairs.add(
                 new MetricLabelPair(
                         isSuccessful(context)
-                                ? Metric.marketsOperationsSuccessful
-                                : Metric.marketsOperationsFailed,
+                                ? Metric.SUCCESSFUL_MARKET_OPERATIONS
+                                : Metric.FAILED_MARKET_OPERATIONS,
                         marketOperationLabels));
         metricLabelPairs.add(
                 new MetricLabelPair(
                         isSuccessful(context)
-                                ? Metric.operationsSuccessful
-                                : Metric.operationsFailed,
+                                ? Metric.SUCCESSFUL_OPERATIONS
+                                : Metric.FAILED_OPERATIONS,
                         operationLabels));
 
         return metricLabelPairs;
@@ -162,10 +166,10 @@ public class AgentWorkerMetricReporter {
                 MetricLabels.from(
                         ImmutableMap.of("market", context.getRequest().getProvider().getMarket()));
 
-        metricLabelPairs.add(new MetricLabelPair(Metric.marketsTotal, marketLabels));
+        metricLabelPairs.add(new MetricLabelPair(Metric.TOTAL_MARKET, marketLabels));
         metricLabelPairs.add(
                 new MetricLabelPair(
-                        isSuccessful(context) ? Metric.marketsSuccessful : Metric.marketsFailed,
+                        isSuccessful(context) ? Metric.SUCCESSFUL_MARKET : Metric.FAILED_MARKET,
                         marketLabels));
 
         return metricLabelPairs;
@@ -178,6 +182,7 @@ public class AgentWorkerMetricReporter {
         final Tier tier =
                 providerTierConfiguration.getTierForProvider(market, providerName).orElse(Tier.T3);
         final String tierName = tier.toString();
+        log.info("[AgentWorkerMetricReporter] Tier: {} Provider: {}", tierName, providerName);
 
         final MetricLabels tierLabels =
                 MetricLabels.from(
@@ -194,21 +199,22 @@ public class AgentWorkerMetricReporter {
                                 "tier", tierName,
                                 "provider", providerName));
 
-        metricLabelPairs.add(new MetricLabelPair(Metric.tierMarketsTotal, tierLabels));
+        metricLabelPairs.add(new MetricLabelPair(Metric.TOTAL_TIER_MARKET, tierLabels));
         metricLabelPairs.add(
                 new MetricLabelPair(
                         isSuccessful(context)
-                                ? Metric.tierMarketsSuccessful
-                                : Metric.tierMarketsFailed,
+                                ? Metric.SUCCESSFUL_TIER_MARKET
+                                : Metric.FAILED_TIER_MARKET,
                         tierLabels));
 
         if (Objects.equals(tier, Tier.T1)) {
-            metricLabelPairs.add(new MetricLabelPair(Metric.tierProviderTotal, tierProviderLabel));
+            metricLabelPairs.add(
+                    new MetricLabelPair(Metric.TOTAL_MARKET_TIER_PROVIDER, tierProviderLabel));
             metricLabelPairs.add(
                     new MetricLabelPair(
                             isSuccessful(context)
-                                    ? Metric.tierProviderSuccessful
-                                    : Metric.tierProviderFailed,
+                                    ? Metric.SUCCESSFUL_MARKET_TIER_PROVIDER
+                                    : Metric.FAILED_MARKET_TIER_PROVIDER,
                             tierProviderLabel));
         }
 
