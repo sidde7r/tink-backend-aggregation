@@ -5,14 +5,19 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class ListMovementsCardEntity {
+    private static final Logger log = LoggerFactory.getLogger(ListMovementsCardEntity.class);
+
     @JsonProperty("interesCarencia")
     private String interestLack;
 
@@ -147,6 +152,11 @@ public class ListMovementsCardEntity {
     }
 
     public boolean isCreditTransaction() {
-        return movementType.equals(EvoBancoConstants.Constants.CREDIT_TRANSACTION_TYPE);
+        final boolean isCreditTransaction =
+                Constants.CREDIT_TRANSACTION_TYPES.contains(movementType);
+        if (!isCreditTransaction) {
+            log.warn("Unknown card transaction type {}", movementType);
+        }
+        return isCreditTransaction;
     }
 }
