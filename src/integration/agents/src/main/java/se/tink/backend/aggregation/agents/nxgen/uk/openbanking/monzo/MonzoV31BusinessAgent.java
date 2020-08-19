@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints;
@@ -34,6 +35,7 @@ public class MonzoV31BusinessAgent extends UkOpenBankingBaseAgent {
                         .withAdditionalPermission(
                                 PartyEndpoints.partyEndpointsPermissionMap.get(
                                         PartyEndpoints.IDENTITY_DATA_ENDPOINT_PARTY))
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
                         .build();
     }
 
