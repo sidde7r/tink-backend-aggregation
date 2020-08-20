@@ -33,7 +33,8 @@ public class Provider implements Cloneable {
 
     public enum AuthenticationUserType {
         PERSONAL,
-        BUSINESS
+        BUSINESS,
+        CORPORATE
     }
 
     @SuppressWarnings("serial")
