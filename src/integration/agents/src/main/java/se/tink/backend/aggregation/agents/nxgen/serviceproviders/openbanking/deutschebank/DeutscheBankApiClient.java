@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 import com.google.common.base.Strings;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryKeys;
@@ -22,13 +21,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DeutscheBankApiClient {
 
-    private static final String CODE_CONSENT_INVALID = "\"code\":\"CONSENT_INVALID\"";
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     protected final DeutscheMarketConfiguration marketConfiguration;
@@ -77,8 +74,13 @@ public class DeutscheBankApiClient {
                 .post(ConsentBaseResponse.class, consentBaseRequest);
     }
 
-    public ConsentStatusResponse getConsentStatus(String consentStatusLink) {
-        return createRequest(new URL(consentStatusLink))
+    public ConsentStatusResponse getConsentStatus() {
+        String consentId = sessionStorage.get(StorageKeys.CONSENT_ID);
+        return createRequest(
+                        new URL(
+                                marketConfiguration
+                                        .getBaseUrl()
+                                        .concat(String.format(Urls.STATUS, consentId))))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
                 .get(ConsentStatusResponse.class);
@@ -116,16 +118,5 @@ public class DeutscheBankApiClient {
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKING_STATUS)
                 .queryParam(QueryKeys.DELTA_LIST, QueryValues.DELTA_LIST)
                 .get(TransactionsKeyPaginatorBaseResponse.class);
-    }
-
-    public void confirmAuthentication() {
-        try {
-            createRequestInSession(new URL(marketConfiguration.getBaseUrl().concat(Urls.ACCOUNTS)))
-                    .get(String.class);
-        } catch (HttpResponseException ex) {
-            if (ex.getResponse().getBody(String.class).contains(CODE_CONSENT_INVALID)) {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
-            }
-        }
     }
 }

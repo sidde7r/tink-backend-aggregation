@@ -2,7 +2,9 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "deutschebank",
-    srcs = glob(["**/*.java"]),
+    srcs = glob([
+        "DeutscheBankDEAgentTest.java",
+    ]),
     data = ["//:agent_test_data"],
     tags = [
         "external",
@@ -17,5 +19,26 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+    ],
+)
+
+junit_test(
+    name = "deutschebank_unit_tests",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = [
+            "DeutscheBankDEAgentTest.java",
+        ],
+    ),
+    tags = [
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/deutschebank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/deutschebank",
+        "//src/integration/lib",
+        "//src/libraries/serialization",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
     ],
 )

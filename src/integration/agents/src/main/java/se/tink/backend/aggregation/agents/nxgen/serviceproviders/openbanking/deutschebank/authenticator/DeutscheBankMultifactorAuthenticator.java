@@ -49,9 +49,11 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        ConsentBaseResponse consent = getConsent(strongAuthenticationState.getState());
+        ConsentBaseResponse consent =
+                apiClient.getConsent(strongAuthenticationState.getState(), iban, psuId);
+        sessionStorage.put(DeutscheBankConstants.StorageKeys.CONSENT_ID, consent.getConsentId());
         deutscheBankRedirectHandler.handleRedirect();
-        poll(consent);
+        poll();
     }
 
     @Override
@@ -59,18 +61,10 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
         return CredentialsTypes.THIRD_PARTY_APP;
     }
 
-    public ConsentBaseResponse getConsent(String state) {
-        ConsentBaseResponse consent = apiClient.getConsent(state, iban, psuId);
-        sessionStorage.put(DeutscheBankConstants.StorageKeys.CONSENT_ID, consent.getConsentId());
-        return consent;
-    }
-
-    private void poll(ConsentBaseResponse consent) throws ThirdPartyAppException {
+    private void poll() throws ThirdPartyAppException {
         for (int i = 0; i < DeutscheBankConstants.FormValues.MAX_POLLS_COUNTER; i++) {
             Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
-            String consentStatusLink = consent.getLinks().getStatus().getHref();
-            ConsentStatusResponse consentStatusResponse =
-                    apiClient.getConsentStatus(consentStatusLink);
+            ConsentStatusResponse consentStatusResponse = apiClient.getConsentStatus();
             String consentStatus = consentStatusResponse.getConsentStatus();
             switch (consentStatus) {
                 case DeutscheBankConstants.StatusValues.VALID:
