@@ -103,8 +103,10 @@ public class ControllerWrapper {
         return client.updateFraudDetails(configuration, request);
     }
 
-    public Response updateCredentialSensitive(Credentials credentials, String sensitiveData) {
-        return client.updateCredentialSensitive(configuration, credentials, sensitiveData);
+    public Response updateCredentialSensitive(
+            Credentials credentials, String sensitiveData, String operationId) {
+        return client.updateCredentialSensitive(
+                configuration, credentials, sensitiveData, operationId);
     }
 
     public Response checkConnectivity() {

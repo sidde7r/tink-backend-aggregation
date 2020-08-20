@@ -188,7 +188,10 @@ public class FakeAggregationControllerAggregationClient
 
     @Override
     public Response updateCredentialSensitive(
-            HostConfiguration hostConfiguration, Credentials credentials, String sensitiveData) {
+            HostConfiguration hostConfiguration,
+            Credentials credentials,
+            String sensitiveData,
+            String operationId) {
         callFakeAggregationController("updateCredentialSensitive", credentials);
         callFakeAggregationController("updateCredentialSensitiveString", sensitiveData);
         return Response.ok().build();
