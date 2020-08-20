@@ -81,8 +81,6 @@ git_repository(
 
 # Go rules
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
 http_archive(
     name = "io_bazel_rules_go",
     sha256 = "e6a6c016b0663e06fa5fccf1cd8152eab8aa8180c583ec20c872f4f9953a7ac5",
@@ -101,8 +99,6 @@ go_register_toolchains()
 # End Go rules
 
 # Gazelle for generating Go packages
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "bazel_gazelle",
