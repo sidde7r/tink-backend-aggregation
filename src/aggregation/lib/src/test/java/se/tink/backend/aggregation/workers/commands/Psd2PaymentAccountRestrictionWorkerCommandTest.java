@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Assert;
@@ -37,7 +38,7 @@ public class Psd2PaymentAccountRestrictionWorkerCommandTest {
     @Test
     public void shouldNotRestrictAccountsWhenNoDataFetchingRestrictions() throws Exception {
         // given
-        setUp(Collections.emptyList());
+        setUp(Collections.emptyList(), getPaymentAccounts());
 
         // when
         AgentWorkerCommandResult result = command.execute();
@@ -53,7 +54,8 @@ public class Psd2PaymentAccountRestrictionWorkerCommandTest {
         // given
         setUp(
                 Collections.singletonList(
-                        DataFetchingRestrictions.RESTRICT_FETCHING_PSD2_PAYMENT_ACCOUNTS));
+                        DataFetchingRestrictions.RESTRICT_FETCHING_PSD2_PAYMENT_ACCOUNTS),
+                getPaymentAccounts());
 
         // when
         AgentWorkerCommandResult result = command.execute();
@@ -63,10 +65,49 @@ public class Psd2PaymentAccountRestrictionWorkerCommandTest {
         Mockito.verify(controllerWrapper, Mockito.times(1)).restrictAccounts(any());
     }
 
-    private void setUp(List<DataFetchingRestrictions> dataFetchingRestrictions) {
+    @Test
+    public void
+            shouldNotRestrictAccountsWhenAccountsAreUndeterminedAndFetchingRestrictionsDoNotRestrictUndetermined()
+                    throws Exception {
+        // given
+        setUp(
+                Collections.singletonList(
+                        DataFetchingRestrictions.RESTRICT_FETCHING_PSD2_PAYMENT_ACCOUNTS),
+                getUndeterminedAccounts());
+
+        // when
+        AgentWorkerCommandResult result = command.execute();
+
+        // then
+        Assert.assertEquals(AgentWorkerCommandResult.CONTINUE, result);
+        Mockito.verify(controllerWrapper, Mockito.times(0)).restrictAccounts(any());
+    }
+
+    @Test
+    public void
+            shouldRestrictAccountsWhenAccountsAreUndeterminedAndFetchingRestrictionsRequireToRestrictUndetermined()
+                    throws Exception {
+        // given
+        setUp(
+                Arrays.asList(
+                        DataFetchingRestrictions.RESTRICT_FETCHING_PSD2_PAYMENT_ACCOUNTS,
+                        DataFetchingRestrictions
+                                .RESTRICT_FETCHING_PSD2_UNDETERMINED_PAYMENT_ACCOUNTS),
+                getUndeterminedAccounts());
+
+        // when
+        AgentWorkerCommandResult result = command.execute();
+
+        // then
+        Assert.assertEquals(AgentWorkerCommandResult.CONTINUE, result);
+        Mockito.verify(controllerWrapper, Mockito.times(1)).restrictAccounts(any());
+    }
+
+    private void setUp(
+            List<DataFetchingRestrictions> dataFetchingRestrictions, List<Account> accounts) {
 
         CredentialsRequest request = prepareCredentialsRequest(dataFetchingRestrictions);
-        setUpContext(request);
+        setUpContext(request, accounts);
         controllerWrapper = mock(ControllerWrapper.class);
 
         command =
@@ -93,28 +134,47 @@ public class Psd2PaymentAccountRestrictionWorkerCommandTest {
         return request;
     }
 
-    private void setUpContext(CredentialsRequest request) {
+    private void setUpContext(CredentialsRequest request, List<Account> accounts) {
         context = mock(AgentWorkerCommandContext.class);
         Provider provider = new Provider();
         provider.setMarket("SE");
         when(context.getRequest()).thenReturn(request);
         when(context.getAppId()).thenReturn("appId");
-        AccountDataCache accountDataCache = getAccountDataCache();
+        AccountDataCache accountDataCache = prepareAccountDataCache(accounts);
         when(context.getAccountDataCache()).thenReturn(accountDataCache);
     }
 
-    private AccountDataCache getAccountDataCache() {
+    private AccountDataCache prepareAccountDataCache(List<Account> accounts) {
         AccountDataCache accountDataCache = new AccountDataCache();
+        int i = 1;
+        accounts.forEach(
+                account -> {
+                    accountDataCache.cacheAccount(account);
+                    accountDataCache.setProcessedTinkAccountId(
+                            account.getBankId(), account.getBankId());
+                });
+        return accountDataCache;
+    }
+
+    private List<Account> getUndeterminedAccounts() {
+        // it's safe to assume that accounts of type OTHER will be categorized as Undetermined
+        // Payment Accounts
+        Account account1 = new Account();
+        account1.setBankId("id1");
+        account1.setType(AccountTypes.OTHER);
+        Account account2 = new Account();
+        account2.setBankId("id2");
+        account2.setType(AccountTypes.OTHER);
+        return Arrays.asList(account1, account2);
+    }
+
+    private List<Account> getPaymentAccounts() {
         Account account1 = new Account();
         account1.setBankId("id1");
         account1.setType(AccountTypes.CHECKING);
-        accountDataCache.cacheAccount(account1);
-        accountDataCache.setProcessedTinkAccountId("id1", "id1");
         Account account2 = new Account();
         account2.setBankId("id2");
         account2.setType(AccountTypes.CHECKING);
-        accountDataCache.cacheAccount(account2);
-        accountDataCache.setProcessedTinkAccountId("id2", "id2");
-        return accountDataCache;
+        return Arrays.asList(account1, account2);
     }
 }
