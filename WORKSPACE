@@ -1279,14 +1279,3 @@ maven_install(
 load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
 
 com_salesforce_servicelibs_grpc_testing_contrib_pin()
-
-git_repository(
-    name = "com_github_atlassian_bazel_tools",
-    commit = "72f7db723e7723842042922344dd690c359a87a5",
-    remote = "https://github.com/atlassian/bazel-tools.git",
-    shallow_since = "1490898663 +0200",
-)
-
-load("@com_github_atlassian_bazel_tools//multirun:deps.bzl", "multirun_dependencies")
-
-multirun_dependencies()
