@@ -38,7 +38,7 @@ public class HsbcV31Agent extends UkOpenBankingBaseAgent {
                 new UKOpenBankingAis.Builder()
                         .withApiBaseURL(V313.PERSONAL_AIS_API_URL)
                         .withWellKnownURL(V313.PERSONAL_WELL_KNOWN_URL)
-                        .withAppToAppURL(V313.APP_TO_APP_AUTH_URL)
+                        .withAppToAppURL(V313.PERSONAL_APP_TO_APP_AUTH_URL)
                         .withIdentityDataURL(PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)
                         .withAdditionalPermission(
                                 PartyEndpoints.partyEndpointsPermissionMap.get(
