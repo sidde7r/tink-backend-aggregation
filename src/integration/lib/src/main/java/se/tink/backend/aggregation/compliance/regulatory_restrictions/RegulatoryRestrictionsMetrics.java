@@ -7,13 +7,13 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
-class RegulatoryRestrictionsMetrics {
+public class RegulatoryRestrictionsMetrics {
     private static final MetricId regulatoryRestriction =
             MetricId.newId("regulatory_restrictions_accounts");
     private final MetricRegistry metricRegistry;
 
     @Inject
-    RegulatoryRestrictionsMetrics(@Nullable MetricRegistry metricRegistry) {
+    public RegulatoryRestrictionsMetrics(@Nullable MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
     }
 
