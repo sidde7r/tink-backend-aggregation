@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.filter;
 
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentRuntimeError;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants.ErrorMessage;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -47,7 +47,7 @@ public class RevolutErrorsFilter extends Filter {
     }
 
     private void conditionalThrow(
-            HttpResponse response, int errorStatus, String errorMessage, AgentRuntimeError error) {
+            HttpResponse response, int errorStatus, String errorMessage, AgentError error) {
         if (response.getStatus() == errorStatus) {
             String body = response.getBody(String.class);
             if (body.contains(errorMessage)) {

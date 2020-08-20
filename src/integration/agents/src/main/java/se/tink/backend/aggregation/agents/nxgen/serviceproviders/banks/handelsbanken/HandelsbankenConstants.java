@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -259,7 +259,7 @@ public class HandelsbankenConstants {
 
             private void throwException() throws AuthenticationException, AuthorizationException {
                 // Have to satisfy method signature...
-                AgentExceptionImpl exception = agentError.exception(key);
+                AgentException exception = agentError.exception(key);
                 if (exception instanceof AuthenticationException) {
                     throw (AuthenticationException) exception;
                 } else {

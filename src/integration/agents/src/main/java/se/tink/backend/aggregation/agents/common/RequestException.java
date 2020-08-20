@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.common;
 
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentBaseError;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 
 public class RequestException extends Exception {
 
-    private AgentBaseError agentError;
+    private AgentError agentError;
     private String message;
 
-    public RequestException(AgentBaseError agentError, String message) {
+    public RequestException(AgentError agentError, String message) {
         this.agentError = agentError;
         this.message = message;
     }
@@ -16,7 +16,7 @@ public class RequestException extends Exception {
         this.message = message;
     }
 
-    public AgentBaseError getAgentError() {
+    public AgentError getAgentError() {
         return agentError;
     }
 

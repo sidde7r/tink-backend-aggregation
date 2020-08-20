@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.entities.ResponseMessage;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -65,7 +65,7 @@ public class CrossKeyResponse {
             // java.util.function.Consumer.
             CrossKeyError crossKeyError = error.get();
             // Have to satisfy method signature...
-            AgentExceptionImpl exception =
+            AgentException exception =
                     crossKeyError.getAgentError().exception(crossKeyError.getKey());
             if (exception instanceof AuthenticationException) {
                 throw (AuthenticationException) exception;

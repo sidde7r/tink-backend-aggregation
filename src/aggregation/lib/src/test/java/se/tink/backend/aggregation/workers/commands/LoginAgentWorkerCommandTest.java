@@ -153,7 +153,7 @@ public class LoginAgentWorkerCommandTest {
         Mockito.verify(metricAction, Mockito.times(1)).unavailable();
         Mockito.verify(metricActionLoginType, Mockito.times(1)).unavailable();
         Mockito.verify(context, Mockito.times(1))
-                .updateStatus(Mockito.eq(CredentialsStatus.TEMPORARY_ERROR));
+                .updateStatus(Mockito.eq(CredentialsStatus.TEMPORARY_ERROR), Mockito.anyString());
         Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
     }
 

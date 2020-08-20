@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink;
 import java.util.Optional;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.entities.ErrorEntity;
@@ -160,7 +160,7 @@ public class SamlinkConstants {
             return this.errorCode.equalsIgnoreCase(code);
         }
 
-        public AgentExceptionImpl exception() {
+        public AgentException exception() {
             return Optional.ofNullable(this.errorMessage)
                     .map(this.agentError::exception)
                     .orElseGet(this.agentError::exception);
