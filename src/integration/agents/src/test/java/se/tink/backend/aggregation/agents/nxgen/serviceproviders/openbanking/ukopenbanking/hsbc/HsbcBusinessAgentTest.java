@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-public class HSBCBusinessAgentTest {
+public class HsbcBusinessAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
@@ -12,7 +12,7 @@ public class HSBCBusinessAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setAppId("tink")
-                .setFinancialInstitutionId("6cd6d369ba8e4d72b1a7d26dabe509a3")
+                .setFinancialInstitutionId("2dd34a204b31439d81c8f913044ea637")
                 .build()
                 .testRefresh();
     }
