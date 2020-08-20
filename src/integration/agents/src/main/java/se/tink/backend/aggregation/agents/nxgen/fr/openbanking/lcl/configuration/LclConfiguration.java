@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration;
 
 import lombok.Data;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @Data
 public class LclConfiguration implements ClientConfiguration {
 
-    private String authorizeUrl;
+    @Secret private String authorizeUrl;
 
-    private String baseUrl;
+    @Secret private String baseUrl;
 
-    private String qsealcKeyId;
+    @Secret private String qsealcKeyId;
 
-    private String clientId;
+    @Secret private String clientId;
 }
