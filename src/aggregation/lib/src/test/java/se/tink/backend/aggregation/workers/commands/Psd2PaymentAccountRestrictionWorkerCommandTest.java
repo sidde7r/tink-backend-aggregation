@@ -146,7 +146,6 @@ public class Psd2PaymentAccountRestrictionWorkerCommandTest {
 
     private AccountDataCache prepareAccountDataCache(List<Account> accounts) {
         AccountDataCache accountDataCache = new AccountDataCache();
-        int i = 1;
         accounts.forEach(
                 account -> {
                     accountDataCache.cacheAccount(account);
