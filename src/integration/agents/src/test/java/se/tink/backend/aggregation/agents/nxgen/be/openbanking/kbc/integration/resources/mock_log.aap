@@ -1,0 +1,104 @@
+
+REQUEST 1
+POST https://openapi.kbc-group.com/psd2/v2/consents
+Content-Type: application/json
+TPP-Redirect-Uri: https://api.tink.se/api/v1/credentials/third-party/callback
+PSU-IP-Address: 0.0.0.0
+X-Aggregator: Tink Testing
+
+{"access":{"accounts":[],"transactions":[{"iban":"BE39000000076000"}],"balances":[{"iban":"BE39000000076000"}]},"recurringIndicator":true,"frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+201
+Date: Wed, 19 Aug 2020 07:10:04 GMT
+Date: Wed, 19 Aug 2020 07:10:05 GMT
+Location: ***
+ASPSP-SCA-Approach: ***
+Content-Type: application/json
+Server: KBCGroupNV
+
+{"consentStatus":"received","consentId":"dummy_consent_id","_links":{}}
+
+REQUEST 2
+POST https://openapi.kbc-group.com/ASK/oauth/token/1
+Authorization: Basic RFVNTVlfSUQ=
+Content-Type: application/x-www-form-urlencoded
+PSU-IP-Address: 0.0.0.0
+X-Aggregator: Tink Testing
+
+grant_type=authorization_code&code=DUMMY_AUTH_CODE&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID
+
+RESPONSE 2
+200
+Date: Wed, 19 Aug 2020 07:10:57 GMT
+Date: Wed, 19 Aug 2020 07:10:57 GMT
+Content-Type: application/json;charset=utf-8
+Server: KBCGroupNV
+
+{"access_token":"DUMMY_ACCESS_TOKEN","expires_in":"900","token_type":"Bearer","refresh_token":"DUMMY_REFRESH_TOKEN","scope":"AIS"}
+
+REQUEST 3
+GET https://openapi.kbc-group.com/psd2/v2/accounts?withBalance=true
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Consent-ID: dummy_consent_id
+Content-Type: application/json
+PSU-IP-Address: 0.0.0.0
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Wed, 19 Aug 2020 07:10:58 GMT
+Date: Wed, 19 Aug 2020 07:10:58 GMT
+Content-Type: application/json;charset=utf-8
+Server: KBCGroupNV
+
+{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","iban":"BE39000000076000","currency":"EUR","name":"DUMMY_NAME","product":"DUMMY_NAME","cashAccountType":"CACC","balances":[{"balanceAmount":{"currency":"EUR","amount":"789.01"},"balanceType":"closingBooked"}],"_links":{"balances":"/psd2/v2/accounts/DUMMY_RESOURCE_ID/balances"}}]}
+
+REQUEST 4
+GET https://openapi.kbc-group.com/psd2/v2/accounts/DUMMY_RESOURCE_ID/transactions?bookingStatus=booked
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+PSU-IP-Address: 0.0.0.0
+Consent-ID: dummy_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Wed, 19 Aug 2020 07:10:59 GMT
+Date: Wed, 19 Aug 2020 07:10:59 GMT
+Content-Type: application/json;charset=utf-8
+Server: KBCGroupNV
+Transfer-Encoding: chunked
+
+{"account":{"iban":"BE39000000076000","currency":"EUR"},"transactions":{"booked":[{"transactionId": "2020-08-19-09.01.42.920758","bookingDate": "2020-07-30","valueDate": "2020-07-30","transactionAmount": {"currency": "EUR","amount": "12.25"},"creditorName": "DUMMY_NAME","debtorName": "DUMMY_NAME","debtorAccount": {"iban": "BE39000000076000","currency": "EUR"},"remittanceInformationUnstructured": "SEPA CREDIT TRANSFER from PSD2Company","bankTransactionCode": "PMNT-CCRD-POSD","proprietaryBankTransactionCode": "0402000"},{"transactionId": "2020-08-19-09.01.42.920758","bookingDate": "2020-07-30","valueDate": "2020-07-30","transactionAmount": {"currency": "EUR","amount": "12.25"},"creditorName": "DUMMY_NAME","debtorName": "DUMMY_NAME","debtorAccount": {"iban": "BE39000000076000","currency": "EUR"},"remittanceInformationUnstructured": "SEPA CREDIT TRANSFER from PSD2Company","bankTransactionCode": "PMNT-CCRD-POSD","proprietaryBankTransactionCode": "0402000"},{"transactionId": "2020-08-19-09.01.42.920758","bookingDate": "2020-07-30","valueDate": "2020-07-30","transactionAmount": {"currency": "EUR","amount": "12.25"},"creditorName": "DUMMY_NAME","debtorName": "DUMMY_NAME","debtorAccount": {"iban": "BE39000000076000","currency": "EUR"},"remittanceInformationUnstructured": "SEPA CREDIT TRANSFER from PSD2Company","bankTransactionCode": "PMNT-CCRD-POSD","proprietaryBankTransactionCode": "0402000"}],"_links":{"account":"/psd2/v2/accounts/DUMMY_RESOURCE_ID","next":"/psd2/v2/accounts/DUMMY_RESOURCE_ID/transactions?entryReferenceFrom=2020-07-31-17.49.49.327035B&dateTo=2020-08-19&dateFrom=2020-05-19&bookingStatus=booked"}}}
+
+REQUEST 5
+GET https://openapi.kbc-group.com/psd2/v2/accounts/DUMMY_RESOURCE_ID/transactions?entryReferenceFrom=2020-07-31-17.49.49.327035B&dateTo=2020-08-19&dateFrom=2020-05-19&bookingStatus=booked
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+PSU-IP-Address: 0.0.0.0
+Consent-ID: dummy_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Wed, 19 Aug 2020 07:10:59 GMT
+Date: Wed, 19 Aug 2020 07:10:59 GMT
+Content-Type: application/json;charset=utf-8
+Server: KBCGroupNV
+
+{"account":{"iban":"BE39000000076000","currency":"EUR"},"transactions":{"booked":[{"transactionId": "2020-08-19-09.01.42.920758","bookingDate": "2020-07-30","valueDate": "2020-07-30","transactionAmount": {"currency": "EUR","amount": "12.25"},"creditorName": "DUMMY_NAME","debtorName": "DUMMY_NAME","debtorAccount": {"iban": "BE39000000076000","currency": "EUR"},"remittanceInformationUnstructured": "SEPA CREDIT TRANSFER from PSD2Company","bankTransactionCode": "PMNT-CCRD-POSD","proprietaryBankTransactionCode": "0402000"}],"_links":{"account":"/psd2/v2/accounts/DUMMY_RESOURCE_ID","next":"/psd2/v2/accounts/DUMMY_RESOURCE_ID/transactions?entryReferenceFrom=2020-07-31-17.49.49.327036B&dateTo=2020-08-19&dateFrom=2020-05-19&bookingStatus=booked"}}}
+
+REQUEST 6
+GET https://openapi.kbc-group.com/psd2/v2/accounts/DUMMY_RESOURCE_ID/transactions?entryReferenceFrom=2020-07-31-17.49.49.327036B&dateTo=2020-08-19&dateFrom=2020-05-19&bookingStatus=booked
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+PSU-IP-Address: 0.0.0.0
+Consent-ID: dummy_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Wed, 19 Aug 2020 07:10:59 GMT
+Date: Wed, 19 Aug 2020 07:10:59 GMT
+Content-Type: application/json;charset=utf-8
+Server: KBCGroupNV
+
+{"account":{"iban":"BE39000000076000","currency":"EUR"},"transactions":{"booked":[{"transactionId": "2020-08-19-09.01.42.920758","bookingDate": "2020-07-30","valueDate": "2020-07-30","transactionAmount": {"currency": "EUR","amount": "12.25"},"creditorName": "DUMMY_NAME","debtorName": "DUMMY_NAME","debtorAccount": {"iban": "BE39000000076000","currency": "EUR"},"remittanceInformationUnstructured": "SEPA CREDIT TRANSFER from PSD2Company","bankTransactionCode": "PMNT-CCRD-POSD","proprietaryBankTransactionCode": "0402000"}],"_links":{"account":"/psd2/v2/accounts/DUMMY_RESOURCE_ID"}}}
