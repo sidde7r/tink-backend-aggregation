@@ -15,8 +15,6 @@ public class N26Configuration implements ClientConfiguration {
     @SensitiveSecret private String memberId;
     @SensitiveSecret private String realmId;
     @AgentConfigParam private String redirectUrl;
-    @Secret private String baseUrl;
-    @Secret private String authorizationUrl;
     @Secret private String aliasType;
     @Secret private String aliasValue;
 }
