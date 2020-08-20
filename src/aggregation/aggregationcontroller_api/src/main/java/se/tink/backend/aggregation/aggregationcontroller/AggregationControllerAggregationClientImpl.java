@@ -245,13 +245,17 @@ public class AggregationControllerAggregationClientImpl
 
     @Override
     public Response updateCredentialSensitive(
-            HostConfiguration hostConfiguration, Credentials credentials, String sensitiveData) {
+            HostConfiguration hostConfiguration,
+            Credentials credentials,
+            String sensitiveData,
+            String operationId) {
         UpdateCredentialsSensitiveRequest request =
                 new UpdateCredentialsSensitiveRequest()
                         .setUserId(credentials.getUserId())
                         .setCredentialsId(credentials.getId())
                         .setCredentialsDataVersion(credentials.getDataVersion())
-                        .setSensitiveData(sensitiveData);
+                        .setSensitiveData(sensitiveData)
+                        .setOperationId(operationId);
 
         return requestExecuter(
                 () -> getCredentialsService(hostConfiguration).updateSensitive(request),
