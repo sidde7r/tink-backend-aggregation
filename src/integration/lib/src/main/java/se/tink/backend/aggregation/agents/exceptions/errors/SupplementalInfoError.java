@@ -24,7 +24,7 @@ public enum SupplementalInfoError implements AgentError {
     }
 
     @Override
-    public Throwable exception(String internalMessage) {
+    public SupplementalInfoException exception(String internalMessage) {
         return new SupplementalInfoException(this, internalMessage);
     }
 

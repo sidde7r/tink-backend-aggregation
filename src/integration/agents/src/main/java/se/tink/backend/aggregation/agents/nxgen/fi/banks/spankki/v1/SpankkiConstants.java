@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1;
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentBaseError;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -73,9 +73,9 @@ public class SpankkiConstants {
         UNKNOWN_ERROR(-1, null);
 
         private final int statusCode;
-        private final AgentBaseError agentError;
+        private final AgentError agentError;
 
-        ServerResponse(int statusCode, AgentBaseError agentError) {
+        ServerResponse(int statusCode, AgentError agentError) {
 
             this.statusCode = statusCode;
             this.agentError = agentError;

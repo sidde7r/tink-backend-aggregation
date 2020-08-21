@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.exceptions.bankservice;
 
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentRuntimeExceptionImpl;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class BankServiceException extends AgentRuntimeExceptionImpl {
+public class BankServiceException extends AgentException {
 
     public BankServiceException(BankServiceError error) {
         super(error);

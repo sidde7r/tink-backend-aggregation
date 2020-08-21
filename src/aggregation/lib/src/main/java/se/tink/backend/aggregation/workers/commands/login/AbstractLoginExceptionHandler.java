@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.workers.commands.login;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
@@ -35,11 +35,11 @@ public abstract class AbstractLoginExceptionHandler implements LoginExceptionHan
             Exception exception, MetricActionIface metricAction);
 
     private void updateStatus(final Exception exception) {
-        if (exception instanceof AgentExceptionImpl) {
+        if (exception instanceof AgentException) {
             statusUpdater.updateStatus(
                     credentialsStatus,
                     context.getCatalog()
-                            .getString((((AgentExceptionImpl) exception).getUserMessage())));
+                            .getString((((AgentException) exception).getUserMessage())));
         } else {
             statusUpdater.updateStatus(credentialsStatus);
         }

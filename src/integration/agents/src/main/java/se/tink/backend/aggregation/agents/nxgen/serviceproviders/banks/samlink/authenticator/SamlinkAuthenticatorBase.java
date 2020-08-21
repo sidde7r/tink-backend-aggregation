@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConstants;
@@ -56,7 +56,7 @@ public class SamlinkAuthenticatorBase {
 
         Optional<SamlinkConstants.ServerError> userError = errorResponse.toUserError();
         if (userError.isPresent()) {
-            AgentExceptionImpl exception = userError.get().exception();
+            AgentException exception = userError.get().exception();
             if (exception instanceof AuthenticationException) {
                 throw (AuthenticationException) exception;
             }

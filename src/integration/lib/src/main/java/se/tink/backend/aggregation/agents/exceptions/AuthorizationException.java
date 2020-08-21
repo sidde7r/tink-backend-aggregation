@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.exceptions;
 
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -13,7 +13,7 @@ import se.tink.libraries.i18n.LocalizableKey;
  * <p>For more info see:
  * http://stackoverflow.com/questions/6556522/authentication-versus-authorization
  */
-public class AuthorizationException extends AgentExceptionImpl {
+public class AuthorizationException extends AgentException {
 
     public AuthorizationException(AuthorizationError error) {
         super(error);

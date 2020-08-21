@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.filter;
 
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentRuntimeError;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -56,7 +56,7 @@ public class KnownErrorsFilter extends Filter {
             int httpStatus,
             int errorCode,
             String errorStatus,
-            AgentRuntimeError toThrow) {
+            AgentError toThrow) {
         if (httpResponse.getStatus() == httpStatus
                 && errorResponse != null
                 && errorResponse.getErrorCode() == errorCode

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -22,16 +23,28 @@ import se.tink.libraries.payment.enums.PaymentType;
 
 @JsonObject
 public class CreatePaymentRequest {
+
     private String paymentInformationId;
+
     private String creationDateTime;
+
     private String requestedExecutionDate;
+
     private Integer numberOfTransactions;
+
     private InitiatingPartyEntity initiatingParty;
+
     private PaymentTypeInformationEntity paymentTypeInformation;
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = AccountEntity.class)
     private AccountEntity debtorAccount;
+
     private BeneficiaryEntity beneficiary;
+
     private List<CreditTransferTransactionEntity> creditTransferTransaction;
+
     private String chargeBearer;
+
     private SupplementaryDataEntity supplementaryData;
 
     private CreatePaymentRequest(Builder builder) {
