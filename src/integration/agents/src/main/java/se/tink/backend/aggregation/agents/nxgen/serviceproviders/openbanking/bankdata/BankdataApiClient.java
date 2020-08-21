@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata;
 
+import java.security.cert.CertificateException;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.Endpoints;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.HeaderValues;
@@ -38,6 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -55,10 +55,12 @@ public final class BankdataApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private BankdataConfiguration configuration;
-    private String redirectUrl;
     private final String baseUrl;
     private final String baseAuthUrl;
+
+    private BankdataConfiguration configuration;
+    private String redirectUrl;
+    private String clientId;
 
     public BankdataApiClient(
             TinkHttpClient client,
@@ -71,11 +73,23 @@ public final class BankdataApiClient {
         this.baseAuthUrl = baseAuthUrl;
     }
 
+    protected void setConfiguration(
+            AgentConfiguration<BankdataConfiguration> agentConfiguration,
+            EidasProxyConfiguration eidasProxyConfiguration) {
+        this.client.setEidasProxy(eidasProxyConfiguration);
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
+        try {
+            this.clientId =
+                    CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+        } catch (CertificateException e) {
+            throw new IllegalStateException("Could not extract organization identifier!", e);
+        }
+    }
+
     public URL getAuthorizeUrl(String state) {
         String consentId = getConsentId();
         authorizeConsent(consentId);
-        final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getRedirectUrl();
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
@@ -89,7 +103,7 @@ public final class BankdataApiClient {
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
-                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam("acr", "psd2")
                 .getUrl();
     }
@@ -98,9 +112,9 @@ public final class BankdataApiClient {
         final AccessTokenRequest request =
                 new AccessTokenRequest(
                         BankdataConstants.FormValues.AUTHORIZATION_CODE,
-                        getConfiguration().getClientId(),
+                        clientId,
                         code,
-                        getRedirectUrl(),
+                        redirectUrl,
                         sessionStorage.get(StorageKeys.CODE_VERIFIER));
 
         return getTokenResponse(request);
@@ -113,7 +127,7 @@ public final class BankdataApiClient {
 
         client.request(url.parameter(IdTags.CONSENT_ID, consentId))
                 .addBearerToken(getTokenFromSession())
-                .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
+                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
                 .post(HttpResponse.class);
@@ -264,8 +278,6 @@ public final class BankdataApiClient {
     public URL getSigningPaymentUrl(String paymentId) {
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
-        final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getRedirectUrl();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
 
         return new URL(baseAuthUrl + Endpoints.AUTHORIZE)
@@ -275,15 +287,12 @@ public final class BankdataApiClient {
                 .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE))
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
-                .queryParam(QueryKeys.REDIRECT_URI, redirectUri);
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl);
     }
 
     public void getTokenWithClientCredentials() {
         final InitialTokenRequest request =
-                new InitialTokenRequest(
-                        FormValues.CLIENT_CREDENTIALS,
-                        FormValues.SCOPE,
-                        getConfiguration().getClientId());
+                new InitialTokenRequest(FormValues.CLIENT_CREDENTIALS, FormValues.SCOPE, clientId);
         URL url = new URL(baseAuthUrl + Endpoints.TOKEN);
 
         TokenResponse response =
@@ -305,30 +314,12 @@ public final class BankdataApiClient {
         ConsentResponse response =
                 client.request(url)
                         .addBearerToken(getTokenFromSession())
-                        .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_REQUEST_ID, requestId)
                         .body(consentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                         .post(ConsentResponse.class);
 
         return response.getConsentId();
-    }
-
-    private BankdataConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    private String getRedirectUrl() {
-        return Optional.ofNullable(redirectUrl)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    protected void setConfiguration(
-            AgentConfiguration<BankdataConfiguration> agentConfiguration,
-            EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
-        this.redirectUrl = agentConfiguration.getRedirectUrl();
-        this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
     private OAuth2Token getTokenFromSession() {
@@ -354,8 +345,8 @@ public final class BankdataApiClient {
                 new RefreshTokenRequest(
                         FormValues.REFRESH_TOKEN_GRANT_TYPE,
                         refreshToken,
-                        getRedirectUrl(),
-                        getConfiguration().getClientId(),
+                        redirectUrl,
+                        clientId,
                         sessionStorage.get(StorageKeys.CODE_VERIFIER));
 
         return getTokenResponse(request);

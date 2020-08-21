@@ -21,12 +21,6 @@ public final class BankdataConstants {
         throw new AssertionError();
     }
 
-    public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-    }
-
     public static final Map<PaymentType, String> TYPE_TO_DOMAIN_MAPPER = new HashMap<>();
 
     static {
