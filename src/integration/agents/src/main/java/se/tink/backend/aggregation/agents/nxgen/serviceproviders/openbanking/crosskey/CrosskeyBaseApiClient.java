@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
 import java.nio.charset.StandardCharsets;
+import java.security.cert.CertificateException;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Base64;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.rpc.InitialTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment.rpc.CrosskeyPaymentDetails;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
@@ -33,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
@@ -54,13 +57,20 @@ public class CrosskeyBaseApiClient {
     private String redirectUrl;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private EidasIdentity eidasIdentity;
-    private String baseAuthUrl;
-    private String baseApiUrl;
-    private String xFapiFinancialId;
+    private final String baseAuthUrl;
+    private final String baseApiUrl;
+    private final String xFapiFinancialId;
+    private String certificateSerialNumber;
 
-    public CrosskeyBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public CrosskeyBaseApiClient(
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            CrosskeyMarketConfiguration marketConfiguration) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.baseAuthUrl = marketConfiguration.getBaseAuthURL();
+        this.baseApiUrl = marketConfiguration.getBaseApiURL();
+        this.xFapiFinancialId = marketConfiguration.getFinancialId();
     }
 
     public CrosskeyBaseConfiguration getConfiguration() {
@@ -76,16 +86,18 @@ public class CrosskeyBaseApiClient {
     public void setConfiguration(
             AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity,
-            String xFapiFinancialId) {
+            EidasIdentity eidasIdentity) {
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
         this.client.setEidasProxy(eidasProxyConfiguration);
-        this.baseApiUrl = getConfiguration().getBaseAPIUrl();
-        this.baseAuthUrl = getConfiguration().getBaseAuthUrl();
-        this.xFapiFinancialId = xFapiFinancialId;
+        try {
+            this.certificateSerialNumber =
+                    CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 10);
+        } catch (CertificateException e) {
+            throw new IllegalStateException(ErrorMessages.INVALID_CONFIGURATION, e);
+        }
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -219,13 +231,9 @@ public class CrosskeyBaseApiClient {
     private JwtPaymentConsentHeader getJwtHeader() {
         return new JwtPaymentConsentHeader(
                 OIDCValues.B_64,
-                getConfiguration().getClientSigningCertificateSerialNumber(),
+                certificateSerialNumber,
                 OIDCValues.ALG,
-                Arrays.asList(
-                        CrosskeyBaseConstants.OIDCValues.B_64_STR,
-                        OIDCValues.IAT,
-                        OIDCValues.ISS,
-                        OIDCValues.TAN),
+                Arrays.asList(OIDCValues.B_64_STR, OIDCValues.IAT, OIDCValues.ISS, OIDCValues.TAN),
                 // -3 since it is sometimes rounds up to future..
                 Instant.now().getEpochSecond() - 3,
                 baseApiUrl,
