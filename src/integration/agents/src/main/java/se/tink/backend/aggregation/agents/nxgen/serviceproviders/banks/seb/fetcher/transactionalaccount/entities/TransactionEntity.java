@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -154,7 +155,10 @@ public class TransactionEntity {
                 Transaction.builder()
                         .setDate(getDate())
                         .setAmount(getAmount())
-                        .setType(getTransactionType(verificationNumber));
+                        .setType(getTransactionType(verificationNumber))
+                        .setPayload(
+                                TransactionPayloadTypes.DETAILS,
+                                SerializationUtils.serializeToString(getTransactionDetails()));
         String description = getDescription();
 
         if (isForeignTransaction()) {
@@ -182,6 +186,13 @@ public class TransactionEntity {
         }
 
         return builder.setDescription(description).build();
+    }
+
+    @JsonIgnore
+    public TransactionDetails getTransactionDetails() {
+        return new TransactionDetails(
+                org.apache.commons.lang.StringUtils.EMPTY,
+                org.apache.commons.lang.StringUtils.EMPTY);
     }
 
     @Override

@@ -1,15 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.Optional;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class TransactionEntity extends AbstractTransactionEntity {
@@ -78,6 +82,9 @@ public class TransactionEntity extends AbstractTransactionEntity {
                 Transaction.builder()
                         .setAmount(ExactCurrencyAmount.of(parsedAmount, currency))
                         .setDate(this.date)
+                        .setPayload(
+                                TransactionPayloadTypes.DETAILS,
+                                SerializationUtils.serializeToString(getTransactionDetails()))
                         .setDescription(SwedbankBaseConstants.Description.clean(this.description));
 
         if (SwedbankBaseConstants.Description.PENDING_TRANSACTIONS.contains(this.description)) {
@@ -87,6 +94,10 @@ public class TransactionEntity extends AbstractTransactionEntity {
         return Optional.of(transactionBuilder.build());
     }
 
+    @JsonIgnore
+    public TransactionDetails getTransactionDetails() {
+        return new TransactionDetails(StringUtils.EMPTY, StringUtils.EMPTY);
+    }
     // FIX temporary for Swedbanks pagination problems
     // create a kind of key to use to identify duplicate transactions
     public String getPseudoKey() {

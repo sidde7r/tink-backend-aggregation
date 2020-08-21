@@ -1,18 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.time.DateTimeException;
 import java.util.Date;
 import java.util.Optional;
+import org.apache.commons.lang.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class TransactionsItemEntity {
@@ -120,6 +124,14 @@ public class TransactionsItemEntity {
                 .setDescription(remittanceInformation)
                 .setPending(
                         HandelsbankenBaseConstants.Transactions.IS_PENDING.equalsIgnoreCase(status))
+                .setPayload(
+                        TransactionPayloadTypes.DETAILS,
+                        SerializationUtils.serializeToString(getTransactionDetails()))
                 .build();
+    }
+
+    @JsonIgnore
+    public TransactionDetails getTransactionDetails() {
+        return new TransactionDetails(StringUtils.EMPTY, StringUtils.EMPTY);
     }
 }
