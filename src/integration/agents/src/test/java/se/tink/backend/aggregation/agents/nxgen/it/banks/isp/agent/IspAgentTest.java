@@ -15,7 +15,7 @@ public class IspAgentTest {
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("it", "it-isp-password")
                     .loadCredentialsBefore(false)
-                    .saveCredentialsAfter(false);
+                    .saveCredentialsAfter(true);
 
     @Before
     public void before() {
