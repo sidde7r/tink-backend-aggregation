@@ -22,13 +22,13 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class JyskeApiClient {
 
-    private JyskeConfiguration configuration;
     private final TinkHttpClient client;
+    private JyskePublicKeys configuration;
 
-    public JyskeApiClient(TinkHttpClient client, JyskeConfiguration configuration) {
+    public JyskeApiClient(TinkHttpClient client) {
         this.client = client;
         this.client.addFilter(new JyskeBankUnavailableFilter());
-        this.configuration = configuration;
+        this.configuration = new JyskePublicKeys();
     }
 
     public NemIdLoginResponse nemIdInit(Token token) {
@@ -70,7 +70,7 @@ public class JyskeApiClient {
                 .post(
                         NemIdResponse.class,
                         NemIdGenericRequest.create(
-                                token, configuration.getAesPadding(), encryptable));
+                                token, JyskeConstants.Crypto.AES_PADDING, encryptable));
     }
 
     public NemIdLoginResponse sendTransportKey(Token token) {
