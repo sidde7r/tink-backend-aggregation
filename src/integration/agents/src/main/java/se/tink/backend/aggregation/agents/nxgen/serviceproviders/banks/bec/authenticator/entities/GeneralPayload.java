@@ -2,12 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.auth
 
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.Meta;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ScaOptions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class KeyCardPayload {
+public class GeneralPayload {
     private String appType;
     private String appVersion;
     private String deviceId;
@@ -21,7 +20,7 @@ public class KeyCardPayload {
     private String userId;
     private String pincode;
 
-    public KeyCardPayload(String userId, String pincode, String deviceId) {
+    public GeneralPayload(String userId, String pincode, String deviceId, String scaOption) {
         this.appType = Meta.APP_TYPE;
         this.appVersion = Meta.APP_VERSION;
         this.deviceId = deviceId;
@@ -31,8 +30,8 @@ public class KeyCardPayload {
         this.locale = Meta.LOCALE;
         this.osVersion = Meta.OS_VERSION;
         this.screenSize = Meta.SCREEN_SIZE;
-        this.secondFactor = ScaOptions.KEYCARD_OPTION;
 
+        this.secondFactor = scaOption;
         this.userId = userId;
         this.pincode = pincode;
     }

@@ -10,7 +10,8 @@ public final class BecConstants {
     public static final class ScaOptions {
         public static final String CODEAPP_OPTION = "codeapp";
         public static final String KEYCARD_OPTION = "keycard";
-        public static final String SCA_OPTION_KEY = "sca-option-key";
+        public static final String SCATOKEN_OPTION = "scatoken";
+        public static final String DEFAULT_OPTION = "default";
     }
 
     public static final class Url {
@@ -90,6 +91,9 @@ public final class BecConstants {
         public static final String CHALLENGE_STORAGE_KEY = "challenge-number";
         public static final String DEVICE_ID_STORAGE_KEY = "device-id";
         public static final String SCA_TOKEN_STORAGE_KEY = "sca-token";
+        public static final String SCA_OPTION_KEY = "sca-option";
+        public static final String KEY_CARD_CHALLENGE_RESPONSE_KEY = "challengeResponseValue";
+        public static final String TOKEN_STORAGE_KEY = "nem-id-token";
     }
 
     public static final class Log {

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ScaOptions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AbstractAuthenticationStep;
@@ -16,7 +17,7 @@ public class DecisionAuthStep extends AbstractAuthenticationStep {
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        if (sessionStorage.get(ScaOptions.SCA_OPTION_KEY).equals(ScaOptions.CODEAPP_OPTION))
+        if (sessionStorage.get(StorageKeys.SCA_OPTION_KEY).equals(ScaOptions.CODEAPP_OPTION))
             return AuthenticationStepResponse.executeNextStep();
         else
             return AuthenticationStepResponse.executeStepWithId(
