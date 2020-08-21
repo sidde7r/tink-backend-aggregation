@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank;
 
+import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
@@ -15,38 +16,38 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /** This agent is not ready for production. Its for test and documentation of the flow. */
+@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public class SwedbankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final SwedbankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public SwedbankAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-
+    @Inject
+    public SwedbankAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
         apiClient =
                 new SwedbankApiClient(
-                        client,
-                        persistentStorage,
-                        agentsServiceConfiguration,
-                        this.getEidasIdentity());
+                        client, persistentStorage, getAgentConfiguration(), qsealcSigner);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        apiClient.setConfiguration(getAgentConfiguration());
-        client.setFollowRedirects(false);
+    }
+
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration agentsServiceConfiguration) {
+        super.setConfiguration(agentsServiceConfiguration);
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 

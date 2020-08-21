@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank;
 
+import java.security.cert.CertificateException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -46,11 +47,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils.CANameEncoding;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -65,26 +64,36 @@ public final class SwedbankApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private SwedbankConfiguration configuration;
-    private String redirectUrl;
+    private final QsealcSigner qsealcSigner;
+    private final String signingCertificate;
+    private final SwedbankConfiguration configuration;
+    private final String redirectUrl;
+    private final String signingKeyId;
     private FetchAccountResponse accounts;
-    private final AgentsServiceConfiguration agentsServiceConfiguration;
-    private final EidasIdentity eidasIdentity;
 
     public SwedbankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            AgentsServiceConfiguration agentsServiceConfiguration,
-            EidasIdentity eidasIdentity) {
+            AgentConfiguration<SwedbankConfiguration> agentConfiguration,
+            QsealcSigner qsealcSigner) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.agentsServiceConfiguration = agentsServiceConfiguration;
-        this.eidasIdentity = eidasIdentity;
-    }
-
-    public void setConfiguration(AgentConfiguration<SwedbankConfiguration> agentConfiguration) {
+        this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
+
+        try {
+            this.signingCertificate =
+                    CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
+                            agentConfiguration.getQsealc());
+            this.signingKeyId =
+                    Psd2Headers.getTppCertificateKeyId(
+                            agentConfiguration.getQsealc(), 16, CANameEncoding.BASE64_IF_NOT_ASCII);
+        } catch (CertificateException e) {
+            throw new IllegalStateException(ErrorMessages.INVALID_CONFIGURATION, e);
+        }
+
+        client.setFollowRedirects(false);
     }
 
     public SwedbankConfiguration getConfiguration() {
@@ -417,12 +426,6 @@ public final class SwedbankApiClient {
     }
 
     private String generateSignatureHeader(Map<String, Object> headers) {
-        QsealcSigner signer =
-                QsealcSignerImpl.build(
-                        agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity);
-
         String signedHeaders =
                 Arrays.stream(HeadersToSign.values())
                         .map(HeadersToSign::getHeader)
@@ -438,13 +441,9 @@ public final class SwedbankApiClient {
                         .map(header -> String.format("%s: %s", header, headers.get(header)))
                         .collect(Collectors.joining("\n"));
 
-        String signature = signer.getSignatureBase64(signedHeadersWithValues.getBytes());
+        String signature = qsealcSigner.getSignatureBase64(signedHeadersWithValues.getBytes());
 
-        return String.format(
-                HeaderValues.SIGNATURE_HEADER,
-                configuration.getKeyIdBase64(),
-                signedHeaders,
-                signature);
+        return String.format(HeaderValues.SIGNATURE_HEADER, signingKeyId, signedHeaders, signature);
     }
 
     private Map<String, Object> getHeaders(String requestId, String digest, Date date) {
@@ -458,7 +457,7 @@ public final class SwedbankApiClient {
         headers.put(HeaderKeys.DATE, getFormattedDate(date));
         headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.DIGEST, digest);
-        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, configuration.getQSealc());
+        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, signingCertificate);
 
         return headers;
     }
