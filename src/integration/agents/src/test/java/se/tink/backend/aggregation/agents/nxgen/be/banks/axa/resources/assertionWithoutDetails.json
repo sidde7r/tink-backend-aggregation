@@ -1,0 +1,11 @@
+{
+    "error_code": 0,
+    "error_message": "",
+    "data": {
+        "assertion_error_code": 18,
+        "assertion_error_message": "Step failed, user may try to correct",
+        "state": "pending",
+        "assertions_complete": false
+    },
+    "headers": []
+}

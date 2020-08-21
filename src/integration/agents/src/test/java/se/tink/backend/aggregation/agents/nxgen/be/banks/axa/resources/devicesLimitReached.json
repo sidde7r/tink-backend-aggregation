@@ -1,0 +1,18 @@
+{
+    "error_code": 0,
+    "error_message": "",
+    "data": {
+        "assertion_error_code": 18,
+        "data": {
+            "error": {
+                "msgCd": "MB0027",
+                "msgDetails": "Sie haben die maximale Anzahl an Registrierungen erreicht. Nehmen Sie bitte mit dem Contact Center (03/286.66.56)",
+                "msgTypeCd": "E"
+            }
+        },
+        "assertion_error_message": "Step failed, user may try to correct",
+        "state": "pending",
+        "assertions_complete": false
+    },
+    "headers": []
+}

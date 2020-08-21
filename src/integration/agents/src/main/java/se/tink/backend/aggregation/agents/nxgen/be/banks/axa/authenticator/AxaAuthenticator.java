@@ -4,8 +4,12 @@ import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaStorage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.errorhandling.ResponseErrorHandler;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.errorhandling.ResponseErrorHandlingBuilder;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.AnonymousInvokeRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.AnonymousInvokeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.AssertFormRequest;
@@ -34,6 +38,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     private final AxaAuthenticatorRequestCreator requestCreator;
     private final List<AuthenticationStep> manualAuthenticationSteps;
     private final List<AuthenticationStep> autoAuthenticationSteps;
+    private final ResponseErrorHandler errorHandler;
 
     public AxaAuthenticator(
             AxaStorage axaStorage,
@@ -45,6 +50,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
         this.manualAuthenticationSteps = initManualAuthenticationSteps();
         this.autoAuthenticationSteps = initAutoAuthenticationSteps();
         this.requestCreator = new AxaAuthenticatorRequestCreator(storage);
+        this.errorHandler = ResponseErrorHandlingBuilder.DEFAULT_CHAIN;
     }
 
     @Override
@@ -119,7 +125,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     private AuthenticationStepResponse processAnonymousInvoke() {
         AnonymousInvokeRequest request = requestCreator.createAnonymousInvokeRequest();
         AnonymousInvokeResponse response = apiClient.anonymousInvoke(request);
-        verifyBaseResponse(response);
+        verifyWithStorageCleanup(response);
         storage.storeValues(response);
         return AuthenticationStepResponse.executeNextStep();
     }
@@ -127,7 +133,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     private AuthenticationStepResponse processCardNumberAssertForm() {
         AssertFormRequest request = requestCreator.createCardNumberAssertFormRequest();
         AssertFormResponse response = apiClient.assertForm(request);
-        verifyResponse(response);
+        verifyWithStorageCleanup(response);
         storage.storeValuesFromCardNumberAssertFormResponse(response);
         return AuthenticationStepResponse.executeNextStep();
     }
@@ -140,7 +146,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     private AuthenticationStepResponse processBind() {
         BindRequest request = requestCreator.createBindRequest();
         BindResponse response = apiClient.bind(request);
-        verifyBaseResponse(response);
+        verifyWithStorageCleanup(response);
         storage.storeValuesFromBindResponse(response);
         return AuthenticationStepResponse.executeNextStep();
     }
@@ -148,7 +154,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     private AuthenticationStepResponse processProfileNameAssertForm() {
         AssertFormRequest request = requestCreator.createProfileNameAssertFormRequest();
         AssertFormResponse response = apiClient.assertFormWithSignature(request);
-        verifyResponse(response);
+        verifyWithStorageCleanup(response);
         storage.storeValuesFromProfileNameAssertFormResponse(response);
         return AuthenticationStepResponse.executeNextStep();
     }
@@ -161,7 +167,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     private AuthenticationStepResponse processAssertRegistration() {
         AssertFormRequest request = requestCreator.createAssertRegistrationRequest();
         AssertFormResponse response = apiClient.assertFormWithSignature(request);
-        verifyResponse(response);
+        verifyWithStorageCleanup(response);
         storage.storeValuesFromAssertRegistrationResponse(response);
         return executeNextStep(response);
     }
@@ -169,7 +175,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     private AuthenticationStepResponse processAssertConfirmation() {
         AssertFormRequest request = requestCreator.createAssertConfirmationRequest();
         AssertFormResponse response = apiClient.assertFormWithSignature(request);
-        verifyBaseResponse(response);
+        verifyWithStorageCleanup(response);
         storage.storeValuesFromAssertConfirmationResponse(response);
         return executeNextStep(response);
     }
@@ -183,7 +189,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     private AuthenticationStepResponse processLogin() {
         LoginRequest request = requestCreator.createLoginRequest();
         LoginResponse response = apiClient.login(request);
-        verifyPostRegisterResponse(response);
+        verifyWithStorageCleanup(response);
         storage.storeValuesFromLoginResponse(response);
         return AuthenticationStepResponse.executeNextStep();
     }
@@ -191,41 +197,9 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     private AuthenticationStepResponse processAssertPinAuthentication() {
         AssertFormRequest request = requestCreator.createAssertPinAuthenticationRequest();
         AssertFormResponse response = apiClient.assertFormWithSignature(request);
-        verifyPostRegisterResponse(response);
+        verifyWithStorageCleanup(response);
         storage.storeValuesFromAssertPinAuthenticationResponse(response);
         return AuthenticationStepResponse.executeNextStep();
-    }
-
-    private void verifyResponse(AssertFormResponse response) {
-        verifyBaseResponse(response);
-        if (response.getData() != null
-                && response.getData().getAssertionErrorCode() != null
-                && response.getData().getAssertionErrorCode() != 0) {
-            storage.clear();
-            throw new IllegalStateException(
-                    formatErrorMsg(
-                            response.getData().getAssertionErrorCode(),
-                            response.getData().getAssertionErrorMessage()));
-        }
-    }
-
-    private void verifyBaseResponse(BaseResponse response) {
-        if (response.getErrorCode() != 0) {
-            storage.clear();
-            throw new IllegalStateException(
-                    formatErrorMsg(response.getErrorCode(), response.getErrorMessage()));
-        }
-    }
-
-    private void verifyPostRegisterResponse(BaseResponse response) {
-        if (response.getErrorCode() != 0) {
-            throw new IllegalStateException(
-                    formatErrorMsg(response.getErrorCode(), response.getErrorMessage()));
-        }
-    }
-
-    private String formatErrorMsg(Integer errorCode, String errorMsg) {
-        return String.format("Error response [code: %d, message: %s]", errorCode, errorMsg);
     }
 
     private AssertFormResponse sendOtpRequest(boolean withSignature) {
@@ -234,8 +208,17 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
                 withSignature
                         ? apiClient.assertFormWithSignature(request)
                         : apiClient.assertForm(request);
-        verifyResponse(response);
+        verifyWithStorageCleanup(response);
         return response;
+    }
+
+    private void verifyWithStorageCleanup(BaseResponse<?> response) {
+        try {
+            errorHandler.handleError(response);
+        } catch (LoginException | BankServiceException ex) {
+            storage.clear();
+            throw ex;
+        }
     }
 
     private AuthenticationStepResponse executeNextStep(AssertFormResponse response) {

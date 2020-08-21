@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.enti
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public final class ErrorsEntity {
+public class ErrorsEntity {
     private String msgCd;
     private String msgDetails;
     private String msgTypeCd;
@@ -14,5 +14,9 @@ public final class ErrorsEntity {
 
     public String getMsgDetails() {
         return msgDetails;
+    }
+
+    public String getMsgTypeCd() {
+        return msgTypeCd;
     }
 }
