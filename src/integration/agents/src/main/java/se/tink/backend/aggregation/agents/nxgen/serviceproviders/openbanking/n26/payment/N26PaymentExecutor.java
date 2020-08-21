@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Configuration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.entities.AliasEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.entities.RequestPayload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.entities.ToEntity;
@@ -117,7 +118,7 @@ public class N26PaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     private Map<String, String> getCallbackData(TokenResponse tokenResponse) {
         return openThirdPartyAppAndGetCallbackData(
-                URL.of(configuration.getProviderSpecificConfiguration().getAuthorizationUrl())
+                URL.of(Url.AUTHORIZATION_URL)
                         .parameter(TOKEN_ID, tokenResponse.getTokenRequest().getId()));
     }
 

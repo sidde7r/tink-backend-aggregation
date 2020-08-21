@@ -36,26 +36,26 @@ public class N26ApiClient implements FrAispApiClient {
     private final N26Storage storage;
 
     public TokenResponse tokenRequest(TokenRequest request) {
-        return createRequest(createUrl(Url.TOKEN_REQUEST)).post(TokenResponse.class, request);
+        return createRequest(URL.of(Url.TOKEN_REQUEST)).post(TokenResponse.class, request);
     }
 
     public TokenDetailsResponse tokenDetails(String tokenId) {
-        final URL url = createUrl(Url.TOKEN_INFO).parameter(UrlParam.TOKEN_ID, tokenId);
+        final URL url = URL.of(Url.TOKEN_INFO).parameter(UrlParam.TOKEN_ID, tokenId);
         return createRequest(url).get(TokenDetailsResponse.class);
     }
 
     public AccountsResponse getAccounts() {
-        return createRequestWithToken(createUrl(Url.ACCOUNTS)).get(AccountsResponse.class);
+        return createRequestWithToken(URL.of(Url.ACCOUNTS)).get(AccountsResponse.class);
     }
 
     public AccountBalanceResponse getAccountBalance(String accountId) {
-        final URL url = createUrl(Url.ACCOUNT_BALANCE).parameter(UrlParam.ACCOUNT_ID, accountId);
+        final URL url = URL.of(Url.ACCOUNT_BALANCE).parameter(UrlParam.ACCOUNT_ID, accountId);
         return createRequestWithToken(url).get(AccountBalanceResponse.class);
     }
 
     public AccountTransactionsResponse getAccountTransactions(String accountId, String offset) {
         URL url =
-                createUrl(Url.ACCOUNT_TRANSACTIONS)
+                URL.of(Url.ACCOUNT_TRANSACTIONS)
                         .parameter(UrlParam.ACCOUNT_ID, accountId)
                         .queryParam(PAGE_LIMIT, DEFAULT_PAGE_LIMIT)
                         .queryParam(PAGE_OFFSET, offset);
@@ -64,12 +64,12 @@ public class N26ApiClient implements FrAispApiClient {
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
-        return createRequest(createUrl(Url.TRANSFERS))
+        return createRequest(URL.of(Url.TRANSFERS))
                 .post(CreatePaymentResponse.class, SerializationUtils.serializeToString(request));
     }
 
     public GetPaymentResponse getPayment(String transferId) {
-        final URL url = createUrl(Url.TRANSFER_DETAILS).parameter(UrlParam.TRANSFER_ID, transferId);
+        final URL url = URL.of(Url.TRANSFER_DETAILS).parameter(UrlParam.TRANSFER_ID, transferId);
         return createRequest(url).get(GetPaymentResponse.class);
     }
 
@@ -86,10 +86,6 @@ public class N26ApiClient implements FrAispApiClient {
 
     private String getAuthorizationHeaderValue() {
         return Header.BASIC + configuration.getProviderSpecificConfiguration().getApiKey();
-    }
-
-    private URL createUrl(String path) {
-        return URL.of(configuration.getProviderSpecificConfiguration().getBaseUrl() + path);
     }
 
     @Override

@@ -10,14 +10,17 @@ import lombok.NoArgsConstructor;
 public class N26Constants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    static class Url {
-        static final String TOKEN_REQUEST = "/token-requests";
-        static final String TOKEN_INFO = "/tokens/{tokenId}";
-        static final String ACCOUNTS = "/accounts";
-        static final String ACCOUNT_BALANCE = "/accounts/{accountId}/balance";
-        static final String ACCOUNT_TRANSACTIONS = "/accounts/{accountId}/transactions";
-        static final String TRANSFERS = "/transfers";
-        static final String TRANSFER_DETAILS = "/transfers/{transferId}";
+    public static class Url {
+        static final String BASE_URL = "https://api.token.io";
+        public static final String AUTHORIZATION_URL =
+                "https://web-app.token.io/app/request-token/{tokenId}";
+        static final String TOKEN_REQUEST = BASE_URL + "/token-requests";
+        static final String TOKEN_INFO = BASE_URL + "/tokens/{tokenId}";
+        static final String ACCOUNTS = BASE_URL + "/accounts";
+        static final String ACCOUNT_BALANCE = BASE_URL + "/accounts/{accountId}/balance";
+        static final String ACCOUNT_TRANSACTIONS = BASE_URL + "/accounts/{accountId}/transactions";
+        static final String TRANSFERS = BASE_URL + "/transfers";
+        static final String TRANSFER_DETAILS = BASE_URL + "/transfers/{transferId}";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
