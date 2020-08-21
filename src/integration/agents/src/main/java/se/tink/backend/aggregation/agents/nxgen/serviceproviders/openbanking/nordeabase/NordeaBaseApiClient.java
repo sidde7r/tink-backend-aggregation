@@ -331,7 +331,7 @@ public class NordeaBaseApiClient implements TokenInterface {
 
     private String getScopes() {
         List<String> scopes = configuration.getScopes();
-        if (scopes.stream().allMatch(scope -> Scopes.AIS.equalsIgnoreCase(scope))) {
+        if (scopes.stream().allMatch(Scopes.AIS::equalsIgnoreCase)) {
             // Return only AIS scopes
             return SCOPE_WITHOUT_PAYMENT;
         } else if (scopes.stream()

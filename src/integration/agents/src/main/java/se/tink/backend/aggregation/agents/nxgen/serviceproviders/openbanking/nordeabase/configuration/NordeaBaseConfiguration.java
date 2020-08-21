@@ -18,7 +18,6 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
-    @JsonProperty
     @Secret
     @ScopesConfiguration
     @JsonSchemaDescription(
