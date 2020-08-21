@@ -22,12 +22,7 @@ public class JyskeNemidAgent extends BankdataAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        JyskeConfiguration configuration =
-                getAgentConfigurationController()
-                        .getAgentConfigurationFromK8s(
-                                JyskeConstants.INTEGRATION_NAME, JyskeConfiguration.class);
-
-        this.apiClient = new JyskeApiClient(client, configuration);
+        this.apiClient = new JyskeApiClient(client);
         configureHttpClient(client);
     }
 
