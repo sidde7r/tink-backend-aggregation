@@ -1,19 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.vavr.jackson.datatype.VavrModule;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Paths;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CreditCardTransactionsTest {
 
+    static final String DATA_PATH = "data/test/agents/es/bbva/";
+
+    private <T> T loadSampleData(String path, Class<T> cls) throws IOException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new VavrModule());
+        return objectMapper.readValue(Paths.get(DATA_PATH, path).toFile(), cls);
+    }
+
     @Test
-    public void testCreditCardTransactionParsing() {
-        CreditCardTransactionEntity transaction =
-                SerializationUtils.deserializeFromString(
-                        CreditCardEntityTestData.CREDIT_CARD_TRANSACTION,
-                        CreditCardTransactionEntity.class);
+    public void testCreditCardTransactionParsing() throws IOException {
+        final CreditCardTransactionEntity transaction =
+                loadSampleData("creditcard_transaction.json", CreditCardTransactionEntity.class);
 
         CreditCardTransaction trx = transaction.toTinkTransaction();
         Assert.assertEquals(BigDecimal.valueOf(-509.21), trx.getExactAmount().getExactValue());

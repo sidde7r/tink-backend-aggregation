@@ -1,0 +1,94 @@
+{
+  "amount": {
+    "amount": -5246,
+    "currency": "SEK"
+  },
+  "cardCdepenCode": "000000001",
+  "cardTransactionDate": "2019-09-05T22:00:00.000+0000",
+  "commission": {
+    "amount": 0,
+    "currency": "EUR"
+  },
+  "concept": {
+    "id": "0005"
+  },
+  "contract": {
+    "bank": {
+      "id": "0182"
+    },
+    "counterPart": "0615",
+    "country": null,
+    "formats": {
+      "bocf": "01822495061500000023261568",
+      "ccc": null,
+      "iban": null,
+      "iuc": "00000000000000000271023383",
+      "pan": "123123****1234"
+    },
+    "id": "AA1231231231231231231231231231231231XXXXXXXXX"
+  },
+  "customizableIndicator": "1",
+  "exchangeValue": 0.094237,
+  "holderAmount": {
+    "amount": -509.21,
+    "currency": "EUR"
+  },
+  "humanCategory": {
+    "id": "15"
+  },
+  "humanSubcategory": {
+    "id": "57"
+  },
+  "id": "111111111111_111111_111111_11111111111111111111111adadad11111111111111111111111111111111111_AA",
+  "isContractHolder": true,
+  "maximumFeeAmount": {
+    "amount": 14.14,
+    "currency": "EUR"
+  },
+  "maximumTimeLimit": "36",
+  "minimumTimeLimit": "3",
+  "operationKey": "123123****2314   123123123123123123",
+  "operationTypeIndicator": "C",
+  "paymentMethod": {
+    "id": "1U01506U4000"
+  },
+  "paymentType": {
+    "id": "4"
+  },
+  "processingType": "01B",
+  "purchaser": {
+    "id": "948001",
+    "reference": "74383769250110005901729"
+  },
+  "shop": {
+    "activitySector": {
+      "id": "0015"
+    },
+    "activitySubSector": {
+      "id": "0014"
+    },
+    "address": "STOCKHOLM",
+    "country": "SE",
+    "id": "000000000",
+    "industry": {
+      "id": "7011"
+    },
+    "name": "NORDIC LIGHT HOTEL CNP"
+  },
+  "statement": {
+    "endDate": "2019-09-29T22:00:00.000+0000",
+    "id": "45",
+    "initialDate": "2019-08-31T22:00:00.000+0000",
+    "statementDate": "2019-08-31T22:00:00.000+0000"
+  },
+  "status": {
+    "id": "7"
+  },
+  "stillCustomizable": true,
+  "terminalId": "00726235",
+  "transactionDate": "2019-09-05T22:00:34.000+0000",
+  "transactionTypeIndicator": "C",
+  "valueDate": "2019-09-08T22:00:00.000+0000",
+  "virtualTpvIndicator": "V",
+  "visible": true
+}
