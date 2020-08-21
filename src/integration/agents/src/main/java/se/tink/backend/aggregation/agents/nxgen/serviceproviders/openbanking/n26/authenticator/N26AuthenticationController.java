@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Scope;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.entities.AccessBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.entities.AliasEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.entities.RequestPayload;
@@ -118,7 +119,7 @@ public class N26AuthenticationController
 
     private URL buildAuthorizeUrl() {
         final TokenResponse tokenResponse = sendTokenRequest();
-        return URL.of(configuration.getProviderSpecificConfiguration().getAuthorizationUrl())
+        return URL.of(Url.AUTHORIZATION_URL)
                 .parameter(TOKEN_ID, tokenResponse.getTokenRequest().getId());
     }
 

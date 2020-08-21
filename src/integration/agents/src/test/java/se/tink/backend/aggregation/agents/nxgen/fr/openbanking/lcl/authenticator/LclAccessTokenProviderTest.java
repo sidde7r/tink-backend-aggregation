@@ -1,0 +1,66 @@
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.AUTH_CODE;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.REFRESH_TOKEN;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createOAuth2Token;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createTokenResponseDto;
+
+import java.util.Optional;
+import org.junit.Before;
+import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.TokenResponseDto;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+
+public class LclAccessTokenProviderTest {
+
+    private LclAccessTokenProvider lclAccessTokenProvider;
+
+    private LclApiClient apiClientMock;
+
+    @Before
+    public void setUp() {
+        apiClientMock = mock(LclApiClient.class);
+
+        lclAccessTokenProvider = new LclAccessTokenProvider(apiClientMock);
+    }
+
+    @Test
+    public void shouldExchangeAuthorizationCode() {
+        // given
+        final TokenResponseDto tokenResponseDto = createTokenResponseDto();
+
+        when(apiClientMock.retrieveAccessToken(AUTH_CODE)).thenReturn(tokenResponseDto);
+
+        // when
+        final OAuth2Token returnedResult =
+                lclAccessTokenProvider.exchangeAuthorizationCode(AUTH_CODE);
+
+        // then
+        final OAuth2Token expectedResult = createOAuth2Token();
+
+        assertThat(returnedResult).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void shouldRefreshAccessToken() {
+        // given
+        final TokenResponseDto tokenResponseDto = createTokenResponseDto();
+
+        when(apiClientMock.refreshAccessToken(REFRESH_TOKEN))
+                .thenReturn(Optional.of(tokenResponseDto));
+
+        // when
+        final Optional<OAuth2Token> returnedResult =
+                lclAccessTokenProvider.refreshAccessToken(REFRESH_TOKEN);
+
+        // then
+        assertThat(returnedResult).isPresent();
+
+        final OAuth2Token expectedResult = createOAuth2Token();
+        returnedResult.ifPresent(actualToken -> assertThat(actualToken).isEqualTo(expectedResult));
+    }
+}

@@ -38,6 +38,8 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     private static final String ID = "8923454567";
     private static final String ACCOUNT_NUMBER = "8923454567";
     private static final String ACCOUNT_DESCRIPTION = "Lån annuitet";
+    private static final String MORTGAGE_ACCOUNT_DESCRIPTION = "Bolig eiendomskreditt ann";
+    private static final String MORTGAGE_ACCOUNT_DESCRIPTION2 = "Fast 7 år annu ek";
     private static final String REPAYMENT_PLAN = "repayment_plan";
     private static final String TYPE = "loan";
     private static final String CAPABILITIES = "capabilities";
@@ -54,26 +56,36 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     private List<LoanAccount> result;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         handelsbankenNOApiClient = Mockito.mock(HandelsbankenNOApiClient.class);
         handelsbankenNOLoanAccountFetcher =
                 new HandelsbankenNOLoanAccountFetcher(handelsbankenNOApiClient);
         objectMapper = new ObjectMapper();
-    }
 
-    @Test
-    public void shouldFetchLoanAccounts() throws IOException {
-        // Given
         when(handelsbankenNOApiClient.fetchLoans())
-                .thenReturn(getLoanFetchingResponse(getLinks(getLinkEntity())));
+                .thenReturn(
+                        getLoanFetchingResponse(
+                                Collections.singletonList(
+                                        getLoanAccountEntity(
+                                                ACCOUNT_DESCRIPTION, getLinks(getLinkEntity())))));
         when(handelsbankenNOApiClient.fetchLoanDetails(REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH))
                 .thenReturn(
                         getLoanDetailsResponse(
                                 Collections.singletonList(
                                         getPaymentDetailEntity(getDetailsEntity()))));
+    }
+
+    @Test
+    public void shouldFetchLoanAccounts() {
+        // Given
         expected =
                 Collections.singletonList(
-                        getLoanAccount(INTEREST_RATE, INSTALMENT, INITIAL_BALANCE));
+                        getLoanAccount(
+                                LoanDetails.Type.DERIVE_FROM_NAME,
+                                INTEREST_RATE,
+                                INSTALMENT,
+                                INITIAL_BALANCE,
+                                ACCOUNT_DESCRIPTION));
 
         // When
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
@@ -88,16 +100,82 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     }
 
     @Test
-    public void shouldFetchLoanAccountsWhenRepaymentPlanPathIsMissing() {
+    public void shouldFetchMortgages() throws IOException {
         // Given
         when(handelsbankenNOApiClient.fetchLoans())
-                .thenReturn(getLoanFetchingResponse(getLinks(new LinkEntity())));
+                .thenReturn(
+                        getLoanFetchingResponse(
+                                Arrays.asList(
+                                        getLoanAccountEntity(
+                                                ACCOUNT_DESCRIPTION, getLinks(getLinkEntity())),
+                                        getLoanAccountEntity(
+                                                MORTGAGE_ACCOUNT_DESCRIPTION,
+                                                getLinks(getLinkEntity())),
+                                        getLoanAccountEntity(
+                                                MORTGAGE_ACCOUNT_DESCRIPTION2,
+                                                getLinks(getLinkEntity())))));
+
         when(handelsbankenNOApiClient.fetchLoanDetails(REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH))
                 .thenReturn(
                         getLoanDetailsResponse(
                                 Collections.singletonList(
                                         getPaymentDetailEntity(getDetailsEntity()))));
-        expected = Collections.singletonList(getLoanAccount(0, BigDecimal.ZERO, 0));
+        expected =
+                Arrays.asList(
+                        getLoanAccount(
+                                LoanDetails.Type.DERIVE_FROM_NAME,
+                                INTEREST_RATE,
+                                INSTALMENT,
+                                INITIAL_BALANCE,
+                                ACCOUNT_DESCRIPTION),
+                        getLoanAccount(
+                                LoanDetails.Type.MORTGAGE,
+                                INTEREST_RATE,
+                                INSTALMENT,
+                                INITIAL_BALANCE,
+                                MORTGAGE_ACCOUNT_DESCRIPTION),
+                        getLoanAccount(
+                                LoanDetails.Type.MORTGAGE,
+                                INTEREST_RATE,
+                                INSTALMENT,
+                                INITIAL_BALANCE,
+                                MORTGAGE_ACCOUNT_DESCRIPTION2));
+
+        // When
+        result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
+
+        // Then
+        int counter = 0;
+        for (LoanAccount loanAccount : result) {
+            assertThat(loanAccount)
+                    .isEqualToIgnoringGivenFields(
+                            expected.get(counter), DETAILS, ID_MODULE, CAPABILITIES);
+            assertThat(loanAccount.getDetails())
+                    .isEqualToComparingFieldByField(expected.get(counter).getDetails());
+            assertThat(loanAccount.getIdModule())
+                    .isEqualToComparingFieldByField(expected.get(counter).getIdModule());
+            counter++;
+        }
+    }
+
+    @Test
+    public void shouldFetchLoanAccountsWhenRepaymentPlanPathIsMissing() {
+        // Given
+        when(handelsbankenNOApiClient.fetchLoans())
+                .thenReturn(
+                        getLoanFetchingResponse(
+                                Collections.singletonList(
+                                        getLoanAccountEntity(
+                                                ACCOUNT_DESCRIPTION, getLinks(new LinkEntity())))));
+
+        expected =
+                Collections.singletonList(
+                        getLoanAccount(
+                                LoanDetails.Type.DERIVE_FROM_NAME,
+                                0,
+                                BigDecimal.ZERO,
+                                0,
+                                ACCOUNT_DESCRIPTION));
 
         // When
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
@@ -114,13 +192,20 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     @Test
     public void shouldFetchLoanAccountsWhenLinksAreNull() {
         // Given
-        when(handelsbankenNOApiClient.fetchLoans()).thenReturn(getLoanFetchingResponse(null));
-        when(handelsbankenNOApiClient.fetchLoanDetails(REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH))
+        when(handelsbankenNOApiClient.fetchLoans())
                 .thenReturn(
-                        getLoanDetailsResponse(
+                        getLoanFetchingResponse(
                                 Collections.singletonList(
-                                        getPaymentDetailEntity(getDetailsEntity()))));
-        expected = Collections.singletonList(getLoanAccount(0, BigDecimal.ZERO, 0));
+                                        getLoanAccountEntity(ACCOUNT_DESCRIPTION, null))));
+
+        expected =
+                Collections.singletonList(
+                        getLoanAccount(
+                                LoanDetails.Type.DERIVE_FROM_NAME,
+                                0,
+                                BigDecimal.ZERO,
+                                0,
+                                ACCOUNT_DESCRIPTION));
 
         // When
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
@@ -135,16 +220,18 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     }
 
     @Test
-    public void shouldFetchLoanAccountsWhenPaymentDetailsListInLoanDetailsResponseIsNull()
-            throws IOException {
+    public void shouldFetchLoanAccountsWhenPaymentDetailsListInLoanDetailsResponseIsNull() {
         // Given
-        when(handelsbankenNOApiClient.fetchLoans())
-                .thenReturn(getLoanFetchingResponse(getLinks(getLinkEntity())));
         when(handelsbankenNOApiClient.fetchLoanDetails(REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH))
                 .thenReturn(getLoanDetailsResponse(null));
         expected =
                 Collections.singletonList(
-                        getLoanAccount(INTEREST_RATE, BigDecimal.ZERO, INITIAL_BALANCE));
+                        getLoanAccount(
+                                LoanDetails.Type.DERIVE_FROM_NAME,
+                                INTEREST_RATE,
+                                BigDecimal.ZERO,
+                                INITIAL_BALANCE,
+                                ACCOUNT_DESCRIPTION));
 
         // When
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
@@ -159,16 +246,18 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     }
 
     @Test
-    public void shouldFetchLoanAccountsWhenPaymentDetailsListInLoanDetailsResponseIsEmpty()
-            throws IOException {
+    public void shouldFetchLoanAccountsWhenPaymentDetailsListInLoanDetailsResponseIsEmpty() {
         // Given
-        when(handelsbankenNOApiClient.fetchLoans())
-                .thenReturn(getLoanFetchingResponse(getLinks(getLinkEntity())));
         when(handelsbankenNOApiClient.fetchLoanDetails(REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH))
                 .thenReturn(getLoanDetailsResponse(Collections.emptyList()));
         expected =
                 Collections.singletonList(
-                        getLoanAccount(INTEREST_RATE, BigDecimal.ZERO, INITIAL_BALANCE));
+                        getLoanAccount(
+                                LoanDetails.Type.DERIVE_FROM_NAME,
+                                INTEREST_RATE,
+                                BigDecimal.ZERO,
+                                INITIAL_BALANCE,
+                                ACCOUNT_DESCRIPTION));
 
         // When
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
@@ -183,16 +272,18 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     }
 
     @Test
-    public void shouldFetchLoanAccountsWhenPaymentDetailsInLoanDetailsResponseIsNull()
-            throws IOException {
+    public void shouldFetchLoanAccountsWhenPaymentDetailsInLoanDetailsResponseIsNull() {
         // Given
-        when(handelsbankenNOApiClient.fetchLoans())
-                .thenReturn(getLoanFetchingResponse(getLinks(getLinkEntity())));
         when(handelsbankenNOApiClient.fetchLoanDetails(REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH))
                 .thenReturn(getLoanDetailsResponse(Collections.singletonList(null)));
         expected =
                 Collections.singletonList(
-                        getLoanAccount(INTEREST_RATE, BigDecimal.ZERO, INITIAL_BALANCE));
+                        getLoanAccount(
+                                LoanDetails.Type.DERIVE_FROM_NAME,
+                                INTEREST_RATE,
+                                BigDecimal.ZERO,
+                                INITIAL_BALANCE,
+                                ACCOUNT_DESCRIPTION));
 
         // When
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
@@ -207,18 +298,20 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     }
 
     @Test
-    public void shouldFetchLoanAccountsWhenDetailsEntityInPaymentDetailsIsNull()
-            throws IOException {
+    public void shouldFetchLoanAccountsWhenDetailsEntityInPaymentDetailsIsNull() {
         // Given
-        when(handelsbankenNOApiClient.fetchLoans())
-                .thenReturn(getLoanFetchingResponse(getLinks(getLinkEntity())));
         when(handelsbankenNOApiClient.fetchLoanDetails(REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH))
                 .thenReturn(
                         getLoanDetailsResponse(
                                 Collections.singletonList(getPaymentDetailEntity(null))));
         expected =
                 Collections.singletonList(
-                        getLoanAccount(INTEREST_RATE, BigDecimal.ZERO, INITIAL_BALANCE));
+                        getLoanAccount(
+                                LoanDetails.Type.DERIVE_FROM_NAME,
+                                INTEREST_RATE,
+                                BigDecimal.ZERO,
+                                INITIAL_BALANCE,
+                                ACCOUNT_DESCRIPTION));
 
         // When
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
@@ -233,10 +326,8 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     }
 
     @Test
-    public void shouldFetchLoanAccountsWhenInstalmentIsNull() throws IOException {
+    public void shouldFetchLoanAccountsWhenInstalmentIsNull() {
         // Given
-        when(handelsbankenNOApiClient.fetchLoans())
-                .thenReturn(getLoanFetchingResponse(getLinks(getLinkEntity())));
         when(handelsbankenNOApiClient.fetchLoanDetails(REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH))
                 .thenReturn(
                         getLoanDetailsResponse(
@@ -244,7 +335,12 @@ public class HandelsbankenNOLoanAccountFetcherTest {
                                         getPaymentDetailEntity(new DetailsEntity()))));
         expected =
                 Collections.singletonList(
-                        getLoanAccount(INTEREST_RATE, BigDecimal.ZERO, INITIAL_BALANCE));
+                        getLoanAccount(
+                                LoanDetails.Type.DERIVE_FROM_NAME,
+                                INTEREST_RATE,
+                                BigDecimal.ZERO,
+                                INITIAL_BALANCE,
+                                ACCOUNT_DESCRIPTION));
 
         // When
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
@@ -259,11 +355,15 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     }
 
     private LoanAccount getLoanAccount(
-            double interestRate, BigDecimal instalment, long initialBalance) {
+            LoanDetails.Type type,
+            double interestRate,
+            BigDecimal instalment,
+            long initialBalance,
+            String description) {
         return LoanAccount.nxBuilder()
                 .withLoanDetails(
                         LoanModule.builder()
-                                .withType(LoanDetails.Type.DERIVE_FROM_NAME)
+                                .withType(type)
                                 .withBalance(ExactCurrencyAmount.of(BALANCE, NOK))
                                 .withInterestRate(interestRate)
                                 .setMonthlyAmortization(ExactCurrencyAmount.of(instalment, NOK))
@@ -273,23 +373,24 @@ public class HandelsbankenNOLoanAccountFetcherTest {
                         IdModule.builder()
                                 .withUniqueIdentifier(ID)
                                 .withAccountNumber(ACCOUNT_NUMBER)
-                                .withAccountName(ACCOUNT_DESCRIPTION)
+                                .withAccountName(description)
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifier.Type.NO, ID))
                                 .build())
                 .build();
     }
 
-    private LoanFetchingResponse getLoanFetchingResponse(Map<String, LinkEntity> links) {
+    private LoanFetchingResponse getLoanFetchingResponse(List<LoanAccountEntity> loanAccounts) {
         LoanFetchingResponse response = new LoanFetchingResponse();
-        response.setLoanAccountEntities(Collections.singletonList(getLoanAccountEntity(links)));
+        response.setLoanAccountEntities(loanAccounts);
         return response;
     }
 
-    private LoanAccountEntity getLoanAccountEntity(Map<String, LinkEntity> links) {
+    private LoanAccountEntity getLoanAccountEntity(
+            String description, Map<String, LinkEntity> links) {
         LoanAccountEntity loanAccountEntity = new LoanAccountEntity();
         loanAccountEntity.setId(ID);
-        loanAccountEntity.setAccountDescription(ACCOUNT_DESCRIPTION);
+        loanAccountEntity.setAccountDescription(description);
         loanAccountEntity.setAccountNumber(ACCOUNT_NUMBER);
         loanAccountEntity.setBalance(BALANCE);
         loanAccountEntity.setType(TYPE);

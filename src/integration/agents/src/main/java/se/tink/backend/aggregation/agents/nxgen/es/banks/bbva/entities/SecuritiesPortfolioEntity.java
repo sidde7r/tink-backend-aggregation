@@ -19,8 +19,9 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
     private List<SecurityEntity> securities;
     private AmountEntity balance;
 
+    @JsonIgnore
     public List<SecurityEntity> getSecurities() {
-        return securities;
+        return securities != null ? securities : List.empty();
     }
 
     public AmountEntity getBalance() {
@@ -54,7 +55,7 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
                 .withType(PortfolioType.DEPOT)
                 .withUniqueIdentifier(getId())
                 .withCashValue(0)
-                .withTotalProfit(totalProfit)
+                .withTotalProfit(totalProfit == null ? 0.00 : totalProfit)
                 .withTotalValue(balance.toTinkAmount().getDoubleValue())
                 .withInstruments(getInstruments(instrumentsProfit).asJava())
                 .build();

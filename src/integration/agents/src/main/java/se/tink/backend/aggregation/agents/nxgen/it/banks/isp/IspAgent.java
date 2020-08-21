@@ -15,7 +15,7 @@ public class IspAgent extends SubsequentProgressiveGenerationAgent implements Pr
     public IspAgent(final AgentComponentProvider componentProvider) {
         super(componentProvider);
         applyFilters();
-        apiClient = new IspApiClient(client, this.sessionStorage, this.persistentStorage);
+        apiClient = new IspApiClient(client, this.sessionStorage);
     }
 
     private void applyFilters() {

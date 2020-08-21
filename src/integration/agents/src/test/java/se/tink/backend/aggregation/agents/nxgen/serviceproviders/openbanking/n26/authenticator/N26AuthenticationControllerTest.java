@@ -185,13 +185,11 @@ public class N26AuthenticationControllerTest {
     @SneakyThrows
     public void shouldCreateAppAuthPayload() {
         // given
-        String authUrl = "https://auth-url/";
-        String finalAuthUrl = "https://auth-url/" + ACCESS_TOKEN;
+        String finalAuthUrl = "https://web-app.token.io/app/request-token/" + ACCESS_TOKEN;
         N26Configuration n26Configuration = mock(N26Configuration.class);
         when(apiClient.tokenRequest(any(TokenRequest.class)))
                 .thenReturn(createTokenResponse(ACCESS_TOKEN));
         when(configuration.getProviderSpecificConfiguration()).thenReturn(n26Configuration);
-        when(n26Configuration.getAuthorizationUrl()).thenReturn(authUrl + "{tokenId}");
 
         // when
         ThirdPartyAppAuthenticationPayload appPayload = authenticationController.getAppPayload();

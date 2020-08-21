@@ -1,0 +1,11 @@
+agentsServiceConfiguration:
+  integrations:
+    60cdc3bd42aa43a9ab2e6eeef116bebd:
+      tink:
+        baseUrl: https://psd2.b2b.belfius.be:8443
+        redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+        clientId: DUMMY_ID
+        clientSecret: DUMMY_SECRET
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

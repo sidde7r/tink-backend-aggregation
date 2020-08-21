@@ -81,8 +81,6 @@ git_repository(
 
 # Go rules
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
 http_archive(
     name = "io_bazel_rules_go",
     sha256 = "e6a6c016b0663e06fa5fccf1cd8152eab8aa8180c583ec20c872f4f9953a7ac5",
@@ -101,8 +99,6 @@ go_register_toolchains()
 # End Go rules
 
 # Gazelle for generating Go packages
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "bazel_gazelle",
@@ -149,7 +145,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "25e7843fe9527e06b387ebc5131231fddfe64515",
+    commit = "6cc0504e6107fe1d1ba7cbf5929ed0d6b1541ad9",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1586908800 +0000",
 )
@@ -1279,14 +1275,3 @@ maven_install(
 load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
 
 com_salesforce_servicelibs_grpc_testing_contrib_pin()
-
-git_repository(
-    name = "com_github_atlassian_bazel_tools",
-    commit = "72f7db723e7723842042922344dd690c359a87a5",
-    remote = "https://github.com/atlassian/bazel-tools.git",
-    shallow_since = "1490898663 +0200",
-)
-
-load("@com_github_atlassian_bazel_tools//multirun:deps.bzl", "multirun_dependencies")
-
-multirun_dependencies()

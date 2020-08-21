@@ -7,6 +7,7 @@ import com.google.gson.JsonPrimitive;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,11 +67,21 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         // likely does not have account under credential, we continue with the rest of the operation
         // without requesting supplemental information
         if (accountsInContext.isEmpty() && accountsInRequest.isEmpty()) {
+            log.info(
+                    "[optIn] Received no accounts in context and no accounts in request for credentials: {}",
+                    Optional.ofNullable(request.getCredentials())
+                            .map(Credentials::getId)
+                            .orElse(null));
             return AgentWorkerCommandResult.CONTINUE;
         }
 
         // If the accounts in the context and request are not empty, handle the case for changed
         if (!accountsInContext.isEmpty() && !accountsInRequest.isEmpty()) {
+            log.info(
+                    "[optIn] Received some accounts in context and some accounts in request for credentials: {}",
+                    Optional.ofNullable(request.getCredentials())
+                            .map(Credentials::getId)
+                            .orElse(null));
             return handleNonEmptyRequestAccountsCase(accountsInContext, accountsInRequest);
         }
 
@@ -78,9 +89,16 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         // and the accounts in the request is not, notify with supplemental information
         // and await if this is correct or not.
         if (accountsInContext.isEmpty() && !accountsInRequest.isEmpty()) {
+            log.info(
+                    "[optIn] Received no accounts in context and some accounts in request for credentials: {}",
+                    Optional.ofNullable(request.getCredentials())
+                            .map(Credentials::getId)
+                            .orElse(null));
             return handleEmptyCachedAccountsCase(accountsInRequest);
         }
-
+        log.info(
+                "[optIn] Received some accounts in context and no accounts in request for credentials: {}",
+                Optional.ofNullable(request.getCredentials()).map(Credentials::getId).orElse(null));
         // If we got here there are not accounts in the request
         // but there are accounts in the context.
         return handleEmptyRequestAccountsCase(accountsInContext);

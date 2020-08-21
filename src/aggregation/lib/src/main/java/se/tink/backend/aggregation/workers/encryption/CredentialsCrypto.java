@@ -141,7 +141,9 @@ public class CredentialsCrypto {
         if (doUpdateCredential) {
             logger.info("Updating sensitive data");
             controllerWrapper.updateCredentialSensitive(
-                    request.getCredentials(), serializedEncryptedCredentials);
+                    request.getCredentials(),
+                    serializedEncryptedCredentials,
+                    request.getOperationId());
         }
 
         return true;

@@ -8,6 +8,7 @@ public class UpdateCredentialsSensitiveRequest {
     private String credentialsId;
     private int credentialsDataVersion;
     private String sensitiveData;
+    private String operationId;
 
     public String getUserId() {
         return userId;
@@ -42,6 +43,15 @@ public class UpdateCredentialsSensitiveRequest {
 
     public UpdateCredentialsSensitiveRequest setCredentialsDataVersion(int credentialsDataVersion) {
         this.credentialsDataVersion = credentialsDataVersion;
+        return this;
+    }
+
+    public String getOperationId() {
+        return operationId;
+    }
+
+    public UpdateCredentialsSensitiveRequest setOperationId(String operationId) {
+        this.operationId = operationId;
         return this;
     }
 }

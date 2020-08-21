@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModule;
@@ -33,6 +34,7 @@ public class NatWestV31CorporateAgent extends UkOpenBankingBaseAgent {
                 new UKOpenBankingAis.Builder()
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.CORPORATE_WELL_KNOWN_URL)
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

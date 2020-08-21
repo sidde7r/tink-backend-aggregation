@@ -1,0 +1,36 @@
+{
+    "error_code": 0,
+    "error_message": "",
+    "data": {
+        "data": null,
+        "challenge": "***MASKED***",
+        "state": "pending",
+        "control_flow": [
+            {
+                "assertion_id": "***MASKED***",
+                "form_id": "bankcardEntryForm",
+                "type": "form",
+                "app_data": {
+                    "title": "Provide bank card number",
+                    "cText": "Next",
+                    "aText": "Cancel"
+                }
+            }
+        ],
+        "assertions_complete": false
+    },
+    "headers": [
+        {
+            "uid": "***MASKED***",
+            "type": "ephemeral_uid"
+        },
+        {
+            "device_id": "***MASKED***",
+            "type": "device_id"
+        },
+        {
+            "session_id": "***MASKED***",
+            "type": "session_id"
+        }
+    ]
+}

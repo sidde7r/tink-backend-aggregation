@@ -47,8 +47,6 @@ public class SwedbankDefaultSessionHandler implements SessionHandler {
 
     private void completeAuthentication() throws AuthenticationException {
         apiClient.completeAuthentication(
-                new LinkEntity()
-                        .setMethod(LinkMethod.GET.getVerb())
-                        .setUri(Url.PROFILE.get().get()));
+                new LinkEntity().setMethod(LinkMethod.GET.getVerb()).setUri(Url.PROFILE.getPath()));
     }
 }

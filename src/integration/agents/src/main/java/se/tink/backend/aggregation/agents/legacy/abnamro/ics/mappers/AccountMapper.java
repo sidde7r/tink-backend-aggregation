@@ -31,12 +31,7 @@ public class AccountMapper {
         account.setBankId(bankId);
         account.setType(AccountTypes.CREDIT_CARD);
 
-        // Balance on the account is the sum of the "current balance" (settled amount) and the
-        // "authorized balance"
-        // (not settled amount). We include the "authorized balance" since we include pending
-        // transactions and the
-        // sum of the transactions should match the balance.
-        account.setBalance(-(input.getCurrentBalance() + input.getAuthorizedBalance()));
+        account.setBalance(input.getCreditLeftToUse() - input.getCreditLimit());
 
         return account;
     }

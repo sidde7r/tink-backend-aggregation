@@ -293,9 +293,12 @@ public abstract class Account {
 
     private AccountHolderType inferHolderType(
             Provider.AuthenticationUserType authenticationUserType) {
-        return authenticationUserType == Provider.AuthenticationUserType.BUSINESS
-                ? AccountHolderType.BUSINESS
-                : AccountHolderType.PERSONAL;
+
+        if (authenticationUserType == Provider.AuthenticationUserType.BUSINESS) {
+            return AccountHolderType.BUSINESS;
+        } else if (authenticationUserType == Provider.AuthenticationUserType.CORPORATE) {
+            return AccountHolderType.CORPORATE;
+        } else return AccountHolderType.PERSONAL;
     }
 
     private Optional<String> getFirstHolder() {

@@ -3,18 +3,37 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank;
 import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Locale;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.einvoice.SwedbankDefaultEinvoiceFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.SwedbankDefaultInvestmentFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.transactional.SwedbankSETransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSELoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankAbstractAgent;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class SwedbankSEAgent extends SwedbankAbstractAgent implements RefreshLoanAccountsExecutor {
+public class SwedbankSEAgent extends SwedbankAbstractAgent
+        implements RefreshLoanAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshEInvoiceExecutor {
 
     private final LoanRefreshController loanRefreshController;
+    private final InvestmentRefreshController investmentRefreshController;
+    private EInvoiceRefreshController eInvoiceRefreshController;
 
     @Inject
     public SwedbankSEAgent(AgentComponentProvider componentProvider) {
@@ -30,6 +49,36 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent implements RefreshLoa
                         metricRefreshController,
                         updateController,
                         new SwedbankSELoanFetcher((SwedbankSEApiClient) apiClient));
+
+        this.eInvoiceRefreshController = null;
+
+        SwedbankDefaultInvestmentFetcher investmentFetcher =
+                new SwedbankDefaultInvestmentFetcher(
+                        (SwedbankSEApiClient) apiClient, request.getProvider().getCurrency());
+
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, investmentFetcher);
+    }
+
+    @Override
+    protected TransactionalAccountRefreshController
+            constructTransactionalAccountRefreshController() {
+        SwedbankSETransactionalAccountFetcher transactionalFetcher =
+                new SwedbankSETransactionalAccountFetcher(
+                        (SwedbankSEApiClient) apiClient, persistentStorage);
+
+        TransactionFetcherController<TransactionalAccount> transactionFetcherController =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(transactionalFetcher),
+                        transactionalFetcher);
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                transactionalFetcher,
+                transactionFetcherController);
     }
 
     @Override
@@ -40,5 +89,28 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent implements RefreshLoa
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return loanRefreshController.fetchLoanTransactions();
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
+    }
+
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        eInvoiceRefreshController =
+                Optional.ofNullable(eInvoiceRefreshController)
+                        .orElseGet(
+                                () ->
+                                        new EInvoiceRefreshController(
+                                                metricRefreshController,
+                                                new SwedbankDefaultEinvoiceFetcher(
+                                                        (SwedbankSEApiClient) apiClient)));
+        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 }

@@ -8,7 +8,7 @@ public class RegisterDevice3ResponsePayload {
 
     @JsonProperty private String seed;
 
-    @JsonProperty("trxId")
+    @JsonProperty("trxid")
     private String transactionId;
 
     public String getSeed() {

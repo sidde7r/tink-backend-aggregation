@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModule;
@@ -29,7 +30,8 @@ public class HsbcV31BusinessAgent extends UkOpenBankingBaseAgent {
                 new UKOpenBankingAis.Builder()
                         .withApiBaseURL(V313.BUSINESS_AIS_API_URL)
                         .withWellKnownURL(V313.BUSINESS_WELL_KNOWN_URL)
-                        .withAppToAppURL(V313.APP_TO_APP_AUTH_URL)
+                        .withAppToAppURL(V313.BUSINESS_APP_TO_APP_AUTH_URL)
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

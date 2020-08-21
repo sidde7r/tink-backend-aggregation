@@ -32,6 +32,8 @@ public final class Psd2Headers {
         public static final String SIGNATURE = "Signature";
         public static final String SSL_CERTIFICATE = "SSL-Certificate";
         public static final String STATE = "state";
+        public static final String TPP_APP_ID = "tpp-app-id";
+        public static final String TPP_X_REQUEST_ID = "tpp-x-request-id";
         public static final String TPP_ID = "TPP-ID";
         public static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-Uri";
@@ -39,6 +41,7 @@ public final class Psd2Headers {
         public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
         public static final String WEB_API_KEY = "web-api-key";
         public static final String X_API_KEY = "x-api-key";
+        public static final String X_CLIENT = "X-Client";
         public static final String X_IBM_CLIENT_ID = "X-IBM-Client-Id";
         public static final String X_REQUEST_ID = "X-Request-ID";
     }

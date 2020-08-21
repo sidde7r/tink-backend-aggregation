@@ -24,7 +24,7 @@ public class TransactionsBaseEntity {
     }
 
     public String getNextLink() {
-        return links.getNextLink();
+        return links.getNextLink().getHref();
     }
 
     public Collection<Transaction> toTinkTransactions() {

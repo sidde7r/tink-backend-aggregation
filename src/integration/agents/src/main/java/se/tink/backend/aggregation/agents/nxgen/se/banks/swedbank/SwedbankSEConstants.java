@@ -14,6 +14,8 @@ public class SwedbankSEConstants {
     public static final String MEMBERSHIP_LOAN = "Medlemslån";
     public static final String AMORTIZATION = "Amorteringsbelopp";
 
+    public static final String HOST = "https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api";
+
     public static final ImmutableMap<String, ProfileParameters> PROFILE_PARAMETERS =
             new ImmutableMap.Builder<String, ProfileParameters>()
                     .put("swedbank", new ProfileParameters("swedbank", "rMKD7LKhhFNVOXJK", false))

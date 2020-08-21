@@ -57,7 +57,10 @@ public interface AggregationControllerAggregationClient {
             se.tink.backend.system.rpc.UpdateFraudDetailsRequest request);
 
     Response updateCredentialSensitive(
-            HostConfiguration hostConfiguration, Credentials credentials, String sensitiveData);
+            HostConfiguration hostConfiguration,
+            Credentials credentials,
+            String sensitiveData,
+            String operationId);
 
     Response checkConnectivity(HostConfiguration hostConfiguration);
 

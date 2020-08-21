@@ -9,8 +9,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonInclude(Include.NON_NULL)
 public class ResponseDataEntity {
 
-    private String errors;
     private String language;
+
+    private ErrorsEntity error;
 
     @JsonProperty("otp_format")
     private OtpFormatEntity otpFormat;
@@ -25,10 +26,6 @@ public class ResponseDataEntity {
 
     @JsonProperty("json_data")
     private JsonDataEntity jsonData;
-
-    public String getErrors() {
-        return errors;
-    }
 
     public String getLanguage() {
         return language;
@@ -60,5 +57,9 @@ public class ResponseDataEntity {
 
     public JsonDataEntity getJsonData() {
         return jsonData;
+    }
+
+    public ErrorsEntity getError() {
+        return error;
     }
 }

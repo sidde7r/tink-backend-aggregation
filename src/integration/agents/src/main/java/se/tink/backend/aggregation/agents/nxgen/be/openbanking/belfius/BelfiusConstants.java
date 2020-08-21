@@ -9,14 +9,14 @@ public final class BelfiusConstants {
     }
 
     public static class ErrorMessages {
+        private ErrorMessages() {}
+
         public static final int INTERNAL_SERVER_ERROR = 500;
     }
 
-    public static class ErrorCodes {
-        public static final String TRANSACTION_TOO_OLD = "20007";
-    }
-
     public static class Urls {
+        private Urls() {}
+
         public static final String FETCH_ACCOUNT_PATH = "/accounts/";
         public static final String FETCH_TRANSACTIONS_PATH = "/accounts/{logical_id}/transactions";
         public static final String CONSENT_PATH = "/consent-uris";
@@ -25,6 +25,8 @@ public final class BelfiusConstants {
     }
 
     public static class StorageKeys {
+        private StorageKeys() {}
+
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CODE = "code";
         public static final String ID_TOKEN = "id_token";
@@ -32,6 +34,8 @@ public final class BelfiusConstants {
     }
 
     public static class HeaderKeys {
+        private HeaderKeys() {}
+
         public static final String REQUEST_ID = "Request-ID";
         public static final String ACCEPT = "Accept";
         public static final String CLIENT_ID = "Client-ID";
@@ -43,6 +47,8 @@ public final class BelfiusConstants {
     }
 
     public static class FormKeys {
+        private FormKeys() {}
+
         public static final String GRANT_TYPE = "grant_type";
         public static final String CODE = "code";
         public static final String REDIRECT_URI = "redirect_uri";
@@ -51,6 +57,8 @@ public final class BelfiusConstants {
     }
 
     public static class FormValues {
+        private FormValues() {}
+
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -58,19 +66,26 @@ public final class BelfiusConstants {
     }
 
     public static class HeaderValues {
+        private HeaderValues() {}
+
         public static final String ACCEPT = "application/vnd.belfius.api+json; version=1";
         public static final String ACCEPT_LANGUAGE = "fr";
         public static final String CODE_CHALLENGE_TYPE = "S256";
     }
 
     public static class CredentialKeys {
+        private CredentialKeys() {}
+
         public static final String IBAN = "iban";
     }
 
     public static class QueryKeys {
+        private QueryKeys() {}
+
         public static final String IBAN = "iban";
         public static final String STATE = "state";
         public static final String FROM_DATE = "date_from";
         public static final String TO_DATE = "date_to";
+        public static final String NEXT = "next";
     }
 }

@@ -229,7 +229,7 @@ public class BecApiClient {
     }
 
     public void pollNemId(String token) throws AuthenticationException {
-        logger.info("Poll for 2fa prove");
+        logger.info("Poll for 2fa approve");
         NemIdPollResponse response =
                 createRequest(this.agentUrl.getNemIdPoll())
                         .type(MediaType.APPLICATION_JSON_TYPE)

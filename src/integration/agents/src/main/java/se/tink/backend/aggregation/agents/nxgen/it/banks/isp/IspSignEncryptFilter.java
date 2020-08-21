@@ -23,6 +23,10 @@ public class IspSignEncryptFilter extends Filter {
         signRequest(httpRequest);
         encryptRequestBody(httpRequest);
         HttpResponse response = nextFilter(httpRequest);
+        if (response.getStatus() != 200) {
+            // all error responses have plaintext body.
+            return response;
+        }
         decryptResponseBody(response);
         changeMimeType(response);
         return response;

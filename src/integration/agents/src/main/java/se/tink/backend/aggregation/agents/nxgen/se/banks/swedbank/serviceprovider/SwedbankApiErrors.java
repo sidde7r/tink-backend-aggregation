@@ -114,7 +114,7 @@ public class SwedbankApiErrors {
         // - Http body: `ErrorResponse` with error field of "STRONGER_AUTHENTICATION_NEEDED"
         // - Not for an identification request
 
-        if (hre.getRequest().getURI().toString().startsWith(Url.IDENTIFICATION)) {
+        if (hre.getRequest().getURI().getPath().contains(Url.IDENTIFICATION)) {
             return false;
         }
 

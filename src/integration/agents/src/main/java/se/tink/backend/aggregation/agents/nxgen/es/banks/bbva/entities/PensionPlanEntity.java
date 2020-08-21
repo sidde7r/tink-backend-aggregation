@@ -36,7 +36,7 @@ public class PensionPlanEntity extends AbstractContractDetailsEntity {
                                 .withType(PortfolioType.PENSION)
                                 .withUniqueIdentifier(getId())
                                 .withCashValue(0)
-                                .withTotalProfit(totalProfit)
+                                .withTotalProfit(totalProfit == null ? 0.00 : totalProfit)
                                 .withTotalValue(getBalance().getAmountAsDouble())
                                 .withoutInstruments()
                                 .build())

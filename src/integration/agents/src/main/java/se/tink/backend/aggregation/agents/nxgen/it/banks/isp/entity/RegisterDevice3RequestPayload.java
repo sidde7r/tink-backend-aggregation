@@ -8,9 +8,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class RegisterDevice3RequestPayload {
 
     @JsonProperty("deviceId")
-    private String deviceName;
-
-    @JsonProperty("deviceIdSost")
     private String deviceId;
 
     @JsonProperty("pin")
@@ -20,11 +17,7 @@ public class RegisterDevice3RequestPayload {
     private String transactionId;
 
     public RegisterDevice3RequestPayload(
-            final String deviceName,
-            final String deviceId,
-            final String newPin,
-            final String transactionId) {
-        this.deviceName = Objects.requireNonNull(deviceName);
+            final String deviceId, final String newPin, final String transactionId) {
         this.deviceId = Objects.requireNonNull(deviceId);
         this.newPin = Objects.requireNonNull(newPin);
         this.transactionId = Objects.requireNonNull(transactionId);
