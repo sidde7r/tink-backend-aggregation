@@ -96,7 +96,9 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                             .orElse(null));
             return handleEmptyCachedAccountsCase(accountsInRequest);
         }
-
+        log.info(
+                "[optIn] Received some accounts in context and no accounts in request for credentials: {}",
+                Optional.ofNullable(request.getCredentials()).map(Credentials::getId).orElse(null));
         // If we got here there are not accounts in the request
         // but there are accounts in the context.
         return handleEmptyRequestAccountsCase(accountsInContext);
