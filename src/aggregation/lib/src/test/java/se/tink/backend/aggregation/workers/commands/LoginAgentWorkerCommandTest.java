@@ -1,9 +1,16 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
@@ -43,19 +50,19 @@ public class LoginAgentWorkerCommandTest {
 
     @Before
     public void init() {
-        credentials = Mockito.mock(Credentials.class);
-        credentialsRequest = Mockito.mock(CredentialsRequest.class);
-        Mockito.when(credentialsRequest.getCredentials()).thenReturn(credentials);
-        context = Mockito.mock(AgentWorkerCommandContext.class);
-        Mockito.when(context.getRequest()).thenReturn(credentialsRequest);
-        state = Mockito.mock(LoginAgentWorkerCommandState.class);
-        metrics = Mockito.mock(AgentWorkerCommandMetricState.class);
-        Mockito.when(metrics.init(Mockito.any())).thenReturn(metrics);
+        credentials = mock(Credentials.class);
+        credentialsRequest = mock(CredentialsRequest.class);
+        when(credentialsRequest.getCredentials()).thenReturn(credentials);
+        context = mock(AgentWorkerCommandContext.class);
+        when(context.getRequest()).thenReturn(credentialsRequest);
+        state = mock(LoginAgentWorkerCommandState.class);
+        metrics = mock(AgentWorkerCommandMetricState.class);
+        when(metrics.init(any())).thenReturn(metrics);
 
-        metricAction = Mockito.mock(MetricAction.class);
-        metricActionLoginType = Mockito.mock(MetricAction.class);
-        metricActionIsLoggedIn = Mockito.mock(MetricAction.class);
-        loginAgentEventProducer = Mockito.mock(LoginAgentEventProducer.class);
+        metricAction = mock(MetricAction.class);
+        metricActionLoginType = mock(MetricAction.class);
+        metricActionIsLoggedIn = mock(MetricAction.class);
+        loginAgentEventProducer = mock(LoginAgentEventProducer.class);
 
         objectUnderTest =
                 new LoginAgentWorkerCommand(context, state, metrics, loginAgentEventProducer);
@@ -64,42 +71,42 @@ public class LoginAgentWorkerCommandTest {
     @Test
     public void executeForNextGenerationAgentShouldLogin() throws Exception {
         // given
-        NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
-        Mockito.when(agent.login()).thenReturn(true);
+        NextGenerationAgent agent = mock(NextGenerationAgent.class);
+        when(agent.login()).thenReturn(true);
         prepareStateForLogin(agent);
         // when
         AgentWorkerCommandResult result = objectUnderTest.execute();
         // then
-        Mockito.verify(metricAction, Mockito.times(1)).completed();
-        Mockito.verify(metricActionLoginType, Mockito.times(1)).completed();
+        verify(metricAction, times(1)).completed();
+        verify(metricActionLoginType, times(1)).completed();
         Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
     }
 
     @Test
     public void executeForAbstractAgentShouldLogin() throws Exception {
         // given
-        AbstractAgent agent = Mockito.mock(AbstractAgent.class);
-        Mockito.when(agent.login()).thenReturn(true);
+        AbstractAgent agent = mock(AbstractAgent.class);
+        when(agent.login()).thenReturn(true);
         prepareStateForLogin(agent);
         // when
         AgentWorkerCommandResult result = objectUnderTest.execute();
         // then
-        Mockito.verify(metricAction, Mockito.times(1)).completed();
-        Mockito.verify(metricActionLoginType, Mockito.times(1)).completed();
+        verify(metricAction, times(1)).completed();
+        verify(metricActionLoginType, times(1)).completed();
         Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
     }
 
     @Test
     public void executeForNextGenerationAgentShouldAbortLogin() throws Exception {
         // given
-        NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
-        Mockito.when(agent.login()).thenReturn(false);
+        NextGenerationAgent agent = mock(NextGenerationAgent.class);
+        when(agent.login()).thenReturn(false);
         prepareStateForLogin(agent);
         // when
         AgentWorkerCommandResult result = objectUnderTest.execute();
         // then
-        Mockito.verify(metricAction, Mockito.times(1)).failed();
-        Mockito.verify(metricActionLoginType, Mockito.times(1)).failed();
+        verify(metricAction, times(1)).failed();
+        verify(metricActionLoginType, times(1)).failed();
         Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
     }
 
@@ -108,40 +115,39 @@ public class LoginAgentWorkerCommandTest {
         // given
         SteppableAuthenticationResponse steppableAuthenticationResponse =
                 SteppableAuthenticationResponse.finalResponse();
-        ProgressiveAuthAgent agent = Mockito.mock(ProgressiveAuthAgent.class);
-        Mockito.when(agent.login(Mockito.any())).thenReturn(steppableAuthenticationResponse);
+        ProgressiveAuthAgent agent = mock(ProgressiveAuthAgent.class);
+        when(agent.login(any())).thenReturn(steppableAuthenticationResponse);
         prepareStateForLogin(agent);
         // when
         AgentWorkerCommandResult result = objectUnderTest.execute();
         // then
-        Mockito.verify(metricAction, Mockito.times(1)).completed();
-        Mockito.verify(metricActionLoginType, Mockito.times(1)).completed();
+        verify(metricAction, times(1)).completed();
+        verify(metricActionLoginType, times(1)).completed();
         Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
     }
 
     @Test
     public void executeForBankIdExceptionShouldAbortLogin() throws Exception {
         // given
-        NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
-        Mockito.when(agent.login())
+        NextGenerationAgent agent = mock(NextGenerationAgent.class);
+        when(agent.login())
                 .thenThrow(new BankIdException(BankIdError.CANCELLED, new LocalizableKey("key")));
 
         prepareStateForLogin(agent);
         // when
         AgentWorkerCommandResult result = objectUnderTest.execute();
         // then
-        Mockito.verify(metricAction, Mockito.times(1)).cancelled();
-        Mockito.verify(metricActionLoginType, Mockito.times(1)).cancelled();
-        Mockito.verify(context, Mockito.times(1))
-                .updateStatus(Mockito.eq(CredentialsStatus.UNCHANGED), Mockito.anyString());
+        verify(metricAction, times(1)).cancelled();
+        verify(metricActionLoginType, times(1)).cancelled();
+        verify(context, times(1)).updateStatus(eq(CredentialsStatus.UNCHANGED), anyString());
         Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
     }
 
     @Test
     public void executeForLoginBankServiceExceptionShouldAbortLogin() throws Exception {
         // given
-        NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
-        Mockito.when(agent.login())
+        NextGenerationAgent agent = mock(NextGenerationAgent.class);
+        when(agent.login())
                 .thenThrow(
                         new BankServiceException(
                                 BankServiceError.BANK_SIDE_FAILURE, new LocalizableKey("key")));
@@ -150,18 +156,17 @@ public class LoginAgentWorkerCommandTest {
         // when
         AgentWorkerCommandResult result = objectUnderTest.execute();
         // then
-        Mockito.verify(metricAction, Mockito.times(1)).unavailable();
-        Mockito.verify(metricActionLoginType, Mockito.times(1)).unavailable();
-        Mockito.verify(context, Mockito.times(1))
-                .updateStatus(Mockito.eq(CredentialsStatus.TEMPORARY_ERROR), Mockito.anyString());
+        verify(metricAction, times(1)).unavailable();
+        verify(metricActionLoginType, times(1)).unavailable();
+        verify(context, times(1)).updateStatus(eq(CredentialsStatus.TEMPORARY_ERROR), anyString());
         Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
     }
 
     @Test
     public void executeForIsLoggedInBankServiceExceptionShouldAbortLogin() throws Exception {
         // given
-        NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
-        Mockito.when(agent.isLoggedIn())
+        NextGenerationAgent agent = mock(NextGenerationAgent.class);
+        when(agent.isLoggedIn())
                 .thenThrow(
                         new BankServiceException(
                                 BankServiceError.BANK_SIDE_FAILURE, new LocalizableKey("key")));
@@ -170,92 +175,77 @@ public class LoginAgentWorkerCommandTest {
         // when
         AgentWorkerCommandResult result = objectUnderTest.execute();
         // then
-        Mockito.verify(metricActionIsLoggedIn, Mockito.times(1)).unavailable();
-        Mockito.verify(context, Mockito.times(1))
-                .updateStatus(Mockito.eq(CredentialsStatus.TEMPORARY_ERROR));
+        verify(metricActionIsLoggedIn, times(1)).unavailable();
+        verify(context, times(1)).updateStatus(eq(CredentialsStatus.TEMPORARY_ERROR));
         Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
     }
 
     @Test
     public void executeForAuthenticationExceptionShouldAbortLogin() throws Exception {
         // given
-        NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
-        AuthenticationException exception = Mockito.mock(AuthenticationException.class);
-        Mockito.when(exception.getUserMessage()).thenReturn(new LocalizableKey("key"));
-        Mockito.when(agent.login()).thenThrow(exception);
+        NextGenerationAgent agent = mock(NextGenerationAgent.class);
+        AuthenticationException exception = mock(AuthenticationException.class);
+        when(exception.getUserMessage()).thenReturn(new LocalizableKey("key"));
+        when(agent.login()).thenThrow(exception);
 
         prepareStateForLogin(agent);
         // when
         AgentWorkerCommandResult result = objectUnderTest.execute();
         // then
-        Mockito.verify(metricAction, Mockito.times(1)).cancelled();
-        Mockito.verify(metricActionLoginType, Mockito.times(1)).cancelled();
-        Mockito.verify(context, Mockito.times(1))
-                .updateStatus(
-                        Mockito.eq(CredentialsStatus.AUTHENTICATION_ERROR), Mockito.anyString());
+        verify(metricAction, times(1)).cancelled();
+        verify(metricActionLoginType, times(1)).cancelled();
+        verify(context, times(1))
+                .updateStatus(eq(CredentialsStatus.AUTHENTICATION_ERROR), anyString());
         Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
     }
 
     @Test
     public void executeForAuthorizationExceptionShouldAbortLogin() throws Exception {
         // given
-        NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
-        AuthenticationException exception = Mockito.mock(AuthenticationException.class);
-        Mockito.when(exception.getUserMessage()).thenReturn(new LocalizableKey("key"));
-        Mockito.when(agent.login()).thenThrow(exception);
+        NextGenerationAgent agent = mock(NextGenerationAgent.class);
+        AuthenticationException exception = mock(AuthenticationException.class);
+        when(exception.getUserMessage()).thenReturn(new LocalizableKey("key"));
+        when(agent.login()).thenThrow(exception);
 
         prepareStateForLogin(agent);
         // when
         AgentWorkerCommandResult result = objectUnderTest.execute();
         // then
-        Mockito.verify(metricAction, Mockito.times(1)).cancelled();
-        Mockito.verify(metricActionLoginType, Mockito.times(1)).cancelled();
-        Mockito.verify(context, Mockito.times(1))
-                .updateStatus(
-                        Mockito.eq(CredentialsStatus.AUTHENTICATION_ERROR), Mockito.anyString());
+        verify(metricAction, times(1)).cancelled();
+        verify(metricActionLoginType, times(1)).cancelled();
+        verify(context, times(1))
+                .updateStatus(eq(CredentialsStatus.AUTHENTICATION_ERROR), anyString());
         Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
     }
 
     @Test
     public void executeForAnyExceptionShouldAbortLogin() throws Exception {
         // given
-        NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
-        Mockito.when(agent.login()).thenThrow(new IllegalArgumentException("message"));
+        NextGenerationAgent agent = mock(NextGenerationAgent.class);
+        when(agent.login()).thenThrow(new IllegalArgumentException("message"));
 
         prepareStateForLogin(agent);
         // when
         AgentWorkerCommandResult result = objectUnderTest.execute();
         // then
-        Mockito.verify(metricAction, Mockito.times(1)).failed();
-        Mockito.verify(metricActionLoginType, Mockito.times(1)).failed();
-        Mockito.verify(context, Mockito.times(1))
-                .updateStatus(Mockito.eq(CredentialsStatus.TEMPORARY_ERROR));
+        verify(metricAction, times(1)).failed();
+        verify(metricActionLoginType, times(1)).failed();
+        verify(context, times(1)).updateStatus(eq(CredentialsStatus.TEMPORARY_ERROR));
         Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
     }
 
     private void prepareStateForLogin(Agent agent) {
-        Mockito.when(context.getAgent()).thenReturn(agent);
-        Mockito.when(
-                        metrics.buildAction(
-                                Mockito.eq(
-                                        new MetricId.MetricLabels()
-                                                .add("action", MetricName.IS_LOGGED_IN))))
+        when(context.getAgent()).thenReturn(agent);
+        when(metrics.buildAction(
+                        eq(new MetricId.MetricLabels().add("action", MetricName.IS_LOGGED_IN))))
                 .thenReturn(metricActionIsLoggedIn);
-        Mockito.when(
-                        metrics.buildAction(
-                                Mockito.eq(
-                                        new MetricId.MetricLabels()
-                                                .add("action", MetricName.LOGIN))))
+        when(metrics.buildAction(eq(new MetricId.MetricLabels().add("action", MetricName.LOGIN))))
                 .thenReturn(metricAction);
-        Mockito.when(
-                        metrics.buildAction(
-                                Mockito.eq(
-                                        new MetricId.MetricLabels()
-                                                .add("action", MetricName.LOGIN_CRON))))
+        when(metrics.buildAction(
+                        eq(new MetricId.MetricLabels().add("action", MetricName.LOGIN_CRON))))
                 .thenReturn(metricActionLoginType);
-        Catalog catalog = Mockito.mock(Catalog.class);
-        Mockito.when(catalog.getString(Mockito.any(LocalizableKey.class)))
-                .thenReturn("localizedString");
-        Mockito.when(context.getCatalog()).thenReturn(catalog);
+        Catalog catalog = mock(Catalog.class);
+        when(catalog.getString(any(LocalizableKey.class))).thenReturn("localizedString");
+        when(context.getCatalog()).thenReturn(catalog);
     }
 }
