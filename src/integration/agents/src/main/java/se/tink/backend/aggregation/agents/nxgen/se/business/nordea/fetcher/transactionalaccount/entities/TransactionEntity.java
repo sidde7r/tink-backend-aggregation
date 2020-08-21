@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.business.nordea.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
+import org.apache.commons.lang.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class TransactionEntity {
@@ -33,6 +37,14 @@ public class TransactionEntity {
                 .setDate(transactionDate)
                 .setDescription(transactionText)
                 .setPending(isCoverReservationTransaction)
+                .setPayload(
+                        TransactionPayloadTypes.DETAILS,
+                        SerializationUtils.serializeToString(getTransactionDetails()))
                 .build();
+    }
+
+    @JsonIgnore
+    public TransactionDetails getTransactionDetails() {
+        return new TransactionDetails(StringUtils.EMPTY, transactionToAccountNumber);
     }
 }
