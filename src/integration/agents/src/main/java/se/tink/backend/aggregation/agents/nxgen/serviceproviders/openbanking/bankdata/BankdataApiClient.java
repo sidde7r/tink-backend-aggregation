@@ -83,7 +83,7 @@ public final class BankdataApiClient {
             this.clientId =
                     CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
         } catch (CertificateException e) {
-            throw new IllegalStateException("Could not extract organization identifier!", e);
+            throw new RuntimeException("Could not extract organization identifier!", e);
         }
     }
 
