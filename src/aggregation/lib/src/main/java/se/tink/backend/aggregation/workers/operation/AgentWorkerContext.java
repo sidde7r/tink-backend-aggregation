@@ -247,6 +247,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     String.format(
                             "Supplemental information request of key %s is waiting for %s %s",
                             key, waitFor, unit));
+            logger.info(
+                    "[Supplemental Information] Credential Status: {}",
+                    Optional.ofNullable(request.getCredentials())
+                            .map(Credentials::getStatus)
+                            .orElse(null));
             if (lock.waitOnBarrier(waitFor, unit)) {
                 String supplementalInformation =
                         supplementalInformationController.getSupplementalInformation(key);
