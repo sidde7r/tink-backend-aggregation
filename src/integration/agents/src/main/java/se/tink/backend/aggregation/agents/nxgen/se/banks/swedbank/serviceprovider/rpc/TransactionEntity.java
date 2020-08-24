@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
@@ -96,7 +97,10 @@ public class TransactionEntity extends AbstractTransactionEntity {
 
     @JsonIgnore
     public TransactionDetails getTransactionDetails() {
-        return new TransactionDetails(details.getReference(), details.getMessage());
+        if (details != null) {
+            return new TransactionDetails(details.getReference(), details.getMessage());
+        }
+        return new TransactionDetails(StringUtils.EMPTY, StringUtils.EMPTY);
     }
     // FIX temporary for Swedbanks pagination problems
     // create a kind of key to use to identify duplicate transactions
