@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.mock;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -64,6 +66,34 @@ public class SwedbankSEAgentWireMockTest {
                         .buildWithLogin(TransferCommand.class);
 
         agentWireMockPaymentTest.executePayment();
+    }
+
+    /**
+     * In the bug report https://tinkab.atlassian.net/browse/PAY1-674 The flow crashed due to user
+     * not authorised register payee After the fix, due to the origin S3 log did not really go to
+     * the very end There will still be exception.
+     */
+    @Test
+    public void testPaymentWithExtendedBankIdUsageAndMultiBankProfiles() throws Exception {
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/swedbank_pis_extended_bankid.aap";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.SE, "savingsbank-bankid", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withHttpDebugTrace()
+                        .addTransfer(createMockedDomesticTransfer())
+                        .buildWithLogin(TransferCommand.class);
+        try {
+            agentWireMockPaymentTest.executePayment();
+        } catch (TransferExecutionException e) {
+            Assert.assertEquals("Could not get recipient name from user", e.getMessage());
+            Assert.assertNotEquals(
+                    "Activation of extended use for BankId required", e.getMessage());
+        }
     }
 
     private Transfer createMockedDomesticTransfer() {

@@ -270,12 +270,6 @@ public class SwedbankBaseConstants {
     }
 
     public static class LogTags {
-        public static final LogTag LOAN_RESPONSE = LogTag.from("Swedbank loan response");
-        public static final LogTag MORTGAGE_OVERVIEW_RESPONSE =
-                LogTag.from("Swedbank mortgage overview");
-        public static final LogTag LOAN_DETAILS_RESPONSE =
-                LogTag.from("Swedbank loan details response");
-        public static final LogTag LOAN_DETAILS_ERROR = LogTag.from("Swedbank loan details error");
         public static final LogTag FUND_MISSING_ISIN =
                 LogTag.from("Swedbank fund missing ISIN code, holding name: {}");
     }
