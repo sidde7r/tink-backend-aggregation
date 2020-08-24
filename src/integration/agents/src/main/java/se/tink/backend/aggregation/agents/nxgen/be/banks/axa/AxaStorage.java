@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public final class AxaStorage {
+public class AxaStorage {
 
     private static final String LANGUAGE = "language";
     private static final String CARD_NUMBER = "cardNumber";
