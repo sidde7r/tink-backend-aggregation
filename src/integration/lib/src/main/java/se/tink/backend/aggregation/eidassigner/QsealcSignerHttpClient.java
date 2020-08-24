@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.eidassigner;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.util.Optional;
@@ -35,6 +36,8 @@ import se.tink.libraries.metrics.types.gauges.OptionalGaugeSampler;
 public class QsealcSignerHttpClient {
     private static final Logger log = LoggerFactory.getLogger(QsealcSignerHttpClient.class);
     private static IdleConnectionMonitorThread staleMonitor;
+    private static final int MAX_RETRY_ATTEMPTS = 3;
+    private static final int WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS = 2000;
     static CloseableHttpClient httpClient;
     static QsealcSignerHttpClient qsealcSignerHttpClient = new QsealcSignerHttpClient();
     static PoolingHttpClientConnectionManager connectionManager;
@@ -153,7 +156,27 @@ public class QsealcSignerHttpClient {
      * it.
      */
     public CloseableHttpResponse execute(HttpPost post) throws IOException {
-        return httpClient.execute(post);
+        for (int i = 1; i <= MAX_RETRY_ATTEMPTS; i++) {
+            try {
+                return httpClient.execute(post);
+            } catch (final java.net.SocketTimeoutException e) {
+                if (i == MAX_RETRY_ATTEMPTS) {
+                    log.error(
+                            "Tried the operation qsealcSigner.execute for {} times and stopping",
+                            i);
+                    throw e;
+                } else {
+                    log.warn(
+                            "Error during attempt {} for operation qsealcSigner.execute, will try again",
+                            i);
+                }
+            }
+
+            Uninterruptibles.sleepUninterruptibly(
+                    WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS * i, TimeUnit.MILLISECONDS);
+        }
+
+        throw new IllegalStateException("Unreachable code on" + post.getURI().toString());
     }
 
     private static class IdleConnectionMonitorThread extends Thread {
