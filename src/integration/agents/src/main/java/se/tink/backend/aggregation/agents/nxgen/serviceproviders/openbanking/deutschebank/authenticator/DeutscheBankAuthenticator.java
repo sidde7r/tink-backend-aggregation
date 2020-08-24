@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator;
 
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -31,6 +35,11 @@ public class DeutscheBankAuthenticator {
     }
 
     public void confirmAuthentication() {
-        apiClient.confirmAuthentication();
+        Optional.ofNullable(apiClient.getConsentStatus())
+                .map(ConsentStatusResponse::getConsentStatus)
+                .filter(
+                        consentStatus ->
+                                consentStatus.equals(DeutscheBankConstants.StatusValues.VALID))
+                .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
     }
 }

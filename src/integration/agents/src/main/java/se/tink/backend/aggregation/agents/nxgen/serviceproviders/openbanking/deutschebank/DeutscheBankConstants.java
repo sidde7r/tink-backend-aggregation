@@ -47,6 +47,7 @@ public final class DeutscheBankConstants {
 
     public static class Urls {
         public static final String CONSENT = "/v1/consents";
+        public static final String STATUS = "/v1/consents/%s/status";
         public static final String ACCOUNTS = "/v1/accounts";
         public static final String BALANCES = "/v1/accounts/%s/balances";
         public static final String TRANSACTIONS = "/v1/accounts/%s/transactions";
