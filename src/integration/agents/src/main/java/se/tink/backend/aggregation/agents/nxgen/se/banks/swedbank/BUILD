@@ -50,6 +50,7 @@ java_library(
         "//third_party:io_vavr",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",

@@ -4,11 +4,11 @@ import com.google.common.base.Strings;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 public class TransactionDetails {
     public final String transactionReference;
     public final String ownReference;
 
-    @JsonObject
     public TransactionDetails(String transactionReference, String ownReference) {
         this.transactionReference =
                 !Strings.isNullOrEmpty(transactionReference)
