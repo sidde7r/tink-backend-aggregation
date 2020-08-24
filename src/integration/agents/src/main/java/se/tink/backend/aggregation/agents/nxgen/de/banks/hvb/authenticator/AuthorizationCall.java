@@ -4,7 +4,6 @@ import static java.lang.String.format;
 import static javax.ws.rs.core.HttpHeaders.ACCEPT;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBConstants.APP_VERSION;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -59,7 +58,6 @@ public class AuthorizationCall extends SimpleExternalApiCall<AuthenticationData,
         MultivaluedMap<String, Object> headers = configurationProvider.getStaticHeaders();
         headers.putSingle(ACCEPT, "text/javascript, text/html, application/xml, text/xml, */*");
         headers.putSingle(CONTENT_TYPE, APPLICATION_JSON);
-        headers.putSingle("x-wl-app-version", APP_VERSION);
         return headers;
     }
 

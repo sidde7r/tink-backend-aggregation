@@ -19,7 +19,7 @@ public class TestFixtures {
         OutBoundHeaders headers = new OutBoundHeaders();
         headers.putSingle(
                 "User-Agent",
-                "HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z");
+                "HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z");
         headers.putSingle("Accept-Language", "en-SE;q=1,en-SE;q=1,en");
         headers.putSingle("Accept-Encoding", "br, gzip, deflate");
         headers.putSingle("Connection", "keep-alive");
@@ -31,20 +31,20 @@ public class TestFixtures {
         return "0CA60A31-ADB5-45E6-B7AE-3A4D7C22BB81";
     }
 
-    public static byte[] givenJsonObject() {
+    public static byte[] givenJsonRegistrationCallPayloadEntity() {
         return ("{\"application\":{\"id\":\"de.unicredit.apptan\",\"clientPlatform\":\"ios\","
-                        + "\"version\":\"4.1.0\"},\"device\":{"
+                        + "\"version\":\"4.2.3\"},\"device\":{"
                         + "\"id\":\"0CA60A31-ADB5-45E6-B7AE-3A4D7C22BB81\","
-                        + "\"platform\":\"ios 12.4.3\",\"hardware\":\"iPhone\"},"
+                        + "\"platform\":\"ios 13.5.1\",\"hardware\":\"iPhone\"},"
                         + "\"attributes\":{\"sdk_protocol_version\":1}}")
                 .getBytes();
     }
 
-    public static String givenBasedJson() {
-        return "eyJhcHBsaWNhdGlvbiI6eyJpZCI6ImRlLnVuaWNyZWRpdC5hcHB0YW4iLCJjbGllbnRQbGF0Zm9ybSI6Iml"
-                + "vcyIsInZlcnNpb24iOiI0LjEuMCJ9LCJkZXZpY2UiOnsiaWQiOiIwQ0E2MEEzMS1BREI1LTQ1RTYtQjdBRS0"
-                + "zQTREN0MyMkJCODEiLCJwbGF0Zm9ybSI6ImlvcyAxMi40LjMiLCJoYXJkd2FyZSI6ImlQaG9uZSJ9LCJhdHR"
-                + "yaWJ1dGVzIjp7InNka19wcm90b2NvbF92ZXJzaW9uIjoxfX0=";
+    public static String givenBase64EncodedRegistrationCallPayloadEntity() {
+        return "eyJhcHBsaWNhdGlvbiI6eyJpZCI6ImRlLnVuaWNyZWRpdC5hcHB0YW4iLCJjbGllbnRQbGF0Zm9ybSI6ImlvcyIsI"
+                + "nZlcnNpb24iOiI0LjIuMyJ9LCJkZXZpY2UiOnsiaWQiOiIwQ0E2MEEzMS1BREI1LTQ1RTYtQjdBRS0zQTREN0MyMk"
+                + "JCODEiLCJwbGF0Zm9ybSI6ImlvcyAxMy41LjEiLCJoYXJkd2FyZSI6ImlQaG9uZSJ9LCJhdHRyaWJ1d"
+                + "GVzIjp7InNka19wcm90b2NvbF92ZXJzaW9uIjoxfX0=";
     }
 
     public static String givenClientId() {
