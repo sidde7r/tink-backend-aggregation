@@ -12,12 +12,8 @@ public final class SwedbankConstants {
     public static final int TRANSACTIONS_DOWNLOAD_RETRY_COUNT = 3;
 
     public static class Format {
-        public static final String TRANSACTION_DATE_FORMAT = "yyMMdd";
+        public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
         public static final String HEADER_TIMESTAMP = "E, dd MMM yyyy HH:mm:ss z";
-    }
-
-    public static class Transaction {
-        public static final String CURRENCY = "SEK";
     }
 
     public static class Urls {
@@ -159,6 +155,7 @@ public final class SwedbankConstants {
     public static final class BodyParameter {
         public static final String ALL_ACCOUNTS = "allAccounts";
         public static final int FREQUENCY_PER_DAY = 4;
+        public static final boolean RECURRING_INDICATOR = false;
         public static final boolean COMBINED_SERVICE_INDICATOR = false;
     }
 
