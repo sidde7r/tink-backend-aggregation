@@ -74,7 +74,6 @@ public class AmexApiClientTest {
     @Before
     public void setUp() {
         final AmexConfiguration amexConfigurationMock = mock(AmexConfiguration.class);
-        when(amexConfigurationMock.getServerUrl()).thenReturn(SERVER_URL);
         when(amexConfigurationMock.getClientId()).thenReturn(CLIENT_ID);
 
         final AmexMacGenerator amexMacGeneratorMock = mock(AmexMacGenerator.class);
