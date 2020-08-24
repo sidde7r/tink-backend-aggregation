@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public final class AxaApiClient {
+public class AxaApiClient {
 
     private final TinkHttpClient httpClient;
     private final AxaStorage storage;
