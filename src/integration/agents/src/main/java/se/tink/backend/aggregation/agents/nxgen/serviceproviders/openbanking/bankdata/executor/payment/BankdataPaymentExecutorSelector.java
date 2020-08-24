@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.PaymentRequests;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.SIGNING_STEPS;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.configuration.BankdataConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.DebtorEntity;
@@ -43,15 +42,11 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
 
     private BankdataApiClient apiClient;
     private SessionStorage sessionStorage;
-    private BankdataConfiguration configuration;
 
     public BankdataPaymentExecutorSelector(
-            BankdataApiClient apiClient,
-            SessionStorage sessionStorage,
-            BankdataConfiguration configuration) {
+            BankdataApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-        this.configuration = configuration;
     }
 
     @Override

@@ -1,11 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.configuration.BankdataConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -13,16 +10,9 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class BankdataAuthenticator implements OAuth2Authenticator {
 
     private final BankdataApiClient apiClient;
-    private final BankdataConfiguration configuration;
 
-    public BankdataAuthenticator(BankdataApiClient apiClient, BankdataConfiguration configuration) {
+    public BankdataAuthenticator(BankdataApiClient apiClient) {
         this.apiClient = apiClient;
-        this.configuration = configuration;
-    }
-
-    private BankdataConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override

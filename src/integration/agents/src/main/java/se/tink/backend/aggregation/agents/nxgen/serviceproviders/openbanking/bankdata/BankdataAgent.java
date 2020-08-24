@@ -56,11 +56,7 @@ public abstract class BankdataAgent extends NextGenerationAgent
     }
 
     private AgentConfiguration<BankdataConfiguration> getAgentConfiguration() {
-
-        AgentConfiguration<BankdataConfiguration> config =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(BankdataConfiguration.class);
-        return config;
+        return getAgentConfigurationController().getAgentConfiguration(BankdataConfiguration.class);
     }
 
     @Override
@@ -69,9 +65,7 @@ public abstract class BankdataAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new BankdataAuthenticator(
-                                apiClient,
-                                getAgentConfiguration().getProviderSpecificConfiguration()),
+                        new BankdataAuthenticator(apiClient),
                         credentials,
                         strongAuthenticationState,
                         request);
@@ -87,10 +81,7 @@ public abstract class BankdataAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         BankdataPaymentExecutorSelector bankdataPaymentExecutorSelector =
-                new BankdataPaymentExecutorSelector(
-                        apiClient,
-                        sessionStorage,
-                        getAgentConfiguration().getProviderSpecificConfiguration());
+                new BankdataPaymentExecutorSelector(apiClient, sessionStorage);
 
         return Optional.of(
                 new BankdataPaymentController(
