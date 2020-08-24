@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
@@ -47,7 +48,8 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
         fromDate =
-                Timestamp.valueOf(LocalDateTime.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX));
+                Timestamp.valueOf(
+                        LocalDateTime.now().minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS));
         toDate = Timestamp.valueOf(LocalDateTime.now());
     }
 
@@ -87,8 +89,10 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
         StatementResponse statementResponse;
         try {
+
             statementResponse =
-                    apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
+                    apiClient.getTransactions(
+                            account.getApiIdentifier(), fromDate, toDate, StatementResponse.class);
         } catch (HttpResponseException e) {
             if (checkIfScaIsRequired(e)) {
                 String scaStatus =
@@ -97,11 +101,16 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                     return Optional.empty();
                 }
                 statementResponse =
-                        apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
+                        apiClient.getTransactions(
+                                account.getApiIdentifier(),
+                                fromDate,
+                                toDate,
+                                StatementResponse.class);
             } else {
                 throw e;
             }
         }
+
         return downaloadZippedTransactions(statementResponse.getLinks().getDownload().getHref());
     }
 
@@ -139,9 +148,21 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        // First add upcoming then booked
-        Optional<FetchTransactionsResponse> fetchTransactionsResponse =
-                fetchAllTransactions(account);
+        Optional<FetchTransactionsResponse> fetchTransactionsResponse;
+        if (TimeUnit.DAYS.convert(
+                        Instant.now().toEpochMilli() - fromDate.getTime(), TimeUnit.MILLISECONDS)
+                <= TimeValues.ONLINE_STATEMENT_MAX_DAYS) {
+            fetchTransactionsResponse =
+                    Optional.of(
+                            apiClient.getTransactions(
+                                    account.getApiIdentifier(),
+                                    fromDate,
+                                    toDate,
+                                    FetchTransactionsResponse.class));
+        } else {
+            fetchTransactionsResponse = fetchAllTransactions(account);
+        }
+
         return Stream.of(
                         fetchTransactionsResponse
                                 .map(FetchTransactionsResponse::getTransactions)
