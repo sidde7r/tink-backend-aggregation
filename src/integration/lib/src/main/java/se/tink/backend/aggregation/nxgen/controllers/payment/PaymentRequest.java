@@ -56,8 +56,13 @@ public class PaymentRequest {
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()));
 
-        if (!market.equalsIgnoreCase("GB")) {
+        if (MarketValidator.isSourceAccountMandatory(market)) {
             paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
+        } else {
+            // as source account is optional hence populate Debtor only if source is not null
+            if (transfer.getSource() != null) {
+                paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
+            }
         }
 
         return new PaymentRequest(paymentInRequestBuilder.build(), transfer.getOriginatingUserIp());
