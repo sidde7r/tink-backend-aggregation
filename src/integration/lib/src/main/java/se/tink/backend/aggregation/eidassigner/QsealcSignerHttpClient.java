@@ -159,7 +159,7 @@ public class QsealcSignerHttpClient {
         for (int i = 1; i <= MAX_RETRY_ATTEMPTS; i++) {
             try {
                 return httpClient.execute(post);
-            } catch (final java.net.SocketTimeoutException e) {
+            } catch (IOException e) {
                 if (i == MAX_RETRY_ATTEMPTS) {
                     log.error(
                             "Tried the operation qsealcSigner.execute for {} times and stopping",
@@ -176,7 +176,7 @@ public class QsealcSignerHttpClient {
                     WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS * i, TimeUnit.MILLISECONDS);
         }
 
-        throw new IllegalStateException("Unreachable code on" + post.getURI().toString());
+        throw new IOException("Unreachable code on" + post.getURI().toString());
     }
 
     private static class IdleConnectionMonitorThread extends Thread {
