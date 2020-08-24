@@ -286,11 +286,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     0ae1802bf3a64752ae4cc0c23aaa75a7:
       tink:
-        baseAPIUrl: https://dummybaseapiurl.com
-        baseAuthUrl: https://dummybaseauthurl.com
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     0b891a4c022349f189d39625783b04be:
       tink:
@@ -5883,11 +5880,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     d585610c9aa64bdaadabc880bfe819fe:
       tink:
-        baseAPIUrl: https://dummybaseapiurl.com
-        baseAuthUrl: https://dummybaseauthurl.com
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     d595265976db41c2beaa95deedeb0c83:
       tink:
@@ -5931,11 +5925,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     d6bc9c301aa444089400b090a943418e:
       tink:
-        baseAPIUrl: https://dummybaseapiurl.com
-        baseAuthUrl: https://dummybaseauthurl.com
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     d6c18ed62054401983edc145977cd096:
       tink:
@@ -6086,11 +6077,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     dcc01ffce499485f89fa008153354018:
       tink:
-        baseAPIUrl: https://dummybaseapiurl.com
-        baseAuthUrl: https://dummybaseauthurl.com
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     dcdb21d684004dcc9be5a6fed6726a54:
       tink:
