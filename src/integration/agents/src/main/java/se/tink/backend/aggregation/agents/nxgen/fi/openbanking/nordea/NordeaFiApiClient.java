@@ -9,6 +9,6 @@ public final class NordeaFiApiClient extends NordeaBaseApiClient {
 
     public NordeaFiApiClient(
             TinkHttpClient client, PersistentStorage persistentStorage, QsealcSigner qsealcSigner) {
-        super(client, persistentStorage, qsealcSigner);
+        super(client, persistentStorage, qsealcSigner, false);
     }
 }

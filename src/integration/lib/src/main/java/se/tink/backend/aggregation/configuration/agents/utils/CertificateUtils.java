@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.configuration.agents.utils;
 
+import com.google.common.base.Charsets;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.security.auth.x500.X500Principal;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -108,6 +110,54 @@ public class CertificateUtils {
             throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
         }
         return certs.get(0).getSerialNumber().toString(radix);
+    }
+
+    public enum CANameEncoding {
+        /** Add CA name as plain text */
+        PLAINTEXT,
+        /** Encode CA name as Base64 */
+        BASE64,
+        /**
+         * Encode CA name as Base64 only if it contains non-ascii characters, otherwise plain text
+         */
+        BASE64_IF_NOT_ASCII;
+
+        String encode(String value) {
+            switch (this) {
+                case PLAINTEXT:
+                    return value;
+                case BASE64:
+                    return base64Encode(value);
+                case BASE64_IF_NOT_ASCII:
+                    return Charsets.US_ASCII.newEncoder().canEncode(value)
+                            ? value
+                            : base64Encode(value);
+            }
+            throw new IllegalStateException("Unknown CANameEncoding");
+        }
+
+        private String base64Encode(String value) {
+            return Base64.getEncoder().encodeToString(value.getBytes(Charsets.UTF_8));
+        }
+    }
+
+    /**
+     * Get the CA name of the certificate, optionally encoded in base64.
+     *
+     * @param base64EncodedCertificates base64 encoded PEM of an eIDAS certificate
+     * @param caNameEncoding how to encode the CA name
+     * @return CA name of the certificate.
+     * @throws CertificateException
+     */
+    public static String getCAName(String base64EncodedCertificates, CANameEncoding caNameEncoding)
+            throws CertificateException {
+        final List<X509Certificate> certs =
+                getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
+        if (certs.isEmpty()) {
+            throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
+        }
+        return caNameEncoding.encode(
+                certs.get(0).getIssuerX500Principal().getName(X500Principal.RFC1779));
     }
 
     /**

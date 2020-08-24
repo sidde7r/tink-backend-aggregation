@@ -2,11 +2,14 @@ package se.tink.backend.aggregation.api;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.UUID;
 import javax.security.auth.x500.X500Principal;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils.CANameEncoding;
 
 public final class Psd2Headers {
 
@@ -83,5 +86,23 @@ public final class Psd2Headers {
                 "SN=%x,CA=%s",
                 certificate.getSerialNumber(),
                 certificate.getIssuerX500Principal().getName(X500Principal.RFC1779));
+    }
+
+    /**
+     * Generate a Key ID from an eIDAS certificate in the form "SN={serial number},CA={CA name}"
+     *
+     * @param base64EncodedCertificates base64 encoded PEM of an eIDAS certificate
+     * @param radix set 10 to get decimal format, 16 to get hex format
+     * @param caNameEncoding how to encode the CA name
+     * @return Formatted key ID from the given certificate
+     * @throws CertificateException
+     */
+    public static String getTppCertificateKeyId(
+            String base64EncodedCertificates, int radix, CANameEncoding caNameEncoding)
+            throws CertificateException {
+        final String serialNumber =
+                CertificateUtils.getSerialNumber(base64EncodedCertificates, radix);
+        final String caName = CertificateUtils.getCAName(base64EncodedCertificates, caNameEncoding);
+        return String.format("SN=%s,CA=%s", serialNumber, caName);
     }
 }
