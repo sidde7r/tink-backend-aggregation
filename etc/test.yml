@@ -286,11 +286,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     0ae1802bf3a64752ae4cc0c23aaa75a7:
       tink:
-        baseAPIUrl: https://dummybaseapiurl.com
-        baseAuthUrl: https://dummybaseauthurl.com
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     0b891a4c022349f189d39625783b04be:
       tink:
@@ -4448,28 +4445,14 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     alandsbank-fi:
       tink:
-        baseAPIUrl: https://api.alandsbanken.fi
-        baseAuthUrl: https://open.alandsbanken.fi
         clientId: ''
         clientSecret: ''
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        scopes:
-        - AIS
-        - PIS
-        xFapiFinancialId: alandsbanken-fi
     alandsbank-se:
       tink:
-        baseAPIUrl: https://api.alandsbanken.se
-        baseAuthUrl: https://open.alandsbanken.se
         clientId: ''
         clientSecret: ''
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        scopes:
-        - AIS
-        - PIS
-        xFapiFinancialId: alandsbanken-se
     almbrand:
       tink:
         apiKey: Al5KynAkYTN4oOySVkS8pnhONurdenid
@@ -5900,11 +5883,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     d585610c9aa64bdaadabc880bfe819fe:
       tink:
-        baseAPIUrl: https://dummybaseapiurl.com
-        baseAuthUrl: https://dummybaseauthurl.com
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     d595265976db41c2beaa95deedeb0c83:
       tink:
@@ -5948,11 +5928,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     d6bc9c301aa444089400b090a943418e:
       tink:
-        baseAPIUrl: https://dummybaseapiurl.com
-        baseAuthUrl: https://dummybaseauthurl.com
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     d6c18ed62054401983edc145977cd096:
       tink:
@@ -6103,11 +6080,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     dcc01ffce499485f89fa008153354018:
       tink:
-        baseAPIUrl: https://dummybaseapiurl.com
-        baseAuthUrl: https://dummybaseauthurl.com
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     dcdb21d684004dcc9be5a6fed6726a54:
       tink:
@@ -7366,16 +7340,9 @@ agentsServiceConfiguration:
         - PIS
     resursbank:
       tink:
-        baseAPIUrl: https://resursbank-api-sandbox.crosskey.io
-        baseAuthUrl: https://resursbank-sandbox.crosskey.io
         clientId: ''
-        clientKeyStorePassword: '123456'
-        clientKeyStorePath: data/test/cryptography/crosskey/client.p12
         clientSecret: ''
-        clientSigningCertificatePath: data/test/cryptography/crosskey/signing.cer
-        clientSigningKeyPath: data/test/cryptography/crosskey/signing.key
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        xFapiFinancialId: resursbank
     revolut:
       tink:
         clientId: dummyClientId
@@ -7475,16 +7442,9 @@ agentsServiceConfiguration:
         redirectUri: https://127.0.0.1:7357/api/v1/thirdparty/callback
     spankki:
       tink:
-        baseAPIUrl: https://api.s-pankki.fi
-        baseAuthUrl: https://openbanking.s-pankki.f"
         clientId: ''
         clientSecret: ''
-        clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        scopes:
-        - AIS
-        - PIS
-        xFapiFinancialId: s-pankki
     sparebank:
       tink:
         certificate: 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

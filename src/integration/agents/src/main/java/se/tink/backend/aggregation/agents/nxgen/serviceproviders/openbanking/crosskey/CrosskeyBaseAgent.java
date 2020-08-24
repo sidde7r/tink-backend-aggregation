@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.CrosskeyBaseAuthCodeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment.CrossKeyPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CreditCardTransactionFetcher;
@@ -38,10 +39,13 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public CrosskeyBaseAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
+            CrosskeyMarketConfiguration marketConfiguration) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new CrosskeyBaseApiClient(client, sessionStorage);
+        apiClient = new CrosskeyBaseApiClient(client, sessionStorage, marketConfiguration);
 
         creditCardRefreshController =
                 new CreditCardRefreshController(
@@ -53,16 +57,11 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    protected abstract String getxFapiFinancialId();
-
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         apiClient.setConfiguration(
-                getAgentConfiguration(),
-                configuration.getEidasProxy(),
-                getEidasIdentity(),
-                getxFapiFinancialId());
+                getAgentConfiguration(), configuration.getEidasProxy(), getEidasIdentity());
     }
 
     private AgentConfiguration<CrosskeyBaseConfiguration> getAgentConfiguration() {
