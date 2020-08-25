@@ -6,7 +6,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import java.util.Date;
 import java.util.UUID;
-import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.enums.SignableOperationTypes;
@@ -44,13 +43,6 @@ public class SignableOperation {
         this.credentialsId = transfer.getCredentialsId();
         this.type = SignableOperationTypes.TRANSFER.name();
         this.signableObject = SerializationUtils.serializeToString(transfer);
-    }
-
-    public SignableOperation(GenericApplication application) {
-        this.underlyingId = application.getApplicationId();
-        this.userId = application.getUserId();
-        this.credentialsId = application.getCredentialsId();
-        this.type = SignableOperationTypes.APPLICATION.name();
     }
 
     public Date getCreated() {
