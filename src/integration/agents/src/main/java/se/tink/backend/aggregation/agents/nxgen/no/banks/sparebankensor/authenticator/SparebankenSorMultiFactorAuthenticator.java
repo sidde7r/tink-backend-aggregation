@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.ErrorText;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.HTMLTags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.Storage;
@@ -93,18 +94,13 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
 
         Document doc = Jsoup.parse(initBankIdResponseString);
 
-        handleLoginErrors(doc);
-
         Element referenceWordsElement = doc.getElementsByClass(HTMLTags.BANKID_REF_WORD).first();
 
-        if (referenceWordsElement == null) {
-            throw new IllegalStateException(
-                    String.format(
-                            "%s: No reference words found. Could not initiate bankId",
-                            SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
-        }
+        if (referenceWordsElement != null) {
+            return referenceWordsElement.text();
+        } else handleLoginErrors(doc);
 
-        return referenceWordsElement.text();
+        throw new IllegalStateException("Unknown error code when missing reference words");
     }
 
     private void handleLoginErrors(final Document doc) throws BankIdException {
@@ -116,12 +112,14 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         }
 
         if (errorElement.hasText()) {
-
             if (ErrorText.BANKID_BLOCKED.equalsIgnoreCase(errorElement.text().trim())) {
                 throw BankIdError.BLOCKED.exception();
-            }
+            } else if (errorElement
+                    .data()
+                    .contains(ErrorCode.WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE))
+                throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception();
+            else throw LoginError.DEFAULT_MESSAGE.exception(errorElement.text());
         }
-
         logger.warn(String.format("Potential unknown login error %s", errorElement.toString()));
     }
 

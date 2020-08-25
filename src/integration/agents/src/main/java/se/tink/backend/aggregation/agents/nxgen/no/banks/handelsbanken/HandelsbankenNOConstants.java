@@ -192,6 +192,7 @@ public class HandelsbankenNOConstants {
         public static final String SESSION_STAMP = "SECESB_SESSION_STAMP";
         public static final String SESSION_STAMP_VALUE = "SECESB_SESSION_STAMP_VALUE";
         public static final String SAML_RESPONSE = "SAMLResponse";
+        public static final String LOGIN_ERROR = "bidmob-login-error";
     }
 
     public static final class InitBankIdForm {
@@ -254,6 +255,10 @@ public class HandelsbankenNOConstants {
     public static final class Storage {
         public static final String EVRY_TOKEN = "evryToken";
         public static final String ACTIVATE_EVRY_TOKEN = "activateEvryToken";
+    }
+
+    public static final class ErrorCode {
+        public static final String C161 = "C161";
     }
 
     public static final class EncapConstants {
