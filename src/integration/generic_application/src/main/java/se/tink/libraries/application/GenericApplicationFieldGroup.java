@@ -3,7 +3,6 @@ package se.tink.libraries.application;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.awt.Point;
@@ -47,23 +46,6 @@ public class GenericApplicationFieldGroup {
         }
 
         return Optional.ofNullable(fields.get(name));
-    }
-
-    public Boolean getFieldAsBool(String name) {
-        return tryGetFieldAsBool(name).orElse(null);
-    }
-
-    public Optional<Boolean> tryGetFieldAsBool(String name) {
-
-        Optional<String> value = tryGetField(name);
-
-        if (!value.isPresent()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(
-                Objects.equal(value.get(), ApplicationFieldOptionValues.TRUE)
-                        || Objects.equal(value.get(), ApplicationFieldOptionValues.YES));
     }
 
     public Double getFieldAsDouble(String name) {
