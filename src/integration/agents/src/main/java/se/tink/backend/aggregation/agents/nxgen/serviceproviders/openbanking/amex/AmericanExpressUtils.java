@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 
 import java.math.BigDecimal;
 import java.util.Date;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -19,10 +18,6 @@ public class AmericanExpressUtils {
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate),
                 "end_date",
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate));
-    }
-
-    public static URL createUrl(String path, String serverUrl) {
-        return new URL(String.format("%s%s", serverUrl, path));
     }
 
     public static String formatAccountId(String accountId) {

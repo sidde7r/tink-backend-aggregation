@@ -2104,9 +2104,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        grantAccessJourneyUrl: https://dummygrantaccessjourneyurl.com
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        serverUrl: https://dummyserverurl.com
     55265077034e44cf8f46dce5f8944f2a:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
@@ -4464,9 +4462,7 @@ agentsServiceConfiguration:
       tink:
         clientId: f552867f-96df-4400-9513-739bf7c4aa84
         clientSecret: 95d2959d-690a-4583-afd9-11846e0993fc
-        grantAccessJourneyUrl: https://global.americanexpress.com/authentication/oauth/enrollment
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        serverUrl: https://api.qa.americanexpress.com
     argenta:
       tink:
         apiKey: ''
@@ -4661,9 +4657,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        grantAccessJourneyUrl: https://dummygrantaccessjourneyurl.com
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        serverUrl: https://dummyserverurl.com
     b700705da3ed4f35aae3454c2e8b8304:
       tink:
         apiKey: dummyApiKey
@@ -5209,9 +5203,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        grantAccessJourneyUrl: https://dummygrantaccessjourneyurl.com
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        serverUrl: https://dummyserverurl.com
     c0fb80b608514df4bc803c41da582097:
       tink:
         apiKey: dummyApiKey
