@@ -8,6 +8,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.ratelimit.RateLimitedExecutorService;
 import se.tink.libraries.concurrency.InstrumentedRunnable;
@@ -21,10 +22,6 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentWorker implements Managed {
     private static final int NUMBER_OF_THREADS = 1000;
-    private static final int BANKID_ATTEMPTS = 90;
-    private static final int SLACK_DURATION = 5;
-    private static final int SINGLE_BANKID_SIGN_TIMEOUT_SECONDS =
-            2 * BANKID_ATTEMPTS + SLACK_DURATION;
     private static final MetricId AGGREGATION_OPERATION_TASKS_METRIC_NAME =
             MetricId.newId("aggregation_operation_tasks");
     private static final String MONITOR_THREAD_NAME_FORMAT = "agent-worker-operation-thread-%s";
@@ -47,10 +44,25 @@ public class AgentWorker implements Managed {
     private static final int MAX_QUEUE_AUTOMATIC_REFRESH = 10;
 
     /**
-     * The time in minutes we wait until we forcefully shut down all agent work. Wirst case scenario
-     * is that an aggregation operation requires signing bankid two times.
+     * As of right now, the longest supplemental information timeout is 540 seconds. This is the max
+     * we have to wait in order for the call to timeout properly. This is required, as otherwise
+     * System and other downstreams consumers of the credentials update won't get the state
+     * transition (with metrics). See ThirdPartyAppConstants.java for the current value.
      */
-    private static final int SHUTDOWN_TIMEOUT_SECONDS = 2 * SINGLE_BANKID_SIGN_TIMEOUT_SECONDS;
+    private static final long LONGEST_SUPPLEMENTAL_INFORMATION_SECONDS =
+            TimeUnit.MINUTES.toSeconds(ThirdPartyAppConstants.WAIT_FOR_MINUTES);
+    /**
+     * As Kubernetes will signal with SIGTERM and then start the process of removing the Aggregation
+     * Instance from the internal load-balancer, we need to add some slack in order for the instance
+     * to not hit the above timeout before we terminate the instance.
+     */
+    private static final long NEW_AGGREGATION_SLACK_SECONDS = 60;
+    /**
+     * The time in minutes we wait until we forcefully shut down all agent work. This is a
+     * combination of the above two numbers.
+     */
+    private static final long SHUTDOWN_TIMEOUT_SECONDS =
+            LONGEST_SUPPLEMENTAL_INFORMATION_SECONDS + NEW_AGGREGATION_SLACK_SECONDS;
 
     private static final MetricId AGGREGATION_EXECUTOR_SERVICE_METRIC_NAME =
             MetricId.newId("aggregation_executor_service");
