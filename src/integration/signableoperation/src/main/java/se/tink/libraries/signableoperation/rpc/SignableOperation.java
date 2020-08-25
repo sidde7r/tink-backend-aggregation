@@ -187,18 +187,6 @@ public class SignableOperation {
         this.internalStatus = internalStatus;
     }
 
-    public static SignableOperation create(Transfer transfer, SignableOperationStatuses status) {
-        SignableOperation signableOperation =
-                transfer != null ? new SignableOperation(transfer) : new SignableOperation();
-
-        Date now = new Date();
-        signableOperation.setStatus(status);
-        signableOperation.setCreated(now);
-        signableOperation.setUpdated(now);
-
-        return signableOperation;
-    }
-
     public enum StatusDetailsKey {
         BANKID_FAILED,
         INVALID_INPUT,
