@@ -147,6 +147,12 @@ public class DanskeBankConstants {
 
     // == END IdentityData ==
 
+    // == START Transfers ==
+
+    public String getListPayeesUrl() {
+        return getE4BaseUrl() + "/payee/list";
+    }
+
     public static class Device {
         public static final String DEVICE_TYPE_CODE_APP = "CODEAPP";
         public static final String DEVICE_TYPE_OTP_CARD = "OTPCARD";

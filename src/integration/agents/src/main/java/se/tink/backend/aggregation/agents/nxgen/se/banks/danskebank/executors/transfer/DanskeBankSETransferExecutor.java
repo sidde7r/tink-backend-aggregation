@@ -4,6 +4,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
@@ -33,6 +35,9 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                 apiClient.listAccounts(
                         ListAccountsRequest.createFromLanguageCode(
                                 configuration.getLanguageCode()));
+
+        ListPayeesResponse listPayees =
+                apiClient.listPayees(ListPayeesRequest.create(configuration.getLanguageCode()));
 
         return Optional.empty();
     }
