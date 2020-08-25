@@ -216,19 +216,6 @@ public class SignableOperation {
         return signableOperation;
     }
 
-    public static SignableOperation create(
-            GenericApplication application, SignableOperationStatuses status) {
-        SignableOperation signableOperation =
-                application != null ? new SignableOperation(application) : new SignableOperation();
-
-        Date now = new Date();
-        signableOperation.setStatus(status);
-        signableOperation.setCreated(now);
-        signableOperation.setUpdated(now);
-
-        return signableOperation;
-    }
-
     public enum StatusDetailsKey {
         BANKID_FAILED,
         INVALID_INPUT,
