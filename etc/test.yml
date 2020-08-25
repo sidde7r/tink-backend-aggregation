@@ -3401,8 +3401,6 @@ agentsServiceConfiguration:
         aliasType: EIDAS
         aliasValue: PSDSE-FINA-44059
         apiKey: dummyApiKey
-        authorizationUrl: https://dummyauthorizationurl.com
-        baseUrl: https://dummybaseurl.com
         memberId: dummyMemberId
         realmId: dummyRealmId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
@@ -4723,8 +4721,6 @@ agentsServiceConfiguration:
         aliasType: EIDAS
         aliasValue: PSDSE-FINA-44059
         apiKey: dummyApiKey
-        authorizationUrl: https://dummyauthorizationurl.com
-        baseUrl: https://dummybaseurl.com
         memberId: dummyMemberId
         realmId: dummyRealmId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
@@ -5767,8 +5763,6 @@ agentsServiceConfiguration:
         aliasType: EIDAS
         aliasValue: PSDSE-FINA-44059
         apiKey: dummyApiKey
-        authorizationUrl: https://dummyauthorizationurl.com
-        baseUrl: https://dummybaseurl.com
         memberId: dummyMemberId
         realmId: dummyRealmId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
@@ -7188,6 +7182,7 @@ agentsServiceConfiguration:
         environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     n26:
+      #These are sandbox values. Go to https://n26.dashboard.token.io/ for production values
       tink:
         aliasType: EIDAS
         aliasValue: PSDSE-FINA-44059
