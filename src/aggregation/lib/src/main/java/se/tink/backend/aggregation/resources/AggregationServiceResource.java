@@ -193,6 +193,18 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
+    public void payment(final TransferRequest request, ClientInfo clientInfo) {
+        logger.info(
+                "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
+        try {
+            agentWorker.execute(
+                    agentWorkerCommandFactory.createOperationExecutePayment(request, clientInfo));
+        } catch (Exception e) {
+            logger.error("Error while calling createOperationExecutePayment", e);
+        }
+    }
+
+    @Override
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo)
             throws Exception {
         agentWorker.execute(
