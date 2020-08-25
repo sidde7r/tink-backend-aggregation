@@ -60,6 +60,11 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
     }
 
     private void validatePaymentDate(Transfer transfer, ListAccountsResponse accounts) {
+        String transferType =
+                accounts.isInternalAccount(transfer.getDestination().getIdentifier())
+                        ? "internal"
+                        : "external";
+
         ValidatePaymentDateRequest paymentDateRequest =
                 new ValidatePaymentDateRequest(
                         transfer.getDueDate(),
@@ -67,7 +72,7 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                         false,
                         "",
                         transfer.getDestination().getIdentifier(),
-                        "external");
+                        transferType);
 
         ValidatePaymentDateResponse paymentDateResponse =
                 apiClient.validatePaymentDate(paymentDateRequest);

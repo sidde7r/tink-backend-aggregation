@@ -57,4 +57,13 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
                 .map(account -> account.toCreditCardAccount(configuration))
                 .collect(Collectors.toList());
     }
+
+    public boolean isInternalAccount(String identifier) {
+        return accounts.stream()
+                .filter(
+                        accountEntity ->
+                                accountEntity.getAccountNoExt().equalsIgnoreCase(identifier))
+                .findFirst()
+                .isPresent();
+    }
 }
