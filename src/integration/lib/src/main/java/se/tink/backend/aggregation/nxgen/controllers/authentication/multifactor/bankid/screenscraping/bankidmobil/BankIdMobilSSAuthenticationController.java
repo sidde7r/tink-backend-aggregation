@@ -46,7 +46,9 @@ public class BankIdMobilSSAuthenticationController {
     }
 
     private boolean isUserAuthenticated(WebDriver driver) {
-        log.info("Waiting for user to accept bank Id in mobile app");
+        log.info(
+                "Waiting for user to accept bank Id in mobile app, current browser content: {}",
+                driver.getPageSource());
 
         for (int i = 0; i < 90; i++) {
             webDriverHelper.sleep(WAIT_RENDER_MILLIS);
