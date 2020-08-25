@@ -229,12 +229,6 @@ public class SignableOperation {
         return signableOperation;
     }
 
-    @JsonIgnore
-    public void cleanSensitiveData() {
-        signableObject = null;
-        statusDetailsKey = null;
-    }
-
     public enum StatusDetailsKey {
         BANKID_FAILED,
         INVALID_INPUT,
