@@ -611,6 +611,65 @@ public class AgentWorkerOperationFactory {
                 agentWorkerOperationState, operationName, request, commands, context);
     }
 
+    public AgentWorkerOperation createOperationExecutePayment(
+            TransferRequest request, ClientInfo clientInfo) {
+
+        ControllerWrapper controllerWrapper =
+                controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
+
+        final String correlationId = UUIDUtils.generateUUID();
+
+        AgentWorkerCommandContext context =
+                new AgentWorkerCommandContext(
+                        request,
+                        metricRegistry,
+                        coordinationClient,
+                        agentsServiceConfiguration,
+                        aggregatorInfoProvider.createAggregatorInfoFor(
+                                clientInfo.getAggregatorId()),
+                        supplementalInformationController,
+                        providerSessionCacheController,
+                        controllerWrapper,
+                        clientInfo.getClusterId(),
+                        clientInfo.getAppId(),
+                        correlationId,
+                        accountInformationServiceEventsProducer);
+        String operationName;
+        List<AgentWorkerCommand> commands;
+
+        boolean shouldRefresh = !request.isSkipRefresh();
+        operationName =
+                shouldRefresh
+                        ? "execute-transfer-with-refresh"
+                        : "execute-transfer-without-refresh";
+        commands =
+                createTransferBaseCommands(
+                        clientInfo, request, context, operationName, controllerWrapper);
+        if (shouldRefresh) {
+            commands.addAll(
+                    createRefreshAccountsCommands(
+                            request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+            commands.add(
+                    new Psd2PaymentAccountRestrictionWorkerCommand(
+                            context,
+                            request,
+                            regulatoryRestrictions,
+                            psd2PaymentAccountClassifier,
+                            accountInformationServiceEventsProducer,
+                            controllerWrapper));
+            commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+            commands.addAll(
+                    createOrderedRefreshableItemsCommands(
+                            request,
+                            context,
+                            RefreshableItem.REFRESHABLE_ITEMS_ALL,
+                            controllerWrapper));
+        }
+
+        return new AgentWorkerOperation(
+                agentWorkerOperationState, operationName, request, commands, context);
+    }
+
     private boolean isUKOBProvider(Provider provider) {
         return provider.getMarket().equals(MarketCode.GB.toString()) && provider.isOpenBanking();
     }
