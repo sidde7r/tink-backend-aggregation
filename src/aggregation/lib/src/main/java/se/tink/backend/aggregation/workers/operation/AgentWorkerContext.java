@@ -391,6 +391,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         Account updatedAccount;
         try {
+            logger.info("Account update from sendAccountToUpdateService");
             updatedAccount = controllerWrapper.updateAccount(updateAccountRequest);
 
         } catch (UniformInterfaceException e) {
