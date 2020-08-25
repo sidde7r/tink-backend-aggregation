@@ -8,14 +8,17 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.NordeaSePaymentExecutorSelector;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.creditcard.NordeaSeCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.transactionalaccount.NordeaSeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.NordeaBaseCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.BaseGetTransactionResponse;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
@@ -27,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -37,8 +41,10 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 public final class NordeaSeAgent extends NordeaBaseAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshTransferDestinationExecutor {
+                RefreshTransferDestinationExecutor,
+                RefreshCreditCardAccountsExecutor {
 
+    private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
@@ -46,7 +52,8 @@ public final class NordeaSeAgent extends NordeaBaseAgent
         super(componentProvider);
 
         apiClient = new NordeaSeApiClient(client, persistentStorage, qsealcSigner);
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.creditCardRefreshController = getCreditCardRefreshController();
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
@@ -90,6 +97,16 @@ public final class NordeaSeAgent extends NordeaBaseAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         NordeaBaseTransactionalAccountFetcher<BaseGetTransactionResponse> accountFetcher =
                 new NordeaSeTransactionalAccountFetcher<>(
@@ -102,6 +119,19 @@ public final class NordeaSeAgent extends NordeaBaseAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(accountFetcher)));
+    }
+
+    private CreditCardRefreshController getCreditCardRefreshController() {
+        NordeaBaseCreditCardFetcher creditFetcher =
+                new NordeaSeCreditCardFetcher(apiClient, provider.getCurrency());
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(creditFetcher)));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.wiremock.module;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.mock.module;
 
 import com.google.inject.Scopes;
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
