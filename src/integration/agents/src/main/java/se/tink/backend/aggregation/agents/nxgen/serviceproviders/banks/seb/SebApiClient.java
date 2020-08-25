@@ -251,6 +251,11 @@ public class SebApiClient {
         try {
             initiateSession("");
         } catch (HttpResponseException e) {
+            if (sebConfiguration.isBusinessAgent()
+                    && e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                throw LoginError.NOT_CUSTOMER.exception(e);
+            }
+
             SocialSecurityNumber.Sweden formattedSsn = new SocialSecurityNumber.Sweden(ssn);
             if (!formattedSsn.isValid()) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e);
