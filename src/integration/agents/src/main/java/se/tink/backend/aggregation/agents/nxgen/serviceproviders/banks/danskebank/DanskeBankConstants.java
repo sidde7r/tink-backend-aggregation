@@ -157,6 +157,10 @@ public class DanskeBankConstants {
         return getE4BaseUrl() + "/transfers/getCreditorName";
     }
 
+    public String getCreditorBankNameUrl() {
+        return getE4BaseUrl() + "/transfers/getBankName";
+    }
+
     public static class Device {
         public static final String DEVICE_TYPE_CODE_APP = "CODEAPP";
         public static final String DEVICE_TYPE_OTP_CARD = "OTPCARD";

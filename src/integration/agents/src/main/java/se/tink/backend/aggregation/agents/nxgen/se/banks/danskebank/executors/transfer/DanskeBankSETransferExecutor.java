@@ -47,6 +47,12 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                                 transfer.getDestination().getIdentifier(),
                                 configuration.getMarketCode()));
 
+        CreditorResponse creditorBankName =
+                apiClient.creditorBankName(
+                        CreditorRequest.create(
+                                transfer.getDestination().getIdentifier(),
+                                configuration.getMarketCode()));
+
         return Optional.empty();
     }
 }

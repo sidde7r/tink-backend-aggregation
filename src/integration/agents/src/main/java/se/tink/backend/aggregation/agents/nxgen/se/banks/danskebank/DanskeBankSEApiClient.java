@@ -42,4 +42,8 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
     public CreditorResponse creditorName(CreditorRequest request) {
         return postRequest(constants.getCreditorNameUrl(), CreditorResponse.class, request);
     }
+
+    public CreditorResponse creditorBankName(CreditorRequest request) {
+        return postRequest(constants.getCreditorBankNameUrl(), CreditorResponse.class, request);
+    }
 }
