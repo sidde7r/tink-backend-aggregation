@@ -7,11 +7,13 @@ import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
+import se.tink.backend.aggregation.configuration.agents.UUIDConfiguration;
 
 @JsonObject
 @Getter
 public class AmexConfiguration implements ClientConfiguration {
 
-    @Secret @ClientIdConfiguration private String clientId;
-    @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
+    @Secret @ClientIdConfiguration @UUIDConfiguration private String clientId;
+
+    @SensitiveSecret @ClientSecretsConfiguration @UUIDConfiguration private String clientSecret;
 }
