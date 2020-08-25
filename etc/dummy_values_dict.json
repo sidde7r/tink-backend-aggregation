@@ -41,7 +41,6 @@
     "eidasQwac": "Tink",
     "grantAccessJourneyUrl": "https://dummygrantaccessjourneyurl.com",
     "keyId": "dummyKeyId",
-    "keyIdBase64": "dummyKeyIdBase64",
     "keyUid": "dummyKeyUid",
     "keystorePassword": "123456",
     "keystorePath": "data/test/cryptography/bawag/keystore.p12",
