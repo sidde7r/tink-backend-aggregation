@@ -4,6 +4,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
@@ -38,6 +40,12 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
 
         ListPayeesResponse listPayees =
                 apiClient.listPayees(ListPayeesRequest.create(configuration.getLanguageCode()));
+
+        CreditorResponse creditorName =
+                apiClient.creditorName(
+                        CreditorRequest.create(
+                                transfer.getDestination().getIdentifier(),
+                                configuration.getMarketCode()));
 
         return Optional.empty();
     }
