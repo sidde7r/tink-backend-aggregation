@@ -23,7 +23,6 @@ public final class NordeaBaseConstants {
     }
 
     public static class Urls {
-        // public static final String BASE_URL = "https://api.nordea.com/nordea-open-banking/obi";
         public static final String BASE_URL = "https://open.nordea.com/personal";
         public static final URL AUTHORIZE = new URL(BASE_URL + ApiService.AUTHORIZE);
         public static final URL GET_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
