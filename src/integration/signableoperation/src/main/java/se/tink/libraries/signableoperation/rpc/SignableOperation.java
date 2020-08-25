@@ -11,8 +11,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.enums.SignableOperationTypes;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.uuid.UUIDUtils;
 
 public class SignableOperation {
     private static final ImmutableSet<SignableOperationStatuses> IN_PROGRESS_STATUSES =
@@ -192,21 +190,6 @@ public class SignableOperation {
     public static SignableOperation create(Transfer transfer, SignableOperationStatuses status) {
         SignableOperation signableOperation =
                 transfer != null ? new SignableOperation(transfer) : new SignableOperation();
-
-        Date now = new Date();
-        signableOperation.setStatus(status);
-        signableOperation.setCreated(now);
-        signableOperation.setUpdated(now);
-
-        return signableOperation;
-    }
-
-    public static SignableOperation create(User user, SignableOperationStatuses status) {
-        SignableOperation signableOperation = new SignableOperation();
-
-        if (user != null && !Strings.isNullOrEmpty(user.getId())) {
-            signableOperation.setUserId(UUIDUtils.fromTinkUUID(user.getId()));
-        }
 
         Date now = new Date();
         signableOperation.setStatus(status);
