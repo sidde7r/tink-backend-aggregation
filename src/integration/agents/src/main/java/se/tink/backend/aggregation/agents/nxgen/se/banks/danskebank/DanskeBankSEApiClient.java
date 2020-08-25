@@ -5,6 +5,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.InitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.PollRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.PollResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -45,5 +51,12 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
 
     public CreditorResponse creditorBankName(CreditorRequest request) {
         return postRequest(constants.getCreditorBankNameUrl(), CreditorResponse.class, request);
+    }
+
+    public ValidatePaymentDateResponse validatePaymentDate(ValidatePaymentDateRequest request) {
+        return postRequest(
+                constants.getValidatePaymentRequestUrl(),
+                ValidatePaymentDateResponse.class,
+                request);
     }
 }

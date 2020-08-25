@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
@@ -52,7 +54,22 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                         CreditorRequest.create(
                                 transfer.getDestination().getIdentifier(),
                                 configuration.getMarketCode()));
+        validatePaymentDate(transfer, accounts);
 
         return Optional.empty();
+    }
+
+    private void validatePaymentDate(Transfer transfer, ListAccountsResponse accounts) {
+        ValidatePaymentDateRequest paymentDateRequest =
+                new ValidatePaymentDateRequest(
+                        transfer.getDueDate(),
+                        configuration.getMarketCode(),
+                        false,
+                        "",
+                        transfer.getDestination().getIdentifier(),
+                        "external");
+
+        ValidatePaymentDateResponse paymentDateResponse =
+                apiClient.validatePaymentDate(paymentDateRequest);
     }
 }

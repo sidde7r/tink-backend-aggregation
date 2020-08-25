@@ -161,6 +161,12 @@ public class DanskeBankConstants {
         return getE4BaseUrl() + "/transfers/getBankName";
     }
 
+    public String getValidatePaymentRequestUrl() {
+        return getE4BaseUrl() + "/transfers/validateBookDate";
+    }
+
+    // == END Transfers ==
+
     public static class Device {
         public static final String DEVICE_TYPE_CODE_APP = "CODEAPP";
         public static final String DEVICE_TYPE_OTP_CARD = "OTPCARD";
