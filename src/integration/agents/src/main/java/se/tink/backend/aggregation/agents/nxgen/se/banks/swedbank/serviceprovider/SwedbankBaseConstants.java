@@ -311,6 +311,8 @@ public class SwedbankBaseConstants {
                 "Transfer or payment was not signed with security token device";
         public static final String OCR_NOT_ALLOWED =
                 "Den valda mottagaren tillåter inte betalningar med OCR-nummer, vänligen välj meddelande.";
+        public static final String DUPLICATE_PAYMENT =
+                "The payment could not be made because an identical payment is already registered";
     }
 
     public static class UserMessage {
@@ -334,6 +336,7 @@ public class SwedbankBaseConstants {
         public static final String STRONGER_AUTHENTICATION_NEEDED =
                 "STRONGER_AUTHENTICATION_NEEDED";
         public static final String DUPLICATION = "DUPLICATE";
+        public static final String TRANSFER_ALREADY_EXISTS = "TRANSFER_ALREADY_EXISTS";
     }
 
     public static class ErrorField {
