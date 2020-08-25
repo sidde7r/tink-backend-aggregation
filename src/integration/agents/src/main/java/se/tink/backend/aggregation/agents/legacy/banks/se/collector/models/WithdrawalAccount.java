@@ -5,12 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
-import com.google.common.collect.ListMultimap;
-import java.util.List;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.application.GenericApplicationFieldGroup;
-import se.tink.libraries.enums.ApplicationFieldName;
-import se.tink.libraries.enums.GenericApplicationFieldGroupNames;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class WithdrawalAccount {
@@ -70,23 +65,5 @@ class WithdrawalAccount {
         }
 
         return builder.toString();
-    }
-
-    public static WithdrawalAccount from(
-            ListMultimap<String, GenericApplicationFieldGroup> fieldGroupByName) {
-        List<GenericApplicationFieldGroup> withdrawalAccountFieldGroups =
-                fieldGroupByName.get(GenericApplicationFieldGroupNames.WITHDRAWAL_ACCOUNT);
-
-        // There should be only one.
-        GenericApplicationFieldGroup withdrawalAccountFieldGroup =
-                withdrawalAccountFieldGroups.get(0);
-
-        WithdrawalAccount withdrawalAccount = new WithdrawalAccount();
-        withdrawalAccount.setAccountNumber(
-                withdrawalAccountFieldGroup.getField(ApplicationFieldName.ACCOUNT_NUMBER));
-        withdrawalAccount.setClearingNumber(
-                withdrawalAccountFieldGroup.getField(ApplicationFieldName.CLEARING_NUMBER));
-
-        return withdrawalAccount;
     }
 }
