@@ -72,6 +72,12 @@ spec:
         runAsGroup: 65535
         fsGroup: 65535
 
+      # This is unusually large, as we have to ensure that we've processed all
+      # Aggregations on the instance. That's minimum 540 seconds. We also include 60 seconds of
+      # slack here, to ensure that eventual consistency doesn't bite us.
+      # This constant should remain consistent with the value found in
+      # `AgentWorker.SHUTDOWN_TIMEOUT_SECONDS`
+      terminationGracePeriodSeconds: 600
       initContainers:
       # Script to replace placeholder passwords with the real passwords
       - name: add-secrets-to-config
