@@ -639,9 +639,7 @@ public class AgentWorkerOperationFactory {
 
         boolean shouldRefresh = !request.isSkipRefresh();
         operationName =
-                shouldRefresh
-                        ? "execute-transfer-with-refresh"
-                        : "execute-transfer-without-refresh";
+                shouldRefresh ? "execute-payment-with-refresh" : "execute-payment-without-refresh";
         commands =
                 createTransferBaseCommands(
                         clientInfo, request, context, operationName, controllerWrapper);

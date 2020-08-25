@@ -106,7 +106,7 @@ public interface AggregationService {
     @TeamOwnership(Team.PAYMENTS)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void payment(TransferRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
+    void payment(TransferRequest request, @ClientContext ClientInfo clientInfo);
 
     @POST
     @Path("transfer/whitelist")
