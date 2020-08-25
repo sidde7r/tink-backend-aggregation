@@ -51,16 +51,16 @@ public final class NordeaBaseConstants {
     }
 
     public static class ApiService {
-        public static final String VERSION = "/v4";
+        private static final String VERSION = "/v4";
         public static final String AUTHORIZE = VERSION + "/authorize";
         public static final String GET_TOKEN = VERSION + "/authorize/token";
         public static final String GET_ASSETS = VERSION + "/assets";
         public static final String GET_ACCOUNTS = VERSION + "/accounts";
         public static final String GET_TRANSACTIONS =
                 VERSION + "/accounts/{accountId}/transactions";
-        public static final String GET_CARDS = "/v4/cards";
-        public static final String GET_CARD_TRANSACTIONS = "/v4/cards/{cardId}/transactions";
-        public static final String GET_CARD_DETAILS = "/v4/cards/{cardId}";
+        public static final String GET_CARDS = VERSION + "/cards";
+        public static final String GET_CARD_TRANSACTIONS = VERSION + "/cards/{cardId}/transactions";
+        public static final String GET_CARD_DETAILS = VERSION + "/cards/{cardId}";
         public static final String INITIATE_PAYMENT = VERSION + "/payments/{paymentType}";
         public static final String CONFIRM_PAYMENT =
                 VERSION + "/payments/{paymentType}/{paymentId}/confirm";
