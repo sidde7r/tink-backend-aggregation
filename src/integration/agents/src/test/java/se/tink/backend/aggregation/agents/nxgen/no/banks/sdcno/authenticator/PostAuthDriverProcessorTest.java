@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -8,7 +7,6 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 import java.util.Collections;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -21,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfi
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
-import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
 
 public class PostAuthDriverProcessorTest {
     private static final By TARGET_ELEMENT_XPATH = By.xpath("//input[@value='Logg ut']");
@@ -47,7 +44,7 @@ public class PostAuthDriverProcessorTest {
     }
 
     @Test
-    public void processWebDriverShouldThrowScreenScrapingExWhenTargetElementNotFound() {
+    public void processWebDriverWhenTargetElementNotFound() {
         // given
         given(webDriverHelperMock.getElement(driverMock, TARGET_ELEMENT_XPATH))
                 .willThrow(new HtmlElementNotFoundException(""));
@@ -55,11 +52,9 @@ public class PostAuthDriverProcessorTest {
         given(configMock.getAuthenticationType()).willReturn(AuthenticationType.PORTAL);
 
         // when
-        Throwable throwable = Assertions.catchThrowable(() -> objUnderTest.processWebDriver());
+        objUnderTest.processWebDriver();
         // then
-        assertThat(throwable)
-                .isInstanceOf(ScreenScrapingException.class)
-                .hasMessage("Website for cookies for credit card fetching not reached");
+        verify(driverMock).manage();
     }
 
     @Test

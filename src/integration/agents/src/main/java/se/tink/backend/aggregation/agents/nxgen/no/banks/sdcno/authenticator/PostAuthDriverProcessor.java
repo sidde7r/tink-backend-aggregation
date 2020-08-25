@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator;
 
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.CARD_PORTAL_PATH;
 
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.AuthenticationType;
@@ -9,8 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfi
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
-import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
 
+@Slf4j
 public class PostAuthDriverProcessor {
 
     private final SdcNoConfiguration configuration;
@@ -40,8 +41,11 @@ public class PostAuthDriverProcessor {
             try {
                 webDriverHelper.getElement(driver, TARGET_ELEMENT_XPATH);
             } catch (HtmlElementNotFoundException ex) {
-                throw new ScreenScrapingException(
-                        "Website for cookies for credit card fetching not reached");
+                log.info(
+                        "Credit card portal not found, for URL: {}, source: {}",
+                        driver.getCurrentUrl(),
+                        driver.getPageSource());
+                return;
             }
             cookieManager.setCookiesToClient();
         }
