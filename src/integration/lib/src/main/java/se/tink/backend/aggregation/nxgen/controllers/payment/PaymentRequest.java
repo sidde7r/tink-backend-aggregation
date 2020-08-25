@@ -8,6 +8,7 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
+import se.tink.libraries.payments_validations.java.se.tink.libraries.payments.validations.MarketValidationsUtil;
 
 public class PaymentRequest {
     private Payment payment;
@@ -56,13 +57,9 @@ public class PaymentRequest {
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()));
 
-        if (MarketValidator.isSourceAccountMandatory(market)) {
+        // If source account is optional then populate Debtor only if source is not null
+        if (MarketValidationsUtil.isSourceAccountMandatory(market) || transfer.getSource() != null) {
             paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
-        } else {
-            // as source account is optional hence populate Debtor only if source is not null
-            if (transfer.getSource() != null) {
-                paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
-            }
         }
 
         return new PaymentRequest(paymentInRequestBuilder.build(), transfer.getOriginatingUserIp());
