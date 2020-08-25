@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.t
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorRequest;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class DanskeBankSETransferExecutor implements BankTransferExecutor {
@@ -76,5 +78,15 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
 
         ValidatePaymentDateResponse paymentDateResponse =
                 apiClient.validatePaymentDate(paymentDateRequest);
+
+        // Case when we get a dueDate from the user and bank sends another date since the user's
+        // date is not valid.
+        if (transfer.getDueDate() != null
+                && !paymentDateResponse.isTransferDateSameAsBookingDate(transfer.getDueDate())) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY)
+                    .setInternalStatus("InvalidDueDate")
+                    .build();
+        }
     }
 }
