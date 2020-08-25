@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.filt
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,7 +29,7 @@ public class SwedbankFallbackHttpFilter extends Filter {
     private final SwedbankPsd2Configuration configuration;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final EidasIdentity eidasIdentity;
-    private final String qSealc;
+    private final String qSealcBase64;
 
     public SwedbankFallbackHttpFilter(
             SwedbankPsd2Configuration configuration,
@@ -40,7 +39,12 @@ public class SwedbankFallbackHttpFilter extends Filter {
         this.configuration = configuration;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
         this.eidasIdentity = eidasIdentity;
-        this.qSealc = qSealc;
+        try {
+            this.qSealcBase64 =
+                    CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(qSealc);
+        } catch (CertificateException e) {
+            throw new IllegalStateException("Invalid qsealc detected", e);
+        }
     }
 
     @Override
@@ -68,7 +72,7 @@ public class SwedbankFallbackHttpFilter extends Filter {
         final Map<String, Object> headers = getHeaders(digest);
         final String signature =
                 SignatureUtils.generateSignatureHeader(
-                        headers, eidasProxyConfig, eidasIdentity, qSealc);
+                        headers, eidasProxyConfig, eidasIdentity, qSealcBase64);
 
         for (Entry<String, Object> header : headers.entrySet()) {
             request.getHeaders().add(header.getKey(), header.getValue());
@@ -85,9 +89,7 @@ public class SwedbankFallbackHttpFilter extends Filter {
         headers.put(Keys.TPP_APP_ID, configuration.getClientId());
         headers.put(Keys.DATE.toLowerCase(), SwedbankFallbackConstants.getCurrentFormattedDate());
         headers.put(Keys.DIGEST.toLowerCase(), digest);
-        headers.put(
-                Keys.TPP_SIGNATURE_CERTIFICATE,
-                Psd2Headers.getBase64Certificate(getX509Certificate()));
+        headers.put(Keys.TPP_SIGNATURE_CERTIFICATE, qSealcBase64);
 
         return headers;
     }
@@ -97,16 +99,6 @@ public class SwedbankFallbackHttpFilter extends Filter {
             String error = Strings.nullToEmpty(response.getBody(String.class)).toLowerCase();
             throw BankServiceError.BANK_SIDE_FAILURE.exception(
                     "Http status: " + response.getStatus() + ", body: " + error);
-        }
-    }
-
-    private X509Certificate getX509Certificate() {
-        try {
-            return CertificateUtils.getX509CertificatesFromBase64EncodedCert(qSealc).stream()
-                    .findFirst()
-                    .get();
-        } catch (CertificateException ce) {
-            throw new IllegalStateException("Certificate error");
         }
     }
 }
