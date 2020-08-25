@@ -7029,7 +7029,6 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     handelsbanken:
       tink:
-        certificateId: Tink
         clientId: dummyId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     handelsbanken-norway:
