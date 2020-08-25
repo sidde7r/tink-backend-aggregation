@@ -27,6 +27,7 @@ public final class NordeaBaseConstants {
         public static final String BASE_URL = "https://open.nordea.com/personal";
         public static final URL AUTHORIZE = new URL(BASE_URL + ApiService.AUTHORIZE);
         public static final URL GET_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
+        public static final URL GET_ASSETS = new URL(BASE_URL + ApiService.GET_ASSETS);
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
         public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
         public static final URL INITIATE_PAYMENT = new URL(BASE_URL + ApiService.INITIATE_PAYMENT);
@@ -54,6 +55,7 @@ public final class NordeaBaseConstants {
         public static final String VERSION = "/v4";
         public static final String AUTHORIZE = VERSION + "/authorize";
         public static final String GET_TOKEN = VERSION + "/authorize/token";
+        public static final String GET_ASSETS = VERSION + "/assets";
         public static final String GET_ACCOUNTS = VERSION + "/accounts";
         public static final String GET_TRANSACTIONS =
                 VERSION + "/accounts/{accountId}/transactions";
@@ -179,6 +181,7 @@ public final class NordeaBaseConstants {
     public class Scopes {
         public static final String AIS = "AIS";
         public static final String PIS = "PIS";
+        public static final String CARDS_INFORMATION = "CARDS_INFORMATION";
     }
 
     public static class CallbackParams {
