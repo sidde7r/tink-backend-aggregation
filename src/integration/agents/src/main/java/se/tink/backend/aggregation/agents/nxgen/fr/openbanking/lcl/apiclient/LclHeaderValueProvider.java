@@ -18,7 +18,7 @@ public class LclHeaderValueProvider {
     private final LclConfiguration configuration;
     private final Clock clock;
 
-    String getSignatureHeaderValue(String requestId, String date, String digest) {
+    public String getSignatureHeaderValue(String requestId, String date, String digest) {
         final String signature = signatureProvider.signRequest(requestId, date, digest);
         return String.join(
                 ",",
@@ -28,12 +28,12 @@ public class LclHeaderValueProvider {
                 "signature=" + '"' + signature + '"');
     }
 
-    String getDigestHeaderValue(Object requestBody) {
+    public String getDigestHeaderValue(Object requestBody) {
         final String serializedBody = serializeBody(requestBody);
         return "SHA-256=" + Base64.getEncoder().encodeToString(Hash.sha256(serializedBody));
     }
 
-    String getDateHeaderValue() {
+    public String getDateHeaderValue() {
         return DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(clock));
     }
 
