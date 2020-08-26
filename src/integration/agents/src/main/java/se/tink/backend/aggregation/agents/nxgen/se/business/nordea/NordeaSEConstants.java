@@ -78,12 +78,14 @@ public class NordeaSEConstants {
         public static final String COMPLETE = "COMPLETE";
         public static final String WAITING = "OUTSTANDING_TRANSACTION";
         public static final String USER_SIGNING = "USER_SIGN";
+        public static final String NO_CLIENT = "NO_CLIENT";
     }
 
     public static class ErrorCodes {
         private ErrorCodes() {}
 
-        public static final String NO_CLIENT = "MBS8636"; // BankId no client
+        public static final String NOT_CUSTOMER = "MBS8636";
+        public static final String BANKID_CANCEL = "MBS0902";
     }
 
     public static class ErrorMessages {

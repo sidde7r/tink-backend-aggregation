@@ -7,9 +7,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.FetchTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.FetchTokenResponse;
@@ -50,11 +50,9 @@ public class NordeaSEBankIdAuthenticator implements BankIdAuthenticator<String> 
 
         final Optional<String> errorCode = resultBankIdResponse.getErrorCode();
         if (errorCode.isPresent()) {
-            if (ErrorCodes.NO_CLIENT.equals(errorCode.get().toUpperCase())) {
-                return BankIdStatus.NO_CLIENT;
-            }
-            return BankIdStatus.FAILED_UNKNOWN;
+            return handleErrorCode(errorCode.get());
         }
+
         switch (resultBankIdResponse.getBankIdStatus().toUpperCase()) {
             case NordeaSEConstants.BankIdStatus.COMPLETE:
                 fetchToken(resultBankIdResponse);
@@ -62,6 +60,19 @@ public class NordeaSEBankIdAuthenticator implements BankIdAuthenticator<String> 
             case NordeaSEConstants.BankIdStatus.WAITING:
             case NordeaSEConstants.BankIdStatus.USER_SIGNING:
                 return BankIdStatus.WAITING;
+            case NordeaSEConstants.BankIdStatus.NO_CLIENT:
+                return BankIdStatus.NO_CLIENT;
+            default:
+                return BankIdStatus.FAILED_UNKNOWN;
+        }
+    }
+
+    private BankIdStatus handleErrorCode(String errorCode) {
+        switch (errorCode.toUpperCase()) {
+            case NordeaSEConstants.ErrorCodes.BANKID_CANCEL:
+                return BankIdStatus.CANCELLED;
+            case NordeaSEConstants.ErrorCodes.NOT_CUSTOMER:
+                throw LoginError.NOT_CUSTOMER.exception();
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
         }
