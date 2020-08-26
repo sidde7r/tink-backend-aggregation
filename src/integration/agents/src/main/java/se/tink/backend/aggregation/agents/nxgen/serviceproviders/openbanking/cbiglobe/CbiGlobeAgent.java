@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
@@ -47,6 +48,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     protected StatelessProgressiveAuthenticator authenticator;
     protected CbiUserState userState;
     private CbiGlobeProviderConfiguration providerConfiguration;
+    protected final String psuIpAddress;
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
@@ -60,6 +62,9 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         authenticator = getAuthenticator();
 
         applyFilters(this.client);
+        this.psuIpAddress =
+                Optional.ofNullable(request.getOriginatingUserIp())
+                        .orElse(HeaderValues.DEFAULT_PSU_IP_ADDRESS);
     }
 
     protected CbiGlobeProviderConfiguration getProviderConfiguration() {
@@ -78,7 +83,8 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                 requestManual,
                 temporaryStorage,
                 InstrumentType.ACCOUNTS,
-                getProviderConfiguration());
+                getProviderConfiguration(),
+                psuIpAddress);
     }
 
     @Override

@@ -23,7 +23,8 @@ public class IccreaAgent extends CbiGlobeAgent {
                 sessionStorage,
                 requestManual,
                 temporaryStorage,
-                getProviderConfiguration());
+                getProviderConfiguration(),
+                psuIpAddress);
     }
 
     @Override

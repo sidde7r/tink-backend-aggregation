@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpm;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -20,7 +19,8 @@ public class BpmApiClient extends CbiGlobeApiClient {
             SessionStorage sessionStorage,
             boolean requestManual,
             TemporaryStorage temporaryStorage,
-            CbiGlobeProviderConfiguration providerConfiguration) {
+            CbiGlobeProviderConfiguration providerConfiguration,
+            String psuIpAddress) {
         super(
                 client,
                 persistentStorage,
@@ -28,18 +28,19 @@ public class BpmApiClient extends CbiGlobeApiClient {
                 requestManual,
                 temporaryStorage,
                 InstrumentType.ACCOUNTS,
-                providerConfiguration);
+                providerConfiguration,
+                psuIpAddress);
     }
 
     @Override
     protected RequestBuilder createAccountsRequestWithConsent() {
         return super.createAccountsRequestWithConsent()
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS);
+                .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
     }
 
     @Override
     protected RequestBuilder createRequestWithConsent(URL url) {
         return super.createRequestWithConsent(url)
-                .overrideHeader(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS);
+                .overrideHeader(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
     }
 }

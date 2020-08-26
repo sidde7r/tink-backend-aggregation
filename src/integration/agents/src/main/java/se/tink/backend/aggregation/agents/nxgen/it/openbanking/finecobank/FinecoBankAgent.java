@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankAuthenticationHelper;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.configuration.FinecoBankConfiguration;
@@ -51,8 +52,13 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         .getAgentConfiguration(FinecoBankConfiguration.class);
 
         super.setConfiguration(agentsServiceConfiguration);
+
+        String psuIpAddress =
+                Optional.ofNullable(request.getOriginatingUserIp())
+                        .orElse(Configuration.DEFAULT_PSU_IP_ADDRESS);
         this.apiClient =
-                new FinecoBankApiClient(client, persistentStorage, this.agentConfiguration);
+                new FinecoBankApiClient(
+                        client, persistentStorage, this.agentConfiguration, psuIpAddress);
 
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();

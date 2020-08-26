@@ -20,6 +20,7 @@ public class BpmAgent extends CbiGlobeAgent {
                 sessionStorage,
                 requestManual,
                 temporaryStorage,
-                getProviderConfiguration());
+                getProviderConfiguration(),
+                psuIpAddress);
     }
 }
