@@ -53,8 +53,6 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
     @Secret
     private String softwareId;
 
-    @JsonProperty @Secret private String tokenEndpointAuthSigningAlg;
-
     @Override
     public ProviderConfiguration getProviderConfiguration() {
         Preconditions.checkState(!Strings.isNullOrEmpty(clientId), "ClientId is null or empty.");
