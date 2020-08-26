@@ -1,66 +1,103 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountBalanceResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountIdentifiersResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public class StarlingTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final StarlingApiClient apiClient;
+    private final Set<String> handledHolderTypes;
 
-    public StarlingTransactionalAccountFetcher(StarlingApiClient apiClient) {
+    public StarlingTransactionalAccountFetcher(
+            StarlingApiClient apiClient, Set<String> handledHolderTypes) {
         this.apiClient = apiClient;
+        this.handledHolderTypes = handledHolderTypes;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-
-        return apiClient.fetchAccounts().stream()
-                .map(account -> constructAccount(account))
-                .collect(Collectors.toList());
+        List<TransactionalAccount> accounts = new ArrayList<>();
+        for (AccountEntity account : apiClient.fetchAccounts().getAccounts()) {
+            String accountHolderType = apiClient.fetchAccountHolder().getAccountHolderType();
+            if (!handledHolderTypes.contains(accountHolderType)) {
+                continue;
+            }
+            constructAccount(account, accountHolderType).ifPresent(accounts::add);
+        }
+        return accounts;
     }
 
-    private String getAccountHolderName() {
-        AccountHolderResponse accountHolder = apiClient.fetchAccountHolder();
-        switch (accountHolder.getAccountHolderType()) {
+    private Collection<String> getAccountHolderNames(String accountHolderType) {
+
+        switch (accountHolderType) {
             case AccountHolderType.INDIVIDUAL:
-                return apiClient.fetchIndividualAccountHolder().getFullName();
+                return Collections.singleton(
+                        apiClient.fetchIndividualAccountHolder().getFullName());
             case AccountHolderType.JOINT:
-                return apiClient.fetchJointAccountHolder().getCombinedFullName();
+                return Collections.singleton(
+                        apiClient.fetchJointAccountHolder().getCombinedFullName());
+            case AccountHolderType.BUSINESS:
+                return Collections.singleton(
+                        apiClient.fetchBusinessAccountHolder().getCompanyName());
+            case AccountHolderType.SOLE_TRADER:
+                Set<String> holders = new HashSet<>();
+                holders.add(apiClient.fetchIndividualAccountHolder().getFullName());
+                holders.add(apiClient.fetchSoleTraderAccountHolder().getTradingAsName());
+                return holders;
+            case AccountHolderType.BANKING_AS_A_SERVICE:
+                return Collections.emptySet();
             default:
-                throw new RuntimeException(
-                        "Unexpected account holder type: " + accountHolder.getAccountHolderType());
+                throw new IllegalArgumentException(
+                        "Unexpected account holder type: " + accountHolderType);
         }
     }
 
-    private TransactionalAccount constructAccount(AccountEntity account) {
+    private Optional<TransactionalAccount> constructAccount(
+            AccountEntity account, String accountHolderType) {
 
-        String holderName = getAccountHolderName();
+        List<Holder> holders =
+                getAccountHolderNames(accountHolderType).stream()
+                        .map(Holder::of)
+                        .collect(Collectors.toList());
         String accountUid = account.getAccountUid();
         String defaultCategoryId = account.getDefaultCategory();
 
         AccountIdentifiersResponse identifiers = apiClient.fetchAccountIdentifiers(accountUid);
         AccountBalanceResponse balance = apiClient.fetchAccountBalance(accountUid);
 
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(identifiers.getIban())
-                .setAccountNumber(identifiers.getAccountIdentifier())
-                .setBalance(balance.getAmount())
-                .setAlias(identifiers.getAccountIdentifier())
-                .addAccountIdentifier(identifiers.getIbanIdentifier())
-                .addAccountIdentifier(identifiers.getSortCodeIdentifier())
-                .setApiIdentifier(accountUid)
-                .addHolderName(holderName)
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withInferredAccountFlags()
+                .withBalance(BalanceModule.of(balance.getAmount().toExactCurrencyAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(identifiers.getIban())
+                                .withAccountNumber(identifiers.getAccountIdentifier())
+                                .withAccountName(identifiers.getAccountIdentifier())
+                                .addIdentifier(identifiers.getSortCodeIdentifier())
+                                .addIdentifier(identifiers.getIbanIdentifier())
+                                .build())
+                .addHolders(holders)
                 .putInTemporaryStorage(UrlParams.CATEGORY_UID, defaultCategoryId)
+                .setApiIdentifier(accountUid)
                 .build();
     }
 }

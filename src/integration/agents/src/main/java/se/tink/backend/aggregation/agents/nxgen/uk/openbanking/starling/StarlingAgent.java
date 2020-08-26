@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType.INDIVIDUAL;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType.JOINT;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType.SOLE_TRADER;
+
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
@@ -87,7 +92,8 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new StarlingTransactionalAccountFetcher(apiClient),
+                new StarlingTransactionalAccountFetcher(
+                        apiClient, ImmutableSet.of(INDIVIDUAL, SOLE_TRADER, JOINT)),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
