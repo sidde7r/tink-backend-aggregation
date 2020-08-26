@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -55,8 +54,9 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final AgentConfiguration<EmptyConfiguration> agentConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(EmptyConfiguration.class);
+        final AgentConfiguration<UnicreditBaseConfiguration> agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(UnicreditBaseConfiguration.class);
 
         apiClient.setConfiguration(agentConfiguration);
 

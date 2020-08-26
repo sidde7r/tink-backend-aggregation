@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.GetPaymentResponse;
@@ -44,12 +44,12 @@ public class Xs2aDevelopersApiClient {
 
     protected final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private final Xs2aDevelopersConfiguration configuration;
+    private final Xs2aDevelopersProviderConfiguration configuration;
 
     public Xs2aDevelopersApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            Xs2aDevelopersConfiguration configuration) {
+            Xs2aDevelopersProviderConfiguration configuration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;

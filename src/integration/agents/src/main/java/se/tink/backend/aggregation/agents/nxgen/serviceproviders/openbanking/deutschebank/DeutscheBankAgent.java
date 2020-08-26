@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -30,7 +29,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
         super(componentProvider);
         String redirectUrl =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(EmptyConfiguration.class)
+                        .getAgentConfiguration(DeutscheBankConfiguration.class)
                         .getRedirectUrl();
         apiClient = constructApiClient(redirectUrl);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();

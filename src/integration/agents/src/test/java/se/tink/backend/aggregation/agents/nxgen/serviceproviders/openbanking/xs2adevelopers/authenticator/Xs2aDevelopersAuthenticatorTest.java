@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -65,8 +65,8 @@ public class Xs2aDevelopersAuthenticatorTest {
     public void init() {
         apiClient = mock(Xs2aDevelopersApiClient.class);
         storage = mock(PersistentStorage.class);
-        Xs2aDevelopersConfiguration configuration =
-                new Xs2aDevelopersConfiguration(CLIENT_ID, BASE_URL, REDIRECT_URL);
+        Xs2aDevelopersProviderConfiguration configuration =
+                new Xs2aDevelopersProviderConfiguration(CLIENT_ID, BASE_URL, REDIRECT_URL);
         authenticator = new Xs2aDevelopersAuthenticator(apiClient, storage, configuration);
     }
 

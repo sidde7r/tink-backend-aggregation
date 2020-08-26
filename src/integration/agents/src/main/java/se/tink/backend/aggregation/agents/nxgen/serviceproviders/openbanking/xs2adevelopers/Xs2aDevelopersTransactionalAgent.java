@@ -7,12 +7,11 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -30,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    protected final Xs2aDevelopersConfiguration configuration;
+    protected final Xs2aDevelopersProviderConfiguration configuration;
 
     protected final TransactionalAccountRefreshController transactionalAccountRefreshController;
     protected Xs2aDevelopersApiClient apiClient;
@@ -53,9 +52,10 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
-    private Xs2aDevelopersConfiguration getConfiguration(String baseUrl) {
-        AgentConfiguration<EmptyConfiguration> agentConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(EmptyConfiguration.class);
+    private Xs2aDevelopersProviderConfiguration getConfiguration(String baseUrl) {
+        AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(Xs2aDevelopersConfiguration.class);
         String organizationIdentifier;
         try {
             organizationIdentifier =
@@ -64,7 +64,8 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
             throw new IllegalStateException("Could not extract organization identifier!", e);
         }
         String redirectUrl = agentConfiguration.getRedirectUrl();
-        return new Xs2aDevelopersConfiguration(organizationIdentifier, baseUrl, redirectUrl);
+        return new Xs2aDevelopersProviderConfiguration(
+                organizationIdentifier, baseUrl, redirectUrl);
     }
 
     @Override
