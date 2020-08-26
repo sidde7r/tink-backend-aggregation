@@ -93,7 +93,6 @@ public final class RaiffeisenConstants {
         public static final String AUTHORIZATION = "Authorization";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String CACHE_CONTROL = "Cache-Control";
-        public static final String X_TINK_DEBUG = "X-Tink-Debug";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 

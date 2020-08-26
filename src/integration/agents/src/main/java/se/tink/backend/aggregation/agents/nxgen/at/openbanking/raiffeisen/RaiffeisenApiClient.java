@@ -97,7 +97,6 @@ public final class RaiffeisenApiClient {
 
         return client.request(Urls.AUTHENTICATE)
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
-                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, clientCredentials)
                 .toTinkToken();
@@ -120,7 +119,6 @@ public final class RaiffeisenApiClient {
             ConsentResponse consentResponse =
                     createRequestInSession(Urls.CONSENTS)
                             .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
-                            .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                             .header(HeaderKeys.TPP_REDIRECT_URI, createRedirectUrlWithState(state))
                             .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                             .post(ConsentResponse.class, consentRequest);
@@ -151,7 +149,6 @@ public final class RaiffeisenApiClient {
             return createRequestInSession(Urls.ACCOUNTS)
                     .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                     .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
-                    .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                     .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                     .get(AccountsResponse.class);
         } catch (HttpResponseException e) {
@@ -176,7 +173,6 @@ public final class RaiffeisenApiClient {
                                 ParameterKeys.ACCOUNT_ID, account.getApiIdentifier()))
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
-                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .queryParam(
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
@@ -207,7 +203,6 @@ public final class RaiffeisenApiClient {
                         Urls.CONSENT_STATUS.parameter(
                                 ParameterKeys.CONSENT_ID,
                                 persistentStorage.get(StorageKeys.CONSENT_ID)))
-                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .get(ConsentResponse.class)
                 .getConsentStatus();
     }
