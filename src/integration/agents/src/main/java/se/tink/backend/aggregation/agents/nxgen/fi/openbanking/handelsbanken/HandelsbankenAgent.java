@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.authenticator.HandelsbankenOAuth2Authenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.executor.payment.HandelsbankenPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Market;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -56,13 +54,8 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
     }
 
     @Override
-    protected Date setMaxPeriodTransactions() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -MAX_FETCH_PERIOD_MONTHS);
-        persistentStorage.put(
-                HandelsbankenBaseConstants.StorageKeys.MAX_FETCH_PERIOD_MONTHS, calendar.getTime());
-
-        return calendar.getTime();
+    protected LocalDate getMaxPeriodTransactions() {
+        return LocalDate.now().minusMonths(MAX_FETCH_PERIOD_MONTHS);
     }
 
     @Override
