@@ -5,7 +5,6 @@ import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -66,26 +65,22 @@ public class CredentialsCrypto {
         Preconditions.checkState(
                 !Strings.isNullOrEmpty(sensitiveData), "Sensitive data was not set.");
 
-        AtomicBoolean success = new AtomicBoolean(false);
-
         // Deserialize & Decrypt using right version
-        VersionDeserializer.withDefaultHandler(
+        return VersionDeserializer.withDefaultHandler(
                         head -> {
                             logger.error(
                                     String.format(
                                             "EncryptedCredentials version not recognized: %d",
                                             head.getVersion()));
-                            success.set(false);
+                            return false;
                         })
                 .setVersion1Handler(
                         v1 -> {
                             byte[] key = cryptoWrapper.getCryptoKeyByKeyId(v1.getKeyId());
                             CredentialsCryptoV1.decryptCredential(key, credentials, v1);
-                            success.set(true);
+                            return true;
                         })
                 .handle(sensitiveData);
-
-        return success.get();
     }
 
     public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {
