@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.Date;
+import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -40,8 +40,6 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenRejectedFilter());
         apiClient = new HandelsbankenBaseApiClient(client, persistentStorage, getMarket());
-
-        setMaxPeriodTransactions();
     }
 
     public HandelsbankenBaseAgent(AgentComponentProvider componentProvider) {
@@ -49,13 +47,11 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenRejectedFilter());
         apiClient = new HandelsbankenBaseApiClient(client, persistentStorage, getMarket());
-
-        setMaxPeriodTransactions();
     }
 
     protected abstract HandelsbankenBaseAccountConverter getAccountConverter();
 
-    protected abstract Date setMaxPeriodTransactions();
+    protected abstract LocalDate getMaxPeriodTransactions();
 
     protected abstract String getMarket();
 
@@ -101,7 +97,8 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
 
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final HandelsbankenBaseTransactionalAccountFetcher accountFetcher =
-                new HandelsbankenBaseTransactionalAccountFetcher(apiClient, persistentStorage);
+                new HandelsbankenBaseTransactionalAccountFetcher(
+                        apiClient, getMaxPeriodTransactions());
 
         accountFetcher.setConverter(getAccountConverter());
 
@@ -116,7 +113,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
 
     protected CreditCardRefreshController getCreditCardRefreshController() {
         final HandelsbankenBaseCreditCardFetcher creditCardFetcher =
-                new HandelsbankenBaseCreditCardFetcher(apiClient, persistentStorage);
+                new HandelsbankenBaseCreditCardFetcher(apiClient, getMaxPeriodTransactions());
 
         return new CreditCardRefreshController(
                 metricRefreshController,
