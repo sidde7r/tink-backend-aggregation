@@ -6544,7 +6544,6 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     edcfe750f47948bf8334287c5054b88e:
       tink:
-        clientId: dummyClientId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     edf2405f36834cd3a2701a42a2d9be19:
       tink:
@@ -7040,9 +7039,6 @@ agentsServiceConfiguration:
         tppId: SE-FINA-44059
     icabanken:
       tink:
-        certificateId: Tink
-        clientId: nCOpWsg6kf5bfFpxk3k2iIZM7iIa
-        clientSecret: 8IKSUB6kS24nTp6wGFM0h9gJicwa
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     icsConfiguration:
       abn:

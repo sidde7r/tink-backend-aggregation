@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator;
 
+import java.security.cert.CertificateException;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authent
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
@@ -23,9 +25,9 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
 
     private final IcaBankenApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private IcaBankenConfiguration icaBankenConfiguration;
     private String redirectUrl;
     private Credentials credentials;
+    private String clientId;
 
     public IcaBankenAuthenticator(
             IcaBankenApiClient apiClient,
@@ -34,9 +36,14 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
             Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.icaBankenConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.credentials = credentials;
+        try {
+            this.clientId =
+                    CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+        } catch (CertificateException e) {
+            throw new IllegalStateException("Could not get organization identifier from QWAC", e);
+        }
     }
 
     @Override
@@ -44,7 +51,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
         final Form params =
                 Form.builder()
                         .put(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
-                        .put(QueryKeys.CLIENT_ID, icaBankenConfiguration.getClientId())
+                        .put(QueryKeys.CLIENT_ID, clientId)
                         .put(QueryKeys.SCOPE, QueryValues.SCOPE)
                         .put(QueryKeys.REDIRECT_URI, redirectUrl)
                         .put(QueryKeys.SSN, credentials.getField(Field.Key.USERNAME))
@@ -58,7 +65,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
         AuthorizationRequest request =
                 AuthorizationRequest.builder()
-                        .setClientId(icaBankenConfiguration.getClientId())
+                        .setClientId(clientId)
                         .setCode(code)
                         .setGrantType(IcaBankenConstants.QueryValues.AUTHORIZATION_CODE)
                         .setRedirectUri(redirectUrl)
@@ -75,7 +82,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
 
         RefreshTokenRequest request =
                 RefreshTokenRequest.builder()
-                        .setClientId(icaBankenConfiguration.getClientId())
+                        .setClientId(clientId)
                         .setGrantType(IcaBankenConstants.QueryValues.REFRESH_TOKEN)
                         .setRefreshToken(refreshToken)
                         .build();
