@@ -57,8 +57,7 @@ public class AuthorizationCallTest {
                                 ACCEPT,
                                 singletonList(
                                         "text/javascript, text/html, "
-                                                + "application/xml, text/xml, */*")),
-                        entry("x-wl-app-version", singletonList("4.1.0")));
+                                                + "application/xml, text/xml, */*")));
     }
 
     private URL expectedUrl() {

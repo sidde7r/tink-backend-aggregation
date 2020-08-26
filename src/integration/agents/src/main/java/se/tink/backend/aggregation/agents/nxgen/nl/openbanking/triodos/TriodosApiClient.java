@@ -41,6 +41,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfiguration> {
 
+    private final String qSealc;
     private final boolean isManual;
     private final Credentials credentials;
     private final QsealcSigner qsealcSigner;
@@ -55,6 +56,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
             final String qSealc) {
         super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
 
+        this.qSealc = qSealc;
         this.isManual = request.isManual();
         this.credentials = request.getCredentials();
         this.qsealcSigner = qsealcSigner;
@@ -234,17 +236,21 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     private RequestBuilder createRequest(final URL url, final String digest) {
         final String requestId = Psd2Headers.getRequestId();
 
-        return client.request(url)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.TENANT, HeaderValues.TENANT)
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(HeaderKeys.DIGEST, digest)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
-                .header(
-                        Psd2Headers.Keys.TPP_SIGNATURE_CERTIFICATE,
-                        Psd2Headers.getBase64Certificate(getX509Certificate()))
-                .header(HeaderKeys.SIGNATURE, getAuthorization(digest, requestId));
+        try {
+            return client.request(url)
+                    .type(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .header(HeaderKeys.TENANT, HeaderValues.TENANT)
+                    .header(HeaderKeys.X_REQUEST_ID, requestId)
+                    .header(HeaderKeys.DIGEST, digest)
+                    .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                    .header(
+                            Psd2Headers.Keys.TPP_SIGNATURE_CERTIFICATE,
+                            CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(qSealc))
+                    .header(HeaderKeys.SIGNATURE, getAuthorization(digest, requestId));
+        } catch (CertificateException e) {
+            throw new IllegalStateException("Invalid qsealc detected", e);
+        }
     }
 
     private RequestBuilder createRequestInSession(final URL url, final String digest) {
