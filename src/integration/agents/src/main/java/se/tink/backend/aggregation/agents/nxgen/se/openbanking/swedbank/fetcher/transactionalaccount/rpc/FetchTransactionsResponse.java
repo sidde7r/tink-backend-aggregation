@@ -1,14 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc;
 
-import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FetchTransactionsResponse {
-    private List<TransactionEntity> transactions;
+    private AccountEntity account;
+    private TransactionsEntity transactions;
 
-    public List<TransactionEntity> getTransactions() {
+    public AccountEntity getAccount() {
+        return account;
+    }
+
+    public TransactionsEntity getTransactions() {
         return transactions;
     }
 }

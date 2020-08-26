@@ -12,12 +12,8 @@ public final class SwedbankConstants {
     public static final int TRANSACTIONS_DOWNLOAD_RETRY_COUNT = 3;
 
     public static class Format {
-        public static final String TRANSACTION_DATE_FORMAT = "yyMMdd";
+        public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
         public static final String HEADER_TIMESTAMP = "E, dd MMM yyyy HH:mm:ss z";
-    }
-
-    public static class Transaction {
-        public static final String CURRENCY = "SEK";
     }
 
     public static class Urls {
@@ -123,6 +119,8 @@ public final class SwedbankConstants {
         public static final String SWEDBANK_BANKID = "08999";
         public static final String PSD2 = "PSD2";
         public static final String MOBILE_ID = "MOBILE_ID";
+        public static final String ALL_SCOPES =
+                "PSD2 PSD2account_balances PSD2account_transactions";
     }
 
     public static class BICProduction {
@@ -157,12 +155,14 @@ public final class SwedbankConstants {
     public static final class BodyParameter {
         public static final String ALL_ACCOUNTS = "allAccounts";
         public static final int FREQUENCY_PER_DAY = 4;
+        public static final boolean RECURRING_INDICATOR = false;
         public static final boolean COMBINED_SERVICE_INDICATOR = false;
     }
 
     public static final class TimeValues {
         public static final int SLEEP_TIME_MILLISECONDS = 4000;
         public static final int MONTHS_TO_FETCH_MAX = 25;
+        public static final int ONLINE_STATEMENT_MAX_DAYS = 89;
         public static final int ATTEMPS_BEFORE_TIMEOUT = 10;
         public static final int CONSENT_DURATION_IN_DAYS = 90;
         public static final int RETRY_TRANSACTIONS_DOWNLOAD = 60000;
