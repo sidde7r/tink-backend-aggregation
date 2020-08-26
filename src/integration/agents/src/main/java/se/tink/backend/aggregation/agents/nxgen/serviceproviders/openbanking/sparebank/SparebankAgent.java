@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank;
 
+import java.security.cert.CertificateException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -13,12 +14,13 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.SparebankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.SparebankController;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.SparebankPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.SparebankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.SparebankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.SparebankTransactionFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -42,18 +44,41 @@ public final class SparebankAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-        List<String> payLoadValues = splitPayload(request.getProvider().getPayload());
-        apiClient = new SparebankApiClient(client, sessionStorage, payLoadValues.get(1));
+
+        apiClient =
+                new SparebankApiClient(
+                        client,
+                        sessionStorage,
+                        agentsServiceConfiguration.getEidasProxy(),
+                        this.getEidasIdentity(),
+                        getApiConfiguration());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        apiClient.setConfiguration(
-                getAgentConfiguration(),
-                agentsServiceConfiguration.getEidasProxy(),
-                this.getEidasIdentity());
     }
 
     public AgentConfiguration<SparebankConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
                 .getAgentConfiguration(SparebankConfiguration.class);
+    }
+
+    private SparebankApiConfiguration getApiConfiguration() {
+        try {
+            AgentConfiguration<SparebankConfiguration> agentConfiguration = getAgentConfiguration();
+            String qsealcBase64 =
+                    CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
+                            agentConfiguration.getQsealc());
+
+            return SparebankApiConfiguration.builder()
+                    .baseUrl(splitPayload(request.getProvider().getPayload()).get(1))
+                    .redirectUrl(agentConfiguration.getRedirectUrl())
+                    .qsealcBase64(qsealcBase64)
+                    .certificateIssuerDN(CertificateUtils.getCertificateIssuerDN(qsealcBase64))
+                    .certificateSerialNumberInHex(
+                            CertificateUtils.getSerialNumber(qsealcBase64, 16))
+                    .build();
+        } catch (CertificateException e) {
+            throw new IllegalStateException(
+                    "Cannot create api configuration due to certificate parsing error", e);
+        }
     }
 
     @Override
