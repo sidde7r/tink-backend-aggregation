@@ -11,4 +11,8 @@ public class ValidatePaymentDateResponse extends AbstractResponse {
     public boolean isTransferDateSameAsBookingDate(Date transferDate) {
         return bookingDate.equals(transferDate);
     }
+
+    public Date getBookingDate() {
+        return bookingDate;
+    }
 }

@@ -9,4 +9,12 @@ public class CreditorResponse extends AbstractResponse {
     private String bankName;
     private String creditorName;
     private RequestBusinessDataEntity requestBusinessData;
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public String getCreditorName() {
+        return creditorName;
+    }
 }

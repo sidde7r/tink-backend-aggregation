@@ -165,6 +165,10 @@ public class DanskeBankConstants {
         return getE4BaseUrl() + "/transfers/validateBookDate";
     }
 
+    public String getRegisterPaymentUrl() {
+        return getBaseUrl() + "/ValidateSignature";
+    }
+
     // == END Transfers ==
 
     public static class Device {

@@ -66,4 +66,13 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
                 .findFirst()
                 .isPresent();
     }
+
+    public AccountEntity findSourceAccount(String identifier) {
+        return accounts.stream()
+                .filter(
+                        accountEntity ->
+                                accountEntity.getAccountNoExt().equalsIgnoreCase(identifier))
+                .findFirst()
+                .get();
+    }
 }
