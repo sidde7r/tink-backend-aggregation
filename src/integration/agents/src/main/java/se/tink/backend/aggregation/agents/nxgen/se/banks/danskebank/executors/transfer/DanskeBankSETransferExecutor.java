@@ -5,6 +5,9 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -15,17 +18,19 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.en
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankWebDriverHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -37,8 +42,6 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
     private final String deviceId;
     private final DanskeBankSEConfiguration configuration;
     private final SupplementalRequester supplementalRequester;
-
-    private String dynamicBankIdJavascript;
 
     public DanskeBankSETransferExecutor(
             DanskeBankSEApiClient apiClient,
@@ -58,8 +61,7 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                         ListAccountsRequest.createFromLanguageCode(
                                 configuration.getLanguageCode()));
 
-        ListPayeesResponse listPayees =
-                apiClient.listPayees(ListPayeesRequest.create(configuration.getLanguageCode()));
+        apiClient.listPayees(ListPayeesRequest.create(configuration.getLanguageCode()));
 
         CreditorResponse creditorName =
                 apiClient.creditorName(
@@ -74,12 +76,20 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                                 configuration.getMarketCode()));
         Date paymentDate = validatePaymentDate(transfer, accounts);
 
-        // Signature call (TBD)
+        HttpResponse injectJsCheckStep = this.apiClient.collectDynamicChallengeJavascript();
 
         RegisterPaymentResponse registerPaymentResponse =
                 registerPayment(transfer, accounts, creditorName, creditorBankName, paymentDate);
 
         signPayment(registerPaymentResponse);
+
+        apiClient.acceptSignature(
+                getTransferType(accounts, transfer),
+                registerPaymentResponse.getSignatureId(),
+                getSignaturePackage(
+                        injectJsCheckStep,
+                        registerPaymentResponse.getUserId(),
+                        registerPaymentResponse.getSignatureText()));
 
         return Optional.empty();
     }
@@ -115,6 +125,12 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
         return paymentDateResponse.getBookingDate();
     }
 
+    private String getTransferType(ListAccountsResponse accounts, Transfer transfer) {
+        return accounts.isInternalAccount(transfer.getDestination().getIdentifier())
+                ? "TransferToOwnAccountSE"
+                : "TransferToOtherAccountSE";
+    }
+
     private RegisterPaymentResponse registerPayment(
             Transfer transfer,
             ListAccountsResponse accounts,
@@ -124,10 +140,7 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
         AccountEntity sourceAccount =
                 accounts.findSourceAccount(transfer.getSource().getIdentifier());
 
-        String transferType =
-                accounts.isInternalAccount(transfer.getDestination().getIdentifier())
-                        ? "TransferToOwnAccountSE"
-                        : "TransferToOtherAccountSE";
+        String transferType = getTransferType(accounts, transfer);
 
         String accountName =
                 Strings.isNullOrEmpty(creditorName.getCreditorName())
@@ -157,10 +170,7 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                 RegisterPaymentRequest.create(
                         businessData, configuration.getLanguageCode(), transferType);
 
-        RegisterPaymentResponse registerPaymentResponse =
-                apiClient.registerPayment(registerPaymentRequest);
-
-        return registerPaymentResponse;
+        return apiClient.registerPayment(registerPaymentRequest);
     }
 
     public void signPayment(RegisterPaymentResponse registerPaymentResponse) {
@@ -202,6 +212,32 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
 
     private BankIdStatus collect(String reference) {
         return apiClient.signPayment(reference).getBankIdStatus();
+    }
+
+    private String getSignaturePackage(
+            HttpResponse injectJsCheckStep, String username, String signText) {
+        String dynamicBankIdSignJavascript =
+                DanskeBankConstants.Javascript.getDeviceInfo(
+                                deviceId,
+                                configuration.getMarketCode(),
+                                configuration.getAppName(),
+                                configuration.getAppVersion())
+                        + injectJsCheckStep.getBody(String.class);
+
+        // Execute javascript to get encrypted signature package and finalize package
+        WebDriver driver = null;
+        try {
+            driver = DanskeBankWebDriverHelper.constructWebDriver();
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript(
+                    DanskeBankJavascriptStringFormatter.createSignSEBankIdJavascript(
+                            dynamicBankIdSignJavascript, username, signText));
+            return driver.findElement(By.tagName("body")).getAttribute("signaturePackage");
+        } finally {
+            if (driver != null) {
+                driver.quit();
+            }
+        }
     }
 
     private TransferExecutionException bankIdTimeoutError() {

@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.InitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.PollRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.PollResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.AcceptSignatureRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.AcceptSignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesRequest;
@@ -73,5 +75,14 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
         return client.request(constants.getBankidPollUrl())
                 .header(DanskeRequestHeaders.REFERRER, constants.getBankidPollUrl())
                 .post(PollResponse.class, SignRequest.createFromReference(reference));
+    }
+
+    public AcceptSignatureResponse acceptSignature(
+            String signatureType, String signatureId, String signaturePackage) {
+        return postRequest(
+                constants.getAcceptSignatureUrl(signatureType),
+                AcceptSignatureResponse.class,
+                new AcceptSignatureRequest(
+                        signatureId, signaturePackage, configuration.getLanguageCode()));
     }
 }

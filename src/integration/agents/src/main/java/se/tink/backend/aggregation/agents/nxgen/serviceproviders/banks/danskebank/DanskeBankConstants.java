@@ -169,6 +169,10 @@ public class DanskeBankConstants {
         return getBaseUrl() + "/ValidateSignature";
     }
 
+    public String getAcceptSignatureUrl(String signatureType) {
+        return getBaseUrl() + "/AcceptSignature?signatureType=" + signatureType;
+    }
+
     // == END Transfers ==
 
     public static class Device {

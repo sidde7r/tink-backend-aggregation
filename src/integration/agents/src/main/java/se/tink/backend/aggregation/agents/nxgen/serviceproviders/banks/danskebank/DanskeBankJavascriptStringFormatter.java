@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 public final class DanskeBankJavascriptStringFormatter {
     private static final String COMMON_FUNCTION =
             "var nt = new Function(\"eval(\" + JSON.stringify(e) + \");\\n      return { ValidateSignature_v2:\\n          typeof ValidateSignature_v2 === 'function'\\n          ? ValidateSignature_v2\\n          : (function() {}),\\n        AcceptSignature_v2:\\n          typeof AcceptSignature_v2 === 'function'\\n          ? AcceptSignature_v2\\n          : (function() {}),\\n        initStepUp:\\n          typeof initStepUp === 'function'\\n          ? initStepUp\\n          : (function() {}),\\n        initStepUpTrustedDevice:\\n          typeof initStepUpTrustedDevice === 'function'\\n          ? initStepUpTrustedDevice\\n          : (function() {}),\\n        valiStepUp:\\n          typeof valiStepUp === 'function'\\n          ? valiStepUp\\n          : (function() {}),\\n        validateStepUpTrustedDevice:\\n          typeof validateStepUpTrustedDevice === 'function'\\n          ? validateStepUpTrustedDevice\\n          : (function() {}),\\n        resetServiceCode:\\n          typeof resetServiceCode === 'function'\\n          ? resetServiceCode\\n          : (function() {}),\\n        setServiceCodeRules:\\n          typeof setServiceCodeRules === 'function'\\n          ? setServiceCodeRules\\n          : (function() {}),\\n        setServiceCodeRulesUec:\\n          typeof setServiceCodeRulesUec === 'function'\\n          ? setServiceCodeRulesUec\\n          : (function() {}),\\n        verifyChangeServiceCode:\\n          typeof verifyChangeServiceCode === 'function'\\n          ? verifyChangeServiceCode\\n          : (function() {}),\\n        changeServiceCodeUec:\\n          typeof changeServiceCodeUec === 'function'\\n          ? changeServiceCodeUec\\n          : (function() {}),\\n        getChangeServiceCodeRules:\\n          typeof getChangeServiceCodeRules === 'function'\\n          ? getChangeServiceCodeRules\\n          : (function() {}),\\n        generateResponse:\\n          typeof generateResponse === 'function'\\n          ? generateResponse\\n          : (function() {}),\\n        decryptDeviceSecret:\\n          typeof decryptDeviceSecret === 'function'\\n          ? decryptDeviceSecret\\n          : (function() {}),\\n        decryptActivationCode:\\n          typeof decryptActivationCode === 'function'\\n          ? decryptActivationCode\\n          : (function() {}),\\n        encryptCredentials:\\n          typeof encryptCredentials === 'function'\\n          ? encryptCredentials\\n          : (function() {}),\\n        initSignSEBankID:\\n          typeof initSignSEBankID === 'function'\\n          ? initSignSEBankID\\n          : (function() {}),\\n        pollSeBankId:\\n          typeof pollSeBankId === 'function'\\n          ? pollSeBankId\\n          : (function() {}),\\n        init: (typeof init === 'function' ? init : function () {}),\\n        cleanup: (typeof cleanup === 'function' ? cleanup : function () {}),\\n        setAppReadyState:\\n          typeof setAppReadyState === 'function'\\n          ? setAppReadyState\\n          : (function() {})\\n      };\")();";
@@ -165,5 +167,24 @@ public final class DanskeBankJavascriptStringFormatter {
                 otpChallenge,
                 generateResponseInputAsBase64,
                 validateStepUpTrustedDeviceAsBase64);
+    }
+
+    public static String createSignSEBankIdJavascript(
+            String challengeDynamicJavascript, String username, String signText) {
+        final String generateResponseJavascript =
+                "var e = %s;\n"
+                        + COMMON_FUNCTION
+                        + "function setSignaturePackage(signaturePackageEntity) {\n"
+                        + "    document.body.setAttribute(\"signaturePackage\", JSON.stringify(signaturePackageEntity));\n"
+                        + "};\n"
+                        + "function failMethod(arg1) {};\n"
+                        + "nt.initSignSEBankID(\"%s\", \"%s\", failMethod);"
+                        + "nt.pollSeBankId(\"OK\", setSignaturePackage, failMethod);";
+
+        return String.format(
+                generateResponseJavascript,
+                challengeDynamicJavascript,
+                username,
+                StringEscapeUtils.escapeJava(signText));
     }
 }
