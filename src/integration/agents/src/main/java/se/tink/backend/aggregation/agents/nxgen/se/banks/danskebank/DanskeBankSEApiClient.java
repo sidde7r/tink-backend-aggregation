@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.DanskeRequestHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
@@ -29,7 +30,7 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
     public InitResponse initiateBankIdLogin(String logonPackage) {
         String response =
                 client.request(constants.getBankidInitLogonUrl())
-                        .header("Referer", constants.getBankidInitLogonUrl())
+                        .header(DanskeRequestHeaders.REFERRER, constants.getBankidInitLogonUrl())
                         .post(String.class, InitRequest.createFromMessage(logonPackage));
 
         return DanskeBankDeserializer.convertStringToObject(response, InitResponse.class);
@@ -38,7 +39,7 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
     public PollResponse pollBankId(String reference) {
         String response =
                 client.request(constants.getBankidPollUrl())
-                        .header("Referer", constants.getBankidPollUrl())
+                        .header(DanskeRequestHeaders.REFERRER, constants.getBankidPollUrl())
                         .post(String.class, PollRequest.createFromReference(reference));
 
         return DanskeBankDeserializer.convertStringToObject(response, PollResponse.class);
@@ -70,7 +71,7 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
 
     public PollResponse signPayment(String reference) {
         return client.request(constants.getBankidPollUrl())
-                .header("Referer", constants.getBankidPollUrl())
+                .header(DanskeRequestHeaders.REFERRER, constants.getBankidPollUrl())
                 .post(PollResponse.class, SignRequest.createFromReference(reference));
     }
 }

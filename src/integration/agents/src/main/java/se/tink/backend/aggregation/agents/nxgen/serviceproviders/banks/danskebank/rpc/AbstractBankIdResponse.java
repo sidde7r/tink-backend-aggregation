@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public abstract class AbstractBankIdResponse extends AbstractResponse{
+public abstract class AbstractBankIdResponse extends AbstractResponse {
     @JsonProperty("AutostartToken")
     private String autostartToken;
 
