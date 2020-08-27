@@ -283,10 +283,6 @@ public class OAuth2AuthenticationController
 
     private boolean shouldForceAuthentication() {
         boolean shouldForceAuthentication = ForceAuthentication.shouldForceAuthentication(request);
-        logger.info(
-                "[forceAuthenticate] Should force authentication for credentials: {}, {}",
-                request.getCredentials().getId(),
-                shouldForceAuthentication);
         return shouldForceAuthentication;
     }
 }
