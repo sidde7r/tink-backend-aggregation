@@ -1,15 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator;
 
 import java.security.cert.CertificateException;
+import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.AuthorizationRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
@@ -18,10 +23,12 @@ import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class IcaBankenAuthenticator implements OAuth2Authenticator {
+    private static final Logger logger = LoggerFactory.getLogger(IcaBankenAuthenticator.class);
 
     private final IcaBankenApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -86,7 +93,28 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
                         .setGrantType(IcaBankenConstants.QueryValues.REFRESH_TOKEN)
                         .setRefreshToken(refreshToken)
                         .build();
-        TokenResponse response = apiClient.exchangeRefreshToken(request);
+        TokenResponse response;
+        try {
+            response = apiClient.exchangeRefreshToken(request);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+
+                if (errorResponse.isInternalServerError()) {
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
+                }
+
+                // Temporarily logging the errors ICA throws at us to debug low success rates
+                logger.debug(
+                        "Error when refreshing access token: error: {}, description: {}",
+                        errorResponse.getError(),
+                        errorResponse.getErrorDescription());
+                throw e;
+            }
+
+            throw e;
+        }
+
         persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.getAccessToken());
         return response.toOauthToken();
     }
