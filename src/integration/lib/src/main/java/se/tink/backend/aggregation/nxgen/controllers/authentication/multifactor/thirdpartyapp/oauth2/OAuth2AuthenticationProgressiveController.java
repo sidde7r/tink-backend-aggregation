@@ -25,11 +25,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.ErrorType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OAuth2AuthenticationProgressiveController
@@ -48,19 +50,22 @@ public class OAuth2AuthenticationProgressiveController
 
     private final String strongAuthenticationState;
     private final String strongAuthenticationStateSupplementalKey;
+    private final CredentialsRequest request;
 
     public OAuth2AuthenticationProgressiveController(
             PersistentStorage persistentStorage,
             OAuth2Authenticator authenticator,
             Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState strongAuthenticationState,
+            CredentialsRequest request) {
         this(
                 persistentStorage,
                 authenticator,
                 credentials,
                 strongAuthenticationState,
                 DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT);
+                DEFAULT_TOKEN_LIFETIME_UNIT,
+                request);
     }
 
     private OAuth2AuthenticationProgressiveController(
@@ -69,7 +74,8 @@ public class OAuth2AuthenticationProgressiveController
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit) {
+            TemporalUnit tokenLifetimeUnit,
+            CredentialsRequest request) {
         this.persistentStorage = persistentStorage;
         this.authenticator = authenticator;
         this.credentials = credentials;
@@ -79,6 +85,10 @@ public class OAuth2AuthenticationProgressiveController
         this.strongAuthenticationStateSupplementalKey =
                 strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
+        this.request = request;
+        if (shouldForceAuthentication()) {
+            invalidateToken();
+        }
     }
 
     @Override
@@ -210,5 +220,18 @@ public class OAuth2AuthenticationProgressiveController
 
         throw new IllegalStateException(
                 String.format("Unknown error: %s:%s.", errorType, errorDescription.orElse("")));
+    }
+
+    private void invalidateToken() {
+        persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
+    }
+
+    private boolean shouldForceAuthentication() {
+        boolean shouldForceAuthentication = ForceAuthentication.shouldForceAuthentication(request);
+        logger.info(
+                "[forceAuthenticate] Should force authentication for credentials: {}, {}",
+                request.getCredentials().getId(),
+                shouldForceAuthentication);
+        return shouldForceAuthentication;
     }
 }
