@@ -143,6 +143,7 @@ public class SebConstants {
         // 2: NOTARIATKONTO, SKOGSKONTO, FÖRETAGSKONTO
         // sometimes 1 has KTOSLAG_TXT=NOTARIATKONTO, but shows as product=Privatkonto on OB
         public static final String OTHER = "2";
+        public static final String BUSINESS_ACCOUNT = "2";
         public static final String PERSONALLONEKONTO = "3";
         public static final String ENKLA_SPARKONTOT_FORETAG = "12";
         public static final String ENKLA_SPARKONTOT = "16";
@@ -166,6 +167,22 @@ public class SebConstants {
                             AccountTypes.SAVINGS,
                             AccountTypeCode.ENKLA_SPARKONTOT,
                             AccountTypeCode.ENKLA_SPARKONTOT_FORETAG)
+                    .put(
+                            AccountTypes.INVESTMENT,
+                            AccountTypeCode.FUND,
+                            AccountTypeCode.IPS,
+                            AccountTypeCode.PLACERINGSKONTO,
+                            AccountTypeCode.ISK_KAPITALKONTO)
+                    .put(AccountTypes.OTHER, AccountTypeCode.OTHER)
+                    .build();
+
+    public static final AccountTypeMapper BUSINESS_ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.CHECKING, AccountTypeCode.SPECIALINLANINGSKONTO)
+                    .put(
+                            AccountTypes.SAVINGS,
+                            AccountTypeCode.ENKLA_SPARKONTOT_FORETAG,
+                            AccountTypeCode.BUSINESS_ACCOUNT)
                     .put(
                             AccountTypes.INVESTMENT,
                             AccountTypeCode.FUND,

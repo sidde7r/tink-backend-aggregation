@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.ServiceInputValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
@@ -38,7 +39,12 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
                 sebBaseConfiguration.getAccountEntities(response).orElseGet(ArrayList::new);
 
         return accountEntities.stream()
-                .filter(AccountEntity::isTransactionalAccount)
+                .filter(
+                        e ->
+                                e.isTransactionalAccount(
+                                        sebBaseConfiguration.isBusinessAgent()
+                                                ? SebConstants.BUSINESS_ACCOUNT_TYPE_MAPPER
+                                                : SebConstants.ACCOUNT_TYPE_MAPPER))
                 .map(account -> account.toTinkAccount(customerNumber))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
