@@ -39,7 +39,7 @@ public class PostAuthDriverProcessor {
             // loading additional website for more cookies necessary to fetch credit cards
             driver.get(configuration.getIndividualBaseURL() + CARD_PORTAL_PATH);
             try {
-                webDriverHelper.getElement(driver, TARGET_ELEMENT_XPATH);
+                webDriverHelper.waitForElement(driver, TARGET_ELEMENT_XPATH);
             } catch (HtmlElementNotFoundException ex) {
                 log.info(
                         "Credit card portal not found, for URL: {}, source: {}",

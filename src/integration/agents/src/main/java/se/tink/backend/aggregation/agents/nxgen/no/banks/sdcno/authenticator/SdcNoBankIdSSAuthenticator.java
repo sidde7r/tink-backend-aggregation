@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -26,14 +27,18 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
     private final SdcNoConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
     private final PostAuthDriverProcessor postAuthDriverProcessor;
+    private final SupplementalRequester supplementalRequester;
 
     public SdcNoBankIdSSAuthenticator(
-            SdcNoConfiguration configuration, TinkHttpClient tinkHttpClient) {
+            SdcNoConfiguration configuration,
+            TinkHttpClient tinkHttpClient,
+            SupplementalRequester supplementalRequester) {
         this.webDriverHelper = new WebDriverHelper();
         this.driver = webDriverHelper.constructPhantomJsWebDriver(WebScrapingConstants.USER_AGENT);
         this.configuration = configuration;
         this.postAuthDriverProcessor =
                 new PostAuthDriverProcessor(driver, webDriverHelper, tinkHttpClient, configuration);
+        this.supplementalRequester = supplementalRequester;
     }
 
     @Override
@@ -51,11 +56,11 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
 
         BankIdMobilSSAuthenticationController controller =
                 new BankIdMobilSSAuthenticationController(
-                        mobilInitializer, driver, webDriverHelper);
+                        webDriverHelper, driver, mobilInitializer, supplementalRequester);
 
         driver.get(configuration.getLoginUrl());
 
-        controller.doLogin();
+        controller.doLogin(credentials);
 
         postAuthDriverProcessor.processWebDriver();
 

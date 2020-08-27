@@ -5,11 +5,12 @@ import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.Sdc
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.QueryParams.ACCOUNT_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.QueryParams.BANKREGNR;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.Headers;
@@ -22,8 +23,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SearchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class SdcNoApiClient {
     private final TinkHttpClient client;
     private final SdcNoConfiguration agentConfig;
@@ -106,16 +110,26 @@ public class SdcNoApiClient {
     }
 
     public List<CardEntity> fetchCreditCards() {
-        List<Map<String, String>> creditCards =
-                client.request(new URL(agentConfig.getIndividualBaseURL() + CREDIT_CARD_PATH))
-                        .get(List.class);
+        try {
+            String creditCards =
+                    client.request(new URL(agentConfig.getIndividualBaseURL() + CREDIT_CARD_PATH))
+                            .get(String.class);
 
-        return creditCards.stream().map(this::mapToCardEntityObject).collect(Collectors.toList());
+            return mapToCardEntities(creditCards);
+        } catch (HttpResponseException e) {
+            log.error("Failed to fetch credit cards", e);
+        }
+        return Collections.emptyList();
     }
 
-    private CardEntity mapToCardEntityObject(Map<String, String> jsonObject) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.convertValue(jsonObject, CardEntity.class);
+    private List<CardEntity> mapToCardEntities(String creditCards) {
+        CardEntity[] cardEntities =
+                SerializationUtils.deserializeFromString(creditCards, CardEntity[].class);
+        if (ArrayUtils.isNotEmpty(cardEntities)) {
+            return Arrays.asList(cardEntities);
+        }
+        log.info("No credit cards found");
+        return Collections.emptyList();
     }
 
     public CreditCardTransactionsEntity fetchCreditCardTransactions(String apiIdentifier) {

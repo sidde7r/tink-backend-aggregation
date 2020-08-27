@@ -46,7 +46,7 @@ public class PostAuthDriverProcessorTest {
     @Test
     public void processWebDriverWhenTargetElementNotFound() {
         // given
-        given(webDriverHelperMock.getElement(driverMock, TARGET_ELEMENT_XPATH))
+        given(webDriverHelperMock.waitForElement(driverMock, TARGET_ELEMENT_XPATH))
                 .willThrow(new HtmlElementNotFoundException(""));
         given(driverMock.findElements(TARGET_ELEMENT_XPATH)).willReturn(Collections.emptyList());
         given(configMock.getAuthenticationType()).willReturn(AuthenticationType.PORTAL);
