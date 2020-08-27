@@ -32,7 +32,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
@@ -79,7 +78,7 @@ public class IngBaseApiClient {
     }
 
     public void setConfiguration(
-            AgentConfiguration<EmptyConfiguration> agentConfiguration,
+            AgentConfiguration<IngBaseConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration,
             EidasIdentity eidasIdentity)
             throws CertificateException {

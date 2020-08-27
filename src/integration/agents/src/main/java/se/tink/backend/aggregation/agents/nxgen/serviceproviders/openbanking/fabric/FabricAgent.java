@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.FabricTransactionFetcher;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -73,8 +72,8 @@ public abstract class FabricAgent extends NextGenerationAgent
         client.setEidasProxy(configuration.getEidasProxy());
     }
 
-    protected AgentConfiguration<EmptyConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(EmptyConfiguration.class);
+    protected AgentConfiguration<FabricConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController().getAgentConfiguration(FabricConfiguration.class);
     }
 
     @Override

@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.Fi
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.FiduciaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
@@ -80,9 +79,9 @@ public final class FiduciaAgent extends NextGenerationAgent
                 FiduciaConstants.SIGNATURE_HEADER, FiduciaConstants.HEADERS_TO_SIGN, qsealcSigner);
     }
 
-    protected AgentConfiguration<EmptyConfiguration> getAgentConfiguration() {
-        final AgentConfiguration<EmptyConfiguration> agentConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(EmptyConfiguration.class);
+    protected AgentConfiguration<FiduciaConfiguration> getAgentConfiguration() {
+        final AgentConfiguration<FiduciaConfiguration> agentConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(FiduciaConfiguration.class);
         Objects.requireNonNull(Strings.emptyToNull(agentConfiguration.getRedirectUrl()));
         return agentConfiguration;
     }
