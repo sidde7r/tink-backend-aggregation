@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.common.TransactionAmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,13 +17,10 @@ public class TransactionEntity {
     private String valueDate;
     private TransactionAmountEntity transactionAmount;
     private String remittanceInformationUnstructured;
+    private String remittanceInformationStructured;
 
     public ExactCurrencyAmount getTransactionAmount() {
         return transactionAmount.toTinkAmount();
-    }
-
-    public String getRemittanceInformationUnstructured() {
-        return remittanceInformationUnstructured;
     }
 
     public Date getBookingDate() {
@@ -48,7 +46,9 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setAmount(getTransactionAmount())
                 .setDate(getValueDate())
-                .setDescription(getRemittanceInformationUnstructured())
+                .setDescription(
+                        Optional.ofNullable(remittanceInformationStructured)
+                                .orElse(remittanceInformationUnstructured))
                 .setPending(isPending)
                 .build();
     }
