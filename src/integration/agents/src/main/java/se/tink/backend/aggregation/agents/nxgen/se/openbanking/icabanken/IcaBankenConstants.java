@@ -100,12 +100,19 @@ public final class IcaBankenConstants {
         public static final String ACCOUNT_ID = "accountId";
     }
 
+    public static class ErrorTypes {
+        private ErrorTypes() {}
+
+        public static final String SERVER_ERROR = "server_error";
+    }
+
     public static class ErrorMessages {
         private ErrorMessages() {}
 
         public static final String MAPPING =
                 "Cannot map Ica payment status: %s to Tink payment status.";
         public static final String MISSING_TOKEN = "Cannot find Token!";
+        public static final String UNEXPECTED_INTERNAL_EXCEPTION = "unexpected internal exception";
     }
 
     public static class FormKeys {
