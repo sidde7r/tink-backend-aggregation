@@ -58,6 +58,16 @@ public abstract class SebConstants {
                 "creditCardTransactionResponse";
     }
 
+    public static class PaymentProduct {
+        public static final String SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS =
+                "swedish-domestic-private-bankgiros";
+        public static final String SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS =
+                "swedish-domestic-private-plusgiros";
+        public static final String SEPA_CREDIT_TRANSFER = "sepa-credit-transfers";
+        public static final String SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS =
+                "swedish-domestic-private-credit-transfers";
+    }
+
     public static class PaymentValue {
         public static final int MAX_DEST_MSG_LEN = 12;
     }
