@@ -38,4 +38,8 @@ public class RegisterPaymentResponse extends AbstractResponse {
     public String getOrderRef() {
         return orderRef;
     }
+
+    public String getAutoStartToken() {
+        return autoStartToken;
+    }
 }

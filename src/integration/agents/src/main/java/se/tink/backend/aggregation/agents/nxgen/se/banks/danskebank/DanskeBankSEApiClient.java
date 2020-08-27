@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.SignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
@@ -65,5 +66,11 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
     public RegisterPaymentResponse registerPayment(RegisterPaymentRequest request) {
         return postRequest(
                 constants.getRegisterPaymentUrl(), RegisterPaymentResponse.class, request);
+    }
+
+    public PollResponse signPayment(String reference) {
+        return client.request(constants.getBankidPollUrl())
+                .header("Referer", constants.getBankidPollUrl())
+                .post(PollResponse.class, SignRequest.createFromReference(reference));
     }
 }

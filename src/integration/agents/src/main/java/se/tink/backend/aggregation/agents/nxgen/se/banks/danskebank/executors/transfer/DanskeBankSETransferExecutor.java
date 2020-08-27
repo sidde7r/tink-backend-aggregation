@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.transfer;
 
+import com.google.common.base.Strings;
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
@@ -16,10 +21,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -29,16 +36,19 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
     private final DanskeBankSEApiClient apiClient;
     private final String deviceId;
     private final DanskeBankSEConfiguration configuration;
+    private final SupplementalRequester supplementalRequester;
 
     private String dynamicBankIdJavascript;
 
     public DanskeBankSETransferExecutor(
             DanskeBankSEApiClient apiClient,
             String deviceId,
-            DanskeBankConfiguration configuration) {
+            DanskeBankConfiguration configuration,
+            SupplementalRequester supplementalRequester) {
         this.apiClient = apiClient;
         this.deviceId = deviceId;
         this.configuration = (DanskeBankSEConfiguration) configuration;
+        this.supplementalRequester = supplementalRequester;
     }
 
     @Override
@@ -66,7 +76,10 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
 
         // Signature call (TBD)
 
-        registerPayment(transfer, accounts, creditorName, creditorBankName, paymentDate);
+        RegisterPaymentResponse registerPaymentResponse =
+                registerPayment(transfer, accounts, creditorName, creditorBankName, paymentDate);
+
+        signPayment(registerPaymentResponse);
 
         return Optional.empty();
     }
@@ -102,7 +115,7 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
         return paymentDateResponse.getBookingDate();
     }
 
-    private String registerPayment(
+    private RegisterPaymentResponse registerPayment(
             Transfer transfer,
             ListAccountsResponse accounts,
             CreditorResponse creditorName,
@@ -116,11 +129,16 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                         ? "TransferToOwnAccountSE"
                         : "TransferToOtherAccountSE";
 
+        String accountName =
+                Strings.isNullOrEmpty(creditorName.getCreditorName())
+                        ? transfer.getDestination().getIdentifier()
+                        : creditorName.getCreditorName();
+
         BusinessDataEntity businessData =
                 new BusinessDataEntity()
                         .seteInvoiceMarking(false)
                         .setAccountNameFrom(sourceAccount.getAccountName())
-                        .setAccountNameTo(creditorName.getCreditorName())
+                        .setAccountNameTo(accountName)
                         .setAccountNoExtFrom(sourceAccount.getAccountNoExt())
                         .setAccountNoIntFrom(sourceAccount.getAccountNoInt())
                         .setAccountNoToExt(transfer.getDestination().getIdentifier())
@@ -131,9 +149,9 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                         .setBookingDate(formatDate(paymentDate))
                         .setCurrency(transfer.getAmount().getCurrency())
                         .setRegNoFromExt(sourceAccount.getAccountRegNoExt())
-                        .setSavePayee(true)
+                        .setSavePayee(false)
                         .setTextFrom(transfer.getSourceMessage())
-                        .setTextTo(transfer.getDestinationMessage());
+                        .setTextTo(transfer.getRemittanceInformation().getValue());
 
         RegisterPaymentRequest registerPaymentRequest =
                 RegisterPaymentRequest.create(
@@ -142,7 +160,76 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
         RegisterPaymentResponse registerPaymentResponse =
                 apiClient.registerPayment(registerPaymentRequest);
 
-        return registerPaymentResponse.getOrderRef();
+        return registerPaymentResponse;
+    }
+
+    public void signPayment(RegisterPaymentResponse registerPaymentResponse) {
+        supplementalRequester.openBankId(registerPaymentResponse.getAutoStartToken(), false);
+        poll(registerPaymentResponse.getOrderRef());
+    }
+
+    public void poll(String reference) {
+        BankIdStatus status;
+
+        for (int i = 0; i < DanskeBankConstants.Transfer.MAX_POLL_ATTEMPTS; i++) {
+            try {
+                status = collect(reference);
+
+                switch (status) {
+                    case DONE:
+                        return;
+                    case WAITING:
+                        break;
+                    case CANCELLED:
+                        throw bankIdCancelledError();
+                    case TIMEOUT:
+                        throw bankIdTimeoutError();
+                    case INTERRUPTED:
+                        throw bankIdInterruptedError();
+                    default:
+                        throw bankIdFailedError();
+                }
+
+                Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
+
+            } catch (HttpResponseException | IllegalStateException e) {
+                throw bankIdFailedError();
+            }
+        }
+
+        throw bankIdTimeoutError();
+    }
+
+    private BankIdStatus collect(String reference) {
+        return apiClient.signPayment(reference).getBankIdStatus();
+    }
+
+    private TransferExecutionException bankIdTimeoutError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
+                .setEndUserMessage(EndUserMessage.BANKID_NO_RESPONSE)
+                .build();
+    }
+
+    private TransferExecutionException bankIdCancelledError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(EndUserMessage.BANKID_CANCELLED.getKey().get())
+                .setEndUserMessage(EndUserMessage.BANKID_CANCELLED)
+                .build();
+    }
+
+    private TransferExecutionException bankIdFailedError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(EndUserMessage.BANKID_TRANSFER_FAILED.getKey().get())
+                .setEndUserMessage(EndUserMessage.BANKID_TRANSFER_FAILED)
+                .build();
+    }
+
+    private TransferExecutionException bankIdInterruptedError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(EndUserMessage.BANKID_ANOTHER_IN_PROGRESS.getKey().get())
+                .setEndUserMessage(EndUserMessage.BANKID_ANOTHER_IN_PROGRESS)
+                .build();
     }
 
     private String formatDate(Date date) {

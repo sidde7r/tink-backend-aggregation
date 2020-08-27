@@ -311,4 +311,8 @@ public class DanskeBankConstants {
     public static class HttpClientParams {
         public static final int CLIENT_TIMEOUT = 60 * 1000;
     }
+
+    public static class Transfer {
+        public static final int MAX_POLL_ATTEMPTS = 90;
+    }
 }
