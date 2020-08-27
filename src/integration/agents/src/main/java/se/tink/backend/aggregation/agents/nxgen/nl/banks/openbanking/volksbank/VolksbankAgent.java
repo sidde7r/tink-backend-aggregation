@@ -108,7 +108,11 @@ public class VolksbankAgent
 
         OAuth2AuthenticationProgressiveController oAuth2AuthenticationController =
                 new OAuth2AuthenticationProgressiveController(
-                        persistentStorage, authenticator, credentials, strongAuthenticationState);
+                        persistentStorage,
+                        authenticator,
+                        credentials,
+                        strongAuthenticationState,
+                        request);
         final AutoAuthenticationProgressiveController autoAuthenticationController =
                 new AutoAuthenticationProgressiveController(
                         request,
