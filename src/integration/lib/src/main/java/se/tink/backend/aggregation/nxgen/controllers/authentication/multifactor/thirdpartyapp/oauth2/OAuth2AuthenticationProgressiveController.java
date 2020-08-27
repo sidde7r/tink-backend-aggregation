@@ -50,7 +50,6 @@ public class OAuth2AuthenticationProgressiveController
 
     private final String strongAuthenticationState;
     private final String strongAuthenticationStateSupplementalKey;
-    private final CredentialsRequest request;
 
     public OAuth2AuthenticationProgressiveController(
             PersistentStorage persistentStorage,
@@ -85,8 +84,7 @@ public class OAuth2AuthenticationProgressiveController
         this.strongAuthenticationStateSupplementalKey =
                 strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
-        this.request = request;
-        if (shouldForceAuthentication()) {
+        if (ForceAuthentication.shouldForceAuthentication(request)) {
             invalidateToken();
         }
     }
@@ -224,10 +222,5 @@ public class OAuth2AuthenticationProgressiveController
 
     private void invalidateToken() {
         persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
-    }
-
-    private boolean shouldForceAuthentication() {
-        boolean shouldForceAuthentication = ForceAuthentication.shouldForceAuthentication(request);
-        return shouldForceAuthentication;
     }
 }
