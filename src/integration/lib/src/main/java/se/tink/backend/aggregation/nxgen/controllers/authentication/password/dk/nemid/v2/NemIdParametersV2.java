@@ -1,16 +1,14 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
-import se.tink.backend.aggregation.nxgen.http.url.URL;
-
 public class NemIdParametersV2 {
     private final String nemIdElements;
-    private final URL initialUrl;
+    private final String initialUrl;
 
     public NemIdParametersV2(String nemIdElements) {
-        this(nemIdElements, NemIdConstantsV2.BASE_URL);
+        this(nemIdElements, NemIdConstantsV2.NEM_ID_APPLET_URL);
     }
 
-    private NemIdParametersV2(String nemIdElements, URL initialUrl) {
+    private NemIdParametersV2(String nemIdElements, String initialUrl) {
         this.nemIdElements = nemIdElements;
         this.initialUrl = initialUrl;
     }
@@ -19,7 +17,7 @@ public class NemIdParametersV2 {
         return nemIdElements;
     }
 
-    URL getInitialUrl() {
+    String getInitialUrl() {
         return initialUrl;
     }
 }
