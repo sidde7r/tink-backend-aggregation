@@ -19,5 +19,9 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
+        "@com_google_guava_guava//:com_google_guava_guava",
+        "//src/libraries/date",
+        "//src/integration/transfer:rpc",
     ],
 )
