@@ -18,6 +18,7 @@ java_library(
         "//src/integration/amount",
         "//src/integration/enums",
         "//src/integration/payment:enums",
+        "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//src/libraries/uuid",

@@ -59,7 +59,8 @@ public class PaymentRequest {
                         .withCurrency(transfer.getAmount().getCurrency())
                         .withReference(referenceInRequest)
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
-                        .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()));
+                        .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()))
+                        .withRemittanceInformation(transfer.getRemittanceInformation());
 
         // If source account is optional then populate Debtor only if source is not null
         if (MarketValidationsUtil.isSourceAccountMandatory(market)

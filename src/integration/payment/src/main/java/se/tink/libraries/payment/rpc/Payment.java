@@ -16,6 +16,7 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class Payment {
     private static Logger log = LoggerFactory.getLogger(Payment.class);
@@ -55,6 +56,8 @@ public class Payment {
     private String currency;
     private Reference reference;
 
+    private final RemittanceInformation remittanceInformation;
+
     private Payment(Builder builder) {
         this.creditor = builder.creditor;
         this.debtor = builder.debtor;
@@ -67,6 +70,7 @@ public class Payment {
         this.uniqueId = builder.uniqueId;
         this.reference = builder.reference;
         this.id = UUID.randomUUID();
+        this.remittanceInformation = builder.remittanceInformation;
     }
 
     /*
@@ -164,6 +168,10 @@ public class Payment {
         return reference;
     }
 
+    public RemittanceInformation getRemittanceInformation() {
+        return remittanceInformation;
+    }
+
     public Pair<AccountIdentifier.Type, AccountIdentifier.Type> getCreditorAndDebtorAccountType() {
         if (Objects.isNull(debtor)) {
             return new Pair<>(null, creditor.getAccountIdentifierType());
@@ -214,6 +222,7 @@ public class Payment {
         private PaymentType type = PaymentType.UNDEFINED;
         private String currency;
         private Reference reference;
+        private RemittanceInformation remittanceInformation;
 
         public Builder withCreditor(Creditor creditor) {
             this.creditor = creditor;
@@ -275,6 +284,11 @@ public class Payment {
 
         public Payment build() {
             return new Payment(this);
+        }
+
+        public Builder withRemittanceInformation(RemittanceInformation remittanceInformation) {
+            this.remittanceInformation = remittanceInformation;
+            return this;
         }
     }
 }
