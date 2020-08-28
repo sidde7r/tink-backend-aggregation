@@ -33,9 +33,12 @@ public class BankIdMobilSSAuthenticationController {
         bankIdMobilInitializer.initializeBankIdMobilAuthentication();
 
         try {
+            // additional sleep for JS to run on bank site and render final page of auth status
+            webDriverHelper.sleep(2000);
+
             webDriverHelper.getElement(driver, WAITING_FOR_AUTHENTICATION_ELEMENT_XPATH);
         } catch (HtmlElementNotFoundException e) {
-            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+            throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception(
                     "User provided invalid credentials or bank Id by mobile is not activated");
         }
 
