@@ -1428,3 +1428,6 @@ msgstr ""
 
 msgid "Please check if reference number matches with SIM message"
 msgstr ""
+
+msgid "Reference words are missing from login page"
+msgstr ""
