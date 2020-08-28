@@ -113,6 +113,10 @@ public class SparebankenSorConstants {
         public static final String LOGIN_ERROR_CLASS = "bidmob-login-error";
     }
 
+    public static final class ErrorCode {
+        public static final String WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE = "C161";
+    }
+
     public static class ErrorText {
         public static final String BANKID_BLOCKED =
                 "Det har dessverre oppstått en feil. Ditt mobilabonnement kan ha blitt endret eller din BankID på mobil kan være sperret.  Aktiver BankID på mobil på nytt i din nettbank dersom feilen vedvarer.";

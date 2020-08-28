@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.ActivationCodeFieldConstants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FinalizeBankIdRequest;
@@ -80,11 +82,12 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
         InitBankIdRequest initBankIdRequest = InitBankIdRequest.build(dob, this.mobileNumber);
         String initBankIdResponse = apiClient.initBankId(initBankIdRequest);
 
-        Element referenceWords =
-                Jsoup.parse(initBankIdResponse).getElementsByClass(Tags.REFERENCE_WORD).first();
+        Document parsedDocument = Jsoup.parse(initBankIdResponse);
+
+        Element referenceWords = parsedDocument.getElementsByClass(Tags.REFERENCE_WORD).first();
 
         if (referenceWords == null) {
-            throw new IllegalStateException("HB_bankID: No reference words found");
+            handleReferenceWordsError(parsedDocument);
         }
 
         return referenceWords.text();
@@ -116,6 +119,25 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
                 "unexpected state when polling for bank ID: "
                         + SerializationUtils.serializeToString(pollBankIdResponse));
         return BankIdStatus.FAILED_UNKNOWN;
+    }
+
+    private void handleReferenceWordsError(Document parsedDocument) {
+        Elements errorElements = parsedDocument.getElementsByClass(Tags.LOGIN_ERROR);
+        if (!errorElements.isEmpty()) {
+            String errorData = "";
+            for (Element element : errorElements) {
+                errorData = element.data();
+                log.info("Handelsbanken No - Error message: {}", errorData);
+                if (errorData.contains(
+                        ErrorCode.WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE)) {
+                    throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception();
+                }
+            }
+            log.error("Handelsbanken No - Unknown error message: {}", errorData);
+            throw LoginError.DEFAULT_MESSAGE.exception(errorData);
+        } else {
+            throw new IllegalStateException("Unknown error code when missing reference words");
+        }
     }
 
     private String getBankIdEvryToken() {
