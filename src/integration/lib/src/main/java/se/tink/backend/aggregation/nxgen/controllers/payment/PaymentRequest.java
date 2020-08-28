@@ -43,6 +43,10 @@ public class PaymentRequest {
                         transfer.getDestination(),
                         transfer.getDestination().getName().orElse(null));
 
+        /*
+         * This is a known bug, we will fix it later. It should not be using transfer type as
+         * reference type and the reference should be removed entirely.
+         */
         Reference referenceInRequest =
                 new Reference(
                         transfer.getType().toString(),
@@ -55,7 +59,8 @@ public class PaymentRequest {
                         .withCurrency(transfer.getAmount().getCurrency())
                         .withReference(referenceInRequest)
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
-                        .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()));
+                        .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()))
+                        .withRemittanceInformation(transfer.getRemittanceInformation());
 
         // If source account is optional then populate Debtor only if source is not null
         if (MarketValidationsUtil.isSourceAccountMandatory(market)
