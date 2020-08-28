@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -40,6 +41,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Slf4j
 public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -86,6 +89,9 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                 Optional.ofNullable(payment.getExecutionDate()).orElse(LocalDate.now());
 
         PaymentType paymentType = PaymentType.SEPA;
+        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
@@ -99,7 +105,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                         .withRedirectUrl(
                                 new URL(redirectUrl)
                                         .queryParam(STATE, strongAuthenticationState.getState()))
-                        .withRemittanceInformation(payment.getReference().getValue())
+                        .withRemittanceInformation(remittanceInformation.getValue())
                         .build();
 
         CreatePaymentResponse paymentResponse = apiClient.createPayment(createPaymentRequest);

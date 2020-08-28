@@ -13,7 +13,8 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class CaisseEpargneIleDeFranceWireMockTest {
 
@@ -44,7 +45,9 @@ public class CaisseEpargneIleDeFranceWireMockTest {
     private Payment createMockedDomesticPayment() {
         String currency = "EUR";
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", currency);
-
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("test");
         return new Payment.Builder()
                 .withCreditor(
                         new Creditor(
@@ -55,7 +58,7 @@ public class CaisseEpargneIleDeFranceWireMockTest {
                                 AccountIdentifier.create(Type.IBAN, "FR1261401750597365134612940")))
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
-                .withReference(new Reference("TRANSFER", "test"))
+                .withRemittanceInformation(remittanceInformation)
                 .withUniqueId("paymentId")
                 .build();
     }
