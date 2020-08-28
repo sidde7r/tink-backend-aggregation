@@ -283,4 +283,8 @@ public class DanskeBankConstants {
         public static final String AUTHORIZATION = "Authorization";
         public static final String PERSISTENT_AUTH = "Persistent-Auth";
     }
+
+    public static class HttpClientParams {
+        public static final int CLIENT_TIMEOUT = 60 * 1000;
+    }
 }

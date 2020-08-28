@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.HttpClientParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.TimeoutRetryFilterParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataNemIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPasswordAuthenticator;
@@ -84,6 +85,7 @@ public class BankdataAgent extends NextGenerationAgent
                 new TimeoutRetryFilter(
                         TimeoutRetryFilterParams.NUM_TIMEOUT_RETRIES,
                         TimeoutRetryFilterParams.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.setTimeout(HttpClientParams.CLIENT_TIMEOUT);
     }
 
     @Override

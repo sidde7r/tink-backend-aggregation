@@ -1,18 +1,15 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
-import se.tink.backend.aggregation.nxgen.http.url.URL;
-
 public class NemIdConstantsV2 {
 
-    public static final String NEM_ID_INIT_URL = "https://applet.danid.dk/launcher/lmt/";
-    public static final URL BASE_URL = new URL("https://applet.danid.dk");
+    public static final String NEM_ID_APPLET_URL = "https://applet.danid.dk";
+    public static final String NEM_ID_INIT_URL = NEM_ID_APPLET_URL + "/launcher/lmt/";
+
+    public static final String USER_AGENT =
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 10_1_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Mobile/14B100";
+
     public static final String NEM_ID_IFRAME =
             "<iframe id=\"nemid_iframe\" allowTransparency=\"true\" name=\"nemid_iframe\" scrolling=\"no\" style=\"z-index: 100; position: relative; width: 275px; height: 350px; border: 0\" src=\"%s\"></iframe>";
-
-    public static class ErrorStrings {
-        public static final String INVALID_CREDENTIALS = "Incorrect user ID or password";
-        public static final String NEMID_NOT_ACTIVATED = "Enter activation password";
-    }
 
     // TODO: make sure Nordea will use the old one
 
@@ -41,10 +38,6 @@ public class NemIdConstantsV2 {
                     + "        </script>\n"
                     + "    </body>\n"
                     + "</html>";
-
-    // iOS 10.1.1
-    public static final String USER_AGENT =
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 10_1_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Mobile/14B100";
 
     public static class Storage {
         public static final String NEMID_INSTALL_ID = "NEMID_INSTALL_ID";

@@ -11,12 +11,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.Errors;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.Status;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthenticator<String> {
@@ -65,6 +63,9 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
                 finalizeAuthentication();
                 break;
             case Status.STATUS_TIMEOUT:
+                status = ThirdPartyAppStatus.WAITING;
+                break;
+            case Status.EXPIRED:
                 status = ThirdPartyAppStatus.TIMED_OUT;
                 break;
             case Status.OVERWRITTEN:
@@ -84,10 +85,6 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
             return client.request(pollUrl)
                     .accept(MediaType.APPLICATION_JSON_TYPE)
                     .type(MediaType.APPLICATION_JSON_TYPE)
-                    .addFilter(
-                            new TimeoutRetryFilter(
-                                    TimeoutFilter.NUM_TIMEOUT_RETRIES,
-                                    TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS))
                     .post(NemIdCodeAppPollResponse.class, request);
         } catch (HttpClientException e) {
             if (Errors.READ_TIMEOUT_ERROR.equals(e.getCause().getMessage())) {
