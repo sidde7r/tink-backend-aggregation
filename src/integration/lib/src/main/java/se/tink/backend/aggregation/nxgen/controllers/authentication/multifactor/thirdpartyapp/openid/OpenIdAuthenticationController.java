@@ -68,7 +68,6 @@ public class OpenIdAuthenticationController
     private OAuth2Token clientOAuth2Token;
     private final URL appToAppRedirectURL;
     private final RandomValueGenerator randomValueGenerator;
-    private final CredentialsRequest credentialsRequest;
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -125,9 +124,8 @@ public class OpenIdAuthenticationController
 
         this.nonce = randomValueGenerator.generateRandomHexEncoded(8);
         this.appToAppRedirectURL = appToAppRedirectURL;
-        this.credentialsRequest = credentialsRequest;
 
-        if (shouldForceAuthentication()) {
+        if (ForceAuthentication.shouldForceAuthentication(credentialsRequest)) {
             invalidateToken();
         }
     }
@@ -384,21 +382,6 @@ public class OpenIdAuthenticationController
 
         throw new IllegalStateException(
                 String.format("Unknown error: %s:%s.", errorType, errorDescription));
-    }
-
-    private boolean shouldForceAuthentication() {
-        boolean shouldForceAuthentication =
-                ForceAuthentication.shouldForceAuthentication(credentialsRequest);
-
-        logger.info(
-                "[forceAuthenticate] Should force authentication for credentials: {}, {}",
-                Optional.ofNullable(credentialsRequest)
-                        .map(CredentialsRequest::getCredentials)
-                        .map(Credentials::getId)
-                        .orElse(null),
-                shouldForceAuthentication);
-
-        return shouldForceAuthentication;
     }
 
     private void invalidateToken() {
