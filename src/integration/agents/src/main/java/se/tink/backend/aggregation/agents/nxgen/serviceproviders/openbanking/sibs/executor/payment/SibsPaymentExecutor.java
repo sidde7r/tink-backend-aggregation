@@ -26,11 +26,12 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.date.CountryDateHelper;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 
 public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private SibsBaseApiClient apiClient;
-    private SignPaymentStrategy signPaymentStrategy;
+    private final SibsBaseApiClient apiClient;
+    private final SignPaymentStrategy signPaymentStrategy;
     private final StrongAuthenticationState strongAuthenticationState;
 
     public SibsPaymentExecutor(
@@ -80,6 +81,18 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
         if (LocalDate.now().isBefore(paymentExecutionDate)) {
             builder.withRequestedExecutionDate(paymentExecutionDate);
+        }
+
+        if (paymentRequest.getPayment().getRemittanceInformation().getType() != null
+                && paymentRequest
+                        .getPayment()
+                        .getRemittanceInformation()
+                        .getType()
+                        .equals(RemittanceInformationType.UNSTRUCTURED)) {
+            builder.withRemittanceInformationUnstructured(
+                    paymentRequest.getPayment().getRemittanceInformation().getValue());
+        } else {
+            throw new UnsupportedOperationException("Unsupported RemittanceInformation Type");
         }
 
         SibsPaymentInitiationRequest sibsPaymentRequest = builder.build();
