@@ -43,6 +43,10 @@ public class PaymentRequest {
                         transfer.getDestination(),
                         transfer.getDestination().getName().orElse(null));
 
+        /*
+         * This is a known bug, we will fix it later. It should not be using transfer type as
+         * reference type and the reference should be removed entirely.
+         */
         Reference referenceInRequest =
                 new Reference(
                         transfer.getType().toString(),
