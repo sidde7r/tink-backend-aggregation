@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSECons
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
@@ -76,21 +77,27 @@ public class AccountEntity implements GeneralAccountEntity {
         AccountIdentifier identifier = generalGetAccountIdentifier();
 
         TransactionalAccountType accountType = getTinkAccountType();
-        return TransactionalAccount.nxBuilder()
-                .withType(accountType)
-                .withInferredAccountFlags()
-                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(availableBalance, currency)))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(maskAccountNumber())
-                                .withAccountNumber(identifier.getIdentifier())
-                                .withAccountName(nickname)
-                                .addIdentifier(identifier)
-                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
-                                .build())
-                .addHolderName(generalGetName())
-                .setApiIdentifier(accountNumber)
-                .build();
+        TransactionalBuildStep transactionalBuildStep =
+                TransactionalAccount.nxBuilder()
+                        .withType(accountType)
+                        .withInferredAccountFlags()
+                        .withBalance(
+                                BalanceModule.of(
+                                        ExactCurrencyAmount.of(availableBalance, currency)))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(maskAccountNumber())
+                                        .withAccountNumber(identifier.getIdentifier())
+                                        .withAccountName(nickname)
+                                        .addIdentifier(identifier)
+                                        .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                        .build())
+                        .setApiIdentifier(accountNumber);
+
+        if (hasAccountOwnerName()) {
+            transactionalBuildStep.addHolderName(generalGetName());
+        }
+        return transactionalBuildStep.build();
     }
 
     private TransactionalAccountType getTinkAccountType() {
@@ -142,10 +149,7 @@ public class AccountEntity implements GeneralAccountEntity {
                 .filter(AccountOwnerEntity::isOwner)
                 .map(AccountOwnerEntity::getOwnerName)
                 .findFirst()
-                .orElseThrow(
-                        () ->
-                                new NullPointerException(
-                                        NordeaSEConstants.ErrorCodes.OWNER_NOT_FOUND));
+                .orElse(null);
     }
 
     @JsonIgnore
@@ -195,5 +199,12 @@ public class AccountEntity implements GeneralAccountEntity {
     @JsonIgnore
     private String maskAccountNumber() {
         return "************" + accountNumber.substring(accountNumber.length() - 4);
+    }
+
+    @JsonIgnore
+    private boolean hasAccountOwnerName() {
+        return roles.stream()
+                .filter(AccountOwnerEntity::isOwner)
+                .anyMatch(AccountOwnerEntity::hasOwnerName);
     }
 }
