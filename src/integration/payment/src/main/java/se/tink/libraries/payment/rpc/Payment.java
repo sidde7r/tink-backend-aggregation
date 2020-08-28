@@ -54,7 +54,8 @@ public class Payment {
     private PaymentStatus status;
     private PaymentType type;
     private String currency;
-    private Reference reference;
+    /** @deprecated (20200828, remittanceInforation should be used instead, to be removed later) */
+    @Deprecated private Reference reference;
 
     private final RemittanceInformation remittanceInformation;
 
@@ -164,6 +165,8 @@ public class Payment {
         return type;
     }
 
+    /** @deprecated (20200828, remittanceInforation should be used instead, to be removed later) */
+    @Deprecated
     public Reference getReference() {
         return reference;
     }
@@ -221,7 +224,11 @@ public class Payment {
         private PaymentStatus status = PaymentStatus.CREATED;
         private PaymentType type = PaymentType.UNDEFINED;
         private String currency;
-        private Reference reference;
+        /**
+         * @deprecated (20200828, remittanceInforation should be used instead, to be removed later)
+         */
+        @Deprecated private Reference reference;
+
         private RemittanceInformation remittanceInformation;
 
         public Builder withCreditor(Creditor creditor) {
@@ -277,6 +284,10 @@ public class Payment {
             return this;
         }
 
+        /**
+         * @deprecated (20200828, remittanceInforation should be used instead, to be removed later)
+         */
+        @Deprecated
         public Builder withReference(Reference reference) {
             this.reference = reference;
             return this;
