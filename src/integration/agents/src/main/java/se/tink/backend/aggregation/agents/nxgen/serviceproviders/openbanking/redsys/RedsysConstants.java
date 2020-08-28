@@ -102,8 +102,6 @@ public final class RedsysConstants {
 
     public static class HeaderValues {
         public static final String TRUE = "true";
-        // FIXME: use actual PSU or TPP address instead of constant
-        public static final String PSU_IP_ADDRESS = "127.0.0.1";
     }
 
     public static class FormKeys {

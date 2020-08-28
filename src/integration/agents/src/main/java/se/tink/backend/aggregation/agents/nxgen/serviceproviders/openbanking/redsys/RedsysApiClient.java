@@ -425,24 +425,19 @@ public final class RedsysApiClient {
             CreatePaymentRequest request, PaymentProduct paymentProduct, String scaToken) {
         final String url = makeApiUrl(Urls.CREATE_PAYMENT, paymentProduct.getProductName());
         return createSignedRequest(url, request, getTppRedirectHeaders(scaToken))
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .post(CreatePaymentResponse.class);
     }
 
     public GetPaymentResponse fetchPayment(String paymentId, PaymentProduct paymentProduct) {
         final String url = makeApiUrl(Urls.GET_PAYMENT, paymentProduct.getProductName(), paymentId);
-        return createSignedRequest(url)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .get(GetPaymentResponse.class);
+        return createSignedRequest(url).get(GetPaymentResponse.class);
     }
 
     public PaymentStatusResponse fetchPaymentStatus(
             String paymentId, PaymentProduct paymentProduct) {
         final String url =
                 makeApiUrl(Urls.PAYMENT_STATUS, paymentProduct.getProductName(), paymentId);
-        return createSignedRequest(url)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .get(PaymentStatusResponse.class);
+        return createSignedRequest(url).get(PaymentStatusResponse.class);
     }
 
     public void cancelPayment(String paymentId, PaymentProduct paymentProduct) {
