@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featche
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -48,8 +47,7 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
 
-        ExactCurrencyAmount transactionAmount =
-                new ExactCurrencyAmount(new BigDecimal(amount.getValue()), amount.getCurrency());
+        ExactCurrencyAmount transactionAmount = amount.toExactCurrencyAmount();
 
         if (direction.equals(TransactionDirections.OUT)) {
             transactionAmount = transactionAmount.negate();

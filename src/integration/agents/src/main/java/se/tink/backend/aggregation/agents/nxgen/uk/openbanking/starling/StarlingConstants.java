@@ -24,6 +24,8 @@ public class StarlingConstants {
         static final String GET_ACCOUNT_HOLDER = "/api/v2/account-holder";
         static final String GET_INDIVIDUAL_ACCOUNT_HOLDER = "/api/v2/account-holder/individual";
         static final String GET_JOINT_ACCOUNT_HOLDER = "/api/v2/account-holder/joint";
+        static final String GET_BUSINESS_ACCOUNT_HOLDER = "/api/v2/account-holder/business";
+        static final String GET_SOLE_TRADER_ACCOUNT_HOLDER = "/api/v2/account-holder/sole-trader";
         static final String GET_ACCOUNT_IDENTIFIERS =
                 "/api/v2/accounts/{" + UrlParams.ACCOUNT_UID + "}/identifiers";
         static final String GET_ACCOUNT_BALANCE =
@@ -57,6 +59,10 @@ public class StarlingConstants {
                 new URL(API_STARLING + ApiEndpoint.GET_INDIVIDUAL_ACCOUNT_HOLDER);
         public static final URL GET_JOINT_ACCOUNT_HOLDER =
                 new URL(API_STARLING + ApiEndpoint.GET_JOINT_ACCOUNT_HOLDER);
+        public static final URL GET_BUSINESS_ACCOUNT_HOLDER =
+                new URL(API_STARLING + ApiEndpoint.GET_BUSINESS_ACCOUNT_HOLDER);
+        public static final URL GET_SOLE_TRADER_ACCOUNT_HOLDER =
+                new URL(API_STARLING + ApiEndpoint.GET_SOLE_TRADER_ACCOUNT_HOLDER);
         public static final URL GET_ACCOUNT_IDENTIFIERS =
                 new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_IDENTIFIERS);
         public static final URL GET_ACCOUNT_BALANCE =
@@ -72,6 +78,9 @@ public class StarlingConstants {
     public class AccountHolderType {
         public static final String INDIVIDUAL = "INDIVIDUAL";
         public static final String JOINT = "JOINT";
+        public static final String BUSINESS = "BUSINESS";
+        public static final String SOLE_TRADER = "SOLE_TRADER";
+        public static final String BANKING_AS_A_SERVICE = "BANKING_AS_A_SERVICE";
     }
 
     public class RequestKey {

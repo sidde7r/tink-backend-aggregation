@@ -16,8 +16,10 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountIdentifiersResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.BusinessAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.IndividualAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.JointAccountHolderResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.SoleTraderAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive.OAuth2Authenticator;
@@ -57,6 +59,15 @@ public class StarlingApiClient {
 
     public JointAccountHolderResponse fetchJointAccountHolder() {
         return request(Url.GET_JOINT_ACCOUNT_HOLDER).get(JointAccountHolderResponse.class);
+    }
+
+    public SoleTraderAccountHolderResponse fetchSoleTraderAccountHolder() {
+        return request(Url.GET_SOLE_TRADER_ACCOUNT_HOLDER)
+                .get(SoleTraderAccountHolderResponse.class);
+    }
+
+    public BusinessAccountHolderResponse fetchBusinessAccountHolder() {
+        return request(Url.GET_BUSINESS_ACCOUNT_HOLDER).get(BusinessAccountHolderResponse.class);
     }
 
     public AccountIdentifiersResponse fetchAccountIdentifiers(final String accountUid) {

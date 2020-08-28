@@ -1,6 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType.INDIVIDUAL;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType.JOINT;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType.SOLE_TRADER;
+
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -19,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive.OAuth2Authenticator;
@@ -60,7 +67,9 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                         persistentStorage, client, aisConfiguration, redirectUrl);
         apiClient = new StarlingApiClient(client, authenticator);
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
     }
 
     @Override
@@ -83,15 +92,21 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new StarlingTransactionalAccountFetcher(apiClient),
+                new StarlingTransactionalAccountFetcher(
+                        apiClient, ImmutableSet.of(INDIVIDUAL, SOLE_TRADER, JOINT)),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                new StarlingTransactionFetcher(apiClient))));
+                                new StarlingTransactionFetcher(apiClient),
+                                3,
+                                90,
+                                ChronoUnit.DAYS,
+                                localDateTimeSource)));
     }
 
     @Override

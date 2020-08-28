@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
@@ -65,7 +67,11 @@ public final class StarlingBusinessAgent extends SubsequentProgressiveGeneration
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new StarlingTransactionalAccountFetcher(apiClient),
+                new StarlingTransactionalAccountFetcher(
+                        apiClient,
+                        ImmutableSet.of(
+                                AccountHolderType.BUSINESS,
+                                AccountHolderType.BANKING_AS_A_SERVICE)),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
