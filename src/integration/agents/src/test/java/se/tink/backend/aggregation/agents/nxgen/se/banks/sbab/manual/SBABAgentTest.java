@@ -26,7 +26,7 @@ public class SBABAgentTest {
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("se", "se-sbab-bankid")
                 .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
-                .loadCredentialsBefore(false)
+                .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)
                 .build()
                 .testRefresh();

@@ -1,0 +1,131 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "98765432198",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "SEK",
+        "exactValue": 9.85,
+        "doubleValue": 9.85,
+        "scale": 2,
+        "unscaledValue": 985
+      },
+      "currencyCode": "SEK",
+      "bankId": "98765432198",
+      "excluded": false,
+      "favored": false,
+      "name": "Sparkonto",
+      "ownership": 1.0,
+      "type": "SAVINGS",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[]",
+      "closed": false,
+      "holderName": "Sparkonto",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Sparkonto",
+            "role": null
+          }
+        ]
+      },
+      "flags": "[]",
+      "availableCredit": 0.0,
+      "balance": 9.85
+    },
+    {
+      "accountNumber": "12345678",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "SEK",
+        "exactValue": 1000000.0,
+        "doubleValue": 1000000.0,
+        "scale": 1,
+        "unscaledValue": 10000000
+      },
+      "currencyCode": "SEK",
+      "bankId": "12345678",
+      "excluded": false,
+      "favored": false,
+      "name": "UNDEFINED",
+      "ownership": 1.0,
+      "type": "LOAN",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[]",
+      "closed": false,
+      "flags": "[]",
+      "availableCredit": 0.0,
+      "balance": 1000000.0
+    },
+    {
+      "accountNumber": "56789123456",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "SEK",
+        "exactValue": 5179.32,
+        "doubleValue": 5179.32,
+        "scale": 2,
+        "unscaledValue": 517932
+      },
+      "currencyCode": "SEK",
+      "bankId": "56789123456",
+      "excluded": false,
+      "favored": false,
+      "name": "ACCOUNT_NAME",
+      "ownership": 1.0,
+      "type": "SAVINGS",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[\"se://56789123456\"]",
+      "closed": false,
+      "holderName": "ACCOUNT_NAME",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "ACCOUNT_NAME",
+            "role": null
+          }
+        ]
+      },
+      "flags": "[]",
+      "availableCredit": 0.0,
+      "balance": 5179.32
+    }
+  ],
+  "transactions": [],
+  "identityData": {
+    "nameElements": [
+      {
+        "type": "FIRST_NAME",
+        "value": "FIRST_NAME"
+      },
+      {
+        "type": "SURNAME",
+        "value": "LAST_NAME"
+      }
+    ],
+    "dateOfBirth": {
+      "year": 1912,
+      "month": "DECEMBER",
+      "era": "CE",
+      "dayOfWeek": "THURSDAY",
+      "leapYear": true,
+      "dayOfYear": 347,
+      "chronology": {
+        "id": "ISO",
+        "calendarType": "iso8601"
+      },
+      "monthValue": 12,
+      "dayOfMonth": 12
+    }
+  }
+}
