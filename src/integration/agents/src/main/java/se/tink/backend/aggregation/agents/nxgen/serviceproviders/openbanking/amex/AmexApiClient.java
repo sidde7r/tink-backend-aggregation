@@ -10,10 +10,10 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.AccountsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.BalanceDto;
@@ -45,8 +45,7 @@ public class AmexApiClient {
     private boolean logout;
 
     public URL getAuthorizeUrl(String state) {
-        return httpClient
-                .request(amexConfiguration.getGrantAccessJourneyUrl())
+        return Urls.GRANT_ACCESS_JOURNEY_URL
                 .queryParam(AmericanExpressConstants.QueryParams.REDIRECT_URI, redirectUrl)
                 .queryParam(
                         AmericanExpressConstants.QueryParams.CLIENT_ID,
@@ -54,8 +53,7 @@ public class AmexApiClient {
                 .queryParam(
                         AmericanExpressConstants.QueryParams.SCOPE_LIST,
                         AmericanExpressConstants.QueryValues.SCOPE_LIST_FOR_AUTHORIZE)
-                .queryParam(AmericanExpressConstants.QueryParams.STATE, state)
-                .getUrl();
+                .queryParam(AmericanExpressConstants.QueryParams.STATE, state);
     }
 
     public TokenResponseDto retrieveAccessToken(String authorizationCode) {
@@ -67,10 +65,7 @@ public class AmexApiClient {
                         .build();
 
         return httpClient
-                .request(
-                        AmericanExpressUtils.createUrl(
-                                AmericanExpressConstants.Urls.RETRIEVE_TOKEN_PATH,
-                                amexConfiguration.getServerUrl()))
+                .request(Urls.RETRIEVE_TOKEN_PATH)
                 .body(tokenRequest, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(
                         AmericanExpressConstants.Headers.X_AMEX_API_KEY,
@@ -86,10 +81,7 @@ public class AmexApiClient {
         try {
             final TokenResponseDto response =
                     httpClient
-                            .request(
-                                    AmericanExpressUtils.createUrl(
-                                            AmericanExpressConstants.Urls.REFRESH_TOKEN_PATH,
-                                            amexConfiguration.getServerUrl()))
+                            .request(Urls.REFRESH_TOKEN_PATH)
                             .body(refreshRequest, MediaType.APPLICATION_FORM_URLENCODED)
                             .header(
                                     AmericanExpressConstants.Headers.X_AMEX_API_KEY,
@@ -113,10 +105,7 @@ public class AmexApiClient {
         final RevokeRequest revokeRequest = new RevokeRequest(accessToken);
 
         return httpClient
-                .request(
-                        AmericanExpressUtils.createUrl(
-                                AmericanExpressConstants.Urls.REVOKE_TOKEN_PATH,
-                                amexConfiguration.getServerUrl()))
+                .request(Urls.REVOKE_TOKEN_PATH)
                 .body(revokeRequest, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(
                         AmericanExpressConstants.Headers.X_AMEX_API_KEY,
@@ -191,7 +180,7 @@ public class AmexApiClient {
     }
 
     private URL buildTransactionsUrl(int limit, Date fromDate, Date toDate) {
-        return new URL(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS)
+        return Urls.ENDPOINT_TRANSACTIONS
                 .queryParam(
                         AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
@@ -238,7 +227,7 @@ public class AmexApiClient {
     private List<LinkedHashMap<String, String>> finalizeAndSendRequest(
             URL url, HmacToken hmacToken, String status) {
         return sendRequestAndGetResponse(
-                url.queryParam(AmericanExpressConstants.QueryParams.STATUS, status).toString(),
+                url.queryParam(AmericanExpressConstants.QueryParams.STATUS, status),
                 hmacToken,
                 List.class);
     }
@@ -252,23 +241,15 @@ public class AmexApiClient {
         return mergedObjects;
     }
 
-    private <T> T sendRequestAndGetResponse(
-            String resourcePath, HmacToken hmacToken, Class<T> clazz) {
+    private <T> T sendRequestAndGetResponse(URL url, HmacToken hmacToken, Class<T> clazz) {
         return httpClient
-                .request(
-                        AmericanExpressUtils.createUrl(
-                                resourcePath, amexConfiguration.getServerUrl()))
+                .request(url)
                 .header(
                         AmericanExpressConstants.Headers.X_AMEX_API_KEY,
                         amexConfiguration.getClientId())
                 .header(
                         HttpHeaders.AUTHORIZATION,
-                        amexMacGenerator.generateDataMacValue(
-                                UriBuilder.fromUri(resourcePath)
-                                        .replaceQuery(null)
-                                        .build()
-                                        .toString(),
-                                hmacToken))
+                        amexMacGenerator.generateDataMacValue(url.toUri().getPath(), hmacToken))
                 .header(
                         AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
                         UUID.randomUUID().toString().replace("-", ""))

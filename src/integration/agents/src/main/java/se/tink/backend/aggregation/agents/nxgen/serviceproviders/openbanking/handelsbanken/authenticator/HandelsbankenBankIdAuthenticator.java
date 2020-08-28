@@ -8,6 +8,7 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -83,7 +84,8 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
     }
 
     @Override
-    public BankIdStatus collect(SessionResponse reference) throws AuthorizationException {
+    public BankIdStatus collect(SessionResponse reference)
+            throws AuthenticationException, AuthorizationException {
 
         DecoupledResponse decoupledResponse =
                 apiClient.getDecoupled(new URL(reference.getLinks().getTokenEntity().getHref()));
@@ -95,6 +97,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
                 case (Errors.MBID_MAX_POLLING):
                     return BankIdStatus.TIMEOUT;
                 case (Errors.NOT_SHB_APPROVED):
+                    throw LoginError.NOT_CUSTOMER.exception();
                 case (Errors.NOT_SHB_ACTIVATED):
                     throw AuthorizationError.UNAUTHORIZED.exception(
                             HandelsbankenBaseConstants.BankIdUserMessage.ACTIVATION_NEEDED);

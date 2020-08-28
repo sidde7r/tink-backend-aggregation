@@ -27,7 +27,8 @@ public class RaiffeisenAgentTest {
                         .addCredentialField(
                                 RaiffeisenConstants.CredentialKeys.IBAN,
                                 manager.get(IbanArgumentEnum.IBAN))
-                        .setFinancialInstitutionId("raiffeisen")
+                        .setFinancialInstitutionId("fe0c6d6af42a4423b08ee0a8019e01e4")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);

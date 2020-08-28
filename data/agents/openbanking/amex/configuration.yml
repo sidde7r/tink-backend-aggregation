@@ -11,7 +11,4 @@ agentsServiceConfiguration:
         certificateId: Tink
         clientId: dummyId
         clientSecret: dummySecret
-        grantAccessJourneyUrl: https://m.amex/oauth
-        grantAccessJourneyUrl2: https://global.americanexpress.com/authentication/oauth/enrollment
         redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-        serverUrl: https://api2s.americanexpress.com

@@ -50,6 +50,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.Urls;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
@@ -224,8 +225,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
         verifyThirdPartyAppCallIsTheNextAuthStep(intermediateAuthResponse);
 
         wireMockRule.verify(
-                0,
-                postRequestedFor(urlPathEqualTo(AmericanExpressConstants.Urls.REFRESH_TOKEN_PATH)));
+                0, postRequestedFor(urlPathEqualTo(Urls.REFRESH_TOKEN_PATH.toUri().getPath())));
     }
 
     private void verifyThirdPartyAppCallIsTheNextAuthStep(
@@ -264,8 +264,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
         assertThat(finalResponse.getSupplementInformationRequester()).isNull();
 
         wireMockRule.verify(
-                postRequestedFor(
-                        urlPathEqualTo(AmericanExpressConstants.Urls.RETRIEVE_TOKEN_PATH)));
+                postRequestedFor(urlPathEqualTo(Urls.RETRIEVE_TOKEN_PATH.toUri().getPath())));
 
         final Optional<HmacMultiToken> maybeHmacMultiToken = hmacMultiTokenStorage.getToken();
         assertThat(maybeHmacMultiToken.isPresent()).isTrue();
@@ -280,7 +279,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
     private void verifyRefreshTokenFollowedInitialStep() {
         wireMockRule.verify(
-                postRequestedFor(urlPathEqualTo(AmericanExpressConstants.Urls.REFRESH_TOKEN_PATH)));
+                postRequestedFor(urlPathEqualTo(Urls.REFRESH_TOKEN_PATH.toUri().getPath())));
     }
 
     private void verifyFetchAccountsResponse(FetchAccountsResponse fetchAccountsResponse) {
@@ -294,7 +293,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
     private void recordRetrieveAccessTokenResponse(String accessToken1, String accessToken2) {
         wireMockRule.stubFor(
-                post(urlPathEqualTo(AmericanExpressConstants.Urls.RETRIEVE_TOKEN_PATH))
+                post(urlPathEqualTo(Urls.RETRIEVE_TOKEN_PATH.toUri().getPath()))
                         .withHeader(
                                 AmericanExpressConstants.Headers.AUTHENTICATION,
                                 matching(createAuthHeaderMatchingPattern(CLIENT_ID)))
@@ -316,7 +315,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                                         accessToken1))));
 
         wireMockRule.stubFor(
-                post(urlPathEqualTo(AmericanExpressConstants.Urls.RETRIEVE_TOKEN_PATH))
+                post(urlPathEqualTo(Urls.RETRIEVE_TOKEN_PATH.toUri().getPath()))
                         .withHeader(
                                 AmericanExpressConstants.Headers.AUTHENTICATION,
                                 matching(createAuthHeaderMatchingPattern(CLIENT_ID)))
@@ -340,7 +339,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
     private void recordRefreshTokenResponseForExpiredRefreshToken() {
         wireMockRule.stubFor(
-                post(urlPathEqualTo(AmericanExpressConstants.Urls.REFRESH_TOKEN_PATH))
+                post(urlPathEqualTo(Urls.REFRESH_TOKEN_PATH.toUri().getPath()))
                         .withHeader(
                                 AmericanExpressConstants.Headers.AUTHENTICATION,
                                 matching(createAuthHeaderMatchingPattern(CLIENT_ID)))
@@ -363,7 +362,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                                         ACCESS_TOKEN_2))));
 
         wireMockRule.stubFor(
-                post(urlPathEqualTo(AmericanExpressConstants.Urls.REFRESH_TOKEN_PATH))
+                post(urlPathEqualTo(Urls.REFRESH_TOKEN_PATH.toUri().getPath()))
                         .withHeader(
                                 AmericanExpressConstants.Headers.AUTHENTICATION,
                                 matching(createAuthHeaderMatchingPattern(CLIENT_ID)))
@@ -386,7 +385,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
     private void recordFetchAccountsResponse(String accessToken1, String accessToken2) {
         wireMockRule.stubFor(
-                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_ACCOUNTS))
+                get(urlPathEqualTo(Urls.ENDPOINT_ACCOUNTS.toUri().getPath()))
                         .withHeader(
                                 HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
@@ -406,7 +405,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                                         ACCOUNT_NUMBER_1))));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_ACCOUNTS))
+                get(urlPathEqualTo(Urls.ENDPOINT_ACCOUNTS.toUri().getPath()))
                         .withHeader(
                                 HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))
@@ -428,7 +427,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
     private void recordFetchBalancesResponse(String accessToken1, String accessToken2) {
         wireMockRule.stubFor(
-                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_BALANCES))
+                get(urlPathEqualTo(Urls.ENDPOINT_BALANCES.toUri().getPath()))
                         .withHeader(
                                 HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
@@ -446,7 +445,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                         .withBody(createBalancesResponseJsonString())));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_BALANCES))
+                get(urlPathEqualTo(Urls.ENDPOINT_BALANCES.toUri().getPath()))
                         .withHeader(
                                 HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))
@@ -468,7 +467,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
         final String expectedEndDateMonth =
                 LocalDate.now().minusMonths(3).minusDays(1).toString().substring(0, 7);
         wireMockRule.stubFor(
-                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
+                get(urlPathEqualTo(Urls.ENDPOINT_TRANSACTIONS.toUri().getPath()))
                         .withQueryParam(
                                 AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                                 containing(ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date())))
@@ -489,7 +488,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                         .withBody(createTransactionsResponseJsonString())));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
+                get(urlPathEqualTo(Urls.ENDPOINT_TRANSACTIONS.toUri().getPath()))
                         .withQueryParam(
                                 AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                                 containing(ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date())))
@@ -510,7 +509,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                         .withBody(createTransactionsResponseJsonString())));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
+                get(urlPathEqualTo(Urls.ENDPOINT_TRANSACTIONS.toUri().getPath()))
                         .withQueryParam(
                                 AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                                 containing(expectedEndDateMonth))
@@ -531,7 +530,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                         .withBody(createTransactionRangeErrorResponse())));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
+                get(urlPathEqualTo(Urls.ENDPOINT_TRANSACTIONS.toUri().getPath()))
                         .withQueryParam(
                                 AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                                 containing(expectedEndDateMonth))
@@ -555,7 +554,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
     private void recordFetchAccountsResponseAfterAccessTokenHadBeenRevoked(
             String accessToken1, String accessToken2) {
         wireMockRule.stubFor(
-                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_ACCOUNTS))
+                get(urlPathEqualTo(Urls.ENDPOINT_ACCOUNTS.toUri().getPath()))
                         .withHeader(
                                 HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
@@ -575,7 +574,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                                         ACCOUNT_NUMBER_1))));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_ACCOUNTS))
+                get(urlPathEqualTo(Urls.ENDPOINT_ACCOUNTS.toUri().getPath()))
                         .withHeader(
                                 HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))

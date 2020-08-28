@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex;
 
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class AmericanExpressConstants {
 
@@ -67,13 +68,19 @@ public class AmericanExpressConstants {
     public static class Urls {
         private Urls() {}
 
-        public static final String RETRIEVE_TOKEN_PATH = "/apiplatform/v2/oauth/token/mac";
-        public static final String REFRESH_TOKEN_PATH = "/apiplatform/v1/oauth/token/refresh/mac";
-        public static final String REVOKE_TOKEN_PATH = "/apiplatform/v2/oauth/token_revocation/mac";
-        public static final String BASE_PATH = "/servicing/v1";
-        public static final String ENDPOINT_ACCOUNTS = BASE_PATH + "/member/accounts";
-        public static final String ENDPOINT_BALANCES = BASE_PATH + "/financials/balances";
-        public static final String ENDPOINT_TRANSACTIONS = BASE_PATH + "/financials/transactions";
+        public static final URL GRANT_ACCESS_JOURNEY_URL = new URL("https://m.amex/oauth");
+        public static final URL SERVER_URL = new URL("https://api2s.americanexpress.com");
+        public static final URL RETRIEVE_TOKEN_PATH =
+                SERVER_URL.concat("/apiplatform/v2/oauth/token/mac");
+        public static final URL REFRESH_TOKEN_PATH =
+                SERVER_URL.concat("/apiplatform/v1/oauth/token/refresh/mac");
+        public static final URL REVOKE_TOKEN_PATH =
+                SERVER_URL.concat("/apiplatform/v2/oauth/token_revocation/mac");
+        public static final URL BASE_PATH = SERVER_URL.concat("/servicing/v1");
+        public static final URL ENDPOINT_ACCOUNTS = BASE_PATH.concat("/member/accounts");
+        public static final URL ENDPOINT_BALANCES = BASE_PATH.concat("/financials/balances");
+        public static final URL ENDPOINT_TRANSACTIONS =
+                BASE_PATH.concat("/financials/transactions");
     }
 
     static class HttpClient {

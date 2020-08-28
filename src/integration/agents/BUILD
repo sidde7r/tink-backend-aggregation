@@ -15,7 +15,6 @@ java_library(
         "//src/integration/credentials:enums",
         "//src/integration/credentials:service",
         "//src/integration/enums",
-        "//src/integration/generic_application",
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",

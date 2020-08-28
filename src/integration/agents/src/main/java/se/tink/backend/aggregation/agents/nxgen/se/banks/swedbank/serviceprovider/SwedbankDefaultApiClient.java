@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Retry;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitAuthenticationRequest;
@@ -342,15 +343,26 @@ public class SwedbankDefaultApiClient {
             String remittanceInformationValue,
             String sourceAccountId,
             Date transferDueDate) {
-        return makeMenuItemRequest(
-                SwedbankBaseConstants.MenuItemKey.REGISTER_TRANSFER,
-                RegisterTransferRequest.create(
-                        amount,
-                        destinationAccountId,
-                        remittanceInformationValue,
-                        sourceAccountId,
-                        transferDueDate),
-                RegisterTransferResponse.class);
+        try {
+            return makeMenuItemRequest(
+                    SwedbankBaseConstants.MenuItemKey.REGISTER_TRANSFER,
+                    RegisterTransferRequest.create(
+                            amount,
+                            destinationAccountId,
+                            remittanceInformationValue,
+                            sourceAccountId,
+                            transferDueDate),
+                    RegisterTransferResponse.class);
+        } catch (HttpResponseException hre) {
+            if (!SwedbankApiErrors.isTransferAlreadyExists(hre)) {
+                throw hre;
+            }
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT)
+                    .setMessage(ErrorMessage.DUPLICATE_PAYMENT)
+                    .setException(hre)
+                    .build();
+        }
     }
 
     public RegisterTransferResponse registerPayment(
