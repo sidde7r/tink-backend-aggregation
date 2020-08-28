@@ -33,7 +33,8 @@ public class BankIdMobilSSAuthenticationController {
         bankIdMobilInitializer.initializeBankIdMobilAuthentication();
 
         try {
-            // additional sleep for JS to run on bank site and render final page of auth status
+            // referrence words which defines waiting for authentication appears for a moment after
+            // login site. Needs additional waiting for JS to finish on bank site
             webDriverHelper.sleep(2000);
 
             webDriverHelper.getElement(driver, WAITING_FOR_AUTHENTICATION_ELEMENT_XPATH);
