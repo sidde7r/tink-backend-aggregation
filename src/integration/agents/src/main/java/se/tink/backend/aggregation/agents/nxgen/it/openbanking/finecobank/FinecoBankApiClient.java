@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
@@ -46,14 +46,20 @@ public class FinecoBankApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final String redirectUrl;
+    private final String psuIpAddress;
+    private final boolean requestManual;
 
     public FinecoBankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            AgentConfiguration<FinecoBankConfiguration> agentConfiguration) {
+            AgentConfiguration<FinecoBankConfiguration> agentConfiguration,
+            boolean requestManual,
+            String psuIpAddress) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.psuIpAddress = psuIpAddress;
+        this.requestManual = requestManual;
     }
 
     private String getRedirectUrl() {
@@ -68,47 +74,47 @@ public class FinecoBankApiClient {
     }
 
     public ConsentResponse getConsent(PostConsentBodyRequest postConsentBodyRequest, String state) {
-        return createRequest(Urls.CONSENTS)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(
-                        HeaderKeys.TPP_REDIRECT_URI,
-                        (new URL(getRedirectUrl()).queryParam(QueryKeys.STATE, state)))
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
-                .body(postConsentBodyRequest)
-                .post(ConsentResponse.class);
+        RequestBuilder requestBuilder =
+                createRequest(Urls.CONSENTS)
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                        .header(
+                                HeaderKeys.TPP_REDIRECT_URI,
+                                (new URL(getRedirectUrl()).queryParam(QueryKeys.STATE, state)))
+                        .body(postConsentBodyRequest);
+        return addPsuIpAddressHeaderIfPossible(requestBuilder).post(ConsentResponse.class);
     }
 
     public ConsentStatusResponse getConsentStatus() {
-        return createRequest(
-                        Urls.CONSENT_STATUS.parameter(
-                                StorageKeys.CONSENT_ID,
-                                persistentStorage.get(StorageKeys.CONSENT_ID)))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
-                .get(ConsentStatusResponse.class);
+        RequestBuilder requestBuilder =
+                createRequest(
+                                Urls.CONSENT_STATUS.parameter(
+                                        StorageKeys.CONSENT_ID,
+                                        persistentStorage.get(StorageKeys.CONSENT_ID)))
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString());
+        return addPsuIpAddressHeaderIfPossible(requestBuilder).get(ConsentStatusResponse.class);
     }
 
     public CardAccountsResponse fetchCreditCardAccounts() {
-        return createRequest(Urls.CARD_ACCOUNTS)
-                .header(FinecoBankConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(
-                        FinecoBankConstants.HeaderKeys.CONSENT_ID,
-                        persistentStorage.get(StorageKeys.CONSENT_ID))
-                .queryParam(FinecoBankConstants.QueryKeys.WITH_BALANCE, String.valueOf(true))
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
-                .get(CardAccountsResponse.class);
+        RequestBuilder requestBuilder =
+                createRequest(Urls.CARD_ACCOUNTS)
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                        .header(
+                                HeaderKeys.CONSENT_ID,
+                                persistentStorage.get(StorageKeys.CONSENT_ID))
+                        .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true));
+        return addPsuIpAddressHeaderIfPossible(requestBuilder).get(CardAccountsResponse.class);
     }
 
     public AccountsResponse fetchAccounts() {
 
-        return createRequest(Urls.ACCOUNTS)
-                .header(FinecoBankConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(
-                        FinecoBankConstants.HeaderKeys.CONSENT_ID,
-                        persistentStorage.get(StorageKeys.CONSENT_ID))
-                .queryParam(FinecoBankConstants.QueryKeys.WITH_BALANCE, String.valueOf(true))
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
-                .get(AccountsResponse.class);
+        RequestBuilder requestBuilder =
+                createRequest(Urls.ACCOUNTS)
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                        .header(
+                                HeaderKeys.CONSENT_ID,
+                                persistentStorage.get(StorageKeys.CONSENT_ID))
+                        .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true));
+        return addPsuIpAddressHeaderIfPossible(requestBuilder).get(AccountsResponse.class);
     }
 
     public PaginatorResponse getTransactions(
@@ -117,26 +123,19 @@ public class FinecoBankApiClient {
         SimpleDateFormat paginationDateFormatter =
                 new SimpleDateFormat(Formats.DEFAULT_DATE_FORMAT);
 
-        return createRequest(
-                        Urls.TRANSACTIONS.parameter(
-                                FinecoBankConstants.ParameterKeys.ACCOUNT_ID,
-                                account.getApiIdentifier()))
-                .header(FinecoBankConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
-                .header(
-                        FinecoBankConstants.HeaderKeys.CONSENT_ID,
-                        persistentStorage.get(StorageKeys.CONSENT_ID))
-                .queryParam(FinecoBankConstants.QueryKeys.WITH_BALANCE, String.valueOf(true))
-                .queryParam(
-                        FinecoBankConstants.QueryKeys.BOOKING_STATUS,
-                        FinecoBankConstants.QueryValues.BOOKED)
-                .queryParam(
-                        FinecoBankConstants.QueryKeys.DATE_FROM,
-                        paginationDateFormatter.format(fromDate))
-                .queryParam(
-                        FinecoBankConstants.QueryKeys.DATE_TO,
-                        paginationDateFormatter.format(toDate))
-                .get(TransactionsResponse.class);
+        RequestBuilder requestBuilder =
+                createRequest(
+                                Urls.TRANSACTIONS.parameter(
+                                        ParameterKeys.ACCOUNT_ID, account.getApiIdentifier()))
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                        .header(
+                                HeaderKeys.CONSENT_ID,
+                                persistentStorage.get(StorageKeys.CONSENT_ID))
+                        .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
+                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
+                        .queryParam(QueryKeys.DATE_FROM, paginationDateFormatter.format(fromDate))
+                        .queryParam(QueryKeys.DATE_TO, paginationDateFormatter.format(toDate));
+        return addPsuIpAddressHeaderIfPossible(requestBuilder).get(TransactionsResponse.class);
     }
 
     public PaginatorResponse getCreditTransactions(
@@ -144,35 +143,29 @@ public class FinecoBankApiClient {
         SimpleDateFormat paginationDateFormatter =
                 new SimpleDateFormat(Formats.DEFAULT_DATE_FORMAT);
 
-        return createRequest(
-                        Urls.CARD_TRANSACTIONS.parameter(
-                                FinecoBankConstants.ParameterKeys.ACCOUNT_ID,
-                                account.getApiIdentifier()))
-                .header(FinecoBankConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
-                .header(
-                        FinecoBankConstants.HeaderKeys.CONSENT_ID,
-                        persistentStorage.get(StorageKeys.CONSENT_ID))
-                .queryParam(FinecoBankConstants.QueryKeys.WITH_BALANCE, String.valueOf(true))
-                .queryParam(
-                        FinecoBankConstants.QueryKeys.BOOKING_STATUS,
-                        FinecoBankConstants.QueryValues.BOOKED)
-                .queryParam(
-                        FinecoBankConstants.QueryKeys.DATE_FROM,
-                        paginationDateFormatter.format(fromDate))
-                .queryParam(
-                        FinecoBankConstants.QueryKeys.DATE_TO,
-                        paginationDateFormatter.format(toDate))
-                .get(CardTransactionsResponse.class);
+        RequestBuilder requestBuilder =
+                createRequest(
+                                Urls.CARD_TRANSACTIONS.parameter(
+                                        ParameterKeys.ACCOUNT_ID, account.getApiIdentifier()))
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                        .header(
+                                HeaderKeys.CONSENT_ID,
+                                persistentStorage.get(StorageKeys.CONSENT_ID))
+                        .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
+                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
+                        .queryParam(QueryKeys.DATE_FROM, paginationDateFormatter.format(fromDate))
+                        .queryParam(QueryKeys.DATE_TO, paginationDateFormatter.format(toDate));
+        return addPsuIpAddressHeaderIfPossible(requestBuilder).get(CardTransactionsResponse.class);
     }
 
     public ConsentAuthorizationsResponse getConsentAuthorizations() {
-        return createRequest(
-                        Urls.CONSENT_AUTHORIZATIONS.parameter(
-                                StorageKeys.CONSENT_ID,
-                                persistentStorage.get(StorageKeys.CONSENT_ID)))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
+        RequestBuilder requestBuilder =
+                createRequest(
+                                Urls.CONSENT_AUTHORIZATIONS.parameter(
+                                        StorageKeys.CONSENT_ID,
+                                        persistentStorage.get(StorageKeys.CONSENT_ID)))
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString());
+        return addPsuIpAddressHeaderIfPossible(requestBuilder)
                 .get(ConsentAuthorizationsResponse.class);
     }
 
@@ -201,13 +194,16 @@ public class FinecoBankApiClient {
         final String state = getStateFromStorage();
         final URL tppRedirectUrl = new URL(getRedirectUrl()).queryParam(QueryKeys.STATE, state);
 
-        return client.request(
-                        Urls.PAYMENT_INITIATION.parameter(
-                                ParameterKeys.PAYMENT_PRODUCT, paymentProduct))
-                .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID_PAYMENT_INITIATION)
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
-                .header(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl.toString())
+        RequestBuilder requestBuilder =
+                client.request(
+                                Urls.PAYMENT_INITIATION.parameter(
+                                        ParameterKeys.PAYMENT_PRODUCT, paymentProduct))
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(
+                                HeaderKeys.X_REQUEST_ID,
+                                HeaderValues.X_REQUEST_ID_PAYMENT_INITIATION)
+                        .header(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl.toString());
+        return addPsuIpAddressHeaderIfPossible(requestBuilder)
                 .post(CreatePaymentResponse.class, requestBody);
     }
 
@@ -233,5 +229,11 @@ public class FinecoBankApiClient {
         return persistentStorage
                 .get(StorageKeys.STATE, String.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.STATE_MISSING_ERROR));
+    }
+
+    protected RequestBuilder addPsuIpAddressHeaderIfPossible(RequestBuilder requestBuilder) {
+        if (psuIpAddress != null && requestManual) {
+            return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
+        } else return requestBuilder;
     }
 }

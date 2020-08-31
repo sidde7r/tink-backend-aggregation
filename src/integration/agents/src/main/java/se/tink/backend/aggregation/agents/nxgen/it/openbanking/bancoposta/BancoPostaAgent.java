@@ -27,7 +27,8 @@ public class BancoPostaAgent extends CbiGlobeAgent {
                 sessionStorage,
                 requestManual,
                 temporaryStorage,
-                getProviderConfiguration());
+                getProviderConfiguration(),
+                psuIpAddress);
     }
 
     @Override

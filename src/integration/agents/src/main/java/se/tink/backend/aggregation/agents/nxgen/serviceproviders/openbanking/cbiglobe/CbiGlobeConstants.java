@@ -105,7 +105,6 @@ public final class CbiGlobeConstants {
     }
 
     public static class HeaderValues {
-        public static final String DEFAULT_PSU_IP_ADDRESS = "127.0.0.1";
         public static final String UPDATE_PSU_DATA = "updatePsuData";
         public static final String CODE = "code";
     }

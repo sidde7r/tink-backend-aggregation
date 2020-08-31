@@ -19,6 +19,7 @@ public class BancaCarigeAgent extends CbiGlobeAgent {
                 sessionStorage,
                 requestManual,
                 temporaryStorage,
-                getProviderConfiguration());
+                getProviderConfiguration(),
+                psuIpAddress);
     }
 }

@@ -126,6 +126,8 @@ public class FinecoBankApiClientTest {
                 new AgentConfiguration.Builder()
                         .setProviderSpecificConfiguration(configuration)
                         .setRedirectUrl("REDIRECT_URL")
-                        .build());
+                        .build(),
+                true,
+                "127.0.0.1");
     }
 }
