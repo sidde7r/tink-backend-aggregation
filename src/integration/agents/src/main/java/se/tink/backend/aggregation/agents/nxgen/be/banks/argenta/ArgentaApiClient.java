@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ConfigResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthRequest;
@@ -46,6 +47,15 @@ public class ArgentaApiClient {
             return;
         }
         throw SessionError.SESSION_EXPIRED.exception();
+    }
+
+    public ConfigResponse getConfig(URL config, String deviceToken) {
+        RequestBuilder request =
+                client.request(config)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
+        addMandatoryHeaders(request, deviceToken);
+        return getRequestWithAuthorization(ConfigResponse.class, request);
     }
 
     public StartAuthResponse startAuth(
