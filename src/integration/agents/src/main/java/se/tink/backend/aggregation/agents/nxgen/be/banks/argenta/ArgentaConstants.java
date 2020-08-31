@@ -16,6 +16,7 @@ public class ArgentaConstants {
     public static final class Url {
         private static final String BASE = "https://mobile-api.argenta.be/";
         static final URL KEEP_ALIVE_URL = new URL(BASE + "authentication/keep-alive");
+        public static final URL CONFIG = new URL(BASE + "config");
         public static final URL AUTH_START = new URL(BASE + "authentication/start-auth");
         static final URL AUTH_VALIDATE = new URL(BASE + "authentication/validate-auth");
         static final URL ACCOUNTS = new URL(BASE + "accounts");
@@ -52,8 +53,8 @@ public class ArgentaConstants {
 
     public static class Application {
         // Probably also want to change User-Agent
-        static final String APPLICATION_VERSION = "5.7.1";
-        static final String USER_AGENT = "Argenta-PROD/2737 CFNetwork/1121.2.2 Darwin/19.3.0";
+        static final String APPLICATION_VERSION = "5.9.1";
+        static final String USER_AGENT = "Argenta-PROD/3024 CFNetwork/1121.2.2 Darwin/19.3.0";
     }
 
     public static class Device {

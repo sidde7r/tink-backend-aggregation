@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ConfigResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthRequest;
@@ -92,6 +93,10 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         persistentStorage.storeHomeOffice(homeOfficeId);
     }
 
+    private ConfigResponse mandatoryGetConfig(String deviceId) {
+        return apiClient.getConfig(ArgentaConstants.Url.CONFIG, deviceId);
+    }
+
     private StartAuthResponse startAuth(String username, String deviceId, boolean registered)
             throws LoginException, AuthorizationException {
 
@@ -138,6 +143,7 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
             throws SupplementalInfoException, LoginException, AuthorizationException {
         String deviceToken = generateRandomDeviceID();
         persistentStorage.setNewCredential(true);
+        mandatoryGetConfig(deviceToken);
         StartAuthResponse startAuthResponse = startAuth(cardNumber, deviceToken, false);
         persistentStorage.storeDeviceId(deviceToken);
         return validateDevice(startAuthResponse, cardNumber);
