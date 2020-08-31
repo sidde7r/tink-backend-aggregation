@@ -52,7 +52,8 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         String cardNumber =
                 ArgentaCardNumber.formatCardNumber(credentials.getField(Field.Key.USERNAME));
 
-        ValidateAuthResponse validateAuthResponse = signInWithRegistredDevice(cardNumber, deviceId);
+        ValidateAuthResponse validateAuthResponse =
+                signInWithRegisteredDevice(cardNumber, deviceId);
         storeUakAndHomeOffice(
                 ArgentaSecurityUtil.getUak(
                         persistentStorage.getUak(),
@@ -74,7 +75,7 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
                     validateAuthResponse.getUak(), validateAuthResponse.getHomeOfficeId());
         }
         deviceToken = persistentStorage.getDeviceId();
-        validateAuthResponse = signInWithRegistredDevice(cardNumber, deviceToken);
+        validateAuthResponse = signInWithRegisteredDevice(cardNumber, deviceToken);
         storeUakAndHomeOffice(
                 ArgentaSecurityUtil.getUak(
                         persistentStorage.getUak(),
@@ -126,11 +127,12 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         return UUID.randomUUID().toString().toUpperCase();
     }
 
-    private ValidateAuthResponse signInWithRegistredDevice(String cardNumber, String deviceToken)
+    private ValidateAuthResponse signInWithRegisteredDevice(String cardNumber, String deviceToken)
             throws SessionException {
         ValidateAuthResponse validateAuthResponse;
         StartAuthResponse startAuthResponse;
         try {
+            mandatoryGetConfig(deviceToken);
             startAuthResponse = startAuth(cardNumber, deviceToken, true);
             validateAuthResponse = validatePin(startAuthResponse, cardNumber);
             return validateAuthResponse;
