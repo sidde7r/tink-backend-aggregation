@@ -181,7 +181,7 @@ public class SwedbankDefaultApiClient {
             if (SwedbankApiErrors.isSessionTerminated(hre)) {
                 throw BankServiceError.SESSION_TERMINATED.exception(hre);
             }
-
+            SwedbankApiErrors.handleTokenErrors(hre);
             if (retry
                     && hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
                     && attempt <= Retry.MAX_RETRY_ATTEMPTS) {
