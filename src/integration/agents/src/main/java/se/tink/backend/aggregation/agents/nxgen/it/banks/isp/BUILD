@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/integration/amount",
         "//src/integration/credentials:service",
+        "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",

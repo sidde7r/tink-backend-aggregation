@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Data
-public class AccountsResponsePayload {
+public class AccountsAndIdentitiesResponsePayload {
 
     @JsonProperty("elencoViste")
-    private List<AccountViewEntity> accountViews;
+    private List<AccountsAndIdentitiesViewEntity> accountsAndIdentitiesViews;
 }

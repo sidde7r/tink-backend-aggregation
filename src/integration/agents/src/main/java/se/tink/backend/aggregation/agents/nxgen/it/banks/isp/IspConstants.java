@@ -14,7 +14,7 @@ public class IspConstants {
                 "/ib/content/api/sec/recuperasmartmobilestep3new";
         public static final String CHECK_TIME = "/ib/content/api/sec/checktime";
         public static final String CONFIRM_DEVICE = "/ib/content/api/sec/confermadevicemobile";
-        public static final String FETCH_ACCOUNTS =
+        public static final String FETCH_ACCOUNTS_AND_IDENTITIES =
                 "/ib/content/api/app/globalposition/getGlobalPositionMobile";
         public static final String FETCH_TRANSACTIONS =
                 "/ib/content/api/app/listaoperazioni/getListaOperazioni";
