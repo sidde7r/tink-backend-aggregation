@@ -21,12 +21,14 @@ public final class RedsysConstants {
                     .build();
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 
     public static class Urls {
+        public static final String BASE_AUTH_URL =
+                "https://hubpsd2.redsys.es/api-oauth-xs2a/services/rest";
+        public static final String BASE_API_URL =
+                "https://psd2.redsys.es/api-entrada-xs2a/services";
         public static final String OAUTH = "/authorize";
         public static final String TOKEN = "/token";
         public static final String REFRESH = "/token";
@@ -100,8 +102,6 @@ public final class RedsysConstants {
 
     public static class HeaderValues {
         public static final String TRUE = "true";
-        // FIXME: use actual PSU or TPP address instead of constant
-        public static final String PSU_IP_ADDRESS = "127.0.0.1";
     }
 
     public static class FormKeys {

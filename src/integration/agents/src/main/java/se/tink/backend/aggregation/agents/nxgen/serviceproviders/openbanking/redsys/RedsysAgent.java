@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -7,7 +8,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
@@ -54,6 +54,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
         apiClient =
                 new RedsysApiClient(
                         client, sessionStorage, persistentStorage, this, this.getEidasIdentity());
+        apiClient.setPsuIpAddress(Strings.emptyToNull(originatingUserIp));
 
         consentStorage = new RedsysConsentStorage(persistentStorage);
         consentController =
@@ -72,7 +73,6 @@ public abstract class RedsysAgent extends NextGenerationAgent
         final AgentConfiguration<RedsysConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(RedsysConfiguration.class);
         apiClient.setConfiguration(agentConfiguration, configuration.getEidasProxy());
-        apiClient.setPsuIpAddress(HeaderValues.PSU_IP_ADDRESS);
     }
 
     @Override
