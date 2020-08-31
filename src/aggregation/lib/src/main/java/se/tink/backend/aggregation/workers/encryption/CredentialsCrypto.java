@@ -80,6 +80,17 @@ public class CredentialsCrypto {
                             CredentialsCryptoV1.decryptCredential(key, credentials, v1);
                             return true;
                         })
+                .setVersion2Handler(
+                        v2 -> {
+                            byte[] fieldsKey =
+                                    cryptoWrapper.getCryptoKeyByKeyId(v2.getFields().getKeyId());
+                            byte[] payloadKey =
+                                    cryptoWrapper.getCryptoKeyByKeyId(v2.getPayload().getKeyId());
+
+                            CredentialsCryptoV2.decryptCredential(
+                                    fieldsKey, payloadKey, credentials, v2);
+                            return true;
+                        })
                 .handle(sensitiveData);
     }
 
