@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.execut
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_PAYMENT_CANCEL_CASE_REGEX;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_PAYMENT_FAILED_CASE_REGEX;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -22,6 +25,8 @@ public class RedirectDemoTransferExecutor implements BankTransferExecutor {
     private final OAuth2AuthenticationController controller;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController;
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public RedirectDemoTransferExecutor(
             Credentials credentials,
@@ -41,6 +46,7 @@ public class RedirectDemoTransferExecutor implements BankTransferExecutor {
         // todo: Temporary fix to unblock sdk
         // controller.init();
 
+        logger.info("Demo Provider: transfer flow start");
         try {
             thirdPartyAppAuthenticationController.authenticate(credentials);
         } catch (AuthenticationException e) {
@@ -52,8 +58,11 @@ public class RedirectDemoTransferExecutor implements BankTransferExecutor {
         // ------------------
 
         String providerName = credentials.getProviderName();
+        logger.info(String.format("Demo Provider: '%s'", providerName));
+
         // This block handles PIS only business use case as source-account will be null in request
         if (providerName.matches(DEMO_PROVIDER_PAYMENT_FAILED_CASE_REGEX)) { // FAILED case
+            logger.info("Demo Provider: failed case");
 
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(
@@ -63,6 +72,7 @@ public class RedirectDemoTransferExecutor implements BankTransferExecutor {
                     .build();
         } else if (providerName.matches(
                 DEMO_PROVIDER_PAYMENT_CANCEL_CASE_REGEX)) { // CANCELLED case
+            logger.info("Demo Provider: cancelled case");
 
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage("Cancel on payment signing (test)")
@@ -70,6 +80,8 @@ public class RedirectDemoTransferExecutor implements BankTransferExecutor {
                     .build();
         } else { // This block handles AIS+PIS business use case as source-account will be sent in
             // request
+            logger.info("Demo Provider: AIS+PIS flow case");
+
             Optional<String> sourceAccountName = transfer.getSource().getName();
 
             if (sourceAccountName.isPresent()) {
