@@ -105,7 +105,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
                 }
 
                 // Temporarily logging the errors ICA throws at us to debug low success rates
-                logger.debug(
+                logger.info(
                         "Error when refreshing access token: error: {}, description: {}",
                         errorResponse.getError(),
                         errorResponse.getErrorDescription());
