@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.Getter;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
@@ -21,7 +21,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @Slf4j
-@Getter
+@Data
 public class AccountEntity {
 
     private static Map<String, TransactionalAccountType> transactionalAccountTypes =
@@ -33,9 +33,6 @@ public class AccountEntity {
 
         loanAccountTypes.put("Conto per Merito", LoanDetails.Type.STUDENT);
     }
-
-    @JsonProperty("codiceFiliale")
-    private String branchNumber;
 
     @JsonProperty("coordinateDaVisualizzare")
     private AccountDetails accountDetails;
@@ -82,7 +79,7 @@ public class AccountEntity {
                                         .withType(loanType)
                                         .withBalance(
                                                 ExactCurrencyAmount.of(
-                                                        balance.getDebit(), currency))
+                                                        balance.getCurrentBalance(), currency))
                                         .withInterestRate(0d) // api does not return interest rate
                                         .build())
                         .withId(getIdModule())

@@ -18,8 +18,4 @@ public class AccountHolderEntity {
 
     @JsonProperty("denominazione")
     private String fullName;
-
-    private String nsg;
-    private int progressivoOrdinante;
-    private String tipoIntestatario;
 }
