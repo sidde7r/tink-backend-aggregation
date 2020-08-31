@@ -6,9 +6,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class BaseResponse {
 
+    private static final String OK_CODE = "OK";
+
     @JsonProperty private String exitCode;
 
-    public String getExitCode() {
-        return exitCode;
+    public boolean isOk() {
+        return OK_CODE.equals(exitCode);
     }
 }

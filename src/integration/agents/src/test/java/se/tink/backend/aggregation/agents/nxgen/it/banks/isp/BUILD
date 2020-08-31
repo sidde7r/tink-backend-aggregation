@@ -12,7 +12,13 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/banks/isp",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/refresh",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
+        "//src/libraries/account_identifier",
+        "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
     ],
 )
 

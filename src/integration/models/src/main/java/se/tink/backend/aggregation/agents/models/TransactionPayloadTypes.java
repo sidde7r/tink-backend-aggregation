@@ -132,5 +132,8 @@ public enum TransactionPayloadTypes {
     CREDIT_CARD_NUMBER,
 
     /** {@see se.tink.backend.core.TransactionPayloadTypes.CREDIT_CARD_HOLDER} */
-    CREDIT_CARD_HOLDER
+    CREDIT_CARD_HOLDER,
+
+    /** {@see se.tink.backend.core.TransactionPayloadTypes.BANK_PROVIDED_CATEGORIZATION} */
+    BANK_PROVIDED_CATEGORIZATION
 }
