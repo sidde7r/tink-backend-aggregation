@@ -10,4 +10,14 @@ public class RedirectDemoAgentUtils {
             throw RedirectAuthenticationDemoAgentConstants.CANCELLED_CASE_EXCEPTION;
         }
     }
+
+    public static void failPaymentIfFailStateProvider(String providerName) {
+        if (providerName.matches(
+                RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_PAYMENT_FAILED_CASE_REGEX)) {
+            throw RedirectAuthenticationDemoAgentConstants.FAILED_CASE_EXCEPTION;
+        } else if (providerName.matches(
+                RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_PAYMENT_CANCEL_CASE_REGEX)) {
+            throw RedirectAuthenticationDemoAgentConstants.CANCELLED_CASE_EXCEPTION;
+        }
+    }
 }
