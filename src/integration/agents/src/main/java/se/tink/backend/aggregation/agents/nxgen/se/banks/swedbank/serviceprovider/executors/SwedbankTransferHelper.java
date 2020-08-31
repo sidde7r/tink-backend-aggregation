@@ -269,6 +269,13 @@ public class SwedbankTransferHelper {
     private Optional<PaymentBaseinfoResponse> getConfirmResponse(LinkEntity linkEntity) {
         try {
             return Optional.of(apiClient.confirmSignNewRecipient(linkEntity));
+        } catch (SupplementalInfoException sie) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.TOKEN_SIGN_FAILED)
+                    .setException(sie)
+                    .build();
         } catch (Exception e) {
             log.warn("Failed to confirm new recipient signature", e);
             return Optional.empty();
