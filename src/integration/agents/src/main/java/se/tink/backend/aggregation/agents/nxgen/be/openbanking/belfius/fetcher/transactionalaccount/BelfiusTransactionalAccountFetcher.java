@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.StorageKeys;
@@ -15,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class BelfiusTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, String> {
@@ -57,6 +60,7 @@ public class BelfiusTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
+        log.info("Is next page param present: {} ", !Strings.isNullOrEmpty(key));
         final String logicalId = persistentStorage.get(StorageKeys.LOGICAL_ID);
         return apiClient.fetchTransactionsForAccount(getOauth2Token(), key, logicalId);
     }

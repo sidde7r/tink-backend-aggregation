@@ -91,8 +91,28 @@ Request-ID: 00000000-0000-4000-0000-000000000000
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 X-Aggregator: Tink Testing
 
-
 RESPONSE 5
+200
+Date: Wed, 12 Aug 2020 13:40:04 GMT
+Date: Wed, 12 Aug 2020 13:40:05 GMT
+Server: Apache-Coyote/1.1
+Response-ID: ***
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+
+{"_embedded":{"transactions":[{"transaction_ref":"090548887U406","counterparty_info":"Gerechtsdeurwaarder Jennes","communication":"JDB 511122","communication_type":"FREETEXT","remittance_info":"SEPA CREDIT TRANSFER from PSD2Company","counterparty_account":"BE39000000076000","amount":12.25,"currency":"EUR","execution_date":"2020-07-30"},{"transaction_ref":"090548887U406","counterparty_info":"Gerechtsdeurwaarder Jennes","communication":"JDB 511122","communication_type":"FREETEXT","remittance_info":"SEPA CREDIT TRANSFER from PSD2Company","counterparty_account":"BE39000000076000","amount":12.25,"currency":"EUR","execution_date":"2020-07-30"},{"transaction_ref":"090548887U406","counterparty_info":"Gerechtsdeurwaarder Jennes","communication":"JDB 511122","communication_type":"FREETEXT","remittance_info":"SEPA CREDIT TRANSFER from PSD2Company","counterparty_account":"BE39000000076000","amount":12.25,"currency":"EUR","execution_date":"2020-07-30"}],"next_page_key":"DUMMY_NEXT_PAGE_KEY2"},"_links":{"self":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed/transactions"},"next":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY2"},"account":{"href":"/accounts/f2533843-785d-4499-b92f-61711101feed"}}}
+
+REQUEST 6
+GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY2
+Accept-Language: fr
+Accept: application/vnd.belfius.api+json; version=1
+Client-ID: DUMMY_ID
+redirect-uri: https://api.tink.se/api/v1/credentials/third-party/callback
+Request-ID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+RESPONSE 6
 200
 Date: Wed, 12 Aug 2020 13:40:04 GMT
 Date: Wed, 12 Aug 2020 13:40:05 GMT
