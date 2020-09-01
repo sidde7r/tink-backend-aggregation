@@ -9,4 +9,11 @@ public class TransferMessageException extends TransferExecutionException {
         this.setSignableOperationStatus(SignableOperationStatuses.CANCELLED);
         this.setUserMessage(userMessage);
     }
+
+    public TransferMessageException(String userMessage, String logMessage, String internalStatus) {
+        super(logMessage);
+        this.setSignableOperationStatus(SignableOperationStatuses.CANCELLED);
+        this.setUserMessage(userMessage);
+        this.setInternalStatus(internalStatus);
+    }
 }

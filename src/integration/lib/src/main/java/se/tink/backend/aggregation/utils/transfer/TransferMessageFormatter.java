@@ -12,6 +12,7 @@ import java.util.Set;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableParametrizedEnum;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -105,7 +106,8 @@ public class TransferMessageFormatter {
             throw new TransferMessageException(
                     catalog.getString(
                             EndUserMessage.DESTINATION_MESSAGE_TO_LONG.cloneWith(maxLength)),
-                    LogMessage.DESTINATION_MESSAGE_TO_LONG.with(transfer));
+                    LogMessage.DESTINATION_MESSAGE_TO_LONG.with(transfer),
+                    InternalStatus.DESTINATION_MESSAGE_TOO_LONG.toString());
         }
 
         Set<Character> normalizedCharacters = getCharactersBeingNormalized(destinationMessage);
@@ -167,7 +169,8 @@ public class TransferMessageFormatter {
             throw new TransferMessageException(
                     catalog.getString(
                             EndUserMessage.DESTINATION_MESSAGE_TO_LONG.cloneWith(maxLength)),
-                    LogMessage.DESTINATION_MESSAGE_TO_LONG.with(transfer));
+                    LogMessage.DESTINATION_MESSAGE_TO_LONG.with(transfer),
+                    InternalStatus.DESTINATION_MESSAGE_TOO_LONG.toString());
         }
 
         Set<Character> normalizedCharacters = getCharactersBeingNormalized(destinationMessage);
