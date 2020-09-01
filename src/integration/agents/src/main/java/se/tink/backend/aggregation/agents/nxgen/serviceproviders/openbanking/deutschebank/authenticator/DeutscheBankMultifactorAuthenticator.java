@@ -19,12 +19,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator, AutoAuthenticator {
 
     private final DeutscheBankApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final String iban;
     private final String psuId;
     private final StrongAuthenticationState strongAuthenticationState;
@@ -32,13 +32,13 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
 
     public DeutscheBankMultifactorAuthenticator(
             DeutscheBankApiClient apiClient,
-            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             String iban,
             String psuId,
             StrongAuthenticationState strongAuthenticationState,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.iban = iban;
         this.psuId = psuId;
         this.strongAuthenticationState = strongAuthenticationState;
@@ -51,7 +51,7 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
             throws AuthenticationException, AuthorizationException {
         ConsentBaseResponse consent =
                 apiClient.getConsent(strongAuthenticationState.getState(), iban, psuId);
-        sessionStorage.put(DeutscheBankConstants.StorageKeys.CONSENT_ID, consent.getConsentId());
+        persistentStorage.put(DeutscheBankConstants.StorageKeys.CONSENT_ID, consent.getConsentId());
         deutscheBankRedirectHandler.handleRedirect();
         poll();
     }

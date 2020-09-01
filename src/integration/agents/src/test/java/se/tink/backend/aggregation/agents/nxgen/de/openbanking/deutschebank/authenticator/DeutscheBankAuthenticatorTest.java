@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DeutscheBankAuthenticatorTest {
@@ -23,9 +23,9 @@ public class DeutscheBankAuthenticatorTest {
     @Before
     public void setup() {
         deutscheBankApiClient = mock(DeutscheBankApiClient.class);
-        SessionStorage sessionStorage = mock(SessionStorage.class);
+        PersistentStorage persistentStorage = mock(PersistentStorage.class);
         deutscheBankAuthenticator =
-                new DeutscheBankAuthenticator(deutscheBankApiClient, sessionStorage, "", "");
+                new DeutscheBankAuthenticator(deutscheBankApiClient, persistentStorage, "", "");
     }
 
     @Test
@@ -37,7 +37,7 @@ public class DeutscheBankAuthenticatorTest {
         when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
 
         // When
-        Throwable t = catchThrowable(deutscheBankAuthenticator::confirmAuthentication);
+        Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
 
         // Then
         assertThat(t).doesNotThrowAnyException();
@@ -52,7 +52,7 @@ public class DeutscheBankAuthenticatorTest {
         when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
 
         // When
-        Throwable t = catchThrowable(deutscheBankAuthenticator::confirmAuthentication);
+        Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
 
         // Then
         assertThat(t)
@@ -69,7 +69,7 @@ public class DeutscheBankAuthenticatorTest {
         when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
 
         // When
-        Throwable t = catchThrowable(deutscheBankAuthenticator::confirmAuthentication);
+        Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
 
         // Then
         assertThat(t)
@@ -87,7 +87,7 @@ public class DeutscheBankAuthenticatorTest {
         when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
 
         // When
-        Throwable t = catchThrowable(deutscheBankAuthenticator::confirmAuthentication);
+        Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
 
         // Then
         assertThat(t)
@@ -101,7 +101,7 @@ public class DeutscheBankAuthenticatorTest {
         when(deutscheBankApiClient.getConsentStatus()).thenReturn(null);
 
         // When
-        Throwable t = catchThrowable(deutscheBankAuthenticator::confirmAuthentication);
+        Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
 
         // Then
         assertThat(t)
@@ -117,7 +117,7 @@ public class DeutscheBankAuthenticatorTest {
         when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
 
         // When
-        Throwable t = catchThrowable(deutscheBankAuthenticator::confirmAuthentication);
+        Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
 
         // Then
         assertThat(t)

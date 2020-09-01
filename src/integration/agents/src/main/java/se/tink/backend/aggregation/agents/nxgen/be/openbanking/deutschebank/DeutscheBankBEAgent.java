@@ -22,7 +22,7 @@ public class DeutscheBankBEAgent extends DeutscheBankAgent {
     @Override
     protected DeutscheBankApiClient constructApiClient(String redirectUrl) {
         return new DeutscheBankBEApiClient(
-                client, sessionStorage, redirectUrl, DEUTSCHE_DE_CONFIGURATION);
+                client, persistentStorage, redirectUrl, DEUTSCHE_DE_CONFIGURATION);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class DeutscheBankBEAgent extends DeutscheBankAgent {
         final DeutscheBankMultifactorAuthenticator deutscheBankAuthenticatorController =
                 new DeutscheBankMultifactorAuthenticator(
                         apiClient,
-                        sessionStorage,
+                        persistentStorage,
                         credentials.getField(DeutscheBankConstants.CredentialKeys.IBAN),
                         credentials.getField(DeutscheBankConstants.CredentialKeys.USERNAME),
                         strongAuthenticationState,

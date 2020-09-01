@@ -17,6 +17,7 @@ public final class NorisbankAgent extends DeutscheBankAgent {
 
     @Override
     protected DeutscheBankApiClient constructApiClient(String redirectUrl) {
-        return new DeutscheBankApiClient(client, sessionStorage, redirectUrl, NORIS_CONFIGURATION);
+        return new DeutscheBankApiClient(
+                client, persistentStorage, redirectUrl, NORIS_CONFIGURATION);
     }
 }
