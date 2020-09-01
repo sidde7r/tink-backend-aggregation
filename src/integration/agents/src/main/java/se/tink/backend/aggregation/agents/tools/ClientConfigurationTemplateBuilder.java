@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -66,7 +67,7 @@ public class ClientConfigurationTemplateBuilder {
         JsonNode flatSchemaFromConf =
                 jsonSchemaGenerator.generateJsonSchema(clientConfigurationClassForProvider);
         JsonNode properties = flatSchemaFromConf.get("properties");
-        if (properties.isNull()) {
+        if (Objects.isNull(properties)) {
             return Collections.emptyMap();
         }
         Iterator<Map.Entry<String, JsonNode>> fields = properties.fields();
