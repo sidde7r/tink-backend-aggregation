@@ -124,7 +124,6 @@ public final class AggregationControllerWrapperTest {
         request.setCredentials(credentialsId);
         request.setTransactions(new ArrayList<>());
         request.setUser("Dummy_User");
-        request.setCredentialsDataVersion(1);
         request.setRequestType(CredentialsRequestType.CREATE);
         request.setAggregationId("foo");
         request.setUserTriggered(false);

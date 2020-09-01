@@ -21,8 +21,7 @@
         "supplementalInformation": "",
         "type": "PASSWORD",
         "updated": null,
-        "userId": "userId",
-        "dataVersion": 1
+        "userId": "userId"
     },
     "provider": {
         "accessType": "OPEN_BANKING",

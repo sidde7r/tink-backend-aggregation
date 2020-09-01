@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountHolder;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
@@ -141,12 +140,6 @@ public class FakeIntegrationArgumentsCreator {
                     public void updateCredentialsExcludingSensitiveInformation(
                             se.tink.backend.agents.rpc.Credentials credentials,
                             boolean doStatusUpdate) {}
-
-                    @Override
-                    public void updateCredentialsExcludingSensitiveInformation(
-                            Credentials credentials,
-                            boolean doStatusUpdate,
-                            boolean isMigrationUpdate) {}
 
                     @Override
                     public void updateFraudDetailsContent(

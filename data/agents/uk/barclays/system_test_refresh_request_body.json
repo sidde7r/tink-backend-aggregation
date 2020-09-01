@@ -30,8 +30,7 @@
         "supplementalInformation": "",
         "type": "PASSWORD",
         "updated": "695260800",
-        "userId": "userId",
-        "dataVersion": 1
+        "userId": "userId"
     },
     "provider": {
         "accessType": "OPEN_BANKING",

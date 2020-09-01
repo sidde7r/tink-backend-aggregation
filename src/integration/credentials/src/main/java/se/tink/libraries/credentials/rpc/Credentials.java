@@ -47,7 +47,6 @@ public class Credentials implements Cloneable {
     private CredentialsTypes type;
     private Date updated;
     private String userId;
-    private int dataVersion;
 
     private void generateIdIfMissing() {
         if (id == null) {
@@ -170,10 +169,6 @@ public class Credentials implements Cloneable {
         return debugUntil;
     }
 
-    public int getDataVersion() {
-        return dataVersion;
-    }
-
     // @Deprecated
     public void setAdditionalInformation(String additionalInformation) {
         if (Strings.isNullOrEmpty(additionalInformation)) {
@@ -272,10 +267,6 @@ public class Credentials implements Cloneable {
 
     public void setUserId(String user) {
         this.userId = user;
-    }
-
-    public void setDataVersion(int dataVersion) {
-        this.dataVersion = dataVersion;
     }
 
     // @Deprecated

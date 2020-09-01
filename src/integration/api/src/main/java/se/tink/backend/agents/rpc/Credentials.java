@@ -52,15 +52,6 @@ public class Credentials implements Cloneable {
     private Date updated;
     private String userId;
     @JsonIgnore private boolean forceManualAuthentication = false;
-    private int dataVersion;
-
-    public int getDataVersion() {
-        return dataVersion;
-    }
-
-    public void setDataVersion(int dataVersion) {
-        this.dataVersion = dataVersion;
-    }
 
     @JsonIgnore // Shoudn't be used between containers.
     private String sensitivePayloadSerialized;
