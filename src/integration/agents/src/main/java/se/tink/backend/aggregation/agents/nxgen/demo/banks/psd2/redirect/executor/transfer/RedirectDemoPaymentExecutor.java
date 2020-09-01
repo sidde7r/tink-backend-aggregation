@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -37,6 +40,8 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
     private final ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController;
     private final StrongAuthenticationState strongAuthenticationState;
     private PaymentResponse paymentResponse;
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public RedirectDemoPaymentExecutor(
             Credentials credentials,
@@ -75,6 +80,7 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+        logger.info("Demo Provider: creating payment via Payment Executor");
         try {
             thirdPartyAppAuthenticationController.authenticate(credentials);
         } catch (AuthenticationException e) {
@@ -95,6 +101,7 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
+        logger.info("Demo Provider: signing payment via Payment Executor");
         switch (paymentMultiStepRequest.getStep()) {
             case SigningStepConstants.STEP_INIT:
                 return init(paymentMultiStepRequest);
