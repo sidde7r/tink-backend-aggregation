@@ -53,7 +53,6 @@ import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.MigrateCredentialWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.Psd2PaymentAccountRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshCommandChainEventTriggerCommand;
@@ -92,7 +91,6 @@ import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsSe
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
-import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
@@ -1373,60 +1371,6 @@ public class AgentWorkerOperationFactory {
                                                 refreshEventProducer)));
         // === END REFRESHING ===
         return commands.build();
-    }
-
-    public AgentWorkerOperation createOperationMigrate(
-            MigrateCredentialsRequest request, ClientInfo clientInfo, int targetVersion) {
-
-        log.debug("Creating migration operation chain for credential");
-
-        ControllerWrapper controllerWrapper =
-                controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
-
-        final String correlationId = UUIDUtils.generateUUID();
-
-        AgentWorkerCommandContext context =
-                new AgentWorkerCommandContext(
-                        request,
-                        metricRegistry,
-                        coordinationClient,
-                        agentsServiceConfiguration,
-                        aggregatorInfoProvider.createAggregatorInfoFor(
-                                clientInfo.getAggregatorId()),
-                        supplementalInformationController,
-                        providerSessionCacheController,
-                        controllerWrapper,
-                        clientInfo.getClusterId(),
-                        clientInfo.getAppId(),
-                        correlationId,
-                        accountInformationServiceEventsProducer);
-        CryptoWrapper cryptoWrapper =
-                cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
-
-        // Please be aware that the order of adding commands is meaningful
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        String metricsName = "batch-migrate";
-
-        commands.add(
-                new LockAgentWorkerCommand(
-                        context, metricsName, interProcessSemaphoreMutexFactory));
-        commands.add(
-                new DecryptCredentialsWorkerCommand(
-                        context,
-                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper),
-                        false));
-        commands.add(
-                new MigrateCredentialWorkerCommand(
-                        context.getRequest(),
-                        clientInfo,
-                        targetVersion,
-                        context,
-                        controllerWrapper));
-
-        log.debug("Created migration operation chain for credential");
-        return new AgentWorkerOperation(
-                agentWorkerOperationState, metricsName, request, commands, context);
     }
 
     public Optional<AgentWorkerOperation> createOperationCreateBeneficiary(
