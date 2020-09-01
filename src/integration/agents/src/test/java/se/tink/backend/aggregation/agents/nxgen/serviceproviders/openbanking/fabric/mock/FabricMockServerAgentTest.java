@@ -15,7 +15,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class FabricMockServerAgentTest {
     private static final String CONFIGURATION_PATH =
@@ -71,7 +72,9 @@ public class FabricMockServerAgentTest {
     private Payment createMockedDomesticPayment() {
         String currency = "EUR";
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", currency);
-
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("WTF");
         return new Payment.Builder()
                 .withCreditor(
                         new Creditor(
@@ -85,7 +88,7 @@ public class FabricMockServerAgentTest {
                                         "IT60X0542811101000000123456")))
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
-                .withReference(new Reference("TRANSFER", "WTF"))
+                .withRemittanceInformation(remittanceInformation)
                 .withUniqueId("paymentId")
                 .build();
     }
