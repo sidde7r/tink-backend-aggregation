@@ -6,16 +6,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.AccountsErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.AuthorizationRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.RefreshTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -80,6 +85,9 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
 
         TokenResponse response = apiClient.exchangeAuthorizationCode(request);
         persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.getAccessToken());
+
+        verifyValidCustomerStatusOrThrow();
+
         return response.toOauthToken();
     }
 
@@ -98,7 +106,8 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
             response = apiClient.exchangeRefreshToken(request);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+                TokenErrorResponse errorResponse =
+                        e.getResponse().getBody(TokenErrorResponse.class);
 
                 if (errorResponse.isInternalServerError()) {
                     throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
@@ -116,9 +125,45 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
         }
 
         persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.getAccessToken());
+
+        verifyValidCustomerStatusOrThrow();
+
         return response.toOauthToken();
     }
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {}
+
+    /**
+     * Verifies that customer has updated KYC info and is a customer by trying to fetch accounts.
+     *
+     * @throws LoginException if no accounts can be found for the user
+     * @throws AuthorizationException if KYC info needs to be updated at bank
+     */
+    private void verifyValidCustomerStatusOrThrow() throws LoginException, AuthorizationException {
+        try {
+            apiClient.fetchAccounts();
+        } catch (HttpResponseException e) {
+            int responseStatus = e.getResponse().getStatus();
+
+            if (!(responseStatus == HttpStatus.SC_FORBIDDEN
+                    || responseStatus == HttpStatus.SC_NOT_FOUND)) {
+                throw e;
+            }
+
+            AccountsErrorResponse errorResponse =
+                    e.getResponse().getBody(AccountsErrorResponse.class);
+
+            if (errorResponse.isOldKycInfoError()) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                        IcaBankenConstants.EndUserMessage.MUST_ANSWER_KYC.getKey(), e);
+            }
+
+            if (errorResponse.isNoAccountInformation()) {
+                throw LoginError.NOT_CUSTOMER.exception(e);
+            }
+
+            throw e;
+        }
+    }
 }

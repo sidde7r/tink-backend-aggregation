@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class ErrorResponse {
+public class TokenErrorResponse {
     private String error;
 
     @JsonProperty("error_description")
