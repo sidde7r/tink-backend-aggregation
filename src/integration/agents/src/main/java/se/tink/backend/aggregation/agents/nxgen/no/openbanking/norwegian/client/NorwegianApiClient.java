@@ -81,7 +81,7 @@ public class NorwegianApiClient {
                         .setCodeVerifier(codeVerifier)
                         .build();
 
-        return client.request(new URL(norwegianConfiguration.getTokenUrl()))
+        return client.request(new URL(NorwegianConstants.URLs.TOKEN_URL))
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(TokenResponse.class)
@@ -89,7 +89,7 @@ public class NorwegianApiClient {
     }
 
     public OAuth2Token exchangeRefreshToken(RefreshRequest request) {
-        return client.request(new URL(norwegianConfiguration.getTokenUrl()))
+        return client.request(new URL(NorwegianConstants.URLs.TOKEN_URL))
                 .header(
                         HeaderKeys.AUTHORIZATION,
                         HeaderValues.BASIC

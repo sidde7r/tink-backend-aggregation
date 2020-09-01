@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.GetPaymentResponse;
@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -46,28 +45,21 @@ public class SparebankApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final String baseUrl;
-    private EidasProxyConfiguration eidasProxyConfiguration;
-    private String redirectUrl;
-    private SparebankConfiguration configuration;
-    private EidasIdentity eidasIdentity;
+    private final EidasProxyConfiguration eidasProxyConfiguration;
+    private final EidasIdentity eidasIdentity;
+    private final SparebankApiConfiguration apiConfiguration;
 
     public SparebankApiClient(
-            TinkHttpClient client, SessionStorage sessionStorage, String baseUrl) {
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            EidasProxyConfiguration eidasProxyConfiguration,
+            EidasIdentity eidasIdentity,
+            SparebankApiConfiguration apiConfiguration) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.baseUrl = baseUrl;
-    }
-
-    public void setConfiguration(
-            final AgentConfiguration<SparebankConfiguration> agentConfiguration,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity) {
-        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
-        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
-        client.setEidasProxy(eidasProxyConfiguration);
         this.eidasIdentity = eidasIdentity;
+        this.apiConfiguration = apiConfiguration;
     }
 
     public void setPsuId(String psuId) {
@@ -86,10 +78,6 @@ public class SparebankApiClient {
         return Optional.ofNullable(sessionStorage.get(StorageKeys.SESSION_ID));
     }
 
-    private String getBaseUrl() {
-        return baseUrl;
-    }
-
     private RequestBuilder createRequest(URL url) {
         return createRequest(url, Optional.empty());
     }
@@ -102,18 +90,19 @@ public class SparebankApiClient {
 
     public ScaResponse getScaRedirect(String state) throws HttpResponseException {
         sessionStorage.put(StorageKeys.STATE, state);
-        return createRequest(new URL(getBaseUrl() + Urls.GET_SCA_REDIRECT)).get(ScaResponse.class);
+        return createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_SCA_REDIRECT))
+                .get(ScaResponse.class);
     }
 
     public AccountResponse fetchAccounts() {
-        return createRequest(new URL(getBaseUrl() + Urls.GET_ACCOUNTS))
+        return createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_ACCOUNTS))
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .get(AccountResponse.class);
     }
 
     public TransactionResponse fetchTransactions(String resourceId, Date fromDate, Date toDate) {
         return createRequest(
-                        new URL(getBaseUrl() + Urls.FETCH_TRANSACTIONS)
+                        new URL(apiConfiguration.getBaseUrl() + Urls.FETCH_TRANSACTIONS)
                                 .parameter(IdTags.RESOURCE_ID, resourceId))
                 .queryParam(
                         SparebankConstants.QueryKeys.DATE_FROM,
@@ -135,7 +124,7 @@ public class SparebankApiClient {
         final String digest = "SHA-256=" + Hash.sha256Base64(paymentRequest.toData().getBytes());
 
         return createRequest(
-                        new URL(baseUrl + Urls.CREATE_PAYMENT)
+                        new URL(apiConfiguration.getBaseUrl() + Urls.CREATE_PAYMENT)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct),
                         Optional.of(digest))
                 .type(MediaType.APPLICATION_JSON)
@@ -144,7 +133,7 @@ public class SparebankApiClient {
 
     public GetPaymentResponse getPayment(String paymentProduct, String paymentId) {
         return createRequest(
-                        new URL(baseUrl + Urls.GET_PAYMENT)
+                        new URL(apiConfiguration.getBaseUrl() + Urls.GET_PAYMENT)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
                 .get(GetPaymentResponse.class);
@@ -154,7 +143,7 @@ public class SparebankApiClient {
             String paymentProduct, String paymentId) {
 
         return createRequest(
-                        new URL(baseUrl + Urls.SIGN_PAYMENT)
+                        new URL(apiConfiguration.getBaseUrl() + Urls.SIGN_PAYMENT)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
                 .post(StartAuthorizationProcessResponse.class);
@@ -162,7 +151,7 @@ public class SparebankApiClient {
 
     public PaymentStatusResponse getPaymentStatus(String paymentProduct, String paymentId) {
         return createRequest(
-                        new URL(baseUrl + Urls.GET_PAYMENT_STATUS)
+                        new URL(apiConfiguration.getBaseUrl() + Urls.GET_PAYMENT_STATUS)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
                 .get(PaymentStatusResponse.class);
@@ -170,18 +159,17 @@ public class SparebankApiClient {
 
     private Map<String, Object> getHeaders(String requestId, Optional<String> digest) {
         String tppRedirectUrl =
-                new URL(redirectUrl)
+                new URL(apiConfiguration.getRedirectUrl())
                         .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE))
                         .toString();
 
         Map<String, Object> headers = new HashMap<>();
         headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
-        headers.put(HeaderKeys.TPP_ID, configuration.getTppId());
         headers.put(
                 HeaderKeys.DATE, ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
         headers.put(HeaderKeys.X_REQUEST_ID, requestId);
         headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
-        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, configuration.getCertificate());
+        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, apiConfiguration.getQsealcBase64());
         headers.put(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
 
         digest.ifPresent(digestString -> headers.put(HeaderKeys.DIGEST, digestString));
@@ -220,11 +208,18 @@ public class SparebankApiClient {
                         .encodeToString(
                                 String.format(
                                                 "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"",
-                                                configuration.getKeyId(),
+                                                prepareSignatureHeaderKeyId(),
                                                 signedWithHeaderKeys.toString(),
                                                 signature)
                                         .getBytes(StandardCharsets.UTF_8));
 
         return String.format("=?utf-8?B?%s?=", encodedSignature);
+    }
+
+    private String prepareSignatureHeaderKeyId() {
+        return String.format(
+                "SN=%s,CA=%s",
+                apiConfiguration.getCertificateSerialNumberInHex(),
+                apiConfiguration.getCertificateIssuerDN());
     }
 }

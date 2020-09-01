@@ -181,6 +181,23 @@ public class CertificateUtils {
                 .toString();
     }
 
+    /**
+     * Extract full Distinguished Name (DN) of a certificate issuer from base64 encoded PEM
+     *
+     * @param base64EncodedCertificates base64 encoded PEM of an eIDAS certificate/certificates
+     * @return certificate issuer distinguished name
+     * @throws CertificateException
+     */
+    public static String getCertificateIssuerDN(String base64EncodedCertificates)
+            throws CertificateException {
+        List<X509Certificate> certs =
+                getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
+        if (certs.isEmpty()) {
+            throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
+        }
+        return certs.get(0).getIssuerX500Principal().getName();
+    }
+
     private static String getScopeInfoExtension(X509CertificateHolder x509CertificateHolder)
             throws IOException {
         String oid = Extension.qCStatements.getId();

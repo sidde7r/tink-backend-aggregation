@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian;
 
+import java.security.cert.CertificateException;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.NorwegianTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.NorwegianTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -28,9 +30,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NorwegianAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
 
+    private final AgentConfiguration<NorwegianConfiguration> agentConfiguration;
     private final NorwegianApiClient apiClient;
-    private AgentConfiguration<NorwegianConfiguration> agentConfiguration;
-    private NorwegianConfiguration norwegianConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public NorwegianAgent(
@@ -41,19 +42,17 @@ public class NorwegianAgent extends NextGenerationAgent implements RefreshChecki
         Objects.requireNonNull(request);
         Objects.requireNonNull(context);
         Objects.requireNonNull(agentsServiceConfiguration);
-        this.agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(NorwegianConfiguration.class);
-        this.norwegianConfiguration = agentConfiguration.getProviderSpecificConfiguration();
+        this.agentConfiguration = getAgentConfiguration();
+
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+        client.addFilter(
+                createHttpClientSigningFilter(agentsServiceConfiguration, agentConfiguration));
+
         this.apiClient =
                 new NorwegianApiClient(
                         client, sessionStorage, persistentStorage, agentConfiguration);
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
-        client.addFilter(
-                new NorwegianSigningFilter(
-                        norwegianConfiguration.getKeyId(),
-                        getQsealcSigner(agentsServiceConfiguration)));
+
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
@@ -63,7 +62,9 @@ public class NorwegianAgent extends NextGenerationAgent implements RefreshChecki
                         persistentStorage,
                         supplementalInformationHelper,
                         new NorwegianAuthenticator(
-                                apiClient, sessionStorage, norwegianConfiguration),
+                                apiClient,
+                                sessionStorage,
+                                agentConfiguration.getProviderSpecificConfiguration()),
                         credentials,
                         strongAuthenticationState,
                         request);
@@ -76,9 +77,32 @@ public class NorwegianAgent extends NextGenerationAgent implements RefreshChecki
                 controller);
     }
 
-    private QsealcSigner getQsealcSigner(AgentsServiceConfiguration agentsServiceConfiguration) {
+    private AgentConfiguration<NorwegianConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentConfiguration(NorwegianConfiguration.class);
+    }
+
+    private NorwegianSigningFilter createHttpClientSigningFilter(
+            AgentsServiceConfiguration serviceConfiguration,
+            AgentConfiguration<NorwegianConfiguration> agentConfiguration) {
+
+        try {
+            String qsealcSerialNumberInHex =
+                    CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 16);
+            String qsealcIssuerDN =
+                    CertificateUtils.getCertificateIssuerDN(agentConfiguration.getQsealc());
+
+            return new NorwegianSigningFilter(
+                    qsealcSerialNumberInHex, qsealcIssuerDN, getQsealcSigner(serviceConfiguration));
+        } catch (CertificateException e) {
+            throw new IllegalStateException(
+                    "Could not create norwegian signing filter due to certificate parsing errors");
+        }
+    }
+
+    private QsealcSigner getQsealcSigner(AgentsServiceConfiguration serviceConfiguration) {
         return QsealcSignerImpl.build(
-                agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
+                serviceConfiguration.getEidasProxy().toInternalConfig(),
                 QsealcAlg.EIDAS_RSA_SHA256,
                 getEidasIdentity());
     }
