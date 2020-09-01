@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken;
 
 import java.util.Date;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.Account;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.ErrorMessages;
@@ -20,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executo
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -80,7 +80,7 @@ public final class IcaBankenApiClient {
                                     HeaderKeys.AUTHORIZATION,
                                     HeaderValues.BEARER + persistentStorage.get(StorageKeys.TOKEN))
                             .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
-                            .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
+                            .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
                             .get(FetchAccountsResponse.class);
         }
 
@@ -97,7 +97,7 @@ public final class IcaBankenApiClient {
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .queryParam(QueryKeys.STATUS, QueryValues.STATUS)
-                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(
                         HeaderKeys.AUTHORIZATION,
                         HeaderValues.BEARER + persistentStorage.get(StorageKeys.TOKEN))
@@ -110,7 +110,7 @@ public final class IcaBankenApiClient {
         URL uri = new URL(SandboxUrls.INITIATE_PAYMENT);
         return createRequest(
                         uri.parameter(QueryKeys.PAYMENT_PRODUCT, paymentTypeToString(paymentType)))
-                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .addBearerToken(getApplicationTokenFromSession())
                 .post(GetPaymentResponse.class, createPaymentRequest);
     }
@@ -123,7 +123,7 @@ public final class IcaBankenApiClient {
                                         IcaBankenConstants.QueryKeys.PAYMENT_PRODUCT,
                                         paymentTypeToString(paymentType))
                                 .parameter(IcaBankenConstants.QueryKeys.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .addBearerToken(getApplicationTokenFromSession())
                 .get(GetPaymentResponse.class);
     }

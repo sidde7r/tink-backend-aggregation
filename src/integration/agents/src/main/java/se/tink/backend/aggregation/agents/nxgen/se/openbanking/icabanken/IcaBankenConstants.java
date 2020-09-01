@@ -84,7 +84,6 @@ public final class IcaBankenConstants {
     public static class HeaderKeys {
         private HeaderKeys() {}
 
-        public static final String REQUEST_ID = "X-Request-ID";
         public static final String AUTHORIZATION = "authorization";
         public static final String SCOPE = "scope";
     }
