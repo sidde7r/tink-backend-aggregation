@@ -151,7 +151,7 @@ public class AccountResponse extends HtmlResponse {
             final String jsfSource = matcher.group(1);
             final String formId = jsfSource.split(":")[0];
             final String viewState = getViewState(formId);
-            return new PaginationKey(formId, jsfSource, viewState, 0);
+            return new PaginationKey(formId, jsfSource, viewState, 0, null);
         } else {
             throw new IllegalStateException("Could not get pagination key for transactions.");
         }

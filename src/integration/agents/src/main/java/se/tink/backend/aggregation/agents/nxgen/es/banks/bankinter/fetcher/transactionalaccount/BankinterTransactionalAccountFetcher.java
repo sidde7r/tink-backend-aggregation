@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
@@ -18,11 +21,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class BankinterTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, PaginationKey> {
-
+    private static final Logger log =
+            LoggerFactory.getLogger(BankinterTransactionalAccountFetcher.class);
     private final BankinterApiClient apiClient;
     private static final long MAX_EMPTY_REPLIES = 4;
 
@@ -93,11 +98,22 @@ public class BankinterTransactionalAccountFetcher
     public TransactionKeyPaginatorResponse<PaginationKey> getTransactionsFor(
             TransactionalAccount account, PaginationKey nextKey) {
         final TransactionsResponse response = fetchTransactionsPage(account, nextKey);
-
-        TransactionKeyPaginatorResponseImpl<PaginationKey> paginatorResponse =
+        final Collection<Transaction> transactions = response.toTinkTransactions();
+        final TransactionKeyPaginatorResponseImpl<PaginationKey> paginatorResponse =
                 new TransactionKeyPaginatorResponseImpl<PaginationKey>();
-        paginatorResponse.setTransactions(response.toTinkTransactions());
-        paginatorResponse.setNext(getSubsequentKey(response, nextKey));
+
+        if (nextKey != null
+                && nextKey.getPreviousPageDate() != null
+                && transactions.size() > 0
+                && nextKey.getPreviousPageDate().equals(response.getFirstTransactionDate())) {
+            log.warn("Got same page of transactions, ending pagination");
+            paginatorResponse.setTransactions(Collections.emptyList());
+            paginatorResponse.setNext(null);
+        } else {
+            paginatorResponse.setTransactions(transactions);
+            paginatorResponse.setNext(getSubsequentKey(response, nextKey));
+        }
+
         return paginatorResponse;
     }
 }

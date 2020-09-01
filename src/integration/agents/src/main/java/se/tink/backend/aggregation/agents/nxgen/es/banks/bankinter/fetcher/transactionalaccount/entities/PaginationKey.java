@@ -1,23 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.annotations.JsonObject;
+import java.util.Date;
 
-@JsonObject
 public class PaginationKey {
-    @JsonProperty private String formId;
-    @JsonProperty private String source;
-    @JsonProperty private String viewState;
-    @JsonProperty private long consecutiveEmptyReplies;
+    private String formId;
+    private String source;
+    private String viewState;
+    private long consecutiveEmptyReplies;
+    private Date previousPageDate;
 
     public PaginationKey() {}
 
     public PaginationKey(
-            String formId, String source, String viewState, long consecutiveEmptyReplies) {
+            String formId,
+            String source,
+            String viewState,
+            long consecutiveEmptyReplies,
+            Date previousPageDate) {
         this.formId = formId;
         this.source = source;
         this.viewState = viewState;
         this.consecutiveEmptyReplies = consecutiveEmptyReplies;
+        this.previousPageDate = previousPageDate;
     }
 
     public String getFormId() {
@@ -34,5 +38,9 @@ public class PaginationKey {
 
     public long getConsecutiveEmptyReplies() {
         return consecutiveEmptyReplies;
+    }
+
+    public Date getPreviousPageDate() {
+        return previousPageDate;
     }
 }
