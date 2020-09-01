@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSECons
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
@@ -296,6 +297,7 @@ public class ErrorResponse {
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT)
                 .setMessage(
                         TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT.getKey().get())
+                .setInternalStatus(InternalStatus.DUPLICATE_PAYMENT.toString())
                 .build();
     }
 
