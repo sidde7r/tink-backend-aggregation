@@ -360,6 +360,7 @@ public class SwedbankDefaultApiClient {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT)
                     .setMessage(ErrorMessage.DUPLICATE_PAYMENT)
+                    .setInternalStatus("Duplicate payment")
                     .setException(hre)
                     .build();
         }
