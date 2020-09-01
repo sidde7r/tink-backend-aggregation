@@ -33,7 +33,9 @@ public final class IcaBankenApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+
     private IcaBankenConfiguration configuration;
+    private FetchAccountsResponse cachedAccounts;
 
     public IcaBankenApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -70,15 +72,19 @@ public final class IcaBankenApiClient {
     }
 
     public FetchAccountsResponse fetchAccounts() {
+        if (cachedAccounts == null) {
+            cachedAccounts =
+                    client.request(new URL(ProductionUrls.ACCOUNTS_PATH))
+                            .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
+                            .header(
+                                    HeaderKeys.AUTHORIZATION,
+                                    HeaderValues.BEARER + persistentStorage.get(StorageKeys.TOKEN))
+                            .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
+                            .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
+                            .get(FetchAccountsResponse.class);
+        }
 
-        return client.request(new URL(ProductionUrls.ACCOUNTS_PATH))
-                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
-                .header(
-                        HeaderKeys.AUTHORIZATION,
-                        HeaderValues.BEARER + persistentStorage.get(StorageKeys.TOKEN))
-                .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
-                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
-                .get(FetchAccountsResponse.class);
+        return cachedAccounts;
     }
 
     public FetchTransactionsResponse fetchTransactionsForAccount(
