@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.R
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.RegisterDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.RegisterDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.entity.TransactionsRequestPayload;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.AccountsAndIdentitiesResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -135,9 +135,9 @@ public class IspApiClient {
                 .post(ConfirmDeviceResponse.class, request);
     }
 
-    public AccountsResponse fetchAccounts() {
-        return baseAuthenticatedRequest(IspConstants.Endpoints.FETCH_ACCOUNTS, false)
-                .post(AccountsResponse.class, EMPTY_PAYLOAD_JSON);
+    public AccountsAndIdentitiesResponse fetchAccountsAndIdentities() {
+        return baseAuthenticatedRequest(IspConstants.Endpoints.FETCH_ACCOUNTS_AND_IDENTITIES, false)
+                .post(AccountsAndIdentitiesResponse.class, EMPTY_PAYLOAD_JSON);
     }
 
     public TransactionsResponse fetchTransactions(String accountId, LocalDate to, int page) {

@@ -57,6 +57,7 @@ ignoredAgentsForCapabilityTest:
   - nxgen.fr.openbanking.creditmutuel.CreditMutuelAgent
   - nxgen.fr.openbanking.hellobank.HelloBankAgent
   - nxgen.fr.openbanking.ing.IngAgent
+  - nxgen.it.banks.isp.IspAgent
   - nxgen.it.openbanking.ing.IngAgent
   - nxgen.nl.banks.openbanking.volksbank.VolksbankAgent
   - nxgen.nl.openbanking.abnamro.AbnAmroAgent
@@ -95,6 +96,14 @@ ignoredAgentsForCapabilityTest:
   - nxgen.uk.openbanking.barclays.BarclaysV31Agent
   - nxgen.uk.openbanking.barclays.BarclaysV31BusinessAgent
   - nxgen.uk.openbanking.barclays.BarclaysV31CorporateAgent
+  - nxgen.uk.openbanking.markandspencer.MarkAndSpencerV31Agent
+  - nxgen.uk.openbanking.natwest.NatWestV31Agent
+  - nxgen.uk.openbanking.lloyds.LloydsV31Agent
+  - nxgen.uk.openbanking.ulster.UlsterV31Agent
+  - nxgen.uk.openbanking.tesco.TescoV31Agent
+  - nxgen.uk.openbanking.tsb.TsbV31Agent
+  - nxgen.uk.openbanking.hsbc.HsbcV31Agent
+  - nxgen.uk.openbanking.halifax.HalifaxV31Agent
   - nxgen.uk.openbanking.revolut.RevolutV31Agent
   - nxgen.uk.openbanking.starling.StarlingAgent
   - nxgen.se.brokers.nordnet.NordnetAgent

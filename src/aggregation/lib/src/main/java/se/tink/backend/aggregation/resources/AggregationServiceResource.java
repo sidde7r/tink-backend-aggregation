@@ -47,7 +47,6 @@ import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerRefreshOperationCreatorWrapper;
-import se.tink.libraries.credentials.service.BatchMigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -262,25 +261,6 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         return HttpResponseHelper.ok();
-    }
-
-    @Override
-    public List<Credentials> batchMigrateCredentials(
-            BatchMigrateCredentialsRequest request, ClientInfo clientInfo) {
-        return request.getRequestList().stream()
-                .map(
-                        migrationRequest -> {
-                            AgentWorkerOperation migrateCredentialsOperation =
-                                    agentWorkerCommandFactory.createOperationMigrate(
-                                            migrationRequest,
-                                            clientInfo,
-                                            request.getTargetVersion());
-
-                            migrateCredentialsOperation.run();
-
-                            return migrateCredentialsOperation.getRequest().getCredentials();
-                        })
-                .collect(Collectors.toList());
     }
 
     @Override

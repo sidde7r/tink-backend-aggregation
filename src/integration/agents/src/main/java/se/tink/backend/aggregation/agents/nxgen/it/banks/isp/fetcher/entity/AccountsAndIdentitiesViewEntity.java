@@ -7,7 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Data
-public class AccountViewEntity {
+public class AccountsAndIdentitiesViewEntity {
     @JsonProperty("elencoRapporti")
     private List<AccountEntity> accounts;
+
+    @JsonProperty("elencoClienti")
+    private List<IdentityDataEntity> identities;
 }

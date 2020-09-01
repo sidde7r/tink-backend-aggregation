@@ -27,7 +27,8 @@ public class LoanAccountFetcherTest {
     @Test
     public void shouldFetchLoanAccount() {
         // given
-        when(apiClient.fetchAccounts()).thenReturn(FetchersTestData.loanAccountResponse());
+        when(apiClient.fetchAccountsAndIdentities())
+                .thenReturn(FetchersTestData.loanAccountResponse());
         // when
         List<LoanAccount> loanAccounts = new ArrayList<>(fetcher.fetchAccounts());
         // then

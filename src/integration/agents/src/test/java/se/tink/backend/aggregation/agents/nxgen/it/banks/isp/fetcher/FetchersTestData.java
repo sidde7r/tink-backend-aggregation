@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher;
 
 import org.junit.Ignore;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.AccountsAndIdentitiesResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.TransactionsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore
 public class FetchersTestData {
 
-    static AccountsResponse loanAccountResponse() {
+    static AccountsAndIdentitiesResponse loanAccountResponse() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
                         + "  \"exitCode\": \"OK\",\n"
@@ -45,10 +45,10 @@ public class FetchersTestData {
                         + "    ]\n"
                         + "  }\n"
                         + "}",
-                AccountsResponse.class);
+                AccountsAndIdentitiesResponse.class);
     }
 
-    static AccountsResponse checkingAccountResponse() {
+    static AccountsAndIdentitiesResponse checkingAccountResponse() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
                         + "  \"exitCode\": \"OK\",\n"
@@ -85,7 +85,7 @@ public class FetchersTestData {
                         + "    ]\n"
                         + "  }\n"
                         + "}",
-                AccountsResponse.class);
+                AccountsAndIdentitiesResponse.class);
     }
 
     static TransactionsResponse fetchTransactionsResponse() {
@@ -149,5 +149,94 @@ public class FetchersTestData {
                         + "  }\n"
                         + "}",
                 TransactionsResponse.class);
+    }
+
+    static AccountsAndIdentitiesResponse maleIdentityDataResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "  \"exitCode\": \"OK\",\n"
+                        + "  \"payload\": {\n"
+                        + "    \"elencoViste\": [\n"
+                        + "      {\n"
+                        + "        \"elencoClienti\": [\n"
+                        + "          {\n"
+                        + "            \"codiceFiscale\": \"TSTTST90M31H769X\",\n"
+                        + "            \"cognome\": \"TESTSURNAME\",\n"
+                        + "            \"nome\": \"TESTNAME\"\n"
+                        + "          }\n"
+                        + "        ]\n"
+                        + "      }\n"
+                        + "    ]\n"
+                        + "  }\n"
+                        + "}",
+                AccountsAndIdentitiesResponse.class);
+    }
+
+    static AccountsAndIdentitiesResponse femaleIdentityDataResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "  \"exitCode\": \"OK\",\n"
+                        + "  \"payload\": {\n"
+                        + "    \"elencoViste\": [\n"
+                        + "      {\n"
+                        + "        \"elencoClienti\": [\n"
+                        + "          {\n"
+                        + "            \"codiceFiscale\": \"TSTTST90M43H769X\",\n"
+                        + "            \"cognome\": \"TESTSURNAME\",\n"
+                        + "            \"nome\": \"TESTNAME\"\n"
+                        + "          }\n"
+                        + "        ]\n"
+                        + "      }\n"
+                        + "    ]\n"
+                        + "  }\n"
+                        + "}",
+                AccountsAndIdentitiesResponse.class);
+    }
+
+    static AccountsAndIdentitiesResponse multipleIdentityDataResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "  \"exitCode\": \"OK\",\n"
+                        + "  \"payload\": {\n"
+                        + "    \"elencoViste\": [\n"
+                        + "      {\n"
+                        + "        \"elencoClienti\": [\n"
+                        + "          {\n"
+                        + "            \"codiceFiscale\": \"TSTTST90M31H769X\",\n"
+                        + "            \"cognome\": \"TESTSURNAME1\",\n"
+                        + "            \"nome\": \"TESTNAME1\"\n"
+                        + "          },\n"
+                        + "          {\n"
+                        + "            \"codiceFiscale\": \"TSTTST90M43H769X\",\n"
+                        + "            \"cognome\": \"TESTSURNAME2\",\n"
+                        + "            \"nome\": \"TESTNAME2\"\n"
+                        + "          }\n"
+                        + "        ]\n"
+                        + "      }\n"
+                        + "    ]\n"
+                        + "  }\n"
+                        + "}",
+                AccountsAndIdentitiesResponse.class);
+    }
+
+    static AccountsAndIdentitiesResponse incorrectFiscalCodeIdentityDataResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "  \"exitCode\": \"OK\",\n"
+                        + "  \"payload\": {\n"
+                        + "    \"elencoViste\": [\n"
+                        + "      {\n"
+                        + "        \"elencoClienti\": [\n"
+                        + "          {\n"
+                        + "            \"codiceFiscale\": \"12345678901\",\n"
+                        + "            \"cognome\": \"TESTSURNAME\",\n"
+                        + "            \"nome\": \"TESTNAME\"\n"
+                        + "          }\n"
+                        + "        ]\n"
+                        + "      }\n"
+                        + "    ]\n"
+                        + "  }\n"
+                        + "}",
+                AccountsAndIdentitiesResponse.class);
     }
 }

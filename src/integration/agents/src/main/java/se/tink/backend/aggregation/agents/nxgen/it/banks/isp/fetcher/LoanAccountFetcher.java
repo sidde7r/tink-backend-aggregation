@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.apiclient.IspApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.entity.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.AccountsAndIdentitiesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
@@ -18,9 +18,9 @@ public class LoanAccountFetcher implements AccountFetcher<LoanAccount> {
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        AccountsResponse accountsResponse = apiClient.fetchAccounts();
+        AccountsAndIdentitiesResponse accountsResponse = apiClient.fetchAccountsAndIdentities();
         List<AccountEntity> accounts =
-                accountsResponse.getPayload().getAccountViews().stream()
+                accountsResponse.getPayload().getAccountsAndIdentitiesViews().stream()
                         .flatMap(a -> a.getAccounts().stream())
                         .collect(Collectors.toList());
         return accounts.stream()

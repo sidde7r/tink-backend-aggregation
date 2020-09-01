@@ -26,7 +26,8 @@ public class TransactionalAccountFetcherTest {
     @Test
     public void shouldFetchCheckingAccount() {
         // given
-        when(apiClient.fetchAccounts()).thenReturn(FetchersTestData.checkingAccountResponse());
+        when(apiClient.fetchAccountsAndIdentities())
+                .thenReturn(FetchersTestData.checkingAccountResponse());
         // when
         List<TransactionalAccount> accounts = new ArrayList<>(fetcher.fetchAccounts());
         // then

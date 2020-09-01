@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.apiclient.IspApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.entity.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.AccountsAndIdentitiesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -20,10 +20,10 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        AccountsResponse accountsResponse = apiClient.fetchAccounts();
+        AccountsAndIdentitiesResponse accountsResponse = apiClient.fetchAccountsAndIdentities();
         logUnknownAccounts(accountsResponse);
         List<AccountEntity> accounts =
-                accountsResponse.getPayload().getAccountViews().stream()
+                accountsResponse.getPayload().getAccountsAndIdentitiesViews().stream()
                         .flatMap(a -> a.getAccounts().stream())
                         .collect(Collectors.toList());
         return accounts.stream()
@@ -34,8 +34,8 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
                 .collect(Collectors.toList());
     }
 
-    private void logUnknownAccounts(AccountsResponse accountsResponse) {
-        accountsResponse.getPayload().getAccountViews().stream()
+    private void logUnknownAccounts(AccountsAndIdentitiesResponse accountsResponse) {
+        accountsResponse.getPayload().getAccountsAndIdentitiesViews().stream()
                 .flatMap(accountViewEntity -> accountViewEntity.getAccounts().stream())
                 .forEach(AccountEntity::logAccountDetailsIfTypeUnknown);
     }

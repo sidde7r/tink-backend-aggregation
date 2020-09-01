@@ -2,13 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.it.banks.isp;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.apiclient.IspApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.apiclient.IspSignEncryptFilter;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.IspAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.IdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.LoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.TransactionalAccountFetcher;
@@ -25,11 +28,13 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public class IspAgent extends SubsequentProgressiveGenerationAgent
         implements ProgressiveAuthAgent,
                 RefreshCheckingAccountsExecutor,
-                RefreshLoanAccountsExecutor {
+                RefreshLoanAccountsExecutor,
+                RefreshIdentityDataExecutor {
 
     private final IspApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final IdentityFetcher identityFetcher;
 
     @Inject
     public IspAgent(final AgentComponentProvider componentProvider) {
@@ -40,6 +45,7 @@ public class IspAgent extends SubsequentProgressiveGenerationAgent
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(transactionFetcher);
         this.loanRefreshController = constructLoanRefreshController(transactionFetcher);
+        this.identityFetcher = new IdentityFetcher(apiClient);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
@@ -102,5 +108,10 @@ public class IspAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return loanRefreshController.fetchLoanTransactions();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(identityFetcher.fetchIdentityData());
     }
 }
