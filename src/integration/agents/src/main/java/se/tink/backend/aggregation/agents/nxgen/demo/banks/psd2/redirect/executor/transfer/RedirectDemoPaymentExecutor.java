@@ -184,7 +184,7 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
 
         String providerName = credentials.getProviderName();
         // This block handles PIS only business use case as source-account will be null in request
-        RedirectDemoAgentUtils.throwIfFailStateProvider(providerName);
+        RedirectDemoAgentUtils.failPaymentIfFailStateProvider(providerName);
 
         PaymentMultiStepResponse pmr =
                 new PaymentMultiStepResponse(
