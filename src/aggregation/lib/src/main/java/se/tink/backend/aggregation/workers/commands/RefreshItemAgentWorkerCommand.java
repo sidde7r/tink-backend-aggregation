@@ -151,6 +151,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 log.warn(
                         "Couldn't refresh RefreshableItem({}) because of null pointer exception",
                         item);
+                action.failed();
                 refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
                         context.getRequest().getProvider().getName(),
                         context.getCorrelationId(),
@@ -167,6 +168,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 log.warn(
                         "Couldn't refresh RefreshableItem({}) with error code: " + e.getMessage(),
                         item);
+                action.failed();
                 refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
                         context.getRequest().getProvider().getName(),
                         context.getCorrelationId(),
