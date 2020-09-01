@@ -68,6 +68,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -360,6 +361,7 @@ public class SwedbankDefaultApiClient {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT)
                     .setMessage(ErrorMessage.DUPLICATE_PAYMENT)
+                    .setInternalStatus(InternalStatus.DUPLICATE_PAYMENT.toString())
                     .setException(hre)
                     .build();
         }
