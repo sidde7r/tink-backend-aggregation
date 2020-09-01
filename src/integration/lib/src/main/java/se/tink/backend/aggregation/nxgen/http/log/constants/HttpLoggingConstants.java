@@ -40,6 +40,7 @@ public final class HttpLoggingConstants {
                     "psu-ip-address",
                     "psu-user-agent",
                     "referer",
+                    "request-id",
                     "server",
                     "signature",
                     "status",
