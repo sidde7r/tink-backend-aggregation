@@ -56,6 +56,8 @@ public abstract class SebConstants {
     public static class Storage {
         public static final String CREDIT_CARD_TRANSACTION_RESPONSE =
                 "creditCardTransactionResponse";
+        public static final String PRODUCT = "product";
+        public static final String ACCOUNT_PRODUCT_MAP = "accountProductMap";
     }
 
     public static class PaymentProduct {
@@ -70,5 +72,14 @@ public abstract class SebConstants {
 
     public static class PaymentValue {
         public static final int MAX_DEST_MSG_LEN = 12;
+    }
+
+    public static class AccountProductTypes {
+
+        public static final String PRIVAT_KONTO = "privatkonto";
+        public static final String ENKLA_SPARKONTO = "enkla sparkontot";
+        public static final String PERSONALLONEKONTO = "personallönekonto";
+        public static final String VALUTAKONTO = "valutakonto";
+        public static final String NOTARIATKONTO = "notariatkonto";
     }
 }
