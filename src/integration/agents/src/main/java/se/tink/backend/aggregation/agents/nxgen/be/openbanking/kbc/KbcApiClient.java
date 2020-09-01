@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -12,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.entities.TransactionResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.rpc.TokenRequest;
@@ -33,14 +31,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BerlinGroupAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
@@ -66,7 +62,6 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
     @Override
     public BerlinGroupAccountResponse fetchAccounts() {
         return getAccountsRequestBuilder(getConfiguration().getBaseUrl() + Urls.ACCOUNTS)
-                .header(Psd2Headers.Keys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(Psd2Headers.Keys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .get(AccountResponse.class);
@@ -74,25 +69,10 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
     @Override
     public TransactionsKeyPaginatorBaseResponse fetchTransactions(String url) {
-        return null;
-    }
-
-    public TransactionResponseEntity fetchTransactions(
-            TransactionalAccount account, Date dateFrom, Date dateTo) {
-        URL url =
-                new URL(getConfiguration().getBaseUrl().concat(Urls.TRANSACTIONS))
-                        .parameter(KbcConstants.IdTags.ACCOUNT_ID, account.getApiIdentifier());
-
-        return getTransactionsRequestBuilder(url.toString())
+        return getTransactionsRequestBuilder(url)
                 .header(BerlinGroupConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .queryParam(BerlinGroupConstants.QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
-                .queryParam(
-                        KbcConstants.QueryKeys.DATE_FROM,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom))
-                .queryParam(
-                        KbcConstants.QueryKeys.DATE_TO,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo))
-                .get(TransactionResponseEntity.class);
+                .get(TransactionsKeyPaginatorBaseResponse.class);
     }
 
     @Override

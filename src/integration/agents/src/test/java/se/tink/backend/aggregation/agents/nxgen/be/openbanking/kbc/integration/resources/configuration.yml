@@ -1,0 +1,12 @@
+agentsServiceConfiguration:
+  integrations:
+    7802078d8a7049398f9668e5478934ea:
+      tink:
+        organizationId: "MOCK_ORG_ID"
+        signingKey: "DUMMY_KEY"
+        signingKeyId: "DUMMY_KEY_ID"
+        softwareStatementAssertion: "DUMMY_SSA"
+        redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
+        softwareId: "DUMMY_SOFTWARE_ID"
+        clientId: "DUMMY_ID"
+        clientSecret: "DUMMY_SECRET"
