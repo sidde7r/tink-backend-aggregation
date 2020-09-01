@@ -26,7 +26,7 @@ public class ArgentaParsingTests {
         ArgentaAccountResponse argentaAccountResponse =
                 objectMapper.readValue(ArgentaTestData.ACCOUNTS, ArgentaAccountResponse.class);
         assertThat(argentaAccountResponse.getPage()).isEqualTo(1);
-        assertThat(argentaAccountResponse.getNextPage()).isEqualTo(0);
+        assertThat(argentaAccountResponse.getNextPage()).isZero();
         assertThat(argentaAccountResponse.getAccounts()).hasSize(3);
 
         TransactionalAccount checkingAccount =
@@ -98,7 +98,7 @@ public class ArgentaParsingTests {
         ArgentaErrorResponse argentaErrorResponse =
                 objectMapper.readValue(
                         ArgentaTestData.AUTHENTICATION_ERROR, ArgentaErrorResponse.class);
-        assertEquals(ArgentaConstants.ErrorResponse.ERROR_CODE_SBP, argentaErrorResponse.getCode());
+        assertEquals(ArgentaConstants.ErrorResponse.ERROR_CODE_SBB, argentaErrorResponse.getCode());
     }
 
     @Test
@@ -108,7 +108,7 @@ public class ArgentaParsingTests {
                 objectMapper.readValue(
                         ArgentaTestData.TOO_MANY_DEVICE_ERROR, ArgentaErrorResponse.class);
         assertTrue(
-                ArgentaConstants.ErrorResponse.ERROR_CODE_SBP,
+                ArgentaConstants.ErrorResponse.ERROR_CODE_SBB,
                 argentaErrorResponse.getMessage().contains("maximumaantal actieve registraties"));
     }
 }
