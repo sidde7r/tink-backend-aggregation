@@ -284,7 +284,2501 @@ Content-type: application/json; charset=UTF-8
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{}
+{
+	"statementTimestamp": "2020-09-01T10:28:24+0200",
+	"export": [
+		{
+			"format": "XLSX",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/xlsx/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "CSV",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/csv/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "PDF",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/pdf/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "TXT",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/txt/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "PDFVIEW",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/pdfview/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		}
+	],
+	"totalTransactionsCount": 0,
+	"account": {
+		"availableAmount": "22 370,87",
+		"antalTransaktionerTotalt": 240,
+		"creditGranted": "0,00",
+		"quickbalanceSubscription": {
+			"id": "7c5f00c5211c9a227810da7c3e35afe82f22b07e",
+			"active": false,
+			"links": {
+				"next": {
+					"method": "POST",
+					"uri": "/v5/quickbalance/subscription/7c5f00c5211c9a227810da7c3e35afe82f22b07e"
+				}
+			}
+		},
+		"currencyAccount": false,
+		"internalAccount": false,
+		"bic": "SWEDSESS",
+		"iban": "SE44 8000 0833 3333 3333 3333",
+		"availableForFavouriteAccount": false,
+		"availableForPriorityAccount": false,
+		"id": "8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f",
+		"name": "Privatkonto",
+		"accountNumber": "333 333 333-3",
+		"clearingNumber": "3333-3",
+		"fullyFormattedNumber": "3333-3,333 333 333-3",
+		"nonFormattedNumber": "333333333333333",
+		"balance": "22 370,87",
+		"currency": "SEK",
+		"expenseControl": {
+			"status": "ACTIVE",
+			"viewCategorizations": true,
+			"links": {
+				"edit": {
+					"method": "PUT",
+					"uri": "/v5/expensecontrol/accounts/47fced9493ed727dfc62512125178c9eb26908d9"
+				},
+				"delete": {
+					"method": "DELETE",
+					"uri": "/v5/expensecontrol/accounts/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		"originalName": "Privatkonto"
+	},
+	"transactions": [
+		{
+			"categoryId": 0,
+			"date": "2019-12-22",
+			"amount": "-50 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SAVINGS",
+						"id": "9d28a6826df53f56e5abdcee672b7b9bbb651fe8",
+						"amount": "-50 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/149ae067e8a6b99cc03487b2524058545a0878be/categories"
+					}
+				}
+			},
+			"id": "149ae067e8a6b99cc03487b2524058545a0878be",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/149ae067e8a6b99cc03487b2524058545a0878be/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/149ae067e8a6b99cc03487b2524058545a0878be/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-23",
+			"accountingBalance": {
+				"amount": "39 031,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-20",
+			"amount": "-9,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Hobby och sport",
+						"group": "ID_SHOPPING",
+						"id": "839b055d11a7c16da618b92e6a47d8e93dc1cb3b",
+						"amount": "-9,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/c426306eab165e7c473d070cb84f21abf16a3703/categories"
+					}
+				}
+			},
+			"id": "c426306eab165e7c473d070cb84f21abf16a3703",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/c426306eab165e7c473d070cb84f21abf16a3703/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/c426306eab165e7c473d070cb84f21abf16a3703/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-20",
+			"accountingBalance": {
+				"amount": "57 319,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-19",
+			"amount": "-69,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SHOPPING",
+						"id": "f76ccfed892388e55c565cce1aacf946df55234e",
+						"amount": "-69,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/b08d6c34785f8a069cb85d60f303237e56fa4a3f/categories"
+					}
+				}
+			},
+			"id": "b08d6c34785f8a069cb85d60f303237e56fa4a3f",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/b08d6c34785f8a069cb85d60f303237e56fa4a3f/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/b08d6c34785f8a069cb85d60f303237e56fa4a3f/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-19",
+			"accountingBalance": {
+				"amount": "57 434,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-19",
+			"amount": "-106,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-106,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/45d40afcb7e5d940621029363697bbe4561dba78/categories"
+					}
+				}
+			},
+			"id": "45d40afcb7e5d940621029363697bbe4561dba78",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/45d40afcb7e5d940621029363697bbe4561dba78/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/45d40afcb7e5d940621029363697bbe4561dba78/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-19",
+			"accountingBalance": {
+				"amount": "57 328,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-16",
+			"amount": "-99,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-99,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/8c1731693c51aba3619a24a144d8e49f00deb0ad/categories"
+					}
+				}
+			},
+			"id": "8c1731693c51aba3619a24a144d8e49f00deb0ad",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/8c1731693c51aba3619a24a144d8e49f00deb0ad/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/8c1731693c51aba3619a24a144d8e49f00deb0ad/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-16",
+			"accountingBalance": {
+				"amount": "57 503,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-15",
+			"amount": "-265,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-265,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/66eadd52a0da05db1e1ed179a0fcca6f575b0dab/categories"
+					}
+				}
+			},
+			"id": "66eadd52a0da05db1e1ed179a0fcca6f575b0dab",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/66eadd52a0da05db1e1ed179a0fcca6f575b0dab/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-16",
+			"accountingBalance": {
+				"amount": "57 602,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-13",
+			"amount": "-265,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-265,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/0c2dc1fa6f979a2d5e12ed49722e162277fc39a7/categories"
+					}
+				}
+			},
+			"id": "0c2dc1fa6f979a2d5e12ed49722e162277fc39a7",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/0c2dc1fa6f979a2d5e12ed49722e162277fc39a7/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-13",
+			"accountingBalance": {
+				"amount": "57 867,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-11",
+			"amount": "-10 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SAVINGS",
+						"id": "9d28a6826df53f56e5abdcee672b7b9bbb651fe8",
+						"amount": "-10 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/723db9faa789cd8a89c5013756feb0f3e78a1929/categories"
+					}
+				}
+			},
+			"id": "723db9faa789cd8a89c5013756feb0f3e78a1929",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/723db9faa789cd8a89c5013756feb0f3e78a1929/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/723db9faa789cd8a89c5013756feb0f3e78a1929/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-11",
+			"accountingBalance": {
+				"amount": "58 132,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-07",
+			"amount": "-315,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-315,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/d6336b7722814aa9749ffa472e5ecc67ee4c4c71/categories"
+					}
+				}
+			},
+			"id": "d6336b7722814aa9749ffa472e5ecc67ee4c4c71",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/d6336b7722814aa9749ffa472e5ecc67ee4c4c71/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-09",
+			"accountingBalance": {
+				"amount": "67 817,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-07",
+			"amount": "315,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "315,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/67ac8a64358619ce97d096260cbf1c49ba07be92/categories"
+					}
+				}
+			},
+			"id": "67ac8a64358619ce97d096260cbf1c49ba07be92",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/67ac8a64358619ce97d096260cbf1c49ba07be92/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-09",
+			"accountingBalance": {
+				"amount": "68 132,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-02",
+			"amount": "-115,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Försäkringar",
+						"group": "ID_OTHER",
+						"id": "8c45498447f292f77bc15c9df618472b62fe3681",
+						"amount": "-115,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/e7c157e453a62eeb0dd4e80d40354cdd8db422f6/categories"
+					}
+				}
+			},
+			"id": "e7c157e453a62eeb0dd4e80d40354cdd8db422f6",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/e7c157e453a62eeb0dd4e80d40354cdd8db422f6/labels4830ce2084c3f050fb22c17659d9882822a06347"
+							}
+						},
+						"id": "4830ce2084c3f050fb22c17659d9882822a06347",
+						"name": "Bankgiro",
+						"type": "SYSTEM"
+					},
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/e7c157e453a62eeb0dd4e80d40354cdd8db422f6/labels06aa8ad7e48c02e0d3e9e1a347634afc9b812357"
+							}
+						},
+						"id": "06aa8ad7e48c02e0d3e9e1a347634afc9b812357",
+						"name": "Autogiro",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/e7c157e453a62eeb0dd4e80d40354cdd8db422f6/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-02",
+			"accountingBalance": {
+				"amount": "68 132,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-01",
+			"amount": "-315,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-315,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/e0ba94f7f15e000636becc80e370139563a810c4/categories"
+					}
+				}
+			},
+			"id": "e0ba94f7f15e000636becc80e370139563a810c4",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/e0ba94f7f15e000636becc80e370139563a810c4/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-02",
+			"accountingBalance": {
+				"amount": "68 247,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-29",
+			"amount": "-265,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-265,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/d7e1ae35397cf1fd15d51da418aee601dc3128bf/categories"
+					}
+				}
+			},
+			"id": "d7e1ae35397cf1fd15d51da418aee601dc3128bf",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/d7e1ae35397cf1fd15d51da418aee601dc3128bf/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-29",
+			"accountingBalance": {
+				"amount": "68 562,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-29",
+			"amount": "-119,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "TV, bredband, telefoni",
+						"group": "ID_ACCOMMODATION",
+						"id": "dacb3f0bc705340bc84bb018bdef756f3dad6d1b",
+						"amount": "-119,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/36d84b093d9786c7fadaa0a92ac229e2e9165c20/categories"
+					}
+				}
+			},
+			"id": "36d84b093d9786c7fadaa0a92ac229e2e9165c20",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/36d84b093d9786c7fadaa0a92ac229e2e9165c20/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/36d84b093d9786c7fadaa0a92ac229e2e9165c20/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-29",
+			"accountingBalance": {
+				"amount": "68 827,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-28",
+			"amount": "3 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "3 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/25478c6772f59d4a0d0c9f7eaf21d1cce6e91343/categories"
+					}
+				}
+			},
+			"id": "25478c6772f59d4a0d0c9f7eaf21d1cce6e91343",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/25478c6772f59d4a0d0c9f7eaf21d1cce6e91343/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/25478c6772f59d4a0d0c9f7eaf21d1cce6e91343/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-28",
+			"accountingBalance": {
+				"amount": "68 946,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-27",
+			"amount": "-10 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SAVINGS",
+						"id": "9d28a6826df53f56e5abdcee672b7b9bbb651fe8",
+						"amount": "-10 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/31a2c808803a12ded84f9232fcc2dc8ca99e8478/categories"
+					}
+				}
+			},
+			"id": "31a2c808803a12ded84f9232fcc2dc8ca99e8478",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/31a2c808803a12ded84f9232fcc2dc8ca99e8478/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/31a2c808803a12ded84f9232fcc2dc8ca99e8478/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-27",
+			"accountingBalance": {
+				"amount": "66 116,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-27",
+			"amount": "-270,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SHOPPING",
+						"id": "f76ccfed892388e55c565cce1aacf946df55234e",
+						"amount": "-270,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/3ea2f3587bcb25ec5ee2c041c993c0732a05e8ca/categories"
+					}
+				}
+			},
+			"id": "3ea2f3587bcb25ec5ee2c041c993c0732a05e8ca",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/3ea2f3587bcb25ec5ee2c041c993c0732a05e8ca/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/3ea2f3587bcb25ec5ee2c041c993c0732a05e8ca/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-27",
+			"accountingBalance": {
+				"amount": "76 116,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-27",
+			"amount": "-170,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-170,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/4734d00c3f0e58773f6c30d67c86f8e75d97c2c3/categories"
+					}
+				}
+			},
+			"id": "4734d00c3f0e58773f6c30d67c86f8e75d97c2c3",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/4734d00c3f0e58773f6c30d67c86f8e75d97c2c3/labels31eac9f553caa1a89db8ffb41f05325101398df2"
+							}
+						},
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"name": "Swish",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/4734d00c3f0e58773f6c30d67c86f8e75d97c2c3/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-28",
+			"accountingBalance": {
+				"amount": "65 946,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "34 412,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Inkomst",
+						"group": "ID_INCOME",
+						"id": "3c5e5b73020cdb789788ff23b1b451780c815501",
+						"amount": "34 412,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/df6362bfdf5fe41fca60fbe925c2613735c68c2a/categories"
+					}
+				}
+			},
+			"id": "df6362bfdf5fe41fca60fbe925c2613735c68c2a",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/df6362bfdf5fe41fca60fbe925c2613735c68c2a/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-22",
+			"accountingBalance": {
+				"amount": "80 055,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "-2 700,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Avgift och hyra",
+						"group": "ID_ACCOMMODATION",
+						"id": "f4567db156735cae9b2a3641e973732d1d5fe3b6",
+						"amount": "-2 700,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/20105c7f74fb235879167cf7a9fbbb0dece3c625/categories"
+					}
+				}
+			},
+			"id": "20105c7f74fb235879167cf7a9fbbb0dece3c625",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/20105c7f74fb235879167cf7a9fbbb0dece3c625/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/20105c7f74fb235879167cf7a9fbbb0dece3c625/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-25",
+			"accountingBalance": {
+				"amount": "76 386,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "-64,95",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SHOPPING",
+						"id": "f76ccfed892388e55c565cce1aacf946df55234e",
+						"amount": "-64,95"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/879387ee875cd614e0960a297b6d45b118085fae/categories"
+					}
+				}
+			},
+			"id": "879387ee875cd614e0960a297b6d45b118085fae",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/879387ee875cd614e0960a297b6d45b118085fae/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/879387ee875cd614e0960a297b6d45b118085fae/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-25",
+			"accountingBalance": {
+				"amount": "79 991,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "-349,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "TV, bredband, telefoni",
+						"group": "ID_ACCOMMODATION",
+						"id": "dacb3f0bc705340bc84bb018bdef756f3dad6d1b",
+						"amount": "-349,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/510c6cb12b6d9a20d77b52ff79225ac5b843b10e/categories"
+					}
+				}
+			},
+			"id": "510c6cb12b6d9a20d77b52ff79225ac5b843b10e",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/510c6cb12b6d9a20d77b52ff79225ac5b843b10e/labels33813c4818abf8222e63642087269c2506b53525"
+							}
+						},
+						"id": "33813c4818abf8222e63642087269c2506b53525",
+						"name": "Plusgiro",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/510c6cb12b6d9a20d77b52ff79225ac5b843b10e/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-25",
+			"accountingBalance": {
+				"amount": "79 642,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "-272,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Fackavgift och a-kassa",
+						"group": "ID_OTHER",
+						"id": "0a2031aa69d538a9f0186296a74df532157734b2",
+						"amount": "-272,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/2a564784f0fc5cbdd17e93091a313f3ccdb8a7d6/categories"
+					}
+				}
+			},
+			"id": "2a564784f0fc5cbdd17e93091a313f3ccdb8a7d6",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/2a564784f0fc5cbdd17e93091a313f3ccdb8a7d6/labels4830ce2084c3f050fb22c17659d9882822a06347"
+							}
+						},
+						"id": "4830ce2084c3f050fb22c17659d9882822a06347",
+						"name": "Bankgiro",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/2a564784f0fc5cbdd17e93091a313f3ccdb8a7d6/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-25",
+			"accountingBalance": {
+				"amount": "79 370,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "-284,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Fackavgift och a-kassa",
+						"group": "ID_OTHER",
+						"id": "0a2031aa69d538a9f0186296a74df532157734b2",
+						"amount": "-284,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/fda78ce967cacf868192024c44c95ae9ec107520/categories"
+					}
+				}
+			},
+			"id": "fda78ce967cacf868192024c44c95ae9ec107520",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/fda78ce967cacf868192024c44c95ae9ec107520/labels4830ce2084c3f050fb22c17659d9882822a06347"
+							}
+						},
+						"id": "4830ce2084c3f050fb22c17659d9882822a06347",
+						"name": "Bankgiro",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/fda78ce967cacf868192024c44c95ae9ec107520/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-25",
+			"accountingBalance": {
+				"amount": "79 086,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-22",
+			"amount": "105,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "105,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/aa634c13eeefb476dfc31c9891b95e9487cf5506/categories"
+					}
+				}
+			},
+			"id": "aa634c13eeefb476dfc31c9891b95e9487cf5506",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/aa634c13eeefb476dfc31c9891b95e9487cf5506/labels31eac9f553caa1a89db8ffb41f05325101398df2"
+							}
+						},
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"name": "Swish",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/aa634c13eeefb476dfc31c9891b95e9487cf5506/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-22",
+			"accountingBalance": {
+				"amount": "45 643,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-20",
+			"amount": "-106,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-106,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/f2c5568464892dfcfaefb203d319082497808814/categories"
+					}
+				}
+			},
+			"id": "f2c5568464892dfcfaefb203d319082497808814",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/f2c5568464892dfcfaefb203d319082497808814/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/f2c5568464892dfcfaefb203d319082497808814/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-20",
+			"accountingBalance": {
+				"amount": "45 547,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-20",
+			"amount": "-9,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Hobby och sport",
+						"group": "ID_SHOPPING",
+						"id": "839b055d11a7c16da618b92e6a47d8e93dc1cb3b",
+						"amount": "-9,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/559173ea08d2d2b521005d4f4aa05d374daf3a2d/categories"
+					}
+				}
+			},
+			"id": "559173ea08d2d2b521005d4f4aa05d374daf3a2d",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/559173ea08d2d2b521005d4f4aa05d374daf3a2d/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/559173ea08d2d2b521005d4f4aa05d374daf3a2d/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-20",
+			"accountingBalance": {
+				"amount": "45 538,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-19",
+			"amount": "-69,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SHOPPING",
+						"id": "f76ccfed892388e55c565cce1aacf946df55234e",
+						"amount": "-69,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/e296cfe87dfcfe45940617451860da70f259d2d5/categories"
+					}
+				}
+			},
+			"id": "e296cfe87dfcfe45940617451860da70f259d2d5",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/e296cfe87dfcfe45940617451860da70f259d2d5/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/e296cfe87dfcfe45940617451860da70f259d2d5/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-19",
+			"accountingBalance": {
+				"amount": "45 758,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-19",
+			"amount": "-105,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-105,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/25c0f1a78b39a12dd2f6ea0a889bc7f0a1efef7c/categories"
+					}
+				}
+			},
+			"id": "25c0f1a78b39a12dd2f6ea0a889bc7f0a1efef7c",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/25c0f1a78b39a12dd2f6ea0a889bc7f0a1efef7c/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/25c0f1a78b39a12dd2f6ea0a889bc7f0a1efef7c/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-19",
+			"accountingBalance": {
+				"amount": "45 653,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-17",
+			"amount": "-5 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SAVINGS",
+						"id": "9d28a6826df53f56e5abdcee672b7b9bbb651fe8",
+						"amount": "-5 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/945d6a7e5dcf55fa26433cec23bb812a25dee284/categories"
+					}
+				}
+			},
+			"id": "945d6a7e5dcf55fa26433cec23bb812a25dee284",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/945d6a7e5dcf55fa26433cec23bb812a25dee284/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/945d6a7e5dcf55fa26433cec23bb812a25dee284/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-18",
+			"accountingBalance": {
+				"amount": "45 827,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-16",
+			"amount": "-99,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-99,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/34e213f73e730c184f88b5252959991ec08a2043/categories"
+					}
+				}
+			},
+			"id": "34e213f73e730c184f88b5252959991ec08a2043",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/34e213f73e730c184f88b5252959991ec08a2043/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/34e213f73e730c184f88b5252959991ec08a2043/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-18",
+			"accountingBalance": {
+				"amount": "50 827,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-15",
+			"amount": "-999,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Hobby och sport",
+						"group": "ID_SHOPPING",
+						"id": "839b055d11a7c16da618b92e6a47d8e93dc1cb3b",
+						"amount": "-999,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/44bec610c0acc3023c7638b2bc540f29b0172b93/categories"
+					}
+				}
+			},
+			"id": "44bec610c0acc3023c7638b2bc540f29b0172b93",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/44bec610c0acc3023c7638b2bc540f29b0172b93/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/44bec610c0acc3023c7638b2bc540f29b0172b93/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-15",
+			"accountingBalance": {
+				"amount": "50 926,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-14",
+			"amount": "-109,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-109,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/e98b2ec36980a2c0b9f2164594a86ae75e926877/categories"
+					}
+				}
+			},
+			"id": "e98b2ec36980a2c0b9f2164594a86ae75e926877",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/e98b2ec36980a2c0b9f2164594a86ae75e926877/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/e98b2ec36980a2c0b9f2164594a86ae75e926877/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-14",
+			"accountingBalance": {
+				"amount": "52 054,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-14",
+			"amount": "-129,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-129,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/c9ac7ac59b48c0531d51528b2ce48b55460c8df3/categories"
+					}
+				}
+			},
+			"id": "c9ac7ac59b48c0531d51528b2ce48b55460c8df3",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/c9ac7ac59b48c0531d51528b2ce48b55460c8df3/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/c9ac7ac59b48c0531d51528b2ce48b55460c8df3/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-14",
+			"accountingBalance": {
+				"amount": "51 925,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-10",
+			"amount": "-435,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-435,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/ba3de07508647ff4165b1f1aaeac820fe68f80c1/categories"
+					}
+				}
+			},
+			"id": "ba3de07508647ff4165b1f1aaeac820fe68f80c1",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/ba3de07508647ff4165b1f1aaeac820fe68f80c1/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-11",
+			"accountingBalance": {
+				"amount": "52 163,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-09",
+			"amount": "650,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "650,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/1ac9ad40af469cd7ecc4414bcaa6405d325f9466/categories"
+					}
+				}
+			},
+			"id": "1ac9ad40af469cd7ecc4414bcaa6405d325f9466",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/1ac9ad40af469cd7ecc4414bcaa6405d325f9466/labels31eac9f553caa1a89db8ffb41f05325101398df2"
+							}
+						},
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"name": "Swish",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/1ac9ad40af469cd7ecc4414bcaa6405d325f9466/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-11",
+			"accountingBalance": {
+				"amount": "52 704,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-09",
+			"amount": "3 400,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "3 400,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/68e0bd629351095477d5801ea04ff93fc09f1802/categories"
+					}
+				}
+			},
+			"id": "68e0bd629351095477d5801ea04ff93fc09f1802",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/68e0bd629351095477d5801ea04ff93fc09f1802/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/68e0bd629351095477d5801ea04ff93fc09f1802/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-11",
+			"accountingBalance": {
+				"amount": "50 554,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-09",
+			"amount": "1 500,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "1 500,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/ddf90bf5193c21b3b591bbb9f2e9f550cd09dd6f/categories"
+					}
+				}
+			},
+			"id": "ddf90bf5193c21b3b591bbb9f2e9f550cd09dd6f",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/ddf90bf5193c21b3b591bbb9f2e9f550cd09dd6f/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/ddf90bf5193c21b3b591bbb9f2e9f550cd09dd6f/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-11",
+			"accountingBalance": {
+				"amount": "52 054,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-09",
+			"amount": "-106,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-106,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/1b054f7c91ac6699e77d6b18762c46f4dced0313/categories"
+					}
+				}
+			},
+			"id": "1b054f7c91ac6699e77d6b18762c46f4dced0313",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/1b054f7c91ac6699e77d6b18762c46f4dced0313/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/1b054f7c91ac6699e77d6b18762c46f4dced0313/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-11",
+			"accountingBalance": {
+				"amount": "52 598,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-08",
+			"amount": "-315,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-315,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/081fd190badab708a3bb2ac839fdbe27481fbc29/categories"
+					}
+				}
+			},
+			"id": "081fd190badab708a3bb2ac839fdbe27481fbc29",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/081fd190badab708a3bb2ac839fdbe27481fbc29/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-08",
+			"accountingBalance": {
+				"amount": "47 279,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-08",
+			"amount": "-106,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-106,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/de0e18cd3ba078adb3dca90e53dae0d253156eff/categories"
+					}
+				}
+			},
+			"id": "de0e18cd3ba078adb3dca90e53dae0d253156eff",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/de0e18cd3ba078adb3dca90e53dae0d253156eff/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/de0e18cd3ba078adb3dca90e53dae0d253156eff/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-08",
+			"accountingBalance": {
+				"amount": "47 594,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-08",
+			"amount": "-125,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-125,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/88914d5419565a383423f01227aa90f15f47b11c/categories"
+					}
+				}
+			},
+			"id": "88914d5419565a383423f01227aa90f15f47b11c",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/88914d5419565a383423f01227aa90f15f47b11c/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/88914d5419565a383423f01227aa90f15f47b11c/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-08",
+			"accountingBalance": {
+				"amount": "47 154,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-07",
+			"amount": "-10 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SAVINGS",
+						"id": "9d28a6826df53f56e5abdcee672b7b9bbb651fe8",
+						"amount": "-10 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/ea6708b809a6676f46978c865221b6789664590e/categories"
+					}
+				}
+			},
+			"id": "ea6708b809a6676f46978c865221b6789664590e",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/ea6708b809a6676f46978c865221b6789664590e/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/ea6708b809a6676f46978c865221b6789664590e/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-07",
+			"accountingBalance": {
+				"amount": "47 700,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-05",
+			"amount": "19,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "19,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/b26b78761aafe31b08513792ebd74a5044a70794/categories"
+					}
+				}
+			},
+			"id": "b26b78761aafe31b08513792ebd74a5044a70794",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/b26b78761aafe31b08513792ebd74a5044a70794/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/b26b78761aafe31b08513792ebd74a5044a70794/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-05",
+			"accountingBalance": {
+				"amount": "57 681,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-05",
+			"amount": "19,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "19,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/f6e0b194e90f6984d95e87bd4e5e2f844a1c38e5/categories"
+					}
+				}
+			},
+			"id": "f6e0b194e90f6984d95e87bd4e5e2f844a1c38e5",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/f6e0b194e90f6984d95e87bd4e5e2f844a1c38e5/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/f6e0b194e90f6984d95e87bd4e5e2f844a1c38e5/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-05",
+			"accountingBalance": {
+				"amount": "57 700,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-04",
+			"amount": "-228,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Resor",
+						"group": "ID_SHOPPING",
+						"id": "841813e74b5ee9ac2223d83a0399e418b24acc68",
+						"amount": "-228,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/9415cf454a367797833c10cd80e0623b35a98c25/categories"
+					}
+				}
+			},
+			"id": "9415cf454a367797833c10cd80e0623b35a98c25",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/9415cf454a367797833c10cd80e0623b35a98c25/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/9415cf454a367797833c10cd80e0623b35a98c25/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-04",
+			"accountingBalance": {
+				"amount": "57 780,99",
+				"currencyCode": "SEK"
+			}
+		}
+	],
+	"reservedTransactions": [
+
+	],
+	"moreTransactionsAvailable": true,
+	"numberOfTransactions": 46,
+	"numberOfReservedTransactions": 0,
+	"uncategorizedIncomeTransactions": 0,
+	"uncategorizedExpenseTransactions": 6,
+	"uncategorizedSubcategoryId": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+	"uncategorizedSortOfReceivers": 5,
+	"numberOfBankGiroPrognosisTransactions": 0,
+	"bankGiroPrognosisTransactions": [
+
+	],
+	"links": {
+		"next": {
+			"method": "GET",
+			"uri": "/v5/engagement/transactions/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f?transactionsPerPage=46&paginationId=8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f&page=2"
+		}
+	}
+}
+
+REQUEST 20A
+GET /TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f?transactionsPerPage=46&paginationId=8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f&page=2&dsid=AAAAAAAA
+Accept: application/json
+
+RESPONSE 20A
+200
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{
+	"statementTimestamp": "2020-09-01T10:28:24+0200",
+	"export": [
+		{
+			"format": "XLSX",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/xlsx/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "CSV",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/csv/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "PDF",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/pdf/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "TXT",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/txt/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "PDFVIEW",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/pdfview/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		}
+	],
+	"totalTransactionsCount": 0,
+	"account": {
+		"availableAmount": "22 370,87",
+		"antalTransaktionerTotalt": 240,
+		"creditGranted": "0,00",
+		"quickbalanceSubscription": {
+			"id": "7c5f00c5211c9a227810da7c3e35afe82f22b07e",
+			"active": false,
+			"links": {
+				"next": {
+					"method": "POST",
+					"uri": "/v5/quickbalance/subscription/7c5f00c5211c9a227810da7c3e35afe82f22b07e"
+				}
+			}
+		},
+		"currencyAccount": false,
+		"internalAccount": false,
+		"bic": "SWEDSESS",
+		"iban": "SE44 8000 0833 3333 3333 3333",
+		"availableForFavouriteAccount": false,
+		"availableForPriorityAccount": false,
+		"id": "8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f",
+		"name": "Privatkonto",
+		"accountNumber": "333 333 333-3",
+		"clearingNumber": "3333-3",
+		"fullyFormattedNumber": "3333-3,333 333 333-3",
+		"nonFormattedNumber": "333333333333333",
+		"balance": "22 370,87",
+		"currency": "SEK",
+		"expenseControl": {
+			"status": "ACTIVE",
+			"viewCategorizations": true,
+			"links": {
+				"edit": {
+					"method": "PUT",
+					"uri": "/v5/expensecontrol/accounts/47fced9493ed727dfc62512125178c9eb26908d9"
+				},
+				"delete": {
+					"method": "DELETE",
+					"uri": "/v5/expensecontrol/accounts/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		"originalName": "Privatkonto"
+	},
+	"transactions": [],
+	"reservedTransactions": [
+	],
+	"moreTransactionsAvailable": true,
+	"numberOfTransactions": 46,
+	"numberOfReservedTransactions": 0,
+	"uncategorizedIncomeTransactions": 0,
+	"uncategorizedExpenseTransactions": 6,
+	"uncategorizedSubcategoryId": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+	"uncategorizedSortOfReceivers": 5,
+	"numberOfBankGiroPrognosisTransactions": 0,
+	"bankGiroPrognosisTransactions": [
+	]
+}
 
 REQUEST 21
 GET /TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/90a9f165727b5b51d439895e9bdf7b488ea19a81?dsid=AAAAAAAA
