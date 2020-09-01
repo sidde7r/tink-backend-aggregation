@@ -145,7 +145,7 @@ public class ArgentaApiClient {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(responseException);
             } else if (errorCode
                     .toLowerCase()
-                    .startsWith(ArgentaConstants.ErrorResponse.ERROR_CODE_SBP)) {
+                    .startsWith(ArgentaConstants.ErrorResponse.ERROR_CODE_SBB)) {
                 String errorMessage = getErrorMessage(argentaErrorResponse);
                 if (!Strings.isNullOrEmpty(errorMessage)) {
                     handleKnownErrorMessages(errorMessage.toLowerCase(), responseException);
@@ -161,6 +161,8 @@ public class ArgentaApiClient {
             throw LoginError.REGISTER_DEVICE_ERROR.exception(responseException);
         } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.AUTHENTICATION_ERROR)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception(responseException);
+        } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.TOO_MANY_ATTEMPTS)) {
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(responseException);
         } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.ACCOUNT_BLOCKED)) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception(responseException);
         } else if (errorMessage.contains(
