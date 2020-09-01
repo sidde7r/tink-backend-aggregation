@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -19,6 +20,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class DeutscheBankAuthenticatorController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
+
     private SupplementalInformationHelper supplementalInformationHelper;
     private final DeutscheBankAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
@@ -38,7 +40,14 @@ public class DeutscheBankAuthenticatorController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        throw SessionError.SESSION_EXPIRED.exception();
+        this.authenticator
+                .getPersistedConsentId()
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        try {
+            this.authenticator.verifyPersistedConsentIdIsValid();
+        } catch (LoginException loginException) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     @Override
@@ -48,7 +57,7 @@ public class DeutscheBankAuthenticatorController
                 ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                 TimeUnit.MINUTES);
 
-        authenticator.confirmAuthentication();
+        authenticator.verifyPersistedConsentIdIsValid();
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 

@@ -13,16 +13,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DeutscheBankBEApiClient extends DeutscheBankApiClient {
 
     DeutscheBankBEApiClient(
             TinkHttpClient client,
-            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             String redirectUrl,
             DeutscheMarketConfiguration marketConfiguration) {
-        super(client, sessionStorage, redirectUrl, marketConfiguration);
+        super(client, persistentStorage, redirectUrl, marketConfiguration);
     }
 
     @Override

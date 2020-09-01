@@ -50,7 +50,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new DeutscheBankAuthenticator(
                                 apiClient,
-                                sessionStorage,
+                                persistentStorage,
                                 credentials.getField(CredentialKeys.IBAN),
                                 credentials.getField(CredentialKeys.USERNAME)),
                         strongAuthenticationState);

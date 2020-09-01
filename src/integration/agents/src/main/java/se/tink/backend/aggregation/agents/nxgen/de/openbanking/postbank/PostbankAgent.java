@@ -22,7 +22,8 @@ public final class PostbankAgent extends DeutscheBankAgent {
 
     @Override
     protected DeutscheBankApiClient constructApiClient(String redirectUrl) {
-        return new PostbankApiClient(client, sessionStorage, redirectUrl, POSTBANK_CONFIGURATION);
+        return new PostbankApiClient(
+                client, persistentStorage, redirectUrl, POSTBANK_CONFIGURATION);
     }
 
     @Override

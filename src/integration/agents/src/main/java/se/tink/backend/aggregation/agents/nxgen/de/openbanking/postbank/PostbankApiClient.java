@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class PostbankApiClient extends DeutscheBankApiClient {
     private static final String ERR_BAD_REQUEST = "Bad Request";
@@ -28,10 +28,10 @@ public class PostbankApiClient extends DeutscheBankApiClient {
 
     PostbankApiClient(
             TinkHttpClient client,
-            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             String redirectUrl,
             DeutscheMarketConfiguration marketConfiguration) {
-        super(client, sessionStorage, redirectUrl, marketConfiguration);
+        super(client, persistentStorage, redirectUrl, marketConfiguration);
     }
 
     public ConsentResponse getConsents(String iban, String psuId) {

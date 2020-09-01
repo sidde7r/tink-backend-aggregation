@@ -8,33 +8,37 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DeutscheBankAuthenticator {
 
     private final DeutscheBankApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final String iban;
     private final String psuId;
 
     public DeutscheBankAuthenticator(
             DeutscheBankApiClient apiClient,
-            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             String iban,
             String psuId) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.iban = iban;
         this.psuId = psuId;
     }
 
+    public Optional<String> getPersistedConsentId() {
+        return Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID));
+    }
+
     public URL authenticate(String state) {
         ConsentBaseResponse consent = apiClient.getConsent(state, iban, psuId);
-        sessionStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
+        persistentStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
         return new URL(consent.getLinks().getScaRedirect().getHref());
     }
 
-    public void confirmAuthentication() {
+    public void verifyPersistedConsentIdIsValid() {
         Optional.ofNullable(apiClient.getConsentStatus())
                 .map(ConsentStatusResponse::getConsentStatus)
                 .filter(

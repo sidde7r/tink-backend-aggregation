@@ -25,7 +25,7 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent {
     @Override
     protected DeutscheBankApiClient constructApiClient(String redirectUrl) {
         return new DeutscheBankDEApiClient(
-                client, sessionStorage, redirectUrl, DEUTSCHE_DE_CONFIGURATION);
+                client, persistentStorage, redirectUrl, DEUTSCHE_DE_CONFIGURATION);
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent {
                         supplementalInformationHelper,
                         new DeutscheBankAuthenticator(
                                 apiClient,
-                                sessionStorage,
+                                persistentStorage,
                                 credentials.getField(DeutscheBankConstants.CredentialKeys.IBAN),
                                 credentials.getField(
                                         DeutscheBankConstants.CredentialKeys.USERNAME)),

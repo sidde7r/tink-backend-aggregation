@@ -22,22 +22,22 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DeutscheBankApiClient {
 
     protected final TinkHttpClient client;
-    protected final SessionStorage sessionStorage;
+    protected final PersistentStorage persistentStorage;
     protected final DeutscheMarketConfiguration marketConfiguration;
     protected final String redirectUrl;
 
     public DeutscheBankApiClient(
             TinkHttpClient client,
-            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             String redirectUrl,
             DeutscheMarketConfiguration marketConfiguration) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.redirectUrl = redirectUrl;
         this.marketConfiguration = marketConfiguration;
     }
@@ -49,7 +49,7 @@ public class DeutscheBankApiClient {
     }
 
     protected RequestBuilder createRequestInSession(URL url) {
-        String consentId = sessionStorage.get(StorageKeys.CONSENT_ID);
+        String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
         String uuid = UUID.randomUUID().toString();
 
         return createRequest(url)
@@ -75,7 +75,7 @@ public class DeutscheBankApiClient {
     }
 
     public ConsentStatusResponse getConsentStatus() {
-        String consentId = sessionStorage.get(StorageKeys.CONSENT_ID);
+        String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
         return createRequest(
                         new URL(
                                 marketConfiguration
