@@ -76,11 +76,9 @@ public final class IcaBankenApiClient {
             cachedAccounts =
                     client.request(new URL(ProductionUrls.ACCOUNTS_PATH))
                             .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
-                            .header(
-                                    HeaderKeys.AUTHORIZATION,
-                                    HeaderValues.BEARER + persistentStorage.get(StorageKeys.TOKEN))
                             .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
                             .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                            .addBearerToken(getTokenFromStorage())
                             .get(FetchAccountsResponse.class);
         }
 
@@ -98,10 +96,8 @@ public final class IcaBankenApiClient {
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .queryParam(QueryKeys.STATUS, QueryValues.STATUS)
                 .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(
-                        HeaderKeys.AUTHORIZATION,
-                        HeaderValues.BEARER + persistentStorage.get(StorageKeys.TOKEN))
                 .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
+                .addBearerToken(getTokenFromStorage())
                 .get(FetchTransactionsResponse.class);
     }
 
@@ -111,7 +107,7 @@ public final class IcaBankenApiClient {
         return createRequest(
                         uri.parameter(QueryKeys.PAYMENT_PRODUCT, paymentTypeToString(paymentType)))
                 .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .addBearerToken(getApplicationTokenFromSession())
+                .addBearerToken(getTokenFromStorage())
                 .post(GetPaymentResponse.class, createPaymentRequest);
     }
 
@@ -124,7 +120,7 @@ public final class IcaBankenApiClient {
                                         paymentTypeToString(paymentType))
                                 .parameter(IcaBankenConstants.QueryKeys.PAYMENT_ID, uniqueId))
                 .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .addBearerToken(getApplicationTokenFromSession())
+                .addBearerToken(getTokenFromStorage())
                 .get(GetPaymentResponse.class);
     }
 
@@ -134,7 +130,7 @@ public final class IcaBankenApiClient {
                 : QueryValues.PaymentProduct.SEPA;
     }
 
-    private OAuth2Token getApplicationTokenFromSession() {
+    private OAuth2Token getTokenFromStorage() {
         return persistentStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));

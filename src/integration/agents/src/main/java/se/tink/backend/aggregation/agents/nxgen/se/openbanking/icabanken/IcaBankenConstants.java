@@ -84,14 +84,12 @@ public final class IcaBankenConstants {
     public static class HeaderKeys {
         private HeaderKeys() {}
 
-        public static final String AUTHORIZATION = "authorization";
         public static final String SCOPE = "scope";
     }
 
     public static class HeaderValues {
         private HeaderValues() {}
 
-        public static final String BEARER = "Bearer ";
         public static final String ACCOUNT = "account";
     }
 

@@ -84,7 +84,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
                         .build();
 
         TokenResponse response = apiClient.exchangeAuthorizationCode(request);
-        persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.getAccessToken());
+        persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.toOauthToken());
 
         verifyValidCustomerStatusOrThrow();
 
@@ -124,7 +124,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
             throw e;
         }
 
-        persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.getAccessToken());
+        persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.toOauthToken());
 
         verifyValidCustomerStatusOrThrow();
 
