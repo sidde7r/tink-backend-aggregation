@@ -1,12 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces;
 
-import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public interface UkOpenBankingPis {
     // Some banks do not allow us to specify a source account.
@@ -15,15 +12,5 @@ public interface UkOpenBankingPis {
 
     PaymentResponse setupPaymentOrderConsent(
             UkOpenBankingApiClient apiClient, PaymentRequest paymentRequest)
-            throws TransferExecutionException;
-
-    // TODO: Remove functionality if not being used.
-    void executeBankTransfer(
-            UkOpenBankingApiClient apiClient,
-            String intentId,
-            @Nullable AccountIdentifier sourceIdentifier,
-            AccountIdentifier destinationIdentifier,
-            ExactCurrencyAmount amount,
-            String referenceText)
             throws TransferExecutionException;
 }

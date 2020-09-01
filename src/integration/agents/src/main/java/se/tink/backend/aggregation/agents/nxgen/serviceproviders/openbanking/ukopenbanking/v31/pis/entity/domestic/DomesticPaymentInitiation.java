@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -45,8 +46,12 @@ public class DomesticPaymentInitiation {
 
     public DomesticPaymentInitiation(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
+        String unstructuredRemittanceInformation =
+                Optional.ofNullable(payment.getRemittanceInformation())
+                        .map(se.tink.libraries.transfer.rpc.RemittanceInformation::getValue)
+                        .orElse("");
         this.remittanceInformation =
-                RemittanceInformation.ofUnstructured(payment.getReference().getValue());
+                RemittanceInformation.ofUnstructured(unstructuredRemittanceInformation);
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;
         this.creditorAccount = new CreditorAccount(payment.getCreditor());

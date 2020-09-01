@@ -19,7 +19,8 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class BarclaysAgentWireMockTest {
 
@@ -84,7 +85,9 @@ public class BarclaysAgentWireMockTest {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "GBP");
         LocalDate executionDate = LocalDate.now();
         String currency = "GBP";
-
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("UK Demo");
         return new Payment.Builder()
                 .withCreditor(
                         new Creditor(
@@ -95,7 +98,7 @@ public class BarclaysAgentWireMockTest {
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
-                .withReference(new Reference("TRANSFER", "UK Demo"))
+                .withRemittanceInformation(remittanceInformation)
                 .withUniqueId("b900555d03124056b54930e1c53c9cac")
                 .build();
     }
