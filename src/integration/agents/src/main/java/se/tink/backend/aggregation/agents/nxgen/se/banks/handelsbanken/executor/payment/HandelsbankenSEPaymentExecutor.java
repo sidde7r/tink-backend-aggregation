@@ -127,12 +127,19 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor {
             case OCR:
                 validationResult
                         .getValidOcr()
-                        .orElseThrow(() -> paymentCanceledException(INVALID_OCR));
+                        .orElseThrow(
+                                () ->
+                                        paymentCanceledException(
+                                                INVALID_OCR, InternalStatus.INVALID_OCR));
                 break;
             case MESSAGE:
                 validationResult
                         .getValidMessage()
-                        .orElseThrow(() -> paymentCanceledException(INVALID_DESTINATION_MESSAGE));
+                        .orElseThrow(
+                                () ->
+                                        paymentCanceledException(
+                                                INVALID_DESTINATION_MESSAGE,
+                                                InternalStatus.INVALID_DESTINATION_MESSAGE));
                 break;
             default:
                 validationResult
@@ -143,7 +150,9 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor {
                                         .orElseThrow(
                                                 () ->
                                                         paymentCanceledException(
-                                                                INVALID_DESTINATION_MESSAGE)));
+                                                                INVALID_DESTINATION_MESSAGE,
+                                                                InternalStatus
+                                                                        .INVALID_DESTINATION_MESSAGE)));
         }
     }
 
@@ -201,7 +210,8 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor {
                 case WAITING:
                     break;
                 case CANCELLED:
-                    throw paymentCanceledException(EndUserMessage.BANKID_CANCELLED);
+                    throw paymentCanceledException(
+                            EndUserMessage.BANKID_CANCELLED, InternalStatus.BANKID_CANCELLED);
                 case FAILED_UNKNOWN:
                     throw paymentFailedException(EndUserMessage.BANKID_TRANSFER_FAILED);
             }
@@ -209,7 +219,8 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor {
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
-        throw paymentCanceledException(EndUserMessage.BANKID_NO_RESPONSE);
+        throw paymentCanceledException(
+                EndUserMessage.BANKID_NO_RESPONSE, InternalStatus.BANKID_NO_RESPONSE);
     }
 
     // A lot of exceptions are thrown in this executor, this method saves us a lot of lines
