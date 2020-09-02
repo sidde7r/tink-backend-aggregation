@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
@@ -178,18 +179,22 @@ public class SebConstants {
 
     public static final AccountTypeMapper BUSINESS_ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
-                    .put(AccountTypes.CHECKING, AccountTypeCode.SPECIALINLANINGSKONTO)
                     .put(
-                            AccountTypes.SAVINGS,
-                            AccountTypeCode.ENKLA_SPARKONTOT_FORETAG,
+                            AccountTypes.CHECKING,
+                            AccountTypeCode.SPECIALINLANINGSKONTO,
                             AccountTypeCode.BUSINESS_ACCOUNT)
+                    .put(AccountTypes.SAVINGS, AccountTypeCode.ENKLA_SPARKONTOT_FORETAG)
                     .put(
                             AccountTypes.INVESTMENT,
                             AccountTypeCode.FUND,
                             AccountTypeCode.IPS,
                             AccountTypeCode.PLACERINGSKONTO,
                             AccountTypeCode.ISK_KAPITALKONTO)
-                    .put(AccountTypes.OTHER, AccountTypeCode.OTHER)
+                    .build();
+    public static final ImmutableList<AccountTypes> ALLOWED_ACCOUNT_TYPES =
+            ImmutableList.<AccountTypes>builder()
+                    .add(AccountTypes.SAVINGS)
+                    .add(AccountTypes.CHECKING)
                     .build();
 
     public static final class AccountCapabilities {

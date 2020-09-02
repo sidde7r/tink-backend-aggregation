@@ -1,0 +1,1146 @@
+
+REQUEST 1
+POST https://msme.seb.se/auth/bid/v2/authentications
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 1 SET POLLED_1
+201
+content-language: en-US
+content-length: 59
+content-type: application/json
+date: Wed, 12 Aug 2020 09:42:08 GMT
+p3p: ***
+x-servicerequestid: ***
+cache-control: no-cache,no-store
+expires: Thu, 01 Dec 1994 16:00:00 GMT
+x-seb-csrf: ***
+pragma: no-cache
+Strict-Transport-Security: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Vary: Accept-Encoding
+
+{"auto_start_token":"87747fd6-3c81-48a3-af4b-932a2430279f"}
+
+REQUEST 2 MATCH POLLED_1
+GET https://msme.seb.se/auth/bid/v2/authentications
+X-Aggregator: Tink Testing
+
+RESPONSE 2 SET POLLED_2
+200
+content-language: en-US
+content-length: 44
+content-type: application/json
+date: Wed, 12 Aug 2020 09:42:08 GMT
+p3p: ***
+x-servicerequestid: ***
+cache-control: no-cache,no-store
+x-seb-csrf: ***
+pragma: no-cache
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"hint_code":"USER_SIGN","status":"PENDING"}
+
+REQUEST 3 MATCH POLLED_2
+GET https://msme.seb.se/auth/bid/v2/authentications
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+content-language: en-US
+content-length: 21
+content-type: application/json
+date: Wed, 12 Aug 2020 09:42:21 GMT
+p3p: ***
+x-servicerequestid: ***
+cache-control: no-cache,no-store
+pragma: no-cache
+Strict-Transport-Security: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Vary: Accept-Encoding
+
+{"status":"COMPLETE"}
+
+REQUEST 4
+POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankInit11Session01.asmx/Execute
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[],"UserCredentials":{"ApplicationName":"RFO","UserId":""}}}
+
+RESPONSE 4
+200
+content-type: application/json; charset=utf-8
+date: Sun, 02 Aug 2020 12:35:31 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInput":null,"UserCredentials":null,"ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":null,"CountryCode":null,"Channel":null,"InvoiceHint":null,"Brand":null,"ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":60},"MiddlewareReport":{"HttpServer":"A2","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20080214:35:31.8878207"},"VODB":{"DBZV170":null,"DBZV160":null,"RESULTO01":{"INIT_TIME":"14:35","INIT_RESULT":"OK"}}}}
+
+
+
+REQUEST 5
+POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankInit11Session01.asmx/Execute
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[],"UserCredentials":{"ApplicationName":"RFO","UserId":""}}}
+
+RESPONSE 5
+200
+content-type: application/json; charset=utf-8
+date: Mon, 31 Aug 2020 09:09:09 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":null,"CountryCode":null,"Channel":null,"InvoiceHint":null,"Brand":null,"ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":60},"MiddlewareReport":{"HttpServer":"A1","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20083111:09:09.8823973"},"VODB":{"DBZV170":null,"DBZV160":null,"RESULTO01":{"INIT_TIME":"11:09","INIT_RESULT":"OK"}}}}
+
+REQUEST 6
+POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankAktivera01Session01.asmx/Execute
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"request":{"VODB":{"DEVID01":{"APPLICATION_VERSION":"10.5.1","OS_NAME":"iOS","MODEL":"API_VERSION=2","MANUFACTURER":"Apple","OS_VERSION":"13.3.1","APPLICATION_NAME":"RFO"},"HWINFO01":{}},"__type":"SEB_CS.SEBCSService","ServiceInput":[{"Condition":"EQ","VariableName":"CUSTOMERTYPE","VariableValue":"S"}]}}
+
+RESPONSE 6
+200
+content-type: application/json; charset=utf-8
+date: Mon, 31 Aug 2020 09:09:10 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"d":{"__type":"SEB_CS.SEBCSService","VODB":{"DEVID01":{"MANUFACTURER":"Apple","OS_VERSION":"13.3.1","APPLICATION_NAME":"RFO","OS_NAME":"iOS","APPLICATION_VERSION":"10.5.1","MODEL":"API_VERSION=2","SESSION_DURATION":570},"HWINFO01":{"TELEPHONENUMBER":null,"COUNTRY_PREFIX":0,"LATITUDE_DECIMAL":0,"LONGITUDE_DECIMAL":0},"DBZV170":null,"DBZV160":null,"USRINF01":{"USER_NAME":"AMAGINE AB                        / AMANDA NORBERG","SEB_KUND_NR":"11111111110004","BUNT_ANTAL_OSIGNERAD":0,"EFACTURA_ANTAL_OSIGN":0,"IMS_SHORT_USERID":"92104278","LOGON_COMPLETED":"J","STATUS":"Success","UNIQUE_ID":"Hhydit3CpP1NP5IdoMxVFE+8V7mrrA0HF2aIH4Hwdfo=","LOGIN_METHOD":"digipass","GENDER":"female","AGE":"28","SEB_BID_USERID12":"NOT_FOUND"},"CBEW501":[{"KUND_NUMMER":"11111111110004","KUNDNAMN":"AMAGINE AB                       ","EXPIRE_DATE":null,"STATUS":null,"HEADING":null,"SUB_HEADING":null,"BODY_TEXT":null,"BUTTON_TEXT":null}],"CBEW502":[{"EBANVFULLM_PRODUKT":"101105OX"},{"EBANVFULLM_PRODUKT":"10110502"},{"EBANVFULLM_PRODUKT":"10110505"},{"EBANVFULLM_PRODUKT":"10110508"},{"EBANVFULLM_PRODUKT":"10110512"},{"EBANVFULLM_PRODUKT":"10120102"},{"EBANVFULLM_PRODUKT":"10210501"},{"EBANVFULLM_PRODUKT":"201401KX"},{"EBANVFULLM_PRODUKT":"20140100"},{"EBANVFULLM_PRODUKT":"21140100"},{"EBANVFULLM_PRODUKT":"301401LX"},{"EBANVFULLM_PRODUKT":"30140100"},{"EBANVFULLM_PRODUKT":"31140100"},{"EBANVFULLM_PRODUKT":"40140300"},{"EBANVFULLM_PRODUKT":"40510800"},{"EBANVFULLM_PRODUKT":"40511000"},{"EBANVFULLM_PRODUKT":"50140100"},{"EBANVFULLM_PRODUKT":"70141000"},{"EBANVFULLM_PRODUKT":"80701200"},{"EBANVFULLM_PRODUKT":"80701210"},{"EBANVFULLM_PRODUKT":"90140100"}],"PCBW024":{"ROW_ID":0,"VERIF_REQ":"N","CERTIFIKAT":null,"TIME_STAMP_OLD":null,"DATA1_TEXT":null,"DATA2_TEXT":null},"PCBWC011":null,"MESSAGE_INFO":null,"CUSTOMER_REVIEW":null},"ServiceInput":null,"ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":277},"MiddlewareReport":{"HttpServer":"A1","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20083111:09:10.9714602"}}}
+
+REQUEST 7
+POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankAktivera01Roll01.asmx/Execute
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[{"Condition":"EQ","VariableName":"CUSTOMERID","VariableValue":"11111111110004"}]}}
+
+RESPONSE 7
+200
+content-type: application/json; charset=utf-8
+date: Mon, 31 Aug 2020 09:09:10 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":235},"MiddlewareReport":{"HttpServer":"9074","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20083111:09:11.3137745"},"VODB":{"DBZV170":null,"DBZV160":null,"CBEW502":[{"EBANVFULLM_PRODUKT":"101105OX"},{"EBANVFULLM_PRODUKT":"10110502"},{"EBANVFULLM_PRODUKT":"10110505"},{"EBANVFULLM_PRODUKT":"10110508"},{"EBANVFULLM_PRODUKT":"10110512"},{"EBANVFULLM_PRODUKT":"10120102"},{"EBANVFULLM_PRODUKT":"10210501"},{"EBANVFULLM_PRODUKT":"201401KX"},{"EBANVFULLM_PRODUKT":"20140100"},{"EBANVFULLM_PRODUKT":"21140100"},{"EBANVFULLM_PRODUKT":"301401LX"},{"EBANVFULLM_PRODUKT":"30140100"},{"EBANVFULLM_PRODUKT":"31140100"},{"EBANVFULLM_PRODUKT":"40140300"},{"EBANVFULLM_PRODUKT":"40510800"},{"EBANVFULLM_PRODUKT":"40511000"},{"EBANVFULLM_PRODUKT":"50140100"},{"EBANVFULLM_PRODUKT":"70141000"},{"EBANVFULLM_PRODUKT":"80701200"},{"EBANVFULLM_PRODUKT":"80701210"},{"EBANVFULLM_PRODUKT":"90140100"}],"USRINF01":{"COMPANY_ID":"Dfh+gLwIeon9wmSlaWELoQ1LBNBpxmlbNgO6dT3QETQ="}}}}
+
+REQUEST 8
+POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankLista11Ktooversikt01.asmx/Execute
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[{"Condition":"EQ","VariableName":"KUND_ID","VariableValue":"11111111110004"},{"Condition":"EQ","VariableName":"EXTRA_INFO","VariableValue":"Y"}]}}
+
+RESPONSE 8
+200
+content-type: application/json; charset=utf-8
+date: Mon, 31 Aug 2020 09:09:17 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInput":null,"UserCredentials":null,"ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":131},"MiddlewareReport":{"HttpServer":"A3","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20083111:09:17.9275820"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW4401":[{"ROW_ID":1,"KUND_NR_PERSORG":5590592548,"KONTO_NR":"22222222222","KTOSLAG_TXT":"FÖRETAGSKONTO","BOKF_SALDO":49950.19,"DISP_BEL":49950.19,"KTOBEN_TXT":"PARADIME AB","KREDBEL":0.00,"KHAV":"","BETFL":"1","INSFL":"1","UTTFL":"1","KTOSLAG_KOD":2,"KTOUTDR_UTSKR":"N","INSGAR_TXT":"JA","BGCNR":"0006379838"},{"ROW_ID":2,"KUND_NR_PERSORG":5590592548,"KONTO_NR":"22222222222","KTOSLAG_TXT":"ENKLA SPARKTO FÖRETAG","BOKF_SALDO":0.00,"DISP_BEL":0.00,"KTOBEN_TXT":"PARADIME AB","KREDBEL":0.00,"KHAV":"","BETFL":"0","INSFL":"1","UTTFL":"1","KTOSLAG_KOD":12,"KTOUTDR_UTSKR":"N","INSGAR_TXT":"JA","BGCNR":""}],"PCBW4402":[],"PCBW4403":[],"PCBW4404":{"ROW_ID":1,"SUM_BOKF_SALDO":49950.19,"SUM_BOKF_SALDO_VAL":0.00,"SUM_DISP_BEL_SEK":49950.19,"SUM_DISP_BEL_VAL":0.00,"SUM_KREDITER_SEK_KTO":0.00,"SUM_KREDITER_VAL_KTO":0.00,"SUM_OVERTRAS_SEK_KTO":0.00,"SUM_OVERTRAS_VAL_KTO":0.00},"PCBW440Z":null,"PCBWP011":[],"PCBW4421":[{"ROW_ID":1,"KUND_NR_PERSORG":"5590592548","VALUTAKOD":"SEK","KONTO_NR":"22222222222","KTOBEN_TXT":"PARADIME AB","BGCNR":"0006379838","NAMN":"Paradime AB"}]}}}
+
+REQUEST 9
+POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankLista01Rorelse_ftg03.asmx/Execute
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"request":{"VODB":{"PCBW4341":{"SEB_KUND_NR":"11111111110004","KONTO_NR":"22222222222","MAX_ROWS":30}},"__type":"SEB_CS.SEBCSService","ServiceInput":[]}}
+
+RESPONSE 9
+200
+content-type: application/json; charset=utf-8
+date: Mon, 31 Aug 2020 09:09:44 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":60},"MiddlewareReport":{"HttpServer":"A3","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20083111:09:45.1523254"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW434Z":{"ROW_ID":0,"CHAR_200":"4"},"PCBW4341":{"ROW_ID":0,"SEB_KUND_NR":"11111111110004","KONTO_NR":"22222222222","BOKF_DATUM_FROM":null,"BOKF_DATUM_TOM":null,"PCB_BOKFDAT_BLADDR":null,"BELOPP_FROM":0,"BELOPP_TOM":0,"PCB_AVANCERAD_SOK":null,"TRANSLOPNR":0,"MAX_ROWS":30,"MOTT_KONTONR_FB":null,"KK_TXT":null},"PCBW4342":[{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-08-18","TRANSLOPNR":156,"PCB_VALUTA_DATUM":"2020-08-18","VERIF_NR":"9900000100","KK_TXT":"BG 637-9838","BOKN_REF":"","ROR_BEL":1703.00,"BOKF_SALDO":49950.19,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"1","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-08-18-10.06.14.226832","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-08-05","TRANSLOPNR":155,"PCB_VALUTA_DATUM":"2020-08-05","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-102.00,"BOKF_SALDO":48247.19,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-08-05-10.17.50.110729","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-07-21","TRANSLOPNR":154,"PCB_VALUTA_DATUM":"2020-07-21","VERIF_NR":"0196700020S","KK_TXT":"ROBIN AHNLUND","BOKN_REF":"0196700020S","ROR_BEL":-25000.00,"BOKF_SALDO":48349.19,"ROR_TYP":"8","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"1","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-07-20-22.17.52.776061","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-07-09","TRANSLOPNR":150,"PCB_VALUTA_DATUM":"2020-07-09","VERIF_NR":"9900000100","KK_TXT":"BG 637-9838","BOKN_REF":"","ROR_BEL":6250.00,"BOKF_SALDO":73349.19,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"1","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-07-09-10.04.09.515124","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-07-03","TRANSLOPNR":149,"PCB_VALUTA_DATUM":"2020-07-03","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":67099.19,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-07-03-10.49.05.395452","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-06-18","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2020-06-18","VERIF_NR":"9900000100","KK_TXT":"BG 637-9838","BOKN_REF":"","ROR_BEL":27000.00,"BOKF_SALDO":67199.19,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"1","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-06-18-10.05.32.442862","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-06-10","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2020-06-10","VERIF_NR":"5490990527","KK_TXT":"TINK AB","BOKN_REF":"","ROR_BEL":6514.78,"BOKF_SALDO":40199.19,"ROR_TYP":"","ROR_X_INFO":"C90701-6126-76481291352046478136016","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"STOEQU39200610163048000212000001","CREATION_TIMESTAMP":"2020-06-10-15.05.32.554288","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-06-03","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2020-06-03","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":33684.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-06-03-09.32.03.189495","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-05-06","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2020-05-06","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":33784.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-05-06-10.34.23.947176","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-04-02","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2020-04-02","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":33884.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-04-02-09.49.51.767033","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-03-13","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2020-03-13","VERIF_NR":"5490990004","KK_TXT":"F: 251","BOKN_REF":"","ROR_BEL":1728.00,"BOKF_SALDO":33984.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-03-13-16.05.54.866582","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-03-11","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2020-03-11","VERIF_NR":"5490990004","KK_TXT":"F: 251","BOKN_REF":"113042093093","ROR_BEL":-1728.00,"BOKF_SALDO":32256.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"1","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-03-11-10.35.07.386214","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-03-11","TRANSLOPNR":2,"PCB_VALUTA_DATUM":"2020-03-11","VERIF_NR":"5490990004","KK_TXT":"F: 121","BOKN_REF":"113109135128","ROR_BEL":-7500.00,"BOKF_SALDO":33984.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"1","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-03-11-10.35.07.378191","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-03-04","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2020-03-04","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":41484.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-03-04-13.23.55.402761","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-02-05","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2020-02-05","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":41584.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-02-05-12.08.43.391231","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2020-01-02","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2020-01-02","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":41684.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2020-01-02-14.11.47.929807","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-12-04","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-12-04","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":41784.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-12-04-11.45.22.263517","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-11-04","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-11-04","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":41884.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-11-04-12.14.43.112789","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-10-28","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-10-28","VERIF_NR":"9301700019S","KK_TXT":"SKATTEVERKET","BOKN_REF":"9301700019S","ROR_BEL":-625.00,"BOKF_SALDO":41984.41,"ROR_TYP":"8","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"1","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-10-28-09.09.33.793556","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-10-03","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-10-03","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":42609.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-10-03-11.53.06.415454","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-09-06","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-09-06","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":42709.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-09-06-12.59.13.282739","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-08-02","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-08-02","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":42809.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-08-02-12.01.23.994346","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-07-03","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-07-03","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":42909.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-07-03-13.11.08.761081","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-06-05","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-06-05","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":43009.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-06-05-11.33.59.356524","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-05-09","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-05-09","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":43109.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-05-09-11.23.22.364061","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-04-05","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-04-05","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":43209.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-04-05-11.51.07.277871","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-03-08","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-03-08","VERIF_NR":"5490990502","KK_TXT":"BANKTJÄNSTER","BOKN_REF":"","ROR_BEL":-100.00,"BOKF_SALDO":43309.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"0","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-03-08-12.42.32.835230","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2019-01-03","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2019-01-03","VERIF_NR":"9002700018S","KK_TXT":"SKATTEVERKET","BOKN_REF":"9002700018S","ROR_BEL":-700.00,"BOKF_SALDO":43409.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"1","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2019-01-02-23.19.04.184749","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2018-09-03","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2018-09-03","VERIF_NR":"8246700017S","KK_TXT":"MISS HOSTING AB","BOKN_REF":"8246700017S","ROR_BEL":-286.25,"BOKF_SALDO":44109.41,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"1","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2018-09-02-21.07.29.547461","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null},{"ROW_ID":0,"KONTO_NR":"22222222222","PCB_BOKF_DATUM":"2018-08-22","TRANSLOPNR":1,"PCB_VALUTA_DATUM":"2018-08-22","VERIF_NR":"5490990005","KK_TXT":"RE:UTLÄGG BV","BOKN_REF":"122936680706","ROR_BEL":-1000.00,"BOKF_SALDO":44395.66,"ROR_TYP":"","ROR_X_INFO":"","BGL_ROR":"0","UPPDR_INFO_FL":"1","RTE_SATS1":1.650,"SEB_UNQ_TXN_ID":"","CREATION_TIMESTAMP":"2018-08-22-10.30.16.516865","VERIF_NUMMER":null,"VALUTAPAR":null,"VAXELKURS":null}]}}}
+
+REQUEST 10
+POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankLista01Skydd01.asmx/Execute
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"request":{"VODB":{"PCBW431Z":{"SEB_KUND_NR":"11111111110004","KONTO_NR":"22222222222","ROW_ID":1}},"__type":"SEB_CS.SEBCSService","ServiceInput":[]}}
+
+RESPONSE 10
+200
+content-type: application/json; charset=utf-8
+date: Mon, 31 Aug 2020 09:09:52 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":"110952840019","SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":"5B205C37FC7D442B9FCB16F4097EC9E0","Language":"SV","CountryCode":null,"Channel":null,"InvoiceHint":null,"Brand":null,"ParentReqId":"110952840019","CurrentReqId":"72966fc3-5f4c-4a5f-a728-be603151c568","ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":2,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":51,"ExecuteTime":3,"HostTime":8,"GateWayTime":0,"HTTPServerTime":13},"MiddlewareReport":{"HttpServer":"A1","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20083111:09:52.8538671"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW431Z":{"ROW_ID":1,"SEB_KUND_NR":"11111111110004","KONTO_NR":22222222222},"PCBW4311":null,"PCBW4312":null}}}
+
+REQUEST 11
+POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankLista01Rorelse_ftg03.asmx/Execute
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"request":{"VODB":{"PCBW4341":{"SEB_KUND_NR":"11111111110004","KONTO_NR":"22222222222","PCB_BOKFDAT_BLADDR":"2018-08-22","TRANSLOPNR":1,"MAX_ROWS":80}},"__type":"SEB_CS.SEBCSService","ServiceInput":[]}}
+
+RESPONSE 11
+200
+content-type: application/json; charset=utf-8
+date: Mon, 31 Aug 2020 09:09:56 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{
+  "d": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInfo": {
+      "SEBCS_Service": "",
+      "minusL": "",
+      "Type": "WantToWorkHere-Call us",
+      "SMMVersion": 0,
+      "Timestamp": null,
+      "SubId": 0,
+      "CSBusinessObject": "",
+      "VersionStamp": "",
+      "SMMName": "",
+      "ClientType": "",
+      "PreviousElapseTime": 0,
+      "PreviousElapseTimeSpecified": false,
+      "CodePage": "",
+      "Accounting": {
+        "CorrelationID": null,
+        "Language": "",
+        "CountryCode": null,
+        "Channel": null,
+        "InvoiceHint": "",
+        "Brand": "",
+        "ParentReqId": null,
+        "CurrentReqId": null,
+        "ZipOptions": null,
+        "Saml": null
+      },
+      "TimeoutMillis": 0,
+      "TimeoutMillisSpecified": false
+    },
+    "ServiceInput": null,
+    "UserCredentials": null,
+    "ResultInfo": {
+      "GatewayReturnCode": 0,
+      "GatewayReturnCodeText": "",
+      "Message": null,
+      "HostReturnCode": 0,
+      "HostReturnCodeText": "",
+      "ResponseTimes": {
+        "QueueTime": 0,
+        "ExecuteTime": 0,
+        "HostTime": 0,
+        "GateWayTime": 0,
+        "HTTPServerTime": 34
+      },
+      "MiddlewareReport": {
+        "HttpServer": "A3",
+        "TGWInstance": null,
+        "IMS": null,
+        "AS400": null
+      },
+      "CurrentTic": "20083111:09:57.2161068"
+    },
+    "VODB": {
+      "DBZV170": null,
+      "DBZV160": null,
+      "PCBW434Z": null,
+      "PCBW4341": {
+        "ROW_ID": 0,
+        "SEB_KUND_NR": "11111111110004",
+        "KONTO_NR": "22222222222",
+        "BOKF_DATUM_FROM": null,
+        "BOKF_DATUM_TOM": null,
+        "PCB_BOKFDAT_BLADDR": "2018-08-22",
+        "BELOPP_FROM": 0,
+        "BELOPP_TOM": 0,
+        "PCB_AVANCERAD_SOK": null,
+        "TRANSLOPNR": 1,
+        "MAX_ROWS": 80,
+        "MOTT_KONTONR_FB": null,
+        "KK_TXT": null
+      },
+      "PCBW4342": [
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-08-22",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2018-08-22",
+          "VERIF_NR": "5490990005",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "122936680706",
+          "ROR_BEL": -1000.00,
+          "BOKF_SALDO": 44395.66,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-08-22-10.30.16.516865",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-07-17",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2018-07-17",
+          "VERIF_NR": "5490990007",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "154000179628",
+          "ROR_BEL": -10197.84,
+          "BOKF_SALDO": 45395.66,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-07-17-02.01.30.310840",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-07-09",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2018-07-09",
+          "VERIF_NR": "9900000100",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "",
+          "ROR_BEL": 25000.00,
+          "BOKF_SALDO": 55593.50,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "1",
+          "UPPDR_INFO_FL": "0",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-07-09-10.10.38.675757",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-07-05",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2018-07-03",
+          "VERIF_NR": "5423850180A",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "",
+          "ROR_BEL": 10197.84,
+          "BOKF_SALDO": 30593.50,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "0",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-07-05-07.49.13.199779",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-07-03",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2018-07-03",
+          "VERIF_NR": "5490990005",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "101932620882",
+          "ROR_BEL": -10197.84,
+          "BOKF_SALDO": 20395.66,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-07-03-09.22.57.350133",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-07-03",
+          "TRANSLOPNR": 2,
+          "PCB_VALUTA_DATUM": "2018-07-03",
+          "VERIF_NR": "5490990005",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "112016892002",
+          "ROR_BEL": -10197.84,
+          "BOKF_SALDO": 30593.50,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-07-03-09.22.57.345512",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-05-25",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2018-05-25",
+          "VERIF_NR": "5490990004",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "103204224737",
+          "ROR_BEL": -9500.00,
+          "BOKF_SALDO": 40791.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-05-25-08.32.55.771304",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-04-25",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2018-04-25",
+          "VERIF_NR": "5490990005",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "115831376570",
+          "ROR_BEL": -450.00,
+          "BOKF_SALDO": 50291.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-04-25-09.59.02.529250",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-04-17",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2018-04-17",
+          "VERIF_NR": "8106700015S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "8106700015S",
+          "ROR_BEL": -1485.00,
+          "BOKF_SALDO": 50741.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-04-16-22.12.40.531564",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-02-23",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2018-02-23",
+          "VERIF_NR": "8053700014S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "8053700014S",
+          "ROR_BEL": -6042.00,
+          "BOKF_SALDO": 52226.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-02-22-23.11.55.734980",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2018-02-07",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2018-02-07",
+          "VERIF_NR": "5490990502",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "",
+          "ROR_BEL": -1500.00,
+          "BOKF_SALDO": 58268.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "0",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2018-02-07-14.21.54.427630",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-10-18",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-10-18",
+          "VERIF_NR": "7291700013S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "7291700013S",
+          "ROR_BEL": -625.00,
+          "BOKF_SALDO": 59768.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-10-18-08.10.19.615722",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-08-15",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-08-15",
+          "VERIF_NR": "7202700012S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "7202700012S",
+          "ROR_BEL": -128727.00,
+          "BOKF_SALDO": 60393.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-08-14-22.10.50.412996",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-07-12",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-07-12",
+          "VERIF_NR": "7192700011S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "7192700011S",
+          "ROR_BEL": -271695.00,
+          "BOKF_SALDO": 189120.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-07-11-22.11.15.311645",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-07-12",
+          "TRANSLOPNR": 2,
+          "PCB_VALUTA_DATUM": "2017-07-12",
+          "VERIF_NR": "7192700010S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "7192700010S",
+          "ROR_BEL": -43750.00,
+          "BOKF_SALDO": 460815.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-07-11-22.11.15.296814",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-07-11",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-07-11",
+          "VERIF_NR": "5490990100",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "",
+          "ROR_BEL": -10.00,
+          "BOKF_SALDO": 504565.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "0",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-07-11-13.35.19.644144",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-07-11",
+          "TRANSLOPNR": 2,
+          "PCB_VALUTA_DATUM": "2017-07-11",
+          "VERIF_NR": "5490990004",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "153446612918",
+          "ROR_BEL": -25000.00,
+          "BOKF_SALDO": 504575.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-07-11-13.35.19.624524",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-06-28",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-06-28",
+          "VERIF_NR": "5267856958",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "",
+          "ROR_BEL": 26862.00,
+          "BOKF_SALDO": 529575.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "0",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-06-28-10.01.28.424334",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-05-24",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-05-24",
+          "VERIF_NR": "5490990007",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "142932944125",
+          "ROR_BEL": -3985.00,
+          "BOKF_SALDO": 502713.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-05-24-02.05.51.413956",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-05-24",
+          "TRANSLOPNR": 2,
+          "PCB_VALUTA_DATUM": "2017-05-24",
+          "VERIF_NR": "7143700009S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "7143700009S",
+          "ROR_BEL": -1544.00,
+          "BOKF_SALDO": 506698.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-05-23-22.24.02.839723",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-04-12",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-04-12",
+          "VERIF_NR": "7079700006S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "7079700006S",
+          "ROR_BEL": -2000.00,
+          "BOKF_SALDO": 508242.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-04-11-22.17.20.445628",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-03-30",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-03-30",
+          "VERIF_NR": "9900000100",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "",
+          "ROR_BEL": 312500.00,
+          "BOKF_SALDO": 510242.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "1",
+          "UPPDR_INFO_FL": "0",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-03-30-10.10.50.355860",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-03-21",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-03-21",
+          "VERIF_NR": "7079700007S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "7079700007S",
+          "ROR_BEL": -22000.00,
+          "BOKF_SALDO": 197742.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-03-20-23.17.26.216645",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-03-17",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-03-17",
+          "VERIF_NR": "7067700005S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "7067700005S",
+          "ROR_BEL": -362.50,
+          "BOKF_SALDO": 219742.34,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-03-16-23.19.14.367004",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-03-13",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-03-13",
+          "VERIF_NR": "7039700004S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "7039700004S",
+          "ROR_BEL": -2000.00,
+          "BOKF_SALDO": 220104.84,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-03-12-22.09.58.261214",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-02-17",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-02-17",
+          "VERIF_NR": "5490990005",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "704509493016",
+          "ROR_BEL": -19500.00,
+          "BOKF_SALDO": 222104.84,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-02-17-08.16.10.008639",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-02-08",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-02-08",
+          "VERIF_NR": "5490990502",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "",
+          "ROR_BEL": -826.66,
+          "BOKF_SALDO": 241604.84,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "0",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-02-08-15.12.57.512804",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-01-25",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-01-25",
+          "VERIF_NR": "7017700002S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "7017700002S",
+          "ROR_BEL": -625.00,
+          "BOKF_SALDO": 242431.50,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-01-24-23.27.12.993696",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2017-01-10",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2017-01-10",
+          "VERIF_NR": "9900000100",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "",
+          "ROR_BEL": 200000.00,
+          "BOKF_SALDO": 243056.50,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "1",
+          "UPPDR_INFO_FL": "0",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2017-01-10-11.10.41.602414",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2016-11-28",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2016-11-28",
+          "VERIF_NR": "6326700001S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "6326700001S",
+          "ROR_BEL": -5500.00,
+          "BOKF_SALDO": 43056.50,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2016-11-27-22.24.57.991071",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2016-09-02",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2016-09-02",
+          "VERIF_NR": "5490990502",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "",
+          "ROR_BEL": -132.50,
+          "BOKF_SALDO": 48556.50,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "0",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2016-09-02-11.02.09.073045",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2016-07-28",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2016-07-27",
+          "VERIF_NR": "6209700000S",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "6209700000S",
+          "ROR_BEL": -8811.00,
+          "BOKF_SALDO": 48689.00,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "1",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2016-07-27-22.30.24.019129",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        },
+        {
+          "ROW_ID": 0,
+          "KONTO_NR": "22222222222",
+          "PCB_BOKF_DATUM": "2016-07-25",
+          "TRANSLOPNR": 1,
+          "PCB_VALUTA_DATUM": "2016-07-25",
+          "VERIF_NR": "5368857229",
+          "KK_TXT": "dummyDescription",
+          "BOKN_REF": "",
+          "ROR_BEL": 57500.00,
+          "BOKF_SALDO": 57500.00,
+          "ROR_TYP": "",
+          "ROR_X_INFO": "",
+          "BGL_ROR": "0",
+          "UPPDR_INFO_FL": "0",
+          "RTE_SATS1": 1.650,
+          "SEB_UNQ_TXN_ID": "",
+          "CREATION_TIMESTAMP": "2016-07-25-14.21.50.785698",
+          "VERIF_NUMMER": null,
+          "VALUTAPAR": null,
+          "VAXELKURS": null
+        }
+      ]
+    }
+  }
+}
+
+REQUEST 12
+POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankLista01Rorelse_ftg03.asmx/Execute
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"request":{"VODB":{"PCBW4341":{"SEB_KUND_NR":"11111111110004","KONTO_NR":"33333333333","MAX_ROWS":30}},"__type":"SEB_CS.SEBCSService","ServiceInput":[]}}
+
+RESPONSE 12
+200
+content-type: application/json; charset=utf-8
+date: Mon, 31 Aug 2020 09:10:03 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":2,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":22},"MiddlewareReport":{"HttpServer":"A1","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20083111:10:04.0015072"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW434Z":null,"PCBW4341":{"ROW_ID":0,"SEB_KUND_NR":"11111111110004","KONTO_NR":"33333333333","BOKF_DATUM_FROM":null,"BOKF_DATUM_TOM":null,"PCB_BOKFDAT_BLADDR":null,"BELOPP_FROM":0,"BELOPP_TOM":0,"PCB_AVANCERAD_SOK":null,"TRANSLOPNR":0,"MAX_ROWS":30,"MOTT_KONTONR_FB":null,"KK_TXT":null},"PCBW4342":null}}}
+
+REQUEST 13
+POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankLista01Skydd01.asmx/Execute
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"request":{"VODB":{"PCBW431Z":{"SEB_KUND_NR":"11111111110004","KONTO_NR":"33333333333","ROW_ID":1}},"__type":"SEB_CS.SEBCSService","ServiceInput":[]}}
+
+RESPONSE 13
+200
+content-type: application/json; charset=utf-8
+date: Mon, 31 Aug 2020 09:10:06 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInput":null,"VODB":{"DBZV170":null,"DBZV160":null,"PCBW431Z":{"KONTO_NR":3333333333333333333333,"ROW_ID":1,"SEB_KUND_NR":"11111111110004"},"PCBW4311":null,"PCBW4312":null},"ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":"111006950083","SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":"C0A65A666EBF473C955F8C1D924E6A49","Language":"SV","CountryCode":null,"Channel":null,"InvoiceHint":null,"Brand":null,"ParentReqId":"111006950083","CurrentReqId":"6a80ace4-5f4c-4e35-a25d-be6f29474d5b","ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":2,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":61,"ExecuteTime":3,"HostTime":8,"GateWayTime":0,"HTTPServerTime":14},"MiddlewareReport":{"HttpServer":"A1","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20083111:10:06.9646785"}}}

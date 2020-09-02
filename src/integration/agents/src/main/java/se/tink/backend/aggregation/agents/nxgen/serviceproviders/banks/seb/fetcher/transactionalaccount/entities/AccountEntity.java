@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
@@ -75,8 +74,7 @@ public class AccountEntity {
     @JsonIgnore
     public boolean isTransactionalAccount(AccountTypeMapper mapper) {
 
-        return mapper.isOneOf(
-                accountType, ImmutableSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS));
+        return mapper.isOneOf(accountType, SebConstants.ALLOWED_ACCOUNT_TYPES);
     }
 
     @JsonIgnore
@@ -94,11 +92,6 @@ public class AccountEntity {
         return !Strings.isNullOrEmpty(holderName)
                 ? StringUtils.firstLetterUppercaseFormatting(holderName)
                 : accountName;
-    }
-
-    @JsonIgnore
-    private Optional<AccountTypes> getAccountType() {
-        return SebConstants.ACCOUNT_TYPE_MAPPER.translate(accountType);
     }
 
     @JsonIgnore
@@ -130,8 +123,9 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(String customerId) {
-        final Optional<AccountTypes> tinkAccountType = getAccountType();
+    public Optional<TransactionalAccount> toTinkAccount(
+            String customerId, AccountTypeMapper mapper) {
+        final Optional<AccountTypes> tinkAccountType = mapper.translate(accountType);
         Preconditions.checkState(tinkAccountType.isPresent());
         Preconditions.checkNotNull(accountNumber);
         Preconditions.checkState(
