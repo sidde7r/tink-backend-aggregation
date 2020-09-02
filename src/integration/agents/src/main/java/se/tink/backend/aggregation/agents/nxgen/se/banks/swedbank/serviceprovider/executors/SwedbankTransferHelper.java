@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.utils.qrcode.QrCodeParser;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -92,6 +93,7 @@ public class SwedbankTransferHelper {
                                             TransferExecutionException.EndUserMessage
                                                     .BANKID_CANCELLED))
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                            .setInternalStatus(InternalStatus.BANKID_CANCELLED.toString())
                             .build();
                 case TIMEOUT:
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
