@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-31 19:49+0200\n"
+"POT-Creation-Date: 2020-09-02 12:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1435,4 +1435,22 @@ msgstr ""
 msgid ""
 "To be able to refresh your accounts you need to answer some questions from "
 "your bank. Please log in to your bank's app or internet bank."
+msgstr ""
+
+msgid "SMS Code"
+msgstr ""
+
+msgid "Enter 6 digits code from SMS"
+msgstr ""
+
+msgid "SMS OTP"
+msgstr ""
+
+msgid "Enter 4 digits code from SMS"
+msgstr ""
+
+msgid "account number"
+msgstr ""
+
+msgid "Enter 4 digit account number, can be found in aggreement"
 msgstr ""
