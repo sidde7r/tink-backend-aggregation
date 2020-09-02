@@ -15,10 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fe
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.creditcards.SebCreditCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.SebTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.SebTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transferdestinations.SebTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
-import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -26,9 +26,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
-import se.tink.libraries.account.AccountIdentifier.Type;
 
 public final class SebAgent extends SebBaseAgent<SebApiClient>
         implements RefreshCheckingAccountsExecutor,
@@ -37,6 +37,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SebStorage instanceStorage;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
     public SebAgent(AgentComponentProvider componentProvider) {
@@ -46,6 +47,12 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
         this.instanceStorage = new SebStorage();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
+        transferDestinationRefreshController = constructTransferDestinationController();
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new SebTransferDestinationFetcher(instanceStorage));
     }
 
     private void connfigureHttpClient(TinkHttpClient client) {
@@ -89,7 +96,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         SebTransactionalAccountFetcher accountFetcher =
-                new SebTransactionalAccountFetcher(apiClient);
+                new SebTransactionalAccountFetcher(apiClient, instanceStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -124,7 +131,6 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        return InferredTransferDestinations.forPaymentAccounts(
-                accounts, Type.SE_BG, Type.SE_PG, Type.IBAN);
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 }

@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class InitiatingPartyEntity {
 
     private String name;

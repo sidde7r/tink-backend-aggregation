@@ -47,7 +47,6 @@ import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerRefreshOperationCreatorWrapper;
-import se.tink.libraries.credentials.service.BatchMigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -193,6 +192,18 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
+    public void payment(final TransferRequest request, ClientInfo clientInfo) {
+        logger.info(
+                "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
+        try {
+            agentWorker.execute(
+                    agentWorkerCommandFactory.createOperationExecutePayment(request, clientInfo));
+        } catch (Exception e) {
+            logger.error("Error while calling createOperationExecutePayment", e);
+        }
+    }
+
+    @Override
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo)
             throws Exception {
         agentWorker.execute(
@@ -250,25 +261,6 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         return HttpResponseHelper.ok();
-    }
-
-    @Override
-    public List<Credentials> batchMigrateCredentials(
-            BatchMigrateCredentialsRequest request, ClientInfo clientInfo) {
-        return request.getRequestList().stream()
-                .map(
-                        migrationRequest -> {
-                            AgentWorkerOperation migrateCredentialsOperation =
-                                    agentWorkerCommandFactory.createOperationMigrate(
-                                            migrationRequest,
-                                            clientInfo,
-                                            request.getTargetVersion());
-
-                            migrateCredentialsOperation.run();
-
-                            return migrateCredentialsOperation.getRequest().getCredentials();
-                        })
-                .collect(Collectors.toList());
     }
 
     @Override

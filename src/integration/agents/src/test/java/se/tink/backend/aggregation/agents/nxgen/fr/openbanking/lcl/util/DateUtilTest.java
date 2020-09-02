@@ -8,7 +8,7 @@ public class DateUtilTest {
 
     @Test
     public void testTplusOneDate() {
-        assertThat(DateUtil.tPlusOneDate("2016-12-30T00:00:00.000+01:00"))
+        assertThat(DateUtil.plusOneDayDate("2016-12-30T00:00:00.000+01:00"))
                 .isEqualTo("2016-12-31T00:00:00.000+01:00");
     }
 }

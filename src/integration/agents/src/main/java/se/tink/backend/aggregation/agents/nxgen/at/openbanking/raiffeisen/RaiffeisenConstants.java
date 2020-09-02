@@ -93,7 +93,6 @@ public final class RaiffeisenConstants {
         public static final String AUTHORIZATION = "Authorization";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String CACHE_CONTROL = "Cache-Control";
-        public static final String X_TINK_DEBUG = "X-Tink-Debug";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
@@ -112,7 +111,7 @@ public final class RaiffeisenConstants {
 
     public static class CredentialKeys {
 
-        public static final String IBAN = "IBAN";
+        public static final String IBAN = "iban";
     }
 
     public static class BalanceTypes {
@@ -139,7 +138,7 @@ public final class RaiffeisenConstants {
                 "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"; // Constant for sandbox
         public static final String CACHE_CONTROL = "no-cache";
         public static final String X_TINK_DEBUG_TRUST_ALL = "trust_all";
-        public static final String PSU_IP_ADDRESS = "192.168.65.37";
+        public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class IdTags {

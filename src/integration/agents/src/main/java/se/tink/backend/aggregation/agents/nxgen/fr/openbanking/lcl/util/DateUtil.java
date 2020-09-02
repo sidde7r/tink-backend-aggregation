@@ -9,7 +9,7 @@ public class DateUtil {
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
-    public static String tPlusOneDate(String date) {
+    public static String plusOneDayDate(String date) {
         return ZonedDateTime.parse(date).plusDays(1L).format(DATE_TIME_FORMATTER);
     }
 }

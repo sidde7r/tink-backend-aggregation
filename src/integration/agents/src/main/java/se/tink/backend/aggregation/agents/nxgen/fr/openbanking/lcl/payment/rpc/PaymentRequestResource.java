@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.util.CreditTransferTransactionUtil;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.util.DateUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
+@NoArgsConstructor
 public class PaymentRequestResource {
 
     private String paymentInformationId;
@@ -34,7 +36,7 @@ public class PaymentRequestResource {
 
     private BeneficiaryEntity beneficiary;
 
-    private List<CreditTransferTransactionEntity> creditTransferTransaction;
+    private List<LclCreditTransferTransactionEntity> creditTransferTransaction;
 
     private String chargeBearer;
 
@@ -44,22 +46,21 @@ public class PaymentRequestResource {
 
     private String paymentInformationStatus;
 
-    public PaymentRequestResource of(CreatePaymentRequest paymentRequest) {
+    public PaymentRequestResource(CreatePaymentRequest paymentRequest) {
         this.paymentInformationId = paymentRequest.getPaymentInformationId();
         this.creationDateTime = paymentRequest.getCreationDateTime();
         this.requestedExecutionDate =
-                DateUtil.tPlusOneDate(paymentRequest.getRequestedExecutionDate());
+                DateUtil.plusOneDayDate(paymentRequest.getRequestedExecutionDate());
         this.numberOfTransactions = paymentRequest.getNumberOfTransactions();
         this.paymentTypeInformation = paymentRequest.getPaymentTypeInformation();
         this.debtorAccount = paymentRequest.getDebtorAccount();
         this.beneficiary = paymentRequest.getBeneficiary();
         this.creditTransferTransaction =
-                CreditTransferTransactionUtil.covertList(
+                CreditTransferTransactionUtil.convertList(
                         paymentRequest.getCreditTransferTransaction());
         this.chargeBearer = paymentRequest.getChargeBearer();
         this.supplementaryData = paymentRequest.getSupplementaryData();
         this.initiatingParty = paymentRequest.getInitiatingParty();
-        return this;
     }
 
     public GetPaymentResponse toPaymentResponse() {

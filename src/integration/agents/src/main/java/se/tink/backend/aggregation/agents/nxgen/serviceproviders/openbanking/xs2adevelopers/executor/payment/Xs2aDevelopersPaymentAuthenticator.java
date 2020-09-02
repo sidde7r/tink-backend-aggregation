@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -15,12 +15,12 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
     private final Xs2aDevelopersApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final Xs2aDevelopersConfiguration configuration;
+    private final Xs2aDevelopersProviderConfiguration configuration;
 
     public Xs2aDevelopersPaymentAuthenticator(
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
-            Xs2aDevelopersConfiguration configuration) {
+            Xs2aDevelopersProviderConfiguration configuration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;

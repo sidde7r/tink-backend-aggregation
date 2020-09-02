@@ -114,7 +114,7 @@ public class TransferExecutionException extends RuntimeException {
         this.endUserMessage = userMessage;
     }
 
-    private void setInternalStatus(String internalStatus) {
+    protected void setInternalStatus(String internalStatus) {
         this.internalStatus = internalStatus;
     }
 

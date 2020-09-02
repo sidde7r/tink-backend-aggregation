@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Retry;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitAuthenticationRequest;
@@ -67,6 +68,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -180,7 +182,7 @@ public class SwedbankDefaultApiClient {
             if (SwedbankApiErrors.isSessionTerminated(hre)) {
                 throw BankServiceError.SESSION_TERMINATED.exception(hre);
             }
-
+            SwedbankApiErrors.handleTokenErrors(hre);
             if (retry
                     && hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
                     && attempt <= Retry.MAX_RETRY_ATTEMPTS) {
@@ -342,15 +344,27 @@ public class SwedbankDefaultApiClient {
             String remittanceInformationValue,
             String sourceAccountId,
             Date transferDueDate) {
-        return makeMenuItemRequest(
-                SwedbankBaseConstants.MenuItemKey.REGISTER_TRANSFER,
-                RegisterTransferRequest.create(
-                        amount,
-                        destinationAccountId,
-                        remittanceInformationValue,
-                        sourceAccountId,
-                        transferDueDate),
-                RegisterTransferResponse.class);
+        try {
+            return makeMenuItemRequest(
+                    SwedbankBaseConstants.MenuItemKey.REGISTER_TRANSFER,
+                    RegisterTransferRequest.create(
+                            amount,
+                            destinationAccountId,
+                            remittanceInformationValue,
+                            sourceAccountId,
+                            transferDueDate),
+                    RegisterTransferResponse.class);
+        } catch (HttpResponseException hre) {
+            if (!SwedbankApiErrors.isTransferAlreadyExists(hre)) {
+                throw hre;
+            }
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT)
+                    .setMessage(ErrorMessage.DUPLICATE_PAYMENT)
+                    .setInternalStatus(InternalStatus.DUPLICATE_PAYMENT.toString())
+                    .setException(hre)
+                    .build();
+        }
     }
 
     public RegisterTransferResponse registerPayment(

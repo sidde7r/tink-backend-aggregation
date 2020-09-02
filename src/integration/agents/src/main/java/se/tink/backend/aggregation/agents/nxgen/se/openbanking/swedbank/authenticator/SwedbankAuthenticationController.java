@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
@@ -174,6 +175,9 @@ public class SwedbankAuthenticationController
         ConsentResponse consentResponseIbanList = authenticator.getConsentForIbanList();
         authenticator.useConsent(consentResponseIbanList);
 
+        if (consentResponseIbanList.getConsentStatus().equalsIgnoreCase(ConsentStatus.VALID)) {
+            return;
+        }
         AuthenticationResponse response =
                 authenticator.initiateAuthorization(
                         consentResponseIbanList.getLinks().getHrefEntity().getHref());

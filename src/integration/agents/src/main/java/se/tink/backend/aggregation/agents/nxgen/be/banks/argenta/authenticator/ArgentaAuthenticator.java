@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ConfigResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthRequest;
@@ -51,7 +52,8 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         String cardNumber =
                 ArgentaCardNumber.formatCardNumber(credentials.getField(Field.Key.USERNAME));
 
-        ValidateAuthResponse validateAuthResponse = signInWithRegistredDevice(cardNumber, deviceId);
+        ValidateAuthResponse validateAuthResponse =
+                signInWithRegisteredDevice(cardNumber, deviceId);
         storeUakAndHomeOffice(
                 ArgentaSecurityUtil.getUak(
                         persistentStorage.getUak(),
@@ -73,7 +75,7 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
                     validateAuthResponse.getUak(), validateAuthResponse.getHomeOfficeId());
         }
         deviceToken = persistentStorage.getDeviceId();
-        validateAuthResponse = signInWithRegistredDevice(cardNumber, deviceToken);
+        validateAuthResponse = signInWithRegisteredDevice(cardNumber, deviceToken);
         storeUakAndHomeOffice(
                 ArgentaSecurityUtil.getUak(
                         persistentStorage.getUak(),
@@ -90,6 +92,10 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
     private void storeUakAndHomeOffice(String uak, String homeOfficeId) {
         persistentStorage.storeUak(uak);
         persistentStorage.storeHomeOffice(homeOfficeId);
+    }
+
+    private ConfigResponse mandatoryGetConfig(String deviceId) {
+        return apiClient.getConfig(ArgentaConstants.Url.CONFIG, deviceId);
     }
 
     private StartAuthResponse startAuth(String username, String deviceId, boolean registered)
@@ -121,11 +127,12 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         return UUID.randomUUID().toString().toUpperCase();
     }
 
-    private ValidateAuthResponse signInWithRegistredDevice(String cardNumber, String deviceToken)
+    private ValidateAuthResponse signInWithRegisteredDevice(String cardNumber, String deviceToken)
             throws SessionException {
         ValidateAuthResponse validateAuthResponse;
         StartAuthResponse startAuthResponse;
         try {
+            mandatoryGetConfig(deviceToken);
             startAuthResponse = startAuth(cardNumber, deviceToken, true);
             validateAuthResponse = validatePin(startAuthResponse, cardNumber);
             return validateAuthResponse;
@@ -138,6 +145,7 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
             throws SupplementalInfoException, LoginException, AuthorizationException {
         String deviceToken = generateRandomDeviceID();
         persistentStorage.setNewCredential(true);
+        mandatoryGetConfig(deviceToken);
         StartAuthResponse startAuthResponse = startAuth(cardNumber, deviceToken, false);
         persistentStorage.storeDeviceId(deviceToken);
         return validateDevice(startAuthResponse, cardNumber);

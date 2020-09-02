@@ -30,7 +30,7 @@ public class ArgentaApiClientTest {
         HttpResponseException httpResponseException = Mockito.mock(HttpResponseException.class);
         ArgentaErrorResponse argentaErrorResponse = Mockito.mock(ArgentaErrorResponse.class);
         Mockito.when(argentaErrorResponse.getMessage()).thenReturn("Oeps, er ging iets mis.");
-        Mockito.when(argentaErrorResponse.getCode()).thenReturn("error.sbp");
+        Mockito.when(argentaErrorResponse.getCode()).thenReturn("error.sbb");
         // when
         objectUnderTest.handleKnownErrorResponses(argentaErrorResponse, httpResponseException);
     }

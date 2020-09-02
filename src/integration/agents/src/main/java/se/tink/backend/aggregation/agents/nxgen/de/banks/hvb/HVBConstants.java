@@ -6,9 +6,9 @@ public final class HVBConstants {
     }
 
     public static final String APP_ID = "de.unicredit.apptan";
-    public static final String APP_VERSION = "4.1.0";
+    public static final String APP_VERSION = "4.2.3";
     public static final String OS_NAME = "ios";
-    public static final String OS_VERSION = "12.4.3";
+    public static final String OS_VERSION = "13.5.1";
     public static final String PLATFORM = "iPhone";
 
     static final String PREDEFINED_RSA_KEY_PAIR =

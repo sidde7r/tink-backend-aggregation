@@ -21,13 +21,13 @@ RELEASE_TRAIN_CHARTS = [
     "tink-backend-aggregation-statuspage-providers-cronjob",
 ]
 
-TRAIN_STEP = """
-- name: ':kubernetes: Upload Chart'
+CHART_STEP = """
+- name: ':kubernetes: Upload Charts'
   branches: "master"
-  key: "upload-chart-{chart}"
+  key: "upload-charts"
   command:
   - echo $$GOOGLE_CLOUD_ACCOUNT_JSON | base64 --decode > /root/credentials.json
-  - GOOGLE_APPLICATION_CREDENTIALS=/root/credentials.json /go/bin/kubernetes-generator --mode push --version "{version}" --repo . --chart "{chart}"
+  - GOOGLE_APPLICATION_CREDENTIALS=/root/credentials.json .buildkite/upload-charts.sh {charts}
   concurrency: 1
   concurrency_group: "upload-helm-gcs"
   plugins:
@@ -36,12 +36,15 @@ TRAIN_STEP = """
       always-pull: True
       environment:
       - "GOOGLE_CLOUD_ACCOUNT_JSON"
+      - "VERSION={version}"
+"""
 
+TRAIN_STEP = """
 - name: "Trigger release-train for {chart}"
   trigger: "release-train"
   branches: "master"
   depends_on:
-  - "upload-chart-{chart}"
+  - "upload-charts"
   async: true
   build:
     message: "{message}"
@@ -73,6 +76,11 @@ SONAR_STEP = """
 """
 
 version = os.environ['VERSION']
+
+print(CHART_STEP.format(
+    charts=str(" ").join(RELEASE_TRAIN_CHARTS),
+    version=version,
+    ))
 
 for chart in RELEASE_TRAIN_CHARTS:
     print(TRAIN_STEP.format(

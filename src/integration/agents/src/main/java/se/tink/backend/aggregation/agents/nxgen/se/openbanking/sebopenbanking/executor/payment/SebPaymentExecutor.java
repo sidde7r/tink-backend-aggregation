@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment;
 
 import com.google.common.base.Strings;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.ex
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentSigningRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebDateUtil;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -39,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -76,8 +76,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .withTemplateId(paymentProduct)
                         .withCreditorAccount(creditorAccountEntity)
                         .withDebtorAccount(debtorAccountEntity)
-                        .withExecutionDate(
-                                getExecutionDateOrCurrentDate(payment.getExecutionDate()))
+                        .withExecutionDate(getExecutionDateOrCurrentDate(payment, paymentProduct))
                         .withAmount(amountEntity)
                         .withCreditorName(payment.getCreditor().getName())
                         .build();
@@ -196,10 +195,22 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         }
     }
 
-    private String getExecutionDateOrCurrentDate(LocalDate executionDate) {
-        return executionDate == null
-                ? LocalDate.now().format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT))
-                : executionDate.toString();
+    private String getExecutionDateOrCurrentDate(Payment payment, String paymentProduct) {
+        switch (paymentProduct) {
+            case SebConstants.PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS:
+            case SebConstants.PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS:
+                return SebDateUtil.getTransferDateForBgPg(payment.getExecutionDate());
+            case SebConstants.PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS:
+                return SebDateUtil.getTransferDate(
+                        payment.getExecutionDate(),
+                        IntraBankChecker.isSwedishMarketIntraBank(
+                                payment.getDebtor().getAccountIdentifier(),
+                                payment.getCreditor().getAccountIdentifier()));
+            case SebConstants.PaymentProduct.SEPA_CREDIT_TRANSFER:
+                return SebDateUtil.getTransferDateForSepa(payment.getExecutionDate());
+            default:
+                throw new IllegalStateException(ErrorMessages.UNKNOWN_PAYMENT_PRODUCT);
+        }
     }
 
     private boolean shouldAddRemittanceInformationStructured(String paymentProduct) {

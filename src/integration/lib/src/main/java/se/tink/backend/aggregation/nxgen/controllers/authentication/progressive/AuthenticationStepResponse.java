@@ -28,7 +28,7 @@ public class AuthenticationStepResponse {
 
     public static AuthenticationStepResponse requestForSupplementInformation(
             final SupplementInformationRequester supplementInformationRequester) {
-        return new AuthenticationStepResponse((supplementInformationRequester));
+        return new AuthenticationStepResponse(supplementInformationRequester);
     }
 
     public static AuthenticationStepResponse executeStepWithId(String nextStepId) {

@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditca
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.investment.rpc.CustodyAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -204,13 +205,9 @@ public class NordeaDkApiClient {
         return baseAuthorizedRequest(URLs.FETCH_LOANS).get(LoansResponse.class);
     }
 
-    public String getLoanDetails(String loanId) {
-        return baseAuthorizedRequest(URLs.FETCH_LOANS + "/" + loanId).get(String.class);
-    }
-
-    public String getLoanTransactions(String loanId) {
-        return baseAuthorizedRequest(String.format(URLs.FETCH_LOANS_TRANSACTIONS_FORMAT, loanId))
-                .get(String.class);
+    public LoanDetailsResponse getLoanDetails(String loanId) {
+        return baseAuthorizedRequest(URLs.FETCH_LOANS + "/" + loanId)
+                .get(LoanDetailsResponse.class);
     }
 
     public TransactionsResponse getAccountTransactions(

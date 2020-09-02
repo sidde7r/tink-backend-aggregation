@@ -10,7 +10,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.MILLIS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.NONCE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.RESOURCE_PATH;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.SERVER_URL;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createAuthMacValue;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createBaseAuthString;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createBaseDataString;
@@ -35,7 +34,6 @@ public class AmexMacGeneratorTest {
         final AmexConfiguration amexConfigurationMock = mock(AmexConfiguration.class);
         when(amexConfigurationMock.getClientId()).thenReturn(CLIENT_ID);
         when(amexConfigurationMock.getClientSecret()).thenReturn(CLIENT_SECRET);
-        when(amexConfigurationMock.getServerUrl()).thenReturn(SERVER_URL);
 
         macSignatureCreatorMock = mock(MacSignatureCreator.class);
         when(macSignatureCreatorMock.createNonce()).thenReturn(NONCE);

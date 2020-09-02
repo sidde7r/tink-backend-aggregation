@@ -14,7 +14,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class LclAgentPaymentTest {
 
@@ -45,6 +46,9 @@ public class LclAgentPaymentTest {
     }
 
     private List<Payment> createRealDomesticPayment() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("Test");
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(LclAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
@@ -56,10 +60,10 @@ public class LclAgentPaymentTest {
         return Collections.singletonList(
                 new Payment.Builder()
                         .withCreditor(new Creditor(creditorAccountIdentifier))
+                        .withDebtor(new Debtor(debtorAccountIdentifier))
                         .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
                         .withCurrency("EUR")
-                        .withDebtor(new Debtor(debtorAccountIdentifier))
-                        .withReference(new Reference("Message", "Bang"))
+                        .withRemittanceInformation(remittanceInformation)
                         .withUniqueId(UUID.randomUUID().toString())
                         .build());
     }

@@ -14,6 +14,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
@@ -27,6 +29,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
     private MobilInitializer mobilInitializer;
     private WebElement dummyElement;
     private InOrder inOrder;
+    private Credentials credentials;
 
     private static final By WAITING_FOR_AUTHENTICATION_FORM_XPATH =
             By.xpath("//*[contains(text(),'Referanse')]");
@@ -36,10 +39,12 @@ public class BankIdMobilSSAuthenticationControllerTest {
         mobilInitializer = mock(MobilInitializer.class);
         driver = mock(PhantomJSDriver.class);
         webDriverHelper = mock(WebDriverHelper.class);
+        SupplementalRequester supplementalRequester = mock(SupplementalRequester.class);
         objUnderTest =
                 new BankIdMobilSSAuthenticationController(
-                        mobilInitializer, driver, webDriverHelper);
+                        webDriverHelper, driver, mobilInitializer, supplementalRequester);
         dummyElement = mock(WebElement.class);
+        credentials = mock(Credentials.class);
         inOrder = Mockito.inOrder(webDriverHelper, driver, mobilInitializer);
     }
 
@@ -50,7 +55,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
                 .willThrow(new HtmlElementNotFoundException(""));
 
         // when
-        Throwable throwable = catchThrowable(() -> objUnderTest.doLogin());
+        Throwable throwable = catchThrowable(() -> objUnderTest.doLogin(credentials));
 
         // then
         assertThat(throwable)
@@ -68,7 +73,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
                 .willReturn(Arrays.asList(dummyElement));
 
         // when
-        Throwable throwable = catchThrowable(() -> objUnderTest.doLogin());
+        Throwable throwable = catchThrowable(() -> objUnderTest.doLogin(credentials));
 
         // then
         assertThat(throwable)
@@ -81,7 +86,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
         // given
 
         // when
-        objUnderTest.doLogin();
+        objUnderTest.doLogin(credentials);
 
         // then
         inOrder.verify(mobilInitializer).initializeBankIdMobilAuthentication();

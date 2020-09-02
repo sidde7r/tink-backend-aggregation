@@ -51,7 +51,6 @@ public class OAuth2AuthenticationController
     private final Credentials credentials;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
-    private final CredentialsRequest request;
 
     private final String strongAuthenticationState;
     private final String strongAuthenticationStateSupplementalKey;
@@ -89,13 +88,12 @@ public class OAuth2AuthenticationController
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
-        this.request = request;
 
         this.strongAuthenticationStateSupplementalKey =
                 strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
 
-        if (shouldForceAuthentication()) {
+        if (ForceAuthentication.shouldForceAuthentication(request)) {
             invalidateToken();
         }
     }
@@ -279,14 +277,5 @@ public class OAuth2AuthenticationController
                         token.getIssuedAt(),
                         token.getExpiresInSeconds()));
         authenticator.useAccessToken(token);
-    }
-
-    private boolean shouldForceAuthentication() {
-        boolean shouldForceAuthentication = ForceAuthentication.shouldForceAuthentication(request);
-        logger.info(
-                "[forceAuthenticate] Should force authentication for credentials: {}, {}",
-                request.getCredentials().getId(),
-                shouldForceAuthentication);
-        return shouldForceAuthentication;
     }
 }

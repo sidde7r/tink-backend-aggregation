@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.r
 
 import java.util.List;
 import lombok.Getter;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.entities.LoanEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
 @JsonObject
 public class LoansResponse {
-    private List<LoansEntity> loans;
+
+    private List<LoanEntity> loans;
 }

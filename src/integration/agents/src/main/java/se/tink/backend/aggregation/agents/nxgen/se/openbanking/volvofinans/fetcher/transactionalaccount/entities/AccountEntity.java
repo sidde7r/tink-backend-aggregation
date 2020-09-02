@@ -32,8 +32,14 @@ public class AccountEntity {
 
     public CreditCardAccount toCreditCardAccount() {
 
-        final Double availableCredit =
-                Double.parseDouble(creditLimit.getAmount()) + getBalance().getDoubleValue();
+        // To avoid NPE at the absence of "balances" if the account is not belonged to account
+        // holder
+        Double availableCredit = 0.00;
+
+        if (Optional.ofNullable(balances).isPresent()) {
+            availableCredit =
+                    Double.parseDouble(creditLimit.getAmount()) + getBalance().getDoubleValue();
+        }
 
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(

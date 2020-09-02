@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -22,8 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClien
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthenticationsPatchResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemIdParamsResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoansEntity;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -91,7 +88,6 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             }
             throw e;
         }
-        fetchLoans();
     }
 
     public AuthenticationStepResponse autoAuthenticate() {
@@ -119,48 +115,7 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             log.info("Refresh token missing or invalid, proceeding to manual authentication");
             return AuthenticationStepResponse.executeNextStep();
         }
-        fetchLoans();
         return AuthenticationStepResponse.authenticationSucceeded();
-    }
-
-    /*
-      TODO: https://tinkab.atlassian.net/browse/ITE-1274
-      Temporary loans fetching in order to analyze API responses in AWS logs.
-      Currently we do not have any ambassador, with whom loans can be tested.
-      When trying to fetch loan details and transactions we assume that such endpoints exist (as in account details)
-    */
-    private void fetchLoans() {
-        try {
-            LoansResponse loans = bankClient.getLoans();
-            if (CollectionUtils.isNotEmpty(loans.getLoans())) {
-                log.info("Loans available for Nordea DK");
-                loans.getLoans().stream()
-                        .map(LoansEntity::getLoanId)
-                        .forEach(
-                                loanId -> {
-                                    this.tryFetchLoanDetails(loanId);
-                                    this.tryFetchLoanTransactions(loanId);
-                                });
-            }
-        } catch (HttpResponseException e) {
-            log.error("Exception while getting loans", e);
-        }
-    }
-
-    private void tryFetchLoanDetails(String loanId) {
-        try {
-            bankClient.getLoanDetails(loanId);
-        } catch (HttpResponseException e) {
-            log.error("Exception while getting loan details", e);
-        }
-    }
-
-    private void tryFetchLoanTransactions(String loanId) {
-        try {
-            bankClient.getLoanTransactions(loanId);
-        } catch (HttpResponseException e) {
-            log.error("Exception while getting loan transactions", e);
-        }
     }
 
     @Override

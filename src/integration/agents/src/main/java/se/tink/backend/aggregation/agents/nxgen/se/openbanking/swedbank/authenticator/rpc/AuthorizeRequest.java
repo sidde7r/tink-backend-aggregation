@@ -10,16 +10,12 @@ public class AuthorizeRequest {
     private String clientID;
     private PsuDataEntity psuData;
     private String redirectUri;
-    private String scope = RequestValues.PSD2;
+    private String scope = RequestValues.ALL_SCOPES;
 
     public AuthorizeRequest(String clientID, String redirectUri) {
         this.clientID = clientID;
         this.redirectUri = redirectUri;
         psuData = new PsuDataEntity();
-    }
-
-    public AuthorizeRequest(PsuDataEntity psuData) {
-        this.psuData = psuData;
     }
 
     public AuthorizeRequest() {}

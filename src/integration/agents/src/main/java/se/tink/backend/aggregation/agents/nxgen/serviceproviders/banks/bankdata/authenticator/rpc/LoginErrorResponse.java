@@ -82,12 +82,28 @@ public class LoginErrorResponse {
 
         switch (errorCode) {
             case 109:
-                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(getUserMessage());
+                handle109ErrorCode();
+                break;
             case 112:
                 throw LoginError.INCORRECT_CREDENTIALS.exception(getUserMessage());
             default:
                 throw LoginError.DEFAULT_MESSAGE.exception(
                         new LocalizableKey(String.format("Unknown error code %d", errorCode)));
+        }
+    }
+
+    private void handle109ErrorCode() {
+        switch (loginErrorNumber) {
+            case 1:
+                throw LoginError.INCORRECT_CREDENTIALS.exception(getUserMessage());
+            case 2:
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(getUserMessage());
+            default:
+                throw LoginError.DEFAULT_MESSAGE.exception(
+                        new LocalizableKey(
+                                String.format(
+                                        "Unknown login error number %d for error code %d",
+                                        loginErrorNumber, errorCode)));
         }
     }
 }

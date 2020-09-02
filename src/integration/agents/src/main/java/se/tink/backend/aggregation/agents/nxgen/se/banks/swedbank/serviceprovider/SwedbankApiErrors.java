@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -106,6 +107,20 @@ public class SwedbankApiErrors {
 
         ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
         return errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.RECIPIENT_NUMBER);
+    }
+
+    public static boolean isTransferAlreadyExists(HttpResponseException hre) {
+        // This method expects an response with the following characteristics:
+        // - Http status: 400
+        // - Http body: `ErrorResponse` with error code of "TRANSFER_ALREADY_EXISTS"
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_BAD_REQUEST) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorCode(ErrorCode.TRANSFER_ALREADY_EXISTS);
     }
 
     public static boolean isSessionTerminated(HttpResponseException hre) {

@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.APP_ID;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.AUTHORIZE_URL;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.CLIENT_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.CLUSTER_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.ORIGINATING_USER_IP;
@@ -24,6 +23,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -36,8 +37,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.TinkHttpClientProviderFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.WireMockTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -52,25 +52,23 @@ import se.tink.libraries.user.rpc.UserProfile;
 
 public abstract class IntegrationTestBase {
 
-    private static final String LOCAL_URL = "http://localhost:%s";
-
     @Rule
     public WireMockRule wireMockRule =
             new WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort());
 
     AgentComponentProvider createAgentComponentProvider(CredentialsRequest credentialsRequest) {
-        final TinkHttpClientProviderFactory tinkHttpClientProviderFactory =
-                new NextGenTinkHttpClientProviderFactory();
         final SupplementalInformationProviderFactory supplementalInformationProviderFactory =
                 new SupplementalInformationProviderFactoryImpl();
         final AgentContextProviderFactory agentContextProviderFactory =
                 new AgentContextProviderFactoryImpl();
         final SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
         final AgentContext agentContext = createAgentContext(credentialsRequest);
+        final FakeBankSocket fakeBankSocket =
+                MutableFakeBankSocket.of("localhost:" + wireMockRule.httpsPort());
 
         return new AgentComponentProvider(
-                tinkHttpClientProviderFactory.createTinkHttpClientProvider(
-                        credentialsRequest, agentContext, signatureKeyPair),
+                new WireMockTinkHttpClientProvider(
+                        credentialsRequest, agentContext, signatureKeyPair, fakeBankSocket),
                 supplementalInformationProviderFactory.createSupplementalInformationProvider(
                         agentContext, credentialsRequest),
                 agentContextProviderFactory.createAgentContextProvider(
@@ -138,8 +136,6 @@ public abstract class IntegrationTestBase {
         final JSONObject agentConfiguration = new JSONObject();
         agentConfiguration.put("clientId", CLIENT_ID);
         agentConfiguration.put("clientSecret", "secret");
-        agentConfiguration.put("grantAccessJourneyUrl", AUTHORIZE_URL);
-        agentConfiguration.put("serverUrl", String.format(LOCAL_URL, wireMockRule.port()));
         agentConfiguration.put("redirectUrl", REDIRECT_URL);
 
         return agentConfiguration;

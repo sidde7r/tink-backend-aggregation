@@ -6,13 +6,10 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import java.util.Date;
 import java.util.UUID;
-import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.enums.SignableOperationTypes;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.uuid.UUIDUtils;
 
 public class SignableOperation {
     private static final ImmutableSet<SignableOperationStatuses> IN_PROGRESS_STATUSES =
@@ -46,13 +43,6 @@ public class SignableOperation {
         this.credentialsId = transfer.getCredentialsId();
         this.type = SignableOperationTypes.TRANSFER.name();
         this.signableObject = SerializationUtils.serializeToString(transfer);
-    }
-
-    public SignableOperation(GenericApplication application) {
-        this.underlyingId = application.getApplicationId();
-        this.userId = application.getUserId();
-        this.credentialsId = application.getCredentialsId();
-        this.type = SignableOperationTypes.APPLICATION.name();
     }
 
     public Date getCreated() {
@@ -187,52 +177,6 @@ public class SignableOperation {
 
     public void setInternalStatus(String internalStatus) {
         this.internalStatus = internalStatus;
-    }
-
-    public static SignableOperation create(Transfer transfer, SignableOperationStatuses status) {
-        SignableOperation signableOperation =
-                transfer != null ? new SignableOperation(transfer) : new SignableOperation();
-
-        Date now = new Date();
-        signableOperation.setStatus(status);
-        signableOperation.setCreated(now);
-        signableOperation.setUpdated(now);
-
-        return signableOperation;
-    }
-
-    public static SignableOperation create(User user, SignableOperationStatuses status) {
-        SignableOperation signableOperation = new SignableOperation();
-
-        if (user != null && !Strings.isNullOrEmpty(user.getId())) {
-            signableOperation.setUserId(UUIDUtils.fromTinkUUID(user.getId()));
-        }
-
-        Date now = new Date();
-        signableOperation.setStatus(status);
-        signableOperation.setCreated(now);
-        signableOperation.setUpdated(now);
-
-        return signableOperation;
-    }
-
-    public static SignableOperation create(
-            GenericApplication application, SignableOperationStatuses status) {
-        SignableOperation signableOperation =
-                application != null ? new SignableOperation(application) : new SignableOperation();
-
-        Date now = new Date();
-        signableOperation.setStatus(status);
-        signableOperation.setCreated(now);
-        signableOperation.setUpdated(now);
-
-        return signableOperation;
-    }
-
-    @JsonIgnore
-    public void cleanSensitiveData() {
-        signableObject = null;
-        statusDetailsKey = null;
     }
 
     public enum StatusDetailsKey {

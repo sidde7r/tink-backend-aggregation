@@ -6,7 +6,14 @@ import java.util.Map;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public class NordeaSEConstants {
+
+    private NordeaSEConstants() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static class Urls {
+        private Urls() {}
+
         public static final String BASE_URL = "https://se.smemobilebank.prod.nordea.com";
 
         public static final String INIT_BANKID = BASE_URL + Endpoints.INIT_BANKID;
@@ -19,6 +26,8 @@ public class NordeaSEConstants {
     }
 
     public static class Endpoints {
+        private Endpoints() {}
+
         public static final String INIT_BANKID =
                 "/SE/MobileBankIdServiceV1.1/MobileBankIdInitialAuthentication";
         public static final String POLL_BANKID =
@@ -30,11 +39,15 @@ public class NordeaSEConstants {
     }
 
     public static class QueryKeys {
+        private QueryKeys() {}
+
         public static final String ACCOUNT_ID = "productId";
         public static final String CONTINUE_KEY = "continueKey";
     }
 
     public static class Headers {
+        private Headers() {}
+
         public static final String REQUEST_ID = "x-Request-Id";
         public static final String SECURITY_TOKEN = "x-Security-Token";
     }
@@ -53,25 +66,42 @@ public class NordeaSEConstants {
                     .build();
 
     public static class StorageKeys {
+        private StorageKeys() {}
+
         public static final String SECURITY_TOKEN = "security_token";
         public static final String HOLDER_NAME = "holder_name";
     }
 
     public static class BankIdStatus {
+        private BankIdStatus() {}
+
         public static final String COMPLETE = "COMPLETE";
         public static final String WAITING = "OUTSTANDING_TRANSACTION";
         public static final String USER_SIGNING = "USER_SIGN";
+        public static final String NO_CLIENT = "NO_CLIENT";
     }
 
     public static class ErrorCodes {
-        public static final String NO_CLIENT = "MBS8636"; // BankId no client
+        private ErrorCodes() {}
+
+        public static final String NOT_CUSTOMER = "MBS8636";
+        public static final String BANKID_CANCEL = "MBS0902";
     }
 
     public static class ErrorMessages {
+        private ErrorMessages() {}
+
         public static final String URL_ENCODING_ERROR = "Url is not well defined.";
     }
 
     public static class AccountType {
+        private AccountType() {}
+
+        private static final String OMBUDSKONTO = "Ombudskonto";
+        private static final String DEPOSIT = "Deposit";
+        private static final String FASTRANTEPLACERING = "Fastränteplacering";
+        private static final String CENTRALKONTO = "Centralkonto";
+
         private static final Map<String, String> ACCOUNT_NAMES_BY_CODE = Maps.newHashMap();
         private static final Map<String, TransactionalAccountType> ACCOUNT_TYPES_BY_CODE =
                 Maps.newHashMap();
@@ -79,7 +109,7 @@ public class NordeaSEConstants {
         static {
             addType("SE0000", "Personkonto", TransactionalAccountType.CHECKING);
             addType("SE0001", "Fn-konto", TransactionalAccountType.CHECKING);
-            addType("SE0002", "Ombudskonto", TransactionalAccountType.CHECKING);
+            addType("SE0002", OMBUDSKONTO, TransactionalAccountType.CHECKING);
             addType("SE0004", "Synskadekonto", TransactionalAccountType.CHECKING);
             addType("SE0005", "Utlandslönekonto", TransactionalAccountType.CHECKING);
             addType("SE1101", "Private Bankingkonto", TransactionalAccountType.CHECKING);
@@ -89,12 +119,12 @@ public class NordeaSEConstants {
             addType("SE0105", "Utlandslönekto Solo", TransactionalAccountType.CHECKING);
             addType("SE0200", "Personkonto-student", TransactionalAccountType.CHECKING);
             addType("SE0300", "Personkonto-ungdom", TransactionalAccountType.CHECKING);
-            addType("SE0302", "Ombudskonto", TransactionalAccountType.CHECKING);
+            addType("SE0302", OMBUDSKONTO, TransactionalAccountType.CHECKING);
             addType("SE0304", "Synskadekonto", TransactionalAccountType.CHECKING);
             addType("SE0402", "IPS cash account", TransactionalAccountType.CHECKING);
             addType("SE0500", "Depålikvidkonto", TransactionalAccountType.CHECKING);
             addType("SE0501", "ISK Trader likvidkonto", TransactionalAccountType.CHECKING);
-            addType("SE0502", "Ombudskonto", TransactionalAccountType.CHECKING);
+            addType("SE0502", OMBUDSKONTO, TransactionalAccountType.CHECKING);
             addType("SE0600", "Pgkonto Privat", TransactionalAccountType.CHECKING);
             addType("SE0606", "Eplusgiro Privat", TransactionalAccountType.CHECKING);
             addType("SE0700", "Pgkonto Privat Ftg", TransactionalAccountType.CHECKING);
@@ -170,16 +200,16 @@ public class NordeaSEConstants {
             addType("SE4404", "Allm Investeringskonto", TransactionalAccountType.SAVINGS);
             addType("SE4405", "Uppfinnarkonto", TransactionalAccountType.SAVINGS);
             addType("SE4500", "Sparkonto", TransactionalAccountType.SAVINGS);
-            addType("SE4600", "Deposit", TransactionalAccountType.SAVINGS);
-            addType("SE4601", "Deposit", TransactionalAccountType.SAVINGS);
-            addType("SE4602", "Fastränteplacering", TransactionalAccountType.SAVINGS);
+            addType("SE4600", DEPOSIT, TransactionalAccountType.SAVINGS);
+            addType("SE4601", DEPOSIT, TransactionalAccountType.SAVINGS);
+            addType("SE4602", FASTRANTEPLACERING, TransactionalAccountType.SAVINGS);
             addType("SE4603", "Dagsinlåning", TransactionalAccountType.SAVINGS);
-            addType("SE4604", "Deposit", TransactionalAccountType.SAVINGS);
-            addType("SE4605", "Fastränteplacering", TransactionalAccountType.SAVINGS);
-            addType("SE4606", "Fastränteplacering", TransactionalAccountType.SAVINGS);
-            addType("SE4607", "Fastränteplacering", TransactionalAccountType.SAVINGS);
+            addType("SE4604", DEPOSIT, TransactionalAccountType.SAVINGS);
+            addType("SE4605", FASTRANTEPLACERING, TransactionalAccountType.SAVINGS);
+            addType("SE4606", FASTRANTEPLACERING, TransactionalAccountType.SAVINGS);
+            addType("SE4607", FASTRANTEPLACERING, TransactionalAccountType.SAVINGS);
             addType("SE4608", "Placering 4 År", TransactionalAccountType.SAVINGS);
-            addType("SE4609", "Fastränteplacering", TransactionalAccountType.SAVINGS);
+            addType("SE4609", FASTRANTEPLACERING, TransactionalAccountType.SAVINGS);
             addType("SE4610", "Bonuskonto, utgåva", TransactionalAccountType.SAVINGS);
             addType("SE4611", "Tillväxtkonto", TransactionalAccountType.SAVINGS);
             addType("SE4700", "Planeringskonto 2 År", TransactionalAccountType.SAVINGS);
@@ -220,10 +250,10 @@ public class NordeaSEConstants {
             addType("SE7603", "Zb Sub Account", TransactionalAccountType.SAVINGS);
             addType("SE7604", "Zb Adjustement Account", TransactionalAccountType.SAVINGS);
             addType("SE7605", "Z Hdjustement Account", TransactionalAccountType.SAVINGS);
-            addType("SE7700", "Centralkonto", TransactionalAccountType.SAVINGS);
-            addType("SE7701", "Centralkonto", TransactionalAccountType.SAVINGS);
-            addType("SE7702", "Centralkonto", TransactionalAccountType.SAVINGS);
-            addType("SE7703", "Centralkonto", TransactionalAccountType.SAVINGS);
+            addType("SE7700", CENTRALKONTO, TransactionalAccountType.SAVINGS);
+            addType("SE7701", CENTRALKONTO, TransactionalAccountType.SAVINGS);
+            addType("SE7702", CENTRALKONTO, TransactionalAccountType.SAVINGS);
+            addType("SE7703", CENTRALKONTO, TransactionalAccountType.SAVINGS);
             addType("SE7800", "Samlingsnummer", TransactionalAccountType.SAVINGS);
             addType("SE7900", "Dispositionsnummer", TransactionalAccountType.SAVINGS);
             addType("SE7901", "Belastningsnummer", TransactionalAccountType.SAVINGS);

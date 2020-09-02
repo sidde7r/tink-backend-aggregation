@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -18,18 +19,24 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.Authentic
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SetupSessionStep implements AuthenticationStep {
 
-    private AuthenticationClient authenticationClient;
-    private NordeaNoStorage storage;
-    private RandomValueGenerator randomValueGenerator;
+    private static final LocalizableKey VALIDATE_REFERENCE_CODE_MSG =
+            new LocalizableKey(
+                    "Please check if given reference code matches with presented one for Bank ID");
+
+    private final AuthenticationClient authenticationClient;
+    private final NordeaNoStorage storage;
+    private final RandomValueGenerator randomValueGenerator;
+    private final SupplementalRequester supplementalRequester;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -74,13 +81,9 @@ public class SetupSessionStep implements AuthenticationStep {
 
         String oidcSessionId = oidcSessionDetails.getSessionId();
         storage.storeOidcSessionId(oidcSessionId);
-        List<Field> confirm =
-                Collections.singletonList(
-                        getBankIdPhraseVerificationField(
-                                oidcSessionDetails.getMerchantReference()));
+        displayBankIdPrompt(request.getCredentials(), oidcSessionDetails.getMerchantReference());
 
-        return AuthenticationStepResponse.requestForSupplementInformation(
-                new SupplementInformationRequester.Builder().withFields(confirm).build());
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private String calculateCodeChallenge(String codeVerifier) {
@@ -104,11 +107,21 @@ public class SetupSessionStep implements AuthenticationStep {
                 metaElements.get("oidc-sid"));
     }
 
-    private Field getBankIdPhraseVerificationField(String phrase) {
+    private void displayBankIdPrompt(Credentials credentials, String referenceNumber) {
+        Field field = getBankIdPhraseVerificationField(referenceNumber);
+
+        credentials.setSupplementalInformation(
+                SerializationUtils.serializeToString(Collections.singletonList(field)));
+        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
+
+        supplementalRequester.requestSupplementalInformation(credentials, false);
+    }
+
+    private Field getBankIdPhraseVerificationField(String referenceNumber) {
         return Field.builder()
                 .immutable(true)
-                .description("Please verify the BankId login.")
-                .value(phrase)
+                .description(VALIDATE_REFERENCE_CODE_MSG.get())
+                .value(referenceNumber)
                 .name("name")
                 .build();
     }

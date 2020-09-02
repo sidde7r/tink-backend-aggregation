@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ConfigResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthRequest;
@@ -46,6 +47,15 @@ public class ArgentaApiClient {
             return;
         }
         throw SessionError.SESSION_EXPIRED.exception();
+    }
+
+    public ConfigResponse getConfig(URL config, String deviceToken) {
+        RequestBuilder request =
+                client.request(config)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
+        addMandatoryHeaders(request, deviceToken);
+        return getRequestWithAuthorization(ConfigResponse.class, request);
     }
 
     public StartAuthResponse startAuth(
@@ -135,7 +145,7 @@ public class ArgentaApiClient {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(responseException);
             } else if (errorCode
                     .toLowerCase()
-                    .startsWith(ArgentaConstants.ErrorResponse.ERROR_CODE_SBP)) {
+                    .startsWith(ArgentaConstants.ErrorResponse.ERROR_CODE_SBB)) {
                 String errorMessage = getErrorMessage(argentaErrorResponse);
                 if (!Strings.isNullOrEmpty(errorMessage)) {
                     handleKnownErrorMessages(errorMessage.toLowerCase(), responseException);
@@ -151,6 +161,8 @@ public class ArgentaApiClient {
             throw LoginError.REGISTER_DEVICE_ERROR.exception(responseException);
         } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.AUTHENTICATION_ERROR)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception(responseException);
+        } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.TOO_MANY_ATTEMPTS)) {
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(responseException);
         } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.ACCOUNT_BLOCKED)) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception(responseException);
         } else if (errorMessage.contains(

@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.execut
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -46,7 +47,7 @@ public final class RaiffeisenApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
-    private RaiffeisenConfiguration configuration;
+    private AgentConfiguration<RaiffeisenConfiguration> configuration;
     private final SessionStorage sessionStorage;
 
     public RaiffeisenApiClient(
@@ -60,7 +61,7 @@ public final class RaiffeisenApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    protected void setConfiguration(RaiffeisenConfiguration configuration) {
+    protected void setConfiguration(AgentConfiguration<RaiffeisenConfiguration> configuration) {
         this.configuration = configuration;
     }
 
@@ -91,12 +92,11 @@ public final class RaiffeisenApiClient {
                 TokenRequest.builder()
                         .setGrantType(RaiffeisenConstants.FormValues.GRANT_TYPE)
                         .setScope(RaiffeisenConstants.FormValues.SCOPE)
-                        .setClientId(configuration.getClientId())
+                        .setClientId(configuration.getProviderSpecificConfiguration().getClientId())
                         .build();
 
         return client.request(Urls.AUTHENTICATE)
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
-                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, clientCredentials)
                 .toTinkToken();
@@ -119,8 +119,8 @@ public final class RaiffeisenApiClient {
             ConsentResponse consentResponse =
                     createRequestInSession(Urls.CONSENTS)
                             .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
-                            .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                             .header(HeaderKeys.TPP_REDIRECT_URI, createRedirectUrlWithState(state))
+                            .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                             .post(ConsentResponse.class, consentRequest);
 
             persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
@@ -149,7 +149,6 @@ public final class RaiffeisenApiClient {
             return createRequestInSession(Urls.ACCOUNTS)
                     .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                     .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
-                    .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                     .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                     .get(AccountsResponse.class);
         } catch (HttpResponseException e) {
@@ -174,7 +173,6 @@ public final class RaiffeisenApiClient {
                                 ParameterKeys.ACCOUNT_ID, account.getApiIdentifier()))
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
-                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .queryParam(
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
@@ -205,7 +203,6 @@ public final class RaiffeisenApiClient {
                         Urls.CONSENT_STATUS.parameter(
                                 ParameterKeys.CONSENT_ID,
                                 persistentStorage.get(StorageKeys.CONSENT_ID)))
-                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .get(ConsentResponse.class)
                 .getConsentStatus();
     }

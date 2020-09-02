@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tra
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -18,5 +19,10 @@ public class AccountOwnerEntity {
     @JsonIgnore
     public String getOwnerName() {
         return lastName;
+    }
+
+    @JsonIgnore
+    public boolean hasOwnerName() {
+        return !Strings.isNullOrEmpty(lastName);
     }
 }

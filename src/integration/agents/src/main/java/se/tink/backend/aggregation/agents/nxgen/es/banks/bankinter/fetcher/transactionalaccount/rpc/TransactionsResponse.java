@@ -4,7 +4,8 @@ import com.google.api.client.repackaged.com.google.common.base.Objects;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -63,7 +64,20 @@ public class TransactionsResponse extends JsfUpdateResponse {
             newConsecutiveEmptyReplies = 0;
         }
 
-        return new PaginationKey(formId, source, getViewState(), newConsecutiveEmptyReplies);
+        return new PaginationKey(
+                formId,
+                source,
+                getViewState(),
+                newConsecutiveEmptyReplies,
+                getFirstTransactionDate());
+    }
+
+    public Date getFirstTransactionDate() {
+        if (getTransactionRows().getLength() > 0) {
+            final Transaction transaction = rowToTransaction(getTransactionRows().item(0));
+            return transaction.getDate();
+        }
+        return null;
     }
 
     private Transaction rowToTransaction(Node row) {
@@ -118,7 +132,7 @@ public class TransactionsResponse extends JsfUpdateResponse {
         return transactionRows;
     }
 
-    public Collection<Transaction> toTinkTransactions() {
+    public List<Transaction> toTinkTransactions() {
         final NodeList transactionRows = getTransactionRows();
         ArrayList<Transaction> transactions = new ArrayList<>();
         for (int i = 0; i < transactionRows.getLength(); i++) {

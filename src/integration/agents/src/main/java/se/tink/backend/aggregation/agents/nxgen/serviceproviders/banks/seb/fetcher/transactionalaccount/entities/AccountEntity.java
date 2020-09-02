@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebCo
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebPaymentAccountCapabilities;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -71,9 +73,10 @@ public class AccountEntity {
     private String KTOUTDR_UTSKR;
 
     @JsonIgnore
-    public boolean isTransactionalAccount() {
-        return SebConstants.ACCOUNT_TYPE_MAPPER.isOf(accountType, AccountTypes.CHECKING)
-                || SebConstants.ACCOUNT_TYPE_MAPPER.isOf(accountType, AccountTypes.SAVINGS);
+    public boolean isTransactionalAccount(AccountTypeMapper mapper) {
+
+        return mapper.isOneOf(
+                accountType, ImmutableSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS));
     }
 
     @JsonIgnore

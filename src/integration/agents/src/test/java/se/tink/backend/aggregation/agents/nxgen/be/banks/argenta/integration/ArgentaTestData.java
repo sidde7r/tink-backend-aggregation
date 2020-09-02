@@ -8,9 +8,9 @@ public class ArgentaTestData {
     static final String ERROR =
             "{\"code\":\"error.request.invalid\",\"message\":\"The request has validation errors.\",\"reregister\":false,\"fieldErrors\":[{\"field\":\"cardNumber\",\"code\":\"error.authentication.cardnumber.invalid\",\"message\":\"Card number is required when no ib subscription is passed and should be in the following format: 6703 xxxx xxxx xxxx x with the final x being the control digit.\"}]}";
     static final String AUTHENTICATION_ERROR =
-            "{\"code\":\"error.sbp\",\"message\":\"De logingegevens zijn niet juist.\",\"reregister\":false}";
+            "{\"code\":\"error.sbb\",\"message\":\"De logingegevens zijn niet juist.\",\"reregister\":false}";
     static final String TOO_MANY_DEVICE_ERROR =
-            "{\"code\":\"error.sbp\",\"message\":\"U hebt het maximumaantal actieve registraties voor dit abonnement bereikt. Meld u aan op Argenta Internetbankieren en ga naar 'Instellingen' om een registratie te verwijderen.\",\"reregister\":false}";
+            "{\"code\":\"error.sbb\",\"message\":\"U hebt het maximumaantal actieve registraties voor dit abonnement bereikt. Meld u aan op Argenta Internetbankieren en ga naar 'Instellingen' om een registratie te verwijderen.\",\"reregister\":false}";
     static final String ACCOUNTS =
             "{\n"
                     + "  \"page\": 1,\n"

@@ -33,8 +33,8 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
 
     private static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
     private static final String PAYMENT_ID_PATH_PLACEHOLDER = "paymentId";
-    private static final String TOKEN_PATH = "token";
-    private static final String PISP_PATH = "pisp";
+    private static final String TOKEN_PATH = "/token";
+    private static final String PISP_PATH = "/pisp";
     private static final String CREATE_PAYMENT_PATH = PISP_PATH + "/payment-requests";
     private static final String GET_PAYMENT_PATH = PISP_PATH + "/payment-requests/{paymentId}";
     private static final String CONFIRM_PAYMENT_PATH =
@@ -81,8 +81,7 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
 
     @Override
     public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
-        PaymentRequestResource paymentRequestResource = new PaymentRequestResource();
-        paymentRequestResource = paymentRequestResource.of(request);
+        PaymentRequestResource paymentRequestResource = new PaymentRequestResource(request);
 
         sessionStorage.put(
                 REDIRECT_URL_LOCAL_KEY,
@@ -129,23 +128,29 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
                         .type(MediaType.APPLICATION_JSON)
                         .get(GetPaymentRequest.class);
         String statusCode = getPaymentRequest.getPaymentRequest().getPaymentInformationStatus();
-        if (statusCode != null
-                && statusCode.equalsIgnoreCase(LCL_PAYMENT_STATUS_WAITING_FOR_CONFIRMATION)) {
-            ConfirmPaymentRequest confirmPaymentRequest = new ConfirmPaymentRequest();
-            getPaymentRequest =
-                    createRequestAndSetHeaders(
-                                    createUrl(CONFIRM_PAYMENT_PATH)
-                                            .parameter(PAYMENT_ID_PATH_PLACEHOLDER, paymentId),
-                                    confirmPaymentRequest)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .type(MediaType.APPLICATION_JSON)
-                            .post(GetPaymentRequest.class, confirmPaymentRequest);
-        }
-        return getPaymentRequest.getPaymentRequest().toPaymentResponse();
+        return isStatusToBeConfirmed(statusCode)
+                ? confirmPaymentRequest(paymentId).getPaymentRequest().toPaymentResponse()
+                : getPaymentRequest.getPaymentRequest().toPaymentResponse();
+    }
+
+    private boolean isStatusToBeConfirmed(String statusCode) {
+        return statusCode != null
+                && statusCode.equalsIgnoreCase(LCL_PAYMENT_STATUS_WAITING_FOR_CONFIRMATION);
+    }
+
+    private GetPaymentRequest confirmPaymentRequest(String paymentId) {
+        ConfirmPaymentRequest confirmPaymentRequest = new ConfirmPaymentRequest();
+        return createRequestAndSetHeaders(
+                        createUrl(CONFIRM_PAYMENT_PATH)
+                                .parameter(PAYMENT_ID_PATH_PLACEHOLDER, paymentId),
+                        confirmPaymentRequest)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .post(GetPaymentRequest.class, confirmPaymentRequest);
     }
 
     private URL createUrl(String path) {
-        return new URL(configuration.getProviderSpecificConfiguration().getBaseUrl() + "/" + path);
+        return new URL(configuration.getProviderSpecificConfiguration().getBaseUrl() + path);
     }
 
     private RequestBuilder createRequestAndSetHeaders(URL url, Object body) {

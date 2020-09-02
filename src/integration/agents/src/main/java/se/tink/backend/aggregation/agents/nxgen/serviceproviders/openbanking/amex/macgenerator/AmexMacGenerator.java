@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 
 import java.time.Clock;
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexGrantType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
@@ -54,14 +55,10 @@ public class AmexMacGenerator {
                 nonce,
                 HttpMethod.GET.name(),
                 URL.urlEncode(resourcePath),
-                getHostFromServerUrl(),
+                Urls.SERVER_URL.toUri().getHost(),
                 SERVER_PORT,
                 "",
                 "");
-    }
-
-    private String getHostFromServerUrl() {
-        return amexConfiguration.getServerUrl().replace("https://", "");
     }
 
     private String getUnixTimestamp() {

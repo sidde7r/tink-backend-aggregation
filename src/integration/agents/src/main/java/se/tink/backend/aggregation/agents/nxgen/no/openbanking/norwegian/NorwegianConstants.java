@@ -24,6 +24,7 @@ public class NorwegianConstants {
 
     public static class URLs {
         public static final String BASE_URL = "https://api.banknorwegian.com/openbanking";
+        public static final String TOKEN_URL = "https://identity.banknorwegian.no/connect/token";
         public static final String ACCOUNTS_PATH = "/accounts";
         public static final String BALANCES_PATH = "/accounts/{accountResourceId}/balances";
         public static final String TRANSACTIONS_PATH = "/accounts/{accountResourceId}/transactions";

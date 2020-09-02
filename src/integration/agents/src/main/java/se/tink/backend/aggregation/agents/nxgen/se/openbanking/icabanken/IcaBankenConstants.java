@@ -1,8 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken;
 
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
+
 public final class IcaBankenConstants {
 
+    private IcaBankenConstants() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static class ProductionUrls {
+        private ProductionUrls() {}
+
         private static String BASE =
                 "https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0";
 
@@ -14,6 +23,8 @@ public final class IcaBankenConstants {
     }
 
     public static class SandboxUrls {
+        private SandboxUrls() {}
+
         // Base url is not the same for this request
         public static final String FETCH_TOKEN = "https://ims.icagruppen.se/oauth/v2/token";
 
@@ -26,10 +37,14 @@ public final class IcaBankenConstants {
     }
 
     public static class StorageKeys {
+        private StorageKeys() {}
+
         public static final String TOKEN = "OAUTH_TOKEN";
     }
 
     public static class QueryKeys {
+        private QueryKeys() {}
+
         public static final String BEARER = "Bearer";
         public static final String WITH_BALANCE = "withBalance";
         public static final String DATE_FROM = "from";
@@ -49,6 +64,8 @@ public final class IcaBankenConstants {
     }
 
     public static class QueryValues {
+        private QueryValues() {}
+
         public static final String STATUS = "both";
         public static final String CODE = "code";
         public static final String SCOPE = "account";
@@ -57,44 +74,84 @@ public final class IcaBankenConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
 
         public static class PaymentProduct {
+            private PaymentProduct() {}
+
             public static final String SEPA = "SepaCreditTransfer";
             public static final String INTERNATIONAL = "CrossBorderCreditTransfers";
         }
     }
 
     public static class HeaderKeys {
-        public static final String REQUEST_ID = "X-Request-ID";
-        public static final String AUTHORIZATION = "authorization";
+        private HeaderKeys() {}
+
         public static final String SCOPE = "scope";
     }
 
     public static class HeaderValues {
-        public static final String BEARER = "Bearer ";
+        private HeaderValues() {}
+
         public static final String ACCOUNT = "account";
     }
 
-    public class Account {
+    public static class Account {
+        private Account() {}
+
         public static final String INTERIM_AVAILABLE_BALANCE = "interimAvailable";
         public static final String ACCOUNT_ID = "accountId";
     }
 
+    public static class ErrorTypes {
+        private ErrorTypes() {}
+
+        public static final String SERVER_ERROR = "server_error";
+        public static final String RESOURCE_BLOCKED = "RESOURCE_BLOCKED";
+        public static final String RESOURCE_UNKNOWN = "RESOURCE_UNKNOWN";
+    }
+
     public static class ErrorMessages {
+        private ErrorMessages() {}
+
         public static final String MAPPING =
                 "Cannot map Ica payment status: %s to Tink payment status.";
         public static final String MISSING_TOKEN = "Cannot find Token!";
+        public static final String UNEXPECTED_INTERNAL_EXCEPTION = "unexpected internal exception";
+        public static final String OLD_KYC_INFO = "Old KYC information";
+        public static final String NO_ACCOUNT_INFO = "Accountinformation not found";
     }
 
     public static class FormKeys {
+        private FormKeys() {}
+
         public static final String GRANT_TYPE = "grant_type";
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
     }
 
     public static class FormValues {
+        private FormValues() {}
+
         public static final String GRANT_TYPE = "client_credentials";
     }
 
     public static class TransactionResponse {
+        private TransactionResponse() {}
+
         public static final String TRANSACTION_NOT_FOUND = "Transaction not found";
+    }
+
+    public enum EndUserMessage implements LocalizableEnum {
+        MUST_ANSWER_KYC(
+                new LocalizableKey(
+                        "To be able to refresh your accounts you need to answer some questions from your bank. Please log in to your bank's app or internet bank."));
+        private final LocalizableKey userMessage;
+
+        EndUserMessage(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return this.userMessage;
+        }
     }
 }

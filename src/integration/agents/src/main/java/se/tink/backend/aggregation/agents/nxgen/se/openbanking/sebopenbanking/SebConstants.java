@@ -56,9 +56,30 @@ public abstract class SebConstants {
     public static class Storage {
         public static final String CREDIT_CARD_TRANSACTION_RESPONSE =
                 "creditCardTransactionResponse";
+        public static final String PRODUCT = "product";
+        public static final String ACCOUNT_PRODUCT_MAP = "accountProductMap";
+    }
+
+    public static class PaymentProduct {
+        public static final String SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS =
+                "swedish-domestic-private-bankgiros";
+        public static final String SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS =
+                "swedish-domestic-private-plusgiros";
+        public static final String SEPA_CREDIT_TRANSFER = "sepa-credit-transfers";
+        public static final String SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS =
+                "swedish-domestic-private-credit-transfers";
     }
 
     public static class PaymentValue {
         public static final int MAX_DEST_MSG_LEN = 12;
+    }
+
+    public static class AccountProductTypes {
+
+        public static final String PRIVAT_KONTO = "privatkonto";
+        public static final String ENKLA_SPARKONTO = "enkla sparkontot";
+        public static final String PERSONALLONEKONTO = "personallönekonto";
+        public static final String VALUTAKONTO = "valutakonto";
+        public static final String NOTARIATKONTO = "notariatkonto";
     }
 }

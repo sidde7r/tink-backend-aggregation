@@ -4,6 +4,7 @@ junit_test(
     name = "starling",
     srcs = glob(["**/*.java"]),
     data = [
+        "//data:agents",
         "//data:aggregation_test",
         "//data:cryptography_test",
         "//data:provider_configurations",

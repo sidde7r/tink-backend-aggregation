@@ -11,9 +11,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -65,6 +67,9 @@ public class ClientConfigurationTemplateBuilder {
         JsonNode flatSchemaFromConf =
                 jsonSchemaGenerator.generateJsonSchema(clientConfigurationClassForProvider);
         JsonNode properties = flatSchemaFromConf.get("properties");
+        if (Objects.isNull(properties)) {
+            return Collections.emptyMap();
+        }
         Iterator<Map.Entry<String, JsonNode>> fields = properties.fields();
 
         final Map<String, String> fieldsDescriptionAndExamples = new HashMap<>();

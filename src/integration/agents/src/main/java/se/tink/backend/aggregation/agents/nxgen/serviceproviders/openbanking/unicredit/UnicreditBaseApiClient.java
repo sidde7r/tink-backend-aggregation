@@ -38,7 +38,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.EmptyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -117,7 +116,8 @@ public class UnicreditBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CREDENTIALS));
     }
 
-    protected void setConfiguration(AgentConfiguration<EmptyConfiguration> agentConfiguration) {
+    protected void setConfiguration(
+            AgentConfiguration<UnicreditBaseConfiguration> agentConfiguration) {
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

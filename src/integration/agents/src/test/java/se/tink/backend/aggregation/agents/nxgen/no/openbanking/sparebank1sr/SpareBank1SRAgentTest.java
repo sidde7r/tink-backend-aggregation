@@ -15,6 +15,8 @@ public class SpareBank1SRAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("no", "no-sparebank1sr-ob")
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("sparebank1")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
