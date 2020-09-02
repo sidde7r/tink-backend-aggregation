@@ -176,6 +176,7 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.strings.StringUtils;
@@ -2237,8 +2238,10 @@ public class SEBApiAgent extends AbstractAgent
                 .build();
     }
 
-    private void cancelTransfer(String message) throws TransferExecutionException {
-        abortTransfer(SignableOperationStatuses.CANCELLED, message);
+    private void cancelTransfer(String message, InternalStatus internalStatus)
+            throws TransferExecutionException {
+        abortTransferWithInternalStatus(
+                SignableOperationStatuses.CANCELLED, message, internalStatus);
     }
 
     private void abortTransfer(SignableOperationStatuses status, String message)
@@ -2246,6 +2249,16 @@ public class SEBApiAgent extends AbstractAgent
         throw TransferExecutionException.builder(status)
                 .setEndUserMessage(message)
                 .setMessage(String.format("Error when executing transfer: %s", message))
+                .build();
+    }
+
+    private void abortTransferWithInternalStatus(
+            SignableOperationStatuses status, String message, InternalStatus internalStatus)
+            throws TransferExecutionException {
+        throw TransferExecutionException.builder(status)
+                .setEndUserMessage(message)
+                .setMessage(String.format("Error when executing transfer: %s", message))
+                .setInternalStatus(internalStatus.toString())
                 .build();
     }
 
