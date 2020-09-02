@@ -265,6 +265,7 @@ public class ErrorResponse {
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_CANCELLED.getKey().get())
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_CANCELLED)
+                .setInternalStatus(InternalStatus.BANKID_CANCELLED.toString())
                 .build();
     }
 
