@@ -26,6 +26,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/mapper",
         "//src/libraries/metrics:collection",
