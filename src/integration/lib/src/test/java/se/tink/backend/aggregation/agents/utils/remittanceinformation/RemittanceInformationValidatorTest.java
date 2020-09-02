@@ -14,4 +14,12 @@ public class RemittanceInformationValidatorTest {
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
                 remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
     }
+
+    @Test
+    public void testSupportedRemittanceInformationType() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(null);
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
+    }
 }

@@ -13,6 +13,8 @@ java_library(
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:lombok_libs",
