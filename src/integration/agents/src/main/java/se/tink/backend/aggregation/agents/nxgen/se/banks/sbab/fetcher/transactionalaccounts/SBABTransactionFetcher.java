@@ -2,27 +2,23 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transacti
 
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccounts.entities.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SBABTransactionFetcher implements TransactionFetcher<TransactionalAccount> {
-    private final SessionStorage sessionStorage;
+    private final SBABApiClient apiClient;
 
-    public SBABTransactionFetcher(SessionStorage sessionStorage) {
-        this.sessionStorage = sessionStorage;
+    public SBABTransactionFetcher(SBABApiClient apiClient) {
+        this.apiClient = apiClient;
     }
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        final AccountsResponse accountsResponse =
-                sessionStorage
-                        .get(StorageKeys.ACCOUNT_RESPONSE, AccountsResponse.class)
-                        .orElse(new AccountsResponse());
+        final AccountsResponse accountsResponse = apiClient.fetchAccounts();
 
         return accountsResponse.getAccounts().getPersonalAccounts().stream()
                 .filter(p -> p.getAccountNumber().equals(account.getAccountNumber()))

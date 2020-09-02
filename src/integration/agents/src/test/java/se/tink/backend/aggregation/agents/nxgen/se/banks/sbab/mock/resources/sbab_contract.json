@@ -5,8 +5,8 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "SEK",
-        "exactValue": 9.85,
         "doubleValue": 9.85,
+        "exactValue": 9.85,
         "scale": 2,
         "unscaledValue": 985
       },
@@ -42,8 +42,8 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "SEK",
-        "exactValue": 1000000.0,
         "doubleValue": 1000000.0,
+        "exactValue": 1000000.0,
         "scale": 1,
         "unscaledValue": 10000000
       },
@@ -68,8 +68,8 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "SEK",
-        "exactValue": 5179.32,
         "doubleValue": 5179.32,
+        "exactValue": 5179.32,
         "scale": 2,
         "unscaledValue": 517932
       },
@@ -101,7 +101,400 @@
       "balance": 5179.32
     }
   ],
-  "transactions": [],
+  "transactions": [
+    {
+      "amount": 4000.0,
+      "date": 1583233200000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "9876543219856789123456SBABSBAB00000000489673976002"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": -70.0,
+      "date": 1577790000000,
+      "description": "ERLAGD PREL. SKATTSBAB",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "56789123456SBABSBABnull00000000476202914002"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": 236.32,
+      "date": 1577790000000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "SBAB56789123456nullSBAB00000000476202914001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": -1003000.0,
+      "date": 1571565600000,
+      "description": "Kontantinsats92511010011",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "5678912345692511010011SBABSBAB00000000459738944001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": 200000.0,
+      "date": 1570183200000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "56789123456NORDEASBAB00000000456983122001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 100000.0,
+      "date": 1570096800000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "56789123456NORDEASBAB00000000456680224001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 204000.0,
+      "date": 1570010400000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "56789123456NORDEASBAB00000000456376688001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 250000.0,
+      "date": 1569924000000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "56789123456NORDEASBAB00000000456069318001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 250000.0,
+      "date": 1569837600000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "56789123456NORDEASBAB00000000455739857001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 1.0,
+      "date": 1565776800000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "9876543219856789123456SBABSBAB00000000445381401002"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 10.0,
+      "date": 1565344800000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "56789123456SEBSBAB00000000444473155001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 1.0,
+      "date": 1565258400000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "9876543219856789123456SBABSBAB00000000444171599002"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 1.0,
+      "date": 1548414000000,
+      "description": "null56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "9876543219856789123456SBABSBAB00000000403309806002"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": -4000.0,
+      "date": 1583233200000,
+      "description": "ÃverfÃ¶ring56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "9876543219856789123456SBABSBAB00000000489673976001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": 4000.0,
+      "date": 1583146800000,
+      "description": "null98765432198",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "98765432198NORDEASBAB00000000489314169001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 0.66,
+      "date": 1577790000000,
+      "description": "null98765432198",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "SBAB98765432198nullSBAB00000000475608129001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1565776800000,
+      "description": "ÃVERFÃRING6156494532211",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "987654321986156494532211SBABHandelsbanken00000000445381710001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1565776800000,
+      "description": "ÃVERFÃRING6156494532211",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "987654321986156494532211SBABHandelsbanken00000000445381709001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1565776800000,
+      "description": "ÃVERFÃRING56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "9876543219856789123456SBABSBAB00000000445381401001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1565690400000,
+      "description": "ÃVERFÃRING6156494532211",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "987654321986156494532211SBABHandelsbanken00000000445083567001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1565690400000,
+      "description": "ÃVERFÃRING6156494532211",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "987654321986156494532211SBABHandelsbanken00000000445083566001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1565690400000,
+      "description": "ÃVERFÃRING6156494532211",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "987654321986156494532211SBABHandelsbanken00000000445083565001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1565690400000,
+      "description": "ÃVERFÃRING6156494532211",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "987654321986156494532211SBABHandelsbanken00000000445083564001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1565258400000,
+      "description": "ÃverfÃ¶ring56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "9876543219856789123456SBABSBAB00000000444171599001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1549450800000,
+      "description": "FIRST_NAME LAST_NAME33009112311999",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "9876543219833009112311999SBABNORDEA00000000405783580001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1548414000000,
+      "description": "To ACCOUNT_NAME56789123456",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "9876543219856789123456SBABSBAB00000000403309806001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": -1560.0,
+      "date": 1548327600000,
+      "description": "MONNIES33009112311999",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "9876543219833009112311999SBABNORDEA00000000402989692001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "WITHDRAWAL",
+      "upcoming": false
+    },
+    {
+      "amount": 9.66,
+      "date": 1546254000000,
+      "description": "null98765432198",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "DETAILS": "SBAB98765432198nullSBAB00000000397658681001"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    }
+  ],
   "identityData": {
     "nameElements": [
       {
@@ -116,7 +509,8 @@
     "dateOfBirth": {
       "year": 1912,
       "month": "DECEMBER",
-      "era": "CE",
+      "monthValue": 12,
+      "dayOfMonth": 12,
       "dayOfWeek": "THURSDAY",
       "leapYear": true,
       "dayOfYear": 347,
@@ -124,8 +518,7 @@
         "id": "ISO",
         "calendarType": "iso8601"
       },
-      "monthValue": 12,
-      "dayOfMonth": 12
+      "era": "CE"
     }
   }
 }

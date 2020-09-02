@@ -83,7 +83,7 @@ public class SBABAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         SBABAccountFetcher accountFetcher = new SBABAccountFetcher(apiClient);
-        SBABTransactionFetcher transactionFetcher = new SBABTransactionFetcher(sessionStorage);
+        SBABTransactionFetcher transactionFetcher = new SBABTransactionFetcher(apiClient);
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
     }
