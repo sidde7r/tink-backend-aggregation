@@ -53,6 +53,7 @@ java_library(
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/uuid",
+        "@tink_backend//src/libraries/payments_validations",
 
         # JSR305 (javax.annotations)
         "//third_party:com_google_code_findbugs_jsr305",

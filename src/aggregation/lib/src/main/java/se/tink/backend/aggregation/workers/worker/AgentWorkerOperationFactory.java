@@ -676,12 +676,8 @@ public class AgentWorkerOperationFactory {
     }
 
     private boolean isAisPlusPisFlow(TransferRequest request) {
-        if (MarketValidationsUtil.isSourceAccountMandatory(request.getProvider().getMarket())
-                || request.getTransfer().getSource() != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return MarketValidationsUtil.isSourceAccountMandatory(request.getProvider().getMarket())
+                || request.getTransfer().getSource() != null;
     }
 
     private boolean isUKOBProvider(Provider provider) {
