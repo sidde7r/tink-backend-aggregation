@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transacti
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.StandardResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,6 +14,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
 public class PersonalAccountsEntity extends StandardResponse {
     private String accountNumber;
     private String accountType;
@@ -33,7 +35,7 @@ public class PersonalAccountsEntity extends StandardResponse {
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
-                                .withAccountName(getDisplayName())
+                                .withAccountName(name)
                                 .addIdentifier(new SwedishIdentifier(accountNumber))
                                 .build())
                 .addHolderName(name)
@@ -42,45 +44,5 @@ public class PersonalAccountsEntity extends StandardResponse {
 
     private ExactCurrencyAmount getBalance() {
         return ExactCurrencyAmount.of(balance, SBABConstants.CURRENCY);
-    }
-
-    private String getDisplayName() {
-        return this.name;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public TransfersEntity getTransfers() {
-        return transfers;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public BigDecimal getAccruedInterestCredit() {
-        return accruedInterestCredit;
-    }
-
-    public BigDecimal getAvailableForWithdrawal() {
-        return availableForWithdrawal;
-    }
-
-    public BigDecimal getInterestRate() {
-        return interestRate;
-    }
-
-    public List<MandatesEntity> getMandates() {
-        return mandates;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getStatus() {
-        return status;
     }
 }

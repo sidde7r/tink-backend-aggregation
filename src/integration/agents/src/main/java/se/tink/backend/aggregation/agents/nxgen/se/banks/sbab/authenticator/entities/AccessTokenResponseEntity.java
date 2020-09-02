@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class AccessTokenResponseEntity {
     @JsonProperty("access_token")
     private String accessToken;
@@ -13,16 +15,4 @@ public class AccessTokenResponseEntity {
 
     @JsonProperty("token_type")
     private String tokenType;
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public int getExpiresIn() {
-        return expiresIn;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
 }
