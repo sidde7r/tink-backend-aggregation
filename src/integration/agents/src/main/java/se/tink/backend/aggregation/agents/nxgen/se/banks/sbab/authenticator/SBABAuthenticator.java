@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants.HrefKeys;
@@ -62,6 +63,9 @@ public class SBABAuthenticator implements BankIdAuthenticator<InitBankIdResponse
                     return BankIdStatus.CANCELLED;
                 }
                 return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+            }
+            if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
+                throw LoginError.NOT_CUSTOMER.exception();
             }
             return BankIdStatus.FAILED_UNKNOWN;
         }
