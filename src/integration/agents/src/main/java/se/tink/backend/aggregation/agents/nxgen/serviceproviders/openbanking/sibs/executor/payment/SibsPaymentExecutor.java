@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentInitiationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategy;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -26,11 +27,13 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.date.CountryDateHelper;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private SibsBaseApiClient apiClient;
-    private SignPaymentStrategy signPaymentStrategy;
+    private final SibsBaseApiClient apiClient;
+    private final SignPaymentStrategy signPaymentStrategy;
     private final StrongAuthenticationState strongAuthenticationState;
 
     public SibsPaymentExecutor(
@@ -81,6 +84,14 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         if (LocalDate.now().isBefore(paymentExecutionDate)) {
             builder.withRequestedExecutionDate(paymentExecutionDate);
         }
+
+        RemittanceInformation remittanceInformation =
+                paymentRequest.getPayment().getRemittanceInformation();
+
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
+
+        builder.withRemittanceInformationUnstructured(remittanceInformation.getValue());
 
         SibsPaymentInitiationRequest sibsPaymentRequest = builder.build();
 
