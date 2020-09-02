@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator;
 
 import java.util.Optional;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -47,10 +48,10 @@ public class SBABAuthenticator implements BankIdAuthenticator<InitBankIdResponse
             sessionStorage.put(StorageKeys.ACCESS_TOKEN, accessToken);
             sessionStorage.put(StorageKeys.BEARER_TOKEN, "Bearer " + accessToken);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == 400) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 return BankIdStatus.WAITING;
             }
-            if (e.getResponse().getStatus() == 401) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                 if (e.getResponse()
                         .getBody(ErrorResponse.class)
                         .getMessage()
