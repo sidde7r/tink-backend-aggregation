@@ -1,5 +1,5 @@
 REQUEST 1
-GET https://api.sbab.se/mobile-bff/api/v1
+GET https://api.sbab.se/mobile-bff/api
 Accept: application/json
 
 RESPONSE 1

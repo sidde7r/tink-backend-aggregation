@@ -16,7 +16,7 @@ public class SBABConstants {
 
     public static class Urls {
         public static final String HOST = "https://api.sbab.se";
-        public static final String BASE_URL = HOST + "/mobile-bff/api/v1";
+        public static final String BASE_URL = HOST + "/mobile-bff/api";
     }
 
     public static final ImmutableMap<String, Type> LOAN_TYPES =
