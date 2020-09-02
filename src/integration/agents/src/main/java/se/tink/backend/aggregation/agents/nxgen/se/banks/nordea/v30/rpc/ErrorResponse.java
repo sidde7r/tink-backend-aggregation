@@ -239,6 +239,7 @@ public class ErrorResponse {
     public static TransferExecutionException invalidSourceAccountError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
+                .setInternalStatus(InternalStatus.INVALID_SOURCE.toString())
                 .build();
     }
 
