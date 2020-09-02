@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.AccountsRespon
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.StandardResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -27,19 +28,16 @@ public class SBABApiClient {
     }
 
     public StandardResponse fetchAuthEndpoint() {
-        return client.request(Urls.BASE_URL)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .headers(SBABConstants.HEADERS)
-                .get(StandardResponse.class);
+        final RequestBuilder request = client.request(Urls.BASE_URL);
+
+        return sendGetRequest(request, StandardResponse.class);
     }
 
     public InitBankIdResponse initBankId(StandardResponse standardResponse) {
         final String initEndpoint = getEndpoint(standardResponse, HrefKeys.AUTHORIZE);
+        final RequestBuilder request = client.request(Urls.HOST + initEndpoint);
 
-        return client.request(Urls.HOST + initEndpoint)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .headers(SBABConstants.HEADERS)
-                .get(InitBankIdResponse.class);
+        return sendGetRequest(request, InitBankIdResponse.class);
     }
 
     public PollBankIdResponse pollBankId(InitBankIdResponse reference) {
@@ -53,23 +51,21 @@ public class SBABApiClient {
                         .put(FormKeys.GRANT_TYPE, FormValues.GRANT_TYPE)
                         .build();
         final String formAsString = form.serialize();
+        final RequestBuilder request =
+                client.request(Urls.HOST + pollEndpoint)
+                        .body(formAsString, MediaType.APPLICATION_FORM_URLENCODED);
 
-        return client.request(Urls.HOST + pollEndpoint)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .headers(SBABConstants.HEADERS)
-                .body(formAsString, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(PollBankIdResponse.class);
+        return sendPostRequest(request, PollBankIdResponse.class);
     }
 
     public AccountsResponse fetchAccounts() {
         final String accountsEndpoint = sessionStorage.get(StorageKeys.ACCOUNTS_ENDPOINT);
         final String bearerToken = sessionStorage.get(StorageKeys.BEARER_TOKEN);
+        final RequestBuilder request =
+                client.request(Urls.HOST + accountsEndpoint)
+                        .header(HeaderKeys.AUTHORIZATION, bearerToken);
 
-        return client.request(Urls.HOST + accountsEndpoint)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .headers(SBABConstants.HEADERS)
-                .header(HeaderKeys.AUTHORIZATION, bearerToken)
-                .get(AccountsResponse.class);
+        return sendGetRequest(request, AccountsResponse.class);
     }
 
     public String getEndpoint(StandardResponse standardResponse, String hrefKey) {
@@ -81,5 +77,17 @@ public class SBABApiClient {
                         () ->
                                 new NoSuchElementException(
                                         String.format("Could not find %s endpoint", hrefKey)));
+    }
+
+    private <T> T sendGetRequest(RequestBuilder request, Class<T> responseType) {
+        return request.accept(MediaType.APPLICATION_JSON_TYPE)
+                .headers(SBABConstants.HEADERS)
+                .get(responseType);
+    }
+
+    private <T> T sendPostRequest(RequestBuilder request, Class<T> responseType) {
+        return request.accept(MediaType.APPLICATION_JSON_TYPE)
+                .headers(SBABConstants.HEADERS)
+                .post(responseType);
     }
 }
