@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -155,6 +156,7 @@ public class BaseTransferExecutor {
                 return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                         .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_OCR)
                         .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
+                        .setInternalStatus(InternalStatus.INVALID_OCR.toString())
                         .setException(hre)
                         .build();
             }
