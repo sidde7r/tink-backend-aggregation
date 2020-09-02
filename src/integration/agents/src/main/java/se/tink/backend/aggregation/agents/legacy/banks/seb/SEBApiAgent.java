@@ -1921,7 +1921,8 @@ public class SEBApiAgent extends AbstractAgent
         if (transfer.getAmount().isLessThan(1.00)) {
             cancelTransfer(
                     catalog.getString(
-                            TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT));
+                            TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT),
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
         }
     }
 
@@ -1942,7 +1943,8 @@ public class SEBApiAgent extends AbstractAgent
         AccountIdentifier destination = transfer.getDestination();
         if (!sourceAccount.get().isAllowedToTransferTo(destination)) {
             cancelTransfer(
-                    catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE));
+                    catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE),
+                    InternalStatus.INVALID_SOURCE);
         }
     }
 
@@ -2029,7 +2031,8 @@ public class SEBApiAgent extends AbstractAgent
         if (!searchResult.isPresent() || searchResult.get().size() != 1) {
             cancelTransfer(
                     catalog.getString(
-                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION));
+                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION),
+                    InternalStatus.INVALID_DESTINATION);
         }
     }
 
@@ -2044,7 +2047,8 @@ public class SEBApiAgent extends AbstractAgent
                     catalog.getString(
                             TransferExecutionException.EndUserMessageParametrized
                                     .INVALID_MESSAGE_WHEN_MAX_LENGTH
-                                    .cloneWith(100)));
+                                    .cloneWith(100)),
+                    InternalStatus.DESTINATION_MESSAGE_TOO_LONG);
         }
 
         GiroMessageValidator.ValidationResult validationResult =
@@ -2075,7 +2079,7 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         if (!isValidMessage) {
-            cancelTransfer(errorMessage);
+            cancelTransfer(errorMessage, InternalStatus.INVALID_DESTINATION_MESSAGE);
         }
 
         return validationResult;
@@ -2201,7 +2205,8 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         cancelTransfer(
-                catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE));
+                catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE),
+                InternalStatus.BANKID_NO_RESPONSE);
     }
 
     private void abortIfTransferSignatureFailed(SebResponse response)
@@ -2209,12 +2214,13 @@ public class SEBApiAgent extends AbstractAgent
         if (FluentIterable.from(response.getErrors())
                 .anyMatch(ERROR_IS_BANKID_TRANSFER_SIGN_CANCELLED)) {
             cancelTransfer(
-                    catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED));
+                    catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED),
+                    InternalStatus.BANKID_CANCELLED);
         } else if (FluentIterable.from(response.getErrors())
                 .anyMatch(ERROR_IS_BANKID_TRANSFER_TIMEOUT)) {
             cancelTransfer(
-                    catalog.getString(
-                            TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE));
+                    catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE),
+                    InternalStatus.BANKID_NO_RESPONSE);
         }
 
         abortTransferIfErrorIsPresent(response);
