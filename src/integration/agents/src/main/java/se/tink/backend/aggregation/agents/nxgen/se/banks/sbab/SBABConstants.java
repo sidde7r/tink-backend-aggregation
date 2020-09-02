@@ -65,6 +65,7 @@ public class SBABConstants {
     public static class ErrorMessages {
         public static final String NO_CLIENT =
                 "Du har inte BankID som går att använda för den här inloggningen på den här enheten.";
+        public static final String CANCELLED = "åtgärden avbruten.";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =

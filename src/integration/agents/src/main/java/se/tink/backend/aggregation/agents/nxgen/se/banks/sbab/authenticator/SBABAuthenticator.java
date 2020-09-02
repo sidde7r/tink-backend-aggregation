@@ -52,11 +52,14 @@ public class SBABAuthenticator implements BankIdAuthenticator<InitBankIdResponse
                 return BankIdStatus.WAITING;
             }
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                if (e.getResponse()
-                        .getBody(ErrorResponse.class)
-                        .getMessage()
-                        .equalsIgnoreCase(ErrorMessages.NO_CLIENT)) {
+                final String errorMessage =
+                        e.getResponse().getBody(ErrorResponse.class).getMessage();
+
+                if (ErrorMessages.NO_CLIENT.equalsIgnoreCase(errorMessage)) {
                     return BankIdStatus.NO_CLIENT;
+                }
+                if (ErrorMessages.CANCELLED.equalsIgnoreCase(errorMessage)) {
+                    return BankIdStatus.CANCELLED;
                 }
                 return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
             }
