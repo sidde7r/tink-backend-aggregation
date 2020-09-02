@@ -38,11 +38,19 @@ public class PersonalAccountsEntity extends StandardResponse {
                                 .withAccountName(name)
                                 .addIdentifier(new SwedishIdentifier(accountNumber))
                                 .build())
-                .addHolderName(name)
+                .addHolderName(getHolderName())
                 .build();
     }
 
     private ExactCurrencyAmount getBalance() {
         return ExactCurrencyAmount.of(balance, SBABConstants.CURRENCY);
+    }
+
+    private String getHolderName() {
+        return mandates.stream()
+                .filter(m -> "OWNER".equalsIgnoreCase(m.getMandateType()))
+                .findFirst()
+                .map(MandatesEntity::getDisplayName)
+                .orElse(accountType);
     }
 }

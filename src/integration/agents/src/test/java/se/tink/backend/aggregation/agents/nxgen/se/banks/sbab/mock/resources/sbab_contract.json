@@ -7,8 +7,8 @@
         "currencyCode": "SEK",
         "doubleValue": 9.85,
         "exactValue": 9.85,
-        "scale": 2,
-        "unscaledValue": 985
+        "unscaledValue": 985,
+        "scale": 2
       },
       "currencyCode": "SEK",
       "bankId": "98765432198",
@@ -22,13 +22,13 @@
       "userModifiedType": false,
       "identifiers": "[]",
       "closed": false,
-      "holderName": "Sparkonto",
+      "holderName": "FIRST_NAME LAST_NAME",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
         "identities": [
           {
-            "name": "Sparkonto",
+            "name": "FIRST_NAME LAST_NAME",
             "role": null
           }
         ]
@@ -44,8 +44,8 @@
         "currencyCode": "SEK",
         "doubleValue": 1000000.0,
         "exactValue": 1000000.0,
-        "scale": 1,
-        "unscaledValue": 10000000
+        "unscaledValue": 10000000,
+        "scale": 1
       },
       "currencyCode": "SEK",
       "bankId": "12345678",
@@ -70,8 +70,8 @@
         "currencyCode": "SEK",
         "doubleValue": 5179.32,
         "exactValue": 5179.32,
-        "scale": 2,
-        "unscaledValue": 517932
+        "unscaledValue": 517932,
+        "scale": 2
       },
       "currencyCode": "SEK",
       "bankId": "56789123456",
@@ -85,13 +85,13 @@
       "userModifiedType": false,
       "identifiers": "[\"se://56789123456\"]",
       "closed": false,
-      "holderName": "ACCOUNT_NAME",
+      "holderName": "FIRST_NAME LAST_NAME",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
         "identities": [
           {
-            "name": "ACCOUNT_NAME",
+            "name": "FIRST_NAME LAST_NAME",
             "role": null
           }
         ]
@@ -509,8 +509,6 @@
     "dateOfBirth": {
       "year": 1912,
       "month": "DECEMBER",
-      "monthValue": 12,
-      "dayOfMonth": 12,
       "dayOfWeek": "THURSDAY",
       "leapYear": true,
       "dayOfYear": 347,
@@ -518,6 +516,8 @@
         "id": "ISO",
         "calendarType": "iso8601"
       },
+      "monthValue": 12,
+      "dayOfMonth": 12,
       "era": "CE"
     }
   }
