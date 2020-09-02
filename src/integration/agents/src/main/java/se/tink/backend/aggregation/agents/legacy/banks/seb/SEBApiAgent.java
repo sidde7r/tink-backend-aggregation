@@ -2239,7 +2239,7 @@ public class SEBApiAgent extends AbstractAgent
             SignableOperationStatuses failed, String message, String internalStatus) {
         throw TransferExecutionException.builder(failed)
                 .setEndUserMessage(message)
-                .setMessage(String.format("Error when executing transfer: %s", message))
+                .setMessage(formatErrorMessage(message))
                 .setInternalStatus(internalStatus)
                 .build();
     }
@@ -2254,7 +2254,7 @@ public class SEBApiAgent extends AbstractAgent
             throws TransferExecutionException {
         throw TransferExecutionException.builder(status)
                 .setEndUserMessage(message)
-                .setMessage(String.format("Error when executing transfer: %s", message))
+                .setMessage(formatErrorMessage(message))
                 .build();
     }
 
@@ -2263,7 +2263,7 @@ public class SEBApiAgent extends AbstractAgent
             throws TransferExecutionException {
         throw TransferExecutionException.builder(status)
                 .setEndUserMessage(message)
-                .setMessage(String.format("Error when executing transfer: %s", message))
+                .setMessage(formatErrorMessage(message))
                 .setInternalStatus(internalStatus.toString())
                 .build();
     }
@@ -2426,5 +2426,9 @@ public class SEBApiAgent extends AbstractAgent
         final IdentityData identityData =
                 SeIdentityData.of(userName.trim(), credentials.getField(Field.Key.USERNAME));
         return new FetchIdentityDataResponse(identityData);
+    }
+
+    private String formatErrorMessage(String message) {
+        return String.format("Error when executing transfer: %s", message);
     }
 }
