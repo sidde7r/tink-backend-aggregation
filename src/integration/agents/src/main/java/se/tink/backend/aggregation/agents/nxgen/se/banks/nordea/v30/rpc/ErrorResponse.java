@@ -219,6 +219,7 @@ public class ErrorResponse {
     public static TransferExecutionException invalidDestError() {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                .setInternalStatus(InternalStatus.INVALID_DESTINATION.toString())
                 .build();
     }
 
@@ -366,6 +367,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(NordeaSEConstants.LogMessages.WRONG_TO_ACCOUNT_LENGTH)
                 .setEndUserMessage(EndUserMessage.INVALID_DESTINATION)
+                .setInternalStatus(InternalStatus.INVALID_DESTINATION.toString())
                 .build();
     }
 
