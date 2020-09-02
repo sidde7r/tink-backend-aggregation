@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorRes
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -300,10 +301,12 @@ public class NordeaExecutorHelper {
     }
 
     private TransferExecutionException transferCancelledWithMessage(
-            TransferExecutionException.EndUserMessage endUserMessage) {
+            TransferExecutionException.EndUserMessage endUserMessage,
+            InternalStatus internalStatus) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(endUserMessage.getKey().get())
                 .setEndUserMessage(catalog.getString(endUserMessage))
+                .setInternalStatus(internalStatus.toString())
                 .build();
     }
 }
