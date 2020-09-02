@@ -205,7 +205,8 @@ public class TransferMessageFormatter {
         if (sourceMessage.length() > maxLength) {
             throw new TransferMessageException(
                     catalog.getString(EndUserMessage.SOURCE_MESSAGE_TO_LONG.cloneWith(maxLength)),
-                    LogMessage.SOURCE_MESSAGE_TO_LONG.with(transfer));
+                    LogMessage.SOURCE_MESSAGE_TO_LONG.with(transfer),
+                    InternalStatus.SOURCE_MESSAGE_TOO_LONG.toString());
         }
 
         Set<Character> normalizedCharacters = getCharactersBeingNormalized(sourceMessage);
