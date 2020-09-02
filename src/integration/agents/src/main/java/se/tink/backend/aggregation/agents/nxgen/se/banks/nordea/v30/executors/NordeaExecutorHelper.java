@@ -113,7 +113,8 @@ public class NordeaExecutorHelper {
         // Transfer source and destination must not be the same
         if (isAccountIdentifierEquals(transfer.getDestination(), transfer.getSource())) {
             throw transferCancelledWithMessage(
-                    TransferExecutionException.EndUserMessage.DESTINATION_CANT_BE_SAME_AS_SOURCE);
+                    TransferExecutionException.EndUserMessage.DESTINATION_CANT_BE_SAME_AS_SOURCE,
+                    InternalStatus.DESTINATION_CANT_BE_SAME_AS_SOURCE);
         }
 
         return accountResponse.getAccounts().stream()
@@ -129,7 +130,8 @@ public class NordeaExecutorHelper {
     protected void validateMinimumTransferAmount(Transfer transfer) {
         if (transfer.getAmount().getValue() < 1) {
             throw transferCancelledWithMessage(
-                    TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT);
+                    TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT,
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
         }
     }
 
