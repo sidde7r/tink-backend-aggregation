@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken;
 
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
+
 public final class IcaBankenConstants {
 
     private IcaBankenConstants() {
@@ -81,15 +84,12 @@ public final class IcaBankenConstants {
     public static class HeaderKeys {
         private HeaderKeys() {}
 
-        public static final String REQUEST_ID = "X-Request-ID";
-        public static final String AUTHORIZATION = "authorization";
         public static final String SCOPE = "scope";
     }
 
     public static class HeaderValues {
         private HeaderValues() {}
 
-        public static final String BEARER = "Bearer ";
         public static final String ACCOUNT = "account";
     }
 
@@ -104,6 +104,8 @@ public final class IcaBankenConstants {
         private ErrorTypes() {}
 
         public static final String SERVER_ERROR = "server_error";
+        public static final String RESOURCE_BLOCKED = "RESOURCE_BLOCKED";
+        public static final String RESOURCE_UNKNOWN = "RESOURCE_UNKNOWN";
     }
 
     public static class ErrorMessages {
@@ -113,6 +115,8 @@ public final class IcaBankenConstants {
                 "Cannot map Ica payment status: %s to Tink payment status.";
         public static final String MISSING_TOKEN = "Cannot find Token!";
         public static final String UNEXPECTED_INTERNAL_EXCEPTION = "unexpected internal exception";
+        public static final String OLD_KYC_INFO = "Old KYC information";
+        public static final String NO_ACCOUNT_INFO = "Accountinformation not found";
     }
 
     public static class FormKeys {
@@ -133,5 +137,21 @@ public final class IcaBankenConstants {
         private TransactionResponse() {}
 
         public static final String TRANSACTION_NOT_FOUND = "Transaction not found";
+    }
+
+    public enum EndUserMessage implements LocalizableEnum {
+        MUST_ANSWER_KYC(
+                new LocalizableKey(
+                        "To be able to refresh your accounts you need to answer some questions from your bank. Please log in to your bank's app or internet bank."));
+        private final LocalizableKey userMessage;
+
+        EndUserMessage(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return this.userMessage;
+        }
     }
 }
