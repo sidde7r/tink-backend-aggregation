@@ -273,6 +273,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
                 .setEndUserMessage(EndUserMessage.BANKID_NO_RESPONSE)
+                .setInternalStatus(InternalStatus.BANKID_NO_RESPONSE.toString())
                 .build();
     }
 
