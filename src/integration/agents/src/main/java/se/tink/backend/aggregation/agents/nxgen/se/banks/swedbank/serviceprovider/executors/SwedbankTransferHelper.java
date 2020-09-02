@@ -100,6 +100,7 @@ public class SwedbankTransferHelper {
                             .setEndUserMessage(
                                     TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE)
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_TIMEOUT)
+                            .setInternalStatus(InternalStatus.BANKID_NO_RESPONSE.toString())
                             .build();
                 case ALREADY_IN_PROGRESS:
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
@@ -152,6 +153,7 @@ public class SwedbankTransferHelper {
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE)
                 .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                .setInternalStatus(InternalStatus.BANKID_NO_RESPONSE.toString())
                 .build();
     }
 
