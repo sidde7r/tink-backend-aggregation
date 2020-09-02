@@ -95,6 +95,7 @@ import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.payments_validations.java.se.tink.libraries.payments.validations.MarketValidationsUtil;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerOperationFactory {
@@ -638,9 +639,17 @@ public class AgentWorkerOperationFactory {
         boolean shouldRefresh = !request.isSkipRefresh();
         operationName =
                 shouldRefresh ? "execute-payment-with-refresh" : "execute-payment-without-refresh";
-        commands =
-                createTransferBaseCommands(
-                        clientInfo, request, context, operationName, controllerWrapper);
+
+        if (isAisPlusPisFlow(request)) {
+            commands =
+                    createTransferBaseCommands(
+                            clientInfo, request, context, operationName, controllerWrapper);
+        } else {
+            commands =
+                    createTransferWithoutRefreshBaseCommands(
+                            clientInfo, request, context, operationName, controllerWrapper);
+        }
+
         if (shouldRefresh) {
             commands.addAll(
                     createRefreshAccountsCommands(
@@ -664,6 +673,15 @@ public class AgentWorkerOperationFactory {
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationName, request, commands, context);
+    }
+
+    private boolean isAisPlusPisFlow(TransferRequest request) {
+        if (MarketValidationsUtil.isSourceAccountMandatory(request.getProvider().getMarket())
+                || request.getTransfer().getSource() != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean isUKOBProvider(Provider provider) {
