@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class SBABApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private AccountsResponse accountsResponse;
 
     public SBABApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
@@ -64,8 +65,11 @@ public class SBABApiClient {
         final RequestBuilder request =
                 client.request(Urls.HOST + accountsEndpoint)
                         .header(HeaderKeys.AUTHORIZATION, bearerToken);
+        if (accountsResponse == null) {
+            this.accountsResponse = sendGetRequest(request, AccountsResponse.class);
+        }
 
-        return sendGetRequest(request, AccountsResponse.class);
+        return accountsResponse;
     }
 
     public String getEndpoint(StandardResponse standardResponse, String hrefKey) {
