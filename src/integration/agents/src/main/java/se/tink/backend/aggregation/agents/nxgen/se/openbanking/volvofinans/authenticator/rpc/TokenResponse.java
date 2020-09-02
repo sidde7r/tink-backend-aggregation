@@ -15,6 +15,6 @@ public class TokenResponse {
     private long expiresIn;
 
     public OAuth2Token toTinkToken() {
-        return OAuth2Token.create(StorageKeys.BEARER, accessToken, "", expiresIn);
+        return OAuth2Token.create(StorageKeys.BEARER, accessToken, null, expiresIn);
     }
 }
