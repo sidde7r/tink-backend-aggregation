@@ -372,6 +372,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(NordeaSEConstants.LogMessages.WRONG_OCR_MESSAGE)
                 .setEndUserMessage(EndUserMessage.INVALID_OCR)
+                .setInternalStatus(InternalStatus.INVALID_OCR.toString())
                 .build();
     }
 
