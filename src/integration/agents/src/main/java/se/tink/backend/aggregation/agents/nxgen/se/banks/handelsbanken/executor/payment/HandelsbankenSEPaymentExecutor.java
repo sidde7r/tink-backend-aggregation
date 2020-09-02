@@ -33,6 +33,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -219,10 +220,12 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor {
                 .build();
     }
 
-    private TransferExecutionException paymentCanceledException(EndUserMessage endUserMessage) {
+    private TransferExecutionException paymentCanceledException(
+            EndUserMessage endUserMessage, InternalStatus internalStatus) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(catalog.getString(endUserMessage))
                 .setEndUserMessage(catalog.getString(endUserMessage))
+                .setInternalStatus(internalStatus.toString())
                 .build();
     }
 }
