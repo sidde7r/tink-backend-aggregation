@@ -32,11 +32,14 @@ public class DemoFinancialInstitutionAuthenticator implements PasswordAuthentica
                 DemoFinancialInstitutionLoginCredentials.USER3_USERNAME,
                 DemoFinancialInstitutionLoginCredentials.USER3_PASSWORD);
 
-        if (username != null && userCredentials.containsKey(username)) {
-            if (userCredentials.get(username).equals(password)) {
-                putInSessionStorage(sessionStorage, username, password);
-            } else throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
-        }
+        if (userExists(userCredentials, username)
+                && userCredentials.get(username).equals(password)) {
+            putInSessionStorage(sessionStorage, username, password);
+        } else throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+    }
+
+    private boolean userExists(Map<String, String> userCredentials, String username) {
+        return username != null && userCredentials.containsKey(username);
     }
 
     private static void putInSessionStorage(
