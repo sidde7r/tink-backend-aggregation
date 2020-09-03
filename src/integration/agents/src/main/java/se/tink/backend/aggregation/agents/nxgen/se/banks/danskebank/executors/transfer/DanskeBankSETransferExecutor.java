@@ -77,18 +77,22 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                 accounts.findAccount(transfer.getDestination().getIdentifier());
 
         RegisterPaymentResponse registerPaymentResponse =
-                executorHelper.registerInternalTransfer(
-                        transfer,
-                        accounts,
-                        ownDestinationAccount,
-                        paymentDate,
-                        isOwnAccount,
-                        transferMessageFormatter);
+                executorHelper
+                        .registerInternalTransfer(
+                                transfer,
+                                accounts,
+                                ownDestinationAccount,
+                                paymentDate,
+                                isOwnAccount,
+                                transferMessageFormatter)
+                        .validate();
 
-        apiClient.acceptSignature(
-                executorHelper.getTransferType(isOwnAccount),
-                registerPaymentResponse.getSignatureId(),
-                null);
+        apiClient
+                .acceptSignature(
+                        executorHelper.getTransferType(isOwnAccount),
+                        registerPaymentResponse.getSignatureId(),
+                        null)
+                .validate();
 
         return Optional.empty();
     }
@@ -108,29 +112,34 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                         CreditorRequest.create(
                                 transfer.getDestination().getIdentifier(),
                                 configuration.getMarketCode()));
+
         Date paymentDate = executorHelper.validatePaymentDate(transfer, isInternalTransfer);
 
         HttpResponse injectJsCheckStep = this.apiClient.collectDynamicChallengeJavascript();
 
         RegisterPaymentResponse registerPaymentResponse =
-                executorHelper.registerExternalTransfer(
-                        transfer,
-                        accounts,
-                        creditorName.getCreditorName(),
-                        creditorBankName.getBankName(),
-                        paymentDate,
-                        isInternalTransfer,
-                        transferMessageFormatter);
+                executorHelper
+                        .registerExternalTransfer(
+                                transfer,
+                                accounts,
+                                creditorName.getCreditorName(),
+                                creditorBankName.getBankName(),
+                                paymentDate,
+                                isInternalTransfer,
+                                transferMessageFormatter)
+                        .validate();
 
         executorHelper.signPayment(registerPaymentResponse);
 
-        apiClient.acceptSignature(
-                executorHelper.getTransferType(isInternalTransfer),
-                registerPaymentResponse.getSignatureId(),
-                executorHelper.getSignaturePackage(
-                        injectJsCheckStep,
-                        registerPaymentResponse.getUserId(),
-                        registerPaymentResponse.getSignatureText()));
+        apiClient
+                .acceptSignature(
+                        executorHelper.getTransferType(isInternalTransfer),
+                        registerPaymentResponse.getSignatureId(),
+                        executorHelper.getSignaturePackage(
+                                injectJsCheckStep,
+                                registerPaymentResponse.getUserId(),
+                                registerPaymentResponse.getSignatureText()))
+                .validate();
 
         return Optional.empty();
     }
