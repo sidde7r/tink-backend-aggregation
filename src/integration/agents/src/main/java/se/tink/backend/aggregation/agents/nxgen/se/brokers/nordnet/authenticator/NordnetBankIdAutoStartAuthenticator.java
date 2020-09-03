@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.FormKeys;
@@ -114,7 +115,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
     }
 
     private InitBankIdResponse initBankId() {
-        String requestBody = Form.builder().put(QueryKeys.SSN, ssn).build().serialize();
+        String requestBody = Form.builder().put(FormKeys.SSN, ssn).build().serialize();
 
         RequestBuilder requestBuilder =
                 apiClient
@@ -154,7 +155,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                                         .queryParam(QueryKeys.AUTH_TYPE, QueryValues.AUTH_TYPE)
                                         .queryParam(
                                                 NordnetConstants.FormKeys.CLIENT_ID,
-                                                QueryValues.CLIENT_ID)
+                                                CaisseEpargneConstants.QueryValues.CLIENT_ID)
                                         .queryParam(
                                                 NordnetConstants.FormKeys.RESPONSE_TYPE,
                                                 QueryValues.RESPONSE_TYPE)
@@ -202,7 +203,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
         final String requestBody =
                 Form.builder()
                         .put(QueryValues.RESPONSE_TYPE, code)
-                        .put(FormKeys.CLIENT_ID, QueryValues.CLIENT_ID)
+                        .put(FormKeys.CLIENT_ID, CaisseEpargneConstants.QueryValues.CLIENT_ID)
                         .put(FormKeys.CLIENT_SECRET, FormValues.CLIENT_SECRET)
                         .put(FormKeys.GRANT_TYPE, FormValues.GRANT_TYPE)
                         .put(FormKeys.REDIRECT_URI, QueryValues.REDIRECT_URI)
@@ -240,7 +241,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                                 new URL(Urls.OAUTH2_AUTHORIZE)
                                         .queryParam(
                                                 NordnetConstants.FormKeys.CLIENT_ID,
-                                                QueryValues.CLIENT_ID)
+                                                CaisseEpargneConstants.QueryValues.CLIENT_ID)
                                         .queryParam(
                                                 NordnetConstants.FormKeys.RESPONSE_TYPE,
                                                 QueryValues.RESPONSE_TYPE)
