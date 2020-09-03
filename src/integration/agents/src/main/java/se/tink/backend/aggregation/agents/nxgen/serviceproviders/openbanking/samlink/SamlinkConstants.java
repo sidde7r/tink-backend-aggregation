@@ -15,8 +15,8 @@ public final class SamlinkConstants {
     public static class Urls {
         private Urls() {}
 
-        public static final String TOKEN = "/samlink-api-sandbox/oauth/token";
-        public static final String AUTH = "/samlink-api-sandbox/oauth/authorize";
+        public static final String TOKEN = "/oauthproxy/token";
+        public static final String AUTH = "/oauthproxy/authorize";
 
         public static final String AIS_PRODUCT = "/psd2/v1";
         public static final String CONSENT = AIS_PRODUCT + "/consents";
@@ -36,7 +36,6 @@ public final class SamlinkConstants {
     public static class HeaderKeys {
         private HeaderKeys() {}
 
-        public static final String SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
         public static final String DIGEST = "Digest";
         public static final String SIGNATURE = "Signature";
         public static final String API_KEY = "apikey";
@@ -55,5 +54,19 @@ public final class SamlinkConstants {
 
         public static final String BOOKED = "booked";
         public static final String PENDING = "pending";
+    }
+
+    public static final class FormKeys {
+        private FormKeys() {}
+
+        public static final String CLIENT_ASSERTION_TYPE = "client_assertion_type";
+        public static final String CLIENT_ASSERTION = "client_assertion";
+    }
+
+    public static final class FormValues {
+        private FormValues() {}
+
+        public static final String CLIENT_ASSERTION_TYPE_VALUE =
+                "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
     }
 }

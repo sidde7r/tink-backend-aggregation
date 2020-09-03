@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfigurati
 
 @JsonObject
 public class SamlinkConfiguration implements BerlinGroupConfiguration {
-    @Secret private String subscriptionKey;
     @JsonProperty @Secret private String oauthBaseUrl;
     @JsonProperty @Secret private String baseUrl;
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
@@ -22,6 +21,12 @@ public class SamlinkConfiguration implements BerlinGroupConfiguration {
     @JsonProperty @Secret private String psuIpAddress;
     @Secret private String keyId;
     @Secret private String certificate;
+    @Secret private String apiKey;
+    @Secret private String redirectUrl;
+
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
 
     public String getKeyId() {
         return keyId;
@@ -29,6 +34,14 @@ public class SamlinkConfiguration implements BerlinGroupConfiguration {
 
     public String getCertificate() {
         return certificate;
+    }
+
+    public String getOauthBaseUrl() {
+        return oauthBaseUrl;
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 
     @Override
@@ -57,9 +70,5 @@ public class SamlinkConfiguration implements BerlinGroupConfiguration {
         } catch (UnknownHostException e) {
             return BerlinGroupConstants.DEFAULT_IP;
         }
-    }
-
-    public String getSubscriptionKey() {
-        return subscriptionKey;
     }
 }
