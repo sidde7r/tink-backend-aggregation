@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
@@ -38,6 +39,36 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                         ListAccountsRequest.createFromLanguageCode(
                                 configuration.getLanguageCode()));
 
+        boolean isOwnAccount = accounts.isOwnAccount(transfer.getDestination().getIdentifier());
+
+        return isOwnAccount
+                ? executeInternalTransfer(transfer, accounts, isOwnAccount)
+                : executeExternalTransfer(transfer, accounts, isOwnAccount);
+    }
+
+    private Optional executeInternalTransfer(
+            Transfer transfer, ListAccountsResponse accounts, boolean isOwnAccount) {
+        Date paymentDate = executorHelper.validatePaymentDate(transfer, isOwnAccount);
+
+        AccountEntity ownDestinationAccount =
+                accounts.findAccount(transfer.getDestination().getIdentifier());
+
+        RegisterPaymentResponse registerPaymentResponse =
+                executorHelper.registerInternalTransfer(
+                        transfer, accounts, ownDestinationAccount, paymentDate, isOwnAccount);
+
+        apiClient.acceptSignature(
+                executorHelper.getTransferType(isOwnAccount),
+                registerPaymentResponse.getSignatureId(),
+                null);
+
+        return Optional.empty();
+    }
+
+    private Optional executeExternalTransfer(
+            Transfer transfer,
+            ListAccountsResponse accounts,
+            boolean isInternalDestinationAccount) {
         apiClient.listPayees(ListPayeesRequest.create(configuration.getLanguageCode()));
 
         CreditorResponse creditorName =
@@ -51,18 +82,24 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
                         CreditorRequest.create(
                                 transfer.getDestination().getIdentifier(),
                                 configuration.getMarketCode()));
-        Date paymentDate = executorHelper.validatePaymentDate(transfer, accounts);
+        Date paymentDate =
+                executorHelper.validatePaymentDate(transfer, isInternalDestinationAccount);
 
         HttpResponse injectJsCheckStep = this.apiClient.collectDynamicChallengeJavascript();
 
         RegisterPaymentResponse registerPaymentResponse =
-                executorHelper.registerPayment(
-                        transfer, accounts, creditorName, creditorBankName, paymentDate);
+                executorHelper.registerExternalTransfer(
+                        transfer,
+                        accounts,
+                        creditorName.getCreditorName(),
+                        creditorBankName.getBankName(),
+                        paymentDate,
+                        isInternalDestinationAccount);
 
         executorHelper.signPayment(registerPaymentResponse);
 
         apiClient.acceptSignature(
-                executorHelper.getTransferType(accounts, transfer),
+                executorHelper.getTransferType(isInternalDestinationAccount),
                 registerPaymentResponse.getSignatureId(),
                 executorHelper.getSignaturePackage(
                         injectJsCheckStep,

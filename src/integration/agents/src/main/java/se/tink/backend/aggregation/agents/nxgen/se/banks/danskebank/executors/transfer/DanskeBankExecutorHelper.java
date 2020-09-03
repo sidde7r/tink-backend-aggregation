@@ -13,8 +13,9 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferAccountType;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateRequest;
@@ -50,11 +51,11 @@ public class DanskeBankExecutorHelper {
         this.supplementalRequester = supplementalRequester;
     }
 
-    public Date validatePaymentDate(Transfer transfer, ListAccountsResponse accounts) {
+    public Date validatePaymentDate(Transfer transfer, boolean isInternalDestinationAccount) {
         String transferType =
-                accounts.isInternalAccount(transfer.getDestination().getIdentifier())
-                        ? "internal"
-                        : "external";
+                isInternalDestinationAccount
+                        ? TransferAccountType.INTERNAL
+                        : TransferAccountType.EXTERNAL;
 
         ValidatePaymentDateRequest paymentDateRequest =
                 new ValidatePaymentDateRequest(
@@ -81,27 +82,25 @@ public class DanskeBankExecutorHelper {
         return paymentDateResponse.getBookingDate();
     }
 
-    public String getTransferType(ListAccountsResponse accounts, Transfer transfer) {
-        return accounts.isInternalAccount(transfer.getDestination().getIdentifier())
-                ? "TransferToOwnAccountSE"
-                : "TransferToOtherAccountSE";
+    public String getTransferType(boolean isInternalDestinationAccount) {
+        return isInternalDestinationAccount ? TransferType.INTERNAL : TransferType.EXTERNAL;
     }
 
-    public RegisterPaymentResponse registerPayment(
+    public RegisterPaymentResponse registerExternalTransfer(
             Transfer transfer,
             ListAccountsResponse accounts,
-            CreditorResponse creditorName,
-            CreditorResponse creditorBankName,
-            Date paymentDate) {
-        AccountEntity sourceAccount =
-                accounts.findSourceAccount(transfer.getSource().getIdentifier());
+            String creditorName,
+            String creditorBankName,
+            Date paymentDate,
+            boolean isInternalDestinationAccount) {
+        AccountEntity sourceAccount = accounts.findAccount(transfer.getSource().getIdentifier());
 
-        String transferType = getTransferType(accounts, transfer);
+        String transferType = getTransferType(isInternalDestinationAccount);
 
         String accountName =
-                Strings.isNullOrEmpty(creditorName.getCreditorName())
+                Strings.isNullOrEmpty(creditorName)
                         ? transfer.getDestination().getIdentifier()
-                        : creditorName.getCreditorName();
+                        : creditorName;
 
         BusinessDataEntity businessData =
                 new BusinessDataEntity()
@@ -114,11 +113,45 @@ public class DanskeBankExecutorHelper {
                         .setAccountProductFrom(sourceAccount.getAccountProduct())
                         .setAllowDuplicateTransfer(true)
                         .setAmount(transfer.getAmount().getValue())
-                        .setBankName(creditorBankName.getBankName())
+                        .setBankName(creditorBankName)
                         .setBookingDate(formatDate(paymentDate))
                         .setCurrency(transfer.getAmount().getCurrency())
                         .setRegNoFromExt(sourceAccount.getAccountRegNoExt())
                         .setSavePayee(false)
+                        .setTextFrom(transfer.getSourceMessage())
+                        .setTextTo(transfer.getRemittanceInformation().getValue());
+
+        RegisterPaymentRequest registerPaymentRequest =
+                RegisterPaymentRequest.create(
+                        businessData, configuration.getLanguageCode(), transferType);
+
+        return apiClient.registerPayment(registerPaymentRequest);
+    }
+
+    public RegisterPaymentResponse registerInternalTransfer(
+            Transfer transfer,
+            ListAccountsResponse accounts,
+            AccountEntity ownDestinationAccount,
+            Date paymentDate,
+            boolean isInternalDestinationAccount) {
+        AccountEntity sourceAccount = accounts.findAccount(transfer.getSource().getIdentifier());
+
+        String transferType = getTransferType(isInternalDestinationAccount);
+
+        BusinessDataEntity businessData =
+                new BusinessDataEntity()
+                        .setAccountNameFrom(sourceAccount.getAccountName())
+                        .setAccountNameTo(ownDestinationAccount.getAccountName())
+                        .setAccountNoExtFrom(sourceAccount.getAccountNoExt())
+                        .setAccountNoIntFrom(sourceAccount.getAccountNoInt())
+                        .setAccountNoIntTo(ownDestinationAccount.getAccountNoInt())
+                        .setAccountNoToExt(transfer.getDestination().getIdentifier())
+                        .setAllowDuplicateTransfer(true)
+                        .setAmount(transfer.getAmount().getValue())
+                        .setBankName(null)
+                        .setBookingDate(formatDate(paymentDate))
+                        .setCurrency(transfer.getAmount().getCurrency())
+                        .setForcableErrorsRC("0000")
                         .setTextFrom(transfer.getSourceMessage())
                         .setTextTo(transfer.getRemittanceInformation().getValue());
 

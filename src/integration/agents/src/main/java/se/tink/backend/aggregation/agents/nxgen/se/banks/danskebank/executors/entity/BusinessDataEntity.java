@@ -17,6 +17,7 @@ public class BusinessDataEntity {
     private String accountNameTo;
     private String accountNoExtFrom;
     private String accountNoIntFrom;
+    private String accountNoIntTo;
     private String accountNoToExt;
     private String accountProductFrom;
     private boolean allowDuplicateTransfer;
@@ -24,6 +25,7 @@ public class BusinessDataEntity {
     private String bankName;
     private String bookingDate;
     private String currency;
+    private String forcableErrorsRC;
     private String payeeName;
     private String regNoFromExt;
     private boolean savePayee;
@@ -54,6 +56,16 @@ public class BusinessDataEntity {
 
     public BusinessDataEntity setAccountNoIntFrom(String accountNoIntFrom) {
         this.accountNoIntFrom = accountNoIntFrom;
+        return this;
+    }
+
+    public BusinessDataEntity setAccountNoIntTo(String accountNoIntTo) {
+        this.accountNoIntTo = accountNoIntTo;
+        return this;
+    }
+
+    public BusinessDataEntity setForcableErrorsRC(String forcableErrorsRC) {
+        this.forcableErrorsRC = forcableErrorsRC;
         return this;
     }
 
