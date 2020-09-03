@@ -292,7 +292,8 @@ public class AgentCapabilitiesTest {
                                         "Agent "
                                                 + diff.first.getClassName()
                                                 + " has the following capabilities which are not mentioned in agent-capabilities.json : "
-                                                + diff.second.toString()));
+                                                + diff.second.toString()
+                                                + "\n If this is intentional, please go to ignored_agents_for_tests.yaml file and add your agent into the ignored agents list"));
 
         assertEquals(
                 0,

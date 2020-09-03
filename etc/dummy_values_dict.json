@@ -70,7 +70,7 @@
     "signingKeyId": "",
     "signingKeyPassword": "",
     "softwareId": "dummySoftwareId",
-    "softwareStatementAssertion": "",
+    "softwareStatementAssertion": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
     "subscriptionKey": "2ce68d55316f410bae8737deee66b081",
     "tokenUrl": "https://dummytokenurl.com",
     "tppId": "dummyTppId",
