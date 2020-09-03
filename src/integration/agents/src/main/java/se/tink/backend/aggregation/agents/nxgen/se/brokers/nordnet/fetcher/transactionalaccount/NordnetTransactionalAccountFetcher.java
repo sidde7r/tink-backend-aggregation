@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -31,10 +31,10 @@ public class NordnetTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        AccountResponse accountResponse = apiClient.fetchAccounts();
-        sessionStorage.put(NordnetConstants.StorageKeys.ACCOUNTS, accountResponse);
+        AccountsResponse accounts = apiClient.fetchAccounts();
+        sessionStorage.put(StorageKeys.ACCOUNTS, accounts);
 
-        return accountResponse.stream()
+        return accounts.stream()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(this::toTinkAccount)
                 .filter(Optional::isPresent)
