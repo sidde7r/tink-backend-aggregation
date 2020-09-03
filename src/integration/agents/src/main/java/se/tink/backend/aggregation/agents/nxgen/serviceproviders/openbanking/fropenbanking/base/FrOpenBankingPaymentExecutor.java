@@ -114,7 +114,6 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         sessionStorage.put(PAYMENT_AUTHORIZATION_URL, authorizationUrl);
 
         String paymentId = apiClient.findPaymentId(authorizationUrl);
-
         return new PaymentResponse(
                 new Payment.Builder()
                         .withUniqueId(paymentId)
