@@ -34,7 +34,7 @@ public class RequestEntity {
     }
 
     public boolean isGetInvestmentPortfolioValFlow() {
-        return nameEquals(RequestNames.GET_SECURITIES__PORTFOLIO_VALUATION);
+        return nameEquals(RequestNames.GET_SECURITIES_PORTFOLIO_VALUATION);
     }
 
     public boolean isGetPendingPayments() {
