@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transacti
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccounts.entities.AccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccounts.entities.PersonalAccountsEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccounts.entities.SharedAccountsEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -18,10 +20,13 @@ public class SBABAccountFetcher implements AccountFetcher<TransactionalAccount> 
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        final AccountsResponse accountsResponse = apiClient.fetchAccounts();
+        final AccountsEntity accounts = apiClient.fetchAccounts().getAccounts();
 
-        return accountsResponse.getAccounts().getPersonalAccounts().stream()
-                .map(PersonalAccountsEntity::toTinkTransactionalAccount)
+        return Stream.concat(
+                        accounts.getPersonalAccounts().stream()
+                                .map(PersonalAccountsEntity::toTinkTransactionalAccount),
+                        accounts.getSharedAccounts().stream()
+                                .map(SharedAccountsEntity::toTinkTransactionalAccount))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

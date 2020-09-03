@@ -65,6 +65,11 @@ public class SBABConstants {
         public static final String NO_CLIENT =
                 "Du har inte BankID som går att använda för den här inloggningen på den här enheten.";
         public static final String CANCELLED = "åtgärden avbruten.";
+        public static final String NO_HOLDER_NAME = "No holder name found";
+    }
+
+    public static class MandateTypes {
+        public static final String OWNER = "OWNER";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =

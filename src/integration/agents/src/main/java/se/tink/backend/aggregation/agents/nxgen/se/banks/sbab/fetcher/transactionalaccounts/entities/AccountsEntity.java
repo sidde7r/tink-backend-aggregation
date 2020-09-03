@@ -10,4 +10,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 public class AccountsEntity extends StandardResponse {
     private List<PersonalAccountsEntity> personalAccounts = Collections.emptyList();
+    private List<SharedAccountsEntity> sharedAccounts = Collections.emptyList();
 }
