@@ -275,7 +275,8 @@ public class OpenIdAuthenticationController
                         .orElseGet(
                                 () -> {
                                     logger.error(
-                                            "callbackData did not contain code. Data received: {}",
+                                            "callbackData did not contain code. CallbackUri: {}, Data received: {}",
+                                            callbackUri,
                                             SerializationUtils.serializeToString(callbackData));
                                     throw new IllegalStateException(
                                             "callbackData did not contain code.");
