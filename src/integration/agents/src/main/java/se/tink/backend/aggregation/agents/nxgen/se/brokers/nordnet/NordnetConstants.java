@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.QueryValues;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public class NordnetConstants {
 
@@ -46,17 +48,30 @@ public class NordnetConstants {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
-        public static final String CODE = "code";
-        public static final String SAML_REQUEST = "SAMLResponse";
-        public static final String TARGET = "TARGET";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String SSN = "national_registration_number";
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+        public static final String SERVICE = "service";
+        public static final String COUNTRY = "country";
+        public static final String SESSION_LANGUAGE = "session_lang";
     }
 
     public static class FormValues {
+        public static final String GRANT_TYPE = "authorization_code";
+        public static final String CLIENT_SECRET = "6C2B9862-7FEE-CBACE053-3757570ADDEF";
         public static final String ANONYMOUS = "<<anonymous>>";
         public static final String COUNTRY_SE = "SE";
         public static final String LANG_EN = "en";
-        public static final String AUTHORIZATION_CODE = "authorization_code";
-        public static final String REDIRECT_URI = "https://www.nordnet.se/now/mobile/token.html";
+        public static final Form ANONYMOUS_LOGIN =
+                Form.builder()
+                        .put(FormKeys.USERNAME, FormValues.ANONYMOUS)
+                        .put(FormKeys.PASSWORD, FormValues.ANONYMOUS)
+                        .put(FormKeys.SERVICE, QueryValues.CLIENT_ID)
+                        .put(FormKeys.COUNTRY, FormValues.COUNTRY_SE)
+                        .put(FormKeys.SESSION_LANGUAGE, FormValues.LANG_EN)
+                        .build();
     }
 
     public static class Urls {
