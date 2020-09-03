@@ -1,144 +1,128 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire;
 
-import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
+import java.util.List;
+import lombok.Getter;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.apiclient.BanquePopulaireApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.BanquePopulaireAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.creditcard.BanquePopulaireCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.loan.BanquePopulaireLoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.transactionalaccounts.BanquePopulaireTransactionalAccountsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.session.BanquePopulaireSessionHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.configuration.BanquePopulaireConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.converter.BanquePopulaireConverter;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.account.BanquePopulaireAccountsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.identity.BanquePopulaireIdentityFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.transaction.BanquePopulaireTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.storage.BanquePopulaireStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.BpceGroupBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.BpceCookieParserHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.BpceTokenExtractor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.steps.helper.BpceValidationHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.steps.helper.ImageRecognizeHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.module.ImageRecognizerHelperModule;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 
-public class BanquePopulaireAgent extends NextGenerationAgent
-        implements RefreshLoanAccountsExecutor,
-                RefreshCreditCardAccountsExecutor,
-                RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
-    private BanquePopulaireApiClient apiClient;
-    private final LoanRefreshController loanRefreshController;
-    private final CreditCardRefreshController creditCardRefreshController;
+@AgentDependencyModules(modules = ImageRecognizerHelperModule.class)
+public class BanquePopulaireAgent extends BpceGroupBaseAgent {
+
+    @Getter private final BanquePopulaireApiClient apiClient;
+    private final BanquePopulaireConverter banquePopulaireConverter;
+    private final BanquePopulaireStorage banquePopulaireStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final BanquePopulaireIdentityFetcher banquePopulaireIdentityFetcher;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final ImageRecognizeHelper imageRecognizeHelper;
 
+    @Inject
     public BanquePopulaireAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-        configureHttpClient(client);
+            AgentComponentProvider agentComponentProvider,
+            ImageRecognizeHelper imageRecognizeHelper) {
+        super(agentComponentProvider);
 
-        apiClient =
-                new BanquePopulaireApiClient(
-                        client, sessionStorage, request.getProvider().getPayload());
-
-        loanRefreshController =
-                new LoanRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new BanquePopulaireLoanFetcher(apiClient));
-
-        creditCardRefreshController = constructCreditCardRefreshController();
-
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.addRedirectHandler(new BanquePopulaireRedirectHandler(sessionStorage));
+        this.imageRecognizeHelper = imageRecognizeHelper;
+        this.banquePopulaireStorage = new BanquePopulaireStorage(this.persistentStorage);
+        this.banquePopulaireConverter = new BanquePopulaireConverter(new ObjectMapper());
+        this.apiClient = createApiClient(agentComponentProvider.getRandomValueGenerator());
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
+        this.banquePopulaireIdentityFetcher =
+                new BanquePopulaireIdentityFetcher(this.banquePopulaireStorage);
+        this.transferDestinationRefreshController =
+                constructTransferDestinationRefreshController(this.apiClient);
     }
 
     @Override
-    protected Authenticator constructAuthenticator() {
-        BanquePopulaireAuthenticator authenticator =
-                new BanquePopulaireAuthenticator(apiClient, sessionStorage);
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        final BpceValidationHelper validationHelper = new BpceValidationHelper();
 
-        return new PasswordAuthenticationController(authenticator);
+        return new BanquePopulaireAuthenticator(
+                this.apiClient,
+                this.banquePopulaireStorage,
+                this.supplementalInformationProvider,
+                this.imageRecognizeHelper,
+                validationHelper);
     }
 
     @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    protected BanquePopulaireApiClient createApiClient(RandomValueGenerator randomValueGenerator) {
+        final BanquePopulaireConfiguration banquePopulaireConfiguration =
+                new BanquePopulaireConfiguration();
+        final BpceTokenExtractor bpceTokenExtractor = new BpceTokenExtractor();
+        final BpceCookieParserHelper cookieParserHelper = new BpceCookieParserHelper();
+
+        return new BanquePopulaireApiClient(
+                this.client,
+                banquePopulaireConfiguration,
+                randomValueGenerator,
+                this.banquePopulaireStorage,
+                bpceTokenExtractor,
+                this.banquePopulaireConverter,
+                cookieParserHelper);
     }
 
     @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
-    }
-
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        BanquePopulaireTransactionalAccountsFetcher transactionalAccountFetcher =
-                new BanquePopulaireTransactionalAccountsFetcher(apiClient);
+    protected TransactionalAccountRefreshController
+            constructTransactionalAccountRefreshController() {
+        final BanquePopulaireAccountsFetcher accountFetcher =
+                new BanquePopulaireAccountsFetcher(this.apiClient, this.banquePopulaireConverter);
+        final BanquePopulaireTransactionFetcher transactionFetcher =
+                new BanquePopulaireTransactionFetcher(getApiClient());
 
         return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                transactionalAccountFetcher,
+                this.metricRefreshController,
+                this.updateController,
+                accountFetcher,
                 new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(transactionalAccountFetcher)));
+                        this.transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 
     @Override
-    public FetchAccountsResponse fetchCreditCardAccounts() {
-        return creditCardRefreshController.fetchCreditCardAccounts();
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        return this.transactionalAccountRefreshController;
     }
 
     @Override
-    public FetchTransactionsResponse fetchCreditCardTransactions() {
-        return creditCardRefreshController.fetchCreditCardTransactions();
-    }
-
-    private CreditCardRefreshController constructCreditCardRefreshController() {
-        BanquePopulaireCreditCardFetcher creditCardFetcher =
-                new BanquePopulaireCreditCardFetcher(apiClient);
-
-        CreditCardRefreshController creditCardController =
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(creditCardFetcher)));
-
-        return creditCardController;
+    protected TransferDestinationRefreshController getTransferDestinationRefreshController() {
+        return this.transferDestinationRefreshController;
     }
 
     @Override
-    public FetchLoanAccountsResponse fetchLoanAccounts() {
-        return loanRefreshController.fetchLoanAccounts();
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(
+                this.banquePopulaireIdentityFetcher.fetchIdentityData());
     }
 
     @Override
-    public FetchTransactionsResponse fetchLoanTransactions() {
-        return loanRefreshController.fetchLoanTransactions();
-    }
-
-    @Override
-    protected SessionHandler constructSessionHandler() {
-        return new BanquePopulaireSessionHandler(apiClient, sessionStorage);
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return this.transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 }

@@ -1,51 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.Range;
 import org.apache.http.HttpStatus;
-import org.apache.http.cookie.Cookie;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.RequestValues;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.RequestValues.ValidationTypes;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.entities.BpcestaQueryParamData;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.entities.Characteristics;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.entities.ClaimsQueryParamData;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.entities.ITEntityType;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.entities.IdToken;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.entities.ImageItem;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.entities.TokenFromLocation;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.entities.Userinfo;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.entities.ValidationUnit;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.CredentialValidationRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.IdentificationRoutingRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.IdentificationRoutingResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.OAuth2TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.OAuth2V2AuthorizeResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.SamlAuthnResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.SsoBapiRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.executor.beneficiary.rpc.CaisseEpargneCreateBeneficiaryRequest;
@@ -56,61 +28,55 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transferdestination.rpc.BeneficiariesResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.utils.CaisseEpargneUtils;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.utils.SoapHelper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.BpceConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.BpceApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.BpceCookieParserHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.BpceTokenExtractor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.entities.MembershipType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.configuration.BpceConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.storage.BpceStorage;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class CaisseEpargneApiClient {
+public class CaisseEpargneApiClient extends BpceApiClient {
 
     private static final String EXPECTED_REDIRECT_GOT = "Expected redirect, got: ";
-    private final TinkHttpClient httpClient;
-    private final TinkHttpClient notRedirectFollowingHttpClient;
-    private final SessionStorage sessionStorage;
-    private final Storage instanceStorage;
 
-    public CaisseEpargneApiClient(
-            TinkHttpClient httpClient, SessionStorage sessionStorage, Storage instanceStorage) {
-        this.httpClient = httpClient;
-        this.httpClient.disableAggregatorHeader();
-        this.notRedirectFollowingHttpClient = httpClient;
-        this.notRedirectFollowingHttpClient.disableAggregatorHeader();
-        this.notRedirectFollowingHttpClient.setFollowRedirects(false);
-        this.sessionStorage = sessionStorage;
-        this.instanceStorage = instanceStorage;
+    CaisseEpargneApiClient(
+            TinkHttpClient httpClient,
+            BpceConfiguration bpceConfiguration,
+            RandomValueGenerator randomValueGenerator,
+            BpceStorage bpceStorage,
+            BpceTokenExtractor bpceTokenExtractor,
+            BpceCookieParserHelper bpceCookieParserHelper) {
+        super(
+                httpClient,
+                bpceConfiguration,
+                randomValueGenerator,
+                bpceStorage,
+                bpceTokenExtractor,
+                bpceCookieParserHelper);
     }
 
-    public void getOAuth2Token() {
-        Optional<OAuth2Token> token =
-                Optional.ofNullable(
-                        httpClient
-                                .request(Urls.OAUTH2_TOKEN)
-                                .header(
-                                        HeaderKeys.CONTENT_TYPE,
-                                        MediaType.APPLICATION_FORM_URLENCODED)
-                                .accept(MediaType.APPLICATION_JSON_TYPE)
-                                .acceptLanguage(Locale.US)
-                                .body(new TokenRequest())
-                                .post(OAuth2TokenResponse.class)
-                                .toTinkToken());
-        token.ifPresent(t -> sessionStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, t));
+    public Optional<OAuth2Token> getOAuth2Token() {
+        return Optional.ofNullable(
+                httpClient
+                        .request(Urls.OAUTH2_TOKEN)
+                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .acceptLanguage(Locale.US)
+                        .body(new TokenRequest())
+                        .post(OAuth2TokenResponse.class)
+                        .toTinkToken());
     }
 
-    public IdentificationRoutingResponse identificationRouting(String userCode)
-            throws SessionException {
-        OAuth2Token bearerToken =
-                sessionStorage
-                        .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
-                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+    public IdentificationRoutingResponse identificationRouting(
+            String userCode, OAuth2Token bearerToken) {
         IdentificationRoutingRequest request =
                 IdentificationRoutingRequest.builder()
                         .characteristics(
@@ -124,41 +90,28 @@ public class CaisseEpargneApiClient {
                                         .userCode(userCode)
                                         .build())
                         .build();
-        IdentificationRoutingResponse response =
-                httpClient
-                        .request(Urls.IDENTIFICATION_ROUTING)
-                        .addBearerToken(bearerToken)
-                        .acceptLanguage(Locale.US)
-                        .accept(MediaType.WILDCARD)
-                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        .body(request)
-                        .post(IdentificationRoutingResponse.class);
-        instanceStorage.put(StorageKeys.IDENTIFICATION_ROUTING_RESPONSE, response);
-        return response;
-    }
 
-    public OAuth2V2AuthorizeResponse oAuth2Authorize(
-            String userCode, String bankIdentifier, String membershipType) {
-        return setupOAuth2Authorize(httpClient, userCode, bankIdentifier, membershipType, null)
-                .get(OAuth2V2AuthorizeResponse.class);
+        return httpClient
+                .request(Urls.IDENTIFICATION_ROUTING)
+                .addBearerToken(bearerToken)
+                .acceptLanguage(Locale.US)
+                .accept(MediaType.WILDCARD)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .body(request)
+                .post(IdentificationRoutingResponse.class);
     }
 
     public String oAuth2AuthorizeRedirect(
-            String userCode, String bankIdentifier, String membershipType, String idTokenHint) {
+            String username, String bankId, MembershipType membershipType, String idTokenHint) {
 
         HttpResponse httpResponse =
-                setupOAuth2Authorize(
-                                notRedirectFollowingHttpClient,
-                                userCode,
-                                bankIdentifier,
-                                membershipType,
-                                idTokenHint)
+                prepareAuthorizeRequest(bankId, username, membershipType, idTokenHint)
                         .get(HttpResponse.class);
         if (!Range.between(300, 399).contains(httpResponse.getStatus())) {
             throw new IllegalStateException(EXPECTED_REDIRECT_GOT + httpResponse.getStatus());
         }
         httpResponse =
-                notRedirectFollowingHttpClient
+                httpClient
                         .request(new URL(httpResponse.getLocation().toString()))
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .get(HttpResponse.class);
@@ -177,226 +130,9 @@ public class CaisseEpargneApiClient {
                                                 + location.toString()));
     }
 
-    private RequestBuilder setupOAuth2Authorize(
-            TinkHttpClient httpClient,
-            String userCode,
-            String bankIdentifier,
-            String membershipType,
-            String idTokenHint) {
-        RequestBuilder builder =
-                httpClient
-                        .request(Urls.OAUTH_V2_AUTHORIZE)
-                        .queryParam(QueryKeys.LOGIN_HINT, userCode)
-                        .queryParam(
-                                QueryKeys.BPCESTA,
-                                createSerializedBpcestaValue(bankIdentifier, membershipType))
-                        .queryParam(QueryKeys.CLAIMS, createSerializedClaimsValue())
-                        .queryParam(QueryKeys.CDETAB, bankIdentifier)
-                        .queryParam(QueryKeys.NONCE, UUID.randomUUID().toString())
-                        .queryParam(QueryKeys.SECRET_ID, QueryValues.SECRET)
-                        .queryParam(QueryKeys.DISPLAY, QueryValues.TOUCH)
-                        .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.ID_TOKEN_TOKEN)
-                        .queryParam(QueryKeys.CLIENT_ID, QueryValues.CLIENT_ID)
-                        .queryParam(
-                                QueryKeys.REDIRECT_URI,
-                                QueryValues.CONTAINER_APP_BAPI_SETUP_SUCCESS)
-                        .accept(MediaType.APPLICATION_JSON_TYPE);
-        Optional.ofNullable(idTokenHint)
-                .ifPresent(idToken -> builder.queryParam(QueryKeys.ID_TOKEN_HINT, idToken));
-        return builder;
-    }
-
-    public String getSamlTransactionPath(URL action, String samlRequest) {
-        try {
-            String urlEncodedSamlRequest =
-                    URLEncoder.encode(samlRequest, StandardCharsets.UTF_8.toString());
-            String requestBody = FormKeys.SAML_REQUEST + "=" + urlEncodedSamlRequest;
-            HttpResponse redirect =
-                    notRedirectFollowingHttpClient
-                            .request(action)
-                            .accept(MediaType.WILDCARD)
-                            .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                            .header(HeaderKeys.USER_AGENT, HeaderValues.CAISSE_DARWIN)
-                            .body(requestBody)
-                            .post(HttpResponse.class);
-            if (redirect.getStatus() != HttpStatus.SC_SEE_OTHER) {
-                throw new IllegalStateException(EXPECTED_REDIRECT_GOT + redirect.getStatus());
-            }
-            return redirect.getLocation().toString();
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Could not URL encode", e);
-        }
-    }
-
-    public SamlAuthnResponse samlAuthorize(String samlTransactionPath) {
-        return httpClient
-                .request(Urls.ICG_AUTH_BASE.concat(samlTransactionPath))
-                .accept(MediaType.WILDCARD)
-                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.USER_AGENT, HeaderValues.CAISSE_DARWIN)
-                .get(SamlAuthnResponse.class);
-    }
-
-    public Map<String, byte[]> getKeyboardImages(URL imageUrl) {
-        HttpResponse imagesResponse =
-                httpClient
-                        .request(imageUrl)
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .header(HeaderKeys.USER_AGENT, HeaderValues.CAISSE_DARWIN)
-                        .get(HttpResponse.class);
-
-        Deque<Cookie> actualCookies = arrangeCookies(imagesResponse);
-
-        List<ImageItem> imageItems = Arrays.asList(imagesResponse.getBody(ImageItem[].class));
-        Map<String, byte[]> images =
-                imageItems.stream()
-                        .map(imageItem -> getImage(imageItem, actualCookies))
-                        .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-        actualCookies.forEach(httpClient::addCookie);
-        return images;
-    }
-
-    private Deque<Cookie> arrangeCookies(HttpResponse imagesResponse) {
-        List<String> setCookies =
-                imagesResponse.getHeaders().entrySet().stream()
-                        .filter(entry -> HeaderKeys.SET_COOKIE.equals(entry.getKey()))
-                        .map(Entry::getValue)
-                        .flatMap(List::stream)
-                        .collect(Collectors.toList());
-        List<Cookie> newCookies =
-                setCookies.stream()
-                        .map(CaisseEpargneUtils::parseRawCookie)
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .collect(Collectors.toList());
-        Deque<Cookie> actualCookies = new ArrayDeque<>();
-        List<Cookie> oldCookies = httpClient.getCookies();
-        httpClient.clearCookies();
-        newCookies.forEach(
-                newCookie -> {
-                    for (Cookie oldCookie : oldCookies) {
-                        if (oldCookie.getValue().equals(newCookie.getValue())) {
-                            oldCookies.remove(oldCookie);
-                        }
-                    }
-                });
-        newCookies.forEach(actualCookies::push);
-        oldCookies.forEach(actualCookies::push);
-        return actualCookies;
-    }
-
-    public SamlAuthnResponse submitPassword(
-            String validationId,
-            String validationUnitId,
-            String passwordKeyString,
-            String samlTransactionPath) {
-        return submitUserCredential(
-                validationId,
-                validationUnitId,
-                passwordKeyString,
-                samlTransactionPath,
-                ValidationTypes.PASSWORD);
-    }
-
-    public SamlAuthnResponse submitOtp(
-            String validationId, String validationUnitId, String otp, String samlTransactionPath) {
-        return submitUserCredential(
-                validationId, validationUnitId, otp, samlTransactionPath, ValidationTypes.OTP);
-    }
-
-    private SamlAuthnResponse submitUserCredential(
-            String validationId,
-            String validationUnitId,
-            String credential,
-            String samlTransactionPath,
-            ValidationTypes credentialType) {
-        ValidationUnit.ValidationUnitBuilder validationUnitBuilder =
-                ValidationUnit.builder().id(validationUnitId).type(credentialType.getName());
-        if (ValidationTypes.PASSWORD.equals(credentialType)) {
-            validationUnitBuilder.password(credential);
-        } else if (ValidationTypes.OTP.equals(credentialType)) {
-            validationUnitBuilder.otpSms(credential);
-        }
-        Map<String, List<ValidationUnit>> validationUnits =
-                Collections.singletonMap(
-                        validationId, Collections.singletonList(validationUnitBuilder.build()));
-        CredentialValidationRequest request =
-                CredentialValidationRequest.builder().validate(validationUnits).build();
-        return httpClient
-                .request(Urls.ICG_AUTH_BASE.concat(samlTransactionPath).concat(Urls.STEP_PATH))
-                .accept(MediaType.WILDCARD_TYPE)
-                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.USER_AGENT, HeaderValues.CAISSE_DARWIN)
-                .body(request)
-                .post(SamlAuthnResponse.class);
-    }
-
-    private Entry<String, byte[]> getImage(ImageItem imageItem, Deque<Cookie> cookies) {
-        String cookieHeader =
-                cookies.stream()
-                        .map(c -> String.join("=", c.getName(), c.getValue()))
-                        .collect(Collectors.joining("; "));
-        byte[] bytes =
-                httpClient
-                        .request(Urls.ICG_AUTH_BASE.concat(imageItem.getUri()))
-                        .accept(MediaType.WILDCARD_TYPE)
-                        .header(HeaderKeys.COOKIE, cookieHeader)
-                        .header(HeaderKeys.USER_AGENT, HeaderValues.CAISSE_DARWIN)
-                        .get(byte[].class);
-        return new SimpleEntry<>(imageItem.getValue(), bytes);
-    }
-
-    private String createSerializedBpcestaValue(String bankId, String membershipType) {
-        BpcestaQueryParamData bpcestaQueryParamData =
-                new BpcestaQueryParamData(bankId, membershipType);
-        sessionStorage.put(StorageKeys.TERM_ID, bpcestaQueryParamData.getTermId());
-        return SerializationUtils.serializeToString(bpcestaQueryParamData);
-    }
-
-    private String createSerializedClaimsValue() {
-        return SerializationUtils.serializeToString(
-                ClaimsQueryParamData.builder()
-                        .idToken(new IdToken())
-                        .userinfo(new Userinfo())
-                        .build());
-    }
-
-    public void oAuth2Consume(String oAuth2ConsumeUrl, String samlResponse) {
-        String urlEncodedSamlRequest = null;
-        try {
-            urlEncodedSamlRequest =
-                    URLEncoder.encode(samlResponse, StandardCharsets.UTF_8.toString());
-            String requestBody = FormKeys.SAML_RESPONSE + "=" + urlEncodedSamlRequest;
-            HttpResponse redirect =
-                    notRedirectFollowingHttpClient
-                            .request(new URL(oAuth2ConsumeUrl))
-                            .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                            .accept(MediaType.WILDCARD)
-                            .body(requestBody)
-                            .post(HttpResponse.class);
-            if (redirect.getStatus() != HttpStatus.SC_MOVED_TEMPORARILY) {
-                throw new IllegalStateException(EXPECTED_REDIRECT_GOT + redirect.getStatus());
-            }
-            TokenFromLocation token = TokenFromLocation.of(redirect.getLocation().toString());
-            if (!token.isValidBearerToken()) {
-                throw new IllegalStateException("Could not parse token from location url.");
-            }
-            sessionStorage.put(StorageKeys.TOKEN, token.toOAuth2Token());
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Could not URL encode", e);
-        }
-    }
-
-    public void soapActionSsoBapi(String bankId) {
-        OAuth2Token token =
-                sessionStorage
-                        .get(StorageKeys.TOKEN, OAuth2Token.class)
-                        .orElseThrow(() -> new IllegalStateException("No token found in storage."));
-        String termId =
-                sessionStorage
-                        .get(StorageKeys.TERM_ID, String.class)
-                        .orElseThrow(
-                                () -> new IllegalStateException("No term id found in storage."));
+    public String soapActionSsoBapi(String bankId) {
+        OAuth2Token token = getTokenFromStorage();
+        String termId = bpceStorage.getTermId();
         SsoBapiRequest ssoBapiRequest = new SsoBapiRequest(token.getAccessToken(), termId);
         HttpResponse response =
                 httpClient
@@ -408,8 +144,7 @@ public class CaisseEpargneApiClient {
                         .accept(MediaType.WILDCARD_TYPE)
                         .body(SoapHelper.formRequest(ssoBapiRequest))
                         .post(HttpResponse.class);
-        String xmlBody = response.getBody(String.class);
-        instanceStorage.put(StorageKeys.FINAL_AUTH_RESPONSE, xmlBody);
+        return response.getBody(String.class);
     }
 
     public AccountsResponse getAccounts() {
@@ -454,31 +189,18 @@ public class CaisseEpargneApiClient {
         return SoapHelper.getTransactions(transactionsResponse);
     }
 
-    public BeneficiariesResponse getBeneficiaries() {
-        OAuth2Token bearerToken =
-                sessionStorage
-                        .get(StorageKeys.TOKEN, OAuth2Token.class)
-                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-        return httpClient
-                .request(Urls.BENEFICIARIES)
-                .addBearerToken(bearerToken)
-                .accept(MediaType.WILDCARD_TYPE)
-                .get(BeneficiariesResponse.class);
-    }
-
     public CaisseEpargneCreateBeneficiaryResponse createBeneficiary(
             CaisseEpargneCreateBeneficiaryRequest request) {
-        OAuth2Token bearerToken =
-                sessionStorage
-                        .get(StorageKeys.TOKEN, OAuth2Token.class)
-                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+        final String url = bpceConfiguration.getRsExAthBaseUrl() + BpceConstants.BENEFICIARIES_PATH;
+
         HttpResponse response;
         try {
             response =
                     httpClient
-                            .request(Urls.BENEFICIARIES)
+                            .request(url)
                             .body(request)
-                            .addBearerToken(bearerToken)
+                            .addBearerToken(getTokenFromStorage())
                             .accept(MediaType.WILDCARD_TYPE)
                             .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                             .header(HeaderKeys.X_SECURE_PASS_TYPE, "out-band")

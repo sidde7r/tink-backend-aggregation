@@ -1,0 +1,132 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "12345678901",
+      "accountExclusion":"NONE",
+      "exactBalance":{
+        "currencyCode":"EUR",
+        "doubleValue":266.23,
+        "scale":2,
+        "unscaledValue":26623,
+        "exactValue":266.23
+      },
+      "currencyCode":"EUR",
+      "bankId":"12345678901",
+      "name":"Compte De Cheques",
+      "ownership":1.0,
+      "type":"CHECKING",
+      "identifiers":"[]",
+      "closed":false,
+      "holderName":"DUMMY_NAME",
+      "flags":"[]",
+      "availableCredit":0.0,
+      "balance":266.23
+    },
+    {
+      "accountNumber": "12345678903",
+      "accountExclusion":"NONE",
+      "exactBalance":{
+        "currencyCode":"EUR",
+        "doubleValue":3474.36,
+        "scale":2,
+        "unscaledValue":347436,
+        "exactValue":3474.36
+      },
+      "currencyCode":"EUR",
+      "bankId":"12345678903",
+      "name":"Plan Epargne Logement",
+      "ownership":1.0,
+      "type":"SAVINGS",
+      "identifiers":"[]",
+      "closed":false,
+      "holderName":"DUMMY_NAME",
+      "flags":"[]",
+      "availableCredit":0.0,
+      "balance":3474.36
+    },
+    {
+      "accountNumber": "12345678902",
+      "accountExclusion":"NONE",
+      "exactBalance":{
+        "currencyCode":"EUR",
+        "doubleValue":6651.71,
+        "scale":2,
+        "unscaledValue":665171,
+        "exactValue":6651.71
+      },
+      "currencyCode":"EUR",
+      "bankId":"12345678902",
+      "name":"Liv Dev Durable Et Solidaire",
+      "ownership":1.0,
+      "type":"SAVINGS",
+      "identifiers":"[]",
+      "closed":false,
+      "holderName":"DUMMY_NAME",
+      "flags":"[]",
+      "availableCredit":0.0,
+      "balance":6651.71
+    }
+  ],
+  "transactions": [
+    {
+      "amount":2000.0,
+      "date":1596103200000,
+      "description":"VIR NAME",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    },
+    {
+      "amount":46.0,
+      "date":1596967200000,
+      "description":"VIR NAME",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    },
+    {
+      "amount":-100.0,
+      "date":1597744800000,
+      "description":"EVI Compte joint",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    },
+    {
+      "amount":-37.0,
+      "date":1591524000000,
+      "description":"060620 Desc",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    }
+  ],
+  "identityData": {
+    "nameElements": [
+      {
+        "type": "FIRST_NAME",
+        "value": "DUMMY_NAME"
+      },
+      {
+        "type": "SURNAME",
+        "value": "DUMMY_SURNAME"
+      }
+    ]
+  }
+}

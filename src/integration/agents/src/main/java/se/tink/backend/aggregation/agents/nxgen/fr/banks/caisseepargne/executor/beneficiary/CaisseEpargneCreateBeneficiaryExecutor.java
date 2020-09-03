@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.executor.beneficiary;
 
 import java.util.ArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -10,14 +11,20 @@ import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryAuth
 import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryException;
 import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryInvalidAccountTypeException;
 import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.Step;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.IdentificationRoutingResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.rpc.SamlAuthnResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.executor.beneficiary.rpc.CaisseEpargneCreateBeneficiaryRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.executor.beneficiary.rpc.CaisseEpargneCreateBeneficiaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.storage.CaisseEpargneStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.dto.authorize.AuthTransactionResponseDto;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.dto.authorize.PhaseDto;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.entities.AuthResponseStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.entities.MembershipType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.steps.helper.BpceValidationHelper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryExecutor;
@@ -26,27 +33,18 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMu
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 
+@Slf4j
+@RequiredArgsConstructor
 public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiaryExecutor {
-    private static final Logger LOG =
-            LoggerFactory.getLogger(CaisseEpargneCreateBeneficiaryExecutor.class);
 
     private final CaisseEpargneApiClient apiClient;
     private final SupplementalInformationProvider supplementalInformationProvider;
     private CaisseEpargneCreateBeneficiaryResponse apiResponse;
-    private final Storage instanceStorage;
-
-    public CaisseEpargneCreateBeneficiaryExecutor(
-            CaisseEpargneApiClient apiClient,
-            SupplementalInformationProvider supplementalInformationProvider,
-            Storage instanceStorage) {
-        this.apiClient = apiClient;
-        this.supplementalInformationProvider = supplementalInformationProvider;
-        this.instanceStorage = instanceStorage;
-    }
+    private final CaisseEpargneStorage caisseEpargneStorage;
+    private final BpceValidationHelper validationHelper;
 
     @Override
     public CreateBeneficiaryResponse createBeneficiary(
@@ -66,7 +64,7 @@ public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiary
             createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.INITIATED);
         } else if (apiResponse.isErrorResponse()) {
             createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.REJECTED);
-            LOG.error("Beneficiary request was rejected: {}", apiResponse.getErrorCode());
+            log.error("Beneficiary request was rejected: {}", apiResponse.getErrorCode());
         } else {
             createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.CREATED);
         }
@@ -95,50 +93,37 @@ public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiary
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest)
             throws BeneficiaryException, LoginException {
         IdentificationRoutingResponse identificationRoutingResponse =
-                instanceStorage
-                        .get(
-                                StorageKeys.IDENTIFICATION_ROUTING_RESPONSE,
-                                IdentificationRoutingResponse.class)
-                        .orElseThrow(
-                                () ->
-                                        new BeneficiaryAuthorizationException(
-                                                "IdentificationRoutingResponse missing from storage."));
+                caisseEpargneStorage.getIdRoutingResponse();
+
+        MembershipType membershipType =
+                MembershipType.fromString(identificationRoutingResponse.getMembershipTypeCode());
+
         String samlTransactionId =
                 apiClient.oAuth2AuthorizeRedirect(
                         identificationRoutingResponse.getUserCode(),
                         identificationRoutingResponse.getBankId(),
-                        identificationRoutingResponse.getMembershipTypeValue(),
+                        membershipType,
                         apiResponse.getIdTokenHint());
         String samlTransactionPath =
                 Urls.SAML_TRANSACTION_PATH.concat("/").concat(samlTransactionId);
-        SamlAuthnResponse samlAuthnResponse = apiClient.samlAuthorize(samlTransactionPath);
-        samlAuthnResponse.throwBeneficiaryExceptionIfFailedAuthentication();
-        String validationId =
-                samlAuthnResponse
-                        .getValidationId()
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Not able to determine validation id."));
+        AuthTransactionResponseDto authTransactionResponseDto =
+                apiClient.getAuthTransaction(samlTransactionPath);
+
+        validateAuthTransactionResponseDto(authTransactionResponseDto);
+
+        String validationId = validationHelper.getValidationId(authTransactionResponseDto);
+
         String validationUnitId =
-                samlAuthnResponse
-                        .getValidationUnitId()
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Not able to determine validation unit id."));
-        SamlAuthnResponse otpResponse =
-                apiClient.submitOtp(
-                        validationId, validationUnitId, getBeneficiaryOtp(), samlTransactionPath);
-        otpResponse.throwBeneficiaryExceptionIfFailedAuthentication();
-        apiClient.oAuth2Consume(
-                otpResponse
-                        .getSaml2PostAction()
-                        .orElseThrow(
-                                () -> new IllegalStateException("SAML action URL is missing.")),
-                otpResponse
-                        .getSamlResponseValue()
-                        .orElseThrow(() -> new IllegalStateException("SAML response missing.")));
+                validationHelper.getValidationUnitId(authTransactionResponseDto, validationId);
+
+        AuthTransactionResponseDto otpResponse =
+                apiClient.sendOtp(
+                        validationId, validationUnitId, samlTransactionPath, getBeneficiaryOtp());
+
+        validateAuthTransactionResponseDto(otpResponse);
+
+        apiClient.oAuth2Consume(otpResponse.getResponse().getSaml2Post());
+
         return new CreateBeneficiaryMultiStepResponse(
                 createBeneficiaryMultiStepRequest, Step.CREATE_BENEFICIARY, new ArrayList<>());
     }
@@ -184,7 +169,7 @@ public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiary
             createBeneficiaryMultiStepResponse
                     .getBeneficiary()
                     .setStatus(CreateBeneficiaryStatus.REJECTED);
-            LOG.error("Beneficiary request was rejected: {}", response.getErrorCode());
+            log.error("Beneficiary request was rejected: {}", response.getErrorCode());
         } else {
             createBeneficiaryMultiStepResponse
                     .getBeneficiary()
@@ -200,6 +185,51 @@ public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiary
                     .waitForOtpInput();
         } catch (SupplementalInfoException e) {
             throw new BeneficiaryException(e.getMessage(), e);
+        }
+    }
+
+    private static void validateAuthTransactionResponseDto(
+            AuthTransactionResponseDto authTransactionResponseDto)
+            throws BeneficiaryAuthorizationException {
+
+        final PhaseDto phaseDto = authTransactionResponseDto.getPhase();
+
+        if (Objects.isNull(phaseDto)) {
+            return;
+        }
+
+        if (AuthResponseStatus.FAILED_AUTHENTICATION
+                        .getName()
+                        .equalsIgnoreCase(phaseDto.getPreviousResult())
+                && phaseDto.getRetryCounter() == 1) {
+            throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
+        } else if (AuthResponseStatus.FAILED_AUTHENTICATION
+                .getName()
+                .equalsIgnoreCase(phaseDto.getPreviousResult())) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        if (Objects.isNull(authTransactionResponseDto.getResponse())
+                || Objects.isNull(authTransactionResponseDto.getResponse().getStatus())) {
+            return;
+        }
+
+        final String status = authTransactionResponseDto.getResponse().getStatus();
+
+        if (!AuthResponseStatus.AUTHENTICATION_SUCCESS.getName().equalsIgnoreCase(status)) {
+            log.error("Authentication failed with status: " + status);
+
+            if (AuthResponseStatus.AUTHENTICATION_LOCKED.getName().equalsIgnoreCase(status)) {
+                throw new BeneficiaryAuthorizationException(
+                        AuthorizationError.ACCOUNT_BLOCKED.userMessage().toString());
+            } else if (AuthResponseStatus.AUTHENTICATION_FAILED
+                    .getName()
+                    .equalsIgnoreCase(status)) {
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+            } else {
+                throw new BeneficiaryAuthorizationException(
+                        AuthorizationError.UNAUTHORIZED.userMessage().toString());
+            }
         }
     }
 }

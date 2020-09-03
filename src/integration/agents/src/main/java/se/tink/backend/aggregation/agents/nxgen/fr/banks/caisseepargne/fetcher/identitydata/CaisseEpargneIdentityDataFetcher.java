@@ -1,22 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.identitydata;
 
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.StorageKeys;
+import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.storage.CaisseEpargneStorage;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.utils.SoapHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.identitydata.IdentityData;
 
+@RequiredArgsConstructor
 public class CaisseEpargneIdentityDataFetcher implements IdentityDataFetcher {
 
-    private final Storage instanceStorage;
-
-    public CaisseEpargneIdentityDataFetcher(Storage instanceStorage) {
-        this.instanceStorage = instanceStorage;
-    }
+    private final CaisseEpargneStorage caisseEpargneStorage;
 
     @Override
     public IdentityData fetchIdentityData() {
-        String finalAuthResponse = instanceStorage.get(StorageKeys.FINAL_AUTH_RESPONSE);
+        String finalAuthResponse = caisseEpargneStorage.getFinalAuthResponse();
         return SoapHelper.getIdentityData(finalAuthResponse);
     }
 }

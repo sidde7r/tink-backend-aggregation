@@ -1,0 +1,852 @@
+REQUEST 1
+GET https://m.banquepopulaire.fr/mapi/1.1/update?apptype=par&appversion=78.5&brand=bp&os=ios&osversion=13.3.1
+Connection: keep-alive
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+Accept: */*
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+
+RESPONSE 1
+200
+Set-Cookie: cim-session-id=C8328C4919FA24D016BE66CD8E66ED8F; Path=/; Secure; HttpOnly
+Cache-Control: no-cache, no-store, max-age=0,must-revalidate
+Pragma: no-cache
+Cache-Control: no-transform
+X-Bk-Engine: off
+Content-Type: application/json;charset=UTF-8
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+
+{"statut": "OK"}
+
+REQUEST 2
+GET https://m.banquepopulaire.fr/mapi/1.1/general-config?brand=bp&apptype=par
+Cookie: cim-session-id=C8328C4919FA24D016BE66CD8E66ED8F
+Connection: keep-alive
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+Accept: */*
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+
+RESPONSE 2
+200
+Cache-Control: no-cache, no-store, max-age=0,must-revalidate
+Pragma: no-cache
+Cache-Control: no-transform
+X-Bk-Engine: off
+Content-Type: application/json;charset=UTF-8
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+
+{
+    "brand": {
+        "banks": [
+            {
+                "anoBaseUrl": "https://m.ibps.bpalc.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "alsace-lorraine-champagne.png",
+                "id": "047",
+                "img": "img_logo_lorraine.png",
+                "logo": "logo_alsacelorrainechampagne.png",
+                "name": "Alsace Lorraine Champagne",
+                "shortName": "BPALC",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire Alsace Lorraine Champagne !"
+            },
+            {
+                "anoBaseUrl": "https://m.ibps.bpaca.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "aquitaine.png",
+                "id": "009",
+                "img": "img_logo_centreatlantique.png",
+                "logo": "logo_aquitaine_centre_atlantique.png",
+                "name": "Aquitaine Centre Atlantique",
+                "shortName": "BPACA",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire Aquitaine Centre Atlantique !"
+            },
+            {
+                "anoBaseUrl": "https://m.ibps.bpgo.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "atlantique.png",
+                "id": "038",
+                "img": "img_logo_grand_ouest.png",
+                "logo": "logo_grand_ouest.png",
+                "name": "Grand Ouest",
+                "shortName": "BPGO",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire Grand Ouest !"
+            },
+            {
+                "anoBaseUrl": "https://m.ibps.bpaura.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "bpaura.png",
+                "id": "068",
+                "img": "img_logo_bpaura.png",
+                "logo": "logo_bpaura.png",
+                "name": "Auvergne Rhône Alpes",
+                "shortName": "BPAURA",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire Auvergne Rhône Alpes !"
+            },
+            {
+                "anoBaseUrl": "https://m.ibps.bpbfc.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "bourgogne.png",
+                "id": "008",
+                "img": "img_logo_bourgogne.png",
+                "logo": "logo_bourgogne.png",
+                "name": "Bourgogne Franche-Comté",
+                "shortName": "BPBFC",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire Bourgogne Franche-Comté !"
+            },
+            {
+                "anoBaseUrl": "https://www.bred.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "null",
+                "id": "10107",
+                "img": "img_header_260.gif",
+                "logo": "null",
+                "name": "BRED",
+                "shortName": "BRED",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la BRED !"
+            },
+            {
+                "anoBaseUrl": "https://m.ibps.mediterranee.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "mediterranee.png",
+                "id": "046",
+                "img": "img_logo_mediterranee.png",
+                "logo": "logo_mediterranee.png",
+                "name": "Méditerranée",
+                "shortName": "BPMED",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire Méditerranée !"
+            },
+            {
+                "anoBaseUrl": "https://m.ibps.nord.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "nord.png",
+                "id": "035",
+                "img": "img_logo_nord.png",
+                "logo": "logo_nord.png",
+                "name": "Nord",
+                "shortName": "BPN",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire du Nord !"
+            },
+            {
+                "anoBaseUrl": "https://m.ibps.occitane.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "occitane.png",
+                "id": "078",
+                "img": "img_logo_occitane.png",
+                "logo": "logo_occitane.png",
+                "name": "Occitane",
+                "shortName": "BPOC",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire Occitane !"
+            },
+            {
+                "anoBaseUrl": "https://m.ibps.rivesparis.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "rivedeparis.png",
+                "id": "002",
+                "img": "img_logo_rives.png",
+                "logo": "logo_rives_de_paris.png",
+                "name": "Rives de Paris",
+                "shortName": "BPRI",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire Rives de Paris !"
+            },
+            {
+                "anoBaseUrl": "https://m.ibps.sud.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "sud.png",
+                "id": "066",
+                "img": "img_logo_sud.png",
+                "logo": "logo_sud.png",
+                "name": "Sud",
+                "shortName": "BPS",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire du Sud !"
+            },
+            {
+                "anoBaseUrl": "https://m.ibps.valdefrance.banquepopulaire.fr",
+                "applicationAPIContextRoot": "/mapi/1.1",
+                "icone": "valdefrance.png",
+                "id": "087",
+                "img": "img_logo_valdefrance.png",
+                "logo": "logo_val_de_france.png",
+                "name": "Val de France",
+                "shortName": "BPVF",
+                "webMobileContextRoot": "/mobile",
+                "welcome-msg": "Bienvenue à la Banque Populaire Val de France !"
+            }
+        ],
+        "logo": "img_logo_banquepopulaire.png",
+        "name": "BP"
+    },
+    "fusion": [
+        {
+            "baseUrl": "https://m.ibps.ouest.banquepopulaire.fr",
+            "idCible": "038",
+            "idSource": "067"
+        },
+        {
+            "baseUrl": "https://m.ibps.atlantique.banquepopulaire.fr",
+            "idCible": "038",
+            "idSource": "038"
+        },
+        {
+            "baseUrl": "https://m.ibps.bretagnenormandie.cmm.groupe.banquepopulaire.fr",
+            "idCible": "536",
+            "idSource": "534"
+        },
+        {
+            "baseUrl": "https://m.ibps.atlantique.creditmaritime.groupe.banquepopulaire.fr",
+            "idCible": "536",
+            "idSource": "536"
+        }
+    ]
+}
+
+REQUEST 3
+GET https://m.ibps.rivesparis.banquepopulaire.fr/mapi/1.1/app-config?apptype=par&appversion=78.5&brand=bp&os=ios
+Connection: keep-alive
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+Accept: */*
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+
+RESPONSE 3
+200
+Set-Cookie: cim-session-id=1A6A4CD233786C54A78837C341610DEF; Path=/; Secure; HttpOnly
+Set-Cookie: cyberplus-hybrid=ios-78.5; Expires=Tue, 17-Nov-2020 12:47:17 GMT; Path=/; HttpOnly
+Access-Control-Allow-Origin: https://www.banquepopulaire.fr
+Cache-Control: no-cache, no-store, max-age=0,must-revalidate,no-transform
+Pragma: no-cache
+X-Bk-Engine: off
+Content-Type: application/json;charset=UTF-8
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+    "appConfig": {
+        "authBaseUrl": "https://www.ibps.rivesparis.banquepopulaire.fr",
+        "cardsIcons": "/portailinternet/Lists/Mobile/cartes/{0}/{1}.png",
+        "currentDate": "2020-08-19T14:47:17+0200",
+        "cyberEditorialAnoURL": "https://www.rivesparis.banquepopulaire.fr",
+        "externalUrl": {
+            "aclUrl": "/portailinternet/Pages/AclMobile/productcatalog.aspx?rwd=true&IsFromDemandOnLine=1",
+            "bapiAnoAsUrl": "https://www.as-ex-ano-groupe.banquepopulaire.fr",
+            "bapiAnoRsUrl": "https://www.rs-ex-ano-groupe.banquepopulaire.fr",
+            "bapiAsUrl": "https://www.as-ex-ath-groupe.banquepopulaire.fr",
+            "bapiRsUrl": "https://www.rs-ex-ath-groupe.banquepopulaire.fr",
+            "collectUrl": "https://www.banquepopulaire.fr/souscrire/espace-immobilier/espace-immo/collecter/digital-folder/category?cdetab={1}&type=000&id={2}-{3}",
+            "immoUrl": "https://www.banquepopulaire.fr/souscrire/pret-immobilier/#/tunnel/recherche/etat",
+            "nativeAdUrl": "https://customers.kameleoon.com/bpce-autopromo",
+            "rdvUrl": "/portailinternet/Pages/RdvEnLigne/RdvEnLigne.aspx?rwd=true&IsFromDemandOnLine=1",
+            "resourcesUrl": "https://www.banquepopulaire.fr",
+            "rgpd-002": "https://www.rivesparis.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnee_personnelle&vary=0-0-0",
+            "rgpd-008": "https://www.bpbfc.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnee_personnelle&vary=0-0-0",
+            "rgpd-009": "https://www.bpaca.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnees_personnelles&vary=0-0-0",
+            "rgpd-035": "https://www.nord.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=protection_des_donnees&vary=0-0-0",
+            "rgpd-038": "https://www.bpgo.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnees_personnelles&vary=0-0-0",
+            "rgpd-046": "https://www.mediterranee.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnee_personnelle&vary=0-0-0",
+            "rgpd-047": "https://www.bpalc.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnee_personnelle&vary=0-0-0",
+            "rgpd-066": "https://www.sud.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnee_personnelle&vary=2-0-0",
+            "rgpd-068": "https://www.bpaura.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=protection_des_donnees&vary=4-0-0",
+            "rgpd-078": "https://www.occitane.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnee_personnelle&vary=2-0-0",
+            "rgpd-087": "https://www.valdefrance.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=2&xtmc=donnee_personnelle&vary=0-0-0",
+            "rgpd-46B": "https://www.palatine.fr/fileadmin/user_upload/pdf/infos-reglementaires/Axxxx-BP_RGPD-Charte_8p_new_charte_V2.pdf",
+            "rgpd-536": "https://www.cmgo.creditmaritime.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?vary=0-0-0",
+            "rgpd-537": "https://www.littoralsudouest.creditmaritime.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnee_personnelle&vary=0-0-0",
+            "rgpd-539": "https://www.cmmed.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnee_personnelle&vary=2-0-0",
+            "rgpd-552": "https://www.banque-de-savoie.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles-bs.aspx?xtcr=2&xtmc=protection_des_donnees&vary=0-0-0",
+            "rgpd-557": "https://www.bdp.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnee_personnelle&vary=2-0-0",
+            "rgpd-558": "https://www.marze.banquepopulaire.fr/portailinternet/Editorial/Informations/Pages/protection-donnees-personnelles.aspx?xtcr=1&xtmc=donnee_personnelle&vary=2-0-0",
+            "simuUrl": "https://www.banquepopulaire.fr/souscrire/credit-consommation/#/calc?coetb=[COETB]&typecode=[CODE]&isMobile=true&tri=[COTE]"
+        },
+        "keepAlive": {
+            "interval": 210,
+            "maxRetry": 0,
+            "webSSOv3URL": "/auth/keepalive",
+            "webappURL": "/mapi/1.1/keep-alive"
+        },
+        "mobilePaymentCgu": "/portailinternet/Editorial/Lists/DocEditoList/cgu-services/CGU-MP.htm",
+        "ssoStrategy": "webssov3",
+        "storeAppExterneConfigURL": "https://www.rivesparis.banquepopulaire.fr/portailinternet/Lists/Tablette/storeAppExterne/storeAppExterneConfig_ios.conf",
+        "version": "[10.14.4]",
+        "webAPI2": {
+            "authAccessTokenURL": "/as-bp/as/2.0/tokens",
+            "authBusinessContextRoot": "/api-bp/wapi/2.0",
+            "authorizations": {
+                "RSC": [
+                    ".*retraits?-sans-carte.*"
+                ],
+                "SEM": [
+                    ".*dossiers-vente-multicanal.*"
+                ]
+            },
+            "cacheStrategies": {
+                "default": "no-cache"
+            },
+            "entryPoints": {
+                "ACCOUNTS": "/account/v0/user/accounts",
+                "AGREGATION": "/abonnes/current/synchronisations-contrats-externes",
+                "ARBOL": "/abonnes/current/portefeuilles-numeriques/eligibilite",
+                "CC": "/abonnes/current/informations-cloudcard",
+                "CC_SV": "/abonnes/current/cloudcard-vuesynthetique",
+                "CES": "/abonnes/current/encart-enveloppe-pre-accordee",
+                "CRD": "/abonnes/current/cartes",
+                "ETNA": "/abonnes/current/contrats/{0}/routage-partenaire",
+                "FCTA": "/fonctionnalites-applicatives/{0}/activation",
+                "FUSION": "/iban_fusion/clientstatus",
+                "GDD": "/abonnes/current/demandes-document",
+                "IDD": "/abonnes/current/information-demandes-document",
+                "INTRADAY": "/abonnes/current/synthese-intraday",
+                "MAE": "/abonnes/current/categorisations-operations",
+                "METEO": "/abonnes/current/previsions-meteo-contrat",
+                "OIC": "/jetons-reroutage/oic-bourse",
+                "PLVT": "/abonnes/current/recuperation-prelevements-recus",
+                "RSC": "/abonnes/current/informations-retrait-sans-carte",
+                "SEARCH": "/ventes/recherche-avancee",
+                "SEM": "/abonnes/current/dossiers-vente-multicanal?statut=enCours",
+                "SJR": "/jetons-reroutage/sjr",
+                "TH": "/abonnes/current/device-connections",
+                "THNONCES": "/abonnes/current/device-nonces",
+                "code": "/codes/{0}/{1}",
+                "codes": "/codes/{0}"
+            }
+        },
+        "webSSOv3CookieNamePrefix": "BWFSESSID_",
+        "webSSOv3LoginScreenURL": "/index.html?transactionID=",
+        "webSSOv3LoginURL": "/dacswebssoissuer/AuthnRequestServlet",
+        "webSSOv3LogoutURL": "/amserver/UI/Logout",
+        "webSSOv3WebAPIBaseURL": "/dacswebssoissuer/api/v1u0/transaction/{0}",
+        "webSSOv3WebAPIStepURL": "/step"
+    },
+    "authorizedFunctions": {
+        "touchID": true
+    },
+    "legal": "\n<div class=\"blocText\">\n\t<span style=\"color:#6F7683\">\n\t\tLe présent document a pour objet de définir les modalités et conditions d’utilisation du site \n\t\tinternet Mobile Banque Populaire Rives de Paris par ses utilisateurs. Les utilisateurs, en se \n\t\tconnectant et en naviguant sur le site internet Mobile Banque Populaire Rives de Paris, acceptent \n\t\tces modalités et conditions d'utilisation.<br/><br/>\n\t\t<b>I-Identité</b><br/>\n\t\tBanque Populaire Rives de Paris.<br/>\n\t\tSociété anonyme coopérative de Banque Populaire à capital variable, régie par les articles L512-2 \n\t\tet suivants du Code Monétaire et Financier et l'ensemble des textes relatifs aux Banques Populaires \n\t\tet aux établissements de crédit. En matière de produits d'assurance, la Banque Populaire Rives de \n\t\tParis agit en qualité d'Intermédiaire d'assurance immatriculé à l'Orias sous le numéro 07 022 545.<br/>\n\t\t<br/>\n\t</span>\n\t<table style='border-spacing: 0px; border-collapse: collapse;'>\n\t\t<tbody>\n\t\t\t<tr>\n\t\t\t\t<td style=\"border: 1px solid black;\">Raison sociale :</td>\n\t\t\t\t<td style=\"border: 1px solid black;\">Banque Populaire Rives de Paris</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td style=\"border: 1px solid black;\">Forme sociale :</td>\n\t\t\t\t<td style=\"border: 1px solid black;\">Société anonyme coopérative de Banque Populaire à capital variable</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td style=\"border: 1px solid black;\">Siège social :</td>\n\t\t\t\t<td style=\"border: 1px solid black;\">76-78 Avenue de France<br/>\n\t\t\t\t\t75204 PARIS cedex 13\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td style=\"border: 1px solid black;\">N° SIREN :</td>\n\t\t\t\t<td style=\"border: 1px solid black;\">552 002 313 RCS Paris</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td style=\"border: 1px solid black;\">N° ind. d'ident. Intracommunautaire :</td>\n\t\t\t\t<td style=\"border: 1px solid black;\">FR 59 552 002 313</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td style=\"border: 1px solid black;\">Directeur de publication :</td>\n\t\t\t\t<td style=\"border: 1px solid black;\">Yves GEVIN</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td style=\"border: 1px solid black;\">Responsable de la rédaction (optionnel) :</td>\n\t\t\t\t<td style=\"border: 1px solid black;\">Service Communication Clients</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td style=\"border: 1px solid black;\">Contact :</td>\n\t\t\t\t<td style=\"border: 1px solid black;\">contact@rivesparis.banquepopulaire.fr</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td style=\"border: 1px solid black;\">Hébergeur :</td>\n\t\t\t\t<td style=\"border: 1px solid black;\">NFrance Conseil<br/>\n\t\t\t\t\tSiège social : 4 rue Kennedy - 31000 Toulouse<br/>\n\t\t\t\t\tSAS au capital de 200 164 €<br/>\n\t\t\t\t\tSiret 425 052 941 00019 - NAF 6311Z<br/>\n\t\t\t\t\tTVA Intracommunautaire : FR36 425 052 941<br/>\n\t\t\t\t\tNuméro d'enregistrement CNIL : 1014998<br/>\n\t\t\t\t\tTel : +33 534 455 500<br/>\n\t\t\t\t\tNB : ce numéro de téléphone est celui de l’hébergeur technique qui ne peut pas \n\t\t\t\t\trépondre à vos questions sur la banque ni aux problèmes que vous pourriez \n\t\t\t\t\trencontrer dans l’utilisation de ce service. Pour obtenir l’assistance que vous \n\t\t\t\t\tsouhaitez ou nous signaler un dysfonctionnement, contactez-nous à l'adresse e-mail \n\t\t\t\t\tsuivante : <a href='mailto:contact.web@bpce.fr'>contact.web@bpce.fr</a>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n\t<span style=\"color:#6F7683\">\n\t\t<br/>\n\t\tLa Banque Populaire Rives de Paris est un établissement de crédit de droit français agréé en qualité \n\t\tde banque prestataire de services d'investissement, conformément aux dispositions du Code monétaire \n\t\tet financier et contrôlée par la Banque Centrale Européenne (Sonnemannstrasse 20, D-60314 Frankfurt-am-Main, \n\t\tAllemagne).<br/>\n\t\tLa Banque Populaire Rives de Paris est adhérente auprès de la FBF - Fédération Bancaire Française, \n\t\torganisation professionnelle représentative de la profession bancaire.<br/>\n\t\tEn matière de produits d'assurance, la Banque Populaire Rives de Paris agit en qualité d’intermédiaire \n\t\ten assurance immatriculé à l'ORIAS sous le n° 07 022 545.<br/>\n\t</span>\n</div>\n<div class=\"blocText\">\n\t<span style=\"color:#6F7683\">\n\t\t<b>II-Conditions d'accès et d'utilisation</b><br/>\n\t\tL'utilisateur du site reconnaît avoir pris connaissance des présentes informations légales et s'engage \n\t\tà les respecter.<br/>\n\t\t<br/>\n\t\tPour des raisons de maintenance mais également en cas de force majeure, difficultés informatiques, \n\t\tdifficultés liées aux réseaux de télécommunications ou autres difficultés techniques, la Banque \n\t\tPopulaire Rives de Paris pourra interrompre l'accès au site et ne saurait être tenu responsable de \n\t\tl'impossibilité d'accéder au présent site.<br/>\n\t\t<br/>\n\t\tL'accès à tout ou partie des produits et services décrits sur ce site peut faire l'objet de restrictions \n\t\tà l'égard de certaines personnes ou de certains pays. Aucun des produits ou services présentés ici ne \n\t\tsera fourni par la Banque Populaire Rives de Paris à une personne si la loi de son pays d'origine, ou de \n\t\ttout autre pays qui la concernerait, l'interdit.<br/>\n\t\t<br/>\n\t</span>\n</div>\n<div class=\"blocText\">\n\t<span style=\"color:#6F7683\">\n\t\t<b>III-Informations mises à disposition sur le site ou sur les sites tiers référencés</b><br/>\n\t\tLa Banque Populaire Rives de Paris s'efforce d'assurer l'exactitude et la mise à jour des informations à \n\t\tcaractère général, notamment financières, diffusées sur ce site, dont elle se réserve le droit de modifier \n\t\tet corriger le contenu à tout moment et sans préavis. En conséquence, la Banque Populaire Rives de Paris ne \n\t\tgarantit en aucune façon la complétude, l’exactitude, la précision, l’exhaustivité ou l’adéquation, des \n\t\tinformations mises à disposition sur ce site, y compris l’ensemble des liens hypertextes ou toute autre liaison \n\t\tinformatique utilisée, directement ou indirectement, à partir de ce site.<br/>\n\t\t<br/>\n\t\tLes performances des produits d'épargne et de placement indiquées sur ce site ne sont que le reflet d'une \n\t\tsituation constatée à un instant donné et ne sauraient, en aucun cas, préjuger de l'évolution des taux et des \n\t\tcours des produits concernés. A cet égard, la Banque Populaire Rives de Paris décline toute responsabilité \n\t\tdans l'utilisation qui pourrait être faite de ces informations et des conséquences qui pourraient en découler, \n\t\tnotamment au niveau des décisions qui pourraient être prises ou des actions qui pourraient être entreprises à \n\t\tpartir desdites informations. Vous demeurez seul et unique responsable de l'usage des informations et des \n\t\trésultats obtenus à partir de ces informations.<br/>\n\t\t<br/>\n\t\tLa Banque Populaire Rives de Paris attire tout particulièrement votre attention sur le fait que l'utilisation \n\t\tet l'interprétation des informations relatives aux produits financiers peut parfois nécessiter des connaissances \n\t\tspécifiques et approfondies. Il appartient à toute personne intéressée de vérifier les informations mises à \n\t\tdisposition et d’en faire un usage approprié.<br/>\n\t\t<br/>\n\t\tLa Banque Populaire Rives de Paris décline en conséquence toute responsabilité :<br/>\n\t\t•\ten cas d'imprécision, inexactitude, erreur ou omission portant sur des informations disponibles sur le site \n\t\tou sur les sites de tiers référencés à partir des liens hypertextes ;<br/>\n\t\t•\td'une absence de disponibilité des informations ;<br/>\n\t\t•\tpour tous dommages, directs et/ou indirects, quelles qu'en soient les causes, origines, nature ou conséquences, \n\t\tprovoqués à raison de l'accès de quiconque au site ou de l'impossibilité d'y accéder ;<br/>\n\t\t•\tde l'utilisation du site et/ou du crédit accordé à une quelconque information provenant directement ou \n\t\tindirectement du site ;<br/>\n\t\t•\tde décisions prises sur la base d'une information contenue sur le site ou sur le site de tiers référencés à \n\t\tpartir des liens hypertextes, et de l'utilisation qui pourrait en être faite par des tiers.<br/>\n\t\t<br/>\n\t\tIl est strictement interdit de mettre en place un lien hypertexte en direction du site sans l'autorisation écrite \n\t\tet préalable de la Banque Populaire Rives de Paris. Toute demande tendant à cette fin doit être adressée à \n\t\t<a href='mailto:contact@rivesparis.banquepopulaire.fr'>contact@rivesparis.banquepopulaire.fr</a>.<br/>\n\t\t<br/>\n\t</span>\n</div>\n<div class=\"blocText\">\n\t<span style=\"color:#6F7683\">\n\t\t<b>IV-Données à caractère personnel</b><br/>\n\t\tLes données à caractère personnel que vous nous communiquez par le biais des formulaires disponibles sur ce site \n\t\t(par exemple une demande de contact ou de renseignement, une simulation, un formulaire de souscription...) sont \n\t\ttraitées par la banque, responsable de traitement, à des fins de gestion interne et pour répondre à votre demande.<br/>\n\t\t<br/>\n\t\tLes informations vous expliquant de quelle manière vos données sont obtenues, pourquoi elles sont traitées, avec qui \n\t\telles sont susceptibles d’être partagées, les mesures mises en œuvre pour assurer leur confidentialité et leur sécurité \n\t\tfigurent dans la Notice d’information sur les traitements des données à caractère personnel de la banque régionale \n\t\tconcernée. Elle rappelle également les droits dont vous disposez et comment les exercer.<br/>\n\t\t<br/>\n\t\tPour en savoir plus sur notre notice d’information sur le traitement des données personnelles \n\t\t<a href='https://www.rivesparis.banquepopulaire.fr/portailinternet/Editorial/Tarifs/Documents/RGPD.pdf'>https://www.rivesparis.banquepopulaire.fr/portailinternet/Editorial/Tarifs/Documents/RGPD.pdf</a><br/>\n\t\t<br/>\n\t</span>\n</div>\n<div class=\"blocText\">\n\t<span style=\"color:#6F7683\">\n\t\t<b>V-Cookies – traceurs</b><br/>\n\t\tUn cookie est un mini-fichier contenant quelques lignes de caractères alphanumériques placé sur votre disque dur par \n\t\tle serveur du site ou de l’application mobile que vous visitez, ou par un serveur tiers (par exemple un service de web \n\t\tanalytique).<br/>\n\t\t<br/>\n\t\tIl contient plusieurs données :<br/>\n\t\t-\tle nom du serveur qui l’a déposé ;<br/>\n\t\t-\tun identifiant sous forme de numéro unique,<br/>\n\t\t-\téventuellement une date d’expiration.<br/>\n\t\t<br/>\n\t\tLes cookies servent à faciliter la navigation et à rationaliser les procédures d’enregistrement ou de mesure d’audience.<br/>\n\t\t<br/>\n\t\tLe site de la banque <a href='https://www.rivesparis.banquepopulaire.fr'>https://www.rivesparis.banquepopulaire.fr</a> \n\t\tutilise ponctuellement des cookies.<br/>\n\t\t<br/>\n\t\tAinsi, lorsque vous visitez le site pour chercher, lire ou télécharger de l’information, certains renseignements vous \n\t\tconcernant peuvent être recueillis, tels le nom du domaine et de l’ordinateur hôte à partir duquel vous naviguez sur \n\t\tinternet, l’adresse du protocole internet (IP) de l’ordinateur utilisé, la date et l’heure de la navigation et les URL à \n\t\tpartir desquelles vous êtes passé. Ces renseignements sont utilisés pour analyser et mesurer la fréquentation du site et \n\t\tpour aider à la rendre plus utile. Ils sont détruits après un certain temps.<br/>\n\t\t<br/>\n\t\tLes navigateurs acceptent par défaut les cookies. Cependant, vous avez la possibilité de modifier les options de navigation \n\t\tpour choisir de n’accepter aucun cookie (pour plus d’information : <a href='http://www.cnil.fr/vos-libertes/vos-traces/les cookies/'>http://www.cnil.fr/vos-libertes/vos-traces/les cookies/</a>)<br/>\n\t\t<br/>\n\t\tEn savoir plus sur notre politique en matière de gestion des cookies <a href='https://www.rivesparis.banquepopulaire.fr/portailinternet/Editorial/Tarifs/Pages/cookies.aspx'>https://www.rivesparis.banquepopulaire.fr/portailinternet/Editorial/Tarifs/Pages/cookies.aspx</a><br/>\n\t\t<br/>\n\t</span>\n</div>\n<div class=\"blocText\">\n\t<span style=\"color:#6F7683\">\n\t\t<b>VI-Propriété intellectuelle</b><br/>\n\t\tL'ensemble des contenus (textes, sons, marques, logos, photographies, etc.), figurant sur les pages de ce site sont la \n\t\tpropriété exclusive de la Banque Populaire Rives de Paris. Toute reproduction, représentation, diffusion ou extraction \n\t\tnon autorisée, en tout ou partie, du contenu du site constituerait une contrefaçon des droits de propriété intellectuelle \n\t\tde la Banque Populaire Rives de Paris susceptible d'engager la responsabilité civile et pénale du contrefacteur.<br/>\n\t\t<br/>\n\t</span>\n</div>\n<div class=\"blocText\">\n\t<span style=\"color:#6F7683\">\n\t\t<b>VII-Droit applicable</b><br/>\n\t\tCe site est soumis à la loi française.<br/>\n\t</span>\n</div>\n\t",
+    "licences": {
+        "a2ia": "EV8WCTEM55KN3U96R5CS4S99LYY8DGV5PMS4PB8ELMM5WDFWTJTCXR5CMU8T7TZBZRMNBCGTVFZQ5HFWQ6M8EDW7F7AFUVCXELA6PNHGTMZUWWRL2ANNBATSWLFARRB6J8EWJA4YBSXV8BW9XGBLY9QS8H"
+    },
+    "menus": [
+        {
+            "applicationId": "ws.securpass",
+            "authLevel": 10,
+            "authorizationRules": [],
+            "icon": "cloudcard.png",
+            "id": "ws.securpass",
+            "inburger": true,
+            "isAuthenticate": true,
+            "isNew": false,
+            "link": "reglages",
+            "linkStore": "",
+            "linkType": "2",
+            "name": "Sécur'Pass",
+            "statusCode": "1",
+            "versionmin": "74.0",
+            "xitiId": "natif_redirection_cloudcard"
+        }
+    ]
+}
+
+REQUEST 4
+GET https://m.ibps.rivesparis.banquepopulaire.fr/mapi/1.1/messages-service
+Connection: keep-alive
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+Accept: */*
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+
+RESPONSE 4
+204
+Set-Cookie: cim-session-id=6BF7C2583C89574C78AE774F367D570F; Path=/; Secure; HttpOnly
+Access-Control-Allow-Origin: https://www.banquepopulaire.fr
+Cache-Control: no-cache, no-store, max-age=0,must-revalidate,no-transform
+Pragma: no-cache
+X-Bk-Engine: off
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+
+REQUEST 5
+GET https://www.as-ex-ath-groupe.banquepopulaire.fr/api/oauth/v2/authorize?login_hint=DUMMY_USER&client_id=08767475-1d17-4bac-93e7-78ea65c7d794&bpcesta=%7B%22cdetab%22:%2210207%22,%22enseigne%22:%22bp%22,%22csid%22:%2200000000-0000-4000-0000-000000000000%22,%22term_id%22:%2200000000-0000-4000-0000-000000000000%22,%22typ_srv%22:%22part%22,%22typ_app%22:%22rest%22,%22typ_act%22:%22sso%22,%22typ_sp%22:%22out-band%22%7D&response_type=id_token%20token&nonce=00000000-0000-4000-0000-000000000000&display=touch&claims=%7B%22id_token%22:%7B%22last_login%22:null,%22auth_time%22:%7B%22essential%22:true%7D%7D,%22userinfo%22:%7B%22cdetab%22:null,%22authMethod%22:null,%22authLevel%22:null%7D%7D&redirect_uri=containerApp://BAPIStepUpSuccess&secret_id=f42ead04-f927-42de-ab1c-6c2809d6c62d&cdetab=10207
+Accept-Language: en-us
+Connection: keep-alive
+User-Agent:	BanquePopulaire/78.5 CFNetwork/1121.2.2 Darwin/19.3.0
+
+RESPONSE 5
+200
+Max-Forwards: 20
+X-CorrelationID: Id-661f3d5fa069872f3dbc82b7 0
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=86400; includeSubDomains; preload
+Content-Type: application/json
+Vary: Accept
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+    "action": "https://www.icgauth.banquepopulaire.fr/dacswebssoissuer/AuthnRequestServlet",
+    "enctype": "application/x-www-form-urlencoded",
+    "method": "POST",
+    "parameters": {
+        "SAMLRequest": "PHNhbWxwOkF1dGhuUmVxdWVzdCB4bWxuczpzYW1scD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnByb3RvY29sIiB4bWxuczpzYW1sPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIiBGb3JjZUF1dGhuPSJmYWxzZSIgSXNzdWVJbnN0YW50PSIyMDIwLTA4LTE5VDEyOjQ3OjM0Ljg0OFoiIFZlcnNpb249IjIuMCIgQXNzZXJ0aW9uQ29uc3VtZXJTZXJ2aWNlVVJMPSJodHRwczovL3d3dy5hcy1leC1hdGgtZ3JvdXBlLmJhbnF1ZXBvcHVsYWlyZS5mci9hcGkvb2F1dGgvdjIvY29uc3VtZSIgUHJvdG9jb2xCaW5kaW5nPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YmluZGluZ3M6SFRUUC1QT1NUIiBJRD0iZHd3Q2tmbmdHQUJBSGs2WXBueHMiIERlc3RpbmF0aW9uPSJodHRwczovL3d3dy5pY2dhdXRoLmJhbnF1ZXBvcHVsYWlyZS5mci9kYWNzd2Vic3NvaXNzdWVyL0F1dGhuUmVxdWVzdFNlcnZsZXQiPjxzYW1sOklzc3Vlcj5CRUxfUkVTVF8xMDIwNzwvc2FtbDpJc3N1ZXI+PGRzaWc6U2lnbmF0dXJlIHhtbG5zOmRzaWc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPjxkc2lnOlNpZ25lZEluZm8+PGRzaWc6Q2Fub25pY2FsaXphdGlvbk1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIvPjxkc2lnOlNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZHNpZy1tb3JlI3JzYS1zaGE1MTIiLz48ZHNpZzpSZWZlcmVuY2UgVVJJPSIjZHd3Q2tmbmdHQUJBSGs2WXBueHMiPjxkc2lnOlRyYW5zZm9ybXM+PGRzaWc6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI2VudmVsb3BlZC1zaWduYXR1cmUiLz48ZHNpZzpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48L2RzaWc6VHJhbnNmb3Jtcz48ZHNpZzpEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGVuYyNzaGE1MTIiLz48ZHNpZzpEaWdlc3RWYWx1ZT5MazJnaDJsK3d2ZlRCM3I0QXBqcVlqMzlvUWk4eC9XY0tVMCs4TWk3VGk4SklkbEdjd1JjQWZqOFBOQ1JnN1U2CnVBNDY2b1JLcTh3bkpPMVpxTjl1NVE9PTwvZHNpZzpEaWdlc3RWYWx1ZT48L2RzaWc6UmVmZXJlbmNlPjwvZHNpZzpTaWduZWRJbmZvPjxkc2lnOlNpZ25hdHVyZVZhbHVlPlZUYkNZdExFVW9tNzA1REcvZWpjTVhOR1gzOEJUdWNQTHVYU09rbDN0T1FzRnEyek11Mlp3eSt3OFc2RlV6WkIKRTVEZlVFSjFWZS9DN3NtR1lnMmpVdXVVYjM0T0xWNDYyM3dkd2lCaFpObk40aTVTMmFYOC9hYWVtK21IRlhCVwpDbnpvb2N5ZlJFUmxaVGxKTncwWDBVV0tVQitZVG1ZOTY3RUZxeml4V2FSOHRxdXJYNVUyQ3pMWWphVlV3YWVSCitVWjVib3pFVGhmeXdxRklpc1BtcUt2bzh6TFdSWkpTRHBUZnN2YVdZQSszN3NlaTBUYjZYaDVTcEhQSVhYMnIKTm5JVzlXaGNBakEwN2l4bENYT0RDTEpoZ3g0QmlINjAyYU1WMEhFclBrRFcvZU55MW5Xd1FHcm13aFNkV1FTbwpaSGhrdVBqNlFERGY0anQ1WFhNYmF3PT08L2RzaWc6U2lnbmF0dXJlVmFsdWU+PGRzaWc6S2V5SW5mbz48ZHNpZzpYNTA5RGF0YT48ZHNpZzpYNTA5Q2VydGlmaWNhdGU+TUlJR2hqQ0NCRzZnQXdJQkFnSUNCRk13RFFZSktvWklodmNOQVFFTEJRQXdYVEVMTUFrR0ExVUVCaE1DUmxJeERUQUxCZ05WQkFvTUJFSlFRMFV4RnpBVkJnTlZCQXNNRGpBd01ESWdORGt6TkRVMU1EUXlNU1l3SkFZRFZRUUREQjFDVUVORklGVkRSeUJCUTBVZ1RVRlVSVkpKUlV4VElFZFNUMVZRUlRBZUZ3MHhOekV4TVRBd09UTTJNak5hRncweU1ERXhNRGt3T1RNMk1qTmFNR3d4Q3pBSkJnTlZCQVlUQWtaU01RMHdDd1lEVlFRS0RBUkNVRU5GTVJjd0ZRWURWUVFMREE0d01EQXlJRFE1TXpRMU5UQTBNakVTTUJBR0ExVUVDd3dKVTFOTVIxSlBWVkJGTVNFd0h3WURWUVFEREJoQ1FWQkpJRkJTUkNCS1YxUWdSbTkxY201cGMzTmxkWEl3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRQzIvYVRpQmtraDFXZ0hTRUMzQmw5bU5CQkxXNGtKdFk1TlFVazVLWlRqMkhrTG4wOUczYkNPckdiT1k1TmZnSnptZ1NtWlhXNW96azlrbzZJVU5HVWN2b0FSWFdHY0U1RXBxODN1RDBqMm5kVEh6VWkvcHhTdndsaG9yNUVjeTluK3g3akxxODliaW9hWTdmOFFQdDk3ZkZod1VVWEZ1ci9sMHRoaHNXQnc3eFVyVXNwcnU1QWx1WVhmZy8zbzhEeFhLT3F1YWZoYzlSQ3o0RSs1cXQ2UDNaTm9WZjNPRXNhS3lCSVRxdGdkRHhHNVIwclZJa1hJalpjYkRQaWRnU2MwVXpGMm4zbXRORHMwb2RNOE1lRno0VzEwR2ZTd0JWRUVPNGUwcTM0WUdubzNOenFlcEw5WFVrOFR5NjJINk1BUkcvTlFrajh6b3pmQTlmWE9NZkY1QWdNQkFBR2pnZ0kvTUlJQ096QWRCZ05WSFE0RUZnUVVaa3lick1hRzRmV2pWUXFpdXltS2hoQ3MrMEl3SHdZRFZSMGpCQmd3Rm9BVTZjWExMNmhlZ2ViNlBhSlNTbHVEVlA3N0ljd3dnWThHQTFVZElBU0JoekNCaERDQmdRWVFLd1lCQkFHQ3ZHOEJBQUVMZ3hzQkFUQnRNR3NHQ0NzR0FRVUZCd0lCRmw5b2RIUndPaTh2Y0hKdkxtUXdNQzV3YTJrd01pNWljR05sTG1aeUwyUnZZM012Y0dNdGRXTm5MV3h2ZERFdlVFTXRRbEJEUlY5VlEwZGZRVU5GWDAxQlZFVlNTVVZNVTE5SFVrOVZVRVV0ZGpFdU9ESXdNVFV3TmpBeExuQmtaakFkQmdOVkhTVUVGakFVQmdnckJnRUZCUWNEQWdZSUt3WUJCUVVIQXdFd0RnWURWUjBQQVFIL0JBUURBZ1dnTUNBR0ExVWRFUVFaTUJlQ0ZXSmhjR2x3Y21ScWQzUm1iM1Z5Ym1semMyVjFjakNCdndZRFZSMGZCSUczTUlHME1EcWdPS0EyaGpSb2RIUndPaTh2Y0hKdkxtUXdNQzV3YTJrd01pNWljR05sTG1aeUwzVmpaMTloWTJWZk5ERXhNREV0TURGZmRqRXVZM0pzTURxZ09LQTJoalJvZEhSd09pOHZjSEp2TG1Rd01TNXdhMmt3TWk1aWNHTmxMbVp5TDNWaloxOWhZMlZmTkRFeE1ERXRNREZmZGpFdVkzSnNNRHFnT0tBMmhqUm9kSFJ3T2k4dmNISnZMbVF3TWk1d2Eya3dNaTVpY0dObExtWnlMM1ZqWjE5aFkyVmZOREV4TURFdE1ERmZkakV1WTNKc01GUUdDQ3NHQVFVRkJ3RUJCRWd3UmpCRUJnZ3JCZ0VGQlFjd0FvWTRhSFIwY0RvdkwzQnlieTVrTURBdWNHdHBNREl1WW5CalpTNW1jaTkxWTJkZllXTmxYelF4TVRBeExUQXhYMk55ZEY5Mk1TNWpjblF3RFFZSktvWklodmNOQVFFTEJRQURnZ0lCQU5zc2Q3R3Irc1JXOE02cE8yL0tyZThSbkExbWNlN2pmd0owdkNEZkowZjlwNEdCdGkyV29ncDZ1WWN2T0J1RHEwMUdXQUQ4L1p4b0lya1p0MDFEZ3VDaUprTk9XRkoxVGpmZzVZWDY3Qk1tOHZTQ0ZFeGN2TFV3a2NQeDF6QVBxUXZjbWovalFVN2NlanhkTXg0R3g2L0dFckZHVXRxWjlRa3RoSWRIVkhYOU50U1dDN3V5TkV3M0YyenBTcVdzM3FOVmdLZmh6dTlKWHNMUkd0bHhLeUFTV0JzeU41Znl5MVF6Tm9qY0drUlFPNG5PendwaHhSaVB4czFyTnNSTzZxaDhGdk82RloyZmFGSDdwTzdMWUJPMDRvRWRoam1zb3NCSzVPazhrQjJLR0FuUmVMMWxhVGFoWGJtUTRMRWlWNy9kQ2QzdEJVeGlyaElNN1FnWWw4MG1KeEFEbGlNMFZBS242Ti8xVDI4T2REWmZLY3E5WUdnZG9rY0FjcytRQ0VRTm11emdUbTQrZnFjTkZoMTVrQS9mMXlMODFHdzNaL1BUcm5PSlQ1VXhlVG1KcFlGNEtDWFVXNllDakZYblJRRzAzc0hKdHl3SW00VXFWWHFNT0ZRbU1yL0Q4elRXS3NMcXQ4SUI2cDd6WTIrenNoNUVCUjRma0puRVNaTmJsRkpMNGh4ZzdMOEQzdkcxem8xUlJ4QXVCOHFBZ05kTStqdjZKVks1T1RJQmszZXBjSUlHNWc0ZVFGQlNoV1hxZFdRUFc1RjNUaFdQRERRTktncnY1MTNjUjVYMnZEMExhRXBjbm1YdzJVQlFBR0N3ZE9sSVhWOVZVWlVMcXQyRUVFNkRPMnNoSUJmSkY2MkFUUnRRcDFPaHFobzlTa0ppbXlSOGZ2QUw0b1hEPC9kc2lnOlg1MDlDZXJ0aWZpY2F0ZT48L2RzaWc6WDUwOURhdGE+PC9kc2lnOktleUluZm8+PC9kc2lnOlNpZ25hdHVyZT48c2FtbHA6RXh0ZW5zaW9ucz48ZGFjczpTZWN1cml0eUxldmVsIHhtbG5zOmRhY3M9Imh0dHA6Ly93d3cuZGljdGFvLmNvbS9kYWNzLzEuMCI+MTAyPC9kYWNzOlNlY3VyaXR5TGV2ZWw+PGRhY3M6Q29udGV4dCB4bWxuczpkYWNzPSJodHRwOi8vd3d3LmRpY3Rhby5jb20vZGFjcy8xLjAiIGlkPSJPUFNfR0VORVJJUVVFIj48ZGFjczpDb250ZXh0TWV0YWRhdGEgbmFtZT0idGV4dGVfc21zIj4gQmFucXVlIFBvcHVsYWlyZSA6IENvbmZpcm1leiB2b3RyZSBhdXRoZW50aWZpY2F0aW9uIMOgIHZvdHJlIGJhbnF1ZSDDoCBkaXN0YW5jZSBlbiBzYWlzaXNzYW50IGxlIGNvZGUgc3VpdmFudCA6IDwvZGFjczpDb250ZXh0TWV0YWRhdGE+PGRhY3M6Q29udGV4dE1ldGFkYXRhIG5hbWU9IlNFTkRFUl9OQU1FX0tFWSI+QmFucXVlIFBvcHVsYWlyZTwvZGFjczpDb250ZXh0TWV0YWRhdGE+PGRhY3M6Q29udGV4dE1ldGFkYXRhIG5hbWU9Ik5PVElGX1RJVExFX0tFWSI+QXV0aGVudGlmaWNhdGlvbiDDoCB2YWxpZGVyPC9kYWNzOkNvbnRleHRNZXRhZGF0YT48ZGFjczpDb250ZXh0TWV0YWRhdGEgbmFtZT0iTk9USUZfREVTQ19LRVkiPkNvbmZpcm1leiB2b3RyZSBhdXRoZW50aWZpY2F0aW9uIMOgIHZvdHJlIGJhbnF1ZSDDoCBkaXN0YW5jZTwvZGFjczpDb250ZXh0TWV0YWRhdGE+PGRhY3M6Q29udGV4dE1ldGFkYXRhIG5hbWU9IkRFU0NfS0VZIj57InR5cGVfRm9uY3QiOiJHRU5FIiwidHlwZV9UZWNoIjoib3V0LWJhbmQiLCJnZW5lX0wxIjoiQXV0aGVudGlmaWV6LXZvdXMgw6Agdm90cmUgYmFucXVlIMOgIGRpc3RhbmNlIiwiZ2VuZV9MMiI6IiIsImdlbmVfTDMiOiIiLCJnZW5lX0w0IjoiIiwiZ2VuZV9MNSI6IiIsIm9yaWdpbmUiOiJtb2JpbGUiLCJkYXRlX2hldXJlIjoiMTktMDgtMjAyMCAxNDo0NzozNCJ9PC9kYWNzOkNvbnRleHRNZXRhZGF0YT48ZGFjczpDb250ZXh0TWV0YWRhdGEgbmFtZT0iU0VORF9OT1RJRl9LRVkiPnRydWU8L2RhY3M6Q29udGV4dE1ldGFkYXRhPjxkYWNzOkNvbnRleHRNZXRhZGF0YSBuYW1lPSJjc2lkIj44ODkwMTBCQS04NDFELTQ1QjUtQTU0MC05MjI0QjQwQjIxQkM8L2RhY3M6Q29udGV4dE1ldGFkYXRhPjxkYWNzOkNvbnRleHRNZXRhZGF0YSBuYW1lPSJzbmlkIj42NzgyNTY8L2RhY3M6Q29udGV4dE1ldGFkYXRhPjxkYWNzOkNvbnRleHRNZXRhZGF0YSBuYW1lPSJtZWRpYSI+dG91Y2g8L2RhY3M6Q29udGV4dE1ldGFkYXRhPjxkYWNzOkNvbnRleHRNZXRhZGF0YSBuYW1lPSJ0eXBfc3J2Ij5wYXJ0PC9kYWNzOkNvbnRleHRNZXRhZGF0YT48ZGFjczpDb250ZXh0TWV0YWRhdGEgbmFtZT0iZXRhYiI+MTAyMDc8L2RhY3M6Q29udGV4dE1ldGFkYXRhPjxkYWNzOkNvbnRleHRNZXRhZGF0YSBuYW1lPSJ0eXBfYWN0Ij5zc288L2RhY3M6Q29udGV4dE1ldGFkYXRhPjwvZGFjczpDb250ZXh0Pjwvc2FtbHA6RXh0ZW5zaW9ucz48c2FtbDpTdWJqZWN0PjxzYW1sOk5hbWVJRD5DMTgyNTk4MDwvc2FtbDpOYW1lSUQ+PC9zYW1sOlN1YmplY3Q+PC9zYW1scDpBdXRoblJlcXVlc3Q+"
+    }
+}
+
+REQUEST 6
+POST https://www.icgauth.banquepopulaire.fr/dacswebssoissuer/AuthnRequestServlet
+Content-Type: application/x-www-form-urlencoded
+Connection: keep-alive
+Accept: */*
+User-Agent: BanquePopulaire/78.5 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: en-us
+
+SAMLRequest=PHNhbWxwOkF1dGhuUmVxdWVzdCB4bWxuczpzYW1scD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnByb3RvY29sIiB4bWxuczpzYW1sPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIiBGb3JjZUF1dGhuPSJmYWxzZSIgSXNzdWVJbnN0YW50PSIyMDIwLTA4LTE5VDEyOjQ3OjM0Ljg0OFoiIFZlcnNpb249IjIuMCIgQXNzZXJ0aW9uQ29uc3VtZXJTZXJ2aWNlVVJMPSJodHRwczovL3d3dy5hcy1leC1hdGgtZ3JvdXBlLmJhbnF1ZXBvcHVsYWlyZS5mci9hcGkvb2F1dGgvdjIvY29uc3VtZSIgUHJvdG9jb2xCaW5kaW5nPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YmluZGluZ3M6SFRUUC1QT1NUIiBJRD0iZHd3Q2tmbmdHQUJBSGs2WXBueHMiIERlc3RpbmF0aW9uPSJodHRwczovL3d3dy5pY2dhdXRoLmJhbnF1ZXBvcHVsYWlyZS5mci9kYWNzd2Vic3NvaXNzdWVyL0F1dGhuUmVxdWVzdFNlcnZsZXQiPjxzYW1sOklzc3Vlcj5CRUxfUkVTVF8xMDIwNzwvc2FtbDpJc3N1ZXI%2BPGRzaWc6U2lnbmF0dXJlIHhtbG5zOmRzaWc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPjxkc2lnOlNpZ25lZEluZm8%2BPGRzaWc6Q2Fub25pY2FsaXphdGlvbk1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIvPjxkc2lnOlNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZHNpZy1tb3JlI3JzYS1zaGE1MTIiLz48ZHNpZzpSZWZlcmVuY2UgVVJJPSIjZHd3Q2tmbmdHQUJBSGs2WXBueHMiPjxkc2lnOlRyYW5zZm9ybXM%2BPGRzaWc6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI2VudmVsb3BlZC1zaWduYXR1cmUiLz48ZHNpZzpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48L2RzaWc6VHJhbnNmb3Jtcz48ZHNpZzpEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGVuYyNzaGE1MTIiLz48ZHNpZzpEaWdlc3RWYWx1ZT5MazJnaDJsK3d2ZlRCM3I0QXBqcVlqMzlvUWk4eC9XY0tVMCs4TWk3VGk4SklkbEdjd1JjQWZqOFBOQ1JnN1U2CnVBNDY2b1JLcTh3bkpPMVpxTjl1NVE9PTwvZHNpZzpEaWdlc3RWYWx1ZT48L2RzaWc6UmVmZXJlbmNlPjwvZHNpZzpTaWduZWRJbmZvPjxkc2lnOlNpZ25hdHVyZVZhbHVlPlZUYkNZdExFVW9tNzA1REcvZWpjTVhOR1gzOEJUdWNQTHVYU09rbDN0T1FzRnEyek11Mlp3eSt3OFc2RlV6WkIKRTVEZlVFSjFWZS9DN3NtR1lnMmpVdXVVYjM0T0xWNDYyM3dkd2lCaFpObk40aTVTMmFYOC9hYWVtK21IRlhCVwpDbnpvb2N5ZlJFUmxaVGxKTncwWDBVV0tVQitZVG1ZOTY3RUZxeml4V2FSOHRxdXJYNVUyQ3pMWWphVlV3YWVSCitVWjVib3pFVGhmeXdxRklpc1BtcUt2bzh6TFdSWkpTRHBUZnN2YVdZQS
+
+RESPONSE 6
+303
+Set-Cookie: HTTPWORKFLOW_TRANSIENT_ATTRIBUTES=tmp03ae8dc4bd50444aad189c66d7a5919f; path=/; secure; HttpOnly; SameSite=None
+Set-Cookie: ICG=!zwvoAB/RHIQ7Jt+zs6bY7Tr2ABcN1ltjpBWcMWZqmRB3+ORq3yhRGvMGo5rPOWbCdgvzOohXlIwGjhU=; path=/; Httponly;Secure
+Set-Cookie: couloir=4; Path=/;Secure
+P3P: CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"
+Location: /dacsrest/api/v1u0/transaction/DUMMY_RESOURCE_ID_1
+Content-Length: 0
+Content-Type: text/plain
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+
+REQUEST 7
+GET https://www.icgauth.banquepopulaire.fr/dacsrest/api/v1u0/transaction/DUMMY_RESOURCE_ID_1
+Accept: */*
+Connection: keep-alive
+User-Agent: BanquePopulaire/78.5 CFNetwork/1121.2.2 Darwin/19.3.0
+
+RESPONSE 7
+200
+Set-Cookie: HTTPWORKFLOW_TRANSIENT_ATTRIBUTES=; path=/; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:00 GMT; Secure; SameSite=None
+Set-Cookie: JSESSIONID=77IZjX1W-MHPpHbJwOKm-l35Jh-0oCFifI5ciyRm.up9tx097; path=/; secure; HttpOnly; SameSite=None
+Expires: 0
+Cache-Control: no-cache, must-revalidate, no-transform, no-store, max-age=0
+Pragma: no-cache
+Content-Type: application/json
+Keep-Alive: timeout=5, max=300
+Connection: close
+
+{
+    "context": {
+        "OPS_GENERIQUE": {
+            "DESC": "{\"type_Fonct\":\"GENE\",\"type_Tech\":\"out-band\",\"gene_L1\":\"Authentifiez-vous à votre banque à distance\",\"gene_L2\":\"\",\"gene_L3\":\"\",\"gene_L4\":\"\",\"gene_L5\":\"\",\"origine\":\"mobile\",\"date_heure\":\"19-08-2020 14:47:34\"}",
+            "NOTIF_DESC": "Confirmez votre authentification à votre banque à distance",
+            "NOTIF_TITLE": "Authentification à valider",
+            "SENDER_NAME": "Banque Populaire",
+            "SEND_NOTIF": "true",
+            "csid": "889010BA-841D-45B5-A540-9224B40B21BC",
+            "etab": "10207",
+            "media": "touch",
+            "snid": "678256",
+            "texte_sms": " Banque Populaire : Confirmez votre authentification à votre banque à distance en saisissant le code suivant : ",
+            "typ_act": "sso",
+            "typ_srv": "part"
+        }
+    },
+    "id": "CtxDACSP097da120443d15d4c7d8ad9b5900ea1ffbc22",
+    "locale": "en",
+    "step": {
+        "phase": {
+            "fallbackFactorAvailable": false,
+            "retryCounter": 5,
+            "securityLevel": "102",
+            "state": "AUTHENTICATION"
+        },
+        "validationUnits": [
+            {
+                "a0bc70d6-3979-4a53-96f2-3f2ae57503e5": [
+                    {
+                        "id": "197f2d5f-e78c-4d67-a459-50011f245154",
+                        "maxSize": 8,
+                        "minSize": 8,
+                        "scope": "CTX_DACS_NUM",
+                        "type": "PASSWORD"
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+REQUEST 8
+POST https://www.icgauth.banquepopulaire.fr/dacsrest/api/v1u0/transaction/DUMMY_RESOURCE_ID_1/step
+Accept:	*/*
+Content-Type: application/json
+Connection:	keep-alive
+Accept-Language: en-us
+User-Agent: BanquePopulaire/78.5 CFNetwork/1121.2.2 Darwin/19.3.0
+
+RESPONSE 8
+200
+Set-Cookie: DACSSession_APPLICATIONGROUP_1352216923104=CtxDACSP097da120443d15d4c7d8ad9b5900ea1ffbc22; Version=1; Path=/; Discard; Secure; SameSite=None
+Set-Cookie: JSESSIONID=77IZjX1W-MHPpHbJwOKm-l35Jh-0oCFifI5ciyRm.up9tx097; path=/; secure; HttpOnly; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:00 GMT; SameSite=None
+Expires: 0
+Cache-Control: no-cache, must-revalidate, no-transform, no-store, max-age=0
+P3P: CP="IDC ADM DEV TAI PSA PSD IVA IVD CON HIS OUR IND CNT"
+Pragma: no-cache
+Content-Type: application/json
+Keep-Alive: timeout=5, max=300
+Connection: close
+
+{
+    "context": {
+        "OPS_GENERIQUE": {
+            "DESC": "{\"type_Fonct\":\"GENE\",\"type_Tech\":\"out-band\",\"gene_L1\":\"Authentifiez-vous à votre banque à distance\",\"gene_L2\":\"\",\"gene_L3\":\"\",\"gene_L4\":\"\",\"gene_L5\":\"\",\"origine\":\"mobile\",\"date_heure\":\"19-08-2020 14:47:34\"}",
+            "NOTIF_DESC": "Confirmez votre authentification à votre banque à distance",
+            "NOTIF_TITLE": "Authentification à valider",
+            "SENDER_NAME": "Banque Populaire",
+            "SEND_NOTIF": "true",
+            "csid": "889010BA-841D-45B5-A540-9224B40B21BC",
+            "etab": "10207",
+            "media": "touch",
+            "snid": "678256",
+            "texte_sms": " Banque Populaire : Confirmez votre authentification à votre banque à distance en saisissant le code suivant : ",
+            "typ_act": "sso",
+            "typ_srv": "part"
+        }
+    },
+    "id": "CtxDACSP097da120443d15d4c7d8ad9b5900ea1ffbc22",
+    "locale": "en",
+    "response": {
+        "saml2_post": {
+            "action": "https://www.as-ex-ath-groupe.banquepopulaire.fr/api/oauth/v2/consume",
+            "method": "POST",
+            "samlResponse": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHNhbWwycDpSZXNwb25zZSB4bWxuczpzYW1sMnA9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpwcm90b2NvbCIgRGVzdGluYXRpb249Imh0dHBzOi8vd3d3LmFzLWV4LWF0aC1ncm91cGUuYmFucXVlcG9wdWxhaXJlLmZyL2FwaS9vYXV0aC92Mi9jb25zdW1lIiBJRD0iQ3R4REFDU1AwOTdkYTEyMDQ0M2QxNWQ0YzdkOGFkOWI1OTAwZWExZmZiYzIyIiBJblJlc3BvbnNlVG89ImR3d0NrZm5nR0FCQUhrNllwbnhzIiBJc3N1ZUluc3RhbnQ9IjIwMjAtMDgtMTlUMTI6NDg6MDEuMTYxWiIgVmVyc2lvbj0iMi4wIj48c2FtbDI6SXNzdWVyIHhtbG5zOnNhbWwyPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIj51cm46ZGljdGFvOmRhY3M8L3NhbWwyOklzc3Vlcj48ZHM6U2lnbmF0dXJlIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIiBJZD0iVEFPXzFfU2lnbmF0dXJlIj48ZHM6U2lnbmVkSW5mbyB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+PGRzOkNhbm9uaWNhbGl6YXRpb25NZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48ZHM6U2lnbmF0dXJlTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI3JzYS1zaGExIi8+PGRzOlJlZmVyZW5jZSBVUkk9IiI+PGRzOlRyYW5zZm9ybXM+PGRzOlRyYW5zZm9ybSBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNlbnZlbG9wZWQtc2lnbmF0dXJlIi8+PGRzOlRyYW5zZm9ybSBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIvPjwvZHM6VHJhbnNmb3Jtcz48ZHM6RGlnZXN0TWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI3NoYTEiLz48ZHM6RGlnZXN0VmFsdWU+TzYzV1Uza0U2SlhYcVU5S2JtSytJMUVlUnJrPTwvZHM6RGlnZXN0VmFsdWU+PC9kczpSZWZlcmVuY2U+PC9kczpTaWduZWRJbmZvPjxkczpTaWduYXR1cmVWYWx1ZSBJZD0iVEFPXzFfU2lnbmF0dXJlVmFsdWUiPjA4V0Q4amoyaFdvTGhsTVFOS29PQVh1SG4wK0l5Nm9YSm9sOVlZT2preGxuanFTd0I3SUxmL25rM0dHbHJkcTIKcVZ0SWVWZjN5RVQySWYwRUJsMzJBZG1FRzllSzJWUXBCYTVGbUdZZzJFQnUzc3VvYkZKWDVaWmZ2SEFqdjNtZwo5WGRsRGpYTnIwOHEwaCtOYlNUakt1ZHNMSWQ0Z2txWlVKSWtXcmFTZ2NzTU53dllvMm5JYlFTSTFFNGh1RmhlCkFtNnJGOEJGMm5aekFGSldRSHFCYmE2cVk0ai9JcXRzdzYveERCYVlUMDhFSXkxRm1RY2t5U0VqK29vWnBLVHgKdDJITFlXeURuK2lrRm5PNU90SFVOR0QvQk5ieFZQSG80N1lBL1Vxa0U0blFJV3pWTkpvbWI0UG5NUzl4djhzUwpSek5tQTBydWdTcnBodXdOOHlnVGdnPT08L2RzOlNpZ25hdHVyZVZhbHVlPjxkczpLZXlJbmZvIElkPSJUQU9fMV9LZXlJbmZvIj48ZHM6WDUwOURhdGE+PGRzOlg1MDlDZXJ0aWZpY2F0ZT5NSUlHeURDQ0JMQ2dBd0lCQWdJREFLK1lNQTBHQ1NxR1NJYjNEUUVCQ3dVQU1Ib3hDekFKQmdOVkJBWVRBa1pTTVNBd0hnWURWUVFLREJkQ1VFTkZJQzBnUTBGSlUxTkZJRVFnUlZCQlVrZE9SVEVYTUJVR0ExVUVDd3dPTURBd01pQTBPVE0wTlRVd05ESXhNREF1QmdOVkJBTU1KMEpRUTBVZ1ZVTkhJRUZEUlNCTlFWUkZVa2xGVEZNZ1EwRkpVMU5GSUVRZ1JWQkJVa2RPUlRBZUZ3MHhPREExTVRRd056RTFNREphRncweU1UQTFNVE13TnpFMU1ESmFNRjh4Q3pBSkJnTlZCQVlUQWtaU01RMHdDd1lEVlFRS0RBUkNVRU5GTVJjd0ZRWURWUVFMREE0d01EQXlJRFE1TXpRMU5UQTBNakVPTUF3R0ExVUVDd3dGVTFOTVEwVXhHREFXQmdOVkJBTU1EMmxqWjNWaWNDNWtZV056TG5OcFp6Q0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURnZ0VQQURDQ0FRb0NnZ0VCQU9Ia1pjL2ZBYTF0NEEvbHlxTm9KSFRoNmQ0VzRzSzh0K3U1R3BwMk9aNlpnampyK21Od3YrS1FjYytsYThEeVd6QWZSWjdHaGRmeitGalV0WC9NV1pCU0c4VnFzQjhzbk53ekp5MFdPZUVrMFdzZElzQlhGbU5iMFBhSENOR3pYcEJtNVVIVTBMUWxaSmpRV1VYNFRGSS9wdVJiTHdNdGNtQzAyZTRndkhVaW80MlZMRFAxa3VwWnJjOGFZWkF5Z3BNbUk5MTdZVXZPOUUzK1JqeVJLaFZCSm0xWkFWbENBakZXd2JLUkNmUFVBb3ZUQ1pZQ3l4VklxRGR6L2tqdFNTMHRieldZSGpHRU5PWFFHTlJhNTQwQjlnOUwvdit0SU9IaHhGWFNXallqSW0wUnNoaFhzaERoaFRYSTVJb2JCdWY2Vjkrd3NnQUhrR3dCOFlkamVNY0NBd0VBQWFPQ0FuQXdnZ0pzTUIwR0ExVWREZ1FXQkJSR2VMVzBkS3hTUmkvd2lzN1B3VGYvY2o2amJ6QWZCZ05WSFNNRUdEQVdnQlQvc1QxSkR4ZmZGbEtQTTJLaGRBMDM5a2VHVURDQmp3WURWUjBnQklHSE1JR0VNSUdCQmhBckJnRUVBWUs4YndFQUFRdUNOd0VCTUcwd2F3WUlLd1lCQlFVSEFnRVdYMmgwZEhBNkx5OXdjbTh1WkRBd0xuQnJhVEF5TG1Kd1kyVXVabkl2Wkc5amN5OXdZeTExWTJjdGJHOTBNUzlRUXkxQ1VFTkZYMVZEUjE5QlEwVmZUVUZVUlZKSlJVeFRYMFZPVkVsVVJTMTJNUzQ0TWpBeE5UQTJNREV1Y0dSbU1CMEdBMVVkSlFRV01CUUdDQ3NHQVFVRkJ3TUNCZ2dyQmdFRkJRY0RBVEFPQmdOVkhROEJBZjhFQkFNQ0JhQXdHZ1lEVlIwUkJCTXdFWUlQYVdObmRXSndMbVJoWTNNdWMybG5NSUcvQmdOVkhSOEVnYmN3Z2JRd09xQTRvRGFHTkdoMGRIQTZMeTl3Y204dVpEQXdMbkJyYVRBeUxtSndZMlV1Wm5JdmRXTm5YMkZqWlY4ek1URXdNUzB3TVY5Mk1TNWpjbXd3T3FBNG9EYUdOR2gwZEhBNkx5OXdjbTh1WkRBeExuQnJhVEF5TG1Kd1kyVXVabkl2ZFdOblgyRmpaVjh6TVRFd01TMHdNVjkyTVM1amNtd3dPcUE0b0RhR05HaDBkSEE2THk5d2NtOHVaREF5TG5CcmFUQXlMbUp3WTJVdVpuSXZkV05uWDJGalpWOHpNVEV3TVMwd01WOTJNUzVqY213d1ZBWUlLd1lCQlFVSEFRRUVTREJHTUVRR0NDc0dBUVVGQnpBQ2hqaG9kSFJ3T2k4dmNISnZMbVF3TUM1d2Eya3dNaTVpY0dObExtWnlMM1ZqWjE5aFkyVmZNekV4TURFdE1ERmZZM0owWDNZeExtTnlkREExQmdrckJnRUVBWUkzRkFJRUtCNG1BRkFBVWdCUEFDMEFUUUJCQUZRQUxRQlRBRk1BVEFBdEFEQUFNQUF4QUMwQVVBQXhBREF3RFFZSktvWklodmNOQVFFTEJRQURnZ0lCQUQ0SzFXckltMk4vOFVpclJtVXFaYkwyY0RZSEhxYXJwRnpwZnNxemx2SkxidGZidGowQ1BvN2hxRTVOY1A1WFUrejl4NjNXeXJha3BCU1dUWmQwWFZ0WjRQbkZNWFIyNVl1eVRJM0JScTd2RGdYbG1LdWZZQnR4UnFNOVJza3dCT05xTEREd3Zkbjhxa3gyUmFlQ3A0T1p4ZzQvY1hsZU1Kd0k3emN2TDZoNXk3VmFiTnZRNk11M0tNMWN2c0FwWWhYZ1R4U3RIV3lRWTZtMG43bTBrNDJkOTM1NU5YdjlPMGFmSDJzTEtFVWVhdHNDQWVNS3NsVUVRaEZobC8ybDkwZUxLb2g3RElTeElZZEs0eXE4UXJWWHdQc3YveUlSaGlSOG1KOEpQWXYrcjEzbXhhWjFSaXBhRnZRcHBhSVZnUjBORzF2VzVQWGljRWZnRlZuZHdmUU1pT2FVdHhPTHdKQytxVXhndWJyOFdZeURnVk1ZSmFFYkFpSExKbHdHeTFVSXMvcTI0MTQ4cm9XaWtqSnlRbHRIaGpHN25FckNocHhKZlJ3OENiWTNCTk43UUE4SnFlcDMrRE1tSEd0YnUraHh6eEE1MnY2ZHk4VDQzcnhaSy8wSWF3SXNkeHBPb0lkODVoY1JBWksvWlVrZWNZNnZHcGlYZDBpMU1YcGtZZG1ndytYWU1oVmthaUdCZTZDUnVsZzFQbm42emgvSXkvd0Fhck81WlJXV2hTZnpjd25rTng3eXlhMC9nYldSa0paQk4zcys3R1oyL21kYlNMdGZjTndoUmFBdmdmYVoySUdMVWJuRzh6czk3TmlubVJCeE5iNExPaml1ODBkNUUzM2dORnFZMTZ5djcvNCtvbmlCWkt3TkFvRVh5MU5sa1lpUjJZaXB4YXhPPC9kczpYNTA5Q2VydGlmaWNhdGU+PC9kczpYNTA5RGF0YT48L2RzOktleUluZm8+PC9kczpTaWduYXR1cmU+PHNhbWwycDpTdGF0dXM+PHNhbWwycDpTdGF0dXNDb2RlIFZhbHVlPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6c3RhdHVzOlN1Y2Nlc3MiLz48L3NhbWwycDpTdGF0dXM+PHNhbWwyOkFzc2VydGlvbiB4bWxuczpzYW1sMj0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFzc2VydGlvbiIgSUQ9ImRhY3MzNmQ2ZTNhMzViNGM0YmIzOGEwZDMzZDYzNjcxYjdhNiIgSXNzdWVJbnN0YW50PSIyMDIwLTA4LTE5VDEyOjQ4OjAxLjE2MVoiIFZlcnNpb249IjIuMCI+PHNhbWwyOklzc3Vlcj51cm46ZGljdGFvOmRhY3M8L3NhbWwyOklzc3Vlcj48c2FtbDI6U3ViamVjdD48c2FtbDI6TmFtZUlEIEZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOm5hbWVpZC1mb3JtYXQ6cGVyc2lzdGVudCI+QzE4MjU5ODA8L3NhbWwyOk5hbWVJRD48c2FtbDI6U3ViamVjdENvbmZpcm1hdGlvbiBNZXRob2Q9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpjbTpiZWFyZXIiPjxzYW1sMjpOYW1lSUQgRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6bmFtZWlkLWZvcm1hdDpwZXJzaXN0ZW50Ij5DMTgyNTk4MDwvc2FtbDI6TmFtZUlEPjxzYW1sMjpTdWJqZWN0Q29uZmlybWF0aW9uRGF0YSBJblJlc3BvbnNlVG89ImR3d0NrZm5nR0FCQUhrNllwbnhzIiBOb3RPbk9yQWZ0ZXI9IjIwMjAtMDgtMTlUMTI6NTM6MDEuMTYxWiIgUmVjaXBpZW50PSJodHRwczovL3d3dy5hcy1leC1hdGgtZ3JvdXBlLmJhbnF1ZXBvcHVsYWlyZS5mci9hcGkvb2F1dGgvdjIvY29uc3VtZSIvPjwvc2FtbDI6U3ViamVjdENvbmZpcm1hdGlvbj48L3NhbWwyOlN1YmplY3Q+PHNhbWwyOkNvbmRpdGlvbnMgTm90QmVmb3JlPSIyMDIwLTA4LTE5VDEyOjQ4OjAxLjE2MVoiIE5vdE9uT3JBZnRlcj0iMjAyMC0wOC0xOVQxMjo1MzowMS4xNjFaIi8+PHNhbWwyOkF0dHJpYnV0ZVN0YXRlbWVudD48c2FtbDI6QXR0cmlidXRlIE5hbWU9ImRhY3M6U2VjdXJpdHlMZXZlbCI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+MTAyPC9zYW1sMjpBdHRyaWJ1dGVWYWx1ZT48L3NhbWwyOkF0dHJpYnV0ZT48c2FtbDI6QXR0cmlidXRlIE5hbWU9IkJQQ0UtQ2RFdGFiRmlubiI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+MTAyMDc8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQlBDRS1FbnYiPjxzYW1sMjpBdHRyaWJ1dGVWYWx1ZSB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhzaTp0eXBlPSJ4czpzdHJpbmciPlBST0Q8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQlBDRS1QcmZsRmVkcklkZW4iPjxzYW1sMjpBdHRyaWJ1dGVWYWx1ZSB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhzaTp0eXBlPSJ4czpzdHJpbmciPmlicF9jeWJlcl9wcm9maWxfY2xpZW50PC9zYW1sMjpBdHRyaWJ1dGVWYWx1ZT48c2FtbDI6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj5pYnBfbW9iaWxlX3Byb2ZpbF9jbGllbnQ8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQlBDRS1EdERDbnhPayI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+MjAyMC0wOC0xOVQxMTo1NToyNC4zMzVaPC9zYW1sMjpBdHRyaWJ1dGVWYWx1ZT48L3NhbWwyOkF0dHJpYnV0ZT48c2FtbDI6QXR0cmlidXRlIE5hbWU9IkJQQ0UtVHJhY2VJRCI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+QzE4MjU5ODA8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQlBDRS1BdHRyaWJ1dElkIj48c2FtbDI6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj57IkVOViI6IjAwMDUxIiwiRU5UIjoiQVEiLCJDT0FEIjoiQyIsIk5VTUFCTyI6IkMxODI1OTgwIiwiUFJPRklMIjoiSVROIn08L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQlBDRS1DYW5sRmVkcklkZW4iPjxzYW1sMjpBdHRyaWJ1dGVWYWx1ZSB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhzaTp0eXBlPSJ4czpzdHJpbmciPjM8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjwvc2FtbDI6QXR0cmlidXRlU3RhdGVtZW50PjxzYW1sMjpBdXRoblN0YXRlbWVudCBBdXRobkluc3RhbnQ9IjIwMjAtMDgtMTlUMTI6NDg6MDEuMTM2WiIgU2Vzc2lvbkluZGV4PSJDdHhEQUNTUDA5N2RhMTIwNDQzZDE1ZDRjN2Q4YWQ5YjU5MDBlYTFmZmJjMjIiPjxzYW1sMjpBdXRobkNvbnRleHQ+PHNhbWwyOkF1dGhuQ29udGV4dENsYXNzUmVmPnVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphYzpjbGFzc2VzOlBhc3N3b3JkPC9zYW1sMjpBdXRobkNvbnRleHRDbGFzc1JlZj48L3NhbWwyOkF1dGhuQ29udGV4dD48L3NhbWwyOkF1dGhuU3RhdGVtZW50Pjwvc2FtbDI6QXNzZXJ0aW9uPjwvc2FtbDJwOlJlc3BvbnNlPgo="
+        },
+        "status": "AUTHENTICATION_SUCCESS"
+    }
+}
+
+REQUEST 9
+POST https://www.as-ex-ath-groupe.banquepopulaire.fr/api/oauth/v2/consume
+Content-Type: application/x-www-form-urlencoded
+Connection: keep-alive
+Accept: */*
+User-Agent: BanquePopulaire/78.5 CFNetwork/1121.2.2 Darwin/19.3.0
+
+SAMLResponse=PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHNhbWwycDpSZXNwb25zZSB4bWxuczpzYW1sMnA9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpwcm90b2NvbCIgRGVzdGluYXRpb249Imh0dHBzOi8vd3d3LmFzLWV4LWF0aC1ncm91cGUuYmFucXVlcG9wdWxhaXJlLmZyL2FwaS9vYXV0aC92Mi9jb25zdW1lIiBJRD0iQ3R4REFDU1AwOTdkYTEyMDQ0M2QxNWQ0YzdkOGFkOWI1OTAwZWExZmZiYzIyIiBJblJlc3BvbnNlVG89ImR3d0NrZm5nR0FCQUhrNllwbnhzIiBJc3N1ZUluc3RhbnQ9IjIwMjAtMDgtMTlUMTI6NDg6MDEuMTYxWiIgVmVyc2lvbj0iMi4wIj48c2FtbDI6SXNzdWVyIHhtbG5zOnNhbWwyPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIj51cm46ZGljdGFvOmRhY3M8L3NhbWwyOklzc3Vlcj48ZHM6U2lnbmF0dXJlIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIiBJZD0iVEFPXzFfU2lnbmF0dXJlIj48ZHM6U2lnbmVkSW5mbyB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI%2BPGRzOkNhbm9uaWNhbGl6YXRpb25NZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48ZHM6U2lnbmF0dXJlTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI3JzYS1zaGExIi8%2BPGRzOlJlZmVyZW5jZSBVUkk9IiI%2BPGRzOlRyYW5zZm9ybXM%2BPGRzOlRyYW5zZm9ybSBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNlbnZlbG9wZWQtc2lnbmF0dXJlIi8%2BPGRzOlRyYW5zZm9ybSBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIvPjwvZHM6VHJhbnNmb3Jtcz48ZHM6RGlnZXN0TWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI3NoYTEiLz48ZHM6RGlnZXN0VmFsdWU%2BTzYzV1Uza0U2SlhYcVU5S2JtSytJMUVlUnJrPTwvZHM6RGlnZXN0VmFsdWU%2BPC9kczpSZWZlcmVuY2U%2BPC9kczpTaWduZWRJbmZvPjxkczpTaWduYXR1cmVWYWx1ZSBJZD0iVEFPXzFfU2lnbmF0dXJlVmFsdWUiPjA4V0Q4amoyaFdvTGhsTVFOS29PQVh1SG4wK0l5Nm9YSm9sOVlZT2preGxuanFTd0I3SUxmL25rM0dHbHJkcTIKcVZ0SWVWZjN5RVQySWYwRUJsMzJBZG1FRzllSzJWUXBCYTVGbUdZZzJFQnUzc3VvYkZKWDVaWmZ2SEFqdjNtZwo5WGRsRGpYTnIwOHEwaCtOYlNUakt1ZHNMSWQ0Z2txWlVKSWtXcmFTZ2NzTU53dllvMm5JYlFTSTFFNGh1RmhlCkFtNnJGOEJGMm5aekFGSldRSHFCYmE2cVk0ai9JcXRzdzYveERCYVlUMDhFSXkxRm1RY2t5U0VqK29vWnBLVHgKdDJITFlXeURuK2lrRm5PNU90SFVOR0QvQk5ieFZQSG80N1lBL1Vxa0U0blFJV3pWTkpvbWI0UG5NUzl4djhzUwpSek5tQTBydWdTcnBodXdOOHlnVGd
+
+RESPONSE 9
+302
+Content-Length: 0
+X-CorrelationID: Id-841f3d5f65812a6b9fd5b447 0
+Cache-Control: no-cache, no-store
+Location: containerApp://BAPIStepUpSuccess#access_token=DUMMY_ACCESS_TOKEN&token_type=Bearer&expires_in=295&id_token=eyJ4NXQjUzI1NiI6Ii0wcWxhcnBONDlOUUpmQmNReXpaLTZiXzdHRW1LTkdMS24wVEVrcnU5MzAiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdF9oYXNoIjoiWENOQmpJTEY5eDVTdkxRaDV5UE02USIsInN1YiI6IkMxODI1OTgwIiwiYXVkIjpbImh0dHBzOi8vd3d3LmFzLWV4LWF0aC1ncm91cGUuYmFucXVlcG9wdWxhaXJlLmZyL2FwaS9vYXV0aC92Mi9hdXRob3JpemUiLCIwODc2NzQ3NS0xZDE3LTRiYWMtOTNlNy03OGVhNjVjN2Q3OTQiXSwibGFzdF9sb2dpbiI6IjIwMjAtMDgtMTlUMTE6NTU6MjQuMzM1WiIsImF6cCI6IjA4NzY3NDc1LTFkMTctNGJhYy05M2U3LTc4ZWE2NWM3ZDc5NCIsImF1dGhfdGltZSI6MTU5Nzg0MTI4MSwiaXNzIjoiaHR0cHM6Ly93d3cuYXMtZXgtYXRoLWdyb3VwZS5iYW5xdWVwb3B1bGFpcmUuZnIvYXBpL29hdXRoL3YyL2F1dGhvcml6ZSIsImV4cCI6MTU5Nzg0MTU4MSwibm9uY2UiOiI5NEFCQUREQi03OTE4LTQwMTktQTAyRS0xRTBENkVDM0JDNjgiLCJpYXQiOjE1OTc4NDEyODF9.hk5jx2w1ia8MhwpXjIftw9FEZ8nwlhpYytg3Q9QTbxXWdIcFVAGLU8XE0TRuSZqBEmC_lf351FreDNAIdVzElt6JERWgJktgAG4tLGJ4yXcuPYyND0_JhK1ON8VlIxh80dl4KZd28BV05AKrpBZrlVIDgOXJBRzFTc9L65HIKpTvlWUcYt_UTRcqVL69J9YM9QxLlCBC9UW9FY7_oEEuC-tuJdUJRQaQGkzMZvMfhV52qDn2s7B6pMJJSB85NjGL1abCm090tPtNJiVo2b3RWObxK7Puc5PKoIW8-viN2Hsre_mDYQIIelNedV8OnjrCfM2-0bLmrNTTh5fs68OzDg
+Pragma: no-cache
+Strict-Transport-Security: max-age=86400; includeSubDomains; preload
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+
+REQUEST 10
+GET https://www.ibps.rivesparis.banquepopulaire.fr/mapi/1.1/mon-profil
+Accept: */*
+NameId: DUMMY_USER
+PULSAR.Login.GwGroup: 1
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+Connection: keep-alive
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+
+RESPONSE 11
+302
+Server: IWS
+Strict-Transport-Security: max-age=31536000
+Set-Cookie: BWFSESSID_597zwzxygs288gq9t4jbpjaht6=5vvmgc5fshskewaj4a7keewthn0sjnflv8sw2mf6y25s7enw5cnhhucpt8w3vwflcz3ayekb9zmryxr4kbhbgykxktj8v9qb2bg3uazze6zjkf8dtjuqelf9nwl3sjk2l558ladab4r5836vmbun29h6rnzucxe5l7cugbnw3emwyqy9qvuzckm6uyar9zy4t4lqz7kuzla; Path=/; Secure
+Set-Cookie: LBRPSSO3=3723104940.3013.0000; path=/
+Location: https://www.icgauth.banquepopulaire.fr/dacswebssoissuer/AuthnRequestServlet?SAMLRequest=eF6dVFtv2jAUfudXRH7PBUQhWCQVBaqhwYYgnaa9IOOcFm%2BJHXwcQv%2F9HAgTbFOlNm%2B2z%2FnOd7EzvD%2FmmXMAjULJiLS9gDgguUqFfInIU%2FLohuQ%2Bbg2R5VlBR6XZyRXsS0Dj2EaJtD6ISKklVQwFUslyQGo4XY8Wc9rxAsoQQRsLT65aird7Cq2M4iojzmwSkU1%2B6HeqHuzKys3LV8OBZV3p7vv7osornTG3utMpHHGX9dzKHH%2BluAvzQ8pkyIgzuswfK4llDnoN%2BiA4PK3mEdkZUyD1%2FaqqPLEt0NPiAFgwLdDbMmmVFqooMyY0eM%2FaZxyJ8%2B3iVqd261FpDidjIvLMMgTLGbGEmUTDpLFVQSdwg9BtD5J2h3ZDGvS8Qbv7gzjLRuWDkGe%2F37Jkey5C%2BilJlu7y6zohzsTmICQzJzY3UvgLs5T%2BJyG1GirYIipR09T%2Bdai1NRkY0iROT0r0B6KOH6bzzWq6TjZtK78%2F9K%2Fg%2Flyn6dGArK3EeFjTomvgpRbmdQ4HyJqp9cFZXKMtFdww5XGVn7T49Z2N7ZSh%2Fy9Gg2uTN3A070F0RBqRcfJ9sxitPp9FkFu0BRiWMsPehVp7FpGjMGKDXBVgmTe8%2F0KNb7fjs4O3np08XZfbn8A%2F8hzjltN8Z6QvtnY2icftsHM3CIMms2a31SybcZf17T8hbv0Gx8t%2Fsg%3D%3D&SigAlg=http%3A%2F%2Fwww.w3.org%2F2000%2F09%2Fxmldsig%23rsa-sha1&Signature=PiQyqOFpsXVqti%2FL3e4Vwr5X%2Fjkw2PsV2cq74TC2i66HM7W5WRDyrBpAnFhid2sz%2BJLjEgfDUkPqFYWb%2FqyOgtVBu86ojJ1aokPjPEhhmwc9KE77NyL40iov1%2FPogubTPMO9gCQ2R6RCT6B3SV1TLlPswT%2B9lxgW0pKPY086Ps6C8%2F8aADVrmgKaxT4Z5In4x1HdxTFZBwp7GQ5wDBCDmmIQfGduyJGx6UmheeP2eIev3KTYh6Hcp7PQbIS%2B07gHaZnz9h3ATkHVRaDvG%2B56jvYMvuN3%2FFjuuOcJsP1IcTWoY0SZN0WAfinT5hRTEbAmaxoWIT1q%2FH1OsIRbKL6iEQ%3D%3D
+Cache-Control: private, max-age=0
+Pragma: no-cache
+Content-Type: text/html
+Content-Length: 11
+Keep-Alive: timeout=8, max=300
+Connection: Keep-Alive
+
+REQUEST 12
+GET https://www.icgauth.banquepopulaire.fr/dacswebssoissuer/AuthnRequestServlet?SAMLRequest=eF6dVFtv2jAUfudXRH7PBUQhWCQVBaqhwYYgnaa9IOOcFm+JHXwcQv%2F9HAgTbFOlNm+2z%2FnOd7EzvD%2FmmXMAjULJiLS9gDgguUqFfInIU%2FLohuQ+bg2R5VlBR6XZyRXsS0Dj2EaJtD6ISKklVQwFUslyQGo4XY8Wc9rxAsoQQRsLT65aird7Cq2M4iojzmwSkU1+6HeqHuzKys3LV8OBZV3p7vv7osornTG3utMpHHGX9dzKHH+luAvzQ8pkyIgzuswfK4llDnoN+iA4PK3mEdkZUyD1%2FaqqPLEt0NPiAFgwLdDbMmmVFqooMyY0eM%2FaZxyJ8+3iVqd261FpDidjIvLMMgTLGbGEmUTDpLFVQSdwg9BtD5J2h3ZDGvS8Qbv7gzjLRuWDkGe%2F37Jkey5C+ilJlu7y6zohzsTmICQzJzY3UvgLs5T+JyG1GirYIipR09T+dai1NRkY0iROT0r0B6KOH6bzzWq6TjZtK78%2F9K%2Fg%2Flyn6dGArK3EeFjTomvgpRbmdQ4HyJqp9cFZXKMtFdww5XGVn7T49Z2N7ZSh%2Fy9Gg2uTN3A070F0RBqRcfJ9sxitPp9FkFu0BRiWMsPehVp7FpGjMGKDXBVgmTe8%2F0KNb7fjs4O3np08XZfbn8A%2F8hzjltN8Z6QvtnY2icftsHM3CIMms2a31SybcZf17T8hbv0Gx8t%2Fsg%3D%3D&SigAlg=http%3A%2F%2Fwww.w3.org%2F2000%2F09%2Fxmldsig%23rsa-sha1&Signature=PiQyqOFpsXVqti%2FL3e4Vwr5X%2Fjkw2PsV2cq74TC2i66HM7W5WRDyrBpAnFhid2sz+JLjEgfDUkPqFYWb%2FqyOgtVBu86ojJ1aokPjPEhhmwc9KE77NyL40iov1%2FPogubTPMO9gCQ2R6RCT6B3SV1TLlPswT+9lxgW0pKPY086Ps6C8%2F8aADVrmgKaxT4Z5In4x1HdxTFZBwp7GQ5wDBCDmmIQfGduyJGx6UmheeP2eIev3KTYh6Hcp7PQbIS+07gHaZnz9h3ATkHVRaDvG+56jvYMvuN3%2FFjuuOcJsP1IcTWoY0SZN0WAfinT5hRTEbAmaxoWIT1q%2FH1OsIRbKL6iEQ%3D%3D
+Content-Type: application/json;charset=UTF-8
+Connection: keep-alive
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+Accept: */*
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+
+RESPONSE 12
+303
+Set-Cookie: DACSSession_APPLICATIONGROUP_1352216923104=CtxDACSP097728c6fc4cb934922bc60238fca40d1b022; path=/; secure; HttpOnly; SameSite=None
+Set-Cookie: HTTPWORKFLOW_TRANSIENT_ATTRIBUTES=tmp9e641e067f634ecba34ee03e8403b9e9; path=/; secure; HttpOnly; SameSite=None
+Set-Cookie: JSESSIONID=Vgm2i3-RrM_ZhrgQ5CL70AoYYB75LMB77CsY6DwX.up9tx097; path=/dacswebssoissuer; HttpOnly; Secure; SameSite=None
+Set-Cookie: couloir=4; Path=/;Secure
+P3P: CP="IDC ADM DEV TAI PSA PSD IVA IVD CON HIS OUR IND CNT"
+Location: /dacsrest/api/v1u0/transaction/DUMMY_RESOURCE_ID_2
+Content-Length: 0
+Content-Type: text/plain
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+
+REQUEST 13
+GET https://www.icgauth.banquepopulaire.fr/dacsrest/api/v1u0/transaction/DUMMY_RESOURCE_ID_2
+Connection: keep-alive
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+Accept: */*
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+
+RESPONSE 13
+200
+Set-Cookie: DACSSession_APPLICATIONGROUP_1352216923104=CtxDACSP097728c6fc4cb934922bc60238fca40d1b022; Version=1; Path=/; Discard; Secure; SameSite=None
+Set-Cookie: HTTPWORKFLOW_TRANSIENT_ATTRIBUTES=; path=/; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:00 GMT; Secure; SameSite=None
+Set-Cookie: JSESSIONID=7ffCnEBC4-2hJuO76XcubRfG_0NkDtBRccHaNWnb.up9tx097; path=/; secure; HttpOnly; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:00 GMT; SameSite=None
+Expires: 0
+Cache-Control: no-cache, must-revalidate, no-transform, no-store, max-age=0
+P3P: CP="IDC ADM DEV TAI PSA PSD IVA IVD CON HIS OUR IND CNT"
+Pragma: no-cache
+Content-Type: application/json
+Keep-Alive: timeout=5, max=300
+Connection: close
+
+{
+     "id": "CtxDACSP097728c6fc4cb934922bc60238fca40d1b022",
+     "locale": "en",
+     "response": {
+         "saml2_post": {
+             "action": "https://www.ibps.rivesparis.banquepopulaire.fr/acs",
+             "method": "POST",
+             "samlResponse": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHNhbWwycDpSZXNwb25zZSB4bWxuczpzYW1sMnA9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpwcm90b2NvbCIgRGVzdGluYXRpb249Imh0dHBzOi8vd3d3LmlicHMucml2ZXNwYXJpcy5iYW5xdWVwb3B1bGFpcmUuZnIvYWNzIiBJRD0iQ3R4REFDU1AwOTc3MjhjNmZjNGNiOTM0OTIyYmM2MDIzOGZjYTQwZDFiMDIyIiBJblJlc3BvbnNlVG89Il9tdjcydzZlaHV3LW11eXRjZWFsNG4tcTdxcHdtd3JsYS13NXJkZXhzaGw2LXd0eGtkc2g4bXZkYW44YSIgSXNzdWVJbnN0YW50PSIyMDIwLTA4LTE5VDEyOjQ4OjA5LjMyNFoiIFZlcnNpb249IjIuMCI+PHNhbWwyOklzc3VlciB4bWxuczpzYW1sMj0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFzc2VydGlvbiI+dXJuOmRpY3RhbzpkYWNzPC9zYW1sMjpJc3N1ZXI+PGRzOlNpZ25hdHVyZSB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyIgSWQ9IlRBT18xX1NpZ25hdHVyZSI+PGRzOlNpZ25lZEluZm8geG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPjxkczpDYW5vbmljYWxpemF0aW9uTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIi8+PGRzOlNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNyc2Etc2hhMSIvPjxkczpSZWZlcmVuY2UgVVJJPSIiPjxkczpUcmFuc2Zvcm1zPjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjZW52ZWxvcGVkLXNpZ25hdHVyZSIvPjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48L2RzOlRyYW5zZm9ybXM+PGRzOkRpZ2VzdE1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNzaGExIi8+PGRzOkRpZ2VzdFZhbHVlPk1GMHZyN2lldWw0clFEVU8zeWsvVzVud1BkWT08L2RzOkRpZ2VzdFZhbHVlPjwvZHM6UmVmZXJlbmNlPjwvZHM6U2lnbmVkSW5mbz48ZHM6U2lnbmF0dXJlVmFsdWUgSWQ9IlRBT18xX1NpZ25hdHVyZVZhbHVlIj5GUGM1TlFGRzRSbG5CdnlPYUV6TU5PYUZHVW9PTnhjVWRqQVFaaWxZcUdRT3M5VHBWd3RmZW55ZEErU0FqMnEvClJQY25jZFd2QXEvdnRaTXFZRkIrQTBtQW90SkNHZGVvd0FMZ0VBc2NZdk9LWkFqUCtrL0tCTzNlaDVoU25RUUwKeVFRSElGd0JyTUhLb0FXQThoNkw2TitYdTlpMnhoTU5FOUVrNS9XSHVVejBva2dzVkpnWjVhL3JYL2hnZFd2UApmOEtHbXVJZmxqaUpkcEhXeXVaclpDQlZoWFEzaUZtcC9qYTBEQzVnaUJVMXZwRDFwWjhkU1QvVDBlUi84ekJ2CnpnSnhERmRPK2FNSElXZ09iaTM4a3VuTTZYU0FON1ZHYjZVemoyVitFYlhZamxTckV5NjM1MkdoeWMwNUZpNXYKWUQ5S0RFQS9pb09uVUxWcjAzbU4rZz09PC9kczpTaWduYXR1cmVWYWx1ZT48ZHM6S2V5SW5mbyBJZD0iVEFPXzFfS2V5SW5mbyI+PGRzOlg1MDlEYXRhPjxkczpYNTA5Q2VydGlmaWNhdGU+TUlJR3lEQ0NCTENnQXdJQkFnSURBSytZTUEwR0NTcUdTSWIzRFFFQkN3VUFNSG94Q3pBSkJnTlZCQVlUQWtaU01TQXdIZ1lEVlFRS0RCZENVRU5GSUMwZ1EwRkpVMU5GSUVRZ1JWQkJVa2RPUlRFWE1CVUdBMVVFQ3d3T01EQXdNaUEwT1RNME5UVXdOREl4TURBdUJnTlZCQU1NSjBKUVEwVWdWVU5ISUVGRFJTQk5RVlJGVWtsRlRGTWdRMEZKVTFORklFUWdSVkJCVWtkT1JUQWVGdzB4T0RBMU1UUXdOekUxTURKYUZ3MHlNVEExTVRNd056RTFNREphTUY4eEN6QUpCZ05WQkFZVEFrWlNNUTB3Q3dZRFZRUUtEQVJDVUVORk1SY3dGUVlEVlFRTERBNHdNREF5SURRNU16UTFOVEEwTWpFT01Bd0dBMVVFQ3d3RlUxTk1RMFV4R0RBV0JnTlZCQU1NRDJsalozVmljQzVrWVdOekxuTnBaekNDQVNJd0RRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFPSGtaYy9mQWExdDRBL2x5cU5vSkhUaDZkNFc0c0s4dCt1NUdwcDJPWjZaZ2pqcittTnd2K0tRY2MrbGE4RHlXekFmUlo3R2hkZnorRmpVdFgvTVdaQlNHOFZxc0I4c25Od3pKeTBXT2VFazBXc2RJc0JYRm1OYjBQYUhDTkd6WHBCbTVVSFUwTFFsWkpqUVdVWDRURkkvcHVSYkx3TXRjbUMwMmU0Z3ZIVWlvNDJWTERQMWt1cFpyYzhhWVpBeWdwTW1JOTE3WVV2TzlFMytSanlSS2hWQkptMVpBVmxDQWpGV3diS1JDZlBVQW92VENaWUN5eFZJcURkei9ranRTUzB0YnpXWUhqR0VOT1hRR05SYTU0MEI5ZzlML3YrdElPSGh4RlhTV2pZakltMFJzaGhYc2hEaGhUWEk1SW9iQnVmNlY5K3dzZ0FIa0d3QjhZZGplTWNDQXdFQUFhT0NBbkF3Z2dKc01CMEdBMVVkRGdRV0JCUkdlTFcwZEt4U1JpL3dpczdQd1RmL2NqNmpiekFmQmdOVkhTTUVHREFXZ0JUL3NUMUpEeGZmRmxLUE0yS2hkQTAzOWtlR1VEQ0Jqd1lEVlIwZ0JJR0hNSUdFTUlHQkJoQXJCZ0VFQVlLOGJ3RUFBUXVDTndFQk1HMHdhd1lJS3dZQkJRVUhBZ0VXWDJoMGRIQTZMeTl3Y204dVpEQXdMbkJyYVRBeUxtSndZMlV1Wm5JdlpHOWpjeTl3WXkxMVkyY3RiRzkwTVM5UVF5MUNVRU5GWDFWRFIxOUJRMFZmVFVGVVJWSkpSVXhUWDBWT1ZFbFVSUzEyTVM0NE1qQXhOVEEyTURFdWNHUm1NQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01DQmdnckJnRUZCUWNEQVRBT0JnTlZIUThCQWY4RUJBTUNCYUF3R2dZRFZSMFJCQk13RVlJUGFXTm5kV0p3TG1SaFkzTXVjMmxuTUlHL0JnTlZIUjhFZ2Jjd2diUXdPcUE0b0RhR05HaDBkSEE2THk5d2NtOHVaREF3TG5CcmFUQXlMbUp3WTJVdVpuSXZkV05uWDJGalpWOHpNVEV3TVMwd01WOTJNUzVqY213d09xQTRvRGFHTkdoMGRIQTZMeTl3Y204dVpEQXhMbkJyYVRBeUxtSndZMlV1Wm5JdmRXTm5YMkZqWlY4ek1URXdNUzB3TVY5Mk1TNWpjbXd3T3FBNG9EYUdOR2gwZEhBNkx5OXdjbTh1WkRBeUxuQnJhVEF5TG1Kd1kyVXVabkl2ZFdOblgyRmpaVjh6TVRFd01TMHdNVjkyTVM1amNtd3dWQVlJS3dZQkJRVUhBUUVFU0RCR01FUUdDQ3NHQVFVRkJ6QUNoamhvZEhSd09pOHZjSEp2TG1Rd01DNXdhMmt3TWk1aWNHTmxMbVp5TDNWaloxOWhZMlZmTXpFeE1ERXRNREZmWTNKMFgzWXhMbU55ZERBMUJna3JCZ0VFQVlJM0ZBSUVLQjRtQUZBQVVnQlBBQzBBVFFCQkFGUUFMUUJUQUZNQVRBQXRBREFBTUFBeEFDMEFVQUF4QURBd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dJQkFENEsxV3JJbTJOLzhVaXJSbVVxWmJMMmNEWUhIcWFycEZ6cGZzcXpsdkpMYnRmYnRqMENQbzdocUU1TmNQNVhVK3o5eDYzV3lyYWtwQlNXVFpkMFhWdFo0UG5GTVhSMjVZdXlUSTNCUnE3dkRnWGxtS3VmWUJ0eFJxTTlSc2t3Qk9OcUxERHd2ZG44cWt4MlJhZUNwNE9aeGc0L2NYbGVNSndJN3pjdkw2aDV5N1ZhYk52UTZNdTNLTTFjdnNBcFloWGdUeFN0SFd5UVk2bTBuN20wazQyZDkzNTVOWHY5TzBhZkgyc0xLRVVlYXRzQ0FlTUtzbFVFUWhGaGwvMmw5MGVMS29oN0RJU3hJWWRLNHlxOFFyVlh3UHN2L3lJUmhpUjhtSjhKUFl2K3IxM214YVoxUmlwYUZ2UXBwYUlWZ1IwTkcxdlc1UFhpY0VmZ0ZWbmR3ZlFNaU9hVXR4T0x3SkMrcVV4Z3VicjhXWXlEZ1ZNWUphRWJBaUhMSmx3R3kxVUlzL3EyNDE0OHJvV2lrakp5UWx0SGhqRzduRXJDaHB4SmZSdzhDYlkzQk5ON1FBOEpxZXAzK0RNbUhHdGJ1K2h4enhBNTJ2NmR5OFQ0M3J4WksvMElhd0lzZHhwT29JZDg1aGNSQVpLL1pVa2VjWTZ2R3BpWGQwaTFNWHBrWWRtZ3crWFlNaFZrYWlHQmU2Q1J1bGcxUG5uNnpoL0l5L3dBYXJPNVpSV1doU2Z6Y3dua054N3l5YTAvZ2JXUmtKWkJOM3MrN0daMi9tZGJTTHRmY053aFJhQXZnZmFaMklHTFVibkc4enM5N05pbm1SQnhOYjRMT2ppdTgwZDVFMzNnTkZxWTE2eXY3LzQrb25pQlpLd05Bb0VYeTFObGtZaVIyWWlweGF4TzwvZHM6WDUwOUNlcnRpZmljYXRlPjwvZHM6WDUwOURhdGE+PC9kczpLZXlJbmZvPjwvZHM6U2lnbmF0dXJlPjxzYW1sMnA6U3RhdHVzPjxzYW1sMnA6U3RhdHVzQ29kZSBWYWx1ZT0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnN0YXR1czpTdWNjZXNzIi8+PC9zYW1sMnA6U3RhdHVzPjxzYW1sMjpBc3NlcnRpb24geG1sbnM6c2FtbDI9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3NlcnRpb24iIElEPSJkYWNzNzAwNTM4MWVmZDFjNGQ4Y2E5NjI0MTNlYzY0ZmI4OWQiIElzc3VlSW5zdGFudD0iMjAyMC0wOC0xOVQxMjo0ODowOS4zMjRaIiBWZXJzaW9uPSIyLjAiPjxzYW1sMjpJc3N1ZXI+dXJuOmRpY3RhbzpkYWNzPC9zYW1sMjpJc3N1ZXI+PHNhbWwyOlN1YmplY3Q+PHNhbWwyOk5hbWVJRCBGb3JtYXQ9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpuYW1laWQtZm9ybWF0OnBlcnNpc3RlbnQiPkMxODI1OTgwPC9zYW1sMjpOYW1lSUQ+PHNhbWwyOlN1YmplY3RDb25maXJtYXRpb24gTWV0aG9kPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6Y206YmVhcmVyIj48c2FtbDI6TmFtZUlEIEZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOm5hbWVpZC1mb3JtYXQ6cGVyc2lzdGVudCI+QzE4MjU5ODA8L3NhbWwyOk5hbWVJRD48c2FtbDI6U3ViamVjdENvbmZpcm1hdGlvbkRhdGEgSW5SZXNwb25zZVRvPSJfbXY3Mnc2ZWh1dy1tdXl0Y2VhbDRuLXE3cXB3bXdybGEtdzVyZGV4c2hsNi13dHhrZHNoOG12ZGFuOGEiIE5vdE9uT3JBZnRlcj0iMjAyMC0wOC0xOVQxMjo1MzowOS4zMjRaIiBSZWNpcGllbnQ9Imh0dHBzOi8vd3d3LmlicHMucml2ZXNwYXJpcy5iYW5xdWVwb3B1bGFpcmUuZnIvYWNzIi8+PC9zYW1sMjpTdWJqZWN0Q29uZmlybWF0aW9uPjwvc2FtbDI6U3ViamVjdD48c2FtbDI6Q29uZGl0aW9ucyBOb3RCZWZvcmU9IjIwMjAtMDgtMTlUMTI6NDg6MDkuMzI0WiIgTm90T25PckFmdGVyPSIyMDIwLTA4LTE5VDEyOjUzOjA5LjMyNFoiLz48c2FtbDI6QXR0cmlidXRlU3RhdGVtZW50PjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iZGFjczpTZWN1cml0eUxldmVsIj48c2FtbDI6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj4xMDI8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQlBDRS1DZEV0YWJGaW5uIj48c2FtbDI6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj4xMDIwNzwvc2FtbDI6QXR0cmlidXRlVmFsdWU+PC9zYW1sMjpBdHRyaWJ1dGU+PHNhbWwyOkF0dHJpYnV0ZSBOYW1lPSJCUENFLUVudiI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+UFJPRDwvc2FtbDI6QXR0cmlidXRlVmFsdWU+PC9zYW1sMjpBdHRyaWJ1dGU+PHNhbWwyOkF0dHJpYnV0ZSBOYW1lPSJCUENFLVByZmxGZWRySWRlbiI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+aWJwX2N5YmVyX3Byb2ZpbF9jbGllbnQ8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjxzYW1sMjpBdHRyaWJ1dGVWYWx1ZSB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhzaTp0eXBlPSJ4czpzdHJpbmciPmlicF9tb2JpbGVfcHJvZmlsX2NsaWVudDwvc2FtbDI6QXR0cmlidXRlVmFsdWU+PC9zYW1sMjpBdHRyaWJ1dGU+PHNhbWwyOkF0dHJpYnV0ZSBOYW1lPSJCUENFLUR0RENueE9rIj48c2FtbDI6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj4yMDIwLTA4LTE5VDEyOjQ4OjAxLjEzNlo8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQlBDRS1UcmFjZUlEIj48c2FtbDI6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj5DMTgyNTk4MDwvc2FtbDI6QXR0cmlidXRlVmFsdWU+PC9zYW1sMjpBdHRyaWJ1dGU+PHNhbWwyOkF0dHJpYnV0ZSBOYW1lPSJCUENFLUF0dHJpYnV0SWQiPjxzYW1sMjpBdHRyaWJ1dGVWYWx1ZSB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhzaTp0eXBlPSJ4czpzdHJpbmciPnsiRU5WIjoiMDAwNTEiLCJFTlQiOiJBUSIsIkNPQUQiOiJDIiwiTlVNQUJPIjoiQzE4MjU5ODAiLCJQUk9GSUwiOiJJVE4ifTwvc2FtbDI6QXR0cmlidXRlVmFsdWU+PC9zYW1sMjpBdHRyaWJ1dGU+PHNhbWwyOkF0dHJpYnV0ZSBOYW1lPSJCUENFLUNhbmxGZWRySWRlbiI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+Mzwvc2FtbDI6QXR0cmlidXRlVmFsdWU+PC9zYW1sMjpBdHRyaWJ1dGU+PC9zYW1sMjpBdHRyaWJ1dGVTdGF0ZW1lbnQ+PHNhbWwyOkF1dGhuU3RhdGVtZW50IEF1dGhuSW5zdGFudD0iMjAyMC0wOC0xOVQxMjo0ODowMS4xMzZaIiBTZXNzaW9uSW5kZXg9IkN0eERBQ1NQMDk3NzI4YzZmYzRjYjkzNDkyMmJjNjAyMzhmY2E0MGQxYjAyMiI+PHNhbWwyOkF1dGhuQ29udGV4dD48c2FtbDI6QXV0aG5Db250ZXh0Q2xhc3NSZWY+dXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFjOmNsYXNzZXM6UHJldmlvdXNTZXNzaW9uPC9zYW1sMjpBdXRobkNvbnRleHRDbGFzc1JlZj48L3NhbWwyOkF1dGhuQ29udGV4dD48L3NhbWwyOkF1dGhuU3RhdGVtZW50Pjwvc2FtbDI6QXNzZXJ0aW9uPjwvc2FtbDJwOlJlc3BvbnNlPgo="
+         },
+         "status": "AUTHENTICATION_SUCCESS"
+     }
+}
+
+REQUEST 14
+POST https://www.ibps.rivesparis.banquepopulaire.fr/acs
+Content-Type: application/x-www-form-urlencoded
+Connection: keep-alive
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+Accept: */*
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+
+SAMLResponse=PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHNhbWwycDpSZXNwb25zZSB4bWxuczpzYW1sMnA9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpwcm90b2NvbCIgRGVzdGluYXRpb249Imh0dHBzOi8vd3d3LmlicHMucml2ZXNwYXJpcy5iYW5xdWVwb3B1bGFpcmUuZnIvYWNzIiBJRD0iQ3R4REFDU1AwOTc3MjhjNmZjNGNiOTM0OTIyYmM2MDIzOGZjYTQwZDFiMDIyIiBJblJlc3BvbnNlVG89Il9tdjcydzZlaHV3LW11eXRjZWFsNG4tcTdxcHdtd3JsYS13NXJkZXhzaGw2LXd0eGtkc2g4bXZkYW44YSIgSXNzdWVJbnN0YW50PSIyMDIwLTA4LTE5VDEyOjQ4OjA5LjMyNFoiIFZlcnNpb249IjIuMCI%2BPHNhbWwyOklzc3VlciB4bWxuczpzYW1sMj0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFzc2VydGlvbiI%2BdXJuOmRpY3RhbzpkYWNzPC9zYW1sMjpJc3N1ZXI%2BPGRzOlNpZ25hdHVyZSB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyIgSWQ9IlRBT18xX1NpZ25hdHVyZSI%2BPGRzOlNpZ25lZEluZm8geG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPjxkczpDYW5vbmljYWxpemF0aW9uTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIi8%2BPGRzOlNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNyc2Etc2hhMSIvPjxkczpSZWZlcmVuY2UgVVJJPSIiPjxkczpUcmFuc2Zvcm1zPjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjZW52ZWxvcGVkLXNpZ25hdHVyZSIvPjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48L2RzOlRyYW5zZm9ybXM%2BPGRzOkRpZ2VzdE1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNzaGExIi8%2BPGRzOkRpZ2VzdFZhbHVlPk1GMHZyN2lldWw0clFEVU8zeWsvVzVud1BkWT08L2RzOkRpZ2VzdFZhbHVlPjwvZHM6UmVmZXJlbmNlPjwvZHM6U2lnbmVkSW5mbz48ZHM6U2lnbmF0dXJlVmFsdWUgSWQ9IlRBT18xX1NpZ25hdHVyZVZhbHVlIj5GUGM1TlFGRzRSbG5CdnlPYUV6TU5PYUZHVW9PTnhjVWRqQVFaaWxZcUdRT3M5VHBWd3RmZW55ZEErU0FqMnEvClJQY25jZFd2QXEvdnRaTXFZRkIrQTBtQW90SkNHZGVvd0FMZ0VBc2NZdk9LWkFqUCtrL0tCTzNlaDVoU25RUUwKeVFRSElGd0JyTUhLb0FXQThoNkw2TitYdTlpMnhoTU5FOUVrNS9XSHVVejBva2dzVkpnWjVhL3JYL2hnZFd2UApmOEtHbXVJZmxqaUpkcEhXeXVaclpDQlZoWFEzaUZtcC9qYTBEQzVnaUJVMXZwRDFwWjhkU1QvVDBlUi84ekJ2CnpnSnhERmRPK2FNSElXZ09iaTM4a3VuTTZYU0FON1ZHYjZVemoyVitFYlhZamxTckV5NjM1MkdoeWMwNUZpNXYKW
+
+RESPONSE 14 SET SEND_ACS_REQUEST
+302
+Server: IWS
+Strict-Transport-Security: max-age=31536000
+Location: /mapi/1.1/mon-profil
+Content-Type: text/html; charset=iso-8859-1
+Keep-Alive: timeout=8, max=300
+Connection: Keep-Alive
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>302 Found</title>
+</head><body>
+<h1>Found</h1>
+<p>The document has moved <a href="/mapi/1.1/mon-profil">here</a>.</p>
+</body></html>
+
+REQUEST 15 MATCH SEND_ACS_REQUEST
+GET https://www.ibps.rivesparis.banquepopulaire.fr/mapi/1.1/mon-profil
+Accept: */*
+NameId: DUMMY_USER
+PULSAR.Login.GwGroup: 1
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+Connection: keep-alive
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+
+RESPONSE 15
+200
+Server: IWS
+Set-Cookie: cim-session-id=3235FB1FF9001B07CC0CE4051352B3AD; Path=/; Secure; HttpOnly
+Set-Cookie: LBITMCMOBPRI=181503837.64413.0000; path=/
+Access-Control-Allow-Origin: https://www.banquepopulaire.fr
+Cache-Control: no-cache, no-store, max-age=0,must-revalidate,no-transform
+Pragma: no-cache
+X-Bk-Engine: off
+Content-Type: application/json;charset=UTF-8
+Strict-Transport-Security: max-age=31536000
+Keep-Alive: timeout=8, max=300
+Connection: Keep-Alive
+
+{"idAbonne":{"codeBanque":"002","identifiant":"DUMMY_USER"},"codeEtablissement":"10207","idClient":{"codeBanque":"002","identifiant":"DUMMY_ID"},"natureClient":{"code":"01","type":"natureClient"},"identitePersonnePhysique":{"civilite":{"code":"M","label":"Monsieur","type":"civilite"},"nomMarital":"","nomPatronymique":"DUMMY_SURNAME","prenom":"DUMMY_NAME"},"dateDerniereConnexion":"2020-08-19T13:50:33+0200","habilitations":["ACCU","AOPR","BENA","BEND","CAOS","CBEN","CDBE","CDOC","CFNC","CFNG","CFNP","CONT","CPWD","CTJP","DELA","DELC","DEMA","DEMC","DEMR","DEPA","DETC","DETN","DOCT","DVIS","ECRI","EDOC","EQPD","EQPR","EQPT","GALE","IBAN","ICGS","KADO","LBAC","LBCM","LBPR","MADR","MCNP","MOCP","MSGA","MVIT","OPPK","OPPP","PECR","PICT","PRER","QCCF","RMCQ","RSCH","SIGN","TELO","TRFA","VIEU","VIPC","VIPU","VIRE","VSEM"],"typeAbonnement":"P","typeAbonnementSegment":"PAR","typeAbonnementSegmentInternet":"JEU","typeProfilAbonnement":{"code":"1","type":"natureRelation"},"typeClient":{"code":"1","label":"Particulier","type":"typeClient"},"statutClient":{"code":"Client","label":"1","type":"statutClient"},"categorieJuridique":{"code":"1900","label":"Autre personne physique","type":"categorieJuridique"},"infosDetail":{"typeAgentEconomique":{"code":"303","label":"Particuliers","type":"typeAgentEconomique"},"typeClientele":{"code":"01","label":"PARTICULIERS NON ARTISAN","type":"typeClientele"}},"agregats":[]}
+
+REQUEST 16
+POST https://www.ibps.rivesparis.banquepopulaire.fr/as-bp/as/2.0/tokens
+Accept: */*
+Connection: keep-alive
+User-Agent: BanquePopulaire/78.5 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: en-us
+Authorization: Basic QlBfY3liZXJwbHVzLm1vYmlsZS5pb3NfUFJPRF8zLjM1OjA0ZWYwMDk4LWY5MGEtNDZjZC04NzkxLTQ4NTc4YTkyZjk5ZA==
+
+RESPONSE 16
+200
+Server: IWS
+X-CorrelationID: Id-931f3d5f9796443d4818b052 0
+Accept-Language: en-us
+Cookie: LBITMCMOBPRI=181503837.64413.0000; cim-session-id=3235FB1FF9001B07CC0CE4051352B3AD; cim-xiti-id=cd1dad17-9bb5-4616-8538-1af9ceb7b914; cyberplus-hybrid=ios-78.5; nav=true; rpaltbe=webssov3; BWFSESSID_597zwzxygs288gq9t4jbpjaht6=5vvmgc5fshskewaj4a7keewthn0sjnflv8sw2mf6y25s7enw5cnhhucpt8w3vwflcz3ayekb9zmryxr4kbhbgykxktj8v9qb2bg3uazze6zjkf8dtjuqelf9nwl3sjk2l558ladab4r5836vmbun29h6rnzucxe5l7cugbnw3emwyqy9qvuzckm6uyar9zy4t4lqz7kuzla; LBRPSSO3=3723104940.3013.0000; iPlanetDirectoryPro=_mv72w6ehuw-muytceal4n-q7qpwmwrla-w5rdexshl6-wshl6wjp3s
+referer: -
+ssl-cipher: ECDHE-RSA-AES256-GCM-SHA384
+ssl-protocol: TLSv1.2
+Via: 1.0 apigtw
+X-Forwarded-PortSrc: 25588
+Content-Type: application/json
+Access-Control-Allow-Origin: https://www.banquepopulaire.fr
+Access-Control-Allow-Credentials: true
+Strict-Transport-Security: max-age=31536000
+Keep-Alive: timeout=8, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+  "access_token" : "DUMMY_AUX_ACCESS_TOKEN",
+  "token_type" : "Bearer",
+  "expires_in" : 1800
+}
+
+REQUEST 17
+GET https://www.ibps.rivesparis.banquepopulaire.fr/mapi/1.1/comptes/1.1
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+
+RESPONSE 17
+200
+Pragma: no-cache
+Server: IWS
+Content-Type: application/json;charset=UTF-8
+Strict-Transport-Security: max-age=31536000
+X-Bk-Engine: off
+Cache-Control: no-cache, no-store, max-age=0,must-revalidate,no-transform
+Access-Control-Allow-Origin: https://www.banquepopulaire.fr
+Keep-Alive: timeout=8, max=300
+Connection: Keep-Alive
+
+[{"idContrat":{"codeBanque":"002","identifiant":"CPT12345678901"},"referenceExterneContrat":"12345678901","typeContrat":{"code":"000","label":"Compte à Vue","type":"typeContrat"},"idProduit":{"code":"00160","label":"Compte De Cheques","type":"produit"},"idsFctContrat":[{"codeBanque":"002","identifiant":"CPT12345678901","typeContrat":"000"}],"codeFamilleProduit":"55110","intitulePersonnalise":"","soldeEncours":{"valeur":"266.23","devise":"978"},"encoursCB":null,"montantAutorisation":null,"client":{"idClient":null,"descriptionClient":"DUMMY_NAME"},"isRibable":true},{"idContrat":{"codeBanque":"002","identifiant":"CPT12345678902"},"referenceExterneContrat":"12345678902","typeContrat":{"code":"004","label":"Epargne liquide et contractuelle","type":"typeContrat"},"idProduit":{"code":"00003","label":"Liv Dev Durable Et Solidaire","type":"produit"},"idsFctContrat":[{"codeBanque":"002","identifiant":"CPT12345678901","typeContrat":"004"}],"codeFamilleProduit":"55120","intitulePersonnalise":"","soldeEncours":{"valeur":"6651.71","devise":"978"},"encoursCB":null,"montantAutorisation":null,"client":{"idClient":null,"descriptionClient":"DUMMY_NAME"},"isRibable":false},{"idContrat":{"codeBanque":"002","identifiant":"CPT12345678903"},"referenceExterneContrat":"12345678903","typeContrat":{"code":"004","label":"Epargne liquide et contractuelle","type":"typeContrat"},"idProduit":{"code":"01894","label":"Plan Epargne Logement","type":"produit"},"idsFctContrat":[{"codeBanque":"002","identifiant":"CPT12345678903","typeContrat":"004"}],"codeFamilleProduit":"55120","intitulePersonnalise":"","soldeEncours":{"valeur":"3474.36","devise":"978"},"encoursCB":null,"montantAutorisation":null,"client":{"idClient":null,"descriptionClient":"DUMMY_NAME"},"isRibable":false}]
+
+REQUEST 18
+GET https://www.ibps.rivesparis.banquepopulaire.fr/mapi/1.1/comptes/002-000-CPT12345678901/operations?pageKey=&statutMouvement=000
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+
+RESPONSE 18
+200
+Content-Type: application/json;charset=UTF-8
+Keep-Alive: timeout=8, max=300
+Pragma: no-cache
+Access-Control-Allow-Origin: https://www.banquepopulaire.fr
+Server: IWS
+Link: ?pageKey=MDhEMjcgIEIgICAgICAwNDE3MDAwMDAyMDIxOUM1OTI5NzcyMjE=; rel='next'
+Cache-Control: no-cache, no-store, max-age=0,must-revalidate,no-transform
+Strict-Transport-Security: max-age=31536000
+Connection: Keep-Alive
+X-Bk-Engine: off
+
+[{"beneficiaire":"","idMouvement":"22197759219","libelleMouvement":"EVI Compte joint","libelle1ODC":"C1825980","libelle2ODC":"Virement de M Elie Hosansky","dateOperation":1597788000000,"referenceMouvement":"7933767","montant":{"devise":"978","valeur":-100.00},"soldeEvolutif":{"devise":"","valeur":null},"familleOperation":{"code":"01","label":"Virements émis","type":"familleOperation"},"codeOperation":{"code":"523","label":"Evi occas cyber","type":"codeOperation","sensOperation":"D"},"dateComptable":1597788000000,"dateValeur":1597788000000,"typeOperation":{"code":"2","label":"Virement externe émis","type":"codeOperation"},"statutMouvement":{"code":"001","label":"Comptabilisée","type":"statutOperation"},"isOperationDuJour":true}]
+
+REQUEST 19
+GET https://www.ibps.rivesparis.banquepopulaire.fr/mapi/1.1/comptes/002-000-CPT12345678901/operations?pageKey=MDhEMjcgIEIgICAgICAwNDE3MDAwMDAyMDIxOUM1OTI5NzcyMjE%3D&statutMouvement=000
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+
+RESPONSE 19
+200
+Content-Type: application/json;charset=UTF-8
+Keep-Alive: timeout=8, max=300
+Pragma: no-cache
+Access-Control-Allow-Origin: https://www.banquepopulaire.fr
+Server: IWS
+Cache-Control: no-cache, no-store, max-age=0,must-revalidate,no-transform
+Strict-Transport-Security: max-age=31536000
+Connection: Keep-Alive
+X-Bk-Engine: off
+
+[{"beneficiaire":"","idMouvement":"22197759219","libelleMouvement":"060620 Desc","libelle1ODC":"SNCF INTERNET  75PARIS 10","libelle2ODC":"","dateOperation":1591567200000,"referenceMouvement":"7D9U8JB","montant":{"devise":"978","valeur":-37.00},"soldeEvolutif":{"devise":"","valeur":null},"familleOperation":{"code":"07","label":"Cartes","type":"familleOperation"},"codeOperation":{"code":"214","label":"Facture cb","type":"codeOperation","sensOperation":"D"},"dateComptable":1591567200000,"dateValeur":1591567200000,"typeOperation":{"code":" ","label":"Autre","type":"codeOperation"},"statutMouvement":{"code":"001","label":"Comptabilisée","type":"statutOperation"},"isOperationDuJour":false}]
+
+REQUEST 20
+GET https://www.ibps.rivesparis.banquepopulaire.fr/mapi/1.1/comptes/002-004-CPT12345678902/operations?pageKey=&statutMouvement=000
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+
+RESPONSE 20
+200
+Content-Type: application/json;charset=UTF-8
+Keep-Alive: timeout=8, max=300
+Pragma: no-cache
+Access-Control-Allow-Origin: https://www.banquepopulaire.fr
+Server: IWS
+Cache-Control: no-cache, no-store, max-age=0,must-revalidate,no-transform
+Strict-Transport-Security: max-age=31536000
+Connection: Keep-Alive
+X-Bk-Engine: off
+
+[{"beneficiaire":"","idMouvement":"22781762300","libelleMouvement":"VIR NAME","libelle1ODC":"Virement vers Liv Dev Durable  E","libelle2ODC":"","dateOperation":1596146400000,"referenceMouvement":"1825980","montant":{"devise":"978","valeur":2000.00},"soldeEvolutif":{"devise":"","valeur":null},"familleOperation":{"code":"02","label":"Virements reçus","type":"familleOperation"},"codeOperation":{"code":"078","label":"Virement credit","type":"codeOperation","sensOperation":"C"},"dateComptable":1596146400000,"dateValeur":1596232800000,"typeOperation":{"code":" ","label":"Autre","type":"codeOperation"},"statutMouvement":{"code":"001","label":"Comptabilisée","type":"statutOperation"},"isOperationDuJour":false}]
+
+REQUEST 21
+GET https://www.ibps.rivesparis.banquepopulaire.fr/mapi/1.1/comptes/002-004-CPT12345678903/operations?pageKey=&statutMouvement=000
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+
+RESPONSE 21
+200
+Content-Type: application/json;charset=UTF-8
+Keep-Alive: timeout=8, max=300
+Pragma: no-cache
+Access-Control-Allow-Origin: https://www.banquepopulaire.fr
+Server: IWS
+Cache-Control: no-cache, no-store, max-age=0,must-revalidate,no-transform
+Strict-Transport-Security: max-age=31536000
+Connection: Keep-Alive
+X-Bk-Engine: off
+
+[{"beneficiaire":"","idMouvement":"22900845369","libelleMouvement":"VIR NAME","libelle1ODC":"","libelle2ODC":"","dateOperation":1597010400000,"referenceMouvement":"2219775","montant":{"devise":"978","valeur":46.00},"soldeEvolutif":{"devise":"","valeur":null},"familleOperation":{"code":"02","label":"Virements reçus","type":"familleOperation"},"codeOperation":{"code":"080","label":"Virement","type":"codeOperation","sensOperation":"C"},"dateComptable":1597010400000,"dateValeur":1597010400000,"typeOperation":{"code":" ","label":"Autre","type":"codeOperation"},"statutMouvement":{"code":"001","label":"Comptabilisée","type":"statutOperation"},"isOperationDuJour":false}]
+
+REQUEST 22
+GET https://www.rs-ex-ath-groupe.banquepopulaire.fr/bapi/transfer/v2/transferCreditors
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 22
+200
+Content-Type: application/hal+json
+Content-Language: fr-FR
+Access-Control-Allow-Origin: *
+X-CorrelationID: Id-7f123d5f2632e102435726a4 0
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+
+{"page":{"pageSize":12,"totalElement":12,"totalPages":1,"pageNumber":0},"_links":{"self":{"href":"https://www.rs-ex-ath-groupe.banquepopulaire.fr/bapi/transfer/v2/transferCreditors"}},"items":[{"identification":{"transferCreditorId":{"entityCode":"10207","id":"CPT12345678901"}},"transferCreditorIdentity":{"creditorType":{"code":"1","label":"Identifiant Compte Interne"},"bankLabel":"BP RIVES DE PARIS","reference":"12345678901","designationLabel":"DUMMY_NAME_1","rib":{"bankid":"10207","deskid":"00129","accountNumber":"12345678901","ribKey":"22"},"iban":"FR761020700129CPT1234567890122","bic":"CCBPFRPPMTG","phoneNumber":null,"balance":{"value":266.23,"currencyCode":"EUR"},"email":"","holderIndicator":true,"activationDate":null,"label":"COMPTE CHEQUES","creditorUse":[{"transferCategoryType":{"code":"1","label":"Interne"}}]}},{"identification":{"transferCreditorId":{"entityCode":"10207","id":"CPTCPT12345678902"}},"transferCreditorIdentity":{"creditorType":{"code":"1","label":"Identifiant Compte Interne"},"bankLabel":"BP RIVES DE PARIS","reference":"CPT12345678902","designationLabel":"DUMMY_NAME_1","rib":{"bankid":null,"deskid":null,"accountNumber":null,"ribKey":null},"iban":null,"bic":"CCBPFRPPMTG","phoneNumber":null,"balance":{"value":6651.71,"currencyCode":"EUR"},"email":"","holderIndicator":true,"activationDate":null,"label":"LIV DEV DURABLE  ET SOLIDAIRE","creditorUse":[{"transferCategoryType":{"code":"1","label":"Interne"}}]}},{"identification":{"transferCreditorId":{"entityCode":"10207","id":"797428-0000001-00000008"}},"transferCreditorIdentity":{"creditorType":{"code":"2","label":"IBAN"},"bankLabel":"CREDIT AGRICOLE","reference":"FR7630006000011234567890189","designationLabel":"DUMMY_NAME_2","rib":null,"iban":"FR7630006000011234567890189","bic":"AGRIFRPP882","phoneNumber":null,"balance":null,"email":"","holderIndicator":false,"activationDate":null,"label":null,"creditorUse":[{"transferCategoryType":{"code":"2","label":"SEPA"}}]}}]}

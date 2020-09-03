@@ -5,15 +5,13 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class MockSupplementalRequester implements SupplementalRequester {
 
-    private final String supplementalInfoForCredentials;
     private final Map<String, String> callbackData;
 
-    public MockSupplementalRequester(
-            String supplementalInfoForCredentials, Map<String, String> callbackData) {
-        this.supplementalInfoForCredentials = supplementalInfoForCredentials;
+    public MockSupplementalRequester(Map<String, String> callbackData) {
         this.callbackData = callbackData;
     }
 
@@ -24,7 +22,7 @@ public final class MockSupplementalRequester implements SupplementalRequester {
 
     @Override
     public String requestSupplementalInformation(Credentials credentials, boolean wait) {
-        return supplementalInfoForCredentials;
+        return SerializationUtils.serializeToString(callbackData);
     }
 
     @Override

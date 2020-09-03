@@ -1,0 +1,64 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "DUMMY_NUMBER",
+      "accountExclusion":"NONE",
+      "exactBalance":{
+        "currencyCode":"EUR",
+        "doubleValue":25.63,
+        "scale":2,
+        "unscaledValue":2563,
+        "exactValue":25.63
+      },
+      "currencyCode":"EUR",
+      "bankId":"DUMMYIBAN1",
+      "name":"DUMMY_NAME",
+      "ownership":1.0,
+      "type":"CHECKING",
+      "identifiers":"[]",
+      "closed":false,
+      "holderName":"DUMMY_NAME",
+      "flags":"[]",
+      "availableCredit":0.0,
+      "balance":25.63
+    }
+  ],
+  "transactions": [
+    {
+      "amount":-208.66,
+      "date":1591783200000,
+      "description":"DUMMY_DESCRIPTION_1",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    },
+    {
+      "amount":-70.67,
+      "date":1591783200000,
+      "description":"DUMMY_DESCRIPTION_2",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    }
+  ],
+  "identityData": {
+    "nameElements": [
+      {
+        "type": "FIRST_NAME",
+        "value": "DUMMY_NAME"
+      },
+      {
+        "type": "SURNAME",
+        "value": "DUMMY_SURNAME"
+      }
+    ]
+  }
+}

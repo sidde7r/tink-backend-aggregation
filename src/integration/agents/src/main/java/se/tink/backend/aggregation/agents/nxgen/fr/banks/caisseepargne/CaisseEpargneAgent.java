@@ -1,123 +1,119 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne;
 
 import com.google.inject.Inject;
-import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
-import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.CaisseEpargneAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.configuration.CaisseEpargneConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.executor.beneficiary.CaisseEpargneCreateBeneficiaryExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.identitydata.CaisseEpargneIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.CaisseEpargneTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.CaisseEpragneTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transferdestination.CaisseEpargneTransferDestinationsFetcher;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.storage.CaisseEpargneStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.BpceGroupBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.BpceCookieParserHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.BpceTokenExtractor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.steps.helper.BpceValidationHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.steps.helper.ImageRecognizeHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.module.ImageRecognizerHelperModule;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
 
-public class CaisseEpargneAgent extends SubsequentProgressiveGenerationAgent
-        implements RefreshIdentityDataExecutor,
-                RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                RefreshTransferDestinationExecutor {
-    private final CaisseEpargneApiClient apiClient;
-    private final Storage instanceStorage;
+@AgentDependencyModules(modules = ImageRecognizerHelperModule.class)
+public class CaisseEpargneAgent extends BpceGroupBaseAgent {
+
+    @Getter private final CaisseEpargneApiClient apiClient;
+
+    private final CaisseEpargneStorage caisseEpargneStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final CaisseEpargneIdentityDataFetcher caisseEpargneIdentityDataFetcher;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
-    private final SupplementalInformationProviderImpl supplementalInformationProvider;
+    private final ImageRecognizeHelper imageRecognizeHelper;
+    private final BpceValidationHelper bpceValidationHelper;
 
     @Inject
-    protected CaisseEpargneAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider);
-        configureHttpClient(client);
-        instanceStorage = new Storage();
-        apiClient = new CaisseEpargneApiClient(client, sessionStorage, instanceStorage);
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-        transferDestinationRefreshController = constructTransferDestinationRefreshController();
-        supplementalInformationProvider =
-                new SupplementalInformationProviderImpl(supplementalRequester, request);
-    }
+    public CaisseEpargneAgent(
+            AgentComponentProvider agentComponentProvider,
+            ImageRecognizeHelper imageRecognizeHelper) {
+        super(agentComponentProvider);
 
-    private void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(new BankServiceInternalErrorFilter())
-                .addFilter(new GatewayTimeoutFilter())
-                .addFilter(new TimeoutFilter());
-    }
-
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        CaisseEpragneTransactionalAccountFetcher accountFetcher =
-                new CaisseEpragneTransactionalAccountFetcher(apiClient);
-
-        CaisseEpargneTransactionalAccountTransactionFetcher transactionFetcher =
-                new CaisseEpargneTransactionalAccountTransactionFetcher(apiClient);
-
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(transactionFetcher)));
-    }
-
-    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
-        return new TransferDestinationRefreshController(
-                metricRefreshController, new CaisseEpargneTransferDestinationsFetcher(apiClient));
+        this.imageRecognizeHelper = imageRecognizeHelper;
+        this.caisseEpargneStorage = new CaisseEpargneStorage(this.persistentStorage);
+        this.apiClient = createApiClient(agentComponentProvider.getRandomValueGenerator());
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
+        this.caisseEpargneIdentityDataFetcher =
+                new CaisseEpargneIdentityDataFetcher(this.caisseEpargneStorage);
+        this.transferDestinationRefreshController =
+                constructTransferDestinationRefreshController(this.apiClient);
+        this.bpceValidationHelper = new BpceValidationHelper();
     }
 
     @Override
-    protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        return new CaisseEpargneAuthenticator(
+                this.apiClient,
+                this.caisseEpargneStorage,
+                this.supplementalInformationProvider,
+                this.imageRecognizeHelper,
+                this.bpceValidationHelper);
+    }
+
+    @Override
+    protected CaisseEpargneApiClient createApiClient(RandomValueGenerator randomValueGenerator) {
+        final CaisseEpargneConfiguration caisseEpargneConfiguration =
+                new CaisseEpargneConfiguration();
+        final BpceTokenExtractor bpceTokenExtractor = new BpceTokenExtractor();
+        final BpceCookieParserHelper cookieParserHelper = new BpceCookieParserHelper();
+
+        return new CaisseEpargneApiClient(
+                this.client,
+                caisseEpargneConfiguration,
+                randomValueGenerator,
+                this.caisseEpargneStorage,
+                bpceTokenExtractor,
+                cookieParserHelper);
+    }
+
+    @Override
+    protected TransactionalAccountRefreshController
+            constructTransactionalAccountRefreshController() {
+        final CaisseEpragneTransactionalAccountFetcher accountFetcher =
+                new CaisseEpragneTransactionalAccountFetcher(this.apiClient);
+        final CaisseEpargneTransactionalAccountTransactionFetcher transactionFetcher =
+                new CaisseEpargneTransactionalAccountTransactionFetcher(getApiClient());
+
+        return new TransactionalAccountRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
+    }
+
+    @Override
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        return this.transactionalAccountRefreshController;
+    }
+
+    @Override
+    protected TransferDestinationRefreshController getTransferDestinationRefreshController() {
+        return this.transferDestinationRefreshController;
     }
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return new FetchIdentityDataResponse(
-                new CaisseEpargneIdentityDataFetcher(instanceStorage).fetchIdentityData());
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return transactionalAccountRefreshController.fetchCheckingAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
-    }
-
-    @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+                this.caisseEpargneIdentityDataFetcher.fetchIdentityData());
     }
 
     @Override
@@ -125,12 +121,9 @@ public class CaisseEpargneAgent extends SubsequentProgressiveGenerationAgent
         return Optional.of(
                 new CreateBeneficiaryController(
                         new CaisseEpargneCreateBeneficiaryExecutor(
-                                apiClient, supplementalInformationProvider, instanceStorage)));
-    }
-
-    @Override
-    public StatelessProgressiveAuthenticator getAuthenticator() {
-        return new CaisseEpargneAuthenticator(
-                apiClient, instanceStorage, supplementalInformationProvider, persistentStorage);
+                                this.apiClient,
+                                this.supplementalInformationProvider,
+                                this.caisseEpargneStorage,
+                                this.bpceValidationHelper)));
     }
 }
