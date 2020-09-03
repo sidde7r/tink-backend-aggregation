@@ -1,1067 +1,520 @@
 
+REQUEST 1
+POST https://www.nordnet.se/api/2/login
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+
+username=<<anonymous>>&password=<<anonymous>>&service=MOBILE_IOS_2&country=SE&session_lang=en
+
+RESPONSE 1
+200
+Date: Thu, 03 Sep 2020 10:16:32 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+
+{"remaining":300,"session_key":"0598b1717772cd57a6856c2586350abd85a00940","expires_in":3600,"environment":"prod","country":"SE","private_feed":{"hostname":"priv.next.nordnet.se","port":443,"encrypted":true},"public_feed":{"hostname":"pub.next.nordnet.se","port":443,"encrypted":true}}
+
 REQUEST 2
+GET https://www.nordnet.se/oauth2/authorize?authType=signin&client_id=MOBILE_IOS_2&response_type=code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback
+Accept: text/plain,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+
+RESPONSE 2 SET AUTH
+307
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:32 GMT
+Transfer-Encoding: chunked
+Connection: keep-alive
+Location: https://classic.nordnet.se/oauth2/authorize?authType=signin&client_id=MOBILE_IOS_2&response_type=code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback
+
+
+REQUEST 3 MATCH AUTH
 GET https://classic.nordnet.se/oauth2/authorize?authType=signin&client_id=MOBILE_IOS_2&response_type=code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/json
-
-
-RESPONSE 2
-303
-Date: Fri, 17 Jul 2020 12:03:31 GMT
-Server: Apache-Coyote/1.1
-Content-Language: sv-SE
-Content-Length: 0
-Connection: Keep-Alive
-Content-Type: text/plain; charset=ISO-8859-1
-
-
-
-REQUEST 3
-GET https://classic.nordnet.se/api/2/authentication/eid/saml/request?eid_method=sbidAnother
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/json
-
+Accept: text/plain,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
 
 RESPONSE 3
-200
-Date: Fri, 17 Jul 2020 12:03:31 GMT
-cache-control: no-cache, no-store, must-revalidate
-content-type: application/json; charset=UTF-8
-expires: 0
-pragma: no-cache
-Vary: User-Agent
+303
+Date: Thu, 03 Sep 2020 10:16:31 GMT
+Server: Apache-Coyote/1.1
+P3P: CP="Nordnet does not have a P3P policy"
+Location: /mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
+Content-Language: sv-SE
+Content-Length: 0
+Set-Cookie: ENDPOINT_URL=%2Foauth2%2Fauthorize%3Fclient_id%3DMOBILE_IOS_2%26response_type%3Dcode%26redirect_uri%3Dnordnet-react%3A%2F%2Foauth2%2Fauthorize-callback; Path=/; Secure; HttpOnly
+Set-Cookie: responsive=true; Path=/; Secure
+Set-Cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
+Keep-Alive: timeout=5, max=100
 Connection: Keep-Alive
+Content-Type: text/plain; charset=ISO-8859-1
+Strict-Transport-Security: max-age=31536000
 
-{"request_url":"https://nneid.nordnet.se/gateway/nordnet.se/saml2/sso/browser?SAMLRequest=samlRequest"}
 
 REQUEST 4
-GET https://nneid.nordnet.se/gateway/nordnet.se/saml2/sso/browser?SAMLRequest=samlRequest
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/json
+GET https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
+Accept: text/plain,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
 
 
 RESPONSE 4
-302
-Date: Fri, 17 Jul 2020 12:03:32 GMT
-Cache-Control: no-cache, no-store
-Pragma: no cache
+200
+Date: Thu, 03 Sep 2020 10:16:32 GMT
+Server: Apache
+Content-Type: text/html; charset=ISO-8859-1
+Set-cookie: LOL=208d575e38fc7a432a01287f7c15e2a21c58e133; path=/; secure; HttpOnly
+Set-cookie: TUX-COOKIE=rd192o00000000000000000000ffff0a40c01fo80; path=/; Httponly
+Set-cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
+Vary: Accept-Encoding,User-Agent
+Keep-Alive: timeout=5, max=99
 Connection: Keep-Alive
-Location: https://dummyHost/dummyLocation
+Transfer-Encoding: chunked
+Strict-Transport-Security: max-age=31536000
 
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="Author" content="Nordnet Bank AB" />
+<meta name="description" content="Spara i aktier, fonder och till din pension hos Nordnet. Utan fasta avgifter och alltid till ett l�gt courtage. V�lkommen som kund!" />
+<meta property="og:description" content="Spara i aktier, fonder och till din pension hos Nordnet. Utan fasta avgifter och alltid till ett l�gt courtage. V�lkommen som kund!" />
+<meta property="og:title" content="Spara i aktier, fonder och till din pension - Nordnet" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.nordnet.se" />
+<meta property="og:image" content="https://www.nordnet.se/now/images/OG_Image_logo.jpg" />
+  <title>Login - Nordnet</title>
+</head>
+<body>
+
+  <div id="authentication-login"
+    data-error=""
+    data-intent="V&auml;lkommen till Nordnet! "
+    data-subclient=""
+    data-redirecturl="/oauth2/authorize?client_id=MOBILE_IOS_2&amp;response_type=code&amp;redirect_uri=nordnet-react://oauth2/authorize-callback"
+  ></div>
+
+  <style>
+    #old-browsers {
+      display: none;
+      font-size: 18px;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    #links {
+      display: block;
+      text-align: left;
+      width: 10%;
+      margin: auto;
+    }
+  </style>
+  <div id="old-browsers">
+    <p>
+      Din webbl�sare �r f�r�ldrad och �r en s�kerhetsrisk. D�rf�r st�ds den inte av Nordnet. <br /> Var v�nlig och uppdatera din webbl�sare till en nyare version.
+    </p>
+    <div id="links">
+      <a href="https://www.google.com/chrome/browser/desktop/index.html">Chrome</a>
+      <br />
+      <a href="https://www.mozilla.org/sv-SE/firefox/new/">Firefox</a>
+    </div>
+  </div>
+
+  <script src="/sc/bundle/vendor-bundle/4d35d7c4f4c7aa684adc50a885758f877cd49e3c.4/vendor.bundle.6.0.0.js"></script>
+  <script charset="UTF-8" src="/sc/authentication-login/init/base.js"></script>
+
+  <script>
+    (function(window, document) {
+      var appName = 'authentication-login';
+      var domElement = document.getElementById(appName);
+      if (domElement && window.Nordnet && window.Nordnet[appName]) {
+        window.Nordnet[appName](domElement);
+      } else {
+        document.getElementById("old-browsers").style.display = "block";
+      }
+    })(window, document);
+  </script>
+
+</body>
+</html>
 
 REQUEST 5
-GET https://dummyHost/dummyLocation
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/json
+POST https://classic.nordnet.se/api/2/login/anonymous
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+ntag: NO_NTAG_RECEIVED_YET
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+Referer: https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
+
 
 RESPONSE 5
 200
-Date: Fri, 17 Jul 2020 12:03:31 GMT
-Server: Apache
-Pragma: no-cache
-Content-Type: text/html;charset=UTF-8
-Connection: Keep-Alive
-Transfer-Encoding: chunked
-
-<!DOCTYPE html><html lang="sv"><head><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nordnet</title><link rel="icon" type="image/png" href="https://nneid.nordnet.se/std/resource/nordnet.se/nordnet_sbid/img/favicon_16x16.ico" sizes="16x16"><style type="text/css" media="all">.nordnet-body,.nordnet-container,.nordnet-header,.nordnet-header-image,.nordnet-message,.nordnet-panel{box-sizing:border-box}img{border:0}body,html{min-height:100%!important;height:auto!important}.nordnet-hidden{display:none}.nordnet-body{font-family:Verdana,Arial,sans-serif;height:100%;margin:0;padding:0;color:#2d2d2d}.nordnet-body-background{background-color:#f4f4f4}.nordnet-header{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;width:100%;height:48px;margin-bottom:70px;background-color:#000;box-shadow:0 2px 4px 2px rgba(0,0,0,.09)}.nordnet-container{width:100%;max-width:532px;margin:0 auto 16px;padding-bottom:16px}.nordnet-message{width:100%;border-radius:5px;background-color:#fafafa;margin-top:16px;margin-bottom:16px;padding:20px}.nordnet-message :first-child{margin-top:0}.nordnet-message :last-child{margin-bottom:0}.nordnet-message__header{font-size:16px}.nordnet-message__link{text-decoration:none;color:#0046ff!important}.nordnet-message__link:active,.nordnet-message__link:hover{color:#003fe6}.nordnet-panel{width:100%;background-color:#fff;box-shadow:0 2px 2px 0 rgba(0,0,0,.03)}@media (min-width:352px){.nordnet-header{margin-bottom:30px}.nordnet-container{padding-right:16px;padding-left:16px}}@media (min-width:564px){.nordnet-header{margin-bottom:70px}.nordnet-message{margin-top:32px;margin-bottom:70px}.nordnet-container{max-width:564px;margin-bottom:70px;padding-right:32px;padding-bottom:32px;padding-left:32px}}body,html{font-size:inherit!important;overflow:visible!important}.nordnet-panel>*{padding-left:20px!important;padding-right:20px!important}.nordnet-panel>:first-child{padding-top:20px!important}.nordnet-panel>:last-child{padding-bottom:20px!important}.nordnet-panel>.outer{padding:0!important}.nordnet-panel a,.nordnet-panel a:visited{text-decoration:none;color:#0046ff}.nordnet-panel a:active,.nordnet-panel a:focus,.nordnet-panel a:hover{text-decoration:underline;color:#003fe6}.nordnet-panel .outer{font-family:Verdana,Arial,sans-serif!important}.nordnet-panel .method,.nordnet-panel .outer{color:#2d2d2d!important}.nordnet-panel .method{border:none!important;background-color:#fff!important}.nordnet-panel .method .header{display:none!important}.nordnet-panel .content .heading{text-align:center!important}.nordnet-panel .message{font-weight:400!important;line-height:1.5!important}.nordnet-panel a.link{font-weight:400!important;text-decoration:none!important;color:#0046ff!important}.nordnet-panel a.link:active,.nordnet-panel a.link:hover{text-decoration:underline!important;color:#003fe6!important}.nordnet-panel .input-container form{text-align:left!important}.nordnet-panel .ok.button{border-radius:0!important;font-weight:400!important;background-color:#0046ff!important;color:#fff;text-decoration:none}.nordnet-panel .ok.button:active,.nordnet-panel .ok.button:hover{background-color:#003fe6!important}.nordnet-panel .button.disabled{opacity:1!important;background-color:#d7d7d2!important}.nordnet-panel .button.disabled:hover{background-color:#d7d7d2!important}.nordnet-panel input.id-number-input{text-transform:lowercase!important;border:1px solid #bcbcb6!important;box-shadow:none!important;background-image:url(https://nneid.nordnet.se/std/resource/nordnet.se/nordnet_sbid/img/bankid_logo.32x30.png);background-size:auto 30px!important;background-repeat:no-repeat!important;background-position:10px 50%!important;padding-left:50px!important;padding-top:10px;padding-bottom:10px;width:100%!important;box-sizing:border-box!important;outline:0!important}@media (-webkit-min-device-pixel-ratio:2),(min-resolution:2dppx),(min-resolution:192dpi),(min-device-pixel-ratio:2){.nordnet-panel input.id-number-input{background-image:url(https://nneid.nordnet.se/std/resource/nordnet.se/nordnet_sbid/img/bankid_logo.32x30.2x.png)}}.nordnet-panel input.text-input.id-number-input:focus{border-color:#0046ff!important}.nordnet-panel input.text-input.id-number-input:invalid{border-bottom-color:#ff1900!important}.nordnet-panel input.text-input.id-number-input:valid{border-bottom-color:#00d200!important}.nordnet-panel input.text-input.id-number-input:focus:invalid{border-color:#ff1900!important}.nordnet-panel input.text-input.id-number-input:focus:valid{border-color:#00d200!important}.nordnet-panel .inprocess-message{font-size:16px!important}.nordnet-panel .method{height:360px!important}@media (min-width:564px){.nordnet-panel .method{height:330px!important}}.nordnet-panel .current{padding-top:0!important;padding-right:0!important;padding-left:0!important}.nordnet-panel .current .content>*{padding-right:20px!important;padding-left:20px!important}.nordnet-panel .content .heading{font-family:"Century Gothic",Arial,sans-serif!important;font-size:28px!important;font-weight:700!important;width:100%!important;padding:16px 0!important;color:#333!important;border-radius:5px 5px 0 0!important;background-color:#fff!important}[data-l10n-id$=idNumberLabel]{display:none!important}.nordnet-panel .left>a{font-size:inherit!important}.nordnet-panel .content .reminder{font-size:16px!important;font-weight:400!important;line-height:1.5!important;box-sizing:border-box!important;width:100%!important;margin-top:16px!important;padding:8px!important;text-align:left!important;background:#F5F5F6!important;border-left:4px solid #FF1900!important;color:#000!important}</style><meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui"><meta name="google" content="notranslate"><link rel="stylesheet" type="text/css" href="/plugins/sbid-2014/v4.0/css/signicat.min.css" /><style>#header-logo {  } #header { background-color: #333333; }</style>
-
-<!-- nn release ref: 0fb5569 --></head><body id="nordnet-body" class="nordnet-body"><div class="nordnet-header"><a href="https://www.nordnet.se" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="74 375 426 46" class="register" width="200" height="20"><style type="text/css">.st0 {
-
-            fill: #ffffff;
-
-          }
-
-
-
-          .st1 {
-
-            fill: #ffffff;
-
-            stroke: #ffffff;
-
-            stroke-width: 0.4675;
-
-            stroke-miterlimit: 13.87;
-
-          }</style><polygon class="st0" points="230.8 375 176.4 419.9 202.9 419.9 257.3 375 "></polygon><polygon class="st0" points="128.8 375 74.4 419.9 100.9 419.9 155.3 375 "></polygon><rect x="155.3" y="375" class="st0" width="21.1" height="45"></rect><path class="st1" d="M316.8 374.9v45.1h-9.5L296 401.7c-3.2-5.1-6.3-10.1-9-14.9 0.3 5.3 0.4 11.2 0.4 17.5v15.6h-8.6v-45.1h9.7l12 19.2c2.9 4.5 5.7 9 8.1 13.4 -0.3-4.8-0.3-10.1-0.3-16.3v-16.4H316.8z"></path><path class="st1" d="M353.8 403.7c0 10.3-6.9 17.3-16.8 17.3 -9.9 0-16.8-7-16.8-17.3s6.9-17.3 16.8-17.3C346.8 386.4 353.8 393.4 353.8 403.7zM328.6 403.7c0 6.3 3.4 10.3 8.4 10.3 5 0 8.4-4 8.4-10.3 0-6.2-3.4-10.3-8.4-10.3C331.9 393.4 328.6 397.5 328.6 403.7z"></path><path class="st1" d="M376.9 387.3v7.6c-1.4-0.2-2.6-0.3-3.7-0.3 -5.3 0-8.1 3.5-8.1 9.5v15.9h-8.3v-32.4h7.6v4.9c1.7-3.2 4.3-5.4 8.4-5.4C374.5 387 375.9 387.1 376.9 387.3z"></path><path class="st1" d="M409.3 374.9v45.1h-7.7v-4.3c-2.2 3.3-5.6 5.3-10.5 5.3 -8.3 0-14.3-6.7-14.3-17.1 0-10.5 6.2-17.2 14.5-17.2 4.4 0 7.6 1.5 9.8 4.3v-15.9H409.3zM401.3 403.7c0-6.3-3.6-10.1-8.1-10.1 -4.8 0-8.1 3.9-8.1 10.1 0 6.1 3 10.2 7.9 10.2C397.9 413.9 401.3 410 401.3 403.7z"></path><path class="st1" d="M443.1 397.7v22.2h-8.3v-19.9c0-4.2-2.2-6.5-6.1-6.5 -3.8 0-6.5 2.7-6.5 6.8v19.6H414v-32.4h7.6v3.7c2-2.9 5.3-4.8 9.8-4.8C439 386.4 443.1 391.1 443.1 397.7z"></path><path class="st1" d="M477.6 405.8h-23.4c0.6 4.8 3.5 8.1 8.6 8.1 2.8 0 5.6-1 6.8-4.4h7.9c-1.7 8.1-7.9 11.4-14.5 11.4 -10.5 0-16.7-6.7-16.7-17.1 0-10 6-17.5 16.3-17.5 9.8 0 15.2 6.2 15.2 16.3C477.8 403.7 477.7 405.2 477.6 405.8zM454.5 400.1h15.4c-0.3-4.4-2.9-7.2-7.4-7.2C458 392.9 455.4 395.8 454.5 400.1z"></path><path class="st1" d="M491.5 393.6v16.6c0 2.6 1.3 3.2 3.3 3.2 1 0 2.1-0.1 3.9-0.5v6.9c-2.3 0.6-4.5 0.9-6.1 0.9 -6.9 0-9.3-3-9.3-9v-18h-5.8v-6.2h5.8v-9.9h8.3v9.9h7.7v6.2H491.5z"></path></svg></a></div><div class="nordnet-container"><div class="nordnet-panel">
-
-
-
-    <!-- OUTER -->
-
-    <div class="outer id-method-sbid-old">
-
-        <!-- METHOD -->
-
-        <div id="method" class="method hidden">
-
-
-
-            <div class="header" id="header">
-
-                <img id="header-logo" class="logo" src="/plugins/sbid-2014/v4.0/img/signicat_logo_plain.svg" alt="Logo"/>
-
-
-
-                <div class="language-select" data-bind="foreach: supportedLanguages">
-
-                    <a class="link button language" data-bind="text: $data.toUpperCase(), click: $parent.setLanguage, css: { selected: $parent.currentLanguage() == $data }"></a>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="body" data-bind="template: { name: 'current-template', data: currentStep, afterRender: afterRender }"></div>
-
-
-
-            <div class="footer">
-
-                <div class="left">
-
-                    <a data-l10n-id="sbid2014-help" class="link button keep-distance-right context-help" href="http://support.bankid.com/supportbankidcom/" target="_blank" tabindex="-1">Help</a>
-
-                </div>
-
-                <div class="right">
-
-                    <a data-l10n-id="sbid2014-cancel" class="link button keep-distance-right" data-bind="click: cancel, visible: canCancel">Cancel</a>
-
-                    <a data-l10n-id="sbid2014-continue" class="ok large-button button" data-bind="click: gotoNext, visible: !canFinish(), css: { disabled: !canContinue() }">Continue &raquo;</a>
-
-                    <a data-l10n-id="sbid2014-continue" class="ok large-button button" data-bind="click: dismiss, visible: isInfo()">Continue &raquo;</a>
-
-                </div>
-
-                <div class="clear"></div>
-
-            </div>
-
-
-
-        </div>
-
-        <!-- END METHOD -->
-
-
-
-    </div>
-
-    <!-- END OUTER -->
-
-
-
-    <!-- PARENT TEMPLATE -->
-
-    <div id="current-template" class="template">
-
-        <div class="current" data-bind="template: { name: template }"></div>
-
-    </div>
-
-    <!-- END PARENT TEMPLATE -->
-
-
-
-    <!-- DEVICE QUESTION TEMPLATE -->
-
-    <div id="device-question-template" class="template">
-
-        <div class="content">
-
-            <h2 data-bind="l10n: deviceQuestionHeadingL10n" class="heading sbid2014-deviceQuestionHeading">sbid2014-deviceQuestionHeading</h2>
-
-            <h4 class="message">
-
-                <span data-bind="l10n: logInUsingL10n" class="sbid2014-logInUsing">Would you like to log in using</span>
-
-                <a class="link" data-bind="l10n: localBankIdL10n, click: chooseThisDevice">BankID on this computer</a>
-
-                <span data-l10n-id="sbid2014-or">or</span>
-
-                <a class="link" data-bind="l10n: mobileBankIdL10n, click: chooseAnotherDevice">Mobile BankID</a><span data-l10n-id="sbid2014-question">?</span>
-
-            </h4>
-
-        </div>
-
-    </div>
-
-    <!-- DEVICE QUESTION TEMPLATE -->
-
-
-
-    <!-- ENTER ID NUMBER TEMPLATE -->
-
-    <div id="id-number-template" class="template">
-
-        <div class="content">
-
-            <h2 data-bind="l10n: idNumberHeadingL10n" class="heading sbid2014-idNumberHeading">sbid2014-idNumberHeading</h2>
-
-            <h4 data-l10n-id="sbid2014-idNumberMessage" class="message">Please enter your personal identity number</h4>
-
-
-
-            <div class="input-container">
-
-                <form data-bind="submit: $parent.gotoNext">
-
-                            <span>
-
-                                <label data-l10n-id="sbid2014-idNumberLabel" class="text-input">ID number:</label>
-
-                                <input data-l10n-id="sbid2014-idNumberInput"
-
-                                       placeholder=""
-
-                                       name="text-input"
-
-                                       class="text-input id-number-input"
-
-                                       type="tel"
-
-                                       autocomplete="off"
-
-                                       required
-
-                                       pattern="[-+\d]{10,13}"
-
-                                       maxlength="13"
-
-                                       data-bind="css: {'input-valid': isValid}, value: idNumber, valueUpdate: ['keyup', 'propertychange', 'input']"
-
-                                       autofocus/>
-
-                            </span>
-
-                </form>
-
-                <p class="reminder" data-bind="visible: showReminder" data-l10n-id="sbid2014-idNumberInputReminder"></p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- ENTER ID NUMBER TEMPLATE -->
-
-
-
-    <!-- START TEMPLATE -->
-
-    <div id="start-template" class="template">
-
-        <div class="content">
-
-            <h2 data-bind="l10n: startHeadingL10n" class="heading sbid2014-startHeading">sbid2014-startHeading</h2>
-
-            <h4 class="message"><span data-l10n-id="sbid2014-startMessage"></span></h4>
-
-
-
-            <div class="spin-parent" data-bind="visible: !qrCodeVisible()">
-
-                <img class="spinner" data-bind="css: {'hidden': hideSpinner}" src="/plugins/sbid-2014/v4.0/img/spin.gif" alt=""/>
-
-
-
-                <div class="launch keep-distance-top">
-
-                    <p class="inprocess-message keep-distance-top" data-bind="l10n: inProcessMessageL10n"></p>
-
-                    <h4>
-
-                        <a class="ok large-button button blocked undecorated launcher keep-distance-top"
-
-                           href=""
-
-                           data-l10n-id="sbid2014-RFA1"
-
-                           data-bind="attr: {href: launchUrl},
-
-                                      click: launchManually,
-
-                                      css: { hidden: hideLaunchButton, disabled: manualLaunchAttempted }">
-
-                        </a>
-
-                    </h4>
-
-
-
-                    <div class="launch-frame"></div>
-
-                </div>
-
-            </div>
-
-            <div data-bind="visible: qrCodeVisible">
-
-                <p class="inprocess-message keep-distance-top" data-bind="l10n: inProcessMessageL10n"></p>
-
-                <div class="qr-code" data-bind="qrcode: qrCode, width: 120, height: 120, color: '#000000'"></div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- START TEMPLATE -->
-
-
-
-    <!-- COLLECT TEMPLATE -->
-
-    <div id="collect-template" class="template">
-
-        <div class="content">
-
-            <h2 data-bind="l10n: collectHeadingL10n" class="heading sbid2014-collectHeading">sbid2014-collectHeading</h2>
-
-            <h4 class="message"><span data-l10n-id="sbid2014-collectMessage"></span></h4>
-
-
-
-            <div class="spin-parent">
-
-                <img class="spinner" data-bind="css: {'hidden': hideSpinner}" src="/plugins/sbid-2014/v4.0/img/spin.gif" alt=""/>
-
-
-
-                <div class="launch keep-distance-top">
-
-                    <p class="inprocess-message keep-distance-top" data-bind="l10n: inProcessMessageL10n"></p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- COLLECT TEMPLATE -->
-
-
-
-    <!-- FINISH TEMPLATE -->
-
-    <div id="finish-template" class="template">
-
-        <div class="content">
-
-            <h2 data-bind="l10n: finishHeadingL10n" class="heading sbid2014-finishHeading">sbid2014-finishHeading</h2>
-
-            <h4 class="message"><span data-l10n-id="sbid2014-finishMessage"></span></h4>
-
-
-
-            <div class="spin-parent">
-
-                <img class="spinner" data-bind="css: {'hidden': hideSpinner}" src="/plugins/sbid-2014/v4.0/img/spin.gif" alt=""/>
-
-
-
-                <div class="keep-distance-top">
-
-                    <p class="inprocess-message keep-distance-top" data-bind="l10n: inProcessMessageL10n"></p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- FINISH TEMPLATE -->
-
-
-
-    <!-- INFO TEMPLATE -->
-
-    <div id="info-template" class="template">
-
-        <div class="content">
-
-            <h2 data-l10n-id="sbid2014-infoHeading" class="heading">Instructions</h2>
-
-            <div class="instructions-container">
-
-                <table>
-
-                    <tbody>
-
-                    <tr>
-
-                        <td class="list-nr">1</td>
-
-                        <td data-l10n-id="sbid2014-infoStep1" class="list-instruction">Read the document carefully.</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td class="list-nr">2</td>
-
-                        <td data-l10n-id="sbid2014-infoStep2" class="list-instruction">When you have read and understood the document, press the &ldquo;Sign&rdquo;-button at the bottom to continue.</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td class="list-nr">3</td>
-
-                        <td data-l10n-id="sbid2014-infoStep3" class="list-instruction">Follow the instructions to sign and submit the document.</td>
-
-                    </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- INFO TEMPLATE -->
-
-
-
-    <script type="application/l10n">
-
-            {"default_locale":"sv","locales":{"sv":{"sbid2014-finishMessage":{"innerHTML":""},"sbid2014-question":{"innerHTML":"?"},"sbid2014-collectHeading-sign":{"innerHTML":"Underteckna"},"sbid2014-finishHeading":{"innerHTML":"Legitimering"},"sbid2014-RFT10":{"innerHTML":"If the user selects to use Mobile BankID only, the certificatePolicies condition must be set to 1.2.752.78.1.5"},"sbid2014-failedToStart":{"innerHTML":"BankID programmet startade inte inom tidsgränsen."},"sbid2014-idNumberInput":{"title":"ååååmmddxxxx","placeholder":"ÅÅÅÅMMDDNNNN"},"sbid2014-idNumberInputReminder":{"innerHTML":"Felaktigt format. Personnummer anges ååååmmddxxxx."},"sbid2014-infoStep1":{"innerHTML":"Läs dokumentet noga."},"sbid2014-noPdfOnMobileHeading":{"innerHTML":"Underteckna"},"sbid2014-infoStep3":{"innerHTML":"Följ instruktionerna för att signera och skicka in dokumentet."},"sbid2014-RFA17B":{"innerHTML":"Misslyckades att läsa av QR koden. Starta BankID-appen och läs av QR koden. Om du inte har BankID-appen måste du installera den och hämta ett BankID hos din internetbank. Installera appen från din appbutik eller https://install.bankid.com."},"sbid2014-infoStep2":{"innerHTML":"När du har läst och förstått dokumentet, tryck på på 'Signera'-knappen längst ned för att fortsätta."},"sbid2014-RFA17A":{"innerHTML":"BankID verkar inte finnas i din dator eller telefon. Installera det och hämta ett BankID hos din bank. Installera programmet från install.bankid.com."},"sbid2014-RFA9":{"innerHTML":"Skriv in din säkerhetskod i BankID."},"sbid2014-RFA8":{"innerHTML":"BankID svarar inte. Kontrollera att det är startat och att du har internetanslutning. Försök sedan igen."},"sbid2014-RFA5":{"innerHTML":"Internt tekniskt fel. Försök igen."},"sbid2014-RFA6":{"innerHTML":"Åtgärden avbruten."},"sbid2014-onMobileBankId-mobile":{"innerHTML":"BankID på den här enheten"},"sbid2014-RFA3":{"innerHTML":"Åtgärden avbruten. Försök igen."},"sbid2014-RFA1":{"innerHTML":"Starta BankID"},"sbid2014-RFA2":{"innerHTML":"Du har inte BankID-appen installerad. Kontakta din bank."},"sbid2014-collectHeading":{"innerHTML":"Legitimering"},"sbid2014-collectMessage":{"innerHTML":""},"sbid2014-idNumberLabel":{"innerHTML":"Personnr:"},"sbid2014-mobileBankId":{"innerHTML":"Mobilt BankID"},"sbid2014-scanQrCode":{"innerHTML":"Starta BankID-appen och välj alternativet för QR-kod. Scanna sedan koden nedan."},"sbid2014-desktopBankId-mobile":{"innerHTML":"Har du BankID på en annan enhet?"},"sbid2014-logInUsing-sign":{"innerHTML":"Vill du skriva under med"},"sbid2014-logInUsing":{"innerHTML":"Vill du logga in med"},"sbid2014-help":{"innerHTML":"Hjälp"},"sbid2014-cancel":{"innerHTML":"Avbryt"},"sbid2014-invalidIdNumber":{"innerHTML":"Det angivna personnummeret är inte giltigt."},"sbid2014-onMobileBankId":{"innerHTML":"BankID på mobil"},"sbid2014-startHeading-sign":{"innerHTML":"Underteckna"},"sbid2014-continue":{"innerHTML":"Fortsätt"},"sbid2014-manualLaunch-anotherDevice":{"innerHTML":"Starta BankID"},"sbid2014-RFT8":{"innerHTML":"RP must contact BankID's web service API from RP's backend server. RP must NOT contact BankID's web service API from RP's client app."},"sbid2014-RFT9":{"innerHTML":"RP should always use the latest version of the web service API, see Information regarding the Web Service API."},"sbid2014-RFA16":{"innerHTML":"Det BankID du försöker använda är för gammalt eller spärrat. Använd ett annat BankID eller hämta ett nytt hos din bank."},"sbid2014-RFT6":{"innerHTML":"Collect should be called every two seconds and must not be called more frequent than once per second."},"sbid2014-RFT7":{"innerHTML":"RP should display a progress indicator in its web app when waiting for the final response from Collect."},"sbid2014-RFA18":{"innerHTML":"Starta BankID"},"sbid2014-RFT4":{"innerHTML":"The ID number in the RP web service API must be 12 characters (YYYYMMDDNNNN)."},"sbid2014-idNumberHeading-sign":{"innerHTML":"Underteckna"},"sbid2014-RFT5":{"innerHTML":"When Collect returns COMPLETE RP shall read and store the parameters signature, userInfo and ocspResponse. RP does not need to verify the signature. BankID verifies the signature."},"sbid2014-RFT2":{"innerHTML":"When the BankID app is launched with a URL the URL must not exceed 2000 characters."},"sbid2014-startHeading":{"innerHTML":"Legitimering"},"sbid2014-RFT3":{"innerHTML":"When the BankID app is launched with a URL the redirect URL should use HTTPS."},"sbid2014-searchingForBankid":{"innerHTML":"Söker efter BankID. Vänligen vänta."},"sbid2014-startMessage":{"innerHTML":""},"sbid2014-RFT1":{"innerHTML":"When the BankID app is launched with a URL the content of the request parameter redirect must be UTF-8 and URL encoded."},"sbid2014-desktopBankId-continue":{"innerHTML":"Klicka här för att fortsätta"},"sbid2014-idNumberHeading":{"innerHTML":"Legitimering"},"sbid2014-RFA13":{"innerHTML":"Försöker starta BankID."},"sbid2014-loginChoice":{"innerHTML":"Välj hur du vill logga in"},"sbid2014-RFA12":{"innerHTML":"Internt tekniskt fel. Uppdatera BankID och försök igen."},"sbid2014-RFA15":{"innerHTML":"Du har inget BankID som går att använda för den här inloggningen/underskriften på den här enheten. Om du inte har något BankID kan du hämta ett hos din Bank."},"sbid2014-RFA14":{"innerHTML":"Du har inget BankID som går att använda för den här underskriften på den här enheten. Om du inte har något BankID kan du hämta ett hos din Bank. Om du har ett BankID på en annan enhet kan du starta ditt BankID där."},"sbid2014-infoHeading":{"innerHTML":"Hur du signerar detta dokument"},"sbid2014-mobileBankId-mobile":{"innerHTML":"BankID på en annan enhet"},"sbid2014-tryAutoLaunch":{"innerHTML":"Kontrollerar om BankID är installerat på denna enhet"},"sbid2014-pleaseWait":{"innerHTML":"Vänligen vänta"},"sbid2014-deviceQuestionHeading-sign":{"innerHTML":"Underteckna"},"sbid2014-finishHeading-sign":{"innerHTML":"Underteckna"},"sbid2014-desktopBankId":{"innerHTML":"BankID på dator"},"sbid2014-idNumberMessage":{"innerHTML":"Ange personnummer (12 siffror):"},"sbid2014-or":{"innerHTML":"eller med ett"},"sbid2014-manualLaunch":{"innerHTML":"Tryck på knappen för att manuellt starta BankID"},"sbid2014-localBankId":{"innerHTML":"BankID på den här datorn"},"sbid2014-localBankId-mobile":{"innerHTML":"BankID på den här enheten"},"sbid2014-signText":{"innerHTML":"Jag har läst och förstått dokumentet '{0}' och accepterar och godkänner med min signatur dess innehåll."},"sbid2014-technicalError":{"innerHTML":"Ett tekniskt fel har tyvärr uppstått."},"sbid2014-deviceQuestionHeading":{"innerHTML":"Legitimering"}}}}
-
-        </script>
-
-
-
-    <script>
-
-        var signicat = signicat || { };
-
-        signicat.idNumber = '';
-
-        signicat.askForDevice = false;
-
-        signicat.assumeRemoteDevice = true;
-
-        signicat.assumeRemoteDeviceOnIos = false;
-
-        signicat.useAnotherDevice = signicat.assumeRemoteDevice;
-
-        signicat.autoLaunch = false;
-
-        signicat.identificationMode = 'PERSONAL_NUMBER';
-
-        signicat.showSpinner = true;
-
-        signicat.serviceUrl = 'https://nneid.nordnet.se/std/method/nordnet.se/f655ea8720ff45d69de246bb62ef489988cc58a0c82511ea8782005056ac05cf/';
-
-        signicat.target = decodeURIComponent('https%3A%2F%2Fnneid.nordnet.se%2Fgateway%2Fnordnet.se%2Fsaml2%2Fproxy');
-
-        signicat.supportedLanguages = ["sv"];
-
-        signicat.currentLanguage = 'sv';
-
-        signicat.sbidRedirectUrl = decodeURIComponent('');
-
-        signicat.useIntentForChromeOnAndroid = true;
-
-        signicat.usePostMessage = false;
-
-        signicat.sign = false;
-
-        signicat.info = false;
-
-        signicat.ticket = '';
-
-        signicat.server = '';
-
-        signicat.transTokenEnabled = false;
-
-        signicat.transToken = '';
-
-        signicat.returnedToCollect = false;
-
-        signicat.collectInterval = 3000;
-
-
-
-        signicat.iosRedirectMode = 'DEFAULT_BROWSER';
-
-        signicat.iosRegex = 'iPhone|iPad';
-
-        signicat.iosSafariRegex = 'Version(.*?)Safari';
-
-        signicat.androidRegex = 'Android';
-
-        signicat.androidChromeRegex = 'Chrome';
-
-    </script>
-
-
-
-    <script src="/plugins/sbid-2014/v4.0/js/sbid.min.js"></script>
-
-
-
-    <script>
-
-        var signicat = signicat || { };
-
-            // These properties are not touched by Grunt
-
-        signicat.orderRequest = { };
-
-        signicat.platformDetector = new PlatformDetector(
-
-                navigator.userAgent,
-
-                signicat.iosRedirectMode,
-
-                signicat.iosRegex,
-
-                signicat.iosSafariRegex,
-
-                signicat.androidRegex,
-
-                signicat.androidChromeRegex);
-
-        signicat.transAuth = new TransAuth(signicat.transTokenEnabled);
-
-        if (signicat.transTokenEnabled) {
-
-            signicat.transAuth.withTransToken(signicat.transToken);
-
-        }
-
-        signicat.xhr = new Xhr(signicat.transAuth);
-
-        signicat.sbid = new SbidProxy(signicat.serviceUrl, signicat.xhr);
-
-        signicat.msgKeys = new UserMessageMapper(document.webL10n);
-
-        signicat.modernUI = false;
-
-        window.l10nko.init();
-
-    </script>
-
-
-
-</div></div><script>;(function init(window) { "use strict";function turnOnBackground(){console.log("nordnet :: will add background class for body");var n=window.document.getElementById("nordnet-body");n.className+=" nordnet-body-background"}var console=window.console||{log:function(){}};window.addEventListener&&window.addEventListener("load",turnOnBackground,!1); })(window);</script></body></html>
-
-REQUEST 6
-POST https://nneid.nordnet.se/std/method/nordnet.se/f655ea8720ff45d69de246bb62ef489988cc58a0c82511ea8782005056ac05cf/order
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/json
-
-
-RESPONSE 6 SET COLLECT
-200
-Date: Fri, 17 Jul 2020 12:03:31 GMT
-Server: Apache
-Content-Type: application/json;charset=UTF-8
-Content-Length: 242
-Connection: Keep-Alive
-
-{"orderRef":"655197c1-f6a1-4b9c-acaf-5f1e09d36096","autoStartToken":"0deeb4fd-a637-4fbb-aaa7-ffa265e556ea","collectUrl":"https://nneid.nordnet.se/std/method/nordnet.se/f655ea8720ff45d69de246bb62ef489988cc58a0c82511ea8782005056ac05cf/collect"}
-
-REQUEST 7 MATCH COLLECT
-POST https://nneid.nordnet.se/std/method/nordnet.se/f655ea8720ff45d69de246bb62ef489988cc58a0c82511ea8782005056ac05cf/collect
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/json
-
-RESPONSE 7 SET COLLECT_1
-200
-Date: Fri, 17 Jul 2020 12:03:32 GMT
-Server: Apache
-Content-Type: application/json;charset=UTF-8
-Connection: Keep-Alive
-
-{"progressStatus":"OUTSTANDING_TRANSACTION"}
-
-REQUEST 8 MATCH COLLECT_1
-POST https://nneid.nordnet.se/std/method/nordnet.se/f655ea8720ff45d69de246bb62ef489988cc58a0c82511ea8782005056ac05cf/collect
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/json
-
-
-RESPONSE 8 SET COLLECT_2
-200
-Date: Fri, 17 Jul 2020 12:03:34 GMT
-Server: Apache
-Content-Type: application/json;charset=UTF-8
-Connection: Keep-Alive
-
-{"progressStatus":"USER_SIGN"}
-
-REQUEST 9 MATCH COLLECT_2
-POST https://nneid.nordnet.se/std/method/nordnet.se/f655ea8720ff45d69de246bb62ef489988cc58a0c82511ea8782005056ac05cf/collect
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/json
-
-
-RESPONSE 9
-200
-Date: Fri, 17 Jul 2020 12:03:36 GMT
-Server: Apache
-Content-Type: application/json;charset=UTF-8
-Content-Length: 166
-Connection: Keep-Alive
-
-{"progressStatus":"COMPLETE","completeUrl":"https://nneid.nordnet.se/std/method/nordnet.se/f655ea8720ff45d69de246bb62ef489988cc58a0c82511ea8782005056ac05cf/complete"}
-
-REQUEST 10
-POST https://nneid.nordnet.se/std/method/nordnet.se/f655ea8720ff45d69de246bb62ef489988cc58a0c82511ea8782005056ac05cf/complete
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/json
-
-{"orderRef":"655197c1-f6a1-4b9c-acaf-5f1e09d36096"}
-
-RESPONSE 10
-200
-Date: Fri, 17 Jul 2020 12:03:37 GMT
-Server: Apache
-Pragma: no-cache
-Content-Type: text/html;charset=UTF-8
-Connection: Keep-Alive
-Transfer-Encoding: chunked
-
-<!DOCTYPE HTML>
-
-<html>
-
-<head>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <style>
-
-        html, body {
-
-            height:100%;
-
-            width:100%;
-
-            margin:0;
-
-            -webkit-font-smoothing:antialiased;
-
-        }
-
-        h4 {
-
-            color:#777;
-
-            font-family:helvetica, arial, myriad, sans-serif;
-
-        }
-
-        .circle-border, .circle-behind {
-
-            width:70px;
-
-            height:70px;
-
-            display: inline-block;
-
-            background-color:transparent;
-
-            border-right:8px solid #999;
-
-            border-left:8px solid transparent;
-
-            border-top:8px solid transparent;
-
-            border-bottom:8px solid transparent;
-
-            border-radius:150px;
-
-            -webkit-animation:square-loader 1.5s infinite forwards linear;
-
-            -moz-animation:square-loader 1.5s infinite forwards linear;
-
-            animation:square-loader 1.5s infinite forwards linear;
-
-            position: absolute;
-
-            left: 0;
-
-            top: 0;
-
-        }
-
-
-
-        .circle-behind {
-
-            -webkit-animation: none;
-
-            -moz-animation: none;
-
-            animation: none;
-
-            border:8px solid #f9f9f9;
-
-            box-shadow: 1px 1px 2px rgba(10,0,0,0.1);
-
-        }
-
-
-
-        @-moz-keyframes square-loader {
-
-            0% {-moz-transform: rotate(0deg);transform: rotate(0deg);}
-
-            100% {-moz-transform: rotate(360deg);transform: rotate(360deg);}
-
-        }
-
-
-
-        @-webkit-keyframes square-loader {
-
-            0% {-webkit-transform: rotate(0deg);transform: rotate(0deg);}
-
-            100% {-webkit-transform: rotate(360deg);transform: rotate(360deg);}
-
-        }
-
-
-
-        @keyframes square-loader {
-
-            0% {-webkit-transform: rotate(0deg);transform: rotate(0deg);}
-
-            100% {-webkit-transform: rotate(360deg);transform: rotate(360deg);}
-
-        }
-
-
-
-        .centered-wrapper {
-
-            position: absolute;
-
-            height:100%;
-
-            width:100%;
-
-            top:0;
-
-            left:0;
-
-            background-color:#f2f2f2;
-
-        }
-
-
-
-        .inner-wrapper {
-
-            top:50%;
-
-            left:50%;
-
-            position: absolute;
-
-            margin-top:-43px;
-
-            margin-left:-43px;
-
-        }
-
-    </style>
-
-</head>
-
-<body>
-
-<div class="centered-wrapper">
-
-    <div class="circlespinner inner-wrapper">
-
-        <div class="circle-behind"></div>
-
-        <div class="circle-border"></div>
-
-    </div>
-
-</div>
-
-<form id="responseForm" class="sig-saml-form" method="POST" action="https://nneid.nordnet.se/gateway/nordnet.se/saml2/proxy"><input type="hidden" name="SAMLResponse" value="samlResponseValue"><input type="hidden" name="TARGET" value="https://nneid.nordnet.se/gateway/nordnet.se/saml2/proxy"><NOSCRIPT><input type="submit" value="Gå vidare"></NOSCRIPT></form><script type="text/javascript">window.onload = document.forms['responseForm'].submit();</script>
-
-</body>
-
-</html>
-
-
-REQUEST 11
-POST https://nneid.nordnet.se/gateway/nordnet.se/saml2/proxy
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/x-www-form-urlencoded
-
-SAMLResponse=samlResponseValue&TARGET=https%3A%2F%2Fnneid.nordnet.se%2Fgateway%2Fnordnet.se%2Fsaml2%2Fproxy
-
-RESPONSE 11
-302
-Date: Fri, 17 Jul 2020 12:03:38 GMT
-Server: Apache
-Content-Length: 0
-Connection: Keep-Alive
-Location: https://dummyHost/dummyEndpoint?SAMLart=dummySAMLart
-
-
-REQUEST 12
-POST https://classic.nordnet.se/api/2/login/anonymous
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Referer: dummySAMLart
-Content-Type: application/json
-
-
-RESPONSE 12
-200
-Date: Fri, 17 Jul 2020 12:03:38 GMT
+Date: Thu, 03 Sep 2020 10:16:32 GMT
+Server: Nordnet API
 cache-control: no-cache, no-store, must-revalidate
 content-type: application/json; charset=UTF-8
 expires: 0
-ntag: dummyNtag
+ntag: 8A83DC013C2CA873E63D4278655F3E
+pragma: no-cache
+set-cookie: NOW=181fcd9bcb356a1df446ff40a7a45116b16c3f5c; Version=1; Expires=Mon, 07-Sep-2020 14:16:32 GMT; Max-Age=360000; Path=/; SecureOnly; SameSite=None
+set-cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
 Vary: Accept-Encoding,User-Agent
+Keep-Alive: timeout=5, max=98
 Connection: Keep-Alive
+Strict-Transport-Security: max-age=31536000
 
-{"expires_in":300,"environment":"prod","country":"SE","session_type":"anonymous","logged_in":true,"lang":"sv","session_id":"842de2433b94b09f672296d6dd9659e01ea73699"}
+{"expires_in":300,"environment":"prod","country":"SE","session_type":"anonymous","logged_in":true,"lang":"sv","session_id":"181fcd9bcb356a1df446ff40a7a45116b16c3f5c"}
 
-REQUEST 13
-POST https://classic.nordnet.se/api/2/authentication/eid/saml/artifact
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Content-Type: application/json
 
-{"artifact":"dummySAMLart"}
+REQUEST 6
+POST https://classic.nordnet.se/api/2/authentication/eid/se/bankid/start
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+ntag: 8A83DC013C2CA873E63D4278655F3E
+Referer: https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
 
-RESPONSE 13
+national_registration_number=199901010000
+
+RESPONSE 6
 200
-Date: Fri, 17 Jul 2020 12:03:37 GMT
+Date: Thu, 03 Sep 2020 10:16:32 GMT
+Server: Nordnet API
 cache-control: no-cache, no-store, must-revalidate
 content-type: application/json; charset=UTF-8
 expires: 0
 pragma: no-cache
 Vary: Accept-Encoding,User-Agent
+Set-Cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
+Keep-Alive: timeout=5, max=97
 Connection: Keep-Alive
+Strict-Transport-Security: max-age=31536000
+
+{"auto_start_token":"727fb6ea-580d-4d36-96f0-52c18069daa8","order_ref":"da39991b-ecea-45fc-9800-b484dc01b01b"}
+
+
+REQUEST 10
+POST https://classic.nordnet.se/api/2/authentication/eid/se/bankid/poll
+Content-Type: application/json
+Accept: application/json
+ntag: 8A83DC013C2CA873E63D4278655F3E
+
+{"order_ref":"da39991b-ecea-45fc-9800-b484dc01b01b"}
+
+
+RESPONSE 10
+200
+Date: Thu, 03 Sep 2020 10:16:38 GMT
+Server: Nordnet API
+cache-control: no-cache, no-store, must-revalidate
+content-type: application/json; charset=UTF-8
+expires: 0
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+pragma: no-cache
+set-cookie: NN-JWT=eyJraWQiOiJhM2psbms2Wnp6MjNjVmJERnlSMXdUVXZPQm1lbEdMa0tTUTVmOWFPU1o4IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJ6aGFuZ2ZhbiIsImF1ZCI6InByb2QiLCJhdXoiOiJ7XCJjbm9cIjo5MDA0OTAxNzgsXCJhY2NcIjpbe1wiYW5vXCI6MTYzMjYzODEsXCJhaWRcIjozfSx7XCJhbm9cIjoxNzc5ODgxMCxcImFpZFwiOjR9LHtcImFub1wiOjE1ODIzNTI5LFwiYWlkXCI6Mn0se1wiYW5vXCI6MTM4NTE1MDYsXCJhaWRcIjoxfSx7XCJhbm9cIjoxODkwODgwNixcImFpZFwiOjV9XX0iLCJpc3MiOiJodHRwczpcL1wvd3d3Lm5vcmRuZXQuc2UiLCJyZWZyZXNoIjoiNzQzMjU5OGYyMzUzODZmODVlZGYwYTE0NDg4Nzk3MDZlMGUzZGRhYyIsImNzcmYiOiJjMzA5NTE5MGI2MzNiNjc1ODU1ZTg4NDcwZTI0YTI1MjMyMzg2YzhhMWQwYmZlOGQ0ZDJjOTgzMmVlOTc5YjEyIiwiZXhwIjoxNTk5MTI4MjI5LCJsYW5nIjoic3YiLCJjb3JnIjoiU0UifQ.j_KiPc37KI3QhLwlR8IUhIHQbMAzJ91iukGuulcyxE9k1K4bhoe5CbxtP_HA7nybRoRuaL3IMNZl-v8-2_YhY9cGgDaQwGBEwqeEyKIqgOevHNp2tgJ_Igh0vyMFZbCTSKYHkp0uFPx2THlPSOO1E7X_PDvIzL3_1QpapRogCLC-ZjenXUkaXzwrwbEVVE7kABq6XCQ9qf-VXS5pdGQkSHLPOUy_x23uYoucx_8DJIWd63PG1aslu7ibE_5dCLDH1S_0vlKJF6gPeNnihD8AhE3iEL5mmySJDsDc_hsFtgdfwkkzwOq3NkysKKR_xcv40haXodg9hzOkngh3VAK25w; Version=1; Expires=Thu, 03-Sep-2020 10:21:39 GMT; Max-Age=300; Domain=nordnet.se; Path=/; Secure; HttpOnly; SameSite=Lax
+set-cookie: NOW=7432598f235386f85edf0a1448879706e0e3ddac; Version=1; Path=/; Secure; HttpOnly
+set-cookie: xsrf=c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12; Version=1; Path=/; Secure
+set-cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
+Vary: Accept-Encoding,User-Agent
+Keep-Alive: timeout=5, max=93
+Connection: Keep-Alive
+Strict-Transport-Security: max-age=31536000
 
 {"country":"SE","lang":"sv","logged_in":true,"session_type":"authenticated"}
 
-REQUEST 14
-GET https://classic.nordnet.se/oauth2/authorize?client_id=MOBILE_IOS_2&response_type=code&redirect_uri=https%3A%2F%2Fwww.nordnet.se%2Fnow%2Fmobile%2Ftoken.html
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Referer: dummySAMLart
-Content-Type: application/json
 
-RESPONSE 14
+REQUEST 11
+GET https://classic.nordnet.se/customers/required_actions
+Accept: application/json
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+Referer: https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
+
+RESPONSE 11
+302
+Date: Thu, 03 Sep 2020 10:16:39 GMT
+Server: Apache
+Location: https://www.nordnet.se/customers/required_actions
+Content-Length: 233
+Keep-Alive: timeout=5, max=92
+Connection: Keep-Alive
+Content-Type: text/html; charset=iso-8859-1
+Strict-Transport-Security: max-age=31536000
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>302 Found</title>
+</head><body>
+<h1>Found</h1>
+<p>The document has moved <a href="https://www.nordnet.se/customers/required_actions">here</a>.</p>
+</body></html>
+
+
+REQUEST 12
+GET https://classic.nordnet.se/oauth2/authorize?client_id=MOBILE_IOS_2&response_type=code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback&b=1
+Accept: text/plain,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+Referer: https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
+
+RESPONSE 12
 303
-Date: Fri, 17 Jul 2020 12:03:38 GMT
+Date: Thu, 03 Sep 2020 10:16:38 GMT
 Server: Apache-Coyote/1.1
+P3P: CP="Nordnet does not have a P3P policy"
+Location: nordnet-react://oauth2/authorize-callback?code=xxxxxxxxxxxxxxx
 Content-Language: sv-SE
+Content-Length: 0
+Set-Cookie: MOBILE_IOS_2=null; Path=/; Secure; HttpOnly
+Set-Cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
+Keep-Alive: timeout=5, max=91
 Connection: Keep-Alive
 Content-Type: text/plain; charset=ISO-8859-1
-Location: https://dummyHost/dummyEndpoint?code=dummyCode
+Strict-Transport-Security: max-age=31536000
+
+REQUEST 13
+POST https://www.nordnet.se/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Nordnet/7 CFNetwork/1121.2.2 Darwin/19.3.0
+
+code=xxxxxxxxxxxxxxx&client_id=MOBILE_IOS_2&client_secret=6C2B9862-7FEE-CBACE053-3757570ADDEF&grant_type=authorization_code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback
+
+RESPONSE 13 SET OAUTH2
+307
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:39 GMT
+Transfer-Encoding: chunked
+Connection: keep-alive
+Location: https://classic.nordnet.se/oauth2/token
+Strict-Transport-Security: max-age=31536000
 
 
-REQUEST 15
+REQUEST 14 MATCH OAUTH2
 POST https://classic.nordnet.se/oauth2/token
 Content-Type: application/x-www-form-urlencoded
+User-Agent: Nordnet/7 CFNetwork/1121.2.2 Darwin/19.3.0
 
-grant_type=authorization_code&redirect_uri=https%3A%2F%2Fwww.nordnet.se%2Fnow%2Fmobile%2Ftoken.html&client_id=MOBILE_IOS_2&client_secret=6C2B9862-7FEE-CBACE053-3757570ADDEF&code=dummyCode
+code=xxxxxxxxxxxxxxx&client_id=MOBILE_IOS_2&client_secret=6C2B9862-7FEE-CBACE053-3757570ADDEF&grant_type=authorization_code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback
 
-RESPONSE 15 SET REFRESH_START
+RESPONSE 14
 200
-Date: Fri, 17 Jul 2020 12:03:38 GMT
+Date: Thu, 03 Sep 2020 10:16:39 GMT
 Server: Apache-Coyote/1.1
 Cache-Control: no-store
 Pragma: no-cache
 Content-Type: application/json
+Content-Length: 157
+Set-Cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
+Keep-Alive: timeout=5, max=90
+Connection: Keep-Alive
+Strict-Transport-Security: max-age=31536000
 
-{"access_token":"dummyToken","token_type":"Bearer","validationToken":"dummyToken","expires_in":86400}
+{"access_token":"e34e2957-48ed-4d0b-90e6-6b37d24eb4ce","token_type":"bearer","validation_token":"5a84531f-ecba-483a-96ea-d7f997d603e0","expires_in":10799999}
 
-REQUEST 16 MATCH REFRESH_START
-GET https://classic.nordnet.se/api/2/customers/contact_info
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+
+REQUEST 15
+GET https://www.nordnet.se/api/2/accounts
+Accept: application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+
+
+RESPONSE 15
+200
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:39 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
+
+[{"accno":33333333,"accid":3,"bank_accno":"33333333333","type":"Investeringssparkonto","atyid":125,"symbol":"ISK","account_code":"ISK","role":"OWNER","default":true,"alias":"OF Aktier"},{"accno":44444444,"accid":4,"bank_accno":"44444444444","type":"Investeringssparkonto","atyid":125,"symbol":"ISK","account_code":"ISK","role":"OWNER","default":false,"alias":"OF Fonder"},{"accno":22222222,"accid":2,"bank_accno":"22222222222","type":"Sparkonto","atyid":123,"symbol":"S","account_code":"SPARKONTO","role":"OWNER","default":false,"alias":"OF Sparkonto"},{"accno":11111111,"accid":1,"type":"Tjänstepension","atyid":8,"symbol":"TJP","account_code":"TJF","role":"POLICYHOLDER","default":false,"alias":"Tjänstepension 1"},{"accno":55555555,"accid":5,"type":"Tjänstepension","atyid":8,"symbol":"TJP","account_code":"TJF","role":"POLICYHOLDER","default":false,"alias":"Tjänstepension 2"}]
+
+
+REQUEST 16
+GET https://www.nordnet.se/api/2/accounts/2/info
+Accept: application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+
 
 RESPONSE 16
 200
-Date: Fri, 17 Jul 2020 12:03:38 GMT
-cache-control: no-cache, no-store, must-revalidate
-content-type: application/json; charset=UTF-8
-expires: 0
-pragma: no-cache
-Vary: User-Agent
-Connection: Keep-Alive
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:39 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
 
-{"address1":"Vintervägen 41 lgh 1302","city":"Solna","country":"Sverige","citizen":"SE","email":"mail@mail.com","first_name":"firsName","last_name":"Johansson","national_id_number":"9901010000","national_id_number_country_code":"SE","zip_code":"10004","registration_date":"2017-02-14","person_type":"NAT"}
+[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.0},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.0},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":0.0,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":0.0},"full_marketvalue":{"currency":"SEK","value":0.0},"account_code":"SPARKONTO","bank_accno":"22222222222","interest_rate":0.0,"registration_date":"2016-10-07","accno":22222222,"accid":2}]
 
 REQUEST 17
-GET https://classic.nordnet.se/api/2/accounts
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+GET https://www.nordnet.se/api/2/accounts/3/info
+Accept: application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+
 
 RESPONSE 17
 200
-Date: Fri, 17 Jul 2020 12:03:38 GMT
-content-type: application/json; charset=UTF-8
-Connection: Keep-Alive
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:39 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
+
+[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.27},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.27},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":175598.69999999998,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":180191.14999999997},"full_marketvalue":{"currency":"SEK","value":175598.43},"account_code":"ISK","bank_accno":"33333333333","interest_rate":0.0,"registration_date":"2016-12-25","accno":33333333,"accid":3}]
 
 
-[{"accno":1000052,"accid":1,"type":"Tjänstepension","atyid":8,"symbol":"TJP","account_code":"TJF","role":"POLICYHOLDER","default":false,"alias":"alias1"},{"accno":10000065,"accid":2,"type":"Tjänstepension","atyid":8,"symbol":"TJP","account_code":"TJF","role":"POLICYHOLDER","default":true,"alias":"alias2"},{"accno":10000047,"accid":3,"bank_accno":"91000000047","type":"Aktie- och fonddepå","atyid":108,"symbol":"AF","account_code":"DEP","role":"OWNER","default":true,"alias":"alias3"},{"accno":10000070,"accid":4,"bank_accno":"91000000063","type":"Investeringssparkonto","atyid":125,"symbol":"ISK","account_code":"ISK","role":"OWNER","default":false,"alias":"alias4"},{"accno":1000058,"accid":5,"bank_accno":"91000000046","type":"Kapitalförsäkring","atyid":2,"symbol":"KF","account_code":"KF","role":"POLICYHOLDER","default":true,"alias":"alias5"}]
 REQUEST 18
-GET https://classic.nordnet.se/api/2/accounts/1/info
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+GET https://www.nordnet.se/api/2/accounts/3/positions?include_instrument_loans=true
+Accept: application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+
 
 RESPONSE 18
 200
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-content-type: application/json; charset=UTF-8
-Connection: Keep-Alive
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:39 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
 
-[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.45},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.45},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":25958.737536475503,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":25958.737536475503},"full_marketvalue":{"currency":"SEK","value":25958.287536475502},"account_code":"TJF","interest_rate":0.0,"registration_date":"2017-02-14","accno":1000052,"accid":1}]
+[{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":13,"tick_size_id":34830908,"display_order":0,"lot_size":1.0,"identifier":"5BTV"}],"instrument_id":16816742,"instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":67716250.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"QBIT","isin_code":"SE0010662585","name":"QuickBit"},"main_market_price":{"currency":"SEK","value":12.03},"morning_price":{"currency":"SEK","value":11.24},"qty":2020.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":24300.6},"market_value":{"currency":"SEK","value":24300.6},"acq_price":{"currency":"SEK","value":5.271782178217822},"acq_price_acc":{"currency":"SEK","value":5.271782178217822},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"108026"}],"instrument_id":16384190,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":48332595.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"SAVOS","isin_code":"FI4000425848","name":"Savosolar Plc"},"main_market_price":{"currency":"SEK","value":2.085},"morning_price":{"currency":"SEK","value":2.06},"qty":400.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":834.0},"market_value":{"currency":"SEK","value":834.0},"acq_price":{"currency":"SEK","value":16.8425},"acq_price_acc":{"currency":"SEK","value":16.8425},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":13,"tick_size_id":34830905,"display_order":0,"lot_size":1.0,"identifier":"3SJQ"}],"instrument_id":16102370,"instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":1406008935.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"ABIG","isin_code":"SE0003617075","name":"Abelco Investment Group"},"main_market_price":{"currency":"SEK","value":0.053},"morning_price":{"currency":"SEK","value":0.055},"qty":290000.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":15370.0},"market_value":{"currency":"SEK","value":15370.0},"acq_price":{"currency":"SEK","value":0.21347241379310344},"acq_price_acc":{"currency":"SEK","value":0.21347241379310344},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":1,"price_type":"monetary_amount","expiration_date":"2021-06-28","tradables":[{"market_id":13,"tick_size_id":34830906,"display_order":0,"lot_size":1.0,"identifier":"598N"}],"instrument_id":17062390,"instrument_type":"ESR","instrument_group_type":"EQ","currency":"SEK","number_of_securities":204291224.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"ABIG TO2","isin_code":"SE0012728822","name":"Abelco Investment Group TO2"},"main_market_price":{"currency":"SEK","value":0.018},"morning_price":{"currency":"SEK","value":0.019},"qty":41750.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":751.5},"market_value":{"currency":"SEK","value":751.5},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":52,"tick_size_id":34830905,"display_order":0,"lot_size":1.0,"identifier":"412E"}],"instrument_id":16287741,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":1802487955.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":160.0,"symbol":"FLOWS","isin_code":"SE0005937117","name":"Flowscape"},"main_market_price":{"currency":"SEK","value":0.103},"morning_price":{"currency":"SEK","value":0.11},"qty":650000.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":66950.0},"market_value":{"currency":"SEK","value":66950.0},"acq_price":{"currency":"SEK","value":0.12544347720326374},"acq_price_acc":{"currency":"SEK","value":0.12544347720326374},"is_custom_gav":false,"margin_percent":160},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"110094"}],"instrument_id":16391933,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":181044961.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"SPEONE","isin_code":"SE0006994448","name":"SpectrumOne AB"},"main_market_price":{"currency":"SEK","value":2.1},"morning_price":{"currency":"SEK","value":2.16},"qty":22500.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":47250.0},"market_value":{"currency":"SEK","value":47250.0},"acq_price":{"currency":"SEK","value":0.5496410256410256},"acq_price_acc":{"currency":"SEK","value":0.5496410256410256},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"184183"}],"instrument_id":16750575,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":83985932.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"BUBL","isin_code":"SE0010270793","name":"Bublar Group AB"},"main_market_price":{"currency":"SEK","value":3.31},"morning_price":{"currency":"SEK","value":3.44},"qty":3050.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":10095.5},"market_value":{"currency":"SEK","value":10095.5},"acq_price":{"currency":"SEK","value":4.64},"acq_price_acc":{"currency":"SEK","value":4.64},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":1,"price_type":"monetary_amount","expiration_date":"2021-02-24","tradables":[{"market_id":13,"tick_size_id":34830906,"display_order":0,"lot_size":1.0,"identifier":"6DH0"}],"instrument_id":17240419,"instrument_type":"ESR","instrument_group_type":"EQ","currency":"SEK","number_of_securities":145459707.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"ABIG TO3","isin_code":"SE0014262044","name":"Abelco Investment Group TO3"},"main_market_price":{"currency":"SEK","value":0.015},"morning_price":{"currency":"SEK","value":0.015},"qty":32222.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":483.33},"market_value":{"currency":"SEK","value":483.33},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":1,"price_type":"monetary_amount","expiration_date":"2020-12-29","tradables":[{"market_id":13,"tick_size_id":34830906,"display_order":0,"lot_size":1.0,"identifier":"5BTX"}],"instrument_id":16829673,"instrument_type":"ESR","instrument_group_type":"EQ","currency":"SEK","number_of_securities":20859125.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"QBIT TO1","isin_code":"SE0010920751","name":"QuickBit TO1"},"main_market_price":{"currency":"SEK","value":7.9},"morning_price":{"currency":"SEK","value":7.3},"qty":1200.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":9480.0},"market_value":{"currency":"SEK","value":9480.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":1,"price_type":"monetary_amount","expiration_date":"2020-11-26","tradables":[{"market_id":13,"tick_size_id":34830906,"display_order":0,"lot_size":1.0,"identifier":"4JV3"}],"instrument_id":16917875,"instrument_type":"ESR","instrument_group_type":"EQ","currency":"SEK","leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"ABIG TO1","isin_code":"SE0011642172","name":"Abelco Investment Group TO1"},"main_market_price":{"currency":"SEK","value":0.005},"morning_price":{"currency":"SEK","value":0.005},"qty":16700.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":83.5},"market_value":{"currency":"SEK","value":83.5},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200}]
+
 
 REQUEST 19
-GET https://classic.nordnet.se/api/2/accounts/1/positions?include_instrument_loans=true
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+GET https://www.nordnet.se/api/2/accounts/4/info
+Accept: application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
 
 RESPONSE 19
 200
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-content-type: application/json; charset=UTF-8
-Vary: User-Agent
-Connection: Keep-Alive
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:40 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
 
+[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.35},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.35},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":0.35,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":0.35},"full_marketvalue":{"currency":"SEK","value":0.0},"account_code":"ISK","bank_accno":"44444444444","interest_rate":0.0,"registration_date":"2017-07-26","accno":44444444,"accid":4}]
 
-[{"accno":1000052,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":6,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/4029544565187ad0cbfc49971acc6ea8.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16122576,"instrument_id":16122576,"symbol":"PG","isin_code":"US7427181091"},{"instrumment_id":16123344,"instrument_id":16123344,"symbol":"V","isin_code":"US92826C8394"},{"instrumment_id":16162041,"instrument_id":16162041,"symbol":"NESN.CH","isin_code":"CH0038863350"},{"instrumment_id":16119063,"instrument_id":16119063,"symbol":"MSFT","isin_code":"US5949181045"},{"instrumment_id":16121793,"instrument_id":16121793,"symbol":"JNJ","isin_code":"US4781601046"},{"instrumment_id":16117575,"instrument_id":16117575,"symbol":"FB","isin_code":"US30303M1027"},{"instrumment_id":16118139,"instrument_id":16118139,"symbol":"AAPL","isin_code":"US0378331005"},{"instrumment_id":16118217,"instrument_id":16118217,"symbol":"AMZN","isin_code":"US0231351067"},{"instrumment_id":16457329,"instrument_id":16457329,"symbol":"GOOGL","isin_code":"US02079K3059"},{"instrumment_id":16457330,"instrument_id":16457330,"symbol":"GOOG","isin_code":"US02079K1079"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F00000PYZ6"}],"instrument_id":16801508,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":0.2,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":200.0,"symbol":"LF GLB INDEX","isin_code":"SE0005188836","name":"Länsförsäkringar Global Indexnära","has_fund_data":true,"category":"Global, mix bolag","institute":"Länsförsäkringar Fondförvaltning AB","rating":4,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.57,"performance_one_week":0.13,"performance_one_month":-0.34,"performance_this_year":-4.49,"performance_three_years":35.36,"performance_five_years":49.92,"last_nav":242.09,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"SEK","value":242.0989},"morning_price":{"currency":"SEK","value":242.0989},"qty":34.109295,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":8257.8227992755},"market_value":{"currency":"SEK","value":8257.8227992755},"acq_price":{"currency":"SEK","value":185.90610917962664},"acq_price_acc":{"currency":"SEK","value":185.90610917962664},"is_custom_gav":false,"margin_percent":200},{"accno":1000052,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/700d4dfc4b4fa736d45578df1834670b.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16123256,"instrument_id":16123256,"symbol":"UNH","isin_code":"US91324P1021"},{"instrumment_id":16123344,"instrument_id":16123344,"symbol":"V","isin_code":"US92826C8394"},{"instrumment_id":16120666,"instrument_id":16120666,"symbol":"BRK.B","isin_code":"US0846707026"},{"instrumment_id":16119063,"instrument_id":16119063,"symbol":"MSFT","isin_code":"US5949181045"},{"instrumment_id":16121814,"instrument_id":16121814,"symbol":"JPM","isin_code":"US46625H1005"},{"instrumment_id":16117575,"instrument_id":16117575,"symbol":"FB","isin_code":"US30303M1027"},{"instrumment_id":16118139,"instrument_id":16118139,"symbol":"AAPL","isin_code":"US0378331005"},{"instrumment_id":16118217,"instrument_id":16118217,"symbol":"AMZN","isin_code":"US0231351067"},{"instrumment_id":16457329,"instrument_id":16457329,"symbol":"GOOGL","isin_code":"US02079K3059"},{"instrumment_id":16457330,"instrument_id":16457330,"symbol":"GOOG","isin_code":"US02079K1079"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F00000W8AB"}],"instrument_id":16801757,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":0.2,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":200.0,"symbol":"ROBUR ACC USA ","isin_code":"SE0007074083","name":"Swedbank Robur Access USA","has_fund_data":true,"category":"USA, mix bolag","institute":"Swedbank Robur Fonder AB","rating":5,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.78,"performance_one_week":-0.45,"performance_one_month":-0.53,"performance_this_year":-1.62,"performance_three_years":51.7,"performance_five_years":75.34,"last_nav":347.48,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"SEK","value":347.48},"morning_price":{"currency":"SEK","value":347.48},"qty":19.9214,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":6922.288071999999},"market_value":{"currency":"SEK","value":6922.288071999999},"acq_price":{"currency":"SEK","value":239.39080586705754},"acq_price_acc":{"currency":"SEK","value":239.39080586705754},"is_custom_gav":false,"margin_percent":200},{"accno":1000052,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/e27079fce31e14672481adde932161b3.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16794649,"instrument_id":16794649,"symbol":"ASML Holding NV","isin_code":"NL0010273215"},{"instrumment_id":16256554,"instrument_id":16256554,"symbol":"NOVO B","isin_code":"DK0060534915"},{"instrumment_id":16153863,"instrument_id":16153863,"symbol":"ULVR.UK","isin_code":"GB00B10RZP78"},{"instrumment_id":16142726,"instrument_id":16142726,"symbol":"AZN.UK","isin_code":"GB0009895292"},{"instrumment_id":16142725,"instrument_id":16142725,"symbol":"GSK.UK","isin_code":"GB0009252882"},{"instrumment_id":16793616,"instrument_id":16793616,"symbol":"Sanofi SA","isin_code":"FR0000120578"},{"instrumment_id":16129188,"instrument_id":16129188,"symbol":"ALV","isin_code":"DE0008404005"},{"instrumment_id":16129157,"instrument_id":16129157,"symbol":"SAP","isin_code":"DE0007164600"},{"instrumment_id":16162041,"instrument_id":16162041,"symbol":"NESN.CH","isin_code":"CH0038863350"},{"instrumment_id":16161586,"instrument_id":16161586,"symbol":"ROG.CH","isin_code":"CH0012032048"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"CL00012081"}],"instrument_id":16802161,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":0.2,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":120.0,"symbol":"SPP AI EU","isin_code":"SE0000531881","name":"SPP Aktiefond Europa","has_fund_data":true,"category":"Europa, mix bolag","institute":"SPP Fonder AB","rating":4,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.26,"performance_one_week":1.04,"performance_one_month":0.87,"performance_this_year":-9.14,"performance_three_years":14.27,"performance_five_years":16.86,"last_nav":142.38,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"SEK","value":142.3831},"morning_price":{"currency":"SEK","value":142.3831},"qty":37.292,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":5309.750565200001},"market_value":{"currency":"SEK","value":5309.750565200001},"acq_price":{"currency":"SEK","value":127.88265579749007},"acq_price_acc":{"currency":"SEK","value":127.88265579749007},"is_custom_gav":false,"margin_percent":120},{"accno":1000052,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/a44b00f72c6cba9aaba1925f028e4415.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F000010FBL"}],"instrument_id":16875946,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":0.79,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":100.0,"symbol":"NORDNET SMART 10 SEK B","isin_code":"IE00BDRV5908","name":"Nordnet Smart 10 SEK Acc","has_fund_data":true,"category":"Blandfond - SEK, balanserad","institute":"JP Morgan Mansart Management Ltd","is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":0.33,"performance_one_week":0.37,"performance_one_month":0.59,"performance_this_year":-17.28,"last_nav":86.43,"last_nav_date":"2020-07-15"},"main_market_price":{"currency":"SEK","value":86.43},"morning_price":{"currency":"SEK","value":86.43},"qty":63.27,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":5468.426100000001},"market_value":{"currency":"SEK","value":5468.426100000001},"acq_price":{"currency":"SEK","value":100.0},"acq_price_acc":{"currency":"SEK","value":100.0},"is_custom_gav":false,"margin_percent":100}]
 
 REQUEST 20
-GET https://classic.nordnet.se/api/2/accounts/2/info
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+GET https://www.nordnet.se/api/2/accounts/4/positions?include_instrument_loans=true
+Accept: application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+
 
 RESPONSE 20
-200
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-content-type: application/json; charset=UTF-8
-Vary: User-Agent
-Connection: Keep-Alive
+204
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:40 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
 
-[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":3.51},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":3.51},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":82385.26664122682,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":82813.22674359487},"full_marketvalue":{"currency":"SEK","value":82381.75664122682},"account_code":"TJF","interest_rate":0.0,"registration_date":"2018-04-24","accno":10000065,"accid":2}]
 
 REQUEST 21
-GET https://classic.nordnet.se/api/2/accounts/2/positions?include_instrument_loans=true
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+GET https://www.nordnet.se/api/2/accounts/1/info
+Accept: application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+
 
 RESPONSE 21
 200
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-content-type: application/json; charset=UTF-8
-Vary: User-Agent
-Connection: Keep-Alive
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:40 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
 
-[{"accno":10000065,"accid":2,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/9d37ec65b12db11006bf78fae63939a3.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16142726,"instrument_id":16142726,"symbol":"AZN.UK","isin_code":"GB0009895292"},{"instrumment_id":16090266,"instrument_id":16090266,"symbol":"HEXA B","isin_code":"SE0000103699"},{"instrumment_id":16100423,"instrument_id":16100423,"symbol":"SAND","isin_code":"SE0000667891"},{"instrumment_id":16714419,"instrument_id":16714419,"symbol":"ESSITY B","isin_code":"SE0009922164"},{"instrumment_id":16405089,"instrument_id":16405089,"symbol":"SHB A","isin_code":"SE0007100599"},{"instrumment_id":16408922,"instrument_id":16408922,"symbol":"ASSA B","isin_code":"SE0007100581"},{"instrumment_id":16403238,"instrument_id":16403238,"symbol":"ATCO A","isin_code":"SE0011166610"},{"instrumment_id":16081531,"instrument_id":16081531,"symbol":"VOLV B","isin_code":"SE0000115446"},{"instrumment_id":16101929,"instrument_id":16101929,"symbol":"ERIC B","isin_code":"SE0000108656"},{"instrumment_id":16102308,"instrument_id":16102308,"symbol":"INVE B","isin_code":"SE0000107419"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F000002J6V"}],"instrument_id":16801084,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":0.0,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":120.0,"symbol":"NN INDEXFOND SVERIGE","isin_code":"SE0002756973","name":"Nordnet Indexfond Sverige","has_fund_data":true,"category":"Sverige","institute":"Öhman Fonder","rating":4,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.75,"performance_one_week":2.95,"performance_one_month":5.29,"performance_this_year":1.73,"performance_three_years":23.76,"performance_five_years":40.27,"last_nav":427.44,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"SEK","value":427.44},"morning_price":{"currency":"SEK","value":430.69},"qty":51.6689,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":22085.354616},"market_value":{"currency":"SEK","value":22085.354616},"acq_price":{"currency":"SEK","value":379.57068952503346},"acq_price_acc":{"currency":"SEK","value":379.57068952503346},"is_custom_gav":false,"margin_percent":120},{"accno":10000065,"accid":2,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/8cb5d011bfc8f63fb68cc795ef3918a9.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16099800,"instrument_id":16099800,"symbol":"ORNBV","isin_code":"FI0009014377"},{"instrumment_id":16102499,"instrument_id":16102499,"symbol":"NDA SE","isin_code":"FI4000297767"},{"instrumment_id":16103263,"instrument_id":16103263,"symbol":"KNEBV","isin_code":"FI0009013403"},{"instrumment_id":16102550,"instrument_id":16102550,"symbol":"NESTE","isin_code":"FI0009013296"},{"instrumment_id":16100794,"instrument_id":16100794,"symbol":"ELISA","isin_code":"FI0009007884"},{"instrumment_id":16100802,"instrument_id":16100802,"symbol":"FORTUM","isin_code":"FI0009007132"},{"instrumment_id":16100879,"instrument_id":16100879,"symbol":"UPM","isin_code":"FI0009005987"},{"instrumment_id":16100862,"instrument_id":16100862,"symbol":"STERV","isin_code":"FI0009005961"},{"instrumment_id":16100852,"instrument_id":16100852,"symbol":"SAMPO","isin_code":"FI0009003305"},{"instrumment_id":16100830,"instrument_id":16100830,"symbol":"NOKIA","isin_code":"FI0009000681"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F00000TH8W"}],"instrument_id":16801606,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"EUR","management_fee":0.0,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":120.0,"symbol":"NORDNET INDEKSIRAHASTO SUOMI","isin_code":"SE0005993102","name":"Nordnet Indeksirahasto Suomi","has_fund_data":true,"category":"Finland","institute":"Öhman Fonder","rating":4,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.12,"performance_one_week":2.86,"performance_one_month":-0.71,"performance_this_year":-2.86,"performance_three_years":20.38,"performance_five_years":60.01,"last_nav":172.03,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"EUR","value":172.03},"morning_price":{"currency":"EUR","value":172.17},"qty":11.1276,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":19779.136436517478},"market_value":{"currency":"EUR","value":1914.2810279999999},"acq_price":{"currency":"EUR","value":163.85204356734607},"acq_price_acc":{"currency":"SEK","value":1743.6875086164132},"is_custom_gav":false,"margin_percent":120},{"accno":10000065,"accid":2,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/02db501f8c4f36c0427a7abbe11eb54b.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16101766,"instrument_id":16101766,"symbol":"CHR","isin_code":"DK0060227585"},{"instrumment_id":16557154,"instrument_id":16557154,"symbol":"ORSTED","isin_code":"DK0060094928"},{"instrumment_id":16256554,"instrument_id":16256554,"symbol":"NOVO B","isin_code":"DK0060534915"},{"instrumment_id":16099928,"instrument_id":16099928,"symbol":"COLO B","isin_code":"DK0060448595"},{"instrumment_id":16100071,"instrument_id":16100071,"symbol":"NZYM B","isin_code":"DK0060336014"},{"instrumment_id":16100022,"instrument_id":16100022,"symbol":"DSV","isin_code":"DK0060079531"},{"instrumment_id":16100070,"instrument_id":16100070,"symbol":"GMAB","isin_code":"DK0010272202"},{"instrumment_id":16099938,"instrument_id":16099938,"symbol":"VWS","isin_code":"DK0010268606"},{"instrumment_id":16099914,"instrument_id":16099914,"symbol":"CARL B","isin_code":"DK0010181759"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F00000TH8X"}],"instrument_id":16801607,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"DKK","management_fee":0.0,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":120.0,"symbol":"NN INDEKSFOND DANMARK","isin_code":"SE0005993078","name":"Nordnet Indeksfond Danmark","has_fund_data":true,"category":"Danmark","institute":"Öhman Fonder","rating":3,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.26,"performance_one_week":1.59,"performance_one_month":5.33,"performance_this_year":13.97,"performance_three_years":38.2,"performance_five_years":64.64,"last_nav":197.58,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"DKK","value":197.58},"morning_price":{"currency":"DKK","value":198.06},"qty":86.7227,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":23778.639771841503},"market_value":{"currency":"DKK","value":17134.671066000003},"acq_price":{"currency":"DKK","value":157.65619561156444},"acq_price_acc":{"currency":"SEK","value":224.7621750761876},"is_custom_gav":false,"margin_percent":120},{"accno":10000065,"accid":2,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/3ef5d8c4ae85329218c7cb4790e7c852.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16105684,"instrument_id":16105684,"symbol":"TOM","isin_code":"NO0005668905"},{"instrumment_id":16105269,"instrument_id":16105269,"symbol":"GJF","isin_code":"NO0010582521"},{"instrumment_id":16105608,"instrument_id":16105608,"symbol":"YAR","isin_code":"NO0010208051"},{"instrumment_id":16105420,"instrument_id":16105420,"symbol":"EQNR","isin_code":"NO0010096985"},{"instrumment_id":16105595,"instrument_id":16105595,"symbol":"TEL","isin_code":"NO0010063308"},{"instrumment_id":16105640,"instrument_id":16105640,"symbol":"DNB","isin_code":"NO0010031479"},{"instrumment_id":16105667,"instrument_id":16105667,"symbol":"NHY","isin_code":"NO0005052605"},{"instrumment_id":16105674,"instrument_id":16105674,"symbol":"ORK","isin_code":"NO0003733800"},{"instrumment_id":16105427,"instrument_id":16105427,"symbol":"MOWI","isin_code":"NO0003054108"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F00000TH8U"}],"instrument_id":16801605,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"NOK","management_fee":0.0,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":120.0,"symbol":"NN INDEKSFOND NORGE","isin_code":"SE0005993110","name":"Nordnet Indeksfond Norge","has_fund_data":true,"category":"Norge","institute":"Öhman Fonder","rating":3,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.8,"performance_one_week":4.3,"performance_one_month":0.25,"performance_this_year":-18.8,"performance_three_years":10.96,"performance_five_years":18.09,"last_nav":129.28,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"NOK","value":129.28},"morning_price":{"currency":"NOK","value":130.61},"qty":132.9238,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":16738.62581686784},"market_value":{"currency":"NOK","value":17184.388864},"acq_price":{"currency":"NOK","value":135.84707930408248},"acq_price_acc":{"currency":"SEK","value":143.74314735856186},"is_custom_gav":false,"margin_percent":120}]
+[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.72},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.72},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":20108.3095671207,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":20108.3095671207},"full_marketvalue":{"currency":"SEK","value":20107.5895671207},"account_code":"TJF","interest_rate":0.0,"registration_date":"2015-09-10","accno":11111111,"accid":1}]
+
 
 REQUEST 22
-GET https://classic.nordnet.se/api/2/accounts/3/info
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+GET https://www.nordnet.se/api/2/accounts/1/positions?include_instrument_loans=true
+Accept: application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+
 
 RESPONSE 22
 200
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-content-type: application/json; charset=UTF-8
-Vary: User-Agent
-Connection: Keep-Alive
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:40 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
 
-[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.0},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.0},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":0.0,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":0.0},"full_marketvalue":{"currency":"SEK","value":0.0},"account_code":"DEP","bank_accno":"91000000047","interest_rate":0.0,"registration_date":"2020-04-28","accno":10000047,"accid":3}]
+[{"accno":11111111,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/288418ed9ecc78efb362dbfaf8a9a52f.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16123344,"instrument_id":16123344,"symbol":"V","isin_code":"US92826C8394"},{"instrumment_id":16119063,"instrument_id":16119063,"symbol":"MSFT","isin_code":"US5949181045"},{"instrumment_id":16121793,"instrument_id":16121793,"symbol":"JNJ","isin_code":"US4781601046"},{"instrumment_id":16117575,"instrument_id":16117575,"symbol":"FB","isin_code":"US30303M1027"},{"instrumment_id":16118139,"instrument_id":16118139,"symbol":"AAPL","isin_code":"US0378331005"},{"instrumment_id":16118217,"instrument_id":16118217,"symbol":"AMZN","isin_code":"US0231351067"},{"instrumment_id":16457329,"instrument_id":16457329,"symbol":"GOOGL","isin_code":"US02079K3059"},{"instrumment_id":16457330,"instrument_id":16457330,"symbol":"GOOG","isin_code":"US02079K1079"},{"instrumment_id":16162041,"instrument_id":16162041,"symbol":"NESN.CH","isin_code":"CH0038863350"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"0P0000ZWWE"}],"instrument_id":16800874,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":0.2,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":200.0,"symbol":"DNB GL INDEKS A SEK","isin_code":"NO0010582984","name":"DNB Global Indeks A","has_fund_data":true,"category":"Global, mix bolag","institute":"DNB Asset Management AS","rating":4,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":0.88,"performance_one_week":0.61,"performance_one_month":6.2,"performance_this_year":-1.34,"performance_three_years":44.46,"performance_five_years":72.63,"last_nav":366.0325,"last_nav_date":"2020-09-01"},"main_market_price":{"currency":"SEK","value":366.0325},"morning_price":{"currency":"SEK","value":366.0325},"qty":11.3578,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":4157.3239285},"market_value":{"currency":"SEK","value":4157.3239285},"acq_price":{"currency":"SEK","value":264.1356600750145},"acq_price_acc":{"currency":"SEK","value":264.1356600750145},"is_custom_gav":false,"margin_percent":200},{"accno":11111111,"accid":1,"instrument":{"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/60dc89c668a4499db137c439e5145ac2.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16334653,"instrument_id":16334653,"symbol":"LIFCO B","isin_code":"SE0006370730"},{"instrumment_id":16096164,"instrument_id":16096164,"symbol":"INDT","isin_code":"SE0001515552"},{"instrumment_id":16099736,"instrument_id":16099736,"symbol":"LATO B","isin_code":"SE0010100958"},{"instrumment_id":16099821,"instrument_id":16099821,"symbol":"KINV B","isin_code":"SE0014684528"},{"instrumment_id":16099749,"instrument_id":16099749,"symbol":"XACT OMXS30","isin_code":"SE0000693293"},{"instrumment_id":16099713,"instrument_id":16099713,"symbol":"ICA","isin_code":"SE0000652216"},{"instrumment_id":16100055,"instrument_id":16100055,"symbol":"RATO B","isin_code":"SE0000111940"},{"instrumment_id":16099886,"instrument_id":16099886,"symbol":"LUND B","isin_code":"SE0000108847"},{"instrumment_id":16102308,"instrument_id":16102308,"symbol":"INVE B","isin_code":"SE0000107419"},{"instrumment_id":16102232,"instrument_id":16102232,"symbol":"INDU C","isin_code":"SE0000107203"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F00000NBM7"}],"instrument_id":16801314,"instrument_type":"FOTH","instrument_group_type":"FND","currency":"SEK","management_fee":0.2,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":120.0,"symbol":"SPILTAN INVESTMENTBOLAG","isin_code":"SE0004297927","name":"Spiltan Aktiefond Investmentbolag","has_fund_data":true,"category":"Sverige","institute":"Spiltan Fonder AB","rating":5,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":1.07,"performance_one_week":-1.48,"performance_one_month":6.97,"performance_this_year":13.23,"performance_three_years":54.83,"performance_five_years":104.18,"last_nav":477.03,"last_nav_date":"2020-09-02"},"main_market_price":{"currency":"SEK","value":477.03},"morning_price":{"currency":"SEK","value":477.03},"qty":11.5892,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":5528.396076},"market_value":{"currency":"SEK","value":5528.396076},"acq_price":{"currency":"SEK","value":327.65972020068835},"acq_price_acc":{"currency":"SEK","value":327.65972020068835},"is_custom_gav":false,"margin_percent":120},{"accno":11111111,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/cd4eec99efba8a2df66b5f495d23eebd.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16192788,"instrument_id":16192788,"symbol":"EE","isin_code":"FR0000125338"},{"instrumment_id":16377849,"instrument_id":16377849,"symbol":"EVO","isin_code":"SE0012673267"},{"instrumment_id":16454998,"instrument_id":16454998,"symbol":"SINCH","isin_code":"SE0007439112"},{"instrumment_id":16476927,"instrument_id":16476927,"symbol":"SF","isin_code":"SE0007704788"},{"instrumment_id":16111847,"instrument_id":16111847,"symbol":"FNOX","isin_code":"SE0001966656"},{"instrumment_id":16623696,"instrument_id":16623696,"symbol":"EMBRAC B","isin_code":"SE0013121589"},{"instrumment_id":16548250,"instrument_id":16548250,"symbol":"PDX","isin_code":"SE0008294953"},{"instrumment_id":16100440,"instrument_id":16100440,"symbol":"BIOT","isin_code":"SE0000454746"},{"instrumment_id":16119526,"instrument_id":16119526,"symbol":"TTWO","isin_code":"US8740541094"},{"instrumment_id":16794954,"instrument_id":16794954,"symbol":"CD Projekt SA","isin_code":"PLOPTTC00011"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"CL00010051"}],"instrument_id":16802242,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":1.25,"multiplier":1.0,"pawn_percentage":80.0,"symbol":"ROBUR NY TEKNIK A","isin_code":"SE0000709123","name":"Swedbank Robur Ny Teknik A","has_fund_data":true,"category":"Branschfond, ny teknik","institute":"Swedbank Robur Fonder AB","rating":5,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":1.09,"performance_one_week":2.72,"performance_one_month":11.47,"performance_this_year":54.78,"performance_three_years":125.64,"performance_five_years":308.4,"last_nav":1480.19,"last_nav_date":"2020-09-02"},"main_market_price":{"currency":"SEK","value":1480.19},"morning_price":{"currency":"SEK","value":1480.19},"qty":4.5136,"pawn_percent":80,"market_value_acc":{"currency":"SEK","value":6680.985584000001},"market_value":{"currency":"SEK","value":6680.985584000001},"acq_price":{"currency":"SEK","value":664.6579227224388},"acq_price_acc":{"currency":"SEK","value":664.6579227224388},"is_custom_gav":false},{"accno":11111111,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":6,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/b1217de31ec50e3291bc2f4b965a37d9.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16720153,"instrument_id":16720153,"symbol":"ADMCM","isin_code":"FI4000251830"},{"instrumment_id":16476927,"instrument_id":16476927,"symbol":"SF","isin_code":"SE0007704788"},{"instrumment_id":16256554,"instrument_id":16256554,"symbol":"NOVO B","isin_code":"DK0060534915"},{"instrumment_id":16454997,"instrument_id":16454997,"symbol":"SECT B","isin_code":"SE0012853661"},{"instrumment_id":17022638,"instrument_id":17022638,"symbol":"NENT B","isin_code":"SE0012116390"},{"instrumment_id":17057518,"instrument_id":17057518,"symbol":"Xero Ltd","isin_code":"NZXROE0001S2"},{"instrumment_id":16119526,"instrument_id":16119526,"symbol":"TTWO","isin_code":"US8740541094"},{"instrumment_id":16623696,"instrument_id":16623696,"symbol":"EMBRAC B","isin_code":"SE0013121589"},{"instrumment_id":16548250,"instrument_id":16548250,"symbol":"PDX","isin_code":"SE0008294953"},{"instrumment_id":16377849,"instrument_id":16377849,"symbol":"EVO","isin_code":"SE0012673267"},{"instrumment_id":16214531,"instrument_id":16214531,"symbol":"NEM","isin_code":"DE0006452907"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F000011XKU"}],"instrument_id":16994475,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":1.5,"multiplier":1.0,"pawn_percentage":70.0,"margin_percentage":120.0,"symbol":"TIN NY TEKNIK A","isin_code":"SE0012193019","name":"TIN Ny Teknik A","has_fund_data":true,"category":"Branschfond, ny teknik","institute":"TIN Fonder","is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":0.97,"performance_one_week":2.01,"performance_one_month":8.8,"performance_this_year":45.25,"last_nav":187.3857,"last_nav_date":"2020-09-02"},"main_market_price":{"currency":"SEK","value":187.3857},"morning_price":{"currency":"SEK","value":187.3857},"qty":19.963551,"pawn_percent":70,"market_value_acc":{"currency":"SEK","value":3740.8839786207},"market_value":{"currency":"SEK","value":3740.8839786207},"acq_price":{"currency":"SEK","value":178.17471450845593},"acq_price_acc":{"currency":"SEK","value":178.17471450845593},"is_custom_gav":false,"margin_percent":120}]
+
 
 REQUEST 23
-GET https://classic.nordnet.se/api/2/accounts/3/positions?include_instrument_loans=true
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+GET https://www.nordnet.se/api/2/accounts/5/info
+Accept: application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+
 
 RESPONSE 23
-204
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-content-type: application/json; charset=UTF-8
-Vary: User-Agent
-Connection: Keep-Alive
-Content-Length: 0
+200
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:40 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
+
+[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.88},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.88},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":5366.0329702771005,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":5366.0329702771005},"full_marketvalue":{"currency":"SEK","value":5365.1529702771},"account_code":"TJF","interest_rate":0.0,"registration_date":"2017-11-16","accno":55555555,"accid":5}]
+
 
 
 REQUEST 24
-GET https://classic.nordnet.se/api/2/accounts/4/info
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+GET https://www.nordnet.se/api/2/accounts/5/positions?include_instrument_loans=true
+Accept: application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+
 
 RESPONSE 24
 200
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-content-type: application/json; charset=UTF-8
-Vary: User-Agent
-Connection: Keep-Alive
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:40 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
 
-[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":191.48},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":191.48},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":10939.955485879998,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":10952.40583852},"full_marketvalue":{"currency":"SEK","value":10748.475485879999},"account_code":"ISK","bank_accno":"91000000063","interest_rate":0.0,"registration_date":"2020-04-28","accno":10000070,"accid":4}]
+[{"accno":55555555,"accid":5,"instrument":{"has_ucits":true,"no_of_decimals":6,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/b1217de31ec50e3291bc2f4b965a37d9.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16720153,"instrument_id":16720153,"symbol":"ADMCM","isin_code":"FI4000251830"},{"instrumment_id":16476927,"instrument_id":16476927,"symbol":"SF","isin_code":"SE0007704788"},{"instrumment_id":16256554,"instrument_id":16256554,"symbol":"NOVO B","isin_code":"DK0060534915"},{"instrumment_id":16454997,"instrument_id":16454997,"symbol":"SECT B","isin_code":"SE0012853661"},{"instrumment_id":17022638,"instrument_id":17022638,"symbol":"NENT B","isin_code":"SE0012116390"},{"instrumment_id":17057518,"instrument_id":17057518,"symbol":"Xero Ltd","isin_code":"NZXROE0001S2"},{"instrumment_id":16119526,"instrument_id":16119526,"symbol":"TTWO","isin_code":"US8740541094"},{"instrumment_id":16623696,"instrument_id":16623696,"symbol":"EMBRAC B","isin_code":"SE0013121589"},{"instrumment_id":16548250,"instrument_id":16548250,"symbol":"PDX","isin_code":"SE0008294953"},{"instrumment_id":16377849,"instrument_id":16377849,"symbol":"EVO","isin_code":"SE0012673267"},{"instrumment_id":16214531,"instrument_id":16214531,"symbol":"NEM","isin_code":"DE0006452907"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F000011XKU"}],"instrument_id":16994475,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":1.5,"multiplier":1.0,"pawn_percentage":70.0,"margin_percentage":120.0,"symbol":"TIN NY TEKNIK A","isin_code":"SE0012193019","name":"TIN Ny Teknik A","has_fund_data":true,"category":"Branschfond, ny teknik","institute":"TIN Fonder","is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":0.97,"performance_one_week":2.01,"performance_one_month":8.8,"performance_this_year":45.25,"last_nav":187.3857,"last_nav_date":"2020-09-02"},"main_market_price":{"currency":"SEK","value":187.3857},"morning_price":{"currency":"SEK","value":187.3857},"qty":28.631603,"pawn_percent":70,"market_value_acc":{"currency":"SEK","value":5365.1529702771},"market_value":{"currency":"SEK","value":5365.1529702771},"acq_price":{"currency":"SEK","value":154.44472319625277},"acq_price_acc":{"currency":"SEK","value":154.44472319625277},"is_custom_gav":false,"margin_percent":120}]
 
 
 REQUEST 25
-GET https://classic.nordnet.se/api/2/accounts/4/positions?include_instrument_loans=true
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+GET https://www.nordnet.se/api/2/customers/contact_info
+Accept: application/json,application/json
+Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
+User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Content-Type: application/json
 
 RESPONSE 25
 200
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-content-type: application/json; charset=UTF-8
-Vary: User-Agent
-Connection: Keep-Alive
+Server: nginx
+Date: Thu, 03 Sep 2020 10:16:40 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
+Strict-Transport-Security: max-age=31536000
 
-[{"accno":10000070,"accid":4,"instrument":{"has_ucits":true,"key_information_documents":{"url_for_combined":"https://www.lyxoretf.com/pdfDocuments/KIID/KIID_LU1829218582_SE_20190221_SWE.pdf"},"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/0665fcbd3acff5c8f0f5e48f839a52a2.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","tradables":[{"market_id":4,"tick_size_id":34830988,"display_order":0,"lot_size":1.0,"identifier":"LCTR"}],"instrument_id":17006839,"asset_class":"COM","instrument_type":"UETF","instrument_group_type":"PAR","currency":"EUR","management_fee":0.35,"total_fee":0.35,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":70.0,"margin_percentage":200.0,"symbol":"LCTR","isin_code":"LU1829218582","market_view":"U","dividend_policy":"ACCUMULATED","name":"Lyxor Commodities Thomson Reuters/CoreCommodity CRB EX-Energ","has_fund_data":true,"category":"Commodities","institute":"Lyxor International Asset Management S.A.S.","is_daily_traded":false,"last_nav":15.008,"last_nav_date":"2020-07-17"},"main_market_price":{"currency":"EUR","value":15.008},"morning_price":{"currency":"EUR","value":14.932},"qty":21.0,"pawn_percent":70,"market_value_acc":{"currency":"SEK","value":3256.4449948799997},"market_value":{"currency":"EUR","value":315.168},"acq_price":{"currency":"EUR","value":15.16904761904762},"acq_price_acc":{"currency":"SEK","value":161.61192830714285},"is_custom_gav":false,"margin_percent":200},{"accno":10000070,"accid":4,"instrument":{"has_ucits":true,"key_information_documents":{"url_for_combined":"https://www.lyxoretf.com/pdfDocuments/KIID/KIID_LU1829218749_SE_20190221_SWE.pdf"},"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/18ce61c7c04c84dca2b1975c5fe30fb6.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","tradables":[{"market_id":4,"tick_size_id":34830988,"display_order":0,"lot_size":1.0,"identifier":"LYTR"}],"instrument_id":17006840,"asset_class":"COM","instrument_type":"UETF","instrument_group_type":"PAR","currency":"EUR","management_fee":0.35,"total_fee":0.35,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":60.0,"margin_percentage":200.0,"symbol":"LYTR","isin_code":"LU1829218749","market_view":"U","dividend_policy":"ACCUMULATED","name":"Lyxor Commodities Thomson Reuters/CoreCommodity CRB TR UCITS","has_fund_data":true,"category":"Commodities","institute":"Lyxor International Asset Management S.A.S.","is_daily_traded":false,"last_nav":11.67,"last_nav_date":"2020-07-17"},"main_market_price":{"currency":"EUR","value":11.67},"morning_price":{"currency":"EUR","value":11.726},"qty":36.0,"pawn_percent":60,"market_value_acc":{"currency":"SEK","value":4340.8520892},"market_value":{"currency":"EUR","value":420.12},"acq_price":{"currency":"EUR","value":9.826666666666666},"acq_price_acc":{"currency":"SEK","value":105.66925189333334},"is_custom_gav":false,"margin_percent":200},{"accno":10000070,"accid":4,"instrument":{"key_information_documents":{"url_for_combined":"http://34.242.79.197/PRIIP/document/sv/KID-DE000A1DCTL3-WisdomTree_Physical_Swiss_Gold-WisdomTree_Metal_Securities_Limited-4-sv.pdf"},"mifid2_category":6,"prospectus_url":"https://www.wisdomtree.eu/en-gb/-/media/eu-media-files/key-documents/supplement/etf-securities/msl-supplementaryprospectus---2019-07-31--final.pdf","price_type":"monetary_amount","tradables":[{"market_id":4,"tick_size_id":34830990,"display_order":0,"lot_size":1.0,"identifier":"GZUR"}],"instrument_id":16128421,"asset_class":"COM","instrument_type":"PTC","instrument_group_type":"PAR","currency":"EUR","management_fee":0.19,"total_fee":0.19,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":70.0,"margin_percentage":160.0,"symbol":"GZUR","isin_code":"DE000A1DCTL3","market_view":"U","name":"WisdomTree Physical Swiss Gold"},"main_market_price":{"currency":"EUR","value":152.5},"morning_price":{"currency":"EUR","value":152.38},"qty":2.0,"pawn_percent":70,"market_value_acc":{"currency":"SEK","value":3151.1784018},"market_value":{"currency":"EUR","value":304.98},"acq_price":{"currency":"EUR","value":153.88},"acq_price_acc":{"currency":"SEK","value":1655.33886368},"is_custom_gav":false,"margin_percent":160}]
+{"address1":"address 1","city":"Stockholm","country":"Sverige","citizen":"SE","email":"user@email.com","first_name":"FirstName","last_name":"LastName","mobile_phone_number":"0707070707","national_id_number":"9001010101","national_id_number_country_code":"SE","zip_code":"100 00","registration_date":"2013-06-11","person_type":"NAT"}
 
-REQUEST 26
-GET https://classic.nordnet.se/api/2/accounts/5/info
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-
-RESPONSE 26
-200
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-content-type: application/json; charset=UTF-8
-Vary: User-Agent
-Connection: Keep-Alive
-
-[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.39},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.39},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":28927.09088181948,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":28946.805709991168},"full_marketvalue":{"currency":"SEK","value":28926.70088181948},"account_code":"ISK","bank_accno":"91003012150","interest_rate":0.0,"registration_date":"2012-04-05","accno":10330124,"accid":5}]
-
-REQUEST 27
-GET https://classic.nordnet.se/api/2/accounts/5/positions?include_instrument_loans=true
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-
-RESPONSE 27
-200
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-content-type: application/json; charset=UTF-8
-Vary: User-Agent
-Connection: Keep-Alive
-
-[{"accno":10330124,"accid":5,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/b4c08f8e97a349a889573dc056319d1c.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16476927,"instrument_id":16476927,"symbol":"SF","isin_code":"SE0007704788"},{"instrumment_id":16963771,"instrument_id":16963771,"symbol":"LIME","isin_code":"SE0011870195"},{"instrumment_id":16521462,"instrument_id":16521462,"symbol":"ALIF B","isin_code":"SE0014401378"},{"instrumment_id":16284418,"instrument_id":16284418,"symbol":"OEM B","isin_code":"SE0005876968"},{"instrumment_id":16100332,"instrument_id":16100332,"symbol":"ANOD B","isin_code":"SE0000472268"},{"instrumment_id":16489162,"instrument_id":16489162,"symbol":"VIT B","isin_code":"SE0007871363"},{"instrumment_id":16457210,"instrument_id":16457210,"symbol":"LAGR B","isin_code":"SE0007603493"},{"instrumment_id":16251199,"instrument_id":16251199,"symbol":"ADDT B","isin_code":"SE0005568136"},{"instrumment_id":16099824,"instrument_id":16099824,"symbol":"AAK","isin_code":"SE0011337708"},{"instrumment_id":16082794,"instrument_id":16082794,"symbol":"BEIJ B","isin_code":"SE0011116508"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F00000XRGU"}],"instrument_id":16801870,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":1.35,"multiplier":1.0,"pawn_percentage":70.0,"margin_percentage":130.0,"symbol":"CLIENS SMÅBOLAG A","isin_code":"SE0008992069","name":"Cliens Småbolag A","has_fund_data":true,"category":"Sverige, små-/medelstora bolag","institute":"Cliens Kapitalförvaltning AB","rating":5,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":0.96,"performance_one_week":4.95,"performance_one_month":10.8,"performance_this_year":7.67,"performance_three_years":79.23,"last_nav":2020.65,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"SEK","value":2020.65},"morning_price":{"currency":"SEK","value":2020.65},"qty":2.6479,"pawn_percent":70,"market_value_acc":{"currency":"SEK","value":5350.4791350000005},"market_value":{"currency":"SEK","value":5350.4791350000005},"acq_price":{"currency":"SEK","value":1118.9999622342234},"acq_price_acc":{"currency":"SEK","value":1118.9999622342234},"is_custom_gav":false,"margin_percent":130},{"accno":10330124,"accid":5,"instrument":{"has_ucits":true,"no_of_decimals":2,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/550f69d5a2fa60b8ebf6cb1191ff5582.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":17299894,"instrument_id":17299894,"symbol":"Romania 3.62%","isin_code":"XS2178857954"},{"instrumment_id":17275218,"instrument_id":17275218,"symbol":"Saudi Arabia (Kingdom of) 4.5%","isin_code":"XS2159975882"},{"instrumment_id":17275217,"instrument_id":17275217,"symbol":"State of Qatar 4.4%","isin_code":"XS2155352748"},{"instrumment_id":17280813,"instrument_id":17280813,"symbol":"Emirate of Abu Dhabi 3.88%","isin_code":"XS2125308242"},{"instrumment_id":17237730,"instrument_id":17237730,"symbol":"Euro Bund Future June 20","isin_code":"DE000A1K0FR4"},{"instrumment_id":17105559,"instrument_id":17105559,"symbol":"Comision Federal de Electricidad 5%","isin_code":"XS2030333038"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F00000LLUP"}],"instrument_id":16801200,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":1.2,"multiplier":1.0,"pawn_percentage":75.0,"margin_percentage":120.0,"symbol":"FID EM MARK (HDG)","isin_code":"LU0566130729","name":"Fidelity Emerging Mkt Dbt A-Acc-SEK Hdg","has_fund_data":true,"category":"Ränte - övriga obligationer ","institute":"Fidelity (FIL Inv Mgmt (Lux) S.A.)","is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":0.07,"performance_one_week":0.0,"performance_one_month":1.67,"performance_this_year":-4.41,"performance_three_years":-1.32,"performance_five_years":7.44,"last_nav":134.3,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"SEK","value":134.3},"morning_price":{"currency":"SEK","value":134.3},"qty":58.261,"pawn_percent":75,"market_value_acc":{"currency":"SEK","value":7824.452300000001},"market_value":{"currency":"SEK","value":7824.452300000001},"acq_price":{"currency":"SEK","value":120.76689380546163},"acq_price_acc":{"currency":"SEK","value":120.76689380546163},"is_custom_gav":false,"margin_percent":120},{"accno":10330124,"accid":5,"instrument":{"has_ucits":true,"no_of_decimals":3,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/008784b709115346183a7572a8b4d2a0.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16794402,"instrument_id":16794402,"symbol":"Zhongsheng Group Holdings Ltd","isin_code":"KYG9894K1085"},{"instrumment_id":16794367,"instrument_id":16794367,"symbol":"China Conch Venture Holdings Ltd","isin_code":"KYG2116J1085"},{"instrumment_id":16795192,"instrument_id":16795192,"symbol":"Chroma Ate Inc","isin_code":"TW0002360005"},{"instrumment_id":17098116,"instrument_id":17098116,"symbol":"Syngene International Ltd","isin_code":"INE398R01022"},{"instrumment_id":16828764,"instrument_id":16828764,"symbol":"Mphasis Ltd","isin_code":"INE356A01018"},{"instrumment_id":16913216,"instrument_id":16913216,"symbol":"Shangri-La Hotels Malaysia Bhd","isin_code":"MYL5517OO007"},{"instrumment_id":16793857,"instrument_id":16793857,"symbol":"PT Ace Hardware Indonesia Tbk","isin_code":"ID1000125503"},{"instrumment_id":16888046,"instrument_id":16888046,"symbol":"Bank OCBC NISP Tbk","isin_code":"ID1000094402"},{"instrumment_id":16193040,"instrument_id":16193040,"symbol":"ASM.NL","isin_code":"NL0000334118"},{"instrumment_id":16793728,"instrument_id":16793728,"symbol":"M P Evans Group PLC","isin_code":"GB0007538100"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F0GBR06X7H"}],"instrument_id":16802795,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"USD","management_fee":1.75,"multiplier":1.0,"pawn_percentage":70.0,"margin_percentage":120.0,"symbol":"ABERDEEN ASIA SMC","isin_code":"LU0231459107","name":"AS SICAV I Asn Smllr Coms A Acc USD","has_fund_data":true,"category":"Asien ex Japan, små-/medelstora bolag","institute":"Aberdeen Standard Investments Luxembourg S.A.","rating":3,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.98,"performance_one_week":-3.32,"performance_one_month":-0.3,"performance_this_year":-10.63,"performance_three_years":5.83,"performance_five_years":8.1,"last_nav":43.98,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"USD","value":43.9862},"morning_price":{"currency":"USD","value":43.9862},"qty":8.588,"pawn_percent":70,"market_value_acc":{"currency":"SEK","value":3416.353415813271},"market_value":{"currency":"USD","value":377.7534855999999},"acq_price":{"currency":"USD","value":38.21611551001397},"acq_price_acc":{"currency":"SEK","value":349.31803435025614},"is_custom_gav":false,"margin_percent":120},{"accno":10330124,"accid":5,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/337811563a781fe9290bd2972bd30926.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":17166200,"instrument_id":17166200,"symbol":"Treatt PLC","isin_code":"GB00BKS7YK08"},{"instrumment_id":17240875,"instrument_id":17240875,"symbol":"Uniphar PLC","isin_code":"IE00BJ5FQX74"},{"instrumment_id":17139692,"instrument_id":17139692,"symbol":"Craneware PLC","isin_code":"GB00B2425G68"},{"instrumment_id":17106268,"instrument_id":17106268,"symbol":"Eco Animal Health Group PLC","isin_code":"GB0032036807"},{"instrumment_id":17047826,"instrument_id":17047826,"symbol":"discoverIE Group PLC","isin_code":"GB0000055888"},{"instrumment_id":17043875,"instrument_id":17043875,"symbol":"Boku Inc Ordinary Shares","isin_code":"USU7744C1063"},{"instrumment_id":16994114,"instrument_id":16994114,"symbol":"Marlowe PLC","isin_code":"GB00BD8SLV43"},{"instrumment_id":16951715,"instrument_id":16951715,"symbol":"30L3","isin_code":"FR0013379484"},{"instrumment_id":16823481,"instrument_id":16823481,"symbol":"DMP","isin_code":"DE000A2GS5D8"},{"instrumment_id":16876894,"instrument_id":16876894,"symbol":"Learning Technologies Group PLC","isin_code":"GB00B4T7HX10"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"CL00010331"}],"instrument_id":16802592,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"EUR","management_fee":1.6,"multiplier":1.0,"pawn_percentage":80.0,"margin_percentage":100.0,"symbol":"DANSKE INV EUROPE SMC","isin_code":"LU0123485178","name":"Danske Invest Europe Small Cap A","has_fund_data":true,"category":"Europa, småbolag","institute":"Danske Invest Management Company SA","rating":3,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.31,"performance_one_week":-1.66,"performance_one_month":0.02,"performance_this_year":-11.7,"performance_three_years":11.68,"performance_five_years":41.02,"last_nav":67.1,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"EUR","value":67.104},"morning_price":{"currency":"EUR","value":67.104},"qty":7.6778,"pawn_percent":80,"market_value_acc":{"currency":"SEK","value":5324.108982686209},"market_value":{"currency":"EUR","value":515.2110912},"acq_price":{"currency":"EUR","value":68.0246945739665},"acq_price_acc":{"currency":"SEK","value":651.2189718982},"is_custom_gav":false,"margin_percent":100},{"accno":10330124,"accid":5,"instrument":{"has_ucits":true,"no_of_decimals":2,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/70ae1f2f20a987bb9547c82c1ac78aa2.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":17300352,"instrument_id":17300352,"symbol":"Theta Capital Pte. Ltd. 8.12%","isin_code":"XS2099273737"},{"instrumment_id":17156240,"instrument_id":17156240,"symbol":"Network I2I Limited 5.65%","isin_code":"USV6703DAA29"},{"instrumment_id":17188240,"instrument_id":17188240,"symbol":"Wynn Macau Ltd 5.12%","isin_code":"USG98149AE02"},{"instrumment_id":17188239,"instrument_id":17188239,"symbol":"Melco Resorts Finance Limited 5.38%","isin_code":"USG5975LAE68"},{"instrumment_id":16994137,"instrument_id":16994137,"symbol":"Puma International Financing S.A. 5%","isin_code":"XS1751117604"},{"instrumment_id":16948119,"instrument_id":16948119,"symbol":"Global A&T Electronics Ltd 8.5%","isin_code":"US379390AH07"},{"instrumment_id":16793864,"instrument_id":16793864,"symbol":"Fidelity ILF - USD A Acc","isin_code":"IE0003323619"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F0000007H4"}],"instrument_id":16800933,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"EUR","management_fee":1.0,"multiplier":1.0,"pawn_percentage":60.0,"margin_percentage":120.0,"symbol":"FID ASIAN HI YIELD","isin_code":"LU0286668966","name":"Fidelity Asian High Yield A-Acc-EUR","has_fund_data":true,"category":"Ränte - Asien obligationer, högrisk","institute":"Fidelity (FIL Inv Mgmt (Lux) S.A.)","rating":3,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.09,"performance_one_week":-1.91,"performance_one_month":-2.45,"performance_this_year":-5.19,"performance_three_years":16.31,"performance_five_years":31.37,"last_nav":20.85,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"EUR","value":20.85},"morning_price":{"currency":"EUR","value":20.85},"qty":10.38,"pawn_percent":60,"market_value_acc":{"currency":"SEK","value":2236.48065432},"market_value":{"currency":"EUR","value":216.42300000000003},"acq_price":{"currency":"EUR","value":20.199903660886317},"acq_price_acc":{"currency":"SEK","value":192.67651847061654},"is_custom_gav":false,"margin_percent":120},{"accno":10330124,"accid":5,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/f0ad7129fe2c98e657b902b776dd8704.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16793757,"instrument_id":16793757,"symbol":"RELX PLC","isin_code":"GB00B2B0DG97"},{"instrumment_id":16129281,"instrument_id":16129281,"symbol":"ADS","isin_code":"DE000A1EWWW0"},{"instrumment_id":16129109,"instrument_id":16129109,"symbol":"FME","isin_code":"DE0005785802"},{"instrumment_id":16793221,"instrument_id":16793221,"symbol":"SGS AG","isin_code":"CH0002497458"},{"instrumment_id":16161586,"instrument_id":16161586,"symbol":"ROG.CH","isin_code":"CH0012032048"},{"instrumment_id":16250355,"instrument_id":16250355,"symbol":"ABF.UK","isin_code":"GB0006731235"},{"instrumment_id":16129113,"instrument_id":16129113,"symbol":"DB1","isin_code":"DE0005810055"},{"instrumment_id":16129157,"instrument_id":16129157,"symbol":"SAP","isin_code":"DE0007164600"},{"instrumment_id":16146484,"instrument_id":16146484,"symbol":"RB.UK","isin_code":"GB00B24CGK77"},{"instrumment_id":16247907,"instrument_id":16247907,"symbol":"LR.FR","isin_code":"FR0010307819"},{"instrumment_id":16793614,"instrument_id":16793614,"symbol":"L'Oreal SA","isin_code":"FR0000120321"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F00000UDDC"}],"instrument_id":16801623,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":1.85,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":100.0,"symbol":"HB EUROPA SELEKT A","isin_code":"SE0005936903","name":"Handelsbanken Europa Selektiv","has_fund_data":true,"category":"Europa, flexibel storlek bolag","institute":"Handelsbanken Fonder AB","rating":4,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-0.1,"performance_one_week":0.41,"performance_one_month":1.75,"performance_this_year":-5.05,"performance_three_years":19.96,"performance_five_years":14.37,"last_nav":289.71,"last_nav_date":"2020-07-16"},"main_market_price":{"currency":"SEK","value":289.71},"morning_price":{"currency":"SEK","value":289.71},"qty":16.4814,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":4774.826394},"market_value":{"currency":"SEK","value":4774.826394},"acq_price":{"currency":"SEK","value":184.44994720120258},"acq_price_acc":{"currency":"SEK","value":184.44994720120258},"is_custom_gav":false,"margin_percent":100}]
-
-REQUEST 28
-GET https://classic.nordnet.se/api/2/customers/contact_info
-Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-
-RESPONSE 28
-200
-Date: Fri, 17 Jul 2020 12:03:39 GMT
-cache-control: no-cache, no-store, must-revalidate
-content-type: application/json; charset=UTF-8
-expires: 0
-pragma: no-cache
-Vary: User-Agent
-Connection: Keep-Alive
-
-{"address1":"Vintervägen 41 lgh 1302","city":"Solna","country":"Sverige","citizen":"SE","email":"mail@mail.com","first_name":"firsName","last_name":"lastName","national_id_number":"9901010000","national_id_number_country_code":"SE","zip_code":"10004","registration_date":"2017-02-14","person_type":"NAT"}
