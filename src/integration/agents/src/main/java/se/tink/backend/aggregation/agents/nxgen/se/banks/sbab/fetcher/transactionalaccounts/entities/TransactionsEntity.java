@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transacti
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants;
@@ -30,12 +31,12 @@ public class TransactionsEntity {
                 .setType(getTransferType())
                 .setRawDetails(getRawDetails())
                 .setDate(getValueDate())
-                .setDescription(getDetails())
+                .setDescription(getNarrative())
                 .build();
     }
 
-    public String getDetails() {
-        return getNarrativeFrom() + getAccountNumberTo();
+    public String getNarrative() {
+        return Optional.ofNullable(getNarrativeFrom()).orElse(getNarrativeTo());
     }
 
     public String getRawDetails() {
