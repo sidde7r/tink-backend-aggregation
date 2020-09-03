@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.parsing;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.StringValuePattern;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +18,9 @@ import org.apache.http.client.utils.URLEncodedUtils;
 
 public final class BodyParserImpl implements BodyParser {
 
-    private static String URL_ENCODING = StandardCharsets.UTF_8.toString();
+    private static final String URL_ENCODING = StandardCharsets.UTF_8.toString();
+    private static final ObjectMapper MAPPER =
+            new ObjectMapper().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
 
     @Override
     public ImmutableList<StringValuePattern> getStringValuePatterns(
@@ -46,6 +51,15 @@ public final class BodyParserImpl implements BodyParser {
     }
 
     private ImmutableList<StringValuePattern> asJsonPattern(final String body) {
+        // Check if the body is a valid JSON string
+        try {
+            MAPPER.readTree(body);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(
+                    "The following JSON body could not be parsed, please check if it is a valid JSON string "
+                            + body);
+        }
+
         return ImmutableList.of(WireMock.equalToJson(body, true, true));
     }
 

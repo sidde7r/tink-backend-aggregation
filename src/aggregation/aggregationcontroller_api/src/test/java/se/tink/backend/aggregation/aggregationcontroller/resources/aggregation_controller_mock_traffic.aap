@@ -29,7 +29,7 @@ POST https://aggregation.com/aggregation/controller/v1/system/update/credentials
 Accept: application/json
 Content-Type: application/json
 
-{"credentials":{"providerLatency":0,"id":"dummy_id_error_500","statusUpdated":1,"fields":{},"sensitivePayload":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"migrationUpdate":false},"updateContextTimestamp":false,"manual":false,"migrationUpdate":false}
+{"credentials":{"providerLatency":0,"id":"dummy_id_error_500","statusUpdated":1,"fields":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"refreshId":null,"requestType":null}
 
 RESPONSE 3
 500
