@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.entities.PortfolioEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.entities.PortfoliosEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.entities.SecurityEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.rpc.PortfolioResponseEntity;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -263,9 +264,15 @@ public class AccountEntity {
         return builder.build();
     }
 
-    public InvestmentAccount toTinkInvestmentAccount(
+    public List<InvestmentAccount> toTinkInvestmentAccounts(
             PortfolioResponseEntity portfolioResponseEntity) {
-        PortfolioEntity portfolioEntity = portfolioResponseEntity.getPortfolio();
+        PortfoliosEntity portfoliosEntity = portfolioResponseEntity.getPortfolios();
+        return portfoliosEntity.getPortfolio().stream()
+                .map(this::mapPortfolioToInvestmentAccount)
+                .collect(Collectors.toList());
+    }
+
+    private InvestmentAccount mapPortfolioToInvestmentAccount(PortfolioEntity portfolioEntity) {
         return InvestmentAccount.nxBuilder()
                 .withPortfolios(toTinkPortfolio(portfolioEntity))
                 .withCashBalance(
@@ -276,14 +283,15 @@ public class AccountEntity {
     }
 
     private IdModule toTinkIdModule(PortfolioEntity portfolioEntity) {
-        final String bbanNumber = portfolioEntity.getPortfolioAccountNumberBBAN();
+        final String portfolioBbanNumber = portfolioEntity.getPortfolioAccountNumberBBAN();
         final String accountName = portfolioEntity.getPortfolioAccountName();
 
         return IdModule.builder()
-                .withUniqueIdentifier(bbanNumber)
-                .withAccountNumber(bbanNumber)
+                .withUniqueIdentifier(portfolioBbanNumber)
+                .withAccountNumber(portfolioBbanNumber)
                 .withAccountName(accountName)
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BBAN, bbanNumber))
+                .addIdentifier(
+                        AccountIdentifier.create(AccountIdentifier.Type.BBAN, portfolioBbanNumber))
                 .build();
     }
 
