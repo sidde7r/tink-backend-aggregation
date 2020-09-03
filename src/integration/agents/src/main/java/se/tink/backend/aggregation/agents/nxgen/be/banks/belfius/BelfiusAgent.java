@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.BadGatewayRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -102,6 +103,8 @@ public class BelfiusAgent extends NextGenerationAgent
                 new TimeoutRetryFilter(
                         BelfiusConstants.HttpClient.MAX_RETRIES,
                         BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new BadGatewayRetryFilter(2, BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
 
         if (agentsServiceConfiguration.isFeatureEnabled("beProxy")) {
             final PasswordBasedProxyConfiguration proxyConfiguration =

@@ -18,4 +18,9 @@ public class AmericanExpressV62HttpRetryFilter extends AbstractRetryFilter {
         return HttpStatus.SC_BAD_GATEWAY == response.getStatus()
                 || HttpStatus.SC_SERVICE_UNAVAILABLE == response.getStatus();
     }
+
+    @Override
+    protected boolean shouldRetry(RuntimeException exception) {
+        return false;
+    }
 }

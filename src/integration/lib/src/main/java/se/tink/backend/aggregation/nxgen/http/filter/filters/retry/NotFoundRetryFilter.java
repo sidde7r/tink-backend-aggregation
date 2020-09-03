@@ -17,4 +17,9 @@ public class NotFoundRetryFilter extends AbstractRetryFilter {
     protected boolean shouldRetry(HttpResponse response) {
         return response.getStatus() == HttpStatus.SC_NOT_FOUND;
     }
+
+    @Override
+    protected boolean shouldRetry(RuntimeException exception) {
+        return false;
+    }
 }
