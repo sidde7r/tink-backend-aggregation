@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.OAuth;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.rpc.AccountResponse;
@@ -71,7 +70,6 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
     public TransactionsKeyPaginatorBaseResponse fetchTransactions(String url) {
         return getTransactionsRequestBuilder(url)
                 .header(BerlinGroupConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .queryParam(BerlinGroupConstants.QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .get(TransactionsKeyPaginatorBaseResponse.class);
     }
 
