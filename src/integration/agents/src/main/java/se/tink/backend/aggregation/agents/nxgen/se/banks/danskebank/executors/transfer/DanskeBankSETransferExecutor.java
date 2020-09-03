@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferConfig;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.AcceptSignatureRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ListPayeesRequest;
@@ -90,8 +91,11 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
         apiClient
                 .acceptSignature(
                         executorHelper.getTransferType(isOwnAccount),
-                        registerPaymentResponse.getSignatureId(),
-                        null)
+                        AcceptSignatureRequest.builder()
+                                .signatureId(registerPaymentResponse.getSignatureId())
+                                .signaturePackage(null)
+                                .language(configuration.getLanguageCode())
+                                .build())
                 .validate();
 
         return Optional.empty();
@@ -99,19 +103,16 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
 
     private Optional<String> executeExternalTransfer(
             Transfer transfer, ListAccountsResponse accounts, boolean isInternalTransfer) {
-        apiClient.listPayees(ListPayeesRequest.create(configuration.getLanguageCode()));
+        apiClient.listPayees(
+                ListPayeesRequest.builder().languageCode(configuration.getLanguageCode()).build());
 
-        CreditorResponse creditorName =
-                apiClient.creditorName(
-                        CreditorRequest.create(
-                                transfer.getDestination().getIdentifier(),
-                                configuration.getMarketCode()));
-
-        CreditorResponse creditorBankName =
-                apiClient.creditorBankName(
-                        CreditorRequest.create(
-                                transfer.getDestination().getIdentifier(),
-                                configuration.getMarketCode()));
+        CreditorRequest creditorRequest =
+                CreditorRequest.builder()
+                        .accountNumber(transfer.getDestination().getIdentifier())
+                        .countryCode(configuration.getMarketCode())
+                        .build();
+        CreditorResponse creditorName = apiClient.creditorName(creditorRequest);
+        CreditorResponse creditorBankName = apiClient.creditorBankName(creditorRequest);
 
         Date paymentDate = executorHelper.validatePaymentDate(transfer, isInternalTransfer);
 
@@ -134,11 +135,15 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
         apiClient
                 .acceptSignature(
                         executorHelper.getTransferType(isInternalTransfer),
-                        registerPaymentResponse.getSignatureId(),
-                        executorHelper.getSignaturePackage(
-                                injectJsCheckStep,
-                                registerPaymentResponse.getUserId(),
-                                registerPaymentResponse.getSignatureText()))
+                        AcceptSignatureRequest.builder()
+                                .signatureId(registerPaymentResponse.getSignatureId())
+                                .signaturePackage(
+                                        executorHelper.getSignaturePackage(
+                                                injectJsCheckStep,
+                                                registerPaymentResponse.getUserId(),
+                                                registerPaymentResponse.getSignatureText()))
+                                .language(configuration.getLanguageCode())
+                                .build())
                 .validate();
 
         return Optional.empty();

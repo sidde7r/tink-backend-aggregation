@@ -71,18 +71,17 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
                 constants.getRegisterPaymentUrl(), RegisterPaymentResponse.class, request);
     }
 
-    public PollResponse signPayment(String reference) {
+    public PollResponse signPayment(SignRequest request) {
         return client.request(constants.getBankidPollUrl())
                 .header(DanskeRequestHeaders.REFERRER, constants.getBankidPollUrl())
-                .post(PollResponse.class, SignRequest.createFromReference(reference));
+                .post(PollResponse.class, request);
     }
 
     public AcceptSignatureResponse acceptSignature(
-            String signatureType, String signatureId, String signaturePackage) {
+            String signatureType, AcceptSignatureRequest request) {
         return postRequest(
                 constants.getAcceptSignatureUrl(signatureType),
                 AcceptSignatureResponse.class,
-                new AcceptSignatureRequest(
-                        signatureId, signaturePackage, configuration.getLanguageCode()));
+                request);
     }
 }

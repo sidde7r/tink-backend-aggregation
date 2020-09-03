@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.r
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@AllArgsConstructor
+@Getter
+@Builder
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AcceptSignatureRequest {
     private String signatureId;

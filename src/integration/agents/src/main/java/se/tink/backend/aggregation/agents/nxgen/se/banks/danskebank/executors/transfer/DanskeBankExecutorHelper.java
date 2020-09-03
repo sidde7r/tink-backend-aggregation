@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.SignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
@@ -59,13 +60,14 @@ public class DanskeBankExecutorHelper {
                         : TransferAccountType.EXTERNAL;
 
         ValidatePaymentDateRequest paymentDateRequest =
-                new ValidatePaymentDateRequest(
-                        transfer.getDueDate(),
-                        configuration.getMarketCode(),
-                        false,
-                        "",
-                        transfer.getDestination().getIdentifier(),
-                        transferType);
+                ValidatePaymentDateRequest.builder()
+                        .bookingDate(transfer.getDueDate())
+                        .countryCode(configuration.getMarketCode())
+                        .isCurrencyTransaction(false)
+                        .payType("")
+                        .receiverAccount(transfer.getDestination().getIdentifier())
+                        .transferType(transferType)
+                        .build();
 
         ValidatePaymentDateResponse paymentDateResponse =
                 apiClient.validatePaymentDate(paymentDateRequest);
@@ -105,32 +107,37 @@ public class DanskeBankExecutorHelper {
                         : creditorName;
 
         BusinessDataEntity businessData =
-                new BusinessDataEntity()
-                        .seteInvoiceMarking(false)
-                        .setAccountNameFrom(sourceAccount.getAccountName())
-                        .setAccountNameTo(accountName)
-                        .setAccountNoExtFrom(sourceAccount.getAccountNoExt())
-                        .setAccountNoIntFrom(sourceAccount.getAccountNoInt())
-                        .setAccountNoToExt(transfer.getDestination().getIdentifier())
-                        .setAccountProductFrom(sourceAccount.getAccountProduct())
-                        .setAllowDuplicateTransfer(true)
-                        .setAmount(transfer.getAmount().getValue())
-                        .setBankName(creditorBankName)
-                        .setBookingDate(formatDate(paymentDate))
-                        .setCurrency(transfer.getAmount().getCurrency())
-                        .setRegNoFromExt(sourceAccount.getAccountRegNoExt())
-                        .setSavePayee(false)
-                        .setTextFrom(transferMessageFormatter.getSourceMessage(transfer))
-                        .setTextTo(
+                BusinessDataEntity.builder()
+                        .eInvoiceMarking(false)
+                        .accountNameFrom(sourceAccount.getAccountName())
+                        .accountNameTo(accountName)
+                        .accountNoExtFrom(sourceAccount.getAccountNoExt())
+                        .accountNoIntFrom(sourceAccount.getAccountNoInt())
+                        .accountNoToExt(transfer.getDestination().getIdentifier())
+                        .accountProductFrom(sourceAccount.getAccountProduct())
+                        .allowDuplicateTransfer(true)
+                        .amount(transfer.getAmount().getValue())
+                        .bankName(creditorBankName)
+                        .bookingDate(formatDate(paymentDate))
+                        .currency(transfer.getAmount().getCurrency())
+                        .regNoFromExt(sourceAccount.getAccountRegNoExt())
+                        .savePayee(false)
+                        .textFrom(
+                                transfer.getSourceMessage() != null
+                                        ? transferMessageFormatter.getSourceMessage(transfer)
+                                        : null)
+                        .textTo(
                                 transferMessageFormatter
                                         .getDestinationMessageFromRemittanceInformation(
-                                                transfer, isInternalTransfer));
+                                                transfer, isInternalTransfer))
+                        .build();
 
-        RegisterPaymentRequest registerPaymentRequest =
-                RegisterPaymentRequest.create(
-                        businessData, configuration.getLanguageCode(), transferType);
-
-        return apiClient.registerPayment(registerPaymentRequest);
+        return apiClient.registerPayment(
+                RegisterPaymentRequest.builder()
+                        .businessData(businessData)
+                        .language(configuration.getLanguageCode())
+                        .signatureType(transferType)
+                        .build());
     }
 
     public RegisterPaymentResponse registerInternalTransfer(
@@ -145,30 +152,35 @@ public class DanskeBankExecutorHelper {
         String transferType = getTransferType(isInternalDestinationAccount);
 
         BusinessDataEntity businessData =
-                new BusinessDataEntity()
-                        .setAccountNameFrom(sourceAccount.getAccountName())
-                        .setAccountNameTo(ownDestinationAccount.getAccountName())
-                        .setAccountNoExtFrom(sourceAccount.getAccountNoExt())
-                        .setAccountNoIntFrom(sourceAccount.getAccountNoInt())
-                        .setAccountNoIntTo(ownDestinationAccount.getAccountNoInt())
-                        .setAccountNoToExt(transfer.getDestination().getIdentifier())
-                        .setAllowDuplicateTransfer(true)
-                        .setAmount(transfer.getAmount().getValue())
-                        .setBankName(null)
-                        .setBookingDate(formatDate(paymentDate))
-                        .setCurrency(transfer.getAmount().getCurrency())
-                        .setForcableErrorsRC("0000")
-                        .setTextFrom(transferMessageFormatter.getSourceMessage(transfer))
-                        .setTextTo(
+                BusinessDataEntity.builder()
+                        .accountNameFrom(sourceAccount.getAccountName())
+                        .accountNameTo(ownDestinationAccount.getAccountName())
+                        .accountNoExtFrom(sourceAccount.getAccountNoExt())
+                        .accountNoIntFrom(sourceAccount.getAccountNoInt())
+                        .accountNoIntTo(ownDestinationAccount.getAccountNoInt())
+                        .accountNoToExt(transfer.getDestination().getIdentifier())
+                        .allowDuplicateTransfer(true)
+                        .amount(transfer.getAmount().getValue())
+                        .bankName(null)
+                        .bookingDate(formatDate(paymentDate))
+                        .currency(transfer.getAmount().getCurrency())
+                        .forcableErrorsRC("0000")
+                        .textFrom(
+                                transfer.getSourceMessage() != null
+                                        ? transferMessageFormatter.getSourceMessage(transfer)
+                                        : null)
+                        .textTo(
                                 transferMessageFormatter
                                         .getDestinationMessageFromRemittanceInformation(
-                                                transfer, isInternalDestinationAccount));
+                                                transfer, isInternalDestinationAccount))
+                        .build();
 
-        RegisterPaymentRequest registerPaymentRequest =
-                RegisterPaymentRequest.create(
-                        businessData, configuration.getLanguageCode(), transferType);
-
-        return apiClient.registerPayment(registerPaymentRequest);
+        return apiClient.registerPayment(
+                RegisterPaymentRequest.builder()
+                        .businessData(businessData)
+                        .language(configuration.getLanguageCode())
+                        .signatureType(transferType)
+                        .build());
     }
 
     public void signPayment(RegisterPaymentResponse registerPaymentResponse) {
@@ -209,7 +221,14 @@ public class DanskeBankExecutorHelper {
     }
 
     private BankIdStatus collect(String reference) {
-        return apiClient.signPayment(reference).getBankIdStatus();
+        return apiClient
+                .signPayment(
+                        SignRequest.builder()
+                                .reference(reference)
+                                .mode("Sign")
+                                .channel("0")
+                                .build())
+                .getBankIdStatus();
     }
 
     public String getSignaturePackage(

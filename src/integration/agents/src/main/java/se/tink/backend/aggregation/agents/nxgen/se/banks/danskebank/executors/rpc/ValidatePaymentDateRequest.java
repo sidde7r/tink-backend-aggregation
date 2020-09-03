@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.r
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
-@Setter
+@Builder
 @JsonObject
 public class ValidatePaymentDateRequest {
     @JsonProperty("BookingDate")
@@ -29,19 +29,4 @@ public class ValidatePaymentDateRequest {
 
     @JsonProperty("TransferType")
     private String transferType;
-
-    public ValidatePaymentDateRequest(
-            Date bookingDate,
-            String countryCode,
-            boolean isCurrencyTransaction,
-            String payType,
-            String receiverAccount,
-            String transferType) {
-        this.bookingDate = bookingDate;
-        this.countryCode = countryCode;
-        this.isCurrencyTransaction = isCurrencyTransaction;
-        this.payType = payType;
-        this.receiverAccount = receiverAccount;
-        this.transferType = transferType;
-    }
 }

@@ -8,14 +8,13 @@ import lombok.Setter;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.ForcableErrorEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @Getter
 @Setter
 @JsonObject
-public class RegisterPaymentResponse extends AbstractResponse {
+public class RegisterPaymentResponse {
     @JsonProperty("AutoStartToken")
     private String autoStartToken;
 
@@ -43,17 +42,21 @@ public class RegisterPaymentResponse extends AbstractResponse {
     @JsonProperty("SignatureText")
     private String signatureText;
 
-    public String getOrderRef() {
-        return orderRef;
-    }
+    @JsonProperty("ResponseMessage")
+    private String responseMessage;
 
-    public String getAutoStartToken() {
-        return autoStartToken;
-    }
+    @JsonProperty("StatusCode")
+    private int statusCode;
+
+    @JsonProperty("UserID")
+    private String userId;
+
+    @JsonProperty("ValidationResponse")
+    private String validationResponse;
 
     @JsonIgnore
     public RegisterPaymentResponse validate() {
-        if (getStatusCode() != 200) {
+        if (statusCode != 200) {
             throw registerTransferFailure();
         }
         return this;

@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
-@Setter
+@Builder
 @JsonObject
 public class CreditorRequest {
     @JsonProperty("AccountNumber")
@@ -14,13 +14,4 @@ public class CreditorRequest {
 
     @JsonProperty("CountryCode")
     private String countryCode;
-
-    private CreditorRequest(String accountNumber, String countryCode) {
-        this.accountNumber = accountNumber;
-        this.countryCode = countryCode;
-    }
-
-    public static CreditorRequest create(String accountNumber, String countryCode) {
-        return new CreditorRequest(accountNumber, countryCode);
-    }
 }
