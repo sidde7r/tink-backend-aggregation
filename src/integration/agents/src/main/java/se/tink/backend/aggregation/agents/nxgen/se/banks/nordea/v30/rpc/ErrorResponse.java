@@ -283,6 +283,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get())
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT)
+                .setInternalStatus(InternalStatus.INSUFFICIENT_FUNDS.toString())
                 .build();
     }
 
@@ -318,48 +319,6 @@ public class ErrorResponse {
                 .setEndUserMessage(
                         TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED)
                 .setException(e)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceNotFoundError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_NOT_FOUND)
-                .setEndUserMessage(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceUpdateAmountNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_AMOUNT)
-                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_AMOUNT)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceUpdateMessageNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION_MESSAGE)
-                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceUpdateDueNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DUEDATE)
-                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_DUEDATE)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceUpdateFromNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_SOURCE)
-                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_SOURCE)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceUpdateToNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION)
-                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_DESTINATION)
                 .build();
     }
 

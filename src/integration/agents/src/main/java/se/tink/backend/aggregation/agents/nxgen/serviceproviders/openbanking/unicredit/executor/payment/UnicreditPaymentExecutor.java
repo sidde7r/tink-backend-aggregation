@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -30,7 +31,8 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private static final Logger logger = LoggerFactory.getLogger(UnicreditPaymentExecutor.class);
@@ -56,8 +58,14 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
         AccountEntity debtor = new AccountEntity(payment.getDebtor().getAccountNumber());
         AccountEntity creditor = new AccountEntity(payment.getCreditor().getAccountNumber());
+        RemittanceInformation remittanceInformation =
+                paymentRequest.getPayment().getRemittanceInformation();
+
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
+
         String unstructuredRemittance =
-                Optional.ofNullable(payment.getReference()).map(Reference::getValue).orElse("");
+                Optional.ofNullable(remittanceInformation.getValue()).orElse("");
         Date executionDate =
                 Optional.ofNullable(payment.getExecutionDate())
                         .map(
