@@ -18,6 +18,7 @@ public class UpdateTransactionsRequest {
     private String topic;
     private CredentialsRequestType requestType;
     private String aggregationId;
+    private String operationId;
 
     public String getCredentials() {
         return credentials;
@@ -99,5 +100,13 @@ public class UpdateTransactionsRequest {
 
     public void setAggregationId(String aggregationId) {
         this.aggregationId = aggregationId;
+    }
+
+    public String getOperationId() {
+        return operationId;
+    }
+
+    public void setOperationId(String operationId) {
+        this.operationId = operationId;
     }
 }

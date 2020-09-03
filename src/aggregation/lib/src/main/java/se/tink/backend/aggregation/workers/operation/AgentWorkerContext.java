@@ -215,6 +215,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateTransactionsRequest.setCredentialsDataVersion(credentials.getDataVersion());
         updateTransactionsRequest.setUserTriggered(request.isManual());
         updateTransactionsRequest.setRequestTypeFromService(getRequest().getType());
+        updateTransactionsRequest.setOperationId(request.getOperationId());
         getRefreshId().ifPresent(updateTransactionsRequest::setAggregationId);
 
         controllerWrapper.updateTransactionsAsynchronously(updateTransactionsRequest);
@@ -388,6 +389,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
         updateAccountRequest.setAvailableBalance(account.getAvailableBalance());
         updateAccountRequest.setCreditLimit(account.getCreditLimit());
+        updateAccountRequest.setOperationId(request.getOperationId());
 
         Account updatedAccount;
         try {
