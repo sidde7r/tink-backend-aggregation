@@ -261,6 +261,7 @@ public class DanskeBankExecutorHelper {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
                 .setEndUserMessage(EndUserMessage.BANKID_NO_RESPONSE)
+                .setInternalStatus(InternalStatus.BANKID_NO_RESPONSE.toString())
                 .build();
     }
 
@@ -268,6 +269,7 @@ public class DanskeBankExecutorHelper {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(EndUserMessage.BANKID_CANCELLED.getKey().get())
                 .setEndUserMessage(EndUserMessage.BANKID_CANCELLED)
+                .setInternalStatus(InternalStatus.BANKID_CANCELLED.toString())
                 .build();
     }
 
@@ -282,6 +284,7 @@ public class DanskeBankExecutorHelper {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(EndUserMessage.BANKID_ANOTHER_IN_PROGRESS.getKey().get())
                 .setEndUserMessage(EndUserMessage.BANKID_ANOTHER_IN_PROGRESS)
+                .setInternalStatus(InternalStatus.BANKID_ANOTHER_IN_PROGRESS.toString())
                 .build();
     }
 
