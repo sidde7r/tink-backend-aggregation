@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorRes
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -112,7 +113,8 @@ public class NordeaExecutorHelper {
         // Transfer source and destination must not be the same
         if (isAccountIdentifierEquals(transfer.getDestination(), transfer.getSource())) {
             throw transferCancelledWithMessage(
-                    TransferExecutionException.EndUserMessage.DESTINATION_CANT_BE_SAME_AS_SOURCE);
+                    TransferExecutionException.EndUserMessage.DESTINATION_CANT_BE_SAME_AS_SOURCE,
+                    InternalStatus.DESTINATION_CANT_BE_SAME_AS_SOURCE);
         }
 
         return accountResponse.getAccounts().stream()
@@ -128,7 +130,8 @@ public class NordeaExecutorHelper {
     protected void validateMinimumTransferAmount(Transfer transfer) {
         if (transfer.getAmount().getValue() < 1) {
             throw transferCancelledWithMessage(
-                    TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT);
+                    TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT,
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
         }
     }
 
@@ -300,10 +303,12 @@ public class NordeaExecutorHelper {
     }
 
     private TransferExecutionException transferCancelledWithMessage(
-            TransferExecutionException.EndUserMessage endUserMessage) {
+            TransferExecutionException.EndUserMessage endUserMessage,
+            InternalStatus internalStatus) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(endUserMessage.getKey().get())
                 .setEndUserMessage(catalog.getString(endUserMessage))
+                .setInternalStatus(internalStatus.toString())
                 .build();
     }
 }

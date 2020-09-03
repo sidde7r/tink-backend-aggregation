@@ -219,6 +219,7 @@ public class ErrorResponse {
     public static TransferExecutionException invalidDestError() {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                .setInternalStatus(InternalStatus.INVALID_DESTINATION.toString())
                 .build();
     }
 
@@ -239,6 +240,7 @@ public class ErrorResponse {
     public static TransferExecutionException invalidSourceAccountError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
+                .setInternalStatus(InternalStatus.INVALID_SOURCE.toString())
                 .build();
     }
 
@@ -265,6 +267,7 @@ public class ErrorResponse {
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_CANCELLED.getKey().get())
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_CANCELLED)
+                .setInternalStatus(InternalStatus.BANKID_CANCELLED.toString())
                 .build();
     }
 
@@ -272,6 +275,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
                 .setEndUserMessage(EndUserMessage.BANKID_NO_RESPONSE)
+                .setInternalStatus(InternalStatus.BANKID_NO_RESPONSE.toString())
                 .build();
     }
 
@@ -363,6 +367,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(NordeaSEConstants.LogMessages.WRONG_TO_ACCOUNT_LENGTH)
                 .setEndUserMessage(EndUserMessage.INVALID_DESTINATION)
+                .setInternalStatus(InternalStatus.INVALID_DESTINATION.toString())
                 .build();
     }
 
@@ -370,6 +375,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(NordeaSEConstants.LogMessages.WRONG_OCR_MESSAGE)
                 .setEndUserMessage(EndUserMessage.INVALID_OCR)
+                .setInternalStatus(InternalStatus.INVALID_OCR.toString())
                 .build();
     }
 
