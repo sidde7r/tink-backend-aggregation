@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -92,10 +93,11 @@ public class DanskeBankExecutorHelper {
             String creditorName,
             String creditorBankName,
             Date paymentDate,
-            boolean isInternalDestinationAccount) {
+            boolean isInternalTransfer,
+            TransferMessageFormatter transferMessageFormatter) {
         AccountEntity sourceAccount = accounts.findAccount(transfer.getSource().getIdentifier());
 
-        String transferType = getTransferType(isInternalDestinationAccount);
+        String transferType = getTransferType(isInternalTransfer);
 
         String accountName =
                 Strings.isNullOrEmpty(creditorName)
@@ -118,8 +120,11 @@ public class DanskeBankExecutorHelper {
                         .setCurrency(transfer.getAmount().getCurrency())
                         .setRegNoFromExt(sourceAccount.getAccountRegNoExt())
                         .setSavePayee(false)
-                        .setTextFrom(transfer.getSourceMessage())
-                        .setTextTo(transfer.getRemittanceInformation().getValue());
+                        .setTextFrom(transferMessageFormatter.getSourceMessage(transfer))
+                        .setTextTo(
+                                transferMessageFormatter
+                                        .getDestinationMessageFromRemittanceInformation(
+                                                transfer, isInternalTransfer));
 
         RegisterPaymentRequest registerPaymentRequest =
                 RegisterPaymentRequest.create(
@@ -133,7 +138,8 @@ public class DanskeBankExecutorHelper {
             ListAccountsResponse accounts,
             AccountEntity ownDestinationAccount,
             Date paymentDate,
-            boolean isInternalDestinationAccount) {
+            boolean isInternalDestinationAccount,
+            TransferMessageFormatter transferMessageFormatter) {
         AccountEntity sourceAccount = accounts.findAccount(transfer.getSource().getIdentifier());
 
         String transferType = getTransferType(isInternalDestinationAccount);
@@ -152,8 +158,11 @@ public class DanskeBankExecutorHelper {
                         .setBookingDate(formatDate(paymentDate))
                         .setCurrency(transfer.getAmount().getCurrency())
                         .setForcableErrorsRC("0000")
-                        .setTextFrom(transfer.getSourceMessage())
-                        .setTextTo(transfer.getRemittanceInformation().getValue());
+                        .setTextFrom(transferMessageFormatter.getSourceMessage(transfer))
+                        .setTextTo(
+                                transferMessageFormatter
+                                        .getDestinationMessageFromRemittanceInformation(
+                                                transfer, isInternalDestinationAccount));
 
         RegisterPaymentRequest registerPaymentRequest =
                 RegisterPaymentRequest.create(

@@ -64,7 +64,7 @@ public class DanskeBankSEAgent extends DanskeBankAgent {
                         supplementalRequester);
         DanskeBankSETransferExecutor transferExecutor =
                 new DanskeBankSETransferExecutor(
-                        (DanskeBankSEApiClient) apiClient, configuration, executorHelper);
+                        (DanskeBankSEApiClient) apiClient, configuration, executorHelper, catalog);
 
         return Optional.of(new TransferController(null, transferExecutor));
     }

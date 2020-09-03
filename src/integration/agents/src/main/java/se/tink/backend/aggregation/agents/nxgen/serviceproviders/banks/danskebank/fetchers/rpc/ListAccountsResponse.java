@@ -58,7 +58,7 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
                 .collect(Collectors.toList());
     }
 
-    public boolean isOwnAccount(String identifier) {
+    public boolean isInternalTransfer(String identifier) {
         return accounts.stream()
                 .filter(
                         accountEntity ->
