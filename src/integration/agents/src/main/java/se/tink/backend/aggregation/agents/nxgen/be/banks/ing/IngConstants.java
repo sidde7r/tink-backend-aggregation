@@ -73,7 +73,7 @@ public class IngConstants {
         public static final String GET_TRANSACTIONS = "gettransactions";
         public static final String GET_PENDING_PAYMENTS = "getpendingpaymentsonaccount";
         public static final String GET_SECURITIES_PORTFOLIO = "getsecuritiesportfolios";
-        public static final String GET_SECURITIES__PORTFOLIO_VALUATION =
+        public static final String GET_SECURITIES_PORTFOLIO_VALUATION =
                 "getsecuritiesportfoliosvaluation";
         public static final String CREDITCARD_LIST = "getcreditcardlist";
         public static final String CREDITCARD_TRANSACTIONS = "gettransactionsoncreditcard";
@@ -245,6 +245,7 @@ public class IngConstants {
         public static final String NO_LINKED_ACCOUNT = "e50/01/g353-000";
         public static final String ACCOUNT_CANCELLED = "e50/01/g322-000";
         public static final String ACCOUNT_NOT_VALID = "EWS/01/G010-000";
+        public static final String TEMPORARY_ERROR = "EWS/01/G560-000";
         public static final String OUT_OF_SESSION = "001";
     }
 
