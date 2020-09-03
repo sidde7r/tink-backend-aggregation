@@ -185,39 +185,36 @@ public class SwedbankTransferHelper {
                         .getRejectedTransfer(idToConfirm)
                         .orElseThrow(
                                 () ->
-                                        transferFailedWithMessage(
+                                        transferFailed(
                                                 TransferExecutionException.EndUserMessage
                                                         .TRANSFER_CONFIRM_FAILED));
 
         final List<ErrorDetailsEntity> rejectionCauses = rejectedTransfer.getRejectionCauses();
 
         if (rejectionCauses == null || rejectionCauses.isEmpty()) {
-            throw transferCancelledWithMessage(
-                    TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
+            throw transferCancelled(TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
         }
 
         if (rejectionCauses.size() > 1) {
             log.warn(
                     "Received multiple rejection causes for transfer which is not expected, consult debug logs to investigate.");
-            throw transferCancelledWithMessage(
-                    TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
+            throw transferCancelled(TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
         }
 
         ErrorDetailsEntity errorDetails = rejectionCauses.get(0);
 
         switch (errorDetails.getCode()) {
             case SwedbankBaseConstants.ErrorCode.INSUFFICIENT_FUNDS:
-                throw transferCancelledWithMessage(
-                        TransferExecutionException.EndUserMessage.EXCESS_AMOUNT);
+                throw transferCancelled(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT);
             case SwedbankBaseConstants.ErrorCode.DUPLICATION:
-                throw transferCancelledWithMessage(
+                throw transferCancelled(
                         TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT);
             default:
                 log.warn(
                         "Unknown transfer rejection cause. Code: {}, message {}",
                         errorDetails.getCode(),
                         errorDetails.getMessage());
-                throw transferCancelledWithMessage(
+                throw transferCancelled(
                         TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
         }
     }
@@ -392,7 +389,7 @@ public class SwedbankTransferHelper {
         }
     }
 
-    private TransferExecutionException transferFailedWithMessage(
+    private TransferExecutionException transferFailed(
             TransferExecutionException.EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(endUserMessage)
@@ -400,7 +397,7 @@ public class SwedbankTransferHelper {
                 .build();
     }
 
-    private TransferExecutionException transferCancelledWithMessage(
+    private TransferExecutionException transferCancelled(
             TransferExecutionException.EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(endUserMessage)
