@@ -253,7 +253,6 @@ public class AggregationControllerAggregationClientImpl
                 new UpdateCredentialsSensitiveRequest()
                         .setUserId(credentials.getUserId())
                         .setCredentialsId(credentials.getId())
-                        .setCredentialsDataVersion(credentials.getDataVersion())
                         .setSensitiveData(sensitiveData)
                         .setOperationId(operationId);
 
