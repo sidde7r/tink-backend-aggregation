@@ -208,7 +208,8 @@ public class SwedbankTransferHelper {
                 throw transferCancelled(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT);
             case SwedbankBaseConstants.ErrorCode.DUPLICATION:
                 throw transferCancelled(
-                        TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT);
+                        TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT,
+                        InternalStatus.DUPLICATE_PAYMENT);
             default:
                 log.warn(
                         "Unknown transfer rejection cause. Code: {}, message {}",
@@ -402,6 +403,16 @@ public class SwedbankTransferHelper {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(endUserMessage)
                 .setMessage(endUserMessage.getKey().get())
+                .build();
+    }
+
+    private TransferExecutionException transferCancelled(
+            TransferExecutionException.EndUserMessage endUserMessage,
+            InternalStatus internalStatus) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setEndUserMessage(endUserMessage)
+                .setMessage(endUserMessage.getKey().get())
+                .setInternalStatus(internalStatus.toString())
                 .build();
     }
 
