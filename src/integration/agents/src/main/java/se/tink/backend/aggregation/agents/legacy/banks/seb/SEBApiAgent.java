@@ -2032,7 +2032,7 @@ public class SEBApiAgent extends AbstractAgent
             cancelTransfer(
                     catalog.getString(
                             TransferExecutionException.EndUserMessage.INVALID_DESTINATION),
-                    InternalStatus.INVALID_DESTINATION);
+                    InternalStatus.INVALID_DESTINATION_ACCOUNT);
         }
     }
 
