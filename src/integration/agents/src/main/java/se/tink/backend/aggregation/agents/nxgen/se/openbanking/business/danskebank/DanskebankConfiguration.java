@@ -39,20 +39,6 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
     @Secret
     private String softwareStatementAssertion;
 
-    @JsonProperty(required = true)
-    @JsonSchemaDescription("The one you used in software statement")
-    @JsonSchemaTitle("Software ID")
-    @JsonSchemaExamples("12345678-3edf-1234-9a89-123294950c15")
-    @JsonSchemaInject(
-            strings = {
-                @JsonSchemaString(
-                        path = "pattern",
-                        value =
-                                "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}")
-            })
-    @Secret
-    private String softwareId;
-
     @Override
     public ProviderConfiguration getProviderConfiguration() {
         Preconditions.checkState(!Strings.isNullOrEmpty(clientId), "ClientId is null or empty.");
@@ -61,7 +47,7 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
 
     @Override
     public SoftwareStatementAssertion getSoftwareStatementAssertions() {
-        return new SoftwareStatementAssertion(softwareStatementAssertion, softwareId);
+        return new SoftwareStatementAssertion(softwareStatementAssertion);
     }
 
     @Override
