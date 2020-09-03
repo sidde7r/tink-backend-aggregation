@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidIframe.initializer;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

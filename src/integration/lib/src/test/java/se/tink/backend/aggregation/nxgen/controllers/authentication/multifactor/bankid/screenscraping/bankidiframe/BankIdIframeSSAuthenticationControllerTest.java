@@ -19,9 +19,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidIframe.BankIdIframeSSAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidIframe.initializer.IframeInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.IframeInitializer;
 import se.tink.libraries.selenium.WebDriverHelper;
+import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 
 public class BankIdIframeSSAuthenticationControllerTest {
     private BankIdIframeSSAuthenticationController controller;
@@ -58,7 +58,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
         inOrder = Mockito.inOrder(iframeInitializer, driver, webDriverHelper);
         controller =
                 new BankIdIframeSSAuthenticationController(
-                        iframeInitializer, driver, webDriverHelper);
+                        webDriverHelper, driver, iframeInitializer);
         initializeWebElements();
     }
 
@@ -133,6 +133,8 @@ public class BankIdIframeSSAuthenticationControllerTest {
         // given
         given(webDriverHelper.waitForElement(driver, AUTHENTICATION_INPUT_XPATH))
                 .willReturn(Optional.empty());
+        given(webDriverHelper.getElement(driver, BANK_ID_MOBIL_BUTTON))
+                .willThrow(HtmlElementNotFoundException.class);
 
         // when
         Throwable throwable =
