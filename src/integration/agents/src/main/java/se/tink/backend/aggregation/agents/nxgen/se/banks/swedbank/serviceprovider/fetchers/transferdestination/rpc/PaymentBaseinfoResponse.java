@@ -132,7 +132,8 @@ public class PaymentBaseinfoResponse {
                                         .setMessage(
                                                 SwedbankBaseConstants.ErrorMessage
                                                         .SOURCE_NOT_TRANSFER_CAPABLE)
-                                        .setInternalStatus(InternalStatus.INVALID_SOURCE.toString())
+                                        .setInternalStatus(
+                                                InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                                         .build());
 
         String transferDestinationAccountId = transferDestinationAccountEntity.getId();

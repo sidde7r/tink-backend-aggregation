@@ -128,7 +128,7 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
         if (Transfers.INVALID_DESTINATION_ACCOUNT.equalsIgnoreCase(
                 validateRecipientResponse.getCode())) {
             throw transferCancelledWithMessage(
-                    EndUserMessage.INVALID_DESTINATION, InternalStatus.INVALID_DESTINATION);
+                    EndUserMessage.INVALID_DESTINATION, InternalStatus.INVALID_DESTINATION_ACCOUNT);
         }
 
         log.error(

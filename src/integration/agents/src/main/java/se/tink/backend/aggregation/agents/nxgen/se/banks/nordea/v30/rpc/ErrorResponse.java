@@ -219,7 +219,7 @@ public class ErrorResponse {
     public static TransferExecutionException invalidDestError() {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                .setInternalStatus(InternalStatus.INVALID_DESTINATION.toString())
+                .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
                 .build();
     }
 
@@ -240,7 +240,7 @@ public class ErrorResponse {
     public static TransferExecutionException invalidSourceAccountError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
-                .setInternalStatus(InternalStatus.INVALID_SOURCE.toString())
+                .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                 .build();
     }
 
@@ -326,7 +326,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(NordeaSEConstants.LogMessages.WRONG_TO_ACCOUNT_LENGTH)
                 .setEndUserMessage(EndUserMessage.INVALID_DESTINATION)
-                .setInternalStatus(InternalStatus.INVALID_DESTINATION.toString())
+                .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
                 .build();
     }
 
