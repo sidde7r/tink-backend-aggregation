@@ -12,10 +12,10 @@ public class AmountEntity {
     private BigDecimal balance;
 
     public BigDecimal getGranted() {
-        return granted.abs();
+        return granted != null ? granted.abs() : null;
     }
 
     public BigDecimal getBalance() {
-        return balance.abs();
+        return balance != null ? balance.abs() : null;
     }
 }
