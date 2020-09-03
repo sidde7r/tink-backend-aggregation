@@ -90,9 +90,7 @@ public abstract class AbstractRetryFilter extends Filter {
      * @param response the response to analyze.
      * @return {@code true} if the operation should be retried, {@code false} otherwise.
      */
-    protected boolean shouldRetry(HttpResponse response) {
-        return false;
-    }
+    protected abstract boolean shouldRetry(HttpResponse response);
 
     /**
      * Informs if the given exception is unacceptable and the operation should be retried. Returns
@@ -102,7 +100,5 @@ public abstract class AbstractRetryFilter extends Filter {
      * @param exception the exception to analyze.
      * @return {@code true} if the operation should be retried, {@code false} otherwise.
      */
-    protected boolean shouldRetry(RuntimeException exception) {
-        return false;
-    }
+    protected abstract boolean shouldRetry(RuntimeException exception);
 }
