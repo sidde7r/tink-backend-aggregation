@@ -283,6 +283,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get())
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT)
+                .setInternalStatus(InternalStatus.INSUFFICIENT_FUNDS.toString())
                 .build();
     }
 
