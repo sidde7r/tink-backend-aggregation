@@ -7,8 +7,8 @@
         "currencyCode": "SEK",
         "doubleValue": 9.85,
         "exactValue": 9.85,
-        "unscaledValue": 985,
-        "scale": 2
+        "scale": 2,
+        "unscaledValue": 985
       },
       "currencyCode": "SEK",
       "bankId": "98765432198",
@@ -44,14 +44,14 @@
         "currencyCode": "SEK",
         "doubleValue": 1000000.0,
         "exactValue": 1000000.0,
-        "unscaledValue": 10000000,
-        "scale": 1
+        "scale": 1,
+        "unscaledValue": 10000000
       },
       "currencyCode": "SEK",
       "bankId": "12345678",
       "excluded": false,
       "favored": false,
-      "name": "UNDEFINED",
+      "name": "PROPERTY_NAME",
       "ownership": 1.0,
       "type": "LOAN",
       "userModifiedExcluded": false,
@@ -70,8 +70,8 @@
         "currencyCode": "SEK",
         "doubleValue": 5179.32,
         "exactValue": 5179.32,
-        "unscaledValue": 517932,
-        "scale": 2
+        "scale": 2,
+        "unscaledValue": 517932
       },
       "currencyCode": "SEK",
       "bankId": "56789123456",
@@ -105,7 +105,7 @@
     {
       "amount": 4000.0,
       "date": 1583233200000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -119,7 +119,7 @@
     {
       "amount": -70.0,
       "date": 1577790000000,
-      "description": "ERLAGD PREL. SKATTSBAB",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -133,7 +133,7 @@
     {
       "amount": 236.32,
       "date": 1577790000000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -147,7 +147,7 @@
     {
       "amount": -1003000.0,
       "date": 1571565600000,
-      "description": "Kontantinsats92511010011",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -161,7 +161,7 @@
     {
       "amount": 200000.0,
       "date": 1570183200000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -175,7 +175,7 @@
     {
       "amount": 100000.0,
       "date": 1570096800000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -189,7 +189,7 @@
     {
       "amount": 204000.0,
       "date": 1570010400000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -203,7 +203,7 @@
     {
       "amount": 250000.0,
       "date": 1569924000000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -217,7 +217,7 @@
     {
       "amount": 250000.0,
       "date": 1569837600000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -231,7 +231,7 @@
     {
       "amount": 1.0,
       "date": 1565776800000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -245,7 +245,7 @@
     {
       "amount": 10.0,
       "date": 1565344800000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -259,7 +259,7 @@
     {
       "amount": 1.0,
       "date": 1565258400000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -273,7 +273,7 @@
     {
       "amount": 1.0,
       "date": 1548414000000,
-      "description": "null56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -287,7 +287,7 @@
     {
       "amount": -4000.0,
       "date": 1583233200000,
-      "description": "ÃverfÃ¶ring56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -301,7 +301,7 @@
     {
       "amount": 4000.0,
       "date": 1583146800000,
-      "description": "null98765432198",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -315,7 +315,7 @@
     {
       "amount": 0.66,
       "date": 1577790000000,
-      "description": "null98765432198",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -329,7 +329,7 @@
     {
       "amount": -1.0,
       "date": 1565776800000,
-      "description": "ÃVERFÃRING6156494532211",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -343,7 +343,7 @@
     {
       "amount": -1.0,
       "date": 1565776800000,
-      "description": "ÃVERFÃRING6156494532211",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -357,7 +357,7 @@
     {
       "amount": -1.0,
       "date": 1565776800000,
-      "description": "ÃVERFÃRING56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -371,7 +371,7 @@
     {
       "amount": -1.0,
       "date": 1565690400000,
-      "description": "ÃVERFÃRING6156494532211",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -385,7 +385,7 @@
     {
       "amount": -1.0,
       "date": 1565690400000,
-      "description": "ÃVERFÃRING6156494532211",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -399,7 +399,7 @@
     {
       "amount": -1.0,
       "date": 1565690400000,
-      "description": "ÃVERFÃRING6156494532211",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -413,7 +413,7 @@
     {
       "amount": -1.0,
       "date": 1565690400000,
-      "description": "ÃVERFÃRING6156494532211",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -427,7 +427,7 @@
     {
       "amount": -1.0,
       "date": 1565258400000,
-      "description": "ÃverfÃ¶ring56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -441,7 +441,7 @@
     {
       "amount": -1.0,
       "date": 1549450800000,
-      "description": "FIRST_NAME LAST_NAME33009112311999",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -455,7 +455,7 @@
     {
       "amount": -1.0,
       "date": 1548414000000,
-      "description": "To ACCOUNT_NAME56789123456",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -469,7 +469,7 @@
     {
       "amount": -1560.0,
       "date": 1548327600000,
-      "description": "MONNIES33009112311999",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -483,7 +483,7 @@
     {
       "amount": 9.66,
       "date": 1546254000000,
-      "description": "null98765432198",
+      "description": "TRANSACTION_DESCRIPTION",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -509,16 +509,16 @@
     "dateOfBirth": {
       "year": 1912,
       "month": "DECEMBER",
+      "era": "CE",
+      "monthValue": 12,
+      "dayOfMonth": 12,
       "dayOfWeek": "THURSDAY",
       "leapYear": true,
       "dayOfYear": 347,
       "chronology": {
         "id": "ISO",
         "calendarType": "iso8601"
-      },
-      "monthValue": 12,
-      "dayOfMonth": 12,
-      "era": "CE"
+      }
     }
   }
 }
