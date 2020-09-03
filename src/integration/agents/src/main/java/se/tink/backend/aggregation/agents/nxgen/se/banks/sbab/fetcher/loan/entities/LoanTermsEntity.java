@@ -9,10 +9,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 public class LoanTermsEntity {
     private BigDecimal amortizationAmount;
-    private Date changeOfConditionDate;
+    private String changeOfConditionDate;
     private String fixedIncomePeriod;
     private BigDecimal interestRate;
     private Date interestResetDate;
     private BigDecimal paymentTerm;
-    private Date startDate;
+    private String startDate;
 }

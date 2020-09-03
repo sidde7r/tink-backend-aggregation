@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -21,12 +23,11 @@ public class PropertyLoansEntity {
     private String discountType;
     private BigDecimal interestRateDiscount;
     private boolean invoicePostponed;
-    private String legacyLoanNumber;
     private BigDecimal loanAmount;
     private String loanNumber;
-    private LoanObjectEntity loanObjectEntity;
+    private LoanObjectEntity loanObject;
     private String loanStatus;
-    private LoanTermsEntity loanTermsEntity;
+    private LoanTermsEntity loanTerms;
     private String loanType;
     private BigDecimal numberOfBorrowers;
     private String objectType;
@@ -40,29 +41,55 @@ public class PropertyLoansEntity {
                         LoanModule.builder()
                                 .withType(getLoanType())
                                 .withBalance(getLoanAmount())
-                                .withInterestRate(getInterestRateDiscount().doubleValue())
+                                .withInterestRate(getLoanTerms().getInterestRate().doubleValue())
+                                .setAmortized(getAmortizied())
+                                .setApplicants(getApplicants())
+                                .setCoApplicant(hasCoApplicants())
+                                .setNextDayOfTermsChange(getNextDayOfTermsChange())
                                 .setInitialBalance(getOriginalLoanAmount())
-                                .setLoanNumber(getLegacyLoanNumber())
+                                .setLoanNumber(loanNumber)
+                                .setInitialDate(getInitialDate())
                                 .build())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(loanNumber)
                                 .withAccountNumber(loanNumber)
-                                .withAccountName(contractor)
+                                .withAccountName(getLoanObject().getDesignation())
                                 .addIdentifier(new SwedishIdentifier(loanNumber))
                                 .build())
                 .build();
     }
 
-    public ExactCurrencyAmount getLoanAmount() {
+    private ExactCurrencyAmount getLoanAmount() {
         return ExactCurrencyAmount.of(loanAmount, SBABConstants.CURRENCY);
     }
 
-    public Type getLoanType() {
+    private ExactCurrencyAmount getAmortizied() {
+        return ExactCurrencyAmount.of(
+                getLoanTerms().getAmortizationAmount(), SBABConstants.CURRENCY);
+    }
+
+    private Type getLoanType() {
         return SBABConstants.LOAN_TYPES.get(loanType);
     }
 
-    public ExactCurrencyAmount getOriginalLoanAmount() {
+    private List<String> getApplicants() {
+        return borrowers.stream().map(BorrowersEntity::getDisplayName).collect(Collectors.toList());
+    }
+
+    private boolean hasCoApplicants() {
+        return getApplicants().size() > 1;
+    }
+
+    private LocalDate getNextDayOfTermsChange() {
+        return LocalDate.parse(getLoanTerms().getChangeOfConditionDate());
+    }
+
+    private LocalDate getInitialDate() {
+        return LocalDate.parse(getLoanTerms().getStartDate());
+    }
+
+    private ExactCurrencyAmount getOriginalLoanAmount() {
         return ExactCurrencyAmount.of(originalLoanAmount, SBABConstants.CURRENCY);
     }
 }
