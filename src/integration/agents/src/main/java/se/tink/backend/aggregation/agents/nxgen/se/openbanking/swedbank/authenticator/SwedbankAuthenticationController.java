@@ -39,6 +39,7 @@ public class SwedbankAuthenticationController
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
     private String ssn;
+    private String autoStartToken;
 
     public SwedbankAuthenticationController(
             PersistentStorage persistentStorage,
@@ -101,7 +102,9 @@ public class SwedbankAuthenticationController
     @Override
     public AuthenticationResponse init(String ssn) {
         this.ssn = ssn;
-        return authenticator.init(ssn);
+        AuthenticationResponse authenticationResponse = authenticator.init(ssn);
+        this.autoStartToken = authenticationResponse.getChallengeData().getAutoStartToken();
+        return authenticationResponse;
     }
 
     @Override
@@ -148,14 +151,14 @@ public class SwedbankAuthenticationController
 
     @Override
     public Optional<String> getAutostartToken() {
-        return Optional.empty();
+        return Optional.of(autoStartToken);
     }
 
     @Override
     public AuthenticationResponse refreshAutostartToken()
             throws BankIdException, BankServiceException, AuthorizationException,
                     AuthenticationException {
-        return null;
+        return init(ssn);
     }
 
     @Override

@@ -137,14 +137,14 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
         List<String> restrictedAccountIds =
                 restrictedAccounts.stream().map(Account::getId).collect(Collectors.toList());
 
+        if (restrictedAccountIds.isEmpty()) {
+            return;
+        }
+
         log.info(
                 "Restrict Accounts initiated for credentialsId: {}, for the following accounts: {}",
                 credentials.getId(),
                 restrictedAccountIds);
-
-        if (restrictedAccountIds.isEmpty()) {
-            return;
-        }
 
         controllerWrapper.restrictAccounts(
                 RestrictAccountsRequest.of(
