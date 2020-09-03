@@ -241,7 +241,7 @@ public class SwedbankTransferHelper {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
                     .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_SOURCE)
-                    .setInternalStatus(InternalStatus.INVALID_SOURCE.toString())
+                    .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                     .build();
         }
 

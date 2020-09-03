@@ -1944,7 +1944,7 @@ public class SEBApiAgent extends AbstractAgent
         if (!sourceAccount.get().isAllowedToTransferTo(destination)) {
             cancelTransfer(
                     catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE),
-                    InternalStatus.INVALID_SOURCE);
+                    InternalStatus.INVALID_SOURCE_ACCOUNT);
         }
     }
 
