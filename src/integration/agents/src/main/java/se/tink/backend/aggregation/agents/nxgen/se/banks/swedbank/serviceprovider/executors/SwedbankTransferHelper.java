@@ -205,7 +205,9 @@ public class SwedbankTransferHelper {
 
         switch (errorDetails.getCode()) {
             case SwedbankBaseConstants.ErrorCode.INSUFFICIENT_FUNDS:
-                throw transferCancelled(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT);
+                throw transferCancelled(
+                        TransferExecutionException.EndUserMessage.EXCESS_AMOUNT,
+                        InternalStatus.INSUFFICIENT_FUNDS);
             case SwedbankBaseConstants.ErrorCode.DUPLICATION:
                 throw transferCancelled(
                         TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT,
