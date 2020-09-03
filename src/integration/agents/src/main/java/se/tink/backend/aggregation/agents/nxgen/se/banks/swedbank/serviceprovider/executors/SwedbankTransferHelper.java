@@ -400,14 +400,6 @@ public class SwedbankTransferHelper {
     }
 
     private TransferExecutionException transferCancelled(
-            TransferExecutionException.EndUserMessage endUserMessage) {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setEndUserMessage(endUserMessage)
-                .setMessage(endUserMessage.getKey().get())
-                .build();
-    }
-
-    private TransferExecutionException transferCancelled(
             TransferExecutionException.EndUserMessage endUserMessage,
             InternalStatus internalStatus) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
