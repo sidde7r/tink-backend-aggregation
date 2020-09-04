@@ -44,7 +44,7 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
         this.controllerWrapper = controllerWrapper;
     }
 
-    private boolean filterRestrictedAccount(Account account) {
+    private boolean shouldFilterRestrictedAccount(Account account) {
         Optional<Psd2PaymentAccountClassificationResult> classification =
                 psd2PaymentAccountClassifier.classify(
                         refreshInformationRequest.getProvider(), account);
@@ -52,10 +52,11 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                 regulatoryRestrictions.shouldAccountBeRestricted(
                         refreshInformationRequest, account, classification);
         log.info(
-                "Restricting account (credentials, account type, classification): ({}, {}, {})",
+                "Should filter account (credentials, account type, classification): ({}, {}, {}): {}",
                 refreshInformationRequest.getCredentials().getId(),
                 account.getType(),
-                classification.orElse(null));
+                classification.orElse(null),
+                shouldRestrict);
         return shouldRestrict;
     }
 
@@ -73,7 +74,8 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                                 // currently we do not want to restrict anything - just see this
                                 // command running
                                 Account account = accountData.getAccount();
-                                boolean shouldBeFilteredOut = filterRestrictedAccount(account);
+                                boolean shouldBeFilteredOut =
+                                        shouldFilterRestrictedAccount(account);
                                 if (shouldBeFilteredOut) {
                                     restrictedAccounts.add(account);
                                 }
@@ -137,14 +139,14 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
         List<String> restrictedAccountIds =
                 restrictedAccounts.stream().map(Account::getId).collect(Collectors.toList());
 
-        log.info(
-                "Restrict Accounts initiated for credentialsId: {}, for the following accounts: {}",
-                credentials.getId(),
-                restrictedAccountIds);
-
         if (restrictedAccountIds.isEmpty()) {
             return;
         }
+
+        log.info(
+                "Sending Restrict Accounts under credentialsId: {}, for the following accounts: {}",
+                credentials.getId(),
+                restrictedAccountIds);
 
         controllerWrapper.restrictAccounts(
                 RestrictAccountsRequest.of(

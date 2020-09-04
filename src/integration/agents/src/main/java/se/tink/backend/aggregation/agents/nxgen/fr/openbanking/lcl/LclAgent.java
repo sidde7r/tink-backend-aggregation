@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -23,13 +24,17 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.conve
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.identity.LclIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.transaction.LclTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.transferdestination.LclTransferDestinationFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.LclPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.signature.LclSignatureProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.AccessCodeStorage;
@@ -40,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.TokenLifeTime;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.steps.ThirdPartyAppAuthenticationStepCreator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -57,6 +63,7 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
     private static final ZoneId ZONE_ID = ZoneId.of("CET");
 
     private final LclApiClient lclApiClient;
+    private final LclPaymentApiClient paymentApiClient;
     private final OAuth2TokenStorage tokenStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LclIdentityFetcher lclIdentityFetcher;
@@ -69,7 +76,18 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
 
         this.agentConfiguration = getAgentConfiguration();
         this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
-        this.lclApiClient = constructApiClient(qsealcSigner);
+        this.lclApiClient =
+                new LclApiClient(
+                        this.client,
+                        getLclHeaderValueProvider(qsealcSigner),
+                        this.tokenStorage,
+                        this.agentConfiguration);
+        this.paymentApiClient =
+                new LclPaymentApiClient(
+                        client,
+                        getLclHeaderValueProvider(qsealcSigner),
+                        sessionStorage,
+                        agentConfiguration);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.lclIdentityFetcher = new LclIdentityFetcher(this.lclApiClient);
@@ -142,6 +160,22 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
         return this.transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        final SupplementalInformationProvider supplementalInformationProvider =
+                new SupplementalInformationProviderImpl(supplementalRequester, request);
+
+        FrOpenBankingPaymentExecutor paymentExecutor =
+                new FrOpenBankingPaymentExecutor(
+                        paymentApiClient,
+                        agentConfiguration.getRedirectUrl(),
+                        sessionStorage,
+                        strongAuthenticationState,
+                        supplementalInformationProvider.getSupplementalInformationHelper());
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final PrioritizedValueExtractor prioritizedValueExtractor = new PrioritizedValueExtractor();
         final LclDataConverter dataConverter = new LclDataConverter();
@@ -168,16 +202,12 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
         return getAgentConfigurationController().getAgentConfiguration(LclConfiguration.class);
     }
 
-    private LclApiClient constructApiClient(QsealcSigner qsealcSigner) {
+    private LclHeaderValueProvider getLclHeaderValueProvider(QsealcSigner qsealcSigner) {
         final LclSignatureProvider signatureProvider = new LclSignatureProvider(qsealcSigner);
         final Clock clock = Clock.system(ZONE_ID);
-        final LclHeaderValueProvider headerValueProvider =
-                new LclHeaderValueProvider(
-                        signatureProvider,
-                        this.agentConfiguration.getProviderSpecificConfiguration(),
-                        clock);
-
-        return new LclApiClient(
-                this.client, headerValueProvider, this.tokenStorage, this.agentConfiguration);
+        return new LclHeaderValueProvider(
+                signatureProvider,
+                this.agentConfiguration.getProviderSpecificConfiguration(),
+                clock);
     }
 }

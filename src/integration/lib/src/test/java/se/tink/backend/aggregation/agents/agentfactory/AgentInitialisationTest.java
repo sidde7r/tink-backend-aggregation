@@ -67,7 +67,12 @@ public class AgentInitialisationTest {
                     + "2) The className in provider configuration (which is in tink-backend) does not have any typo\n"
                     + getStackTrace(e);
         } else {
-            return errorMessagePrefix + "\n" + getStackTrace(e);
+            return errorMessagePrefix
+                    + "\nOne reason might be that the proper dummy secrets are not provided. "
+                    + "To ensure that this is not the case, please check test.yml and check that all "
+                    + "proper dummy secrets are included for your agent. \nYou can also execute dummy_secrets_adder.py "
+                    + "to add dummy secrets to this file. The following is the error message coming from the agent:\n"
+                    + getStackTrace(e);
         }
     }
 

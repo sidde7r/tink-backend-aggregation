@@ -95,7 +95,7 @@ public class BarclaysAgentWireMockTest {
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
-                .withReference(new Reference("TRANSFER", "b900555d03124056b54930e1c53c9cac"))
+                .withReference(new Reference("TRANSFER", "UK Demo"))
                 .withUniqueId("b900555d03124056b54930e1c53c9cac")
                 .build();
     }

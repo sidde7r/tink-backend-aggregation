@@ -1,19 +1,24 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidIframe;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe;
 
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidIframe.initializer.IframeInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.IframeInitializer;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.selenium.WebDriverHelper;
+import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 
+@RequiredArgsConstructor
 public class BankIdIframeSSAuthenticationController {
-    private WebDriverHelper webDriverHelper;
-    private WebDriver driver;
-    private IframeInitializer iframeInitializer;
+
+    private static final LocalizableKey ONLY_MOBILE_BANK_ID_MESSAGE =
+            new LocalizableKey("Currently only Mobile BankID login method is supported");
+    private static final int WAIT_RENDER_MILLIS = 2000;
 
     private static final By FORM_XPATH = By.xpath("//form");
     private static final By PASSWORD_INPUT_XPATH =
@@ -26,14 +31,9 @@ public class BankIdIframeSSAuthenticationController {
     private static final By AUTHENTICATION_INPUT_XPATH =
             By.xpath("//form//input[@type='password'][@maxlength]");
 
-    private static final int WAIT_RENDER_MILLIS = 2000;
-
-    public BankIdIframeSSAuthenticationController(
-            IframeInitializer iframeInitializer, WebDriver driver, WebDriverHelper driverHelper) {
-        this.webDriverHelper = driverHelper;
-        this.driver = driver;
-        this.iframeInitializer = iframeInitializer;
-    }
+    private final WebDriverHelper webDriverHelper;
+    private final WebDriver driver;
+    private final IframeInitializer iframeInitializer;
 
     public void doLogin(String password) throws AuthenticationException {
         iframeInitializer.initializeBankIdAuthentication();
@@ -47,13 +47,11 @@ public class BankIdIframeSSAuthenticationController {
         waitForUserInteractionAndSendBankIdPassword(driver, password);
     }
 
-    private boolean isBankIdMobilNotSetByDefault() throws LoginException {
-        WebElement passwordInputElement =
-                webDriverHelper
-                        .waitForElement(driver, AUTHENTICATION_INPUT_XPATH)
-                        .orElseThrow(() -> LoginError.NOT_SUPPORTED.exception());
+    private boolean isBankIdMobilNotSetByDefault() {
+        Optional<WebElement> passwordInputElement =
+                webDriverHelper.waitForElement(driver, AUTHENTICATION_INPUT_XPATH);
 
-        return passwordInputElement.isEnabled();
+        return !passwordInputElement.isPresent() || passwordInputElement.get().isEnabled();
     }
 
     private void waitForUserInteractionAndSendBankIdPassword(WebDriver driver, String password)
@@ -70,9 +68,13 @@ public class BankIdIframeSSAuthenticationController {
     }
 
     private void chooseBankIdMobil(WebDriver driver) {
-        WebElement bankIdMobilAuthenticationSelectionButton =
-                webDriverHelper.getElement(driver, BANK_ID_MOBIL_BUTTON);
-        webDriverHelper.clickButton(bankIdMobilAuthenticationSelectionButton);
+        try {
+            WebElement bankIdMobilAuthenticationSelectionButton =
+                    webDriverHelper.getElement(driver, BANK_ID_MOBIL_BUTTON);
+            webDriverHelper.clickButton(bankIdMobilAuthenticationSelectionButton);
+        } catch (HtmlElementNotFoundException e) {
+            throw LoginError.NOT_SUPPORTED.exception(ONLY_MOBILE_BANK_ID_MESSAGE);
+        }
     }
 
     private WebElement waitForUserInteraction(WebDriver driver) throws LoginException {
@@ -81,7 +83,7 @@ public class BankIdIframeSSAuthenticationController {
             Optional<WebElement> webElement =
                     driver.findElements(PASSWORD_INPUT_XPATH).stream()
                             .findAny()
-                            .filter(input -> webDriverHelper.checkIfElementEnabledIfNotWait(input));
+                            .filter(webDriverHelper::checkIfElementEnabledIfNotWait);
             if (webElement.isPresent()) {
                 return webElement.get();
             }

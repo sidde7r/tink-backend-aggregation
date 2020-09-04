@@ -77,7 +77,7 @@ public class AgentWorkerContextTest {
         Credentials credentials = new Credentials();
 
         // when
-        context.updateCredentialsExcludingSensitiveInformation(credentials, false, false);
+        context.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
         // then
         verify(controllerWrapper, times(1))
@@ -110,7 +110,7 @@ public class AgentWorkerContextTest {
         Credentials credentials = new Credentials();
 
         // when
-        context.updateCredentialsExcludingSensitiveInformation(credentials, false, false);
+        context.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
         // then
         verify(controllerWrapper, times(1))

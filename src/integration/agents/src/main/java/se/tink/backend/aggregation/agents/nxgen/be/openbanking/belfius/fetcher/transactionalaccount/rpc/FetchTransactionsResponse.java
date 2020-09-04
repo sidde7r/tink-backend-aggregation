@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.transaction.EmbeddedEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.transaction.LinksEntity;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
+@Slf4j
 @JsonObject
 public class FetchTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
 
@@ -56,6 +58,9 @@ public class FetchTransactionsResponse implements TransactionKeyPaginatorRespons
 
     @Override
     public Optional<Boolean> canFetchMore() {
+        log.info(
+                "Transactions amount on page is : {}",
+                CollectionUtils.size(embedded.getTransactions()));
         return Optional.of(
                 embedded.getNextPageKey() != null
                         && CollectionUtils.isNotEmpty(embedded.getTransactions()));

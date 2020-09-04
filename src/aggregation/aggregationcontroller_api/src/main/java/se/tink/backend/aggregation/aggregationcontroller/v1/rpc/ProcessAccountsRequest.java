@@ -5,7 +5,6 @@ import java.util.List;
 public class ProcessAccountsRequest {
     private List<String> accountIds;
     private String credentialsId;
-    private int credentialsDataVersion;
     private String userId;
 
     public String getCredentialsId() {
@@ -30,13 +29,5 @@ public class ProcessAccountsRequest {
 
     public void setAccountIds(List<String> accountIds) {
         this.accountIds = accountIds;
-    }
-
-    public int getCredentialsDataVersion() {
-        return credentialsDataVersion;
-    }
-
-    public void setCredentialsDataVersion(int credentialsDataVersion) {
-        this.credentialsDataVersion = credentialsDataVersion;
     }
 }

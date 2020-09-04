@@ -171,7 +171,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                                 .ProcessAccountsRequest();
         processAccountsRequest.setAccountIds(accountIds);
         processAccountsRequest.setCredentialsId(credentials.getId());
-        processAccountsRequest.setCredentialsDataVersion(credentials.getDataVersion());
         processAccountsRequest.setUserId(request.getUser().getId());
 
         controllerWrapper.processAccounts(processAccountsRequest);
@@ -209,7 +208,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         getAccountDataCache()
                 .getFilteredAccounts()
                 .forEach(
-                        filteredAccount -> sendAccountToUpdateService(filteredAccount.getBankId()));
+                        filteredAccount -> {
+                            log.info("Sending account to UpdateService.");
+                            sendAccountToUpdateService(filteredAccount.getBankId());
+                        });
     }
 
     public void sendAllCachedAccountsHoldersToUpdateService() {
@@ -321,7 +323,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         updateRequest.setDestinationsBySouce(destinationBySource(transferDestinationPatterns));
         updateRequest.setUserId(request.getUser().getId());
         updateRequest.setCredentialsId(request.getCredentials().getId());
-        updateRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
 
         controllerWrapper.updateTransferDestinationPatterns(updateRequest);
     }
@@ -349,7 +350,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                                 .UpdateTransfersRequest();
         updateTransfersRequest.setUserId(request.getUser().getId());
         updateTransfersRequest.setCredentialsId(request.getCredentials().getId());
-        updateTransfersRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
         updateTransfersRequest.setTransfers(transfers);
 
         controllerWrapper.processEinvoices(updateTransfersRequest);

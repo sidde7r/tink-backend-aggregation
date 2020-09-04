@@ -5,7 +5,9 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
@@ -73,15 +75,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
                         this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
                         this.persistentStorage.get(IngConstants.Storage.DEVICE_ID));
 
-        if (IngConstants.ReturnCodes.NOK.equalsIgnoreCase(loginResponseEntity.getReturnCode())) {
-            throw new IllegalStateException(
-                    String.format(
-                            "%s%s%s%s",
-                            "AutoAuth not successful! Code: ",
-                            loginResponseEntity.getErrorCode().orElse("No error code"),
-                            " Message: ",
-                            loginResponseEntity.getErrorText()));
-        }
+        handleError(loginResponseEntity);
 
         this.ingHelper.persist(loginResponseEntity);
     }
@@ -161,5 +155,21 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
         this.persistentStorage.put(IngConstants.Storage.OTP_COUNTER, otpCounter);
 
         return otp;
+    }
+
+    private void handleError(LoginResponseEntity loginResponseEntity) {
+        if (IngConstants.ReturnCodes.NOK.equalsIgnoreCase(loginResponseEntity.getReturnCode())) {
+            String errorCode = loginResponseEntity.getErrorCode().orElse("No error code");
+            if (IngConstants.ErrorCodes.TEMPORARY_ERROR.equalsIgnoreCase(errorCode)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception("error code: " + errorCode);
+            }
+            throw LoginError.DEFAULT_MESSAGE.exception(
+                    String.format(
+                            "%s%s%s%s",
+                            "AutoAuth not successful! Code: ",
+                            errorCode,
+                            " Message: ",
+                            loginResponseEntity.getErrorText()));
+        }
     }
 }

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.tests;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.common.JsonException;
 import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
 import com.github.tomakehurst.wiremock.matching.StringValuePattern;
 import com.google.common.collect.ImmutableList;
@@ -87,7 +86,7 @@ public final class BodyParserTest {
         bodyParser.getStringValuePatterns(aPerfectlyValidBody, unsupportedMediaType);
     }
 
-    @Test(expected = JsonException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void invalidJson_ThrowException() {
 
         final BodyParser bodyParser = new BodyParserImpl();

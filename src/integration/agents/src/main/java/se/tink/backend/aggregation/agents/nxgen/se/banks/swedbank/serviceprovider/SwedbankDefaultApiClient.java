@@ -329,6 +329,7 @@ public class SwedbankDefaultApiClient {
                         .setEndUserMessage(
                                 TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
                         .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
+                        .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
                         .setException(hre)
                         .build();
             }

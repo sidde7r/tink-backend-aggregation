@@ -176,6 +176,7 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.strings.StringUtils;
@@ -1920,7 +1921,8 @@ public class SEBApiAgent extends AbstractAgent
         if (transfer.getAmount().isLessThan(1.00)) {
             cancelTransfer(
                     catalog.getString(
-                            TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT));
+                            TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT),
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
         }
     }
 
@@ -1941,7 +1943,8 @@ public class SEBApiAgent extends AbstractAgent
         AccountIdentifier destination = transfer.getDestination();
         if (!sourceAccount.get().isAllowedToTransferTo(destination)) {
             cancelTransfer(
-                    catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE));
+                    catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE),
+                    InternalStatus.INVALID_SOURCE_ACCOUNT);
         }
     }
 
@@ -2028,7 +2031,8 @@ public class SEBApiAgent extends AbstractAgent
         if (!searchResult.isPresent() || searchResult.get().size() != 1) {
             cancelTransfer(
                     catalog.getString(
-                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION));
+                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION),
+                    InternalStatus.INVALID_DESTINATION_ACCOUNT);
         }
     }
 
@@ -2043,7 +2047,8 @@ public class SEBApiAgent extends AbstractAgent
                     catalog.getString(
                             TransferExecutionException.EndUserMessageParametrized
                                     .INVALID_MESSAGE_WHEN_MAX_LENGTH
-                                    .cloneWith(100)));
+                                    .cloneWith(100)),
+                    InternalStatus.DESTINATION_MESSAGE_TOO_LONG);
         }
 
         GiroMessageValidator.ValidationResult validationResult =
@@ -2074,7 +2079,7 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         if (!isValidMessage) {
-            cancelTransfer(errorMessage);
+            cancelTransfer(errorMessage, InternalStatus.INVALID_DESTINATION_MESSAGE);
         }
 
         return validationResult;
@@ -2200,7 +2205,8 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         cancelTransfer(
-                catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE));
+                catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE),
+                InternalStatus.BANKID_NO_RESPONSE);
     }
 
     private void abortIfTransferSignatureFailed(SebResponse response)
@@ -2208,12 +2214,13 @@ public class SEBApiAgent extends AbstractAgent
         if (FluentIterable.from(response.getErrors())
                 .anyMatch(ERROR_IS_BANKID_TRANSFER_SIGN_CANCELLED)) {
             cancelTransfer(
-                    catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED));
+                    catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED),
+                    InternalStatus.BANKID_CANCELLED);
         } else if (FluentIterable.from(response.getErrors())
                 .anyMatch(ERROR_IS_BANKID_TRANSFER_TIMEOUT)) {
             cancelTransfer(
-                    catalog.getString(
-                            TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE));
+                    catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE),
+                    InternalStatus.BANKID_NO_RESPONSE);
         }
 
         abortTransferIfErrorIsPresent(response);
@@ -2232,20 +2239,32 @@ public class SEBApiAgent extends AbstractAgent
             SignableOperationStatuses failed, String message, String internalStatus) {
         throw TransferExecutionException.builder(failed)
                 .setEndUserMessage(message)
-                .setMessage(String.format("Error when executing transfer: %s", message))
+                .setMessage(formatErrorMessage(message))
                 .setInternalStatus(internalStatus)
                 .build();
     }
 
-    private void cancelTransfer(String message) throws TransferExecutionException {
-        abortTransfer(SignableOperationStatuses.CANCELLED, message);
+    private void cancelTransfer(String message, InternalStatus internalStatus)
+            throws TransferExecutionException {
+        abortTransferWithInternalStatus(
+                SignableOperationStatuses.CANCELLED, message, internalStatus);
     }
 
     private void abortTransfer(SignableOperationStatuses status, String message)
             throws TransferExecutionException {
         throw TransferExecutionException.builder(status)
                 .setEndUserMessage(message)
-                .setMessage(String.format("Error when executing transfer: %s", message))
+                .setMessage(formatErrorMessage(message))
+                .build();
+    }
+
+    private void abortTransferWithInternalStatus(
+            SignableOperationStatuses status, String message, InternalStatus internalStatus)
+            throws TransferExecutionException {
+        throw TransferExecutionException.builder(status)
+                .setEndUserMessage(message)
+                .setMessage(formatErrorMessage(message))
+                .setInternalStatus(internalStatus.toString())
                 .build();
     }
 
@@ -2407,5 +2426,9 @@ public class SEBApiAgent extends AbstractAgent
         final IdentityData identityData =
                 SeIdentityData.of(userName.trim(), credentials.getField(Field.Key.USERNAME));
         return new FetchIdentityDataResponse(identityData);
+    }
+
+    private String formatErrorMessage(String message) {
+        return String.format("Error when executing transfer: %s", message);
     }
 }

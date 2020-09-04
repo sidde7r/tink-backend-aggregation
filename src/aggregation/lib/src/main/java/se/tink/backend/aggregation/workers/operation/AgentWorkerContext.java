@@ -212,7 +212,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateTransactionsRequest.setTransactions(transactionsToProcess);
         updateTransactionsRequest.setUser(credentials.getUserId());
         updateTransactionsRequest.setCredentials(credentials.getId());
-        updateTransactionsRequest.setCredentialsDataVersion(credentials.getDataVersion());
         updateTransactionsRequest.setUserTriggered(request.isManual());
         updateTransactionsRequest.setRequestTypeFromService(getRequest().getType());
         getRefreshId().ifPresent(updateTransactionsRequest::setAggregationId);
@@ -360,6 +359,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         AccountData accountData = optionalAccountData.get();
         if (accountData.isProcessed()) {
             // Already updated/processed, do not do it twice.
+            logger.info(
+                    "skip updating account from sendAccountToUpdateService as the account data is processed.");
             return accountData.getAccount();
         }
 
@@ -385,7 +386,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setAccount(CoreAccountMapper.fromAggregation(account));
         updateAccountRequest.setAccountFeatures(accountFeatures);
         updateAccountRequest.setCredentialsId(request.getCredentials().getId());
-        updateAccountRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
         updateAccountRequest.setAvailableBalance(account.getAvailableBalance());
         updateAccountRequest.setCreditLimit(account.getCreditLimit());
 
@@ -436,12 +436,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void updateCredentialsExcludingSensitiveInformation(
             Credentials credentials, boolean doStatusUpdate) {
-        updateCredentialsExcludingSensitiveInformation(credentials, doStatusUpdate, false);
-    }
-
-    @Override
-    public void updateCredentialsExcludingSensitiveInformation(
-            Credentials credentials, boolean doStatusUpdate, boolean isMigrationUpdate) {
         // Execute any event-listeners.
 
         for (AgentEventListener eventListener : eventListeners) {
@@ -467,7 +461,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setUserId(credentials.getUserId());
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
-        updateCredentialsStatusRequest.setMigrationUpdate(isMigrationUpdate);
         updateCredentialsStatusRequest.setRequestType(request.getType());
         updateCredentialsStatusRequest.setOperationId(request.getOperationId());
         logger.info(

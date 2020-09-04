@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebSe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Response;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class TransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
@@ -37,15 +38,13 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
                 apiClient.fetchAccounts(customerNumber, ServiceInputValues.DEFAULT_ACCOUNT_TYPE);
         final List<AccountEntity> accountEntities =
                 sebBaseConfiguration.getAccountEntities(response).orElseGet(ArrayList::new);
-
+        AccountTypeMapper mapper =
+                sebBaseConfiguration.isBusinessAgent()
+                        ? SebConstants.BUSINESS_ACCOUNT_TYPE_MAPPER
+                        : SebConstants.ACCOUNT_TYPE_MAPPER;
         return accountEntities.stream()
-                .filter(
-                        e ->
-                                e.isTransactionalAccount(
-                                        sebBaseConfiguration.isBusinessAgent()
-                                                ? SebConstants.BUSINESS_ACCOUNT_TYPE_MAPPER
-                                                : SebConstants.ACCOUNT_TYPE_MAPPER))
-                .map(account -> account.toTinkAccount(customerNumber))
+                .filter(e -> e.isTransactionalAccount(mapper))
+                .map(account -> account.toTinkAccount(customerNumber, mapper))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

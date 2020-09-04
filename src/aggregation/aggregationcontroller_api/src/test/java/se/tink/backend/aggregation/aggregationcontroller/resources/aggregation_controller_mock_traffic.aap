@@ -3,7 +3,7 @@ POST https://aggregation.com/aggregation/controller/v1/system/update/credentials
 Accept: application/json
 Content-Type: application/json
 
-{"credentials":{"providerLatency":0,"id":"dummy_id","statusUpdated":1,"dataVersion":0,"fields":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"migrationUpdate":false},"updateContextTimestamp":false,"manual":false,"migrationUpdate":false,"refreshId":null,"requestType":null}
+{"credentials":{"providerLatency":0,"id":"dummy_id","statusUpdated":1,"fields":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"refreshId":null,"requestType":null}
 
 RESPONSE 1 SET STATE1
 502
@@ -16,7 +16,7 @@ POST https://aggregation.com/aggregation/controller/v1/system/update/credentials
 Accept: application/json
 Content-Type: application/json
 
-{"credentials":{"providerLatency":0,"id":"dummy_id","statusUpdated":1,"dataVersion":0,"fields":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"migrationUpdate":false},"updateContextTimestamp":false,"manual":false,"migrationUpdate":false,"refreshId":null,"requestType":null}
+{"credentials":{"providerLatency":0,"id":"dummy_id","statusUpdated":1,"fields":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"refreshId":null,"requestType":null}
 
 RESPONSE 2
 200
@@ -29,7 +29,7 @@ POST https://aggregation.com/aggregation/controller/v1/system/update/credentials
 Accept: application/json
 Content-Type: application/json
 
-{"credentials":{"providerLatency":0,"id":"dummy_id_error_500","statusUpdated":1,"dataVersion":0,"fields":{},"sensitivePayload":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"migrationUpdate":false},"updateContextTimestamp":false,"manual":false,"migrationUpdate":false}
+{"credentials":{"providerLatency":0,"id":"dummy_id_error_500","statusUpdated":1,"fields":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"refreshId":null,"requestType":null}
 
 RESPONSE 3
 500
@@ -42,7 +42,7 @@ POST https://aggregation.com/aggregation/controller/v1/system/process/transactio
 Accept: application/json
 Content-Type: application/json
 
-{"credentials": "not_dummy_cornwall", "requestType": "CREATE", "aggregationId": "foo", "transactions": [], "user": "Dummy_User", "credentialsDataVersion": 1, "userTriggered": false, "topic": "foo"}
+{"credentials": "not_dummy_cornwall", "requestType": "CREATE", "aggregationId": "foo", "transactions": [], "user": "Dummy_User", "userTriggered": false, "topic": "foo"}
 
 RESPONSE 4
 200
@@ -55,7 +55,7 @@ POST https://aggregation.com/aggregation/controller/v1/system/process/transactio
 Accept: application/json
 Content-Type: application/json
 
-{"credentials": "dummy_cornwall", "transactions": [], "user": "Dummy_User", "credentialsDataVersion": 1, "userTriggered": false, "topic": "foo"}
+{"credentials": "dummy_cornwall", "transactions": [], "user": "Dummy_User", "userTriggered": false, "topic": "foo"}
 
 RESPONSE 5
 200
@@ -68,7 +68,7 @@ POST https://aggregation.com/aggregation/controller/v1/system/process/transactio
 Accept: application/json
 Content-Type: application/json
 
-{"credentials": "dummy_cornwall", "transactions": [], "requestType": "CREATE", "aggregationId": "foo" , "user": "Dummy_User", "credentialsDataVersion": 1, "userTriggered": false, "topic": "foo"}
+{"credentials": "dummy_cornwall", "transactions": [], "requestType": "CREATE", "aggregationId": "foo" , "user": "Dummy_User", "userTriggered": false, "topic": "foo"}
 
 RESPONSE 6
 500

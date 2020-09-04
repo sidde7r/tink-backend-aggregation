@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -126,7 +127,8 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
 
         if (Transfers.INVALID_DESTINATION_ACCOUNT.equalsIgnoreCase(
                 validateRecipientResponse.getCode())) {
-            throw transferCancelledWithMessage(EndUserMessage.INVALID_DESTINATION);
+            throw transferCancelledWithMessage(
+                    EndUserMessage.INVALID_DESTINATION, InternalStatus.INVALID_DESTINATION_ACCOUNT);
         }
 
         log.error(
@@ -185,10 +187,11 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
     }
 
     private TransferExecutionException transferCancelledWithMessage(
-            TransferExecutionException.EndUserMessage endUserMessage) {
+            EndUserMessage endUserMessage, InternalStatus internalStatus) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(catalog.getString(endUserMessage))
                 .setMessage(endUserMessage.toString())
+                .setInternalStatus(internalStatus.toString())
                 .build();
     }
 }

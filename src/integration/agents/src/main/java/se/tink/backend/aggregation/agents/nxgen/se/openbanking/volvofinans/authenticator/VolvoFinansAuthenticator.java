@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.auth
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansConstants.StorageKeys;
@@ -43,7 +44,7 @@ public class VolvoFinansAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
-        return null;
+        throw SessionError.SESSION_EXPIRED.exception();
     }
 
     @Override

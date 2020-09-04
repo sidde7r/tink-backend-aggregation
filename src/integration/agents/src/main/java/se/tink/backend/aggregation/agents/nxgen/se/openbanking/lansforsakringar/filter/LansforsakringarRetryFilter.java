@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.AbstractRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class LansforsakringarRetryFilter extends AbstractRetryFilter {
 
@@ -11,6 +12,11 @@ public class LansforsakringarRetryFilter extends AbstractRetryFilter {
      */
     public LansforsakringarRetryFilter(int maxNumRetries, long retrySleepMilliseconds) {
         super(maxNumRetries, retrySleepMilliseconds);
+    }
+
+    @Override
+    protected boolean shouldRetry(HttpResponse response) {
+        return false;
     }
 
     @Override

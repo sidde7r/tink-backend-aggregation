@@ -1,0 +1,932 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "22222222222",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "SEK",
+                "exactValue": 49950.19,
+                "scale": 2,
+                "unscaledValue": 4995019,
+                "doubleValue": 49950.19
+            },
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "exactValue": 49950.19,
+                "scale": 2,
+                "unscaledValue": 4995019,
+                "doubleValue": 49950.19
+            },
+            "currencyCode": "SEK",
+            "bankId": "22222222222",
+            "excluded": false,
+            "favored": false,
+            "name": "Paradime Ab",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "PARADIME AB",
+            "accountHolder": {
+                "accountId": null,
+                "type": "BUSINESS",
+                "identities": [
+                    {
+                        "name": "PARADIME AB",
+                        "role": null
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "availableCredit": 49950.19,
+            "balance": 49950.19
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 1703.0,
+            "date": 1597744800000,
+            "description": "BG 637-9838",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -102.0,
+            "date": 1596621600000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -25000.0,
+            "date": 1595325600000,
+            "description": "ROBIN AHNLUND",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 6250.0,
+            "date": 1594288800000,
+            "description": "BG 637-9838",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1593770400000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 27000.0,
+            "date": 1592474400000,
+            "description": "BG 637-9838",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 6514.78,
+            "date": 1591783200000,
+            "description": "TINK AB",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1591178400000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1588759200000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1585821600000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 1728.0,
+            "date": 1584097200000,
+            "description": "F: 251",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -1728.0,
+            "date": 1583924400000,
+            "description": "F: 251",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -7500.0,
+            "date": 1583924400000,
+            "description": "F: 121",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1583319600000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1580900400000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1577962800000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1575457200000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1572865200000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -625.0,
+            "date": 1572260400000,
+            "description": "SKATTEVERKET",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1570096800000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1567764000000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1564740000000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1562148000000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1559728800000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1557396000000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1554458400000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -100.0,
+            "date": 1552042800000,
+            "description": "BANKTJÄNSTER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -700.0,
+            "date": 1546513200000,
+            "description": "SKATTEVERKET",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -286.25,
+            "date": 1535968800000,
+            "description": "MISS HOSTING AB",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -1000.0,
+            "date": 1534932000000,
+            "description": "RE:UTLÄGG BV",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -1000.0,
+            "date": 1534932000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -10197.84,
+            "date": 1531821600000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": 25000.0,
+            "date": 1531130400000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 10197.84,
+            "date": 1530612000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -10197.84,
+            "date": 1530612000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -10197.84,
+            "date": 1530612000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -9500.0,
+            "date": 1527242400000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -450.0,
+            "date": 1524650400000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -1485.0,
+            "date": 1523959200000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -6042.0,
+            "date": 1519383600000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -1500.0,
+            "date": 1518001200000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -625.0,
+            "date": 1508320800000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -128727.0,
+            "date": 1502791200000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -271695.0,
+            "date": 1499853600000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -43750.0,
+            "date": 1499853600000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -10.0,
+            "date": 1499767200000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -25000.0,
+            "date": 1499767200000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": 26862.0,
+            "date": 1498644000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -3985.0,
+            "date": 1495620000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -1544.0,
+            "date": 1495620000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -2000.0,
+            "date": 1491991200000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 312500.0,
+            "date": 1490868000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -22000.0,
+            "date": 1490094000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -362.5,
+            "date": 1489748400000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -2000.0,
+            "date": 1489402800000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -19500.0,
+            "date": 1487329200000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "TRANSFER",
+            "upcoming": false
+        },
+        {
+            "amount": -826.66,
+            "date": 1486551600000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -625.0,
+            "date": 1485342000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 200000.0,
+            "date": 1484046000000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -5500.0,
+            "date": 1480330800000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -132.5,
+            "date": 1472810400000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -8811.0,
+            "date": 1469613600000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 57500.0,
+            "date": 1469440800000,
+            "description": "dummyDescription",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        }
+    ]
+}

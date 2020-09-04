@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.utils.remittanceinformation;
 
-import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -17,11 +16,11 @@ public class RemittanceInformationValidator {
     public static void validateSupportedRemittanceInformationTypesOrThrow(
             RemittanceInformation remittanceInformation,
             RemittanceInformationType... supportedTypes) {
-        Stream.of(supportedTypes)
-                .filter(
-                        remittanceInformationType ->
-                                remittanceInformationType == remittanceInformation.getType())
-                .findFirst()
-                .orElseThrow(() -> exception);
+        for (RemittanceInformationType type : supportedTypes) {
+            if (type == remittanceInformation.getType()) {
+                return;
+            }
+        }
+        throw exception;
     }
 }

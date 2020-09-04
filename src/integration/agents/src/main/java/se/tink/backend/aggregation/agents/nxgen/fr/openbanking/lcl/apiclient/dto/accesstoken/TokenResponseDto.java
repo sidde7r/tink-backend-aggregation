@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
 @Data
@@ -21,4 +22,8 @@ public class TokenResponseDto {
     private String scope;
 
     private String refreshToken;
+
+    public OAuth2Token toOauthToken() {
+        return OAuth2Token.create("Bearer", getAccessToken(), getRefreshToken(), getExpiresIn());
+    }
 }

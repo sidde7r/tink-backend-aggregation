@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AbstractAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ErrorDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
@@ -31,6 +33,7 @@ import se.tink.backend.aggregation.utils.qrcode.QrCodeParser;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -92,12 +95,14 @@ public class SwedbankTransferHelper {
                                             TransferExecutionException.EndUserMessage
                                                     .BANKID_CANCELLED))
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                            .setInternalStatus(InternalStatus.BANKID_CANCELLED.toString())
                             .build();
                 case TIMEOUT:
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                             .setEndUserMessage(
                                     TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE)
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_TIMEOUT)
+                            .setInternalStatus(InternalStatus.BANKID_NO_RESPONSE.toString())
                             .build();
                 case ALREADY_IN_PROGRESS:
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
@@ -150,6 +155,7 @@ public class SwedbankTransferHelper {
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE)
                 .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                .setInternalStatus(InternalStatus.BANKID_NO_RESPONSE.toString())
                 .build();
     }
 
@@ -179,20 +185,41 @@ public class SwedbankTransferHelper {
                         .getRejectedTransfer(idToConfirm)
                         .orElseThrow(
                                 () ->
-                                        transferFailedWithMessage(
+                                        transferFailed(
                                                 TransferExecutionException.EndUserMessage
                                                         .TRANSFER_CONFIRM_FAILED));
 
-        TransferExecutionException.EndUserMessage endUserMessage =
-                rejectedTransfer
-                        .getMessageBasedOnRejectionCause()
-                        .orElseThrow(
-                                () ->
-                                        transferCancelledWithMessage(
-                                                TransferExecutionException.EndUserMessage
-                                                        .TRANSFER_REJECTED));
+        final List<ErrorDetailsEntity> rejectionCauses = rejectedTransfer.getRejectionCauses();
 
-        throw transferCancelledWithMessage(endUserMessage);
+        if (rejectionCauses == null || rejectionCauses.isEmpty()) {
+            throw transferCancelled(TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
+        }
+
+        if (rejectionCauses.size() > 1) {
+            log.warn(
+                    "Received multiple rejection causes for transfer which is not expected, consult debug logs to investigate.");
+            throw transferCancelled(TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
+        }
+
+        ErrorDetailsEntity errorDetails = rejectionCauses.get(0);
+
+        switch (errorDetails.getCode()) {
+            case SwedbankBaseConstants.ErrorCode.INSUFFICIENT_FUNDS:
+                throw transferCancelled(
+                        TransferExecutionException.EndUserMessage.EXCESS_AMOUNT,
+                        InternalStatus.INSUFFICIENT_FUNDS);
+            case SwedbankBaseConstants.ErrorCode.DUPLICATION:
+                throw transferCancelled(
+                        TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT,
+                        InternalStatus.DUPLICATE_PAYMENT);
+            default:
+                log.warn(
+                        "Unknown transfer rejection cause. Code: {}, message {}",
+                        errorDetails.getCode(),
+                        errorDetails.getMessage());
+                throw transferCancelled(
+                        TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
+        }
     }
 
     public static AccountIdentifier getDestinationAccount(Transfer transfer) {
@@ -214,6 +241,7 @@ public class SwedbankTransferHelper {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
                     .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_SOURCE)
+                    .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                     .build();
         }
 
@@ -364,7 +392,7 @@ public class SwedbankTransferHelper {
         }
     }
 
-    private TransferExecutionException transferFailedWithMessage(
+    private TransferExecutionException transferFailed(
             TransferExecutionException.EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(endUserMessage)
@@ -372,11 +400,21 @@ public class SwedbankTransferHelper {
                 .build();
     }
 
-    private TransferExecutionException transferCancelledWithMessage(
+    private TransferExecutionException transferCancelled(
             TransferExecutionException.EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(endUserMessage)
                 .setMessage(endUserMessage.getKey().get())
+                .build();
+    }
+
+    private TransferExecutionException transferCancelled(
+            TransferExecutionException.EndUserMessage endUserMessage,
+            InternalStatus internalStatus) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setEndUserMessage(endUserMessage)
+                .setMessage(endUserMessage.getKey().get())
+                .setInternalStatus(internalStatus.toString())
                 .build();
     }
 

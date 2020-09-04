@@ -7,9 +7,8 @@ public class LocalCertificateTlsConfiguration implements TlsConfigurationOverrid
 
     private TransportKey transportKey;
 
-    public LocalCertificateTlsConfiguration(
-            String transportKeyId, String transportKey, String transportKeyPassword) {
-        this(new TransportKey(transportKeyId, transportKey, transportKeyPassword));
+    public LocalCertificateTlsConfiguration(String transportKey, String transportKeyPassword) {
+        this(new TransportKey(transportKey, transportKeyPassword));
     }
 
     public LocalCertificateTlsConfiguration(TransportKey transportKey) {
@@ -18,7 +17,6 @@ public class LocalCertificateTlsConfiguration implements TlsConfigurationOverrid
 
     @Override
     public void applyConfiguration(final TinkHttpClient client) {
-
         client.setSslClientCertificate(transportKey.getP12Key(), transportKey.getPassword());
     }
 }

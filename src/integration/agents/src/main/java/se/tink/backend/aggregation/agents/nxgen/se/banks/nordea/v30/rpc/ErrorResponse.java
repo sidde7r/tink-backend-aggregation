@@ -219,6 +219,7 @@ public class ErrorResponse {
     public static TransferExecutionException invalidDestError() {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
                 .build();
     }
 
@@ -239,6 +240,7 @@ public class ErrorResponse {
     public static TransferExecutionException invalidSourceAccountError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
+                .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                 .build();
     }
 
@@ -265,6 +267,7 @@ public class ErrorResponse {
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_CANCELLED.getKey().get())
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_CANCELLED)
+                .setInternalStatus(InternalStatus.BANKID_CANCELLED.toString())
                 .build();
     }
 
@@ -272,6 +275,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
                 .setEndUserMessage(EndUserMessage.BANKID_NO_RESPONSE)
+                .setInternalStatus(InternalStatus.BANKID_NO_RESPONSE.toString())
                 .build();
     }
 
@@ -279,6 +283,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get())
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT)
+                .setInternalStatus(InternalStatus.INSUFFICIENT_FUNDS.toString())
                 .build();
     }
 
@@ -317,52 +322,11 @@ public class ErrorResponse {
                 .build();
     }
 
-    public static TransferExecutionException eInvoiceNotFoundError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_NOT_FOUND)
-                .setEndUserMessage(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceUpdateAmountNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_AMOUNT)
-                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_AMOUNT)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceUpdateMessageNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION_MESSAGE)
-                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceUpdateDueNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DUEDATE)
-                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_DUEDATE)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceUpdateFromNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_SOURCE)
-                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_SOURCE)
-                .build();
-    }
-
-    public static TransferExecutionException eInvoiceUpdateToNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION)
-                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_DESTINATION)
-                .build();
-    }
-
     public TransferExecutionException wrongToAccountLengthError() {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(NordeaSEConstants.LogMessages.WRONG_TO_ACCOUNT_LENGTH)
                 .setEndUserMessage(EndUserMessage.INVALID_DESTINATION)
+                .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
                 .build();
     }
 
@@ -370,6 +334,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(NordeaSEConstants.LogMessages.WRONG_OCR_MESSAGE)
                 .setEndUserMessage(EndUserMessage.INVALID_OCR)
+                .setInternalStatus(InternalStatus.INVALID_OCR.toString())
                 .build();
     }
 

@@ -14,10 +14,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.ClientRegistration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenRequestForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
@@ -311,31 +309,5 @@ public class OpenIdApiClient {
 
     public Optional<OpenIdError> getOpenIdError() {
         return Optional.ofNullable(openIdError);
-    }
-
-    public static String registerClient(
-            SoftwareStatement softwareStatement,
-            URL wellKnownURL,
-            TinkHttpClient httpClient,
-            JwtSigner signer) {
-
-        WellKnownResponse wellKnownResponse =
-                SerializationUtils.deserializeFromString(
-                        httpClient.request(wellKnownURL).get(String.class),
-                        WellKnownResponse.class);
-        URL registrationEndpoint = wellKnownResponse.getRegistrationEndpoint();
-        String postData =
-                ClientRegistration.create()
-                        .withSoftwareStatement(softwareStatement)
-                        .withWellknownConfiguration(wellKnownResponse)
-                        .withAccountsScope()
-                        .withPaymentsScope()
-                        .build(signer);
-
-        return httpClient
-                .request(registrationEndpoint)
-                .type("application/jwt")
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(String.class, postData);
     }
 }

@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
@@ -131,6 +132,8 @@ public class PaymentBaseinfoResponse {
                                         .setMessage(
                                                 SwedbankBaseConstants.ErrorMessage
                                                         .SOURCE_NOT_TRANSFER_CAPABLE)
+                                        .setInternalStatus(
+                                                InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                                         .build());
 
         String transferDestinationAccountId = transferDestinationAccountEntity.getId();

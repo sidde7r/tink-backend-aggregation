@@ -67,7 +67,6 @@ public class ProviderConfiguration {
 
     private String financialInstitutionId;
     private String financialInstitutionName;
-    private String defaultDataVersion;
 
     @JsonProperty("supplementalFields")
     private String supplementalFieldsSerialized;
@@ -128,10 +127,6 @@ public class ProviderConfiguration {
 
     public String getCurrency() {
         return currency;
-    }
-
-    public String getDefaultDataVersion() {
-        return defaultDataVersion;
     }
 
     public String getDisplayName() {
@@ -260,10 +255,6 @@ public class ProviderConfiguration {
 
     public void setCurrency(String currency) {
         this.currency = currency;
-    }
-
-    public void setDefaultDataVersion(String defaultDataVersion) {
-        this.defaultDataVersion = defaultDataVersion;
     }
 
     public void setDisplayName(String displayName) {

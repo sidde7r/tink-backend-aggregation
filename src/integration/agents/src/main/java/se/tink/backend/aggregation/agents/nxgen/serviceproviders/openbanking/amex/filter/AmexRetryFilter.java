@@ -18,4 +18,9 @@ public class AmexRetryFilter extends AbstractRetryFilter {
     public boolean shouldRetry(HttpResponse response) {
         return response.getStatus() >= 500 && Strings.isNullOrEmpty(response.getBody(String.class));
     }
+
+    @Override
+    protected boolean shouldRetry(RuntimeException exception) {
+        return false;
+    }
 }

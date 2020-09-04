@@ -11,7 +11,6 @@ public class UpdateAccountRequest {
     private AccountFeatures accountFeatures;
     private String user;
     private String credentialsId;
-    private int credentialsDataVersion;
     private ExactCurrencyAmount availableBalance;
     private ExactCurrencyAmount creditLimit;
 
@@ -48,14 +47,6 @@ public class UpdateAccountRequest {
 
     public void setAccountFeatures(AccountFeatures accountFeatures) {
         this.accountFeatures = accountFeatures;
-    }
-
-    public int getCredentialsDataVersion() {
-        return credentialsDataVersion;
-    }
-
-    public void setCredentialsDataVersion(int credentialsDataVersion) {
-        this.credentialsDataVersion = credentialsDataVersion;
     }
 
     public ExactCurrencyAmount getAvailableBalance() {

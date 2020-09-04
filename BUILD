@@ -21,11 +21,6 @@ filegroup(
     ],
 )
 
-alias(
-    name = "ukob_register",
-    actual = "//src/commands/ukob_register",
-)
-
 test_suite(
     name = "most_tests",
     tests = [
