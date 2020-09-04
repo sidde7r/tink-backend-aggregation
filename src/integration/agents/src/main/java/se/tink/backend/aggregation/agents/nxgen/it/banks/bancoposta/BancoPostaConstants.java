@@ -69,6 +69,31 @@ public class BancoPostaConstants {
             public static final String APP_REGISTER_ID = "appRegisterID";
             public static final String USER_PIN = "userPIN";
             public static final String OTP = "otp";
+            public static final String TRANSACTION_CHALLENGE = "transaction-challenge";
+            public static final String AUTHZ_TOOL = "authzTool";
+            public static final String POSTEID = "posteid";
+            public static final String SIGTYPE = "sigtype";
+            public static final String JWS = "JWS";
+            public static final String TRANSACTION_ID = "transactionID";
+            public static final String SIGNED_CHALLENGE = "signed_challenge";
+            public static final String APP_BPOL = "app-bpol";
+            public static final String OTP_SPECS = "otp-specs";
+            public static final String KID_SHA_256 = "kid-sha256";
+            public static final String DATA = "data";
+            public static final String TYPE = "type";
+            public static final String HMAC_SHA_1 = "HMAC-SHA1";
+            public static final String MOVING_FACTOR = "movingFactor";
+            public static final String REGISTER_TOKEN = "registerToken";
+            public static final String IDP_ACCESS_TOKEN = "idpAccessToken";
+            public static final String ACTIVATION = "activation";
+            public static final String USERNAME = "username";
+            public static final String PASSWORD = "password";
+            public static final String REGISTER = "register";
+            public static final String XDEVICE = "xdevice";
+            public static final String PUB_APP_KEY = "pubAppKey";
+            public static final String INIT_CODE_VERIFIER = "initCodeVerifier";
+            public static final String DEVICE_SPEC_ENCODED =
+                    ":MDBmYzEzYWRmZjc4NTEyMmI0YWQyODgwOWEzNDIwOTgyMzQxMjQxNDIxMzQ4MDk3ODc4ZTU3N2M5OTFkZThmMA==:IOS:13.3.1:iPhone:13.65.22:true";
         }
     }
 
@@ -89,6 +114,11 @@ public class BancoPostaConstants {
         public static final String PUB_SERVER_KEY = "pubServerKey";
         public static final String OTP_SECRET_KEY = "otpSecretKey";
         public static final String MANUAL_AUTH_FINISH_FLAG = "manualAuthFinishFlag";
+        public static final String REGISTRATION_SESSION_TOKEN = "registrationSessionToken";
+        public static final String ACCOUNT_NUMBER = "accountNumber";
+        public static final String ACCOUNT_ALIAS = "accountAlias";
+        public static final String REGISTER_TOKEN = "registerToken";
+        public static final String USER_PIN_SET_REQUIRED = "userPinSetRequired";
     }
 
     public static class FormParams {
@@ -100,6 +130,12 @@ public class BancoPostaConstants {
         public static final String REQUEST = "request";
         public static final String CREDENTIALS = "credentials";
         public static final String RESPONSE_TYPE = "response_type";
+        public static final String STATE = "state";
+        public static final String PROMPT = "prompt";
+        public static final String NONCE = "nonce";
+        public static final String JTI = "jti";
+        public static final String ISS = "iss";
+        public static final String AUD = "aud";
     }
 
     public static class FormValues {
@@ -109,6 +145,18 @@ public class BancoPostaConstants {
         public static final String ACR_VALUES = "https://idp.poste.it/L1";
         public static final String SUB = "poste.it";
         public static final String GRANT_TYPE = "password";
-        public static final String RESPONSE_TYPE = "token";
+        public static final String TOKEN = "token";
+        public static final String OIDC_URL = "https://oidc-proxy.poste.it";
+        public static final String IDP_URL = "https://idp-poste.poste.it";
+        public static final String POSTE_URL_L2 = "https://idp.poste.it/L2";
+        public static final String NONE_LOGIN = "none login";
+        public static final String SIGNED_CHALLENGE = "signed_challenge";
+        public static final String POSTE_ID = "posteID";
+    }
+
+    public static class ErrorCodes {
+        public static final String MAX_DEVICES_LIMIT = "PIN-ERR-1";
+        public static final String PIN_SET_REQUIRED = "DEVICE-ERR-2";
+        public static final String INCORRECT_CREDENTIALS = "WS_CALL_ERROR";
     }
 }

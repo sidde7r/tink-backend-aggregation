@@ -5,29 +5,63 @@ import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Storage;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@Data
-public class UserContext {
+public class BancoPostaStorage {
     private final PersistentStorage persistentStorage;
 
-    private String registrationSessionToken;
-    private String accountNumber;
-    private String accountAlias;
-    private String registerToken;
-    private boolean isUserPinSetRequired;
-
-    public UserContext(PersistentStorage persistentStorage) {
+    public BancoPostaStorage(PersistentStorage persistentStorage) {
         this.persistentStorage = persistentStorage;
     }
 
     public void saveToPersistentStorage(String key, Object val) {
         this.persistentStorage.put(key, val);
+    }
+
+    public void clearStorage() {
+        this.persistentStorage.clear();
+    }
+
+    public String getRegistrationSessionToken() {
+        return Optional.ofNullable(persistentStorage.get(Storage.REGISTRATION_SESSION_TOKEN))
+                .orElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "Can't obtain stored registration session token."));
+    }
+
+    public String getAccountNumber() {
+        return Optional.ofNullable(persistentStorage.get(Storage.ACCOUNT_NUMBER))
+                .orElseThrow(
+                        () -> new NoSuchElementException("Can't obtain stored account number."));
+    }
+
+    public String getAccountAlias() {
+        return Optional.ofNullable(persistentStorage.get(Storage.ACCOUNT_ALIAS))
+                .orElseThrow(
+                        () -> new NoSuchElementException("Can't obtain stored account alias."));
+    }
+
+    public String getRegisterToken() {
+        return Optional.ofNullable(persistentStorage.get(Storage.REGISTER_TOKEN))
+                .orElseThrow(
+                        () -> new NoSuchElementException("Can't obtain stored register token."));
+    }
+
+    public boolean isUserPinSetRequired() {
+        return persistentStorage.get(Storage.USER_PIN_SET_REQUIRED, Boolean.class).orElse(false);
+    }
+
+    public void removeDataUsedOnlyForManualAuth() {
+        persistentStorage.remove(Storage.REGISTRATION_SESSION_TOKEN);
+        persistentStorage.remove(Storage.ACCOUNT_NUMBER);
+        persistentStorage.remove(Storage.ACCOUNT_ALIAS);
+        persistentStorage.remove(Storage.REGISTER_TOKEN);
+        persistentStorage.remove(Storage.USER_PIN_SET_REQUIRED);
     }
 
     public KeyPair getKeyPair() {

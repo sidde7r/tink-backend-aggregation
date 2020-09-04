@@ -10,7 +10,7 @@ public class SignedChallenge {
     private String jti;
 
     @JsonProperty("sigtype")
-    private String sigType;
+    private String signatureType;
 
     private String signature;
 }

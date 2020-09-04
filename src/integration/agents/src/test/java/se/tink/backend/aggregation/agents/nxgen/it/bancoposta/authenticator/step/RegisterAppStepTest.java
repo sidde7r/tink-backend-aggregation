@@ -11,31 +11,25 @@ import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.AuthenticationTestData;
+import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.AuthenticationTestHelper;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Storage;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.UserContext;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step.RegisterAppStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RegisterAppStepTest {
     private RegisterAppStep objUnderTest;
     private BancoPostaApiClient apiClient;
-    private UserContext userContext;
+    private BancoPostaStorage storage;
     private AuthenticationRequest request;
 
     @Before
     public void init() {
         this.apiClient = Mockito.mock(BancoPostaApiClient.class);
-        this.userContext = new UserContext(new PersistentStorage());
-        this.objUnderTest = new RegisterAppStep(apiClient, userContext);
+        this.storage = AuthenticationTestHelper.prepareStorageForTests();
+        this.objUnderTest = new RegisterAppStep(apiClient, storage);
         this.request = new AuthenticationRequest(Mockito.mock(Credentials.class));
-
-        this.userContext.saveToPersistentStorage(Storage.APP_ID, AuthenticationTestData.APP_ID);
-        this.userContext.saveToPersistentStorage(
-                Storage.PUB_SERVER_KEY, AuthenticationTestData.PUB_KEY);
-        this.userContext.saveToPersistentStorage(
-                Storage.OTP_SECRET_KEY, AuthenticationTestData.OTP_SECRET_KEY);
     }
 
     @Test
@@ -59,7 +53,7 @@ public class RegisterAppStepTest {
         // when
         objUnderTest.execute(request);
         // then
-        assertThat(userContext.isUserPinSetRequired()).isEqualTo(true);
+        assertThat(storage.isUserPinSetRequired()).isEqualTo(true);
     }
 
     @Test

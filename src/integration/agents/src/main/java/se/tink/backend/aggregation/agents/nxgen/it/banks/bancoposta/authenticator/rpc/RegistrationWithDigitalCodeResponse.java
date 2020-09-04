@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,8 +14,8 @@ public class RegistrationWithDigitalCodeResponse {
 
     @Getter
     @JsonObject
+    @JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
     public static class Header {
-        @JsonProperty("command-result-description")
         private String commandResultDescription;
     }
 

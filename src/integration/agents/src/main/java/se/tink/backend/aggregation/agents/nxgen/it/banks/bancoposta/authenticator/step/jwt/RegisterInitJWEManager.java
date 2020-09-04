@@ -6,23 +6,21 @@ import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.JWT.Claims;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.UserContext;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RegisterInitJWEManager {
-    private UserContext userContext;
 
-    private static final String X_DEVICE_VAL =
-            ":MDBmYzEzYWRmZjc4NTEyMmI0YWQyODgwOWEzNDIwOTgyMzQxMjQxNDIxMzQ4MDk3ODc4ZTU3N2M5OTFkZThmMA==:IOS:13.3.1:iPhone:13.65.22:true";
+    private final BancoPostaStorage storage;
 
     public String genActivationJWE() {
         return new JWE.Builder()
-                .setJWEHeaderWithKeyId(userContext.getAppId())
+                .setJWEHeaderWithKeyId(storage.getAppId())
                 .setJwtClaimsSet(getActivationClaims())
-                .setRSAEnrypter(userContext.getPubServerKey())
+                .setRSAEnrypter(storage.getPubServerKey())
                 .build();
     }
 
@@ -30,7 +28,7 @@ public class RegisterInitJWEManager {
         return new JWE.Builder()
                 .setJWEHeader()
                 .setJwtClaimsSet(getRegisterClaims(initCodeChallenge))
-                .setRSAEnrypter(userContext.getPubServerKey())
+                .setRSAEnrypter(storage.getPubServerKey())
                 .build();
     }
 
@@ -45,27 +43,25 @@ public class RegisterInitJWEManager {
     private JWTClaimsSet getActivationClaims() {
         return new JWEClaims.Builder()
                 .setDefaultValues()
-                .setOtpSpecClaims(userContext.getOtpSecretKey(), userContext.getAppId())
-                .setSubject("activation")
+                .setOtpSpecClaims(storage.getOtpSecretKey(), storage.getAppId())
+                .setSubject(Claims.ACTIVATION)
                 .setData(ImmutableMap.of())
                 .build();
     }
 
     private JWTClaimsSet getOpenIdAzClaims(String username, String password) {
         return new JWEClaims.Builder()
-                .setClaim(Claims.APP_ID, userContext.getAppId())
-                .setClaim("username", username)
-                .setClaim("password", password)
+                .setClaim(Claims.APP_ID, storage.getAppId())
+                .setClaim(Claims.USERNAME, username)
+                .setClaim(Claims.PASSWORD, password)
                 .build();
     }
 
     private JWTClaimsSet getRegisterClaims(String initCodeChallenge) {
         return new JWEClaims.Builder()
                 .setDefaultValues()
-                .setSubject("register")
-                .setData(
-                        getRegisterDataClaims(
-                                initCodeChallenge, userContext.getKeyPair().getPublic()))
+                .setSubject(Claims.REGISTER)
+                .setData(getRegisterDataClaims(initCodeChallenge, storage.getKeyPair().getPublic()))
                 .build();
     }
 
@@ -73,11 +69,11 @@ public class RegisterInitJWEManager {
             String initCodeChallenge, PublicKey pubAppKey) {
         return ImmutableMap.builder()
                 .put(
-                        "xdevice",
+                        Claims.XDEVICE,
                         EncodingUtils.encodeAsBase64String(UUID.randomUUID().toString())
-                                + X_DEVICE_VAL)
-                .put("pubAppKey", EncodingUtils.encodeAsBase64String(pubAppKey.getEncoded()))
-                .put("initCodeVerifier", initCodeChallenge)
+                                + Claims.DEVICE_SPEC_ENCODED)
+                .put(Claims.PUB_APP_KEY, EncodingUtils.encodeAsBase64String(pubAppKey.getEncoded()))
+                .put(Claims.INIT_CODE_VERIFIER, initCodeChallenge)
                 .build();
     }
 }

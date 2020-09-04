@@ -10,24 +10,25 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.AuthenticationTestData;
+import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.AuthenticationTestHelper;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.UserContext;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step.RegisterVerificationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RegisterVerificationStepTest {
     private RegisterVerificationStep objUnderTest;
     private BancoPostaApiClient apiClient;
-    private UserContext userContext;
+    private BancoPostaStorage storage;
     private AuthenticationRequest request;
 
     @Before
     public void init() {
         this.apiClient = Mockito.mock(BancoPostaApiClient.class);
-        this.userContext = new UserContext(Mockito.mock(PersistentStorage.class));
-        this.objUnderTest = new RegisterVerificationStep(apiClient, userContext);
+        this.storage = AuthenticationTestHelper.prepareStorageForTests();
+        this.objUnderTest = new RegisterVerificationStep(apiClient, storage);
         this.request = new AuthenticationRequest(Mockito.mock(Credentials.class));
     }
 
@@ -92,7 +93,7 @@ public class RegisterVerificationStepTest {
         // when
         objUnderTest.execute(request);
         // then
-        assertThat(this.userContext.getAccountNumber()).isNotBlank();
-        assertThat(this.userContext.getAccountNumber()).isNotNull();
+        assertThat(this.storage.getAccountNumber()).isNotBlank();
+        assertThat(this.storage.getAccountNumber()).isNotNull();
     }
 }

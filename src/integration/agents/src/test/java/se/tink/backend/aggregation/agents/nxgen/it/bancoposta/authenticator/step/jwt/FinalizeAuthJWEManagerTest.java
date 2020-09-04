@@ -1,31 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.step.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 
 import com.nimbusds.jose.JWEObject;
+import com.nimbusds.jose.crypto.RSADecrypter;
 import java.util.Map;
 import java.util.UUID;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.AuthenticationTestHelper;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step.jwt.FinalizeAuthJWEManager;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class FinalizeAuthJWEManagerTest extends JWEManagerTest {
+public class FinalizeAuthJWEManagerTest {
     private FinalizeAuthJWEManager objUnderTest;
+    private BancoPostaStorage storage;
     private static final String APP_REGISTER_ID = "appRegisterID";
     private static final String TRANSACTION_CHALLENGE =
             "HVCXr0hkTDgXXlO2gkewlYLy8I1SpyZrLmGe18RZnCs";
     private static final String RAND_K = "-2869187136524957696";
-    private static final String USER_PIN = "userPin";
 
     @Before
     public void init() {
-        initSetup();
-        given(userContext.getAppRegisterId()).willReturn(APP_REGISTER_ID);
-        this.objUnderTest = new FinalizeAuthJWEManager(userContext);
+        this.storage = AuthenticationTestHelper.prepareStorageForTests();
+        this.objUnderTest = new FinalizeAuthJWEManager(storage);
     }
 
     @SneakyThrows
@@ -34,9 +35,10 @@ public class FinalizeAuthJWEManagerTest extends JWEManagerTest {
         // given
         // when
         String jweEncrypted = objUnderTest.genCheckRegisterJWE();
-        JWEObject jweDecrypted = getDecryptedJwe(jweEncrypted);
+        JWEObject jweDecrypted = JWEObject.parse(jweEncrypted);
+        jweDecrypted.decrypt(new RSADecrypter(storage.getKeyPair().getPrivate()));
         // then
-        assertDefaultJWEValues(jweDecrypted);
+        AuthenticationTestHelper.assertDefaultJWEValues(jweDecrypted);
         String dataClaim = jweDecrypted.getPayload().toJSONObject().getAsString("data");
         assertThat(dataClaim).isNotEmpty();
 
@@ -50,9 +52,10 @@ public class FinalizeAuthJWEManagerTest extends JWEManagerTest {
         // given
         // when
         String jweEncrypted = objUnderTest.genChallengeJWE();
-        JWEObject jweDecrypted = getDecryptedJwe(jweEncrypted);
+        JWEObject jweDecrypted = JWEObject.parse(jweEncrypted);
+        jweDecrypted.decrypt(new RSADecrypter(storage.getKeyPair().getPrivate()));
         // then
-        assertDefaultJWEValues(jweDecrypted);
+        AuthenticationTestHelper.assertDefaultJWEValues(jweDecrypted);
 
         String dataClaim = jweDecrypted.getPayload().toJSONObject().getAsString("data");
         assertThat(dataClaim).isNotEmpty();
@@ -64,14 +67,14 @@ public class FinalizeAuthJWEManagerTest extends JWEManagerTest {
     @Test
     public void genAuthorizeTransactionJWEShouldReturnJWE() {
         // given
-        given(userContext.getUserPin()).willReturn(USER_PIN);
         ChallengeResponse challengeResponse =
                 new ChallengeResponse(UUID.randomUUID().toString(), TRANSACTION_CHALLENGE, RAND_K);
         // when
         String jweEncrypted = objUnderTest.genAuthorizeTransactionJWE(challengeResponse);
-        JWEObject jweDecrypted = getDecryptedJwe(jweEncrypted);
+        JWEObject jweDecrypted = JWEObject.parse(jweEncrypted);
+        jweDecrypted.decrypt(new RSADecrypter(storage.getKeyPair().getPrivate()));
         // then
-        assertDefaultJWEValues(jweDecrypted);
+        AuthenticationTestHelper.assertDefaultJWEValues(jweDecrypted);
 
         String dataClaim = jweDecrypted.getPayload().toJSONObject().getAsString("data");
         assertThat(dataClaim).isNotEmpty();

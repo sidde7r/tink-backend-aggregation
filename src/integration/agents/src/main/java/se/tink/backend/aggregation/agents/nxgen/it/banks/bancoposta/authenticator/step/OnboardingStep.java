@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
@@ -10,9 +8,12 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.UserContext;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RequestBody;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterCodeRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterInitCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.InitRegistrationWithDigitalCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.RegistrationWithDigitalCodeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
@@ -25,7 +26,7 @@ import se.tink.libraries.i18n.Catalog;
 @Slf4j
 public class OnboardingStep implements AuthenticationStep {
     private BancoPostaApiClient apiClient;
-    private UserContext userContext;
+    private BancoPostaStorage storage;
     private Catalog catalog;
 
     private static final String OTP_NAME = "otpOnboarding";
@@ -36,10 +37,10 @@ public class OnboardingStep implements AuthenticationStep {
             throws AuthenticationException, AuthorizationException {
 
         String otp = request.getUserInputs().get(OTP_NAME);
-        String codeDigital = request.getUserInputs().get(CODE_NAME);
+        String accountNumberCode = request.getUserInputs().get(CODE_NAME);
 
-        if (Objects.nonNull((otp)) && Objects.nonNull((codeDigital))) {
-            registerWithDigitalCode(otp, codeDigital);
+        if (otp != null && accountNumberCode != null) {
+            registerWithDigitalCode(otp, accountNumberCode);
             return AuthenticationStepResponse.executeStepWithId(
                     BancoPostaAuthenticator.REGSITER_VERIFICATION_STEP_ID);
         }
@@ -52,44 +53,28 @@ public class OnboardingStep implements AuthenticationStep {
                         .build());
     }
 
-    private void registerWithDigitalCode(String otp, String digitalCode) {
-        RequestBody requestBody = generateRegisterRequestBody(otp, digitalCode);
+    private void registerWithDigitalCode(String otp, String accountNumberCode) {
+        RegisterCodeRequest requestBody =
+                new RegisterCodeRequest(otp, accountNumberCode, storage.getAccountAlias());
+
         RegistrationWithDigitalCodeResponse registrationWithDigitalCodeResponse =
                 apiClient.registerWithDigitalCode(requestBody);
 
-        if ("WS_CALL_ERROR"
-                .equals(
-                        registrationWithDigitalCodeResponse
-                                .getHeader()
-                                .getCommandResultDescription())) {
+        if (ErrorCodes.INCORRECT_CREDENTIALS.equals(
+                registrationWithDigitalCodeResponse.getHeader().getCommandResultDescription())) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
         String registerToken = registrationWithDigitalCodeResponse.getBody().getRegisterToken();
-        userContext.setRegisterToken(registerToken);
-    }
-
-    private RequestBody generateRegisterRequestBody(String otp, String digitalCode) {
-        ImmutableMap<String, String> body =
-                ImmutableMap.<String, String>builder()
-                        .put("smsOTP", otp)
-                        .put("codiceDigital", digitalCode)
-                        .put("aliasWallet", userContext.getAccountAlias())
-                        .build();
-        return new RequestBody(body);
+        storage.saveToPersistentStorage(Storage.REGISTER_TOKEN, registerToken);
     }
 
     private void initRegistrationWithDigitalCode() {
         InitRegistrationWithDigitalCodeResponse initRegistrationWithDigitalCodeResponse =
-                apiClient.initAccountWithDigitalCode(generateRegisterInitRequestBody());
+                apiClient.initAccountWithDigitalCode(
+                        new RegisterInitCodeRequest(storage.getAccountNumber()));
         String accountAlias = initRegistrationWithDigitalCodeResponse.getBody().getAccountAlias();
-        userContext.setAccountAlias(accountAlias);
-    }
-
-    private RequestBody generateRegisterInitRequestBody() {
-        ImmutableMap<String, String> body =
-                ImmutableMap.of("numeroConto", userContext.getAccountNumber());
-        return new RequestBody(body);
+        storage.saveToPersistentStorage(Storage.ACCOUNT_ALIAS, accountAlias);
     }
 
     private Field buildOtpField() {

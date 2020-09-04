@@ -6,7 +6,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.JWT.Claims;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.UserContext;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SignedChallenge;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.HOTP;
@@ -15,31 +15,30 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @AllArgsConstructor
 public class FinalizeAuthJWEManager {
 
-    private UserContext userContext;
+    private BancoPostaStorage storage;
 
     public String genCheckRegisterJWE() {
         return new JWE.Builder()
-                .setJWEHeaderWithKeyId(userContext.getAppId())
+                .setJWEHeaderWithKeyId(storage.getAppId())
                 .setJwtClaimsSet(buildCheckRegisterClaims())
-                .setRSAEnrypter(userContext.getPubServerKey())
+                .setRSAEnrypter(storage.getPubServerKey())
                 .build();
     }
 
     public String genChallengeJWE() {
         return new JWE.Builder()
-                .setJWEHeaderWithKeyId(userContext.getAppId())
+                .setJWEHeaderWithKeyId(storage.getAppId())
                 .setJwtClaimsSet(buildChallengeClaims())
-                .setRSAEnrypter(userContext.getPubServerKey())
+                .setRSAEnrypter(storage.getPubServerKey())
                 .build();
     }
 
     public String genAuthorizeTransactionJWE(ChallengeResponse challengeResponse) {
         return new JWE.Builder()
-                .setJWEHeaderWithKeyId(userContext.getAppId())
+                .setJWEHeaderWithKeyId(storage.getAppId())
                 .setJwtClaimsSet(
-                        buildAuthorizeTransactionsClaims(
-                                userContext.getUserPin(), challengeResponse))
-                .setRSAEnrypter(userContext.getPubServerKey())
+                        buildAuthorizeTransactionsClaims(storage.getUserPin(), challengeResponse))
+                .setRSAEnrypter(storage.getPubServerKey())
                 .build();
     }
 
@@ -52,14 +51,14 @@ public class FinalizeAuthJWEManager {
     }
 
     private Map<String, String> genCheckRegisterDataClaims() {
-        return ImmutableMap.of(Claims.APP_REGISTER_ID, userContext.getAppRegisterId());
+        return ImmutableMap.of(Claims.APP_REGISTER_ID, storage.getAppRegisterId());
     }
 
     private JWTClaimsSet buildAuthorizeTransactionsClaims(
             String userPin, ChallengeResponse challengeResponse) {
         return new JWEClaims.Builder()
                 .setDefaultValues()
-                .setOtpSpecClaims(userContext.getOtpSecretKey(), userContext.getAppId())
+                .setOtpSpecClaims(storage.getOtpSecretKey(), storage.getAppId())
                 .setData(getAuthorizeTransactionClaims(userPin, challengeResponse))
                 .build();
     }
@@ -67,18 +66,17 @@ public class FinalizeAuthJWEManager {
     private Map<String, String> getAuthorizeTransactionClaims(
             String userPin, ChallengeResponse challengeResponse) {
         byte[] key =
-                (challengeResponse.getTransactionId() + ":" + userContext.getSecretApp())
-                        .getBytes();
+                (challengeResponse.getTransactionId() + ":" + storage.getSecretApp()).getBytes();
         long movingFactor = Long.parseLong(challengeResponse.getRandK());
         String otp = HOTP.generateOTP(key, movingFactor, 6, 20);
 
         return ImmutableMap.<String, String>builder()
-                .put("transaction-challenge", challengeResponse.getTransactionChallenge())
-                .put(Claims.APP_REGISTER_ID, userContext.getAppRegisterId())
-                .put("authzTool", "posteid")
-                .put("sigtype", "JWS")
+                .put(Claims.TRANSACTION_CHALLENGE, challengeResponse.getTransactionChallenge())
+                .put(Claims.APP_REGISTER_ID, storage.getAppRegisterId())
+                .put(Claims.AUTHZ_TOOL, Claims.POSTEID)
+                .put(Claims.SIGTYPE, Claims.JWS)
                 .put(Claims.USER_PIN, userPin)
-                .put("transactionID", challengeResponse.getTransactionId())
+                .put(Claims.TRANSACTION_ID, challengeResponse.getTransactionId())
                 .put(Claims.OTP, otp)
                 .build();
     }
@@ -86,8 +84,8 @@ public class FinalizeAuthJWEManager {
     private JWTClaimsSet buildChallengeClaims() {
         return new JWEClaims.Builder()
                 .setDefaultValues()
-                .setOtpSpecClaims(userContext.getOtpSecretKey(), userContext.getAppId())
-                .setData(getChallengeDataClaims(userContext.getAppRegisterId()))
+                .setOtpSpecClaims(storage.getOtpSecretKey(), storage.getAppId())
+                .setData(getChallengeDataClaims(storage.getAppRegisterId()))
                 .build();
     }
 
@@ -98,20 +96,21 @@ public class FinalizeAuthJWEManager {
     private JWTClaimsSet buildCheckRegisterClaims() {
         return new JWEClaims.Builder()
                 .setDefaultValues()
-                .setOtpSpecClaims(userContext.getOtpSecretKey(), userContext.getAppId())
+                .setOtpSpecClaims(storage.getOtpSecretKey(), storage.getAppId())
                 .setData(genCheckRegisterDataClaims())
                 .build();
     }
 
     private JWTClaimsSet buildAccessTokenClaims(String transactionId, String signature) {
         return new JWEClaims.Builder()
-                .setClaim(Claims.APP_ID, userContext.getAppId())
-                .setClaim("signed_challenge", getSignedChallengeString(transactionId, signature))
+                .setClaim(Claims.APP_ID, storage.getAppId())
+                .setClaim(
+                        Claims.SIGNED_CHALLENGE, getSignedChallengeString(transactionId, signature))
                 .build();
     }
 
     private String getSignedChallengeString(String transactionId, String signature) {
         return SerializationUtils.serializeToString(
-                new SignedChallenge(transactionId, "JWS", signature));
+                new SignedChallenge(transactionId, Claims.JWS, signature));
     }
 }

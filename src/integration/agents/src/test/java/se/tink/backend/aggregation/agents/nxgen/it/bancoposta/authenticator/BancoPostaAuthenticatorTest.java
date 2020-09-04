@@ -6,25 +6,24 @@ import static org.mockito.BDDMockito.given;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.UserContext;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 
 public class BancoPostaAuthenticatorTest {
     private BancoPostaAuthenticator objUnderTest;
-    private UserContext userContext;
+    private BancoPostaStorage storage;
 
     @Before
     public void init() {
-        this.userContext = Mockito.mock(UserContext.class);
-        objUnderTest = new BancoPostaAuthenticator(null, userContext, null);
+        this.storage = AuthenticationTestHelper.prepareStorageForTests();
+        objUnderTest = new BancoPostaAuthenticator(null, storage, null);
     }
 
     @Test
     public void authenticationStepsShouldReturnAutoAuthStepsIfAutoAuthPossible() {
         // given
-        given(userContext.isManualAuthFinished()).willReturn(true);
+        given(storage.isManualAuthFinished()).willReturn(true);
         // when
         List<AuthenticationStep> list = objUnderTest.authenticationSteps();
         // then
@@ -34,7 +33,7 @@ public class BancoPostaAuthenticatorTest {
     @Test
     public void authenticationStepsShouldReturnAutoAllStepsIfAutoAuthIsNotPossible() {
         // given
-        given(userContext.isManualAuthFinished()).willReturn(false);
+        given(storage.isManualAuthFinished()).willReturn(false);
         // when
         List<AuthenticationStep> list = objUnderTest.authenticationSteps();
         // then

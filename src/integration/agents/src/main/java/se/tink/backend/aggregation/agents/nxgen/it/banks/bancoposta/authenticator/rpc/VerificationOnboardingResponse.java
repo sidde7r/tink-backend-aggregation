@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Data
 @JsonObject
-@NoArgsConstructor
 public class VerificationOnboardingResponse {
 
     @JsonProperty("body")

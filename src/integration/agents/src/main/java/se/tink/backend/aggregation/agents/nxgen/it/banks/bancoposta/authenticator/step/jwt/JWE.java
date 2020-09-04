@@ -9,7 +9,6 @@ import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.RSAEncrypter;
 import com.nimbusds.jwt.JWTClaimsSet;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Objects;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -30,7 +29,7 @@ public class JWE {
                             .contentType("JWE")
                             .type(JOSEObjectType.JWT);
 
-            if (!Objects.isNull(keyId)) {
+            if (keyId != null) {
                 builder.keyID(keyId);
             }
             this.jweHeader = builder.build();

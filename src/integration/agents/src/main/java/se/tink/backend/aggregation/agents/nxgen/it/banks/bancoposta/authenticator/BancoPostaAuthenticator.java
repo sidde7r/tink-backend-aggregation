@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticat
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step.FinalizeAuthStep;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step.OnboardingStep;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
+@RequiredArgsConstructor
 public class BancoPostaAuthenticator extends StatelessProgressiveAuthenticator {
 
     public static final String SYNC_WALLET_STEP_ID = "syncWalletStep";
@@ -24,32 +26,34 @@ public class BancoPostaAuthenticator extends StatelessProgressiveAuthenticator {
     public static final String REGISTER_APP_STEP_ID = "registerAppStep";
 
     private final BancoPostaApiClient apiClient;
-    private final UserContext userContext;
+    private final BancoPostaStorage storage;
     private final Catalog catalog;
-
-    public BancoPostaAuthenticator(
-            BancoPostaApiClient apiClient, UserContext userContext, Catalog catalog) {
-        this.apiClient = apiClient;
-        this.userContext = userContext;
-        this.catalog = catalog;
-    }
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
-        return userContext.isManualAuthFinished();
+        return storage.isManualAuthFinished();
     }
 
     @Override
     public List<AuthenticationStep> authenticationSteps() {
-        if (userContext.isManualAuthFinished()) {
-            return Collections.singletonList(new FinalizeAuthStep(apiClient, userContext));
+        if (storage.isManualAuthFinished()) {
+            return autoAuthSteps();
+        } else {
+            return manualAuthSteps();
         }
+    }
+
+    private List<AuthenticationStep> manualAuthSteps() {
         return ImmutableList.of(
-                new RegisterInitStep(apiClient, userContext),
-                new RegisterVerificationStep(apiClient, userContext),
+                new RegisterInitStep(apiClient, storage),
+                new RegisterVerificationStep(apiClient, storage),
                 new SyncWalletStep(apiClient, catalog),
-                new OnboardingStep(apiClient, userContext, catalog),
-                new RegisterAppStep(apiClient, userContext),
-                new FinalizeAuthStep(apiClient, userContext));
+                new OnboardingStep(apiClient, storage, catalog),
+                new RegisterAppStep(apiClient, storage),
+                new FinalizeAuthStep(apiClient, storage));
+    }
+
+    private List<AuthenticationStep> autoAuthSteps() {
+        return Collections.singletonList(new FinalizeAuthStep(apiClient, storage));
     }
 }

@@ -3,37 +3,37 @@ package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticat
 import com.nimbusds.jwt.JWTClaimsSet;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.JWT.Claims;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.UserContext;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RegisterAppJWEManager {
 
-    private UserContext userContext;
+    private final BancoPostaStorage storage;
 
     public String genRegisterAppJWE() {
         return new JWE.Builder()
-                .setJWEHeaderWithKeyId(userContext.getAppId())
+                .setJWEHeaderWithKeyId(storage.getAppId())
                 .setJwtClaimsSet(buildClaims())
-                .setRSAEnrypter(userContext.getPubServerKey())
+                .setRSAEnrypter(storage.getPubServerKey())
                 .build();
     }
 
     private JWTClaimsSet buildClaims() {
         return new JWEClaims.Builder()
                 .setDefaultValues()
-                .setOtpSpecClaims(userContext.getOtpSecretKey(), userContext.getAppId())
+                .setOtpSpecClaims(storage.getOtpSecretKey(), storage.getAppId())
                 .setData(getDataClaims())
                 .build();
     }
 
     private Map<String, String> getDataClaims() {
         Map<String, String> data = new HashMap<>();
-        data.put("registerToken", userContext.getRegisterToken());
-        data.put("idpAccessToken", userContext.getRegistrationSessionToken());
-        if (userContext.isUserPinSetRequired()) {
-            data.put(Claims.USER_PIN, userContext.getUserPin());
+        data.put(Claims.REGISTER_TOKEN, storage.getRegisterToken());
+        data.put(Claims.IDP_ACCESS_TOKEN, storage.getRegistrationSessionToken());
+        if (storage.isUserPinSetRequired()) {
+            data.put(Claims.USER_PIN, storage.getUserPin());
         }
         return data;
     }

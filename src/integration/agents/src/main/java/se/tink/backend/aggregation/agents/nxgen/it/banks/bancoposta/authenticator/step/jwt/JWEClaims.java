@@ -15,13 +15,16 @@ public class JWEClaims {
 
     public static class Builder {
 
+        private static final int OTP_SPECS_CLAIM_DIGIT_CODE = 8;
+        private static final int DEFAULT_TRUNCATION_OFFSET_HOTP = 20;
+
         private JWTClaimsSet.Builder jwtClaimSetBuilder = new JWTClaimsSet.Builder();
 
         public Builder setDefaultValues() {
             this.jwtClaimSetBuilder
                     .issueTime(new Date())
                     .expirationTime(new Date())
-                    .issuer("app-bpol")
+                    .issuer(Claims.APP_BPOL)
                     .jwtID(UUID.randomUUID().toString())
                     .notBeforeTime(new Date());
             return this;
@@ -29,8 +32,8 @@ public class JWEClaims {
 
         public Builder setOtpSpecClaims(byte[] otpSecretKey, String appId) {
             this.jwtClaimSetBuilder
-                    .claim("otp-specs", getOtpSpecClaims(otpSecretKey))
-                    .claim("kid-sha256", getKidSHA(appId));
+                    .claim(Claims.OTP_SPECS, getOtpSpecClaims(otpSecretKey))
+                    .claim(Claims.KID_SHA_256, getKidSHA(appId));
             return this;
         }
 
@@ -40,7 +43,7 @@ public class JWEClaims {
         }
 
         public Builder setData(Object data) {
-            this.jwtClaimSetBuilder.claim("data", data);
+            this.jwtClaimSetBuilder.claim(Claims.DATA, data);
             return this;
         }
 
@@ -59,11 +62,16 @@ public class JWEClaims {
 
         public static Map<String, String> getOtpSpecClaims(byte[] otpSecretKey) {
             long movingFactor = new Random().nextInt();
-            String hotp = HOTP.generateOTP(otpSecretKey, movingFactor, 8, 20);
+            String hotp =
+                    HOTP.generateOTP(
+                            otpSecretKey,
+                            movingFactor,
+                            OTP_SPECS_CLAIM_DIGIT_CODE,
+                            DEFAULT_TRUNCATION_OFFSET_HOTP);
 
             return ImmutableMap.<String, String>builder()
-                    .put("type", "HMAC-SHA1")
-                    .put("movingFactor", String.valueOf(movingFactor))
+                    .put(Claims.TYPE, Claims.HMAC_SHA_1)
+                    .put(Claims.MOVING_FACTOR, String.valueOf(movingFactor))
                     .put(Claims.OTP, hotp)
                     .build();
         }

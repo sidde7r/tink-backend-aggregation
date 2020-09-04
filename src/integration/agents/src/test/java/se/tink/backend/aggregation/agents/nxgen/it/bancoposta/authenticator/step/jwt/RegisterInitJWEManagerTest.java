@@ -1,24 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.step.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 
 import com.nimbusds.jose.JWEObject;
+import com.nimbusds.jose.crypto.RSADecrypter;
 import java.util.Map;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.AuthenticationTestHelper;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step.jwt.RegisterInitJWEManager;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class RegisterInitJWEManagerTest extends JWEManagerTest {
+public class RegisterInitJWEManagerTest {
     private RegisterInitJWEManager objUnderTest;
+    private BancoPostaStorage storage;
     private static final String INIT_CODE_CHALLENGE = "initCodeChallenge";
 
     @Before
     public void init() {
-        initSetup();
-        this.objUnderTest = new RegisterInitJWEManager(userContext);
+        this.storage = AuthenticationTestHelper.prepareStorageForTests();
+        this.objUnderTest = new RegisterInitJWEManager(storage);
     }
 
     @SneakyThrows
@@ -27,9 +30,10 @@ public class RegisterInitJWEManagerTest extends JWEManagerTest {
         // given
         // when
         String jweEncrypted = objUnderTest.genActivationJWE();
-        JWEObject jweDecrypted = getDecryptedJwe(jweEncrypted);
+        JWEObject jweDecrypted = JWEObject.parse(jweEncrypted);
+        jweDecrypted.decrypt(new RSADecrypter(storage.getKeyPair().getPrivate()));
         // then
-        assertDefaultJWEValues(jweDecrypted);
+        AuthenticationTestHelper.assertDefaultJWEValues(jweDecrypted);
         assertThat(jweDecrypted.getPayload().toJSONObject().getAsString("sub"))
                 .isEqualTo("activation");
     }
@@ -38,10 +42,10 @@ public class RegisterInitJWEManagerTest extends JWEManagerTest {
     @Test
     public void genRegisterJWEShouldReturnJWE() {
         // given
-        given(userContext.getKeyPair()).willReturn(keyPair);
         // when
         String jweEncrypted = objUnderTest.genRegisterJWE(INIT_CODE_CHALLENGE);
-        JWEObject jweDecrypted = getDecryptedJwe(jweEncrypted);
+        JWEObject jweDecrypted = JWEObject.parse(jweEncrypted);
+        jweDecrypted.decrypt(new RSADecrypter(storage.getKeyPair().getPrivate()));
         // then
         assertThat(jweDecrypted.getPayload().toJSONObject().getAsString("sub"))
                 .isEqualTo("register");

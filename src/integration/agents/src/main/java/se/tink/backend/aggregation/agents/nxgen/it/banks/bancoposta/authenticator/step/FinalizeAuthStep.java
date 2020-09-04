@@ -10,10 +10,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.FormParams;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.UserContext;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.AuthorizationTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.CheckRegisterAppResponse;
@@ -25,14 +26,15 @@ import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class FinalizeAuthStep implements AuthenticationStep {
+
     private final BancoPostaApiClient apiClient;
-    private UserContext userContext;
+    private final BancoPostaStorage storage;
     private final FinalizeAuthJWEManager jweManager;
 
-    public FinalizeAuthStep(BancoPostaApiClient apiClient, UserContext userContext) {
+    public FinalizeAuthStep(BancoPostaApiClient apiClient, BancoPostaStorage storage) {
         this.apiClient = apiClient;
-        this.userContext = userContext;
-        this.jweManager = new FinalizeAuthJWEManager(userContext);
+        this.storage = storage;
+        this.jweManager = new FinalizeAuthJWEManager(storage);
     }
 
     @Override
@@ -42,6 +44,7 @@ public class FinalizeAuthStep implements AuthenticationStep {
         CheckRegisterAppResponse checkRegisterAppResponse = checkRegisterApp();
 
         if (!checkRegisterAppResponse.getCommandResult().isValid()) {
+            storage.clearStorage();
             throw SessionError.SESSION_EXPIRED.exception();
         }
         ChallengeResponse challengeResponse = challenge();
@@ -49,12 +52,13 @@ public class FinalizeAuthStep implements AuthenticationStep {
         String signature = authorizeTransaction(challengeResponse);
 
         String basicToken = requestAccessToken(signature, challengeResponse.getTransactionId());
-        userContext.saveToPersistentStorage(Storage.ACCESS_BASIC_TOKEN, basicToken);
+        storage.saveToPersistentStorage(Storage.ACCESS_BASIC_TOKEN, basicToken);
 
         String dataToken = apiClient.performJwtAuthorization();
-        userContext.saveToPersistentStorage(Storage.ACCESS_DATA_TOKEN, dataToken);
+        storage.saveToPersistentStorage(Storage.ACCESS_DATA_TOKEN, dataToken);
 
-        userContext.saveToPersistentStorage(Storage.MANUAL_AUTH_FINISH_FLAG, true);
+        storage.saveToPersistentStorage(Storage.MANUAL_AUTH_FINISH_FLAG, true);
+        storage.removeDataUsedOnlyForManualAuth();
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 
@@ -91,18 +95,18 @@ public class FinalizeAuthStep implements AuthenticationStep {
 
     private Form buildForm(String jweObject) {
         return Form.builder()
-                .put("state", UUID.randomUUID().toString().toUpperCase())
-                .put("acr_values", "https://idp.poste.it/L2")
-                .put("prompt", "none login")
-                .put("response_type", "token")
-                .put("nonce", UUID.randomUUID().toString().toUpperCase())
-                .put("grant_type", "signed_challenge")
-                .put("scope", FormValues.SCOPE)
-                .put("jti", UUID.randomUUID().toString().toUpperCase())
-                .put("credentials", jweObject)
-                .put("iss", "https://oidc-proxy.poste.it")
-                .put("sub", "posteID")
-                .put("aud", "https://idp-poste.poste.it")
+                .put(FormParams.STATE, UUID.randomUUID().toString().toUpperCase())
+                .put(FormParams.ACR_VALUES, FormValues.POSTE_URL_L2)
+                .put(FormParams.PROMPT, FormValues.NONE_LOGIN)
+                .put(FormParams.RESPONSE_TYPE, FormValues.TOKEN)
+                .put(FormParams.NONCE, UUID.randomUUID().toString().toUpperCase())
+                .put(FormParams.GRANT_TYPE, FormValues.SIGNED_CHALLENGE)
+                .put(FormParams.SCOPE, FormValues.SCOPE)
+                .put(FormParams.JTI, UUID.randomUUID().toString().toUpperCase())
+                .put(FormParams.CREDENTIALS, jweObject)
+                .put(FormParams.ISS, FormValues.OIDC_URL)
+                .put(FormParams.SUB, FormValues.POSTE_ID)
+                .put(FormParams.AUD, FormValues.IDP_URL)
                 .build();
     }
 

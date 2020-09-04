@@ -1,17 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RequestBody;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SendOtpRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SimpleRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -31,26 +30,20 @@ public class SyncWalletStep implements AuthenticationStep {
 
         String otp = request.getUserInputs().get(OTP_NAME);
 
-        if (Objects.nonNull(otp)) {
-            apiClient.sendSmsOTPWallet(generateRequestBody(otp));
+        if (StringUtils.isNotBlank(otp)) {
+            apiClient.sendSmsOTPWallet(new SendOtpRequest(otp));
             return AuthenticationStepResponse.executeStepWithId(
                     BancoPostaAuthenticator.REGSITER_VERIFICATION_STEP_ID);
         }
 
-        apiClient.initSyncWallet(new RequestBody(new HashMap<>()));
-        apiClient.requestForSmsOtpWallet(new RequestBody(new HashMap<>()));
+        apiClient.initSyncWallet(new SimpleRequest());
+        apiClient.requestForSmsOtpWallet(new SimpleRequest());
 
         log.info("waiting for user to input SMS otp");
         return AuthenticationStepResponse.requestForSupplementInformation(
                 new SupplementInformationRequester.Builder()
                         .withFields(Collections.singletonList(buildField()))
                         .build());
-    }
-
-    private RequestBody generateRequestBody(String otp) {
-        Map<String, String> body = new HashMap<>();
-        body.put("smsOTP", otp);
-        return new RequestBody(body);
     }
 
     private Field buildField() {

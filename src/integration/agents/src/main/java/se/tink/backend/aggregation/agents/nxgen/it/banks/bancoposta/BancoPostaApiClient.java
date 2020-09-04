@@ -4,12 +4,16 @@ import java.util.Map;
 import java.util.Random;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.UserContext;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterInitBody;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RequestBody;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterInitCodeRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SendOtpRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SimpleRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.AccessTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.AuthorizationTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.CheckRegisterAppResponse;
@@ -24,75 +28,72 @@ import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@RequiredArgsConstructor
 public class BancoPostaApiClient {
 
     private final TinkHttpClient httpClient;
-    private final UserContext userContext;
+    private final BancoPostaStorage storage;
 
-    BancoPostaApiClient(TinkHttpClient httpClient, UserContext userContext) {
-        this.httpClient = httpClient;
-        this.userContext = userContext;
-    }
-
-    public RegistrationWithDigitalCodeResponse registerWithDigitalCode(RequestBody requestBody) {
+    public RegistrationWithDigitalCodeResponse registerWithDigitalCode(
+            RegisterCodeRequest requestBody) {
         return createBaseRequest(Urls.SEND_POSTE_CODE)
                 .header(
                         HeaderValues.XKEY,
-                        generateXKey(userContext.getAppId(), userContext.getOtpSecretKey()))
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
                 .header(
                         HttpHeaders.AUTHORIZATION,
-                        HeaderValues.BEARER + userContext.getRegistrationSessionToken())
+                        HeaderValues.BEARER + storage.getRegistrationSessionToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .post(RegistrationWithDigitalCodeResponse.class, requestBody);
     }
 
     public InitRegistrationWithDigitalCodeResponse initAccountWithDigitalCode(
-            RequestBody requestBody) {
+            RegisterInitCodeRequest requestBody) {
         return createBaseRequest(Urls.INIT_CODE_VERIFICATION)
                 .header(
                         HeaderValues.XKEY,
-                        generateXKey(userContext.getAppId(), userContext.getOtpSecretKey()))
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
                 .header(
                         HttpHeaders.AUTHORIZATION,
-                        HeaderValues.BEARER + userContext.getRegistrationSessionToken())
+                        HeaderValues.BEARER + storage.getRegistrationSessionToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .post(InitRegistrationWithDigitalCodeResponse.class, requestBody);
     }
 
-    public void sendSmsOTPWallet(RequestBody requestBody) {
+    public void sendSmsOTPWallet(SendOtpRequest baseRequest) {
         createBaseRequest(Urls.ELIMINA_WALLET)
                 .header(
                         HeaderValues.XKEY,
-                        generateXKey(userContext.getAppId(), userContext.getOtpSecretKey()))
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
                 .header(
                         HttpHeaders.AUTHORIZATION,
-                        HeaderValues.BEARER + userContext.getRegistrationSessionToken())
+                        HeaderValues.BEARER + storage.getRegistrationSessionToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .post(requestBody);
+                .post(baseRequest);
     }
 
-    public void requestForSmsOtpWallet(RequestBody requestBody) {
+    public void requestForSmsOtpWallet(SimpleRequest baseRequest) {
         createBaseRequest(Urls.SEND_OTP)
                 .header(
                         HeaderValues.XKEY,
-                        generateXKey(userContext.getAppId(), userContext.getOtpSecretKey()))
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
                 .header(
                         HttpHeaders.AUTHORIZATION,
-                        HeaderValues.BEARER + userContext.getRegistrationSessionToken())
+                        HeaderValues.BEARER + storage.getRegistrationSessionToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .post(requestBody);
+                .post(baseRequest);
     }
 
-    public void initSyncWallet(RequestBody requestBody) {
+    public void initSyncWallet(SimpleRequest baseRequest) {
         createBaseRequest(Urls.INIT_SYNC_WALLET)
                 .header(
                         HeaderValues.XKEY,
-                        generateXKey(userContext.getAppId(), userContext.getOtpSecretKey()))
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
                 .header(
                         HttpHeaders.AUTHORIZATION,
-                        HeaderValues.BEARER + userContext.getRegistrationSessionToken())
+                        HeaderValues.BEARER + storage.getRegistrationSessionToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .post(requestBody);
+                .post(baseRequest);
     }
 
     public String performSecondOpenIdAz(String form) {
@@ -103,7 +104,7 @@ public class BancoPostaApiClient {
 
         if ("login_required".equals(response.getBody(Map.class).get("error"))) {
             throw LoginError.DEFAULT_MESSAGE.exception(
-                    "Something went wrong with probably JWE structure in request call");
+                    "Something went wrong with JWE structure in request call");
         }
 
         return response.getBody(String.class);
@@ -143,7 +144,8 @@ public class BancoPostaApiClient {
     public RegisterInitResponse registerInit(RegisterInitBody registerInitBody) {
         return createBaseRequest(Urls.REGISTER_INIT)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .post(RegisterInitResponse.class, registerInitBody);
+                //                .post(RegisterInitResponse.class, registerInitBody);
+                .post(RegisterInitResponse.class, new SimpleRequest());
     }
 
     public String performRequestAz(String azBody) {
@@ -171,14 +173,14 @@ public class BancoPostaApiClient {
                 .post(String.class);
     }
 
-    public VerificationOnboardingResponse verifyOnboarding(RequestBody body) {
+    public VerificationOnboardingResponse verifyOnboarding(SimpleRequest body) {
         return createBaseRequest(Urls.ONBOARDING_VERIFICATION)
                 .header(
                         HeaderValues.XKEY,
-                        generateXKey(userContext.getAppId(), userContext.getOtpSecretKey()))
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
                 .header(
                         HttpHeaders.AUTHORIZATION,
-                        HeaderValues.BEARER + userContext.getRegistrationSessionToken())
+                        HeaderValues.BEARER + storage.getRegistrationSessionToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .post(VerificationOnboardingResponse.class, body);
     }

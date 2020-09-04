@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaCo
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.UserContext;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterInitBody;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.AccessTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.RegisterInitResponse;
@@ -35,14 +35,14 @@ public class RegisterInitStep implements AuthenticationStep {
     private static final int RETRY_ATTEMPTS = 3;
 
     private final BancoPostaApiClient apiClient;
-    private UserContext userContext;
+    private BancoPostaStorage storage;
     private final RegisterInitJWEManager jweManager;
     private final RetryExecutor retryExecutor = new RetryExecutor();
 
-    public RegisterInitStep(BancoPostaApiClient apiClient, UserContext userContext) {
+    public RegisterInitStep(BancoPostaApiClient apiClient, BancoPostaStorage storage) {
         this.apiClient = apiClient;
-        this.userContext = userContext;
-        this.jweManager = new RegisterInitJWEManager(userContext);
+        this.storage = storage;
+        this.jweManager = new RegisterInitJWEManager(storage);
         this.retryExecutor.setRetryPolicy(new RetryPolicy(RETRY_ATTEMPTS, LoginException.class));
     }
 
@@ -51,7 +51,7 @@ public class RegisterInitStep implements AuthenticationStep {
             throws AuthenticationException, AuthorizationException {
         String initCodeChallengeInput = UUID.randomUUID().toString();
         String keyPairSerialized = SerializationUtils.serializeKeyPair(RSA.generateKeyPair());
-        userContext.saveToPersistentStorage(Storage.KEY_PAIR, keyPairSerialized);
+        storage.saveToPersistentStorage(Storage.KEY_PAIR, keyPairSerialized);
 
         registerInit(initCodeChallengeInput);
 
@@ -63,7 +63,8 @@ public class RegisterInitStep implements AuthenticationStep {
         // next call with the same values get through. Hence retry executor used
         AccessTokenResponse accessTokenResponse =
                 retryExecutor.execute(() -> requestForAccessToken(request.getCredentials()));
-        userContext.setRegistrationSessionToken(accessTokenResponse.getAccessToken());
+        storage.saveToPersistentStorage(
+                Storage.REGISTRATION_SESSION_TOKEN, accessTokenResponse.getAccessToken());
 
         return AuthenticationStepResponse.executeStepWithId(
                 BancoPostaAuthenticator.REGSITER_VERIFICATION_STEP_ID);
@@ -78,7 +79,7 @@ public class RegisterInitStep implements AuthenticationStep {
         String username = credentials.getField(Key.USERNAME);
         String password = credentials.getField(Key.PASSWORD);
         String userPin = credentials.getField(Key.ACCESS_PIN);
-        userContext.saveToPersistentStorage(Storage.USER_PIN, userPin);
+        storage.saveToPersistentStorage(Storage.USER_PIN, userPin);
         String jweObject = jweManager.genAZTokenJWE(username, password);
 
         Form azForm = buildAZRequestForm();
@@ -92,10 +93,11 @@ public class RegisterInitStep implements AuthenticationStep {
         byte[] challengeByte = Hash.sha256(initCodeChallengeInput);
         String initCodeChallenge = EncodingUtils.encodeAsBase64String(challengeByte);
 
-        RegisterInitBody registerInitBody = new RegisterInitBody(initCodeChallenge, "app-bpol");
+        RegisterInitBody registerInitBody =
+                new RegisterInitBody(initCodeChallenge, FormValues.APP_NAME);
         RegisterInitResponse registerInitResponse = apiClient.registerInit(registerInitBody);
 
-        userContext.saveToPersistentStorage(
+        storage.saveToPersistentStorage(
                 Storage.PUB_SERVER_KEY, registerInitResponse.getPubServerKey());
     }
 
@@ -106,15 +108,14 @@ public class RegisterInitStep implements AuthenticationStep {
         String registerResponseJWE = apiClient.register(jwe);
 
         JWEObject jweObject = JWEObject.parse(registerResponseJWE);
-        jweObject.decrypt(new RSADecrypter(userContext.getKeyPair().getPrivate()));
+        jweObject.decrypt(new RSADecrypter(storage.getKeyPair().getPrivate()));
         String json = jweObject.getPayload().toString();
         RegisterResponse registerResponse =
                 SerializationUtils.deserializeFromString(json, RegisterResponse.class);
 
         String otpSecretKey = registerResponse.getData().getOtpSecretKey();
-        userContext.saveToPersistentStorage(Storage.OTP_SECRET_KEY, otpSecretKey);
-        userContext.saveToPersistentStorage(
-                Storage.APP_ID, registerResponse.getData().getAppUuid());
+        storage.saveToPersistentStorage(Storage.OTP_SECRET_KEY, otpSecretKey);
+        storage.saveToPersistentStorage(Storage.APP_ID, registerResponse.getData().getAppUuid());
     }
 
     private Form buildAZRequestForm() {
@@ -131,7 +132,7 @@ public class RegisterInitStep implements AuthenticationStep {
         return Form.builder()
                 .put(FormParams.REQUEST, requestToken)
                 .put(FormParams.CREDENTIALS, jweObject)
-                .put(FormParams.RESPONSE_TYPE, FormValues.RESPONSE_TYPE)
+                .put(FormParams.RESPONSE_TYPE, FormValues.TOKEN)
                 .build();
     }
 }

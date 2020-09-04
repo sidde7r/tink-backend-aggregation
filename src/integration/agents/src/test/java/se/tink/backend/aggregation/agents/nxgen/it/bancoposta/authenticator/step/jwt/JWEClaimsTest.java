@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.io.BaseEncoding;
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.step.AuthenticationTestData;
+import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.AuthenticationTestData;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step.jwt.JWEClaims;
 
 public class JWEClaimsTest {

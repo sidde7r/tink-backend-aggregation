@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.step;
+package se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator;
 
 import java.util.Map;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -13,7 +13,7 @@ public class AuthenticationTestData {
             "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnoABQp4IUzej+lEaJDpaO/XgK+NlkZtqJqsL8L5CkUEJJ7DnwBwqLNyvVyo2lHFdZZrnqozsk1aElzUT0xwq+5ia7ZAYvfuVkjHa9nSRfMW3yYUuZvXErHBpqjR0OvG8H+aTzEIfhbhgm0c6CNpIn798ALHP9MFGtdGe8poKF3katzy7aaQ6x3yvuh3+ja0hXYmm0cUToVGsXNaZeY2QGtQiFNWdp054hLOeMUHbaT25M3PYVzp24WnVteGepOooAjIJwSWMTnj78XvuFWHVSsnNNORV1UEnRG2sSAN6F4fipeZxd8ljuNlvRjCZ6DumEvK9FACnl5lZzGNhusOCXwIDAQAB";
     public static final String APP_ID = "appId";
 
-    static VerificationOnboardingResponse verificationOnboardingResponse(
+    public static VerificationOnboardingResponse verificationOnboardingResponse(
             boolean onboardingRequired, boolean syncWalletRequired, String registerToken) {
         return SerializationUtils.deserializeFromString(
                 "{\n"
@@ -77,7 +77,7 @@ public class AuthenticationTestData {
                 VerificationOnboardingResponse.class);
     }
 
-    static Map<String, String> registerAppResponseWithPinError() {
+    public static Map<String, String> registerAppResponseWithPinError() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
                         + "    \"command-success\": false,\n"
@@ -89,7 +89,7 @@ public class AuthenticationTestData {
                 Map.class);
     }
 
-    static Map<String, String> registerAppResponseWithMaxDeviceReachedError() {
+    public static Map<String, String> registerAppResponseWithMaxDeviceReachedError() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
                         + "    \"command-success\": false,\n"
@@ -101,7 +101,7 @@ public class AuthenticationTestData {
                 Map.class);
     }
 
-    static Map<String, String> registerAppResponseWithDefaultError() {
+    public static Map<String, String> registerAppResponseWithDefaultError() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
                         + "    \"command-success\": false,\n"
