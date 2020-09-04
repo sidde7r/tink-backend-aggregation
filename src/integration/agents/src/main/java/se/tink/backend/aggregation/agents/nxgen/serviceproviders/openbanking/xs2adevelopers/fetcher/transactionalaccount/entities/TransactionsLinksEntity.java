@@ -1,24 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransactionsLinksEntity {
-
-    @JsonProperty("account")
-    private JsonNode accountInternal;
-
-    @JsonProperty("next")
-    private JsonNode nextInternal;
-
-    @JsonProperty("last")
-    private JsonNode lastInternal;
-
-    @JsonProperty("first")
-    private JsonNode firstInternal;
 
     private LinkHrefType account;
     private LinkHrefType first;
@@ -48,5 +34,9 @@ public class TransactionsLinksEntity {
 
     public Optional<String> getTransactionDetails() {
         return getUrlFromHrefType(transactionDetails);
+    }
+
+    public boolean hasNextLink() {
+        return Optional.ofNullable(next).isPresent();
     }
 }

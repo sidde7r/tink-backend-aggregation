@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bpost;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bpost.agent;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -6,6 +6,8 @@ import static org.mockito.Mockito.mock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -17,23 +19,37 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class BpostAgentPaymentTest {
+public class BpostAgentTest {
     private final ArgumentManager<IbanArgumentEnum> manager =
             new ArgumentManager<>(IbanArgumentEnum.values());
+    private AgentIntegrationTest.Builder builder;
 
-    @Test
-    public void testPayments() throws Exception {
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
+
+    @Before
+    public void setup() {
         manager.before();
 
-        AgentIntegrationTest.Builder builder =
+        builder =
                 new AgentIntegrationTest.Builder("be", "be-bpost-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
-                        .setFinancialInstitutionId("bpost")
-                        .setAppId("tink")
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("bpost")
+                        .setAppId("tink");
+    }
 
+    @Test
+    public void testRefresh() throws Exception {
+        builder.build().testRefresh();
+    }
+
+    @Test
+    public void testPayments() throws Exception {
         builder.build().testGenericPayment(createListMockedDomesticPayment(4));
     }
 

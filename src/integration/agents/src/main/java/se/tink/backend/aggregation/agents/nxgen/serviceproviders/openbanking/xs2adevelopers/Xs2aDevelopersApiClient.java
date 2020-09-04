@@ -145,6 +145,27 @@ public class Xs2aDevelopersApiClient {
         return fetchedTransactions;
     }
 
+    public GetTransactionsResponse getTransactions(String nextLink) {
+
+        URL nextUrl = new URL(nextLink);
+
+        return createFetchingRequest(nextUrl).get(GetTransactionsResponse.class);
+    }
+
+    public GetTransactionsResponse getTransactions(
+            TransactionalAccount account, LocalDate dateFrom) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        URL transactionFetchUrl =
+                new URL(configuration.getBaseUrl() + ApiServices.GET_TRANSACTIONS)
+                        .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());
+
+        return createFetchingRequest(transactionFetchUrl)
+                .queryParam(QueryKeys.DATE_FROM, dateFormatter.format(dateFrom))
+                .queryParam(QueryKeys.DATE_TO, dateFormatter.format(LocalDate.now()))
+                .get(GetTransactionsResponse.class);
+    }
+
     public GetTransactionsResponse getCreditTransactions(
             CreditCardAccount account, Date fromDate, Date toDate) {
         return createFetchingRequest(
