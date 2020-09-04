@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +16,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingaccount.rpc.AccountListResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.rpc.FetchCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.rpc.GetCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.rpc.ListCardResponse;
@@ -43,7 +41,6 @@ public class DnbApiClient {
     private static final Pattern ISIN = Pattern.compile("ISIN:\\s*([A-Za-z0-9]{11}[0-9])");
     private final TinkHttpClient client;
     private final DnbTimestampUtil timestampUtil;
-    private List<CardEntity> cards = null;
 
     public DnbApiClient(TinkHttpClient client) {
         this.client = client;
@@ -178,18 +175,14 @@ public class DnbApiClient {
 
     ////// Credit Cards Begin //////
     public ListCardResponse listCards() {
-        ListCardResponse listCardResponse =
-                this.client
-                        .request(DnbConstants.Url.LIST_CARDS)
-                        .queryParam(
-                                DnbConstants.QueryParam.PREVENT_CACHE,
-                                String.valueOf(new Date().getTime()))
-                        .header(
-                                DnbConstants.Header.REQUEST_WITH_KEY,
-                                DnbConstants.Header.REQUEST_WITH_VALUE)
-                        .get(ListCardResponse.class);
-        this.cards = listCardResponse.getCreditCards();
-        return listCardResponse;
+        return this.client
+                .request(DnbConstants.Url.LIST_CARDS)
+                .queryParam(
+                        DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
+                .header(
+                        DnbConstants.Header.REQUEST_WITH_KEY,
+                        DnbConstants.Header.REQUEST_WITH_VALUE)
+                .get(ListCardResponse.class);
     }
 
     public GetCardResponse getCard(String cardId) {

@@ -44,6 +44,9 @@ public class BankIdMobilSSAuthenticationController {
 
             webDriverHelper.getElement(driver, WAITING_FOR_AUTHENTICATION_ELEMENT_XPATH);
         } catch (HtmlElementNotFoundException e) {
+            log.info(
+                    "BankID Mobile not supported (no reference code on page), see source: {}",
+                    driver.getPageSource());
             throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception(
                     "User provided invalid credentials or bank Id by mobile is not activated");
         }
