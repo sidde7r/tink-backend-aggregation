@@ -55,18 +55,4 @@ public final class SamlinkConstants {
         public static final String BOOKED = "booked";
         public static final String PENDING = "pending";
     }
-
-    public static final class FormKeys {
-        private FormKeys() {}
-
-        public static final String CLIENT_ASSERTION_TYPE = "client_assertion_type";
-        public static final String CLIENT_ASSERTION = "client_assertion";
-    }
-
-    public static final class FormValues {
-        private FormValues() {}
-
-        public static final String CLIENT_ASSERTION_TYPE_VALUE =
-                "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
-    }
 }

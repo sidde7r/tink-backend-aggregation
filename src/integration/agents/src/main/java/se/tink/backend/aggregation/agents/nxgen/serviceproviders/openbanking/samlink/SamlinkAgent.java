@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sa
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.payment.SamlinkPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.transactionalaccount.SamlinkTransactionFetcher;
@@ -15,10 +16,15 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConfiguration> {
 
     private final QsealcSigner qsealcSigner;
+    private final SamlinkAgentsConfiguration agentConfiguration;
 
-    public SamlinkAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+    public SamlinkAgent(
+            AgentComponentProvider componentProvider,
+            QsealcSigner qsealcSigner,
+            SamlinkAgentsConfiguration agentConfiguration) {
         super(componentProvider);
 
+        this.agentConfiguration = agentConfiguration;
         this.qsealcSigner = qsealcSigner;
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -30,10 +36,10 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
                 client,
                 persistentStorage,
                 qsealcSigner,
+                getConfiguration(),
                 getConfiguration().getProviderSpecificConfiguration(),
                 request,
-                getConfiguration().getRedirectUrl(),
-                getConfiguration().getQsealc());
+                agentConfiguration);
     }
 
     @Override
@@ -55,8 +61,7 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
 
     @Override
     protected BerlinGroupTransactionFetcher getTransactionFetcher() {
-        return new SamlinkTransactionFetcher(
-                apiClient, getConfiguration().getProviderSpecificConfiguration());
+        return new SamlinkTransactionFetcher(apiClient, agentConfiguration);
     }
 
     @Override
