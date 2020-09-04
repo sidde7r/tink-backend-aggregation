@@ -14,10 +14,10 @@ public class SpAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("fi", "fi-saastopankki-ob")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
+                        .loadCredentialsBefore(true)
                         .setFinancialInstitutionId("c1746bbd12204b5d959424d2c598cddc")
                         .setAppId("tink")
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(true);
     }
 
     @Test

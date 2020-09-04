@@ -11,8 +11,10 @@ import java.security.cert.X509Certificate;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
@@ -25,6 +27,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponseWithoutHref;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountEntityBaseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.BookingStatus;
@@ -92,9 +96,30 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
     // The "withBalance" URL parameter is not supported by SamLink
     @Override
     public AccountsBaseResponseBerlinGroup fetchAccounts() {
-        return createRequestInSession(
-                        new URL(agentConfiguration.getBaseUrl()).concat(Urls.ACCOUNTS), "")
-                .get(AccountsBaseResponseBerlinGroup.class);
+        AccountsBaseResponseBerlinGroup response =
+                createRequestInSession(
+                                new URL(agentConfiguration.getBaseUrl()).concat(Urls.ACCOUNTS), "")
+                        .get(AccountsBaseResponseBerlinGroup.class);
+
+        final List<AccountEntityBaseEntity> accountsWithBalances =
+                response.getAccounts().stream()
+                        .map(this::fetchBalances)
+                        .collect(Collectors.toList());
+
+        return new AccountsBaseResponseBerlinGroup(accountsWithBalances);
+    }
+
+    private AccountEntityBaseEntity fetchBalances(final AccountEntityBaseEntity accountBaseEntity) {
+        final URL url =
+                new URL(
+                        agentConfiguration
+                                .getBaseUrl()
+                                .concat(accountBaseEntity.getBalancesLink()));
+        final List<BalanceBaseEntity> balances =
+                createRequestInSession(url, "").get(AccountEntityBaseEntity.class).getBalances();
+        accountBaseEntity.setBalances(balances);
+
+        return accountBaseEntity;
     }
 
     private RequestBuilder buildRequestWithSignature(final URL url, final String body) {
