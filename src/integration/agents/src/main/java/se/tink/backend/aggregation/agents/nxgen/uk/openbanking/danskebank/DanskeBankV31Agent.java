@@ -37,6 +37,7 @@ public class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 new UKOpenBankingAis.Builder()
+                        .withOrganisationId("0015800000jf7AeAAI")
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.WELL_KNOWN_URL)
                         .withIdentityDataURL(PartyEndpoints.IDENTITY_DATA_ENDPOINT_PARTY)

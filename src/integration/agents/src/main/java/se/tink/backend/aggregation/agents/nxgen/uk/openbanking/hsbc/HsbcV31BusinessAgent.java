@@ -28,6 +28,7 @@ public class HsbcV31BusinessAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 new UKOpenBankingAis.Builder()
+                        .withOrganisationId(HsbcConstants.ORGANISATION_ID)
                         .withApiBaseURL(V313.BUSINESS_AIS_API_URL)
                         .withWellKnownURL(V313.BUSINESS_WELL_KNOWN_URL)
                         .withAppToAppURL(V313.BUSINESS_APP_TO_APP_AUTH_URL)

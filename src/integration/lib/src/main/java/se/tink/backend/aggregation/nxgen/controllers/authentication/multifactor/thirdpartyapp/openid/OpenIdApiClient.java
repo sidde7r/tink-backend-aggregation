@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
@@ -34,7 +33,7 @@ public class OpenIdApiClient {
     protected final TinkHttpClient httpClient;
     protected final SoftwareStatementAssertion softwareStatement;
     protected final String redirectUrl;
-    protected final ProviderConfiguration providerConfiguration;
+    protected final ClientInfo providerConfiguration;
     protected final JwtSigner signer;
     private final URL wellKnownURL;
     private final RandomValueGenerator randomValueGenerator;
@@ -50,13 +49,13 @@ public class OpenIdApiClient {
             JwtSigner signer,
             SoftwareStatementAssertion softwareStatement,
             String redirectUrl,
-            ProviderConfiguration providerConfiguration,
+            ClientInfo clientInfo,
             URL wellKnownURL,
             RandomValueGenerator randomValueGenerator) {
         this.httpClient = httpClient;
         this.softwareStatement = softwareStatement;
         this.redirectUrl = redirectUrl;
-        this.providerConfiguration = providerConfiguration;
+        this.providerConfiguration = clientInfo;
         this.wellKnownURL = wellKnownURL;
         this.signer = signer;
         this.randomValueGenerator = randomValueGenerator;
@@ -102,7 +101,7 @@ public class OpenIdApiClient {
         return signer;
     }
 
-    public ProviderConfiguration getProviderConfiguration() {
+    public ClientInfo getProviderConfiguration() {
         return providerConfiguration;
     }
 
@@ -123,19 +122,19 @@ public class OpenIdApiClient {
 
     private void handleFormAuthentication(
             TokenRequestForm requestForm, WellKnownResponse wellknownConfiguration) {
-
-        ClientInfo clientInfo = providerConfiguration.getClientInfo();
         TOKEN_ENDPOINT_AUTH_METHOD authMethod =
-                determineTokenEndpointAuthMethod(clientInfo, wellknownConfiguration);
+                determineTokenEndpointAuthMethod(providerConfiguration, wellknownConfiguration);
 
         switch (authMethod) {
             case client_secret_post:
                 requestForm.withClientSecretPost(
-                        clientInfo.getClientId(), clientInfo.getClientSecret());
+                        providerConfiguration.getClientId(),
+                        providerConfiguration.getClientSecret());
                 break;
 
             case private_key_jwt:
-                requestForm.withPrivateKeyJwt(signer, wellknownConfiguration, clientInfo);
+                requestForm.withPrivateKeyJwt(
+                        signer, wellknownConfiguration, providerConfiguration);
                 break;
 
             case client_secret_basic:
@@ -144,7 +143,7 @@ public class OpenIdApiClient {
 
             case tls_client_auth:
                 // Do nothing. We authenticate using client certificate.
-                requestForm.withClientId(clientInfo.getClientId());
+                requestForm.withClientId(providerConfiguration.getClientId());
                 break;
 
             default:
@@ -186,17 +185,16 @@ public class OpenIdApiClient {
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE);
 
-        ClientInfo clientInfo = providerConfiguration.getClientInfo();
-
         TOKEN_ENDPOINT_AUTH_METHOD authMethod =
-                determineTokenEndpointAuthMethod(clientInfo, wellKnownConfiguration);
+                determineTokenEndpointAuthMethod(providerConfiguration, wellKnownConfiguration);
 
         switch (authMethod) {
             case client_secret_basic:
                 // `client_secret_basic` does not add data to the body, but on the header.
                 requestBuilder =
                         requestBuilder.addBasicAuth(
-                                clientInfo.getClientId(), clientInfo.getClientSecret());
+                                providerConfiguration.getClientId(),
+                                providerConfiguration.getClientSecret());
                 break;
             case tls_client_auth:
                 break;
@@ -257,7 +255,7 @@ public class OpenIdApiClient {
     public URL buildAuthorizeUrl(
             String state, String nonce, ClientMode mode, String callbackUri, URL authEndpoint) {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
-        ClientInfo clientInfo = providerConfiguration.getClientInfo();
+        ;
 
         String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
 
@@ -282,7 +280,7 @@ public class OpenIdApiClient {
          */
         return authorizationEndpoint
                 .queryParam(OpenIdConstants.Params.RESPONSE_TYPE, responseType)
-                .queryParam(OpenIdConstants.Params.CLIENT_ID, clientInfo.getClientId())
+                .queryParam(OpenIdConstants.Params.CLIENT_ID, providerConfiguration.getClientId())
                 .queryParam(OpenIdConstants.Params.SCOPE, scope)
                 .queryParam(OpenIdConstants.Params.STATE, state)
                 .queryParam(OpenIdConstants.Params.NONCE, nonce)

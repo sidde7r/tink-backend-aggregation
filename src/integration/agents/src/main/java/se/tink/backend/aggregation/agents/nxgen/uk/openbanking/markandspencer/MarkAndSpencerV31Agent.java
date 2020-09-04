@@ -28,6 +28,7 @@ public class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 new UKOpenBankingAis.Builder()
+                        .withOrganisationId("0015800000jeukaAAA")
                         .withApiBaseURL(V313.AIS_API_URL)
                         .withWellKnownURL(V313.WELL_KNOWN_URL)
                         .withIdentityDataURL(PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)

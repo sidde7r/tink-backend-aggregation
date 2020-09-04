@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
@@ -16,14 +16,14 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class OpenIdAuthenticatedHttpFilter extends Filter {
     private final OAuth2Token accessToken;
-    private final ProviderConfiguration providerConfiguration;
+    private final ClientInfo providerConfiguration;
     private final String customerIp;
     private final String customerLastLoggedInTime;
     private final RandomValueGenerator randomValueGenerator;
 
     public OpenIdAuthenticatedHttpFilter(
             OAuth2Token accessToken,
-            ProviderConfiguration providerConfiguration,
+            ClientInfo providerConfiguration,
             String customerIp,
             String customerLastLoggedInTime,
             RandomValueGenerator randomValueGenerator) {
@@ -71,9 +71,6 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
 
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
         headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
-        headers.add(
-                OpenIdConstants.HttpHeaders.X_FAPI_FINANCIAL_ID,
-                providerConfiguration.getOrganizationId());
         // Setting these 2 headers is optional according to the OpenID and OpenBanking specs.
         // If we set the timestamp then the actually accepted formats don't follow the
         // specifications.

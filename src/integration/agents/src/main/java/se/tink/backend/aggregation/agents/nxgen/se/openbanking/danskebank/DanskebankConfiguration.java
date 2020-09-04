@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.danskebank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInject;
@@ -14,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationOverride;
@@ -39,10 +36,33 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
     @Secret
     private String softwareStatementAssertion;
 
+    @JsonSchemaTitle("Token Endpoint Auth Signing algorithm")
+    @JsonSchemaDescription(
+            "Algorithm which the TPP uses to authenticate with the token endpoint if using private_key_jwt or client_secret_jwt. This must be the same algorithm as the one chosen during registration. Must be specified if token_endpoint_auth_method is private_key_jwt or client_secret_jwt")
+    @JsonSchemaInject(strings = {@JsonSchemaString(path = "pattern", value = "^(RS256|PS256)$")})
+    @JsonSchemaExamples("PS256")
+    @JsonProperty
+    @Secret
+    private String tokenEndpointAuthSigningAlg;
+
+    @JsonSchemaTitle("Token Endpoint Authentication Method")
+    @JsonSchemaDescription(
+            "Specifies which Token endpoint authentication method the TPP wants to use. This must be the same method as the one chosen during registration.")
+    @JsonSchemaInject(
+            strings = {
+                @JsonSchemaString(
+                        path = "pattern",
+                        value =
+                                "^(private_key_jwt|client_secret_basic|client_secret_post|tls_client_auth)$")
+            })
+    @JsonSchemaExamples("tls_client_auth")
+    @JsonProperty(required = false)
+    @Secret
+    private String tokenEndpointAuthMethod;
+
     @Override
-    public ProviderConfiguration getProviderConfiguration() {
-        Preconditions.checkState(!Strings.isNullOrEmpty(clientId), "ClientId is null or empty.");
-        return new ProviderConfiguration(organizationId, new ClientInfo(clientId, ""));
+    public ClientInfo getProviderConfiguration() {
+        return new ClientInfo(clientId, "", tokenEndpointAuthMethod, tokenEndpointAuthSigningAlg);
     }
 
     @Override

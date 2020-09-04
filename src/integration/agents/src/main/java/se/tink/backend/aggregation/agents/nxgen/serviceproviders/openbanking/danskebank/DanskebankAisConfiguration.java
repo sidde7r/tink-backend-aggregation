@@ -95,6 +95,11 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
+    public String getOrganisationId() {
+        return "0015800000jf7AeAAI";
+    }
+
+    @Override
     public void setHolderName(String holderName) {
         this.holderName = holderName;
     }

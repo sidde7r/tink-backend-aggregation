@@ -47,4 +47,6 @@ public interface UkOpenBankingAisConfig {
     String getHolderName();
 
     AccountOwnershipType getAllowedAccountOwnershipType();
+
+    String getOrganisationId();
 }

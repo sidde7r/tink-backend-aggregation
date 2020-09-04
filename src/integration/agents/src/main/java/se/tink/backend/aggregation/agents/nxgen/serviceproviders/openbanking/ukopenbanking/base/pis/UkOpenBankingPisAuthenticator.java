@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
     private final UkOpenBankingApiClient apiClient;
     private final SoftwareStatementAssertion softwareStatement;
-    private final ProviderConfiguration providerConfiguration;
+    private final ClientInfo clientInfo;
     private final UkOpenBankingPis ukOpenBankingPis;
     private PaymentResponse paymentResponse;
     private final PaymentRequest paymentRequest;
@@ -27,12 +27,12 @@ public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
     public UkOpenBankingPisAuthenticator(
             UkOpenBankingApiClient apiClient,
             SoftwareStatementAssertion softwareStatement,
-            ProviderConfiguration providerConfiguration,
+            ClientInfo clientInfo,
             UkOpenBankingPis ukOpenBankingPis,
             PaymentRequest paymentRequest) {
         this.apiClient = apiClient;
         this.softwareStatement = softwareStatement;
-        this.providerConfiguration = providerConfiguration;
+        this.clientInfo = clientInfo;
         this.ukOpenBankingPis = ukOpenBankingPis;
         this.paymentRequest = paymentRequest;
     }
@@ -57,7 +57,7 @@ public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
         return authorizeUrl.queryParam(
                 UkOpenBankingAisAuthenticatorConstants.Params.REQUEST,
                 AuthorizeRequest.create()
-                        .withClientInfo(providerConfiguration.getClientInfo())
+                        .withClientInfo(clientInfo)
                         .withPaymentsScope()
                         .withSoftwareStatement(softwareStatement)
                         .withRedirectUrl(apiClient.getRedirectUrl())

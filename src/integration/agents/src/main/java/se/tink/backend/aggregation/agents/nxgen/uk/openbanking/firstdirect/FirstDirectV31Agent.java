@@ -36,6 +36,7 @@ public class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 new UKOpenBankingAis.Builder()
+                        .withOrganisationId("00158000016i44JAAQ")
                         .withApiBaseURL(V313.AIS_API_URL)
                         .withWellKnownURL(V313.WELL_KNOWN_URL)
                         .withIdentityDataURL(PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)

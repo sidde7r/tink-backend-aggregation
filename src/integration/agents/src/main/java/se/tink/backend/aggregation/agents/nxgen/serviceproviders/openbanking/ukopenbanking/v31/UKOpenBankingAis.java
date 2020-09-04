@@ -33,6 +33,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     private IdentityDataEntity identityData;
     private String holderName;
     private AccountOwnershipType allowedAccountOwnershipType;
+    private final String organisationId;
 
     private UKOpenBankingAis(
             URL apiBaseURL,
@@ -43,7 +44,8 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
             boolean accountPartyEndpointEnabled,
             boolean accountPartiesEndpointEnabled,
             List<String> additionalPermissions,
-            AccountOwnershipType allowedAccountOwnershipType) {
+            AccountOwnershipType allowedAccountOwnershipType,
+            String organisationId) {
         this.apiBaseURL = apiBaseURL;
         this.wellKnownURL = wellKnownURL;
         this.identityDataURL = identityDataURL;
@@ -53,6 +55,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         this.accountPartiesEndpointEnabled = accountPartiesEndpointEnabled;
         this.additionalPermissions = additionalPermissions;
         this.allowedAccountOwnershipType = allowedAccountOwnershipType;
+        this.organisationId = organisationId;
     }
 
     @Override
@@ -112,6 +115,11 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         return allowedAccountOwnershipType;
     }
 
+    @Override
+    public String getOrganisationId() {
+        return null;
+    }
+
     // TODO replace with lombok builder
     public static final class Builder {
 
@@ -124,6 +132,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         private boolean accountPartyEndpointEnabled;
         private boolean accountPartiesEndpointEnabled;
         private AccountOwnershipType allowedAccountOwnershipType = AccountOwnershipType.PERSONAL;
+        private String organisationId;
 
         public Builder() {}
 
@@ -176,8 +185,15 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
             return this;
         }
 
+        public Builder withOrganisationId(final String organisationId) {
+            this.organisationId = organisationId;
+            return this;
+        }
+
         public UKOpenBankingAis build() {
             Preconditions.checkNotNull(apiBaseURL);
+            Preconditions.checkNotNull(organisationId);
+
             return new UKOpenBankingAis(
                     apiBaseURL,
                     wellKnownURL,
@@ -187,7 +203,8 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
                     accountPartyEndpointEnabled,
                     accountPartiesEndpointEnabled,
                     additionalPermissions,
-                    allowedAccountOwnershipType);
+                    allowedAccountOwnershipType,
+                    organisationId);
         }
     }
 }

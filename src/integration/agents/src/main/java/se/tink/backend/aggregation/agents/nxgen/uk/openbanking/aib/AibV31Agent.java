@@ -37,6 +37,7 @@ public class AibV31Agent extends UkOpenBankingBaseAgent {
                 new UKOpenBankingAis.Builder()
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.WELL_KNOWN_URL)
+                        .withOrganisationId("0015800000jf9VgAAI")
                         .build();
     }
 
