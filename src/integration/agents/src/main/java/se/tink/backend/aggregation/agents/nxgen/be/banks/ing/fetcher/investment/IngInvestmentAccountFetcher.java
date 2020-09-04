@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
@@ -83,20 +84,30 @@ public class IngInvestmentAccountFetcher
 
     private List<InvestmentAccount> getInvestmentAccounts(URL url, AccountEntity accountEntity) {
         final Optional<String> bbanNumber = Optional.ofNullable(accountEntity.getBbanNumber());
-        return bbanNumber
-                .map(bban -> bban.replace(accountEntity.getAccount313(), ""))
-                .map(
-                        bban -> {
-                            PortfolioResponseEntity response =
-                                    apiClient
-                                            .fetchInvestmentPortfolio(url, bban)
-                                            .getMobileResponse();
-                            return accountEntity.toTinkInvestmentAccounts(response);
-                        })
-                .orElseGet(
-                        () -> {
-                            log.warn("No BBAN to get investment accounts");
-                            return Collections.emptyList();
-                        });
+        if (bbanNumber.isPresent()) {
+            String bban = bbanNumber.get().replace(accountEntity.getAccount313(), "");
+            PortfolioResponseEntity response =
+                    apiClient.fetchInvestmentPortfolio(url, bban).getMobileResponse();
+            handleError(response);
+            return accountEntity.toTinkInvestmentAccounts(response);
+        } else {
+            log.warn(
+                    "No BBAN to get investment portfolio for account ({}/{})",
+                    accountEntity.getName(),
+                    accountEntity.getIbanNumber());
+            return Collections.emptyList();
+        }
+    }
+
+    private void handleError(PortfolioResponseEntity responseEntity) {
+        if (IngConstants.ReturnCodes.NOK.equalsIgnoreCase(responseEntity.getReturnCode())) {
+            String errorCode = responseEntity.getErrorCode().orElse("No error code");
+            if (IngConstants.ErrorCodes.TECHNICAL_FAILURE.equalsIgnoreCase(errorCode)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        "Technical failure (" + errorCode + ")");
+            }
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Unknown problem (" + errorCode + ")");
+        }
     }
 }

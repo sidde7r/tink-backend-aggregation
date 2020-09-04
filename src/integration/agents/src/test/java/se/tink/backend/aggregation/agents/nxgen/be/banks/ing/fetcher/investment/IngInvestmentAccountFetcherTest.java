@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -16,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
@@ -53,6 +55,19 @@ public class IngInvestmentAccountFetcherTest {
                 .hasFieldOrPropertyWithValue("exactBalance", ExactCurrencyAmount.inEUR(22505.32));
     }
 
+    @Test
+    public void shouldThrowException() throws Exception {
+        when(ingHelper.retrieveLoginResponse()).thenReturn(Optional.of(mockLoginResponseEntity()));
+        when(apiClient.fetchAccounts(any())).thenReturn(Optional.of(mockAccountsResponse()));
+        when(apiClient.fetchInvestmentPortfolio(any(), eq("3771005805456")))
+                .thenReturn(mockPortfolioErrorResponse());
+
+        Throwable exception = catchThrowable(ingInvestmentAccountFetcher::fetchAccounts);
+        assertThat(exception)
+                .isExactlyInstanceOf(BankServiceException.class)
+                .hasMessage("Technical failure (E50/01/G001-038)");
+    }
+
     private PortfolioResponse mockPortfolioResponse() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
@@ -79,6 +94,22 @@ public class IngInvestmentAccountFetcherTest {
                         + "            ]\n"
                         + "        },\n"
                         + "        \"portfolioTotalBalance\": \"+323678502\"\n"
+                        + "    }\n"
+                        + "}",
+                PortfolioResponse.class);
+    }
+
+    private PortfolioResponse mockPortfolioErrorResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"mobileResponse\": {\n"
+                        + "        \"returnCode\": \"NOK\",\n"
+                        + "        \"errors\": [\n"
+                        + "            {\n"
+                        + "                \"code\": \"E50/01/G001-038\",\n"
+                        + "                \"text\": \"Due to a technical failure,  we were not able to process your request. Please try again. (038)\"\n"
+                        + "            }\n"
+                        + "        ]\n"
                         + "    }\n"
                         + "}",
                 PortfolioResponse.class);

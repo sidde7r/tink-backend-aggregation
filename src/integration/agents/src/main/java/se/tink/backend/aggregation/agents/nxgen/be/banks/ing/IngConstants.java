@@ -244,6 +244,7 @@ public class IngConstants {
         public static final String NO_ACCESS_TO_ONLINE_BANKING = "e50/01/g350-220";
         public static final String NO_LINKED_ACCOUNT = "e50/01/g353-000";
         public static final String ACCOUNT_CANCELLED = "e50/01/g322-000";
+        public static final String TECHNICAL_FAILURE = "e50/01/g001-038";
         public static final String ACCOUNT_NOT_VALID = "EWS/01/G010-000";
         public static final String TEMPORARY_ERROR = "EWS/01/G560-000";
         public static final String OUT_OF_SESSION = "001";
