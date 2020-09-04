@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.ste
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.AuthenticationTestData;
 import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator.AuthenticationTestHelper;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step.RegisterAppStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -50,10 +52,11 @@ public class RegisterAppStepTest {
         // given
         given(apiClient.registerApp(any()))
                 .willReturn(AuthenticationTestData.registerAppResponseWithPinError());
+        given(storage.isUserPinSetRequired()).willReturn(true);
         // when
         objUnderTest.execute(request);
         // then
-        assertThat(storage.isUserPinSetRequired()).isEqualTo(true);
+        verify(storage).saveToPersistentStorage(Storage.USER_PIN_SET_REQUIRED, true);
     }
 
     @Test

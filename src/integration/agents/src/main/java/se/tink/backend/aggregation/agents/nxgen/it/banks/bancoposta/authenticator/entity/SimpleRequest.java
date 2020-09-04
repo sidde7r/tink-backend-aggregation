@@ -6,5 +6,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class SimpleRequest extends BaseRequest {
-    private final Map<String, String> body = Collections.EMPTY_MAP;;
+    private final Map<String, String> body = Collections.emptyMap();
 }

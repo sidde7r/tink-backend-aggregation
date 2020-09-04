@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.bancoposta.authenticator;
 
 import java.util.Map;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.VerificationOnboardingResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -9,8 +9,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class AuthenticationTestData {
     public static final String OTP_SECRET_KEY =
             "GIYXQ53CGI2TC6DMM5TWK5RVNBTGC6DOORVG253CNRXWI23IOQ3G63TSN5VHEOLMPFWGYNRXNEZDIYTGMJXWUMJTHFUHO6RY";
-    static final String PUB_KEY =
-            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnoABQp4IUzej+lEaJDpaO/XgK+NlkZtqJqsL8L5CkUEJJ7DnwBwqLNyvVyo2lHFdZZrnqozsk1aElzUT0xwq+5ia7ZAYvfuVkjHa9nSRfMW3yYUuZvXErHBpqjR0OvG8H+aTzEIfhbhgm0c6CNpIn798ALHP9MFGtdGe8poKF3katzy7aaQ6x3yvuh3+ja0hXYmm0cUToVGsXNaZeY2QGtQiFNWdp054hLOeMUHbaT25M3PYVzp24WnVteGepOooAjIJwSWMTnj78XvuFWHVSsnNNORV1UEnRG2sSAN6F4fipeZxd8ljuNlvRjCZ6DumEvK9FACnl5lZzGNhusOCXwIDAQAB";
     public static final String APP_ID = "appId";
 
     public static VerificationOnboardingResponse verificationOnboardingResponse(

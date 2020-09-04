@@ -144,8 +144,7 @@ public class BancoPostaApiClient {
     public RegisterInitResponse registerInit(RegisterInitBody registerInitBody) {
         return createBaseRequest(Urls.REGISTER_INIT)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                //                .post(RegisterInitResponse.class, registerInitBody);
-                .post(RegisterInitResponse.class, new SimpleRequest());
+                .post(RegisterInitResponse.class, registerInitBody);
     }
 
     public String performRequestAz(String azBody) {
