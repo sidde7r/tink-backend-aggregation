@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.investme
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.LoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.TransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.filters.NordeaNoRetryFilter;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -35,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class NordeaNoAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshIdentityDataExecutor,
@@ -61,9 +63,14 @@ public class NordeaNoAgent extends SubsequentProgressiveGenerationAgent
         super(componentProvider);
         this.storage = new NordeaNoStorage(persistentStorage, sessionStorage);
 
-        componentProvider.getTinkHttpClient().addFilter(new ExceptionFilter());
+        TinkHttpClient httpClient = componentProvider.getTinkHttpClient();
+        httpClient.addFilter(new ExceptionFilter());
+        httpClient.addFilter(
+                new NordeaNoRetryFilter(
+                        NordeaNoConstants.RetryFilter.NUM_TIMEOUT_RETRIES,
+                        NordeaNoConstants.RetryFilter.RETRY_SLEEP_MILLISECONDS));
 
-        BaseClient baseClient = new BaseClient(componentProvider.getTinkHttpClient(), storage);
+        BaseClient baseClient = new BaseClient(httpClient, storage);
         this.authenticationClient = new AuthenticationClient(baseClient, storage);
         this.fetcherClient = new FetcherClient(baseClient);
 
