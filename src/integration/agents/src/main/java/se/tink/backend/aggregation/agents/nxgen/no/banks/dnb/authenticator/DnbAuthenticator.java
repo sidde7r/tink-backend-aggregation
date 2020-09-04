@@ -39,8 +39,8 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         // From this request we'll get a location that contains the encrypted uid
         HttpResponse startMobileResponse = apiClient.postStartMobile(nationalId);
 
-        bankIdReferer = extractLocationFromStartMobileResponse(startMobileResponse);
         verifyStartMobileResponse(startMobileResponse);
+        bankIdReferer = extractLocationFromStartMobileResponse(startMobileResponse);
 
         apiClient.initiateSession(bankIdReferer);
 
