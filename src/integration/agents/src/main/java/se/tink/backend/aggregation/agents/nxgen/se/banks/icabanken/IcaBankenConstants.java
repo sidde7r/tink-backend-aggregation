@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 
 import java.time.ZoneId;
 import java.util.Locale;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -18,10 +20,14 @@ public class IcaBankenConstants {
     public static final class Urls {
         public static final String HOST = "https://appserver.icabanken.se";
 
-        public static final URL LOGIN_BANKID =
-                new URL(HOST + "/api/session/login/bankid/{identifier}");
+        public static final URL BANKID_CREATE =
+                new URL(HOST + "/api/authentication/mobilebankid/create");
+        public static final URL BANKID_COLLECT =
+                new URL(HOST + "/api/authentication/mobilebankid/collect/{identifier}");
+        public static final URL BANKID_AUTH =
+                new URL(HOST + "/api/authentication/mobilebankid/auth");
+
         public static final URL KEEP_ALIVE = new URL(HOST + "/api/session/heartbeat");
-        public static final URL SESSION = new URL(HOST + "/api/session");
         public static final URL SIGN_TRANSFER_COLLECT_URL =
                 new URL(HOST + "/api/bankId/sign/collect/{requestId}");
         public static final URL ACCOUNTS = new URL(HOST + "/api/accounts");
@@ -53,31 +59,39 @@ public class IcaBankenConstants {
     public static final class Headers {
         public static final String ACCEPT = "Accept";
         public static final String HEADER_CLIENTAPPVERSION = "ClientAppVersion";
-        public static final String VALUE_CLIENTAPPVERSION = "1.55.1";
+        public static final String VALUE_CLIENTAPPVERSION = "1.65.1";
         public static final String HEADER_APIKEY = "ApiKey";
-        public static final String VALUE_APIKEY = "F6EE92F2-3428-4462-9308-7617E721D884";
+        public static final String VALUE_APIKEY = "7E5540EE-9903-4272-8401-6AD9ACA455AD";
         public static final String HEADER_API_VERSION = "ApiVersion";
-        public static final String VALUE_API_VERSION = "10";
+        public static final String VALUE_API_VERSION = "12";
         public static final String HEADER_CLIENT_OS = "ClientOS";
         public static final String VALUE_CLIENT_OS = "iOS";
         public static final String HEADER_CLIENT_OS_VERSION = "ClientOSVersion";
-        public static final String VALUE_CLIENT_OS_VERSION = "10.3.3";
+        public static final String VALUE_CLIENT_OS_VERSION = "13.3.1";
         public static final String HEADER_CLIENT_HARDWARE = "ClientHardware";
         public static final String VALUE_CLIENT_HARDWARE = "iPhone";
+        public static final String VALUE_USER_AGENT =
+                "ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0";
     }
 
-    public static final class BankIdStatus {
-        public static final String PENDING = "pending";
-        public static final String OK = "ok";
-        public static final String ABORTED = "aborted";
-        public static final String TIMEOUT = "timedout";
-        public static final String FAILED = "failed";
+    public static final class BankIdErrors {
+        public static final String STATUS_FAILED = "failed";
         public static final String NOT_A_CUSTOMER = "no active accounts";
         public static final String INTERRUPTED = "signing not found";
         public static final String NOT_VERIFIED = "konto har ännu inte blivit verifierat";
         public static final String SOMETHING_WENT_WRONG = "något har blivit fel";
         public static final String INVALID_CUSTOMER_ID = "invalid customerid";
     }
+
+    public static final GenericTypeMapper<BankIdStatus, String> BANKID_STATUS_MAPPER =
+            GenericTypeMapper.<BankIdStatus, String>genericBuilder()
+                    .put(BankIdStatus.DONE, "ok")
+                    .put(BankIdStatus.WAITING, "pending")
+                    .put(BankIdStatus.CANCELLED, "aborted")
+                    .put(BankIdStatus.TIMEOUT, "timedout")
+                    .put(BankIdStatus.FAILED_UNKNOWN, BankIdErrors.STATUS_FAILED)
+                    .setDefaultTranslationValue(BankIdStatus.FAILED_UNKNOWN)
+                    .build();
 
     public static final class StatusCodes {
         public static final int OK_RESPONSE = 0;

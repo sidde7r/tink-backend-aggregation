@@ -15,20 +15,8 @@ public class BankIdResponse extends BaseResponse<BankIdBodyEntity> {
     @JsonIgnore private static final Logger log = LoggerFactory.getLogger(BankIdResponse.class);
 
     public BankIdStatus getBankIdStatus() {
-        String status = Preconditions.checkNotNull(getBody().getStatus(), "BankID status was null");
-
-        switch (status.toLowerCase()) {
-            case IcaBankenConstants.BankIdStatus.OK:
-                return BankIdStatus.DONE;
-            case IcaBankenConstants.BankIdStatus.PENDING:
-                return BankIdStatus.WAITING;
-            case IcaBankenConstants.BankIdStatus.ABORTED:
-                return BankIdStatus.CANCELLED;
-            case IcaBankenConstants.BankIdStatus.TIMEOUT:
-                return BankIdStatus.TIMEOUT;
-            default:
-                log.warn("Unknown bankID status: {}", status);
-                return BankIdStatus.FAILED_UNKNOWN;
-        }
+        final String status =
+                Preconditions.checkNotNull(getBody().getStatus(), "BankID status was null");
+        return IcaBankenConstants.BANKID_STATUS_MAPPER.translate(status.toLowerCase()).get();
     }
 }

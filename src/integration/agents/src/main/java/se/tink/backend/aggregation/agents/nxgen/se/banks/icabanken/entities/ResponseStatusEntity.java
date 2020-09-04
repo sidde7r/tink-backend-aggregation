@@ -33,7 +33,7 @@ public class ResponseStatusEntity {
         return serverMessage != null
                 && serverMessage
                         .toLowerCase()
-                        .contains(IcaBankenConstants.BankIdStatus.NOT_A_CUSTOMER);
+                        .contains(IcaBankenConstants.BankIdErrors.NOT_A_CUSTOMER);
     }
 
     @JsonIgnore
@@ -41,7 +41,7 @@ public class ResponseStatusEntity {
         return serverMessage != null
                 && serverMessage
                         .toLowerCase()
-                        .contains(IcaBankenConstants.BankIdStatus.INTERRUPTED);
+                        .contains(IcaBankenConstants.BankIdErrors.INTERRUPTED);
     }
 
     @JsonIgnore
@@ -49,7 +49,7 @@ public class ResponseStatusEntity {
         return clientMessage != null
                 && clientMessage
                         .toLowerCase()
-                        .contains(IcaBankenConstants.BankIdStatus.NOT_VERIFIED);
+                        .contains(IcaBankenConstants.BankIdErrors.NOT_VERIFIED);
     }
 
     @JsonIgnore
@@ -57,7 +57,7 @@ public class ResponseStatusEntity {
         return clientMessage != null
                 && clientMessage
                         .toLowerCase()
-                        .contains(IcaBankenConstants.BankIdStatus.SOMETHING_WENT_WRONG);
+                        .contains(IcaBankenConstants.BankIdErrors.SOMETHING_WENT_WRONG);
     }
 
     @JsonIgnore
@@ -65,7 +65,7 @@ public class ResponseStatusEntity {
         return serverMessage != null
                 && serverMessage
                         .toLowerCase()
-                        .contains(IcaBankenConstants.BankIdStatus.INVALID_CUSTOMER_ID);
+                        .contains(IcaBankenConstants.BankIdErrors.INVALID_CUSTOMER_ID);
     }
 
     @JsonIgnore

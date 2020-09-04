@@ -8,9 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @JsonNaming(UpperCamelCaseStrategy.class)
 @Getter
-public class SessionBodyEntity {
-    private String sessionId;
-    private int clientSessionTimeToLive;
-    private int heartbeatInterval;
-    private String userInstallationId;
+public class BankIdAuthPollBodyEntity {
+    private String orderRef;
+    private String orderStatus;
 }

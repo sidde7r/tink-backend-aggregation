@@ -77,7 +77,9 @@ public class IcaBankenAgent extends NextGenerationAgent
         super(componentProvider);
         configureHttpClient(client);
         this.icaBankenSessionStorage = new IcaBankenSessionStorage(sessionStorage);
-        this.icaBankenPersistentStorage = new IcabankenPersistentStorage(persistentStorage);
+        this.icaBankenPersistentStorage =
+                new IcabankenPersistentStorage(
+                        persistentStorage, componentProvider.getRandomValueGenerator());
         this.apiClient =
                 new IcaBankenApiClient(client, icaBankenSessionStorage, icaBankenPersistentStorage);
         this.eInvoiceRefreshController = null;
@@ -114,8 +116,7 @@ public class IcaBankenAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
-                new IcaBankenBankIdAuthenticator(
-                        apiClient, icaBankenSessionStorage, icaBankenPersistentStorage),
+                new IcaBankenBankIdAuthenticator(apiClient, icaBankenSessionStorage),
                 persistentStorage,
                 credentials);
     }
