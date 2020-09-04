@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.configur
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.SwedbankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.filter.SwedbankConsentLimitFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -38,9 +39,14 @@ public class SwedbankAgent extends NextGenerationAgent
     @Inject
     public SwedbankAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
+        client.addFilter(new SwedbankConsentLimitFilter());
         apiClient =
                 new SwedbankApiClient(
-                        client, persistentStorage, getAgentConfiguration(), qsealcSigner);
+                        client,
+                        persistentStorage,
+                        getAgentConfiguration(),
+                        qsealcSigner,
+                        componentProvider.getCredentialsRequest());
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

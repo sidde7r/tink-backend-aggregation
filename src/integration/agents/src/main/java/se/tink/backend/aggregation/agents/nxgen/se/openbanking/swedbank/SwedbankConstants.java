@@ -96,7 +96,9 @@ public final class SwedbankConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String TPP_NOK_REDIRECT_URI = "TPP-Nok-Redirect-URI";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+        public static final String PSU_IP_PORT = "PSU-IP-Port";
         public static final String PSU_USER_AGENT = "PSU-User-Agent";
+        public static final String PSU_HTTP_METHOD = "PSU-HTTP-Method";
         public static final String ACCEPT = "accept";
         public static final String PSU_ID = "PSU-ID";
         public static final String DIGEST = "digest";
@@ -108,6 +110,8 @@ public final class SwedbankConstants {
 
     public static class HeaderValues {
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
+        public static final String PSU_IP_PORT = "443";
+        public static final String PSU_HTTP_METHOD = "GET";
         public static final String PSU_USER_AGENT = "Tink";
         public static final String SIGNATURE_HEADER =
                 "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
@@ -177,6 +181,7 @@ public final class SwedbankConstants {
 
     public static final class HttpStatus {
         public static final int RESOURCE_PENDING = 428;
+        public static final int ACCESS_EXCEEDED = 429;
     }
 
     public enum HeadersToSign {

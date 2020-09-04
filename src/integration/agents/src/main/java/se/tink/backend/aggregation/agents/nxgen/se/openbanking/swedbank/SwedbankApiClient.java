@@ -57,6 +57,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -70,17 +71,20 @@ public final class SwedbankApiClient {
     private final String redirectUrl;
     private final String signingKeyId;
     private FetchAccountResponse accounts;
+    private final CredentialsRequest credentialsRequest;
 
     public SwedbankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             AgentConfiguration<SwedbankConfiguration> agentConfiguration,
-            QsealcSigner qsealcSigner) {
+            QsealcSigner qsealcSigner,
+            CredentialsRequest credentialsRequest) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.credentialsRequest = credentialsRequest;
 
         try {
             this.signingCertificate =
@@ -122,11 +126,16 @@ public final class SwedbankApiClient {
     }
 
     private RequestBuilder createRequestInSession(URL url, boolean withConsent) {
-        final RequestBuilder request =
-                createRequest(url)
-                        .addBearerToken(getTokenFromSession())
-                        .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                        .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT);
+        final RequestBuilder request = createRequest(url).addBearerToken(getTokenFromSession());
+        if (credentialsRequest.isManual()) {
+            request.header(
+                            HeaderKeys.PSU_IP_ADDRESS,
+                            Optional.ofNullable(credentialsRequest.getOriginatingUserIp())
+                                    .orElse(HeaderValues.PSU_IP_ADDRESS))
+                    .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
+                    .header(HeaderKeys.PSU_IP_PORT, HeaderValues.PSU_IP_PORT)
+                    .header(HeaderKeys.PSU_HTTP_METHOD, HeaderValues.PSU_HTTP_METHOD);
+        }
         if (withConsent) {
             return request.header(
                     SwedbankConstants.HeaderKeys.CONSENT_ID,
