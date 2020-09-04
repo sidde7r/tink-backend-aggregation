@@ -158,4 +158,9 @@ public class NordeaNoConstants {
         public static final String FETCH_LOAN_DETAILS =
                 NORDEA_PRIVATE_BASE_URL + "/api/dbf/ca/loans-v1/loans/{loanId}";
     }
+
+    public static class RetryFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 10;
+        public static final int RETRY_SLEEP_MILLISECONDS = 10000;
+    }
 }

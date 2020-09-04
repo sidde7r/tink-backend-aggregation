@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -28,12 +27,8 @@ public class TransactionsBaseEntity {
     }
 
     public Collection<Transaction> toTinkTransactions() {
-        final Stream<Transaction> bookedTransactionsStream =
-                booked.stream().map(BookedTransactionEntity::toTinkTransaction);
-        final Stream<Transaction> pendingTransactionsStream =
-                pending.stream().map(PendingTransactionEntity::toTinkTransaction);
-
-        return Stream.concat(bookedTransactionsStream, pendingTransactionsStream)
+        return booked.stream()
+                .map(BookedTransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 }
