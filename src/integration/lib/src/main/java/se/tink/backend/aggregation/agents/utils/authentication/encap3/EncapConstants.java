@@ -46,6 +46,8 @@ public class EncapConstants {
 
     public static final class Soap {
         public static final String EC_SUCCESS = "0";
+        public static final String EC_ACTIVATION_TIMED_OUT = "222";
+        public static final String EC_ACTIVATION_SESSION_IS_ALREADY_ACTIVATED = "250";
         public static final String EC_INVALID_USERNAME_OR_ACTIVATION_CODE = "251";
         public static final String HEADERS_B64 =
                 "VXNlci1BZ2VudD1TQU0gaU9TDQpDb250ZW50LVR5cGU9YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkDQpDb250ZW50LUxlbmd0aD0xMjExDQo";

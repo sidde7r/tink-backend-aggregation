@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3.utils;
 
 import com.google.common.base.Preconditions;
+import java.util.Base64;
 import java.util.Optional;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConfiguration;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapStorage;
@@ -13,6 +17,11 @@ import se.tink.backend.aggregation.agents.utils.soap.SoapParser;
 public class EncapSoapUtils {
     private final EncapConfiguration configuration;
     private final EncapStorage storage;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EncapSoapUtils.class);
+    private static final String MESSAGE_TAG = "Message";
+    private static final String ERROR_CODE_TAG = "ErrorCode";
+    private static final String ACTIVATION_SESSION_ID_TAG = "ns2:activationSessionId";
 
     public EncapSoapUtils(EncapConfiguration configuration, EncapStorage storage) {
         this.configuration = configuration;
@@ -222,37 +231,47 @@ public class EncapSoapUtils {
                 + "</soap:Envelope>";
     }
 
-    public static Optional<String> getActivationSessionId(String soapResponse) {
+    public static String getActivationSessionId(String soapResponse) {
         Node node = SoapParser.getSoapBody(soapResponse);
         Preconditions.checkState(
                 node instanceof Element,
                 "Could not parse activationSessionId from server response.");
 
         Element element = (Element) node;
-        String errorCode =
-                element.getElementsByTagName("ErrorCode").item(0).getFirstChild().getTextContent();
+        String errorCode = getMessageByTag(element, ERROR_CODE_TAG, soapResponse);
 
         switch (errorCode) {
             case EncapConstants.Soap.EC_SUCCESS:
-                return Optional.ofNullable(
-                        element.getElementsByTagName("ns2:activationSessionId")
-                                .item(0)
-                                .getFirstChild()
-                                .getTextContent());
+                return getMessageByTag(element, ACTIVATION_SESSION_ID_TAG, soapResponse);
+            case EncapConstants.Soap.EC_ACTIVATION_TIMED_OUT:
+                throw LoginError.ACTIVATION_TIMED_OUT.exception(
+                        getMessageByTag(element, MESSAGE_TAG, soapResponse));
+            case EncapConstants.Soap.EC_ACTIVATION_SESSION_IS_ALREADY_ACTIVATED:
             case EncapConstants.Soap.EC_INVALID_USERNAME_OR_ACTIVATION_CODE:
-                return Optional.empty();
+                throw LoginError.WRONG_ACTIVATION_CODE.exception(
+                        getMessageByTag(element, MESSAGE_TAG, soapResponse));
             default:
-                String errorMessage =
-                        element.getElementsByTagName("Message")
-                                .item(0)
-                                .getFirstChild()
-                                .getTextContent();
-
-                throw new IllegalStateException(
+                throw LoginError.DEFAULT_MESSAGE.exception(
                         String.format(
                                 "Unexpected error during activation: (%s) %s ",
-                                errorCode, errorMessage));
+                                errorCode, getMessageByTag(element, MESSAGE_TAG, soapResponse)));
         }
+    }
+
+    private static String getMessageByTag(Element element, String tag, String soapResponse) {
+        return Optional.ofNullable(element.getElementsByTagName(tag))
+                .map(nodeList -> nodeList.item(0))
+                .map(Node::getFirstChild)
+                .map(Node::getTextContent)
+                .orElseThrow(
+                        () -> {
+                            LOGGER.warn(
+                                    "Could not get activationSessionId. Soap response: "
+                                            + Base64.getEncoder()
+                                                    .encodeToString(soapResponse.getBytes()));
+                            throw LoginError.DEFAULT_MESSAGE.exception(
+                                    "Could not get activationSessionId");
+                        });
     }
 
     public static Optional<String> getSecurityToken(String soapResponse) {
