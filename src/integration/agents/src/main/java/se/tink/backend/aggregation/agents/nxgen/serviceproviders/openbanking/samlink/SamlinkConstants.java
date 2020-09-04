@@ -22,7 +22,6 @@ public final class SamlinkConstants {
         public static final String CONSENT = AIS_PRODUCT + "/consents";
         public static final String ACCOUNTS = AIS_PRODUCT + "/accounts";
         public static final String TRANSACTIONS = ACCOUNTS + "/%s/transactions";
-        public static final String BALANCES = ACCOUNTS + "/%s/balances";
         public static final String CREATE_SEPA_PAYMENT =
                 AIS_PRODUCT + "/payments/sepa-credit-transfers";
         public static final String CREATE_FOREIGN_PAYMENT =
