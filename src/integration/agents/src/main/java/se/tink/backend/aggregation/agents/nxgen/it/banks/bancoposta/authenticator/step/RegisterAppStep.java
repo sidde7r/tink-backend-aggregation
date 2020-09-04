@@ -26,7 +26,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class RegisterAppStep implements AuthenticationStep {
 
     private final BancoPostaApiClient apiClient;
-    private BancoPostaStorage storage;
+    private final BancoPostaStorage storage;
     private final RegisterAppJWEManager jweManager;
 
     public RegisterAppStep(BancoPostaApiClient apiClient, BancoPostaStorage storage) {

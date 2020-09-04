@@ -35,7 +35,7 @@ public class RegisterInitStep implements AuthenticationStep {
     private static final int RETRY_ATTEMPTS = 3;
 
     private final BancoPostaApiClient apiClient;
-    private BancoPostaStorage storage;
+    private final BancoPostaStorage storage;
     private final RegisterInitJWEManager jweManager;
     private final RetryExecutor retryExecutor = new RetryExecutor();
 

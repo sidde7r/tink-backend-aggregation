@@ -25,9 +25,9 @@ import se.tink.libraries.i18n.Catalog;
 @AllArgsConstructor
 @Slf4j
 public class OnboardingStep implements AuthenticationStep {
-    private BancoPostaApiClient apiClient;
-    private BancoPostaStorage storage;
-    private Catalog catalog;
+    private final BancoPostaApiClient apiClient;
+    private final BancoPostaStorage storage;
+    private final Catalog catalog;
 
     private static final String OTP_NAME = "otpOnboarding";
     private static final String CODE_NAME = "codeDigital";

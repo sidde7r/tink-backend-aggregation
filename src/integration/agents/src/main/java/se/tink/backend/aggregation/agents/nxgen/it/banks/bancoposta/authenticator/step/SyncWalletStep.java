@@ -20,8 +20,8 @@ import se.tink.libraries.i18n.Catalog;
 @AllArgsConstructor
 @Slf4j
 public class SyncWalletStep implements AuthenticationStep {
-    private BancoPostaApiClient apiClient;
-    private Catalog catalog;
+    private final BancoPostaApiClient apiClient;
+    private final Catalog catalog;
     private static final String OTP_NAME = "otpSync";
 
     @Override
