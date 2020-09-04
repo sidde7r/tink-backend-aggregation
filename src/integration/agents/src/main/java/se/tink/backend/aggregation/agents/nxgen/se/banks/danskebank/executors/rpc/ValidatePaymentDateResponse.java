@@ -3,12 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.r
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import lombok.Getter;
-import lombok.Setter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
-@Setter
 @JsonObject
 public class ValidatePaymentDateResponse extends AbstractResponse {
     private Date bookingDate;

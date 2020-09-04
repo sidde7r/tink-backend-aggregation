@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
-import lombok.Setter;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
@@ -13,7 +12,6 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
 @Getter
-@Setter
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AcceptSignatureResponse extends AbstractResponse {
     private String error;

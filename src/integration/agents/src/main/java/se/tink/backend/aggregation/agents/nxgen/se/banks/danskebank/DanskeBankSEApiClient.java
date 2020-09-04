@@ -47,7 +47,7 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
         return DanskeBankDeserializer.convertStringToObject(response, PollResponse.class);
     }
 
-    public ListPayeesResponse listPayees(ListPayeesRequest request) {
+    public ListPayeesResponse getBeneficiaries(ListPayeesRequest request) {
         return postRequest(constants.getListPayeesUrl(), ListPayeesResponse.class, request);
     }
 

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;
-import lombok.Setter;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.ForcableErrorEntity;
@@ -12,7 +11,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @Getter
-@Setter
 @JsonObject
 public class RegisterPaymentResponse {
     @JsonProperty("AutoStartToken")
@@ -57,13 +55,13 @@ public class RegisterPaymentResponse {
     @JsonIgnore
     public RegisterPaymentResponse validate() {
         if (statusCode != 200) {
-            throw registerTransferFailure();
+            throw createTransferFailure();
         }
         return this;
     }
 
     @JsonIgnore
-    private TransferExecutionException registerTransferFailure() {
+    private TransferExecutionException createTransferFailure() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(EndUserMessage.TRANSFER_REJECTED.getKey().get())
                 .setEndUserMessage(EndUserMessage.TRANSFER_REJECTED)

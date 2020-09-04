@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticat
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractBankIdResponse;
 
@@ -12,8 +14,7 @@ public class PollResponse extends AbstractBankIdResponse {
         if (getResponseCode() == 504) {
             return BankIdStatus.WAITING;
         } else if (getStatus() == null || getResponseCode() == 500) {
-            throw new IllegalStateException(
-                    "Could not authenticate user - BankId poll returned null status");
+            throw new BankServiceException(BankServiceError.BANK_SIDE_FAILURE);
         }
 
         switch (getStatus().toLowerCase()) {

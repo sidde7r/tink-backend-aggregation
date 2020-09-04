@@ -53,9 +53,9 @@ public class DanskeBankExecutorHelper {
         this.supplementalRequester = supplementalRequester;
     }
 
-    public Date validatePaymentDate(Transfer transfer, boolean isInternalDestinationAccount) {
+    public Date validatePaymentDate(Transfer transfer, boolean isOwnDestinationAccount) {
         String transferType =
-                isInternalDestinationAccount
+                isOwnDestinationAccount
                         ? TransferAccountType.INTERNAL
                         : TransferAccountType.EXTERNAL;
 
@@ -85,8 +85,8 @@ public class DanskeBankExecutorHelper {
         return paymentDateResponse.getBookingDate();
     }
 
-    public String getTransferType(boolean isInternalDestinationAccount) {
-        return isInternalDestinationAccount ? TransferType.INTERNAL : TransferType.EXTERNAL;
+    public String getTransferType(boolean isOwnDestinationAccount) {
+        return isOwnDestinationAccount ? TransferType.INTERNAL : TransferType.EXTERNAL;
     }
 
     public RegisterPaymentResponse registerExternalTransfer(
@@ -95,13 +95,13 @@ public class DanskeBankExecutorHelper {
             String creditorName,
             String creditorBankName,
             Date paymentDate,
-            boolean isInternalTransfer,
+            boolean isOwnDestinationAccount,
             TransferMessageFormatter transferMessageFormatter) {
         AccountEntity sourceAccount = accounts.findAccount(transfer.getSource().getIdentifier());
 
-        String transferType = getTransferType(isInternalTransfer);
+        String transferType = getTransferType(isOwnDestinationAccount);
 
-        String accountName =
+        String destinationAccountName =
                 Strings.isNullOrEmpty(creditorName)
                         ? transfer.getDestination().getIdentifier()
                         : creditorName;
@@ -110,7 +110,7 @@ public class DanskeBankExecutorHelper {
                 BusinessDataEntity.builder()
                         .eInvoiceMarking(false)
                         .accountNameFrom(sourceAccount.getAccountName())
-                        .accountNameTo(accountName)
+                        .accountNameTo(destinationAccountName)
                         .accountNoExtFrom(sourceAccount.getAccountNoExt())
                         .accountNoIntFrom(sourceAccount.getAccountNoInt())
                         .accountNoToExt(transfer.getDestination().getIdentifier())
@@ -129,7 +129,7 @@ public class DanskeBankExecutorHelper {
                         .textTo(
                                 transferMessageFormatter
                                         .getDestinationMessageFromRemittanceInformation(
-                                                transfer, isInternalTransfer))
+                                                transfer, isOwnDestinationAccount))
                         .build();
 
         return apiClient.registerPayment(
@@ -140,16 +140,16 @@ public class DanskeBankExecutorHelper {
                         .build());
     }
 
-    public RegisterPaymentResponse registerInternalTransfer(
+    public RegisterPaymentResponse registerOwnDestinationAccountTransfer(
             Transfer transfer,
             ListAccountsResponse accounts,
             AccountEntity ownDestinationAccount,
             Date paymentDate,
-            boolean isInternalDestinationAccount,
+            boolean isOwnDestinationAccount,
             TransferMessageFormatter transferMessageFormatter) {
         AccountEntity sourceAccount = accounts.findAccount(transfer.getSource().getIdentifier());
 
-        String transferType = getTransferType(isInternalDestinationAccount);
+        String transferType = getTransferType(isOwnDestinationAccount);
 
         BusinessDataEntity businessData =
                 BusinessDataEntity.builder()
@@ -172,7 +172,7 @@ public class DanskeBankExecutorHelper {
                         .textTo(
                                 transferMessageFormatter
                                         .getDestinationMessageFromRemittanceInformation(
-                                                transfer, isInternalDestinationAccount))
+                                                transfer, isOwnDestinationAccount))
                         .build();
 
         return apiClient.registerPayment(
