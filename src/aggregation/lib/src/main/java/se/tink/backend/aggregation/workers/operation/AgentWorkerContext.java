@@ -359,6 +359,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         AccountData accountData = optionalAccountData.get();
         if (accountData.isProcessed()) {
             // Already updated/processed, do not do it twice.
+            logger.info(
+                    "skip updating account from sendAccountToUpdateService as the account data is processed.");
             return accountData.getAccount();
         }
 
