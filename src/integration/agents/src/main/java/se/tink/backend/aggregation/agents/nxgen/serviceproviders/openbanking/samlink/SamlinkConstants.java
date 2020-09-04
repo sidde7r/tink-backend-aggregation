@@ -15,8 +15,8 @@ public final class SamlinkConstants {
     public static class Urls {
         private Urls() {}
 
-        public static final String TOKEN = "/samlink-api-sandbox/oauth/token";
-        public static final String AUTH = "/samlink-api-sandbox/oauth/authorize";
+        public static final String TOKEN = "/oauthproxy/token";
+        public static final String AUTH = "/oauthproxy/authorize";
 
         public static final String AIS_PRODUCT = "/psd2/v1";
         public static final String CONSENT = AIS_PRODUCT + "/consents";
@@ -36,7 +36,6 @@ public final class SamlinkConstants {
     public static class HeaderKeys {
         private HeaderKeys() {}
 
-        public static final String SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
         public static final String DIGEST = "Digest";
         public static final String SIGNATURE = "Signature";
         public static final String API_KEY = "apikey";

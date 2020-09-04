@@ -3,15 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class SamlinkTransactionFetcher extends BerlinGroupTransactionFetcher {
-    private final SamlinkConfiguration configuration;
+    private final SamlinkAgentsConfiguration configuration;
 
     public SamlinkTransactionFetcher(
-            final BerlinGroupApiClient apiClient, final SamlinkConfiguration configuration) {
+            final BerlinGroupApiClient apiClient, final SamlinkAgentsConfiguration configuration) {
         super(apiClient);
         this.configuration = configuration;
     }
