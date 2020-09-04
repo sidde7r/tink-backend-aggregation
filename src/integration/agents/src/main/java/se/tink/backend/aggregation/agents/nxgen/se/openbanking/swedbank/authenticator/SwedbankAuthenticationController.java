@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
@@ -39,7 +40,7 @@ public class SwedbankAuthenticationController
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
     private String ssn;
-    private String autoStartToken;
+    private Optional<String> autoStartToken;
 
     public SwedbankAuthenticationController(
             PersistentStorage persistentStorage,
@@ -103,7 +104,9 @@ public class SwedbankAuthenticationController
     public AuthenticationResponse init(String ssn) {
         this.ssn = ssn;
         AuthenticationResponse authenticationResponse = authenticator.init(ssn);
-        this.autoStartToken = authenticationResponse.getChallengeData().getAutoStartToken();
+        this.autoStartToken =
+                Optional.ofNullable(authenticationResponse.getChallengeData())
+                        .map(ChallengeDataEntity::getAutoStartToken);
         return authenticationResponse;
     }
 
@@ -151,7 +154,7 @@ public class SwedbankAuthenticationController
 
     @Override
     public Optional<String> getAutostartToken() {
-        return Optional.of(autoStartToken);
+        return autoStartToken;
     }
 
     @Override
