@@ -58,6 +58,7 @@ public class SdcAuthenticationController
                 authenticator.refreshAccessToken(
                         token.getRefreshToken()
                                 .orElseThrow(SessionError.SESSION_EXPIRED::exception));
+
         authenticator.useAccessToken(accessToken);
     }
 
@@ -72,10 +73,16 @@ public class SdcAuthenticationController
 
         Map<String, String> callbackData =
                 stringStringMap.orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
+
         String code = callbackData.getOrDefault("code", null);
         Preconditions.checkNotNull(code);
 
         OAuth2Token accessToken = authenticator.exchangeAuthorizationCode(code);
+
+        // SDC provides Oauth2 Token without information about token type
+        if (accessToken.getTokenType() == null) {
+            accessToken.setTokenType("Bearer");
+        }
 
         authenticator.useAccessToken(accessToken);
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
