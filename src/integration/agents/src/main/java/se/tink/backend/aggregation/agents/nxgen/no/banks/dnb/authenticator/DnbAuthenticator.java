@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -39,8 +40,8 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         // From this request we'll get a location that contains the encrypted uid
         HttpResponse startMobileResponse = apiClient.postStartMobile(nationalId);
 
-        verifyStartMobileResponse(startMobileResponse);
         bankIdReferer = extractLocationFromStartMobileResponse(startMobileResponse);
+        verifyStartMobileResponse(startMobileResponse);
 
         apiClient.initiateSession(bankIdReferer);
 
@@ -68,8 +69,11 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         // Sometimes the Location header looks like:
         // Location: https://m.dnb.no, m.dnb.no/segp/appo/logon/main..
         // Which just doesn't compute
-        return URI.create(
-                startMobileResponse.getHeaders().getFirst(LOCATION).replace("m.dnb.no, ", ""));
+        String location = startMobileResponse.getHeaders().getFirst(LOCATION);
+        if (StringUtils.isEmpty(location)) {
+            return null;
+        }
+        return URI.create(location.replace("m.dnb.no, ", ""));
     }
 
     private void handleBankIdError(
