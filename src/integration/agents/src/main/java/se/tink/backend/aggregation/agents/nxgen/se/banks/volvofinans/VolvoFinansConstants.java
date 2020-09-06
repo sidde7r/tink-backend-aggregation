@@ -67,6 +67,6 @@ public class VolvoFinansConstants {
     }
 
     public static final class Message {
-        public static final String ALREADY_IN_PROGRESS = "already in progress";
+        public static final String ALREADY_IN_PROGRESS = "är redan påbörjad";
     }
 }
