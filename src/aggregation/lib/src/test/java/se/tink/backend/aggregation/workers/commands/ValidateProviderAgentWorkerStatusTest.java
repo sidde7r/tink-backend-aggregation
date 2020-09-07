@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.collect.ImmutableSet;
-import java.util.Set;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -32,7 +33,8 @@ public class ValidateProviderAgentWorkerStatusTest {
         Provider provider = Mockito.mock(Provider.class);
         Mockito.when(request.getProvider()).thenReturn(provider);
         Mockito.when(provider.getStatus()).thenReturn(ProviderStatuses.ENABLED);
-        Set<ProviderStatuses> blacklisted = ImmutableSet.of(ProviderStatuses.OBSOLETE);
+        BiMap<ProviderStatuses, CredentialsStatus> blacklisted =
+                ImmutableBiMap.of(ProviderStatuses.OBSOLETE, CredentialsStatus.UNCHANGED);
         ValidateProviderAgentWorkerStatus command =
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper, blacklisted);
 
@@ -51,11 +53,12 @@ public class ValidateProviderAgentWorkerStatusTest {
         Provider provider = Mockito.mock(Provider.class);
         Mockito.when(request.getProvider()).thenReturn(provider);
         Mockito.when(provider.getStatus()).thenReturn(ProviderStatuses.ENABLED);
-        Set<ProviderStatuses> blacklisted = ImmutableSet.of(ProviderStatuses.ENABLED);
+        BiMap<ProviderStatuses, CredentialsStatus> blacklisted =
+                ImmutableBiMap.of(ProviderStatuses.ENABLED, CredentialsStatus.UPDATED);
         ValidateProviderAgentWorkerStatus command =
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper, blacklisted);
         ValidateProviderAgentWorkerStatus commandSpy = Mockito.spy(command);
-        Mockito.doNothing().when(commandSpy).updateCredentialStatusToUnchanged();
+        Mockito.doNothing().when(commandSpy).updateCredentialStatusForBlacklistedProviderStatuses();
 
         // Act
         AgentWorkerCommandResult result = commandSpy.execute();
