@@ -163,4 +163,10 @@ public class NordeaNoConstants {
         public static final int NUM_TIMEOUT_RETRIES = 10;
         public static final int RETRY_SLEEP_MILLISECONDS = 10000;
     }
+
+    public static class ErrorCode {
+        public static final String WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE = "C161";
+        public static final String MOBILE_OPERATOR_ERROR_RETRY_1 = "C131";
+        public static final String MOBILE_OPERATOR_ERROR_RETRY_2 = "C325";
+    }
 }
