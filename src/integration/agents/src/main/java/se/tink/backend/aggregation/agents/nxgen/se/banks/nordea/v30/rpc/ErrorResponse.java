@@ -238,7 +238,7 @@ public class ErrorResponse {
     }
 
     public static TransferExecutionException invalidSourceAccountError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
                 .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                 .build();
@@ -298,7 +298,7 @@ public class ErrorResponse {
     }
 
     protected TransferExecutionException duplicatePaymentError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT)
                 .setMessage(
                         TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT.getKey().get())

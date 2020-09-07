@@ -16,7 +16,7 @@ public class SamlinkConfiguration implements BerlinGroupConfiguration {
     @SensitiveSecret
     @JsonSchemaTitle("API key")
     @JsonSchemaDescription("Unique key generated during TPP registration to Samlink.")
-    @JsonSchemaExamples("26e94058cb984f5cba18869d7b2f761a")
+    @JsonSchemaExamples("26e94058-cb98-4f5c-ba18-869d7b2f761a")
     private String apiKey;
 
     public String getApiKey() {
@@ -25,7 +25,8 @@ public class SamlinkConfiguration implements BerlinGroupConfiguration {
 
     @Override
     public String getClientId() {
-        throw new NotImplementedException("Value is present in Samlink constants.");
+        throw new NotImplementedException(
+                "Value is derived from Tink Qseal certificate as organization identifier.");
     }
 
     @Override
