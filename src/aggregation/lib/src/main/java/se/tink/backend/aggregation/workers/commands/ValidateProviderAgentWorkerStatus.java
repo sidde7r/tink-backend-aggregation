@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 import java.util.Optional;
-import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
@@ -26,20 +26,23 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     private AgentWorkerCommandContext context;
     private final ControllerWrapper controllerWrapper;
-    private final Set<ProviderStatuses> blacklistedProviderStatuses;
+    private final BiMap<ProviderStatuses, CredentialsStatus> blacklistedProviderStatuses;
 
     public ValidateProviderAgentWorkerStatus(
             AgentWorkerCommandContext context, ControllerWrapper controllerWrapper) {
         this(
                 context,
                 controllerWrapper,
-                ImmutableSet.of(ProviderStatuses.DISABLED, ProviderStatuses.TEMPORARY_DISABLED));
+                ImmutableBiMap.<ProviderStatuses, CredentialsStatus>builder()
+                        .put(ProviderStatuses.TEMPORARY_DISABLED, CredentialsStatus.UNCHANGED)
+                        .put(ProviderStatuses.DISABLED, CredentialsStatus.PERMANENT_ERROR)
+                        .build());
     }
 
     ValidateProviderAgentWorkerStatus(
             AgentWorkerCommandContext context,
             ControllerWrapper controllerWrapper,
-            Set<ProviderStatuses> blacklistedProviderStatuses) {
+            BiMap<ProviderStatuses, CredentialsStatus> blacklistedProviderStatuses) {
         this.context = context;
         this.controllerWrapper = controllerWrapper;
         this.blacklistedProviderStatuses = blacklistedProviderStatuses;
@@ -49,20 +52,20 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     public AgentWorkerCommandResult execute() throws Exception {
         Provider provider = context.getRequest().getProvider();
 
-        if (blacklistedProviderStatuses.contains(provider.getStatus())) {
-            updateCredentialStatusToUnchanged();
+        if (blacklistedProviderStatuses.containsKey(provider.getStatus())) {
+            updateCredentialStatusForBlacklistedProviderStatuses();
             return AgentWorkerCommandResult.ABORT;
         }
 
         return AgentWorkerCommandResult.CONTINUE;
     }
 
-    void updateCredentialStatusToUnchanged() {
+    void updateCredentialStatusForBlacklistedProviderStatuses() {
         Provider provider = context.getRequest().getProvider();
         Credentials credentials = context.getRequest().getCredentials();
         Optional<String> refreshId = context.getRefreshId();
 
-        credentials.setStatus(CredentialsStatus.UNCHANGED);
+        credentials.setStatus(blacklistedProviderStatuses.get(provider.getStatus()));
         credentials.clearSensitiveInformation(provider);
 
         se.tink.libraries.credentials.rpc.Credentials coreCredentials =
