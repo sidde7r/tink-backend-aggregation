@@ -20,6 +20,7 @@ public class BPSondrioAgent extends CbiGlobeAgent {
                 sessionStorage,
                 requestManual,
                 temporaryStorage,
-                getProviderConfiguration());
+                getProviderConfiguration(),
+                psuIpAddress);
     }
 }

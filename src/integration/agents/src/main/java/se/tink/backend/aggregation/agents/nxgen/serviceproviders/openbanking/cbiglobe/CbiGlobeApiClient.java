@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
-import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
@@ -59,6 +58,7 @@ public class CbiGlobeApiClient {
     protected TemporaryStorage temporaryStorage;
     protected InstrumentType instrumentType;
     private CbiGlobeProviderConfiguration providerConfiguration;
+    protected final String psuIpAddress;
 
     public CbiGlobeApiClient(
             TinkHttpClient client,
@@ -67,7 +67,8 @@ public class CbiGlobeApiClient {
             boolean requestManual,
             TemporaryStorage temporaryStorage,
             InstrumentType instrumentType,
-            CbiGlobeProviderConfiguration providerConfiguration) {
+            CbiGlobeProviderConfiguration providerConfiguration,
+            String psuIpAddress) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
@@ -75,6 +76,7 @@ public class CbiGlobeApiClient {
         this.temporaryStorage = temporaryStorage;
         this.instrumentType = instrumentType;
         this.providerConfiguration = providerConfiguration;
+        this.psuIpAddress = psuIpAddress;
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -107,16 +109,8 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createRequestWithConsent(URL url) {
-        RequestBuilder rb =
-                createRequestInSession(url)
-                        .header(
-                                HeaderKeys.CONSENT_ID,
-                                persistentStorage.get(StorageKeys.CONSENT_ID));
-        if (requestManual) {
-            rb.header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS);
-        }
-
-        return rb;
+        return createRequestInSession(url)
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
     }
 
     protected RequestBuilder createAccountsRequestWithConsent() {
@@ -275,31 +269,30 @@ public class CbiGlobeApiClient {
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
-        return createRequestInSession(Urls.PAYMENT)
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
-                .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
-                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
-                .header(
-                        HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(getRedirectUrl())
-                                .queryParam(QueryKeys.STATE, sessionStorage.get(QueryKeys.STATE))
-                                .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
+        RequestBuilder requestBuilder =
+                createRequestInSession(Urls.PAYMENT)
+                        .header(
+                                HeaderKeys.ASPSP_PRODUCT_CODE,
+                                providerConfiguration.getAspspProductCode())
+                        .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
+                        .header(
+                                HeaderKeys.TPP_REDIRECT_URI,
+                                new URL(getRedirectUrl())
+                                        .queryParam(
+                                                QueryKeys.STATE,
+                                                sessionStorage.get(QueryKeys.STATE))
+                                        .queryParam(HeaderKeys.CODE, HeaderValues.CODE));
+        return addPsuIpAddressHeaderIfPossible(requestBuilder)
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
-    private String getPsuIpAddress() {
-        String psuIpAddress = sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS);
-        if (Strings.isNullOrEmpty(psuIpAddress)) {
-            psuIpAddress = HeaderValues.DEFAULT_PSU_IP_ADDRESS;
-        }
-        return psuIpAddress;
-    }
-
     public CreatePaymentResponse getPayment(String uniqueId) {
-        return createRequestInSession(Urls.FETCH_PAYMENT.parameter(IdTags.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
-                .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
-                .get(CreatePaymentResponse.class);
+        RequestBuilder requestBuilder =
+                createRequestInSession(Urls.FETCH_PAYMENT.parameter(IdTags.PAYMENT_ID, uniqueId))
+                        .header(
+                                HeaderKeys.ASPSP_PRODUCT_CODE,
+                                providerConfiguration.getAspspProductCode());
+        return addPsuIpAddressHeaderIfPossible(requestBuilder).get(CreatePaymentResponse.class);
     }
 
     public CreatePaymentResponse getPaymentStatus(String uniqueId) {
@@ -318,5 +311,11 @@ public class CbiGlobeApiClient {
             persistentStorage.put(StorageKeys.ACCOUNTS, getAccountsResponse);
         }
         return getAccountsResponse;
+    }
+
+    protected RequestBuilder addPsuIpAddressHeaderIfPossible(RequestBuilder requestBuilder) {
+        if (psuIpAddress != null && requestManual) {
+            return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
+        } else return requestBuilder;
     }
 }

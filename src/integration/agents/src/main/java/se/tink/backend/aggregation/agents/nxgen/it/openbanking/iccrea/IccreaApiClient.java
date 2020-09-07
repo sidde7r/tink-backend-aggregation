@@ -20,7 +20,8 @@ public class IccreaApiClient extends CbiGlobeApiClient {
             SessionStorage sessionStorage,
             boolean requestManual,
             TemporaryStorage temporaryStorage,
-            CbiGlobeProviderConfiguration providerConfiguration) {
+            CbiGlobeProviderConfiguration providerConfiguration,
+            String psuIpAddress) {
         super(
                 client,
                 persistentStorage,
@@ -28,7 +29,8 @@ public class IccreaApiClient extends CbiGlobeApiClient {
                 requestManual,
                 temporaryStorage,
                 InstrumentType.ACCOUNTS,
-                providerConfiguration);
+                providerConfiguration,
+                psuIpAddress);
     }
 
     @Override
