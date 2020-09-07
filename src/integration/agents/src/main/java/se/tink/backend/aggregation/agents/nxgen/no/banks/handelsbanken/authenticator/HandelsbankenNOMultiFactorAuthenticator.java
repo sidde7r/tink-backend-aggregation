@@ -126,7 +126,7 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
         if (!errorElements.isEmpty()) {
             String errorData = "";
             for (Element element : errorElements) {
-                errorData = element.data();
+                errorData = element.text();
                 log.info("Handelsbanken No - Error message: {}", errorData);
                 if (errorData.contains(
                         ErrorCode.WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE)) {
