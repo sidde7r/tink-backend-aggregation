@@ -57,7 +57,7 @@ public class NordnetConstants {
         public static final String RESPONSE_TYPE = "response_type";
         public static final String SSN = "national_registration_number";
         public static final String USERNAME = "username";
-        public static final String ANONYMOUS = "password";
+        protected static final byte[] PASSWORD = "password".getBytes();
         public static final String SERVICE = "service";
         public static final String COUNTRY = "country";
         public static final String SESSION_LANGUAGE = "session_lang";
@@ -72,7 +72,7 @@ public class NordnetConstants {
         public static final Form ANONYMOUS_LOGIN =
                 Form.builder()
                         .put(FormKeys.USERNAME, FormValues.ANONYMOUS)
-                        .put(FormKeys.ANONYMOUS, FormValues.ANONYMOUS)
+                        .put(new String(FormKeys.PASSWORD), FormValues.ANONYMOUS)
                         .put(FormKeys.SERVICE, QueryValues.CLIENT_ID)
                         .put(FormKeys.COUNTRY, FormValues.COUNTRY_SE)
                         .put(FormKeys.SESSION_LANGUAGE, FormValues.LANG_EN)
