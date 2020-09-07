@@ -54,7 +54,7 @@ public class PropertyLoansEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(loanNumber)
                                 .withAccountNumber(loanNumber)
-                                .withAccountName(getLoanObject().getDesignation())
+                                .withAccountName(getAccountName())
                                 .addIdentifier(new SwedishIdentifier(loanNumber))
                                 .build())
                 .build();
@@ -71,6 +71,12 @@ public class PropertyLoansEntity {
 
     private Type getLoanType() {
         return SBABConstants.LOAN_TYPES.get(loanType);
+    }
+
+    // SBAB does not provide with any loan account names so this is parsing the loan type instead.
+    // e.g. "loanType": "MORTGAGE_LOAN" will return "MORTGAGE"
+    private String getAccountName() {
+        return loanType.split("_")[0];
     }
 
     private List<String> getApplicants() {

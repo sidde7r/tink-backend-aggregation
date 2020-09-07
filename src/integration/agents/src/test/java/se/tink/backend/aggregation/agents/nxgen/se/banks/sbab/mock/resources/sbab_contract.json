@@ -6,9 +6,9 @@
       "exactBalance": {
         "currencyCode": "SEK",
         "doubleValue": 9.85,
-        "exactValue": 9.85,
         "scale": 2,
-        "unscaledValue": 985
+        "unscaledValue": 985,
+        "exactValue": 9.85
       },
       "currencyCode": "SEK",
       "bankId": "98765432198",
@@ -43,15 +43,15 @@
       "exactBalance": {
         "currencyCode": "SEK",
         "doubleValue": 1000000.0,
-        "exactValue": 1000000.0,
         "scale": 1,
-        "unscaledValue": 10000000
+        "unscaledValue": 10000000,
+        "exactValue": 1000000.0
       },
       "currencyCode": "SEK",
       "bankId": "12345678",
       "excluded": false,
       "favored": false,
-      "name": "PROPERTY_NAME",
+      "name": "MORTGAGE",
       "ownership": 1.0,
       "type": "LOAN",
       "userModifiedExcluded": false,
@@ -69,9 +69,9 @@
       "exactBalance": {
         "currencyCode": "SEK",
         "doubleValue": 5179.32,
-        "exactValue": 5179.32,
         "scale": 2,
-        "unscaledValue": 517932
+        "unscaledValue": 517932,
+        "exactValue": 5179.32
       },
       "currencyCode": "SEK",
       "bankId": "56789123456",
@@ -509,7 +509,6 @@
     "dateOfBirth": {
       "year": 1912,
       "month": "DECEMBER",
-      "era": "CE",
       "monthValue": 12,
       "dayOfMonth": 12,
       "dayOfWeek": "THURSDAY",
@@ -518,7 +517,8 @@
       "chronology": {
         "id": "ISO",
         "calendarType": "iso8601"
-      }
+      },
+      "era": "CE"
     }
   }
 }
