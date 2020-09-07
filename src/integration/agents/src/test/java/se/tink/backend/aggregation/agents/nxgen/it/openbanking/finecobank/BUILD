@@ -18,6 +18,7 @@ junit_test(
         "//src/integration/enums",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/payment:rpc",
+        "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
         "//src/libraries/account_identifier",
         "//third_party:org_iban4j_iban4j",

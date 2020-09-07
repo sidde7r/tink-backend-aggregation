@@ -17,6 +17,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class FinecoBankAgentPaymentTest {
 
@@ -53,6 +54,7 @@ public class FinecoBankAgentPaymentTest {
             Mockito.doReturn(Iban.random().toString()).when(creditor).getAccountNumber();
             Mockito.doReturn("Walter Bianchi").when(creditor).getName();
 
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
             Reference reference = Mockito.mock(Reference.class);
             Mockito.doReturn("causale pagamento").when(reference).getValue();
 
@@ -63,6 +65,7 @@ public class FinecoBankAgentPaymentTest {
             Amount amount = Amount.inEUR(123.5);
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
+            remittanceInformation.setValue("causale pagamento");
 
             listOfMockedPayments.add(
                     new Payment.Builder()
@@ -71,7 +74,7 @@ public class FinecoBankAgentPaymentTest {
                             .withAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
-                            .withReference(reference)
+                            .withRemittanceInformation(remittanceInformation)
                             .build());
         }
 
