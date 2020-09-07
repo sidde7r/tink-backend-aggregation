@@ -69,6 +69,9 @@ public class FeatureFlags {
     // Flag for rolling the ICS duplication fix
     public static final String ABN_AMRO_ICS_DUPLICATE_FIX = "ABN_AMRO_ICS_DUPLICATE_FIX";
 
+    // Alpha testing the new credentials-revamp code base
+    public static final String ALPHA_TEST_CREDENTIALS_REVAMP = "ALPHA_TEST_CREDENTIALS_REVAMP";
+
     /**
      * A feature groups hold information what flags are included and what client version are
      * required.

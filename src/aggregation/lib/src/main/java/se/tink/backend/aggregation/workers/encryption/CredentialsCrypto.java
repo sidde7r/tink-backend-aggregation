@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.FeatureFlags;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
@@ -15,7 +16,7 @@ import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.encryptedpayload.EncryptedPayloadHead;
-import se.tink.libraries.encryptedpayload.EncryptedPayloadV1;
+import se.tink.libraries.encryptedpayload.EncryptedPayloadV2;
 import se.tink.libraries.encryptedpayload.VersionDeserializer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -112,10 +113,18 @@ public class CredentialsCrypto {
         Credentials sensitiveInformationCredentials = originalCredentials.clone();
         sensitiveInformationCredentials.onlySensitiveInformation(request.getProvider());
 
-        // Always use the latest version, which is v1.
-        EncryptedPayloadV1 encryptedCredentials =
-                CredentialsCryptoV1.encryptCredential(
-                        clusterKeyId, clusterKey, sensitiveInformationCredentials);
+        EncryptedPayloadHead encryptedCredentials;
+        if (isAlphaUser(request) || isV2(request.getCredentials())) {
+            // Upgrade to crypto V2 for new Aggregation Engine-based credentials revamp users
+            encryptedCredentials =
+                    CredentialsCryptoV2.encryptCredential(
+                            clusterKeyId, clusterKey, sensitiveInformationCredentials);
+        } else {
+            // Regularly use V1
+            encryptedCredentials =
+                    CredentialsCryptoV1.encryptCredential(
+                            clusterKeyId, clusterKey, sensitiveInformationCredentials);
+        }
 
         String serializedEncryptedCredentials =
                 SerializationUtils.serializeToString(encryptedCredentials);
@@ -153,6 +162,21 @@ public class CredentialsCrypto {
         }
 
         return true;
+    }
+
+    private boolean isV2(Credentials credentials) {
+        EncryptedPayloadHead previous =
+                SerializationUtils.deserializeFromString(
+                        credentials.getSensitiveDataSerialized(), EncryptedPayloadHead.class);
+
+        return previous != null && previous.getVersion() == EncryptedPayloadV2.VERSION;
+    }
+
+    private boolean isAlphaUser(CredentialsRequest request) {
+        return request.getUser().getFlags() != null
+                && request.getUser()
+                        .getFlags()
+                        .contains(FeatureFlags.ALPHA_TEST_CREDENTIALS_REVAMP);
     }
 
     private String pickMostRecentSensitiveData(String a, String b) {

@@ -139,6 +139,7 @@ public class Field {
         private String value;
         private String additionalInfo;
         private boolean checkbox;
+        private boolean sensitive;
 
         public Builder description(String description) {
             this.description = description;
@@ -200,6 +201,11 @@ public class Field {
             return this;
         }
 
+        public Builder sensitive(boolean sensitive) {
+            this.sensitive = sensitive;
+            return this;
+        }
+
         public Builder value(String value) {
             this.value = value;
             return this;
@@ -237,6 +243,7 @@ public class Field {
             field.optional = optional;
             field.pattern = pattern;
             field.patternError = patternError;
+            field.sensitive = sensitive;
             field.value = value;
             field.additionalInfo = additionalInfo;
             field.checkbox = checkbox;
