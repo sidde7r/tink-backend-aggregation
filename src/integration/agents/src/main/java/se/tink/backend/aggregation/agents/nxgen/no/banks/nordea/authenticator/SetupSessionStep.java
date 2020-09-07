@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_OPERATOR_ERROR_RETRY_1;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_OPERATOR_ERROR_RETRY_2;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -76,7 +80,7 @@ public class SetupSessionStep implements AuthenticationStep {
                 extractBankIdSessionDetails(bankIdInitializationResponse);
 
         if (!oidcSessionDetails.isInProperState()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            handleErrorMessages(oidcSessionDetails);
         }
 
         String oidcSessionId = oidcSessionDetails.getSessionId();
@@ -105,6 +109,21 @@ public class SetupSessionStep implements AuthenticationStep {
                 metaElements.get("oidc-errorMessage"),
                 metaElements.get("oidc-merchantReference"),
                 metaElements.get("oidc-sid"));
+    }
+
+    private void handleErrorMessages(OidcSessionDetails oidcSessionDetails) {
+        switch (oidcSessionDetails.getErrorCode()) {
+            case WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE:
+                throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception();
+            case MOBILE_OPERATOR_ERROR_RETRY_1:
+            case MOBILE_OPERATOR_ERROR_RETRY_2:
+                throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
+                        new LocalizableKey(
+                                "Error Code C131. This error indicates that your mobile operator has trouble or a process is"
+                                        + " running on your phone number. Restart your phone and try again in 5 minutes."));
+            default:
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
     }
 
     private void displayBankIdPrompt(Credentials credentials, String referenceNumber) {
