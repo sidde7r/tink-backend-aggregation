@@ -192,13 +192,13 @@ public class SwedbankTransferHelper {
         final List<ErrorDetailsEntity> rejectionCauses = rejectedTransfer.getRejectionCauses();
 
         if (rejectionCauses == null || rejectionCauses.isEmpty()) {
-            throw transferCancelled(TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
+            throw transferFailed(TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
         }
 
         if (rejectionCauses.size() > 1) {
             log.warn(
                     "Received multiple rejection causes for transfer which is not expected, consult debug logs to investigate.");
-            throw transferCancelled(TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
+            throw transferFailed(TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
         }
 
         ErrorDetailsEntity errorDetails = rejectionCauses.get(0);
@@ -217,8 +217,7 @@ public class SwedbankTransferHelper {
                         "Unknown transfer rejection cause. Code: {}, message {}",
                         errorDetails.getCode(),
                         errorDetails.getMessage());
-                throw transferCancelled(
-                        TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
+                throw transferFailed(TransferExecutionException.EndUserMessage.TRANSFER_REJECTED);
         }
     }
 
@@ -395,14 +394,6 @@ public class SwedbankTransferHelper {
     private TransferExecutionException transferFailed(
             TransferExecutionException.EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setEndUserMessage(endUserMessage)
-                .setMessage(endUserMessage.getKey().get())
-                .build();
-    }
-
-    private TransferExecutionException transferCancelled(
-            TransferExecutionException.EndUserMessage endUserMessage) {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(endUserMessage)
                 .setMessage(endUserMessage.getKey().get())
                 .build();

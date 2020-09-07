@@ -183,8 +183,7 @@ public class ErrorResponse {
             throw wrongToAccountLengthError();
         }
         if (isUnregisteredRecipient()) {
-            throw transferRejectedError(
-                    ErrorCodes.UNREGISTERED_RECIPIENT, EndUserMessage.UNREGISTERED_RECIPIENT);
+            throw unregisteredRecipientError();
         }
         if (isNotEnoughFunds()) {
             throw notEnoughFundsError();
@@ -308,9 +307,16 @@ public class ErrorResponse {
 
     public static TransferExecutionException transferRejectedError(
             String errorMessage, TransferExecutionException.EndUserMessage endUserMessage) {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(errorMessage)
                 .setEndUserMessage(endUserMessage)
+                .build();
+    }
+
+    public static TransferExecutionException unregisteredRecipientError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(ErrorCodes.UNREGISTERED_RECIPIENT)
+                .setEndUserMessage(EndUserMessage.UNREGISTERED_RECIPIENT)
                 .build();
     }
 
