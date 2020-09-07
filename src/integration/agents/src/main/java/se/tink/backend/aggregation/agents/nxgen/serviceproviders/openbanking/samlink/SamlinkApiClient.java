@@ -32,20 +32,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.BookingStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.provider.SamlinkAuthorisationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.provider.SamlinkSignatureEntity;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -218,47 +213,6 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
                 new SamlinkSignatureEntity(digest, requestId, getRedirectUrl());
 
         return qsealcSigner.getSignatureBase64(signatureEntity.toString().getBytes());
-    }
-
-    public CreatePaymentResponse createSepaPayment(CreatePaymentRequest paymentRequest) {
-        return createRequestInSession(
-                        new URL(agentConfiguration.getBaseUrl()).concat(Urls.CREATE_SEPA_PAYMENT),
-                        "")
-                .body(paymentRequest)
-                .post(CreatePaymentResponse.class);
-    }
-
-    public CreatePaymentResponse createForeignPayment(CreatePaymentRequest paymentRequest) {
-        return createRequestInSession(
-                        new URL(
-                                agentConfiguration
-                                        .getBaseUrl()
-                                        .concat(Urls.CREATE_FOREIGN_PAYMENT)),
-                        "")
-                .body(paymentRequest)
-                .post(CreatePaymentResponse.class);
-    }
-
-    public FetchPaymentResponse fetchSepaPayment(PaymentRequest paymentRequest) {
-        URL urlWithPaymentId =
-                new URL(agentConfiguration.getBaseUrl())
-                        .concat(Urls.GET_SEPA_PAYMENT)
-                        .parameter(IdTags.PAYMENT_ID, paymentRequest.getPayment().getUniqueId());
-        return fetchPayment(urlWithPaymentId);
-    }
-
-    public FetchPaymentResponse fetchForeignPayment(PaymentRequest paymentRequest) {
-        URL urlWithPaymentId =
-                new URL(agentConfiguration.getBaseUrl())
-                        .concat(Urls.GET_FOREIGN_PAYMENT)
-                        .parameter(IdTags.PAYMENT_ID, paymentRequest.getPayment().getUniqueId());
-        return fetchPayment(urlWithPaymentId);
-    }
-
-    private FetchPaymentResponse fetchPayment(URL url) {
-        return createRequestInSession(url, "")
-                .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
-                .get(FetchPaymentResponse.class);
     }
 
     private String buildSignedClientAssertion() {

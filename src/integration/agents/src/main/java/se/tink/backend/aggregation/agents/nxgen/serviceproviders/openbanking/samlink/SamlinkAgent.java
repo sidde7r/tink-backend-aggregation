@@ -1,17 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.payment.SamlinkPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.transactionalaccount.SamlinkTransactionFetcher;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
 public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConfiguration> {
 
@@ -62,11 +59,5 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
     @Override
     protected BerlinGroupTransactionFetcher getTransactionFetcher() {
         return new SamlinkTransactionFetcher(apiClient, agentConfiguration);
-    }
-
-    @Override
-    public Optional<PaymentController> constructPaymentController() {
-        SamlinkPaymentExecutor executor = new SamlinkPaymentExecutor(apiClient);
-        return Optional.of(new PaymentController(executor, executor));
     }
 }

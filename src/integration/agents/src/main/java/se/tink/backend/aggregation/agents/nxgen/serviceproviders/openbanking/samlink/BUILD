@@ -24,8 +24,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/integration/payment:enums",
-        "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//third_party:com_google_inject_guice",
