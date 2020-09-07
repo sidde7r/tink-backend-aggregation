@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.enums.BnpParibasFortisPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -32,6 +33,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -75,6 +78,10 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
         }
 
         BnpParibasFortisPaymentType paymentType = getPaymentType(paymentRequest);
+        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
+
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
@@ -90,7 +97,7 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
                                         .queryParam(
                                                 QueryKeys.STATE,
                                                 strongAuthenticationState.getState()))
-                        .withRemittanceInformation(payment.getReference().getValue())
+                        .withRemittanceInformation(remittanceInformation.getValue())
                         .build();
 
         PaymentResponse paymentResponse =

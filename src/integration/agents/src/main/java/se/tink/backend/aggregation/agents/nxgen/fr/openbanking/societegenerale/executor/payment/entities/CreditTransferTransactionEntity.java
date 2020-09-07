@@ -9,10 +9,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @JsonObject
 @AllArgsConstructor
@@ -34,9 +36,12 @@ public class CreditTransferTransactionEntity {
         Payment payment = paymentRequest.getPayment();
 
         PaymentId paymentId = new PaymentId(payment.getUniqueId(), UUID.randomUUID().toString());
+        RemittanceInformation remittanceInformationFromPayment = payment.getRemittanceInformation();
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformationFromPayment, null, RemittanceInformationType.UNSTRUCTURED);
 
         String unstructuredRemittance =
-                Optional.ofNullable(payment.getReference()).map(Reference::getValue).orElse("");
+                Optional.ofNullable(remittanceInformationFromPayment.getValue()).orElse("");
         remittanceInformation.add(unstructuredRemittance);
         RemittanceInformationEntity remittanceInformationEntity = new RemittanceInformationEntity();
         remittanceInformationEntity.setUnstructured(remittanceInformation);

@@ -24,6 +24,8 @@ java_library(
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//third_party:com_google_http_client_google_http_client",

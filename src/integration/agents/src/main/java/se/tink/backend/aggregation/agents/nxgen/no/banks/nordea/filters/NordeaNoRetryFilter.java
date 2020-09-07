@@ -13,7 +13,6 @@ public class NordeaNoRetryFilter extends AbstractRandomRetryFilter {
 
     @Override
     protected boolean shouldRetry(HttpResponse response) {
-        String body = response.getBody(String.class);
-        return response.getStatus() == 500 && body.contains(RETRY_ERROR);
+        return response.getStatus() == 500 && response.getBody(String.class).contains(RETRY_ERROR);
     }
 }
