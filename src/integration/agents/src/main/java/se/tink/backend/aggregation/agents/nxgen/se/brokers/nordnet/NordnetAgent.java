@@ -10,13 +10,16 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.NordnetBankIdAutoStartAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.NordnetPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.investment.NordnetInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.transactionalaccount.NordnetTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.session.NordnetSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -48,11 +51,15 @@ public class NordnetAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(
-                supplementalRequester,
-                new NordnetBankIdAutoStartAuthenticator(apiClient, persistentStorage),
-                persistentStorage,
-                credentials);
+
+        return new TypedAuthenticationController(
+                new BankIdAuthenticationController<>(
+                        supplementalRequester,
+                        new NordnetBankIdAutoStartAuthenticator(apiClient, persistentStorage),
+                        persistentStorage,
+                        credentials),
+                new PasswordAuthenticationController(
+                        new NordnetPasswordAuthenticator(apiClient, sessionStorage)));
     }
 
     @Override

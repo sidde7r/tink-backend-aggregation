@@ -14,6 +14,7 @@ public class NordnetConstants {
         public static final String BASE = "https://www.nordnet.se";
         public static final String AUTH_BASE = "https://classic.nordnet.se";
         public static final String INIT_LOGIN = BASE + "/api/2/login";
+        public static final String BASIC_LOGIN = BASE + "/api/2/authentication/basic/login";
         public static final String INIT_AUTHORIZE = BASE + "/oauth2/authorize";
         public static final String OAUTH2_AUTHORIZE = AUTH_BASE + "/oauth2/authorize";
         public static final String ANONYMOUS_LOGIN = AUTH_BASE + "/api/2/login/anonymous";
@@ -29,7 +30,7 @@ public class NordnetConstants {
         public static final String POSITIONS = BASE + "/api/2/accounts/{positions-id}/positions";
     }
 
-    public static class InitBankId {
+    public static class InitLogin {
         public static final String AUTHENTICATED = "authenticated";
     }
 
@@ -85,6 +86,7 @@ public class NordnetConstants {
         public static final String GENERIC_MEDIA_TYPE = "*/*;q=0.8";
         public static final String REFERER = "Referer";
         public static final String BEARER = "Bearer ";
+        public static final String BASIC = "Basic ";
     }
 
     public static final class HeaderValues {
@@ -114,6 +116,10 @@ public class NordnetConstants {
 
     public static class Patterns {
         public static final Pattern CODE = Pattern.compile("\\?code=([a-zA-Z\\d]*)$");
+    }
+
+    public static class Errors {
+        public static final String INVALID_SESSION = "NEXT_INVALID_SESSION";
     }
 
     public static class IdTags {

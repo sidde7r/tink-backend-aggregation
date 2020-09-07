@@ -6,19 +6,23 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.InitBankId;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.InitLogin;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.Patterns;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.QueryValues;
@@ -33,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -71,7 +76,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
 
         final HttpResponse response = pollBankId(reference);
 
-        if (response.getBody(String.class).contains(InitBankId.AUTHENTICATED)) {
+        if (response.getBody(String.class).contains(InitLogin.AUTHENTICATED)) {
             getNtag(response);
             fetchOauth2Token(getCode());
 
@@ -91,7 +96,12 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                         .header(HeaderKeys.NTAG, ntag)
                         .body(request);
 
-        return apiClient.post(requestBuilder, HttpResponse.class);
+        try {
+            return apiClient.post(requestBuilder, HttpResponse.class);
+        } catch (HttpResponseException e) {
+            handleBankIdErrors(e);
+            throw e;
+        }
     }
 
     @Override
@@ -127,7 +137,12 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                         .header(HeaderKeys.REFERER, HeaderValues.REFERER)
                         .body(requestBody);
 
-        return apiClient.post(requestBuilder, InitBankIdResponse.class);
+        try {
+            return apiClient.post(requestBuilder, InitBankIdResponse.class);
+        } catch (HttpResponseException e) {
+            handleBankIdErrors(e);
+            throw e;
+        }
     }
 
     private void initLogin() {
@@ -153,9 +168,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                         .createBasicRequest(
                                 new URL(Urls.INIT_AUTHORIZE)
                                         .queryParam(QueryKeys.AUTH_TYPE, QueryValues.AUTH_TYPE)
-                                        .queryParam(
-                                                NordnetConstants.FormKeys.CLIENT_ID,
-                                                CaisseEpargneConstants.QueryValues.CLIENT_ID)
+                                        .queryParam(FormKeys.CLIENT_ID, QueryValues.CLIENT_ID)
                                         .queryParam(
                                                 NordnetConstants.FormKeys.RESPONSE_TYPE,
                                                 QueryValues.RESPONSE_TYPE)
@@ -203,7 +216,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
         final String requestBody =
                 Form.builder()
                         .put(QueryValues.RESPONSE_TYPE, code)
-                        .put(FormKeys.CLIENT_ID, CaisseEpargneConstants.QueryValues.CLIENT_ID)
+                        .put(FormKeys.CLIENT_ID, QueryValues.CLIENT_ID)
                         .put(FormKeys.CLIENT_SECRET, FormValues.CLIENT_SECRET)
                         .put(FormKeys.GRANT_TYPE, FormValues.GRANT_TYPE)
                         .put(FormKeys.REDIRECT_URI, QueryValues.REDIRECT_URI)
@@ -241,7 +254,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                                 new URL(Urls.OAUTH2_AUTHORIZE)
                                         .queryParam(
                                                 NordnetConstants.FormKeys.CLIENT_ID,
-                                                CaisseEpargneConstants.QueryValues.CLIENT_ID)
+                                                QueryValues.CLIENT_ID)
                                         .queryParam(
                                                 NordnetConstants.FormKeys.RESPONSE_TYPE,
                                                 QueryValues.RESPONSE_TYPE)
@@ -292,5 +305,17 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
         Preconditions.checkNotNull(
                 location, "Expected Location header to exist for subsequent requests");
         return location;
+    }
+
+    private BankIdStatus handleBankIdErrors(HttpResponseException e)
+            throws BankIdException, LoginException {
+        if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+            throw LoginError.NOT_CUSTOMER.exception();
+        } else if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception(e);
+        } else if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
+        }
+        throw BankIdError.UNKNOWN.exception();
     }
 }
