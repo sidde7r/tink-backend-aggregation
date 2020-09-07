@@ -307,3 +307,25 @@ Transfer-Encoding: chunked
 Server: Jetty(9.4.z-SNAPSHOT)
 
 {"group_header":{"message_identification":"343f03eed8e0703e","creation_date_time":"2020-08-13T10:24:19.073Z","http_code":200},"response":{"transactions":[{"id":"190370745","beneficiary":"narrative","amount":"-108.62","currency":"SEK","transaction_date":"2020-07-14"},{"id":"-2093430023","beneficiary":"narrative","amount":"-1450.00","currency":"SEK","transaction_date":"2020-07-13"},{"id":"684338255","beneficiary":"narrative","amount":"-965.36","currency":"SEK","transaction_date":"2020-07-13"},{"id":"-191161918","beneficiary":"narrative","amount":"-4495.00","currency":"SEK","transaction_date":"2020-07-13"},{"id":"-1089080380","beneficiary":"narrative","amount":"-1168.68","currency":"SEK","transaction_date":"2020-07-13"},{"id":"1649588706","beneficiary":"narrative","amount":"-615.00","currency":"SEK","transaction_date":"2020-07-13"},{"id":"1093838642","beneficiary":"narrative","amount":"-90.00","currency":"SEK","transaction_date":"2020-07-11"},{"id":"-924759527","beneficiary":"narrative","amount":"499.00","currency":"SEK","transaction_date":"2020-07-11"},{"id":"-924759527","beneficiary":"narrative","amount":"499.00","currency":"SEK","transaction_date":"2020-07-11"}]}}
+
+REQUEST 13
+GET https://api.nordeaopenbanking.com/personal/v4/assets
+Content-Type: application/json
+
+RESPONSE 13
+200
+Date: Thu, 13 Aug 2020 10:24:13 GMT
+Date: Thu, 13 Aug 2020 10:24:14 GMT
+Content-Type: application/json;charset=utf-8
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+x-request-id: 2a36903074c7429d091b26c3f4c5c9d7
+X-Global-Transaction-ID: f193ec025f3514cd0520b8f3
+Access-Control-Allow-Origin: *
+X-RateLimit-Limit: name=rate-limit-1,5000;
+X-RateLimit-Remaining: name=rate-limit-1,0;
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"group_header":{"message_identification":"343f03eed8e0703e","creation_date_time":"2020-08-13T10:24:19.073Z","http_code":200},"response":{"scopes":["ACCOUNTS_DETAILS", "CARDS_INFORMATION"]}}
