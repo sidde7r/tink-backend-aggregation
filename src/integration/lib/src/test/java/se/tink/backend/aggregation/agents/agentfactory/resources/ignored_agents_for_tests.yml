@@ -57,7 +57,6 @@ ignoredAgentsForCapabilityTest:
   - nxgen.fr.openbanking.creditmutuel.CreditMutuelAgent
   - nxgen.fr.openbanking.hellobank.HelloBankAgent
   - nxgen.fr.openbanking.ing.IngAgent
-  - nxgen.it.banks.isp.IspAgent
   - nxgen.it.openbanking.ing.IngAgent
   - nxgen.nl.banks.openbanking.volksbank.VolksbankAgent
   - nxgen.nl.openbanking.abnamro.AbnAmroAgent
