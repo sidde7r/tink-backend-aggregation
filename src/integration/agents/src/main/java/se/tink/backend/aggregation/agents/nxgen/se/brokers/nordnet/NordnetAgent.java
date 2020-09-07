@@ -42,7 +42,8 @@ public class NordnetAgent extends NextGenerationAgent
     public NordnetAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.sessionStorage = new SessionStorage();
-        this.apiClient = new NordnetApiClient(client, persistentStorage);
+        this.apiClient =
+                new NordnetApiClient(client, credentials, persistentStorage, sessionStorage);
         this.investmentRefreshController = constructInvestmentRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
@@ -64,7 +65,7 @@ public class NordnetAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new NordnetSessionHandler(apiClient, persistentStorage);
+        return new NordnetSessionHandler(apiClient);
     }
 
     @Override
