@@ -365,7 +365,7 @@ public class SoapHelperTest {
         assertThat(checking.get().getAccountNumber()).isEqualTo(SHORT_ACC_NR);
         assertThat(checking.get().getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN);
         assertThat(checking.get().getHolderName().toString()).isEqualTo(FAKE_NAME);
-        assertThat(checking.get().getExactBalance().compareTo(BigDecimal.valueOf(59.23)))
+        assertThat(checking.get().getExactBalance().compareTo(BigDecimal.valueOf(-59.23)))
                 .isEqualTo(0);
         Optional<TransactionalAccount> savings =
                 accounts.stream()

@@ -1,0 +1,778 @@
+REQUEST 1
+POST https://www.as-ex-ano-groupe.caisse-epargne.fr/api/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Connection:	keep-alive
+Accept:	application/json
+Accept-Language: en-US
+
+client_id=8a7e499e-8f67-4377-91d3-74e4cbdd7a42&client_secret=eade1e43-60b2-456e-810f-c7b9a85eae5f&grant_type=client_credentials
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{
+    "access_token": "DUMMY_ACCESS_TOKEN",
+    "expires_in": 3600,
+    "scope": "manageUser readAgencyV2",
+    "token_type": "Bearer"
+}
+
+REQUEST 2
+POST https://www.rs-ex-ano-groupe.caisse-epargne.fr/bapi/user/v1/users/identificationRouting
+Content-Type: application/json
+Connection: keep-alive
+Accept: */*
+Accept-Language: en-US
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+{"characteristics":{"bankId":"","subscribeTypeItems":[],"iTEntityType":{"code":"02"},"userCode":"DUMMY_USER"}}
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{
+    "characteristics": {
+        "bankId": "17515",
+        "iTEntityType": {
+            "code": "02",
+            "label": null
+        },
+        "subscribeTypeItems": [
+            {
+                "code": "1",
+                "label": "abonnement Particulier"
+            }
+        ],
+        "userCode": "DUMMY_USER"
+    },
+    "response": {
+        "code": "0",
+        "interactionId": "",
+        "label": "OK"
+    }
+}
+
+REQUEST 3
+GET https://www.as-ex-ath-groupe.caisse-epargne.fr/api/oauth/v2/authorize?display=touch&bpcesta=%7B%22cdetab%22:%2217515%22,%22enseigne%22:%22ce%22,%22csid%22:%2200000000-0000-4000-0000-000000000000%22,%22term_id%22:%2200000000-0000-4000-0000-000000000000%22,%22typ_srv%22:%22part%22,%22typ_app%22:%22rest%22,%22typ_act%22:%22sso%22,%22typ_sp%22:%22out-band%22%7D&secret_id=34791847-2cfe-4992-bff2-1c3327b92fab&login_hint=DUMMY_USER&redirect_uri=containerApp://BAPIStepUpSuccess&client_id=f4ee2144-0d68-4b90-ae78-25e255a1f3ac&cdetab=17515&response_type=id_token%20token&claims=%7B%22id_token%22:%7B%22last_login%22:null,%22auth_time%22:%7B%22essential%22:true%7D%7D,%22userinfo%22:%7B%22cdetab%22:null,%22authMethod%22:null,%22authLevel%22:null%7D%7D&nonce=00000000-0000-4000-0000-000000000000
+Accept: application/json
+Accept-Language: en-US
+Connection: keep-alive
+User-Agent: CaisseEpargne/742 CFNetwork/978.0.7 Darwin/18.7.0
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{
+    "action": "https://www.icgauth.caisse-epargne.fr/dacswebssoissuer/AuthnRequestServlet",
+    "enctype": "application/x-www-form-urlencoded",
+    "method": "POST",
+    "parameters": {
+        "SAMLRequest": "PHNhbWxwOkF1dGhuUmVxdWVzdCB4bWxuczpzYW1scD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnByb3RvY29sIiB4bWxuczpzYW1sPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIiBGb3JjZUF1dGhuPSJmYWxzZSIgSXNzdWVJbnN0YW50PSIyMDIwLTA3LTE2VDEwOjMzOjE0LjQ4NVoiIFZlcnNpb249IjIuMCIgQXNzZXJ0aW9uQ29uc3VtZXJTZXJ2aWNlVVJMPSJodHRwczovL3d3dy5hcy1leC1hdGgtZ3JvdXBlLmNhaXNzZS1lcGFyZ25lLmZyL2FwaS9vYXV0aC92Mi9jb25zdW1lIiBQcm90b2NvbEJpbmRpbmc9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpiaW5kaW5nczpIVFRQLVBPU1QiIElEPSJ2Y1h5aWpuM1d4dHFnb2pzUTRxRiIgRGVzdGluYXRpb249Imh0dHBzOi8vd3d3LmljZ2F1dGguY2Fpc3NlLWVwYXJnbmUuZnIvZGFjc3dlYnNzb2lzc3Vlci9BdXRoblJlcXVlc3RTZXJ2bGV0Ij48c2FtbDpJc3N1ZXI+QkVMX1BBUlRfUkVTVF8xNzUxNTwvc2FtbDpJc3N1ZXI+PGRzaWc6U2lnbmF0dXJlIHhtbG5zOmRzaWc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPjxkc2lnOlNpZ25lZEluZm8+PGRzaWc6Q2Fub25pY2FsaXphdGlvbk1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIvPjxkc2lnOlNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZHNpZy1tb3JlI3JzYS1zaGE1MTIiLz48ZHNpZzpSZWZlcmVuY2UgVVJJPSIjdmNYeWlqbjNXeHRxZ29qc1E0cUYiPjxkc2lnOlRyYW5zZm9ybXM+PGRzaWc6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI2VudmVsb3BlZC1zaWduYXR1cmUiLz48ZHNpZzpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48L2RzaWc6VHJhbnNmb3Jtcz48ZHNpZzpEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGVuYyNzaGE1MTIiLz48ZHNpZzpEaWdlc3RWYWx1ZT5GK0c4Rk9LWFl5OWs5bStoY0NJWGR1R2dLYlp6aXdnUm1tQ1UxSC9LcCszNGlDMjRKeTRmRVNMNWlFdThtQVdrCjRwNHlpSldOaGttVDNSTUFhWkljUUE9PTwvZHNpZzpEaWdlc3RWYWx1ZT48L2RzaWc6UmVmZXJlbmNlPjwvZHNpZzpTaWduZWRJbmZvPjxkc2lnOlNpZ25hdHVyZVZhbHVlPlhuREl2RnhVQTc5T0lNdkJydVVaNkVVRm00dDFSckxzb01JTmRaVjVUdzJiekw0WUxzeW9KcnhybUdnTENnRE4KWE9iUDcvMWoxVmtnZHZEaGllNXhaR2JjZ0IrSTg3dVBmSXJKR3p3c01iNWQ3SVBIWFFvUTNoclgxSis2VnpPTApzN24reHpLUFVwSURkWTJOTEtDemtvOGxrZDIyYkpxZ2tQMWdqYTZibzUrWS8rMGRCSUNFdkpSNjE1Z05QbUVNCkhLY3lqQkc0Q05kRVZJU0JRUzBSek1jQTNES0c0Z1ppL2d2NGZDYVM0K1ZOMEYyVU1rK0VMUmxlY01xYkxjdWQKOHdyeE12aTNhUW84amtyc25pYmdVTDIrOGRMYXNveW5aVVlua1BSN1NSSE1CZkFJaVNPdWlRMEdvMEZEM0xqOQpBeS9uME9yeHo1U1JPZGJhSjdIMWdnPT08L2RzaWc6U2lnbmF0dXJlVmFsdWU+PGRzaWc6S2V5SW5mbz48ZHNpZzpYNTA5RGF0YT48ZHNpZzpYNTA5Q2VydGlmaWNhdGU+TUlJR2hqQ0NCRzZnQXdJQkFnSUNCRk13RFFZSktvWklodmNOQVFFTEJRQXdYVEVMTUFrR0ExVUVCaE1DUmxJeERUQUxCZ05WQkFvTUJFSlFRMFV4RnpBVkJnTlZCQXNNRGpBd01ESWdORGt6TkRVMU1EUXlNU1l3SkFZRFZRUUREQjFDVUVORklGVkRSeUJCUTBVZ1RVRlVSVkpKUlV4VElFZFNUMVZRUlRBZUZ3MHhOekV4TVRBd09UTTJNak5hRncweU1ERXhNRGt3T1RNMk1qTmFNR3d4Q3pBSkJnTlZCQVlUQWtaU01RMHdDd1lEVlFRS0RBUkNVRU5GTVJjd0ZRWURWUVFMREE0d01EQXlJRFE1TXpRMU5UQTBNakVTTUJBR0ExVUVDd3dKVTFOTVIxSlBWVkJGTVNFd0h3WURWUVFEREJoQ1FWQkpJRkJTUkNCS1YxUWdSbTkxY201cGMzTmxkWEl3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRQzIvYVRpQmtraDFXZ0hTRUMzQmw5bU5CQkxXNGtKdFk1TlFVazVLWlRqMkhrTG4wOUczYkNPckdiT1k1TmZnSnptZ1NtWlhXNW96azlrbzZJVU5HVWN2b0FSWFdHY0U1RXBxODN1RDBqMm5kVEh6VWkvcHhTdndsaG9yNUVjeTluK3g3akxxODliaW9hWTdmOFFQdDk3ZkZod1VVWEZ1ci9sMHRoaHNXQnc3eFVyVXNwcnU1QWx1WVhmZy8zbzhEeFhLT3F1YWZoYzlSQ3o0RSs1cXQ2UDNaTm9WZjNPRXNhS3lCSVRxdGdkRHhHNVIwclZJa1hJalpjYkRQaWRnU2MwVXpGMm4zbXRORHMwb2RNOE1lRno0VzEwR2ZTd0JWRUVPNGUwcTM0WUdubzNOenFlcEw5WFVrOFR5NjJINk1BUkcvTlFrajh6b3pmQTlmWE9NZkY1QWdNQkFBR2pnZ0kvTUlJQ096QWRCZ05WSFE0RUZnUVVaa3lick1hRzRmV2pWUXFpdXltS2hoQ3MrMEl3SHdZRFZSMGpCQmd3Rm9BVTZjWExMNmhlZ2ViNlBhSlNTbHVEVlA3N0ljd3dnWThHQTFVZElBU0JoekNCaERDQmdRWVFLd1lCQkFHQ3ZHOEJBQUVMZ3hzQkFUQnRNR3NHQ0NzR0FRVUZCd0lCRmw5b2RIUndPaTh2Y0hKdkxtUXdNQzV3YTJrd01pNWljR05sTG1aeUwyUnZZM012Y0dNdGRXTm5MV3h2ZERFdlVFTXRRbEJEUlY5VlEwZGZRVU5GWDAxQlZFVlNTVVZNVTE5SFVrOVZVRVV0ZGpFdU9ESXdNVFV3TmpBeExuQmtaakFkQmdOVkhTVUVGakFVQmdnckJnRUZCUWNEQWdZSUt3WUJCUVVIQXdFd0RnWURWUjBQQVFIL0JBUURBZ1dnTUNBR0ExVWRFUVFaTUJlQ0ZXSmhjR2x3Y21ScWQzUm1iM1Z5Ym1semMyVjFjakNCdndZRFZSMGZCSUczTUlHME1EcWdPS0EyaGpSb2RIUndPaTh2Y0hKdkxtUXdNQzV3YTJrd01pNWljR05sTG1aeUwzVmpaMTloWTJWZk5ERXhNREV0TURGZmRqRXVZM0pzTURxZ09LQTJoalJvZEhSd09pOHZjSEp2TG1Rd01TNXdhMmt3TWk1aWNHTmxMbVp5TDNWaloxOWhZMlZmTkRFeE1ERXRNREZmZGpFdVkzSnNNRHFnT0tBMmhqUm9kSFJ3T2k4dmNISnZMbVF3TWk1d2Eya3dNaTVpY0dObExtWnlMM1ZqWjE5aFkyVmZOREV4TURFdE1ERmZkakV1WTNKc01GUUdDQ3NHQVFVRkJ3RUJCRWd3UmpCRUJnZ3JCZ0VGQlFjd0FvWTRhSFIwY0RvdkwzQnlieTVrTURBdWNHdHBNREl1WW5CalpTNW1jaTkxWTJkZllXTmxYelF4TVRBeExUQXhYMk55ZEY5Mk1TNWpjblF3RFFZSktvWklodmNOQVFFTEJRQURnZ0lCQU5zc2Q3R3Irc1JXOE02cE8yL0tyZThSbkExbWNlN2pmd0owdkNEZkowZjlwNEdCdGkyV29ncDZ1WWN2T0J1RHEwMUdXQUQ4L1p4b0lya1p0MDFEZ3VDaUprTk9XRkoxVGpmZzVZWDY3Qk1tOHZTQ0ZFeGN2TFV3a2NQeDF6QVBxUXZjbWovalFVN2NlanhkTXg0R3g2L0dFckZHVXRxWjlRa3RoSWRIVkhYOU50U1dDN3V5TkV3M0YyenBTcVdzM3FOVmdLZmh6dTlKWHNMUkd0bHhLeUFTV0JzeU41Znl5MVF6Tm9qY0drUlFPNG5PendwaHhSaVB4czFyTnNSTzZxaDhGdk82RloyZmFGSDdwTzdMWUJPMDRvRWRoam1zb3NCSzVPazhrQjJLR0FuUmVMMWxhVGFoWGJtUTRMRWlWNy9kQ2QzdEJVeGlyaElNN1FnWWw4MG1KeEFEbGlNMFZBS242Ti8xVDI4T2REWmZLY3E5WUdnZG9rY0FjcytRQ0VRTm11emdUbTQrZnFjTkZoMTVrQS9mMXlMODFHdzNaL1BUcm5PSlQ1VXhlVG1KcFlGNEtDWFVXNllDakZYblJRRzAzc0hKdHl3SW00VXFWWHFNT0ZRbU1yL0Q4elRXS3NMcXQ4SUI2cDd6WTIrenNoNUVCUjRma0puRVNaTmJsRkpMNGh4ZzdMOEQzdkcxem8xUlJ4QXVCOHFBZ05kTStqdjZKVks1T1RJQmszZXBjSUlHNWc0ZVFGQlNoV1hxZFdRUFc1RjNUaFdQRERRTktncnY1MTNjUjVYMnZEMExhRXBjbm1YdzJVQlFBR0N3ZE9sSVhWOVZVWlVMcXQyRUVFNkRPMnNoSUJmSkY2MkFUUnRRcDFPaHFobzlTa0ppbXlSOGZ2QUw0b1hEPC9kc2lnOlg1MDlDZXJ0aWZpY2F0ZT48L2RzaWc6WDUwOURhdGE+PC9kc2lnOktleUluZm8+PC9kc2lnOlNpZ25hdHVyZT48c2FtbHA6RXh0ZW5zaW9ucz48ZGFjczpTZWN1cml0eUxldmVsIHhtbG5zOmRhY3M9Imh0dHA6Ly93d3cuZGljdGFvLmNvbS9kYWNzLzEuMCI+OTYyPC9kYWNzOlNlY3VyaXR5TGV2ZWw+PGRhY3M6Q29udGV4dCB4bWxuczpkYWNzPSJodHRwOi8vd3d3LmRpY3Rhby5jb20vZGFjcy8xLjAiIGlkPSJPUFNfR0VORVJJUVVFIj48ZGFjczpDb250ZXh0TWV0YWRhdGEgbmFtZT0idGV4dGVfc21zIj4gQ2Fpc3NlIGQnRXBhcmduZSA6IENvbmZpcm1leiB2b3RyZSBhdXRoZW50aWZpY2F0aW9uIMOgIHZvdHJlIGJhbnF1ZSDDoCBkaXN0YW5jZSBlbiBzYWlzaXNzYW50IGxlIGNvZGUgc3VpdmFudCA6IDwvZGFjczpDb250ZXh0TWV0YWRhdGE+PGRhY3M6Q29udGV4dE1ldGFkYXRhIG5hbWU9IlNFTkRFUl9OQU1FX0tFWSI+Q2Fpc3NlIGQnRXBhcmduZTwvZGFjczpDb250ZXh0TWV0YWRhdGE+PGRhY3M6Q29udGV4dE1ldGFkYXRhIG5hbWU9Ik5PVElGX1RJVExFX0tFWSI+QXV0aGVudGlmaWNhdGlvbiDDoCB2YWxpZGVyPC9kYWNzOkNvbnRleHRNZXRhZGF0YT48ZGFjczpDb250ZXh0TWV0YWRhdGEgbmFtZT0iTk9USUZfREVTQ19LRVkiPkNvbmZpcm1leiB2b3RyZSBhdXRoZW50aWZpY2F0aW9uIMOgIHZvdHJlIGJhbnF1ZSDDoCBkaXN0YW5jZTwvZGFjczpDb250ZXh0TWV0YWRhdGE+PGRhY3M6Q29udGV4dE1ldGFkYXRhIG5hbWU9IkRFU0NfS0VZIj57InR5cGVfRm9uY3QiOiJHRU5FIiwidHlwZV9UZWNoIjoib3V0LWJhbmQiLCJnZW5lX0wxIjoiQXV0aGVudGlmaWV6LXZvdXMgw6Agdm90cmUgYmFucXVlIMOgIGRpc3RhbmNlIiwiZ2VuZV9MMiI6IiIsImdlbmVfTDMiOiIiLCJnZW5lX0w0IjoiIiwiZ2VuZV9MNSI6IiIsIm9yaWdpbmUiOiJtb2JpbGUiLCJkYXRlX2hldXJlIjoiMTYtMDctMjAyMCAxMjozMzoxNCJ9PC9kYWNzOkNvbnRleHRNZXRhZGF0YT48ZGFjczpDb250ZXh0TWV0YWRhdGEgbmFtZT0iU0VORF9OT1RJRl9LRVkiPnRydWU8L2RhY3M6Q29udGV4dE1ldGFkYXRhPjxkYWNzOkNvbnRleHRNZXRhZGF0YSBuYW1lPSJjc2lkIj4wQUJGNzZGMy03QzUwLTQ3MzctQTkzQi01QkZDODgyRkIwRDY8L2RhY3M6Q29udGV4dE1ldGFkYXRhPjxkYWNzOkNvbnRleHRNZXRhZGF0YSBuYW1lPSJzbmlkIj4yMjQ4Mzc8L2RhY3M6Q29udGV4dE1ldGFkYXRhPjxkYWNzOkNvbnRleHRNZXRhZGF0YSBuYW1lPSJtZWRpYSI+dG91Y2g8L2RhY3M6Q29udGV4dE1ldGFkYXRhPjxkYWNzOkNvbnRleHRNZXRhZGF0YSBuYW1lPSJ0eXBfc3J2Ij5wYXJ0PC9kYWNzOkNvbnRleHRNZXRhZGF0YT48ZGFjczpDb250ZXh0TWV0YWRhdGEgbmFtZT0iZXRhYiI+MTc1MTU8L2RhY3M6Q29udGV4dE1ldGFkYXRhPjxkYWNzOkNvbnRleHRNZXRhZGF0YSBuYW1lPSJ0eXBfYWN0Ij5zc288L2RhY3M6Q29udGV4dE1ldGFkYXRhPjwvZGFjczpDb250ZXh0Pjwvc2FtbHA6RXh0ZW5zaW9ucz48c2FtbDpTdWJqZWN0PjxzYW1sOk5hbWVJRD43NTA4MjU0NTQ8L3NhbWw6TmFtZUlEPjwvc2FtbDpTdWJqZWN0Pjwvc2FtbHA6QXV0aG5SZXF1ZXN0Pg=="
+    }
+}
+
+REQUEST 4
+POST https://www.icgauth.caisse-epargne.fr/dacswebssoissuer/AuthnRequestServlet
+Content-Type: application/x-www-form-urlencoded
+Connection:	keep-alive
+Accept:	*/*
+User-Agent:	CaisseEpargne/742 CFNetwork/978.0.7 Darwin/18.7.0
+Accept-Language: en-US
+
+SAMLRequest=PHNhbWxwOkF1dGhuUmVxdWVzdCB4bWxuczpzYW1scD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnByb3RvY29sIiB4bWxuczpzYW1sPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIiBGb3JjZUF1dGhuPSJmYWxzZSIgSXNzdWVJbnN0YW50PSIyMDIwLTA3LTE2VDEwOjMzOjE0LjQ4NVoiIFZlcnNpb249IjIuMCIgQXNzZXJ0aW9uQ29uc3VtZXJTZXJ2aWNlVVJMPSJodHRwczovL3d3dy5hcy1leC1hdGgtZ3JvdXBlLmNhaXNzZS1lcGFyZ25lLmZyL2FwaS9vYXV0aC92Mi9jb25zdW1lIiBQcm90b2NvbEJpbmRpbmc9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpiaW5kaW5nczpIVFRQLVBPU1QiIElEPSJ2Y1h5aWpuM1d4dHFnb2pzUTRxRiIgRGVzdGluYXRpb249Imh0dHBzOi8vd3d3LmljZ2F1dGguY2Fpc3NlLWVwYXJnbmUuZnIvZGFjc3dlYnNzb2lzc3Vlci9BdXRoblJlcXVlc3RTZXJ2bGV0Ij48c2FtbDpJc3N1ZXI%2BQkVMX1BBUlRfUkVTVF8xNzUxNTwvc2FtbDpJc3N1ZXI%2BPGRzaWc6U2lnbmF0dXJlIHhtbG5zOmRzaWc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPjxkc2lnOlNpZ25lZEluZm8%2BPGRzaWc6Q2Fub25pY2FsaXphdGlvbk1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIvPjxkc2lnOlNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZHNpZy1tb3JlI3JzYS1zaGE1MTIiLz48ZHNpZzpSZWZlcmVuY2UgVVJJPSIjdmNYeWlqbjNXeHRxZ29qc1E0cUYiPjxkc2lnOlRyYW5zZm9ybXM%2BPGRzaWc6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI2VudmVsb3BlZC1zaWduYXR1cmUiLz48ZHNpZzpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48L2RzaWc6VHJhbnNmb3Jtcz48ZHNpZzpEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGVuYyNzaGE1MTIiLz48ZHNpZzpEaWdlc3RWYWx1ZT5GK0c4Rk9LWFl5OWs5bStoY0NJWGR1R2dLYlp6aXdnUm1tQ1UxSC9LcCszNGlDMjRKeTRmRVNMNWlFdThtQVdrCjRwNHlpSldOaGttVDNSTUFhWkljUUE9PTwvZHNpZzpEaWdlc3RWYWx1ZT48L2RzaWc6UmVmZXJlbmNlPjwvZHNpZzpTaWduZWRJbmZvPjxkc2lnOlNpZ25hdHVyZVZhbHVlPlhuREl2RnhVQTc5T0lNdkJydVVaNkVVRm00dDFSckxzb01JTmRaVjVUdzJiekw0WUxzeW9KcnhybUdnTENnRE4KWE9iUDcvMWoxVmtnZHZEaGllNXhaR2JjZ0IrSTg3dVBmSXJKR3p3c01iNWQ3SVBIWFFvUTNoclgxSis2VnpPTApzN24reHpLUFVwSURkWTJOTEtDemtvOGxrZDIyYkpxZ2tQMWdqYTZibzUrWS8rMGRCSUNFdkpSNjE1Z05QbUVNCkhLY3lqQkc0Q05kRVZJU0JRUzBSek1jQTNES0c0Z1ppL2d2NGZD
+
+RESPONSE 4
+303
+Set-Cookie:	HTTPWORKFLOW_TRANSIENT_ATTRIBUTES=tmp34219e5c1dfd4ed78821e89de5674489; path=/; secure; HttpOnly
+Set-Cookie:	ICG=!xM+Fr2Y9HmIs6B6zs6bY7Tr2ABcN1u2rLvvIA2TypEyIhSWaKm9AEuQs0Db92nkjrPlEV5CBAkYb3TQ=; path=/; Httponly;Secure
+Set-Cookie:	ICGI=!aY0L6O35BL6cmeb6BAMTb4VNVfnklPF4fAgcciDsoMdIM/zzljxZ8GH4Gvgrr4eP5ZUIwHmQtiAuA+8=; path=/; Httponly; Secure
+Set-Cookie:	couloir=2; Path=/;Secure
+Location: /dacsrest/api/v1u0/transaction/DUMMY_RESOURCE_ID_1
+
+REQUEST 5
+GET https://www.icgauth.caisse-epargne.fr/dacsrest/api/v1u0/transaction/DUMMY_RESOURCE_ID_1
+Accept:	*/*
+Cookie:	HTTPWORKFLOW_TRANSIENT_ATTRIBUTES=tmp34219e5c1dfd4ed78821e89de5674489; ICG=!xM+Fr2Y9HmIs6B6zs6bY7Tr2ABcN1u2rLvvIA2TypEyIhSWaKm9AEuQs0Db92nkjrPlEV5CBAkYb3TQ=; ICGI=!aY0L6O35BL6cmeb6BAMTb4VNVfnklPF4fAgcciDsoMdIM/zzljxZ8GH4Gvgrr4eP5ZUIwHmQtiAuA+8=; couloir=2
+User-Agent:	CaisseEpargne/742 CFNetwork/978.0.7 Darwin/18.7.0
+Accept-Language: en-US
+Connection:	keep-alive
+
+RESPONSE 5
+200
+Content-Type: application/json
+Set-Cookie:	HTTPWORKFLOW_TRANSIENT_ATTRIBUTES=; path=/; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:00 GMT;Secure
+Set-Cookie:	JSESSIONID=YlzCQkiBq1z6lcgijVwmXNJkebKwxP0L4C7o5M6L.up0tx846; path=/; secure; HttpOnly
+Expires: 0
+
+{
+    "context": {
+        "OPS_GENERIQUE": {
+            "DESC": "{\"type_Fonct\":\"GENE\",\"type_Tech\":\"out-band\",\"gene_L1\":\"Authentifiez-vous à votre banque à distance\",\"gene_L2\":\"\",\"gene_L3\":\"\",\"gene_L4\":\"\",\"gene_L5\":\"\",\"origine\":\"mobile\",\"date_heure\":\"16-07-2020 12:33:14\"}",
+            "NOTIF_DESC": "Confirmez votre authentification à votre banque à distance",
+            "NOTIF_TITLE": "Authentification à valider",
+            "SENDER_NAME": "Caisse d'Epargne",
+            "SEND_NOTIF": "true",
+            "csid": "00000000-0000-4000-0000-000000000000",
+            "etab": "17515",
+            "media": "touch",
+            "snid": "224837",
+            "texte_sms": " Caisse d'Epargne : Confirmez votre authentification à votre banque à distance en saisissant le code suivant : ",
+            "typ_act": "sso",
+            "typ_srv": "part"
+        }
+    },
+    "id": "CtxDACSP84660a81095a3c842b8b4153eb54d94beb622",
+    "locale": "en",
+    "step": {
+        "phase": {
+            "fallbackFactorAvailable": false,
+            "retryCounter": 3,
+            "securityLevel": "962",
+            "state": "AUTHENTICATION"
+        },
+        "validationUnits": [
+            {
+                "bdeefbc9-7a81-49f0-a3b5-386493dc81c2": [
+                    {
+                        "id": "5675fb0a-404f-40a3-bc7d-a39269d7c490",
+                        "maxSize": 8,
+                        "minSize": 4,
+                        "type": "PASSWORD"
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+REQUEST 6
+POST https://www.icgauth.caisse-epargne.fr/dacsrest/api/v1u0/transaction/DUMMY_RESOURCE_ID_1/step
+Accept:	*/*
+Content-Type: application/json
+Connection:	keep-alive
+Cookie:	ICG=!xM+Fr2Y9HmIs6B6zs6bY7Tr2ABcN1u2rLvvIA2TypEyIhSWaKm9AEuQs0Db92nkjrPlEV5CBAkYb3TQ=; ICGI=!aY0L6O35BL6cmeb6BAMTb4VNVfnklPF4fAgcciDsoMdIM/zzljxZ8GH4Gvgrr4eP5ZUIwHmQtiAuA+8=; JSESSIONID=YlzCQkiBq1z6lcgijVwmXNJkebKwxP0L4C7o5M6L.up0tx846; couloir=2
+Accept-Language: en-US
+User-Agent:	CaisseEpargne/742 CFNetwork/978.0.7 Darwin/18.7.0
+
+{"validate":{"bdeefbc9-7a81-49f0-a3b5-386493dc81c2":[{"password":"DUMMY_PASSWORD","id":"5675fb0a-404f-40a3-bc7d-a39269d7c490","type":"PASSWORD"}]}}
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{
+    "phase": {
+        "fallbackFactorAvailable": false,
+        "retryCounter": 3,
+        "securityLevel": "962",
+        "state": "AUTHENTICATION"
+    },
+    "validationUnits": [
+        {
+            "017117d1-c48e-4ed9-b006-008224a93402": [
+                {
+                    "id": "6673c5d1-6288-4466-a21f-4d1a7e1e8056",
+                    "phoneNumber": "12XXXX3456",
+                    "type": "SMS"
+                }
+            ]
+        }
+    ]
+}
+
+REQUEST 7
+POST https://www.icgauth.caisse-epargne.fr/dacsrest/api/v1u0/transaction/DUMMY_RESOURCE_ID_1/step
+Accept:	*/*
+Content-Type: application/json
+Connection:	keep-alive
+Cookie:	ICG=!xM+Fr2Y9HmIs6B6zs6bY7Tr2ABcN1u2rLvvIA2TypEyIhSWaKm9AEuQs0Db92nkjrPlEV5CBAkYb3TQ=; ICGI=!aY0L6O35BL6cmeb6BAMTb4VNVfnklPF4fAgcciDsoMdIM/zzljxZ8GH4Gvgrr4eP5ZUIwHmQtiAuA+8=; JSESSIONID=YlzCQkiBq1z6lcgijVwmXNJkebKwxP0L4C7o5M6L.up0tx846; couloir=2
+Accept-Language: en-US
+User-Agent:	CaisseEpargne/742 CFNetwork/978.0.7 Darwin/18.7.0
+
+{"validate":{"017117d1-c48e-4ed9-b006-008224a93402":[{"id":"6673c5d1-6288-4466-a21f-4d1a7e1e8056","type":"SMS","otp_sms":"DUMMY_OTP_CODE"}]}}
+
+RESPONSE 7
+200
+Content-Type: application/json
+Set-Cookie:	DACSSession_BEL_PART_REST_17515=CtxDACSP84660a81095a3c842b8b4153eb54d94beb622; Version=1; Path=/; Discard;Secure
+Set-Cookie:	JSESSIONID=YlzCQkiBq1z6lcgijVwmXNJkebKwxP0L4C7o5M6L.up0tx846; path=/; secure; HttpOnly; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:00 GMT
+Expires: 0
+
+{
+    "context": {
+        "OPS_GENERIQUE": {
+            "DESC": "{\"type_Fonct\":\"GENE\",\"type_Tech\":\"out-band\",\"gene_L1\":\"Authentifiez-vous à votre banque à distance\",\"gene_L2\":\"\",\"gene_L3\":\"\",\"gene_L4\":\"\",\"gene_L5\":\"\",\"origine\":\"mobile\",\"date_heure\":\"16-07-2020 12:33:14\"}",
+            "NOTIF_DESC": "Confirmez votre authentification à votre banque à distance",
+            "NOTIF_TITLE": "Authentification à valider",
+            "SENDER_NAME": "Caisse d'Epargne",
+            "SEND_NOTIF": "true",
+            "csid": "00000000-0000-4000-0000-000000000000",
+            "etab": "17515",
+            "media": "touch",
+            "snid": "224837",
+            "texte_sms": " Caisse d'Epargne : Confirmez votre authentification à votre banque à distance en saisissant le code suivant : ",
+            "typ_act": "sso",
+            "typ_srv": "part"
+        }
+    },
+    "id": "CtxDACSP84660a81095a3c842b8b4153eb54d94beb622",
+    "locale": "en",
+    "response": {
+        "saml2_post": {
+            "action": "https://www.as-ex-ath-groupe.caisse-epargne.fr/api/oauth/v2/consume",
+            "method": "POST",
+            "samlResponse": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHNhbWwycDpSZXNwb25zZSB4bWxuczpzYW1sMnA9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpwcm90b2NvbCIgRGVzdGluYXRpb249Imh0dHBzOi8vd3d3LmFzLWV4LWF0aC1ncm91cGUuY2Fpc3NlLWVwYXJnbmUuZnIvYXBpL29hdXRoL3YyL2NvbnN1bWUiIElEPSJDdHhEQUNTUDg0NjYwYTgxMDk1YTNjODQyYjhiNDE1M2ViNTRkOTRiZWI2MjIiIEluUmVzcG9uc2VUbz0idmNYeWlqbjNXeHRxZ29qc1E0cUYiIElzc3VlSW5zdGFudD0iMjAyMC0wNy0xNlQxMDozNDowOS4yNzlaIiBWZXJzaW9uPSIyLjAiPjxzYW1sMjpJc3N1ZXIgeG1sbnM6c2FtbDI9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3NlcnRpb24iPnVybjpkaWN0YW86ZGFjczwvc2FtbDI6SXNzdWVyPjxkczpTaWduYXR1cmUgeG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiIElkPSJUQU9fMV9TaWduYXR1cmUiPjxkczpTaWduZWRJbmZvIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj48ZHM6Q2Fub25pY2FsaXphdGlvbk1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIvPjxkczpTaWduYXR1cmVNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjcnNhLXNoYTEiLz48ZHM6UmVmZXJlbmNlIFVSST0iIj48ZHM6VHJhbnNmb3Jtcz48ZHM6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI2VudmVsb3BlZC1zaWduYXR1cmUiLz48ZHM6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIi8+PC9kczpUcmFuc2Zvcm1zPjxkczpEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjc2hhMSIvPjxkczpEaWdlc3RWYWx1ZT5BZEQ2YTlrcE1mM0w5blM0a2RLV1dBUTJScG89PC9kczpEaWdlc3RWYWx1ZT48L2RzOlJlZmVyZW5jZT48L2RzOlNpZ25lZEluZm8+PGRzOlNpZ25hdHVyZVZhbHVlIElkPSJUQU9fMV9TaWduYXR1cmVWYWx1ZSI+QU11dVFBaFlRakFaTm9HbHBtUUcyd2hoYmRPSWtjSWgyTzNJNFNQNjJ4U0ZZRE5iOFlicjl6b0xYK1JmUHVuVQpmZkdDb2R0UGpKOE1qUTZ1RDhyNGZGMElMNUNqVjR6Vit4RWZSZ0QwQ2lEbXBKQ1RRV1d2ZmlqbXRXdUJZLzRyCkpoRTVKV214Rms4blZOSVBrdEhuckp0bTYvWnRuUkkvR3RBaVJ1dkVMZ2FXeGtjU1RNRDJhV1Z5VEluengvZkwKQ2VpSm1URXZBQVZ3RTJ5alJyaGVkT2FvZUtUN1lZWDhNN2loNy9yYW1hVStnQVBNMTdvOXRFSERiaUJSaDZwawoxN3VrR2hMa2swRTN4TXd1UnRPTUE0WFdDS0ZydE85V01uY1VWb0JwU3pIUEdLTEhKVFk5RnhzUjUzSm9KN1hGCitwOXc4eVdqSlZ6bFhYN1ljVWhJL2c9PTwvZHM6U2lnbmF0dXJlVmFsdWU+PGRzOktleUluZm8gSWQ9IlRBT18xX0tleUluZm8iPjxkczpYNTA5RGF0YT48ZHM6WDUwOUNlcnRpZmljYXRlPk1JSUd5RENDQkxDZ0F3SUJBZ0lEQUsrak1BMEdDU3FHU0liM0RRRUJDd1VBTUhveEN6QUpCZ05WQkFZVEFrWlNNU0F3SGdZRFZRUUtEQmRDVUVORklDMGdRMEZKVTFORklFUWdSVkJCVWtkT1JURVhNQlVHQTFVRUN3d09NREF3TWlBME9UTTBOVFV3TkRJeE1EQXVCZ05WQkFNTUowSlFRMFVnVlVOSElFRkRSU0JOUVZSRlVrbEZURk1nUTBGSlUxTkZJRVFnUlZCQlVrZE9SVEFlRncweE9EQTFNVFF3TnpNME5URmFGdzB5TVRBMU1UTXdOek0wTlRGYU1GOHhDekFKQmdOVkJBWVRBa1pTTVEwd0N3WURWUVFLREFSQ1VFTkZNUmN3RlFZRFZRUUxEQTR3TURBeUlEUTVNelExTlRBME1qRU9NQXdHQTFVRUN3d0ZVMU5NUTBVeEdEQVdCZ05WQkFNTUQybGpaM1ZqWlM1a1lXTnpMbk5wWnpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBSWJiRUZHdE9naE9OdGZBL3VGeXRZSGUwZVlJOUs5RjVKaldtSm1xVHVzRzVoYUJza01tMTZMaWdZaTZnbUdXbWJlL3JpcnhiUVpaa0d4RHQxd2UwSjdYYkJIWkY0N2QyVEVjNFN5ZEsxcS82Nm4xVFcyVlNQUVZPa0dpUHZkYnBZd3pjMFJoV0lTOC9sdEdkVHdwS2xRbmlxdHk2UVVtWC83ekZVeU5aMnFySW5yZm5UdmNKK3VlYmJ1b1kwQWdhSEh4ZlJ0NWdEem5jZDlxZlhVOFY5MlZ6TUhBa1NEOEs4RE9WOHYrcWxPZERUSEYxUGJHUmtqdC9VcUJRMDZwd2V3SFE3L0hXdy9nclJ3ZStRTTBkQVJRU2xuWU16LzRTQnhrb3NVZTZ6djlYbDY1cHoyS3JiZG05aVpwQ1F3enhYcFR6NHFNcjdScUJMc3Ewa3NEVWU4Q0F3RUFBYU9DQW5Bd2dnSnNNQjBHQTFVZERnUVdCQlJrcUpCSWZ6RVM1ZDZLMHVvUEw3L2dVRkcybGpBZkJnTlZIU01FR0RBV2dCVC9zVDFKRHhmZkZsS1BNMktoZEEwMzlrZUdVRENCandZRFZSMGdCSUdITUlHRU1JR0JCaEFyQmdFRUFZSzhid0VBQVF1Q053RUJNRzB3YXdZSUt3WUJCUVVIQWdFV1gyaDBkSEE2THk5d2NtOHVaREF3TG5CcmFUQXlMbUp3WTJVdVpuSXZaRzlqY3k5d1l5MTFZMmN0Ykc5ME1TOVFReTFDVUVORlgxVkRSMTlCUTBWZlRVRlVSVkpKUlV4VFgwVk9WRWxVUlMxMk1TNDRNakF4TlRBMk1ERXVjR1JtTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQ0JnZ3JCZ0VGQlFjREFUQU9CZ05WSFE4QkFmOEVCQU1DQmFBd0dnWURWUjBSQkJNd0VZSVBhV05uZFdObExtUmhZM011YzJsbk1JRy9CZ05WSFI4RWdiY3dnYlF3T3FBNG9EYUdOR2gwZEhBNkx5OXdjbTh1WkRBd0xuQnJhVEF5TG1Kd1kyVXVabkl2ZFdOblgyRmpaVjh6TVRFd01TMHdNVjkyTVM1amNtd3dPcUE0b0RhR05HaDBkSEE2THk5d2NtOHVaREF4TG5CcmFUQXlMbUp3WTJVdVpuSXZkV05uWDJGalpWOHpNVEV3TVMwd01WOTJNUzVqY213d09xQTRvRGFHTkdoMGRIQTZMeTl3Y204dVpEQXlMbkJyYVRBeUxtSndZMlV1Wm5JdmRXTm5YMkZqWlY4ek1URXdNUzB3TVY5Mk1TNWpjbXd3VkFZSUt3WUJCUVVIQVFFRVNEQkdNRVFHQ0NzR0FRVUZCekFDaGpob2RIUndPaTh2Y0hKdkxtUXdNQzV3YTJrd01pNWljR05sTG1aeUwzVmpaMTloWTJWZk16RXhNREV0TURGZlkzSjBYM1l4TG1OeWREQTFCZ2tyQmdFRUFZSTNGQUlFS0I0bUFGQUFVZ0JQQUMwQVRRQkJBRlFBTFFCVEFGTUFUQUF0QURBQU1BQXhBQzBBVUFBeEFEQXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnSUJBSUJqNDU1aEhFak1acnRkQzM0czQyL2NyZ3AvSWRrR09DeVEyd0N0TkF2VWxvN0tNaGN3VUdidDZsRFZIclhoT1B2clhySWIxSGppRFozT3JUcjY1dUk2SEl2dGIwQjZ6NWFFeWtMMFp6R1hxQjRodFFTbWtzcWMvN0Y5TDhKbVNId2FuclVJTnIzRkJMOG84MnhZb1hDZ3NDcEk2clRCLzlEc3g2cE5OWnZqS0pxQk5RSWNsV0JWU1ptbndDbXgyZ2l0cW1CU1QzVkttVVlobVRYY2hjOHcvaGV1TG5Td29Zb25pTWxFWVl3bzVJcFZtM3NKV3EwTXNocjU5aEJ5TlNrSDNUSjhob2xGQXpJakFoeWxGQ3BQU2RqRkRYaVorZGU1OFJUUW1OSjExZEk5Y1k4RGgyS1kzOFNZdkVpVE56QUJaSTlwWXhkdGEvRWZWNkFlTHc4T2oyQ3NOQUVHTFpFMmpzY3pWWEJQR0EvRndQdnpkcU1mYVRYemI4dkhQTk1jT1h3QkhCa1l4c0ZkUWdWS1U5VWdQbU5hYk8wN0RRYnhvSWxDUGVNNGlXcytyVFNWV0Q4UTA4N0NqZk1vakRtR0lPamVVVVVYd0pYS1Yyc0F5eElEU212bnhKa2UvVXZ2a0NMd0daazEyN2FtQ2RCMWtwbE5yVDNKd2taUXZMZTNqYlRQZElKc3paSU5LQjB6SzZCclA0UlRQREdZcTdpbVk3cTlPeDJhTURYZ0RFN3pYZjZxaDAwQ2R0NGsrWSs4Z2lqZzVRWCtGa3dHN1NsMERIQ2xhTCs2TnRndGg1Q3lucW5EU05Jc0FTekRUYTRDRkxxU3dveVhUSGdOdVRDUDlKTUhzU01yenhFSmpJS1R6Mm5nQnJJYVd2Tlh6RTNnYndxc0Y4RVc8L2RzOlg1MDlDZXJ0aWZpY2F0ZT48L2RzOlg1MDlEYXRhPjwvZHM6S2V5SW5mbz48L2RzOlNpZ25hdHVyZT48c2FtbDJwOlN0YXR1cz48c2FtbDJwOlN0YXR1c0NvZGUgVmFsdWU9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpzdGF0dXM6U3VjY2VzcyIvPjwvc2FtbDJwOlN0YXR1cz48c2FtbDI6QXNzZXJ0aW9uIHhtbG5zOnNhbWwyPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIiBJRD0iZGFjczI1NjQ2MTc1MTVlOTRkZWE5OTcxN2U1MmE2ODAyYTI3IiBJc3N1ZUluc3RhbnQ9IjIwMjAtMDctMTZUMTA6MzQ6MDkuMjc5WiIgVmVyc2lvbj0iMi4wIj48c2FtbDI6SXNzdWVyPnVybjpkaWN0YW86ZGFjczwvc2FtbDI6SXNzdWVyPjxzYW1sMjpTdWJqZWN0PjxzYW1sMjpOYW1lSUQgRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6bmFtZWlkLWZvcm1hdDpwZXJzaXN0ZW50Ij43NTA4MjU0NTQ8L3NhbWwyOk5hbWVJRD48c2FtbDI6U3ViamVjdENvbmZpcm1hdGlvbiBNZXRob2Q9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpjbTpiZWFyZXIiPjxzYW1sMjpOYW1lSUQgRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6bmFtZWlkLWZvcm1hdDpwZXJzaXN0ZW50Ij43NTA4MjU0NTQ8L3NhbWwyOk5hbWVJRD48c2FtbDI6U3ViamVjdENvbmZpcm1hdGlvbkRhdGEgSW5SZXNwb25zZVRvPSJ2Y1h5aWpuM1d4dHFnb2pzUTRxRiIgTm90T25PckFmdGVyPSIyMDIwLTA3LTE2VDEwOjM5OjA5LjI3OVoiIFJlY2lwaWVudD0iaHR0cHM6Ly93d3cuYXMtZXgtYXRoLWdyb3VwZS5jYWlzc2UtZXBhcmduZS5mci9hcGkvb2F1dGgvdjIvY29uc3VtZSIvPjwvc2FtbDI6U3ViamVjdENvbmZpcm1hdGlvbj48L3NhbWwyOlN1YmplY3Q+PHNhbWwyOkNvbmRpdGlvbnMgTm90QmVmb3JlPSIyMDIwLTA3LTE2VDEwOjM0OjA5LjI3OVoiIE5vdE9uT3JBZnRlcj0iMjAyMC0wNy0xNlQxMDozOTowOS4yNzlaIi8+PHNhbWwyOkF0dHJpYnV0ZVN0YXRlbWVudD48c2FtbDI6QXR0cmlidXRlIE5hbWU9ImRhY3M6U2VjdXJpdHlMZXZlbCI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+OTYyPC9zYW1sMjpBdHRyaWJ1dGVWYWx1ZT48L3NhbWwyOkF0dHJpYnV0ZT48c2FtbDI6QXR0cmlidXRlIE5hbWU9IkJQQ0UtQ2RFdGFiRmlubiI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+MTc1MTU8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQXVkaWVuY2UiPjxzYW1sMjpBdHRyaWJ1dGVWYWx1ZSB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhzaTp0eXBlPSJ4czpzdHJpbmciPmh0dHBzOi8vd3d3LmNhaXNzZS1lcGFyZ25lLmZyL3NlLWNvbm5lY3Rlci88L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQlBDRS1FbnYiPjxzYW1sMjpBdHRyaWJ1dGVWYWx1ZSB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhzaTp0eXBlPSJ4czpzdHJpbmciPlBST0Q8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQlBDRS1QcmZsRmVkcklkZW4iPjxzYW1sMjpBdHRyaWJ1dGVWYWx1ZSB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhzaTp0eXBlPSJ4czpzdHJpbmciPnBhcnQ8L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjxzYW1sMjpBdHRyaWJ1dGUgTmFtZT0iQlBDRS1EdERDbnhPayI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+MjAyMC0wNy0xNlQwNjowOToyNy43MDJaPC9zYW1sMjpBdHRyaWJ1dGVWYWx1ZT48L3NhbWwyOkF0dHJpYnV0ZT48c2FtbDI6QXR0cmlidXRlIE5hbWU9IkJQQ0UtVHJhY2VJRCI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnR5cGU9InhzOnN0cmluZyI+NzUwODI1NDU0PC9zYW1sMjpBdHRyaWJ1dGVWYWx1ZT48L3NhbWwyOkF0dHJpYnV0ZT48c2FtbDI6QXR0cmlidXRlIE5hbWU9IkJQQ0UtQ2FubEZlZHJJZGVuIj48c2FtbDI6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj4zPC9zYW1sMjpBdHRyaWJ1dGVWYWx1ZT48L3NhbWwyOkF0dHJpYnV0ZT48L3NhbWwyOkF0dHJpYnV0ZVN0YXRlbWVudD48c2FtbDI6QXV0aG5TdGF0ZW1lbnQgQXV0aG5JbnN0YW50PSIyMDIwLTA3LTE2VDEwOjM0OjA5LjI0MFoiIFNlc3Npb25JbmRleD0iQ3R4REFDU1A4NDY2MGE4MTA5NWEzYzg0MmI4YjQxNTNlYjU0ZDk0YmViNjIyIj48c2FtbDI6QXV0aG5Db250ZXh0PjxzYW1sMjpBdXRobkNvbnRleHRDbGFzc1JlZj51cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YWM6Y2xhc3NlczpQYXNzd29yZC11cm46ZGljdGFvOlNNUzwvc2FtbDI6QXV0aG5Db250ZXh0Q2xhc3NSZWY+PC9zYW1sMjpBdXRobkNvbnRleHQ+PC9zYW1sMjpBdXRoblN0YXRlbWVudD48L3NhbWwyOkFzc2VydGlvbj48L3NhbWwycDpSZXNwb25zZT4K"
+        },
+        "status": "AUTHENTICATION_SUCCESS"
+    }
+}
+
+REQUEST 8
+POST https://www.as-ex-ath-groupe.caisse-epargne.fr/api/oauth/v2/consume
+Content-Type: application/x-www-form-urlencoded
+Connection:	keep-alive
+Accept:	*/*
+User-Agent:	CaisseEpargne/742 CFNetwork/978.0.7 Darwin/18.7.0
+Accept-Language: en-US
+
+SAMLResponse=PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHNhbWwycDpSZXNwb25zZSB4bWxuczpzYW1sMnA9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpwcm90b2NvbCIgRGVzdGluYXRpb249Imh0dHBzOi8vd3d3LmFzLWV4LWF0aC1ncm91cGUuY2Fpc3NlLWVwYXJnbmUuZnIvYXBpL29hdXRoL3YyL2NvbnN1bWUiIElEPSJDdHhEQUNTUDg0NjYwYTgxMDk1YTNjODQyYjhiNDE1M2ViNTRkOTRiZWI2MjIiIEluUmVzcG9uc2VUbz0idmNYeWlqbjNXeHRxZ29qc1E0cUYiIElzc3VlSW5zdGFudD0iMjAyMC0wNy0xNlQxMDozNDowOS4yNzlaIiBWZXJzaW9uPSIyLjAiPjxzYW1sMjpJc3N1ZXIgeG1sbnM6c2FtbDI9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3NlcnRpb24iPnVybjpkaWN0YW86ZGFjczwvc2FtbDI6SXNzdWVyPjxkczpTaWduYXR1cmUgeG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiIElkPSJUQU9fMV9TaWduYXR1cmUiPjxkczpTaWduZWRJbmZvIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj48ZHM6Q2Fub25pY2FsaXphdGlvbk1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIvPjxkczpTaWduYXR1cmVNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjcnNhLXNoYTEiLz48ZHM6UmVmZXJlbmNlIFVSST0iIj48ZHM6VHJhbnNmb3Jtcz48ZHM6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI2VudmVsb3BlZC1zaWduYXR1cmUiLz48ZHM6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIi8%2BPC9kczpUcmFuc2Zvcm1zPjxkczpEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjc2hhMSIvPjxkczpEaWdlc3RWYWx1ZT5BZEQ2YTlrcE1mM0w5blM0a2RLV1dBUTJScG89PC9kczpEaWdlc3RWYWx1ZT48L2RzOlJlZmVyZW5jZT48L2RzOlNpZ25lZEluZm8%2BPGRzOlNpZ25hdHVyZVZhbHVlIElkPSJUQU9fMV9TaWduYXR1cmVWYWx1ZSI%2BQU11dVFBaFlRakFaTm9HbHBtUUcyd2hoYmRPSWtjSWgyTzNJNFNQNjJ4U0ZZRE5iOFlicjl6b0xYK1JmUHVuVQpmZkdDb2R0UGpKOE1qUTZ1RDhyNGZGMElMNUNqVjR6Vit4RWZSZ0QwQ2lEbXBKQ1RRV1d2ZmlqbXRXdUJZLzRyCkpoRTVKV214Rms4blZOSVBrdEhuckp0bTYvWnRuUkkvR3RBaVJ1dkVMZ2FXeGtjU1RNRDJhV1Z5VEluengvZkwKQ2VpSm1URXZBQVZ3RTJ5alJyaGVkT2FvZUtUN1lZWDhNN2loNy9yYW1hVStnQVBNMTdvOXRFSERiaUJSaDZwawoxN3VrR2hMa2swRTN4TXd1UnRPTUE0WFdDS0ZydE85V01uY1VWb0JwU3pIUEdLTEhKVFk5RnhzUjUzSm9KN1hGCitwOXc4eVdqSlZ6bFhYN1ljVWhJL2c9PTwvZHM6U
+
+RESPONSE 8
+302
+Location: containerApp://BAPIStepUpSuccess#access_token=DUMMY_ACCESS_TOKEN_FOR_RESOURCES&token_type=Bearer&expires_in=296&id_token=eyJ4NXQjUzI1NiI6Ii0wcWxhcnBONDlOUUpmQmNReXpaLTZiXzdHRW1LTkdMS24wVEVrcnU5MzAiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdF9oYXNoIjoiNU9sVVhhMG9PbVdweVh1NVdhYmk2dyIsInN1YiI6Ijc1MDgyNTQ1NCIsImF1ZCI6WyJodHRwczovL3d3dy5hcy1leC1hdGgtZ3JvdXBlLmNhaXNzZS1lcGFyZ25lLmZyL2FwaS9vYXV0aC92Mi9hdXRob3JpemUiLCJmNGVlMjE0NC0wZDY4LTRiOTAtYWU3OC0yNWUyNTVhMWYzYWMiXSwibGFzdF9sb2dpbiI6IjIwMjAtMDctMTZUMDY6MDk6MjcuNzAyWiIsImF6cCI6ImY0ZWUyMTQ0LTBkNjgtNGI5MC1hZTc4LTI1ZTI1NWExZjNhYyIsImF1dGhfdGltZSI6MTU5NDg5NTY0OSwiaXNzIjoiaHR0cHM6Ly93d3cuYXMtZXgtYXRoLWdyb3VwZS5jYWlzc2UtZXBhcmduZS5mci9hcGkvb2F1dGgvdjIvYXV0aG9yaXplIiwiZXhwIjoxNTk0ODk1OTQ5LCJub25jZSI6IkU3REYwOEU4LUFCOTctNDcxRi05NTIzLUIwMkQ2QzU1QzFEQSIsImlhdCI6MTU5NDg5NTY0OX0.EsboGzNcYx8aFeMrqfsiHCbtiggyxliJlzpP4jo5BFrYvlMHYFBoHArMIbkTJ1tqGRLho5JJRf9YXP7oqcoTQCt4hbTtofpRumLQqyLN2QsQRfNvMD_vKzNCBJtzlLfKHYOVJ3MDvvatpLnOEe0-7mXXIoIxM543Op2t6E3OI2kGe376GosjBqdEsi6UqpQ6WePGSc0fXDMWtptu9DXUvkUvqw0MaWPIie5ZgfTTNLFcUvVKJiK7-mQZrbB_0k0kuByTlg3q4JN7OCAFYlUWo3x1TPxLzz6SHyO2eSVjlaN07jhcexRNteZ3FFW1obfRnIkjAlyPiZamttMscp6KEg
+
+REQUEST 9
+POST https://www.s.caisse-epargne.fr/V22/WsBad/WsBad.asmx
+Accept:	*/*
+VersionWsbad: V22
+SOAPAction:	http://caisse-epargne.fr/webservices/sso_BAPI
+ID_ETABLISSEMENT: 17515
+Content-Type: text/xml
+Connection:	keep-alive
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <sso_BAPI xmlns="http://caisse-epargne.fr/webservices/">
+      <modeALD>0</modeALD>
+      <idTerminal>BC086236-0CB9-4FEE-B4C3-098F9860B1B7</idTerminal>
+      <etablissement>CAISSE_EPARGNE</etablissement>
+      <at>6BtfZD2uqX3qksSnmRz3LYzkLvQgN4Nvvg2ltiQRKeN16uaL1QmxAS</at>
+    </sso_BAPI>
+  </soap:Body>
+</soap:Envelope>
+
+RESPONSE 9 SET GOT_SSO_BAPI
+200
+Set-Cookie:	ASP.NET_SessionId=ploltqntogjz02boma031tun; path=/; HttpOnly
+Set-Cookie:	.ASPXAUTH=25BDA51E0C3B551CF2A6C11BC3C1722D00901F341A21EDB9094A4D57C9023237183F0ECDFE81BA78FFBA5AC8B1BE885EFC2C2AAA6D58CCE191F8EAE41EBDD8DD4611FC64DBD929ED77F3B835CA179D3F61DE2899A625C0B12696F986FC82ABED5581C3DD5F4C1E3631D4AB26B8A8AC7D9DAC4979AEB4A55E61FDE479C464C386D3BA34F6; expires=Thu, 16-Jul-2020 11:34:13 GMT; path=/; secure; HttpOnly
+Content-Type: text/xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <sso_BAPIResponse xmlns="http://caisse-epargne.fr/webservices/">
+      <sso_BAPIResult>
+        <CodeRetour>0000</CodeRetour>
+        <LibelleRetour />
+        <Resultat xsi:type="AbonneSSO">
+          <DateConnexion>2020-07-16T12:34:13.4717571+02:00</DateConnexion>
+          <TerminalHabituel>
+            <IdentifiantInterne>12345678</IdentifiantInterne>
+            <IdentifiantTerminal>BC086236-0CB9-4FEE-B4C3-098F9860B1B7</IdentifiantTerminal>
+            <IdentifiantClient>123456789</IdentifiantClient>
+            <IdentifiantUsager>0</IdentifiantUsager>
+            <DateEnregistrement>2020-07-16T12:34:13.5356421+02:00</DateEnregistrement>
+            <ModeEnregistrement>0</ModeEnregistrement>
+            <Device>iPhone</Device>
+            <Status>1</Status>
+            <ModeVerif>0</ModeVerif>
+          </TerminalHabituel>
+          <FlagAnrTdcValide>true</FlagAnrTdcValide>
+          <CodeCaisse>17515</CodeCaisse>
+          <NumSession>06153072</NumSession>
+          <IdSession>ploltqntogjz02boma031tun</IdSession>
+          <NumeroAbonne>123456789</NumeroAbonne>
+          <NumeroAbonneCrypte>DUMMY_NO</NumeroAbonneCrypte>
+          <IdentifiantPersonne>123456789</IdentifiantPersonne>
+          <IdentifiantPersonneH>DUMMY_ID</IdentifiantPersonneH>
+          <DateDerniereConnexion>2020-07-16T08:33:34</DateDerniereConnexion>
+          <AbonnementValide>
+            <Civilite>M</Civilite>
+            <Nom>DUMMY_SURNAME</Nom>
+            <Prenom>DUMMY_NAME</Prenom>
+            <NumeroPersonne>123456789</NumeroPersonne>
+            <ListeServices>
+              <Service>
+                <Code>AUTHR</Code>
+                <Etat>00</Etat>
+              </Service>
+              <Service>
+                <Code>RNUM</Code>
+                <Etat>01</Etat>
+              </Service>
+              <Service>
+                <Code>SOL</Code>
+                <Etat>01</Etat>
+              </Service>
+              <Service>
+                <Code>ENROL</Code>
+                <Etat>10</Etat>
+              </Service>
+            </ListeServices>
+          </AbonnementValide>
+          <AuthentificationValide>
+            <ChangePwd>N</ChangePwd>
+            <CauseChangePwd />
+            <NbEssais>3</NbEssais>
+            <AncienIdBad>000000000000</AncienIdBad>
+            <AncienPwd />
+          </AuthentificationValide>
+          <NiveauServiceSelectionne>PAR</NiveauServiceSelectionne>
+          <NumeroUsager>0</NumeroUsager>
+          <IdAgPri>0000130</IdAgPri>
+          <ANR />
+          <DateNaissance>0001-01-01T00:00:00</DateNaissance>
+          <NumCetelem xsi:nil="true" />
+        </Resultat>
+      </sso_BAPIResult>
+    </sso_BAPIResponse>
+  </soap:Body>
+</soap:Envelope>
+
+REQUEST 10
+GET https://www.rs-ex-ath-groupe.caisse-epargne.fr/bapi/transfer/v2/transferCreditors
+Connection:	keep-alive
+Accept:	*/*
+Authorization:	Bearer DUMMY_ACCESS_TOKEN_FOR_RESOURCES
+
+RESPONSE 10
+200
+Set-Cookie:	JSESSIONID=ceFPFEJPbZVuasUW40CHyEC9sZAh3pljS0M8aN4C.celpjbs005.dom101.prdres:JVM_ROA_PRD_SG2; path=/bapi/transfer
+Set-Cookie:	LB_APA_BAPI_PRO=rd2o00000000000000000000ffff647b5110o39080; path=/; Httponly
+Content-Type: application/json;charset=UTF-8
+
+{
+    "_links": null,
+    "items": [
+        {
+            "identification": {
+                "transferCreditorId": {
+                    "entityCode": "17515",
+                    "id": "DUMMY_ID_1"
+                }
+            },
+            "transferCreditorIdentity": {
+                "activationDate": null,
+                "balance": {
+                    "currencyCode": "EUR",
+                    "value": 2556.31
+                },
+                "bankLabel": "Caisse d'Epargne Ile-de-France",
+                "bic": "CEPAFRPP751",
+                "creditorType": {
+                    "code": "1",
+                    "label": null
+                },
+                "creditorUse": [
+                    {
+                        "transferCategoryType": {
+                            "code": "1",
+                            "label": null
+                        }
+                    }
+                ],
+                "designationLabel": "DUMMY_LABEL",
+                "email": "",
+                "holderIndicator": true,
+                "iban": null,
+                "label": "CPT DEPOT PART.",
+                "phoneNumber": null,
+                "reference": "04134777368",
+                "rib": {
+                    "accountNumber": "01234567890",
+                    "bankid": "17515",
+                    "deskid": "90000",
+                    "ribKey": "58"
+                }
+            }
+        },
+        {
+            "identification": {
+                "transferCreditorId": {
+                    "entityCode": "17515",
+                    "id": "DUMMY_ID_2"
+                }
+            },
+            "transferCreditorIdentity": {
+                "activationDate": null,
+                "balance": {
+                    "currencyCode": "EUR",
+                    "value": 10.0
+                },
+                "bankLabel": "Caisse d'Epargne Ile-de-France",
+                "bic": "CEPAFRPP751",
+                "creditorType": {
+                    "code": "1",
+                    "label": null
+                },
+                "creditorUse": [
+                    {
+                        "transferCategoryType": {
+                            "code": "1",
+                            "label": null
+                        }
+                    }
+                ],
+                "designationLabel": "DUMMY_LABEL",
+                "email": "",
+                "holderIndicator": true,
+                "iban": null,
+                "label": "LIVRET JEUNE",
+                "phoneNumber": null,
+                "reference": "DUMMY_REFERENCE",
+                "rib": {
+                    "accountNumber": "1234567891",
+                    "bankid": "17515",
+                    "deskid": "90000",
+                    "ribKey": "12"
+                }
+            }
+        },
+        {
+            "identification": {
+                "transferCreditorId": {
+                    "entityCode": "17515",
+                    "id": "DUMMY_ID_3"
+                }
+            },
+            "transferCreditorIdentity": {
+                "activationDate": null,
+                "balance": null,
+                "bankLabel": "Crédit Agricole",
+                "bic": "AGRIFRPP829",
+                "creditorType": {
+                    "code": "2",
+                    "label": null
+                },
+                "creditorUse": [
+                    {
+                        "transferCategoryType": {
+                            "code": "1",
+                            "label": null
+                        }
+                    },
+                    {
+                        "transferCategoryType": {
+                            "code": "2",
+                            "label": null
+                        }
+                    }
+                ],
+                "designationLabel": "DUMMY_LABEL",
+                "email": null,
+                "holderIndicator": false,
+                "iban": "FR7630056005020502000363678",
+                "label": null,
+                "phoneNumber": null,
+                "reference": "FR7630056005020502000363678",
+                "rib": null
+            }
+        },
+        {
+            "identification": {
+                "transferCreditorId": {
+                    "entityCode": "17515",
+                    "id": "DUMMY_ID"
+                }
+            },
+            "transferCreditorIdentity": {
+                "activationDate": null,
+                "balance": null,
+                "bankLabel": "BNP Paribas",
+                "bic": "BNPAFRPPXXX",
+                "creditorType": {
+                    "code": "2",
+                    "label": null
+                },
+                "creditorUse": [
+                    {
+                        "transferCategoryType": {
+                            "code": "1",
+                            "label": null
+                        }
+                    },
+                    {
+                        "transferCategoryType": {
+                            "code": "2",
+                            "label": null
+                        }
+                    }
+                ],
+                "designationLabel": "DUMMY_LABEL",
+                "email": null,
+                "holderIndicator": false,
+                "iban": "FR7630006000011234567890189",
+                "label": null,
+                "phoneNumber": null,
+                "reference": "FR7630006000011234567890189",
+                "rib": null
+            }
+        }
+    ],
+    "messageResponse": null,
+    "page": null,
+    "sort": null
+}
+
+REQUEST 11 MATCH GOT_SSO_BAPI
+POST https://www.s.caisse-epargne.fr/V22/WsBad/WsBad.asmx
+Accept:	*/*
+SOAPAction:	http://caisse-epargne.fr/webservices/GetSyntheseCpteAbonnement
+Content-Type: text/xml
+Connection:	keep-alive
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <GetSyntheseCpteAbonnement xmlns="http://caisse-epargne.fr/webservices/"/>
+  </soap:Body>
+</soap:Envelope>
+
+RESPONSE 11 SET GOT_ACCOUNTS
+200
+Content-Type: text/xml; charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <GetSyntheseCpteAbonnementResponse xmlns="http://caisse-epargne.fr/webservices/">
+      <GetSyntheseCpteAbonnementResult>
+        <CodeRetour>0000</CodeRetour>
+        <LibelleRetour>La requête s'est bien déroulée (0000).</LibelleRetour>
+        <Resultat xsi:type="SyntheseCompteInterne">
+          <Resultat>0000</Resultat>
+          <Message />
+          <NumeroAbonne>DUMMY_ID</NumeroAbonne>
+          <lstComptesInternesTit>
+            <CompteInterneSynt>
+              <NumeroRib>17515900000404241124191</NumeroRib>
+              <NumeroCompteReduit>DUMMY_NUMBER</NumeroCompteReduit>
+              <LibelleTypeProduit>DUMMY_NAME</LibelleTypeProduit>
+              <MontantSoldeCompte>2563.00</MontantSoldeCompte>
+              <CodeDevise>EUR</CodeDevise>
+              <IntituleProduit>DUMMY_NAME</IntituleProduit>
+              <LibelleAbregeTypeProduit>C.CHEQUE</LibelleAbregeTypeProduit>
+              <IsClicable>true</IsClicable>
+              <CodeSens>C</CodeSens>
+              <MontantDecouvert>20000</MontantDecouvert>
+              <CodeDeviseDecouvert>EUR</CodeDeviseDecouvert>
+              <CodeSensDecouvert>C</CodeSensDecouvert>
+              <CodeProduit>04</CodeProduit>
+              <CodeCategorieProduit>A</CodeCategorieProduit>
+              <NumeroRibCompteLie />
+              <IndicateurChequierRice>R</IndicateurChequierRice>
+              <Personnalise>false</Personnalise>
+              <SeuilMin>0</SeuilMin>
+              <SeuilMax>0</SeuilMax>
+              <NvAutoCpt />
+            </CompteInterneSynt>
+          </lstComptesInternesTit>
+          <lstComptesInternesAutre />
+        </Resultat>
+      </GetSyntheseCpteAbonnementResult>
+    </GetSyntheseCpteAbonnementResponse>
+  </soap:Body>
+</soap:Envelope>
+
+REQUEST 12 MATCH GOT_ACCOUNTS
+POST https://www.s.caisse-epargne.fr/V22/WsBad/WsBad.asmx
+Accept:	*/*
+SOAPAction:	http://caisse-epargne.fr/webservices/GetRice
+Content-Type: text/xml
+Connection:	keep-alive
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <GetRice xmlns="http://caisse-epargne.fr/webservices/">
+      <cpt>17515900000413477736858</cpt>
+    </GetRice>
+  </soap:Body>
+</soap:Envelope>
+
+RESPONSE 12 SET GOT_ACCOUNT_DETAILS_1
+200
+Content-Type: text/xml; charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <GetRiceResponse xmlns="http://caisse-epargne.fr/webservices/">
+      <GetRiceResult>
+        <CodeRetour>0000</CodeRetour>
+        <LibelleRetour>La requête s'est bien déroulée (0000).</LibelleRetour>
+        <Resultat xsi:type="Rice">
+          <CodeInseePaysAgence />
+          <CodeInseePaysTitulaire />
+          <AdresseTitulaire>
+            <string>DUMMY_ADDRESS</string>
+            <string />
+            <string>75015 PARIS</string>
+            <string xsi:nil="true" />
+            <string xsi:nil="true" />
+          </AdresseTitulaire>
+          <AdresseAgence>
+            <string>LA DEFENSE</string>
+            <string>14 PLACE DE LA DEFENSE</string>
+            <string>92400 COURBEVOIE</string>
+            <string xsi:nil="true" />
+            <string xsi:nil="true" />
+            <string>TEL : 01.71.09.61.14</string>
+          </AdresseAgence>
+          <CleRib>58</CleRib>
+          <CodeBic>CEPAFRPP751</CodeBic>
+          <CodeGuicIntb>90000</CodeGuicIntb>
+          <CodeIban>DUMMY_IBAN_1</CodeIban>
+          <IdntEtabGce>17515</IdntEtabGce>
+          <InttlCpte />
+          <LiblGuicIntb />
+          <NumrPrdt>04134777368</NumrPrdt>
+          <NumTelAgence>TEL : 01.71.09.61.14</NumTelAgence>
+          <LibelleCaisse>CE CEIDF</LibelleCaisse>
+        </Resultat>
+      </GetRiceResult>
+    </GetRiceResponse>
+  </soap:Body>
+</soap:Envelope>
+
+REQUEST 13 MATCH GOT_ACCOUNT_DETAILS_1
+POST https://www.s.caisse-epargne.fr/V22/WsBad/WsBad.asmx
+Accept:	*/*
+SOAPAction:	http://caisse-epargne.fr/webservices/GetHistoriqueOperationsByCompte
+Content-Type: text/xml
+Connection:	keep-alive
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <GetHistoriqueOperationsByCompte xmlns="http://caisse-epargne.fr/webservices/">
+      <cpt>17515900000661737445344</cpt>
+      <nbOp>50</nbOp>
+      <typeDemandeNav>D</typeDemandeNav>
+      <bufferNav></bufferNav>
+    </GetHistoriqueOperationsByCompte>
+  </soap:Body>
+</soap:Envelope>
+
+RESPONSE 13 SET GOT_TRANSACTION_1
+200
+Content-Type: text/xml; charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <GetHistoriqueOperationsByCompteResponse xmlns="http://caisse-epargne.fr/webservices/">
+      <GetHistoriqueOperationsByCompteResult>
+        <CodeRetour>0000</CodeRetour>
+        <LibelleRetour>La requête s'est bien déroulée (0000).</LibelleRetour>
+        <Resultat xsi:type="Histo">
+          <IndicateurNav>F</IndicateurNav>
+          <BufferSuite />
+          <Nb_Op>5</Nb_Op>
+          <Nb_Op_Tot>5</Nb_Op_Tot>
+          <IndiceExaustif>C</IndiceExaustif>
+          <ListHistoCpt>
+            <HistoCpt>
+              <DateOprt>2020-06-10T00:00:00</DateOprt>
+              <LiblOprt>DUMMY_DESCRIPTION_1</LiblOprt>
+              <MtOprt>20866</MtOprt>
+              <CodeDevise>EUR</CodeDevise>
+              <SensOprt>D</SensOprt>
+              <RefrOprt>1006202020200610-02.26.24.807636</RefrOprt>
+              <CodeTypeEcrit>R</CodeTypeEcrit>
+              <CodeTypeOp>01</CodeTypeOp>
+            </HistoCpt>
+            <HistoCpt>
+              <DateOprt>2020-06-10T00:00:00</DateOprt>
+              <LiblOprt>DUMMY_DESCRIPTION_2</LiblOprt>
+              <MtOprt>7067</MtOprt>
+              <CodeDevise>EUR</CodeDevise>
+              <SensOprt>D</SensOprt>
+              <RefrOprt>1006202020200610-00.45.58.004294</RefrOprt>
+              <CodeTypeEcrit>R</CodeTypeEcrit>
+              <CodeTypeOp>01</CodeTypeOp>
+            </HistoCpt>
+          </ListHistoCpt>
+          <MttSoldeCompte>1000</MttSoldeCompte>
+          <SensSoldeCompte>C</SensSoldeCompte>
+        </Resultat>
+      </GetHistoriqueOperationsByCompteResult>
+    </GetHistoriqueOperationsByCompteResponse>
+  </soap:Body>
+</soap:Envelope>
+
+REQUEST 14 MATCH GOT_TRANSACTION_1
+POST https://www.s.caisse-epargne.fr/V22/WsBad/WsBad.asmx
+Accept:	*/*
+SOAPAction:	http://caisse-epargne.fr/webservices/GetRice
+Content-Type: text/xml
+Connection:	keep-alive
+
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><GetRice xmlns="http://caisse-epargne.fr/webservices/"><cpt>17515900000189538636321</cpt></GetRice></soap:Body></soap:Envelope>
+
+RESPONSE 14 SET GOT_ACCOUNT_DETAILS_2
+200
+Content-Type: text/xml; charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <GetRiceResponse xmlns="http://caisse-epargne.fr/webservices/">
+      <GetRiceResult>
+        <CodeRetour>0000</CodeRetour>
+        <LibelleRetour>La requête s'est bien déroulée (0000).</LibelleRetour>
+        <Resultat xsi:type="Rice">
+          <CodeInseePaysAgence />
+          <CodeInseePaysTitulaire />
+          <AdresseTitulaire>
+            <string>DUMMY_ADDRESS</string>
+            <string />
+            <string>75015 PARIS</string>
+            <string xsi:nil="true" />
+            <string xsi:nil="true" />
+          </AdresseTitulaire>
+          <AdresseAgence>
+            <string>LA DEFENSE</string>
+            <string>14 PLACE DE LA DEFENSE</string>
+            <string>92400 COURBEVOIE</string>
+            <string xsi:nil="true" />
+            <string xsi:nil="true" />
+            <string>TEL : 01.71.09.61.14</string>
+          </AdresseAgence>
+          <CleRib>58</CleRib>
+          <CodeBic>CEPAFRPP751</CodeBic>
+          <CodeGuicIntb>90000</CodeGuicIntb>
+          <CodeIban>DUMMY_IBAN_1</CodeIban>
+          <IdntEtabGce>17515</IdntEtabGce>
+          <InttlCpte />
+          <LiblGuicIntb />
+          <NumrPrdt>04134777368</NumrPrdt>
+          <NumTelAgence>TEL : 01.71.09.61.14</NumTelAgence>
+          <LibelleCaisse>CE CEIDF</LibelleCaisse>
+        </Resultat>
+      </GetRiceResult>
+    </GetRiceResponse>
+  </soap:Body>
+</soap:Envelope>

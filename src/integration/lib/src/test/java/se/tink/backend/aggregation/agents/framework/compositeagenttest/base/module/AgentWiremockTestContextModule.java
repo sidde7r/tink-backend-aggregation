@@ -42,7 +42,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
     private final String providerName;
     private final AgentsServiceConfiguration configuration;
     private final Map<String, String> loginDetails;
-    private final String supplementalInfoForCredentials;
+    private final String credentialPayload;
     private final Map<String, String> callbackData;
     private final Map<String, String> persistentStorageData;
 
@@ -51,14 +51,14 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
             String providerName,
             AgentsServiceConfiguration configuration,
             Map<String, String> loginDetails,
-            String supplementalInfoForCredentials,
+            String credentialPayload,
             Map<String, String> callbackData,
             Map<String, String> persistentStorageData) {
         this.marketCode = marketCode;
         this.providerName = providerName;
         this.configuration = configuration;
         this.loginDetails = loginDetails;
-        this.supplementalInfoForCredentials = supplementalInfoForCredentials;
+        this.credentialPayload = credentialPayload;
         this.callbackData = callbackData;
         this.persistentStorageData = persistentStorageData;
     }
@@ -84,7 +84,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
     @Provides
     @Singleton
     private SupplementalRequester provideSupplementalRequester() {
-        return new MockSupplementalRequester(supplementalInfoForCredentials, callbackData);
+        return new MockSupplementalRequester(callbackData);
     }
 
     @Provides
@@ -119,6 +119,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
         credential.setProviderName(provider.getName());
         credential.setType(provider.getCredentialsType());
         credential.setFields(loginDetails);
+        credential.setPayload(credentialPayload);
         credential.setSensitivePayload(
                 Field.Key.PERSISTENT_STORAGE,
                 SerializationUtils.serializeToString(persistentStorageData));

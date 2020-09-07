@@ -51,6 +51,7 @@ public final class AgentWireMockRefreshTest {
             Set<String> wireMockFilePaths,
             AgentsServiceConfiguration configuration,
             Map<String, String> loginDetails,
+            String credentialPayload,
             Map<String, String> callbackData,
             Map<String, String> persistentStorageData,
             TestModule agentTestModule,
@@ -79,7 +80,7 @@ public final class AgentWireMockRefreshTest {
                                 providerName,
                                 configuration,
                                 loginDetails,
-                                null,
+                                credentialPayload,
                                 callbackData,
                                 persistentStorageData),
                         new RefreshRequestModule(
@@ -164,6 +165,7 @@ public final class AgentWireMockRefreshTest {
         private final String providerName;
         private final Set<String> wireMockFilePaths;
         private final Map<String, String> credentialFields;
+        private String credentialPayload;
         private final Map<String, String> callbackData;
         private final Map<String, String> persistentStorageData;
         private final Set<RefreshableItem> refreshableItems;
@@ -210,6 +212,11 @@ public final class AgentWireMockRefreshTest {
          */
         public Builder addCredentialField(String key, String value) {
             credentialFields.put(key, value);
+            return this;
+        }
+
+        public Builder addCredentialPayload(String credentialPayload) {
+            this.credentialPayload = credentialPayload;
             return this;
         }
 
@@ -363,6 +370,7 @@ public final class AgentWireMockRefreshTest {
                     wireMockFilePaths,
                     configuration,
                     credentialFields,
+                    credentialPayload,
                     callbackData,
                     persistentStorageData,
                     agentTestModule,
