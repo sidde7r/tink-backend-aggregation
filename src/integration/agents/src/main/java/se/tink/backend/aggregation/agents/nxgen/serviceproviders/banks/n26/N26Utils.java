@@ -29,11 +29,11 @@ public class N26Utils {
             HttpResponseException ex, ErrorResponse errorResponse) {
 
         String error = errorResponse.getError();
-        if (N26Constants.Errors.continueList.contains(error)) {
+        if (N26Constants.Errors.CONTINUE_LIST.contains(error)) {
             return Optional.empty();
         }
 
-        Optional<AgentError> translate = N26Constants.Errors.errorsMap.translate(error);
+        Optional<AgentError> translate = N26Constants.Errors.ERRORS_MAP.translate(error);
         return translate
                 .map(
                         a -> {
