@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
@@ -13,19 +14,23 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.GenericResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class SwedbankAuthenticationController
@@ -113,8 +118,20 @@ public class SwedbankAuthenticationController
     @Override
     public BankIdStatus collect(AuthenticationResponse reference) throws AuthenticationException {
         final String collectAuthUri = reference.getCollectAuthUri();
-        final AuthenticationStatusResponse authenticationStatusResponse =
-                authenticator.collect(ssn, collectAuthUri);
+        final AuthenticationStatusResponse authenticationStatusResponse;
+
+        try {
+            authenticationStatusResponse = authenticator.collect(ssn, collectAuthUri);
+        } catch (HttpResponseException e) {
+            GenericResponse genericResponse = e.getResponse().getBody(GenericResponse.class);
+            if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN
+                    && genericResponse.isKycError()) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                        EndUserMessage.MUST_ANSWER_KYC.getKey());
+            } else {
+                return BankIdStatus.FAILED_UNKNOWN;
+            }
+        }
 
         switch (authenticationStatusResponse.getScaStatus().toLowerCase()) {
             case AuthStatus.RECEIVED:
