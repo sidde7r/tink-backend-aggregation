@@ -17,6 +17,6 @@ public class PopPankkiAgent extends SamlinkAgent {
         super(
                 componentProvider,
                 qsealcSigner,
-                new SamlinkAgentsConfiguration(PopPankkiConstants.Urls.BASEURL, Urls.BASEOAUTHURL));
+                new SamlinkAgentsConfiguration(Urls.BASEURL, Urls.BASEOAUTHURL));
     }
 }
