@@ -1,32 +1,30 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.Base64;
-import java.util.HashMap;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.Params;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class SoftwareStatementAssertion {
 
-    private String softwareId;
+    private final String softwareId;
 
-    public SoftwareStatementAssertion(String assertion) {
-        try {
-            final DecodedJWT decodedSsa = JWT.decode(assertion);
-            this.softwareId = decodedSsa.getClaim(Params.SOFTWARE_ID).asString();
-        } catch (JWTDecodeException e) {
-            final String json = new String(Base64.getDecoder().decode(assertion));
-            this.softwareId =
-                    (String)
-                            SerializationUtils.deserializeFromString(
-                                            json, new TypeReference<HashMap<String, Object>>() {})
-                                    .get("software_id");
-        }
+    private SoftwareStatementAssertion(String softwareId) {
+        this.softwareId = softwareId;
+    }
+
+    public static SoftwareStatementAssertion fromJWT(String jwt) {
+        final DecodedJWT decodedSsa = JWT.decode(jwt);
+        String softwareId = decodedSsa.getClaim(Params.SOFTWARE_ID).asString();
+        return new SoftwareStatementAssertion(softwareId);
+    }
+
+    @lombok.SneakyThrows
+    public static SoftwareStatementAssertion fromJson(String json) {
+        String softwareId = new ObjectMapper().readTree(json).get("software_id").asText();
+        return new SoftwareStatementAssertion(softwareId);
     }
 
     public String getSoftwareId() {

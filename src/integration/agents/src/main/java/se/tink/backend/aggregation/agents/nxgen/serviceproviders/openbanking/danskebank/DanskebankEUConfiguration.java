@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.danskebank;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
@@ -7,6 +7,7 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInject;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInt;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaString;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
+import java.util.Base64;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.annotations.Secret;
@@ -16,15 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationOverride;
 
-public class DanskebankConfiguration implements UkOpenBankingClientConfigurationAdapter {
-
-    @JsonProperty(required = true)
-    @JsonSchemaDescription("0015800000jf7AeAAI (Danske Bank’s OrgId)")
-    @JsonSchemaTitle("Organization ID")
-    @JsonSchemaInject(strings = {@JsonSchemaString(path = "pattern", value = "0015800000jf7AeAAI")})
-    @JsonSchemaExamples("0015800000jf7AeAAI")
-    @Secret
-    private String organizationId;
+public class DanskebankEUConfiguration implements UkOpenBankingClientConfigurationAdapter {
 
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
 
@@ -67,7 +60,8 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
 
     @Override
     public SoftwareStatementAssertion getSoftwareStatementAssertions() {
-        return new SoftwareStatementAssertion(softwareStatementAssertion);
+        return SoftwareStatementAssertion.fromJson(
+                new String(Base64.getDecoder().decode(softwareStatementAssertion)));
     }
 
     @Override

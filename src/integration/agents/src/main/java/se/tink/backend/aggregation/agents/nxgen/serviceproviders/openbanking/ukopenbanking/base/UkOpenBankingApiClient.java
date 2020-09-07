@@ -81,6 +81,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         this.randomValueGenerator = randomValueGenerator;
         this.aisConfig = aisConfig;
         addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
     }
 
     private <T extends AccountPermissionResponse> T createAccountIntentId(Class<T> responseType) {
@@ -172,8 +173,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         return httpClient
                 .request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .addFilter(getAisAuthFilter())
-                .addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
+                .addFilter(getAisAuthFilter());
     }
 
     public String fetchIntentIdString() {

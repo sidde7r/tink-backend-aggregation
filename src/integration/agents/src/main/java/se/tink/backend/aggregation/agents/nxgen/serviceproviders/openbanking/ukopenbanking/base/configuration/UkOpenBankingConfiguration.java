@@ -131,7 +131,7 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
 
     @Override
     public SoftwareStatementAssertion getSoftwareStatementAssertions() {
-        return new SoftwareStatementAssertion(softwareStatementAssertion);
+        return SoftwareStatementAssertion.fromJWT(softwareStatementAssertion);
     }
 
     @Override

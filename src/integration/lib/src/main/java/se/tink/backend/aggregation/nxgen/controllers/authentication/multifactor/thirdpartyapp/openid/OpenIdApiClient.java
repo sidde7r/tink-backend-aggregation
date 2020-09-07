@@ -255,7 +255,6 @@ public class OpenIdApiClient {
     public URL buildAuthorizeUrl(
             String state, String nonce, ClientMode mode, String callbackUri, URL authEndpoint) {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
-        ;
 
         String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
 
@@ -289,16 +288,12 @@ public class OpenIdApiClient {
 
     public void instantiateAisAuthFilter(OAuth2Token token) {
         logger.debug("Instantiating the Ais Auth Filter.");
-        aisAuthFilter =
-                new OpenIdAuthenticatedHttpFilter(
-                        token, providerConfiguration, null, null, randomValueGenerator);
+        aisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, randomValueGenerator);
     }
 
     public void instantiatePisAuthFilter(OAuth2Token token) {
         logger.debug("Instantiating the Pis Auth Filter.");
-        pisAuthFilter =
-                new OpenIdAuthenticatedHttpFilter(
-                        token, providerConfiguration, null, null, randomValueGenerator);
+        pisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, randomValueGenerator);
     }
 
     public void storeOpenIdError(OpenIdError error) {

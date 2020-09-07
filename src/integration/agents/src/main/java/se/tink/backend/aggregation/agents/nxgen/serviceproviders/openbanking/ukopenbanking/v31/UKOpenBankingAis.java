@@ -117,7 +117,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
 
     @Override
     public String getOrganisationId() {
-        return null;
+        return organisationId;
     }
 
     // TODO replace with lombok builder

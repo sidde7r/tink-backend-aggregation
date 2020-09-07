@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankAisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankEUConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant.Url.V31;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
@@ -53,6 +53,6 @@ public class DanskebankV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected Class<? extends UkOpenBankingClientConfigurationAdapter>
             getClientConfigurationFormat() {
-        return DanskebankConfiguration.class;
+        return DanskebankEUConfiguration.class;
     }
 }
