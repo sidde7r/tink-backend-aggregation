@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.DanskeBankBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.transfer.DanskeBankExecutorHelper;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.transfer.DanskeBankSETransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
@@ -11,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -48,5 +52,20 @@ public class DanskeBankSEAgent extends DanskeBankAgent {
                 new PasswordAuthenticationController(
                         new DanskeBankPasswordAuthenticator(
                                 apiClient, deviceId, configuration, credentials)));
+    }
+
+    @Override
+    protected Optional<TransferController> constructTransferController() {
+        DanskeBankExecutorHelper executorHelper =
+                new DanskeBankExecutorHelper(
+                        (DanskeBankSEApiClient) apiClient,
+                        deviceId,
+                        configuration,
+                        supplementalRequester);
+        DanskeBankSETransferExecutor transferExecutor =
+                new DanskeBankSETransferExecutor(
+                        (DanskeBankSEApiClient) apiClient, configuration, executorHelper, catalog);
+
+        return Optional.of(new TransferController(null, transferExecutor));
     }
 }

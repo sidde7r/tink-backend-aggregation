@@ -147,6 +147,34 @@ public class DanskeBankConstants {
 
     // == END IdentityData ==
 
+    // == START Transfers ==
+
+    public String getListPayeesUrl() {
+        return getE4BaseUrl() + "/payee/list";
+    }
+
+    public String getCreditorNameUrl() {
+        return getE4BaseUrl() + "/transfers/getCreditorName";
+    }
+
+    public String getCreditorBankNameUrl() {
+        return getE4BaseUrl() + "/transfers/getBankName";
+    }
+
+    public String getValidatePaymentRequestUrl() {
+        return getE4BaseUrl() + "/transfers/validateBookDate";
+    }
+
+    public String getRegisterPaymentUrl() {
+        return getBaseUrl() + "/ValidateSignature";
+    }
+
+    public String getAcceptSignatureUrl(String signatureType) {
+        return getBaseUrl() + "/AcceptSignature?signatureType=" + signatureType;
+    }
+
+    // == END Transfers ==
+
     public static class Device {
         public static final String DEVICE_TYPE_CODE_APP = "CODEAPP";
         public static final String DEVICE_TYPE_OTP_CARD = "OTPCARD";
@@ -286,5 +314,9 @@ public class DanskeBankConstants {
 
     public static class HttpClientParams {
         public static final int CLIENT_TIMEOUT = 60 * 1000;
+    }
+
+    public static class Transfer {
+        public static final int MAX_POLL_ATTEMPTS = 90;
     }
 }

@@ -9,6 +9,7 @@ public abstract class AbstractResponse {
     private String responseMessage;
     private String sessionId;
     private String userId;
+    private int statusCode;
 
     public String getEupToken() {
         return eupToken;
@@ -28,5 +29,9 @@ public abstract class AbstractResponse {
 
     public String getUserId() {
         return userId;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
     }
 }

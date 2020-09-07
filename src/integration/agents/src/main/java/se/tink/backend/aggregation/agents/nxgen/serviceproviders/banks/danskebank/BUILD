@@ -40,6 +40,7 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_apache_commons_commons_text",
         "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",

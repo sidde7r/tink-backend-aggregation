@@ -57,4 +57,22 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
                 .map(account -> account.toCreditCardAccount(configuration))
                 .collect(Collectors.toList());
     }
+
+    public boolean isOwnAccount(String identifier) {
+        return accounts.stream()
+                .filter(
+                        accountEntity ->
+                                accountEntity.getAccountNoExt().equalsIgnoreCase(identifier))
+                .findFirst()
+                .isPresent();
+    }
+
+    public AccountEntity findAccount(String identifier) {
+        return accounts.stream()
+                .filter(
+                        accountEntity ->
+                                accountEntity.getAccountNoExt().equalsIgnoreCase(identifier))
+                .findFirst()
+                .get();
+    }
 }
