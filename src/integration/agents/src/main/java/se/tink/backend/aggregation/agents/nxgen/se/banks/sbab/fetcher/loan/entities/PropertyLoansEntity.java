@@ -40,7 +40,7 @@ public class PropertyLoansEntity {
                 .withLoanDetails(
                         LoanModule.builder()
                                 .withType(getLoanType())
-                                .withBalance(getLoanAmount())
+                                .withBalance(getLoanAmount().negate())
                                 .withInterestRate(getLoanTerms().getInterestRate().doubleValue())
                                 .setAmortized(getAmortizied())
                                 .setApplicants(getApplicants())

@@ -5,9 +5,9 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "SEK",
-        "doubleValue": 9.85,
-        "scale": 2,
         "unscaledValue": 985,
+        "scale": 2,
+        "doubleValue": 9.85,
         "exactValue": 9.85
       },
       "currencyCode": "SEK",
@@ -42,10 +42,10 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "SEK",
-        "doubleValue": 1000000.0,
+        "unscaledValue": -10000000,
         "scale": 1,
-        "unscaledValue": 10000000,
-        "exactValue": 1000000.0
+        "doubleValue": -1000000.0,
+        "exactValue": -1000000.0
       },
       "currencyCode": "SEK",
       "bankId": "12345678",
@@ -61,16 +61,16 @@
       "closed": false,
       "flags": "[]",
       "availableCredit": 0.0,
-      "balance": 1000000.0
+      "balance": -1000000.0
     },
     {
       "accountNumber": "56789123456",
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "SEK",
-        "doubleValue": 5179.32,
-        "scale": 2,
         "unscaledValue": 517932,
+        "scale": 2,
+        "doubleValue": 5179.32,
         "exactValue": 5179.32
       },
       "currencyCode": "SEK",
@@ -509,8 +509,6 @@
     "dateOfBirth": {
       "year": 1912,
       "month": "DECEMBER",
-      "monthValue": 12,
-      "dayOfMonth": 12,
       "dayOfWeek": "THURSDAY",
       "leapYear": true,
       "dayOfYear": 347,
@@ -518,6 +516,8 @@
         "id": "ISO",
         "calendarType": "iso8601"
       },
+      "monthValue": 12,
+      "dayOfMonth": 12,
       "era": "CE"
     }
   }
