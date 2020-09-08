@@ -31,6 +31,9 @@ public class SwedbankSEConstants {
                     .put(
                             "savingsbank-youth",
                             new ProfileParameters("savingsbank-youth", "LFQP9KuzqNBJOosw", true))
+                    .put(
+                            "savingsbank-business",
+                            new ProfileParameters("savingsbank-business", "3tw7Anux312vVqZv", true))
                     .build();
 
     public static class StorageKey {
