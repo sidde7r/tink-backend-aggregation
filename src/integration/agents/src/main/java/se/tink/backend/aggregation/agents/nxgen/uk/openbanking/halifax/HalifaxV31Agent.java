@@ -35,6 +35,7 @@ public class HalifaxV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 new UKOpenBankingAis.Builder()
+                        .withOrganisationId("0015800000jfPKvAAM")
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.WELL_KNOWN_URL)
                         .withAppToAppURL(V31.APP_TO_APP_AUTH_URL)

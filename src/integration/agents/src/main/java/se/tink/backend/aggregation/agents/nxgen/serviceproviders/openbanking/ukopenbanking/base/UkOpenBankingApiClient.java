@@ -39,10 +39,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.JWTSignatureHeaders.PAYLOAD;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.FinancialOrganisationIdFilter;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner.Algorithm;
@@ -63,7 +64,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             JwtSigner signer,
             SoftwareStatementAssertion softwareStatement,
             String redirectUrl,
-            ProviderConfiguration providerConfiguration,
+            ClientInfo providerConfiguration,
             URL wellKnownURL,
             RandomValueGenerator randomValueGenerator,
             PersistentStorage persistentStorage,
@@ -80,6 +81,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         this.randomValueGenerator = randomValueGenerator;
         this.aisConfig = aisConfig;
         addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
     }
 
     private <T extends AccountPermissionResponse> T createAccountIntentId(Class<T> responseType) {
@@ -249,7 +251,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         // Refer : https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1112670669/W007
         // remove this check once this wavier times out
         // Monzo organization ID check
-        if (MONZO_ORG_ID.equals(providerConfiguration.getOrganizationId())) {
+        if (MONZO_ORG_ID.equals(aisConfig.getOrganisationId())) {
             return createPs256SignatureWithoutB64Header(payloadClaims);
         } else {
             return createPs256SignatureWithB64Header(payloadClaims);

@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.EidasJwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
@@ -70,7 +70,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     protected UkOpenBankingApiClient apiClient;
     protected SoftwareStatementAssertion softwareStatement;
-    protected ProviderConfiguration providerConfiguration;
+    protected ClientInfo providerConfiguration;
     private boolean disableSslVerification;
 
     private TransferDestinationRefreshController transferDestinationRefreshController;
@@ -163,7 +163,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             JwtSigner signer,
             SoftwareStatementAssertion softwareStatement,
             String redirectUrl,
-            ProviderConfiguration providerConfiguration) {
+            ClientInfo providerConfiguration) {
         return new UkOpenBankingApiClient(
                 httpClient,
                 signer,

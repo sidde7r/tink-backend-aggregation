@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.LocalKeySigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
@@ -24,15 +23,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 @JsonObject
 public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurationAdapter {
-
-    @JsonSchemaTitle("Organization Id")
-    @JsonSchemaDescription("Organization Id as in UKOB Directory")
-    @JsonSchemaInject(
-            strings = {@JsonSchemaString(path = "pattern", value = "^[0-9a-zA-Z]{1,22}$")})
-    @JsonSchemaExamples("0015800000jf9GgAAI")
-    @JsonProperty(required = true)
-    @Secret
-    private String organizationId;
 
     @JsonSchemaTitle("Signing key - OB Seal/OB Signing")
     @JsonSchemaDescription("Private key used to sign requests, base64 encoded ")
@@ -109,10 +99,6 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     @SensitiveSecret
     private String transportKeyPassword;
 
-    public String getOrganizationId() {
-        return organizationId;
-    }
-
     public String getClientId() {
         return clientId;
     }
@@ -138,19 +124,14 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     }
 
     @Override
-    public ProviderConfiguration getProviderConfiguration() {
-        return new ProviderConfiguration(
-                organizationId,
-                new ClientInfo(
-                        clientId,
-                        clientSecret,
-                        tokenEndpointAuthMethod,
-                        tokenEndpointAuthSigningAlg));
+    public ClientInfo getProviderConfiguration() {
+        return new ClientInfo(
+                clientId, clientSecret, tokenEndpointAuthMethod, tokenEndpointAuthSigningAlg);
     }
 
     @Override
     public SoftwareStatementAssertion getSoftwareStatementAssertions() {
-        return new SoftwareStatementAssertion(softwareStatementAssertion);
+        return SoftwareStatementAssertion.fromJWT(softwareStatementAssertion);
     }
 
     @Override

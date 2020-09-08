@@ -32,6 +32,7 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 new UKOpenBankingAis.Builder()
+                        .withOrganisationId(BarclaysConstants.ORGANISATION_ID)
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.PERSONAL_WELL_KNOWN_URL)
                         .withIdentityDataURL(

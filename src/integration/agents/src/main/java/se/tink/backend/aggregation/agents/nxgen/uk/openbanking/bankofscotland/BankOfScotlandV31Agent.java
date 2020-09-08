@@ -38,6 +38,7 @@ public class BankOfScotlandV31Agent extends UkOpenBankingBaseAgent {
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.WELL_KNOWN_URL)
                         .withAppToAppURL(V31.APP_TO_APP_AUTH_URL)
+                        .withOrganisationId("0015800000jfPKvAAM")
                         .build();
     }
 

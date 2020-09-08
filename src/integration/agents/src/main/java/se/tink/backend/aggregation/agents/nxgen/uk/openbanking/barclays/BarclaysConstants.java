@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays;
 
 public final class BarclaysConstants {
 
+    public static final String ORGANISATION_ID = "001580000103UBKAA2";
+
     class Urls {
 
         class V31 {

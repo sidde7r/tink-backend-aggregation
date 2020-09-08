@@ -6,14 +6,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ProviderConfiguration {
 
-    private String organizationId;
-
     private ClientInfo clientInfo;
 
     public ProviderConfiguration() {}
 
-    public ProviderConfiguration(String organizationId, ClientInfo clientInfo) {
-        this.organizationId = organizationId;
+    public ProviderConfiguration(ClientInfo clientInfo) {
         this.clientInfo = clientInfo;
     }
 
@@ -23,9 +20,5 @@ public class ProviderConfiguration {
 
     public ClientInfo getClientInfo() {
         return clientInfo;
-    }
-
-    public String getOrganizationId() {
-        return organizationId;
     }
 }

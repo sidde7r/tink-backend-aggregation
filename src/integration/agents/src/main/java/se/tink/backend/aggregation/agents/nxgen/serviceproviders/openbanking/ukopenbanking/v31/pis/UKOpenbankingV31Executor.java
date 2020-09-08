@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -63,7 +63,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
     private final UkOpenBankingPisConfig pisConfig;
     private final SoftwareStatementAssertion softwareStatement;
-    private final ProviderConfiguration providerConfiguration;
+    private final ClientInfo clientInfo;
     private final UkOpenBankingApiClient apiClient;
     private final UkOpenBankingPis ukOpenBankingPis;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -75,7 +75,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     public UKOpenbankingV31Executor(
             UkOpenBankingPisConfig pisConfig,
             SoftwareStatementAssertion softwareStatement,
-            ProviderConfiguration providerConfiguration,
+            ClientInfo clientInfo,
             UkOpenBankingApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
             Credentials credentials,
@@ -85,7 +85,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         this(
                 pisConfig,
                 softwareStatement,
-                providerConfiguration,
+                clientInfo,
                 apiClient,
                 supplementalInformationHelper,
                 credentials,
@@ -97,7 +97,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     public UKOpenbankingV31Executor(
             UkOpenBankingPisConfig pisConfig,
             SoftwareStatementAssertion softwareStatement,
-            ProviderConfiguration providerConfiguration,
+            ClientInfo clientInfo,
             UkOpenBankingApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
             Credentials credentials,
@@ -106,7 +106,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             URL appToAppRedirectURL) {
         this.pisConfig = pisConfig;
         this.softwareStatement = softwareStatement;
-        this.providerConfiguration = providerConfiguration;
+        this.clientInfo = clientInfo;
         this.apiClient = apiClient;
         this.ukOpenBankingPis = new UkOpenBankingV31Pis(pisConfig, randomValueGenerator);
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -174,11 +174,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
         UkOpenBankingPisAuthenticator paymentAuthenticator =
                 new UkOpenBankingPisAuthenticator(
-                        apiClient,
-                        softwareStatement,
-                        providerConfiguration,
-                        ukOpenBankingPis,
-                        paymentRequest);
+                        apiClient, softwareStatement, clientInfo, ukOpenBankingPis, paymentRequest);
 
         // Do not use the real PersistentStorage because we don't want to overwrite the AIS auth
         // token.

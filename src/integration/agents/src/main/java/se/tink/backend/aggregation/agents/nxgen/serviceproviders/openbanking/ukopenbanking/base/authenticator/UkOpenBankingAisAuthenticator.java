@@ -4,18 +4,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.AuthorizeRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
 
     private final UkOpenBankingApiClient apiClient;
-    private final ProviderConfiguration providerConfiguration;
+    private final ClientInfo clientInfo;
 
     public UkOpenBankingAisAuthenticator(UkOpenBankingApiClient apiClient) {
         this.apiClient = apiClient;
-        this.providerConfiguration = apiClient.getProviderConfiguration();
+        this.clientInfo = apiClient.getProviderConfiguration();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
                 UkOpenBankingAisAuthenticatorConstants.Params.REQUEST,
                 AuthorizeRequest.create()
                         .withAccountsScope()
-                        .withClientInfo(providerConfiguration.getClientInfo())
+                        .withClientInfo(clientInfo)
                         .withSoftwareStatement(apiClient.getSoftwareStatement())
                         .withRedirectUrl(apiClient.getRedirectUrl())
                         .withState(state)
