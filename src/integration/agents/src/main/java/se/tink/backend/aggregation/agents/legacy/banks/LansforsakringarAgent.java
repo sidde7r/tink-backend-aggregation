@@ -454,8 +454,7 @@ public class LansforsakringarAgent extends AbstractAgent
             // Looking at error message to decide if bank side failure as LF seem to have a bunch
             // of different codes for the same errors.
             if (!Strings.isNullOrEmpty(errorMsg)
-                    && errorMsg.toLowerCase()
-                            .contains("tyvärr har det uppstått ett tekniskt fel")) {
+                    && errorMsg.toLowerCase().contains("ett tekniskt fel")) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception("Message:" + errorMsg);
             }
 
