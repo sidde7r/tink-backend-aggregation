@@ -32,4 +32,8 @@ public class TransactionsEntity {
     public TransactionsLinksEntity getLinks() {
         return links;
     }
+
+    public boolean hasMore() {
+        return Optional.ofNullable(links).map(TransactionsLinksEntity::hasNextLink).orElse(false);
+    }
 }

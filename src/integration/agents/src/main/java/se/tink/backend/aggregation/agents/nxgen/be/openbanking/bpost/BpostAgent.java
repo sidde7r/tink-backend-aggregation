@@ -5,8 +5,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountTransactionDateFromFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDateFromFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionKeyWithInitDateFromFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -19,10 +20,11 @@ public final class BpostAgent extends Xs2aDevelopersTransactionalAgent {
 
     @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
+        final AccountFetcher accountFetcher =
                 new Xs2aDevelopersTransactionalAccountFetcher(apiClient, oauth2Authenticator);
+
         final TransactionFetcher<TransactionalAccount> transactionFetcher =
-                new TransactionDateFromFetcherController<>(
+                new TransactionKeyWithInitDateFromFetcherController<>(
                         request,
                         new Xs2aDevelopersTransactionalAccountTransactionDateFromFetcher(
                                 apiClient, oauth2Authenticator));
