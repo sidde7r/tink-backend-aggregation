@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferPayType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity.BusinessDataEntityBuilder;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment.rpc.ValidateGiroRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment.rpc.ValidateOCRRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentRequest;
@@ -35,6 +36,8 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class DanskeBankExecutorHelper {
@@ -279,11 +282,12 @@ public class DanskeBankExecutorHelper {
             Transfer transfer,
             ListAccountsResponse accounts,
             String creditorName,
-            Date paymentDate) {
+            Date paymentDate,
+            RemittanceInformation remittanceInformation) {
 
         AccountEntity sourceAccount = accounts.findAccount(transfer.getSource().getIdentifier());
 
-        BusinessDataEntity businessData =
+        BusinessDataEntityBuilder businessDataEntityBuilder =
                 BusinessDataEntity.builder()
                         .accountNameFrom(sourceAccount.getAccountName())
                         .accountNoExtFrom(sourceAccount.getAccountNoExt())
@@ -294,18 +298,23 @@ public class DanskeBankExecutorHelper {
                         .cardType(TransferPayType.GIRO)
                         .creditorId(transfer.getDestination().getIdentifier())
                         .creditorName(creditorName)
-                        .creditorReference(transfer.getRemittanceInformation().getValue())
                         .currency(transfer.getAmount().getCurrency())
                         .payeeName(creditorName)
                         .regNoFromExt(sourceAccount.getAccountRegNoExt())
                         .registerPayment("NO")
                         .savePayee(false)
-                        .textFrom(transfer.getSourceMessage())
-                        .build();
+                        .textFrom(transfer.getSourceMessage());
+
+        if (remittanceInformation.isOfType(RemittanceInformationType.OCR)) {
+            businessDataEntityBuilder.creditorReference(remittanceInformation.getValue());
+        } else {
+            businessDataEntityBuilder.creditorReference("");
+            businessDataEntityBuilder.messageToReceiverText(remittanceInformation.getValue());
+        }
 
         return apiClient.registerPayment(
                 RegisterPaymentRequest.builder()
-                        .businessData(businessData)
+                        .businessData(businessDataEntityBuilder.build())
                         .language(configuration.getLanguageCode())
                         .signatureType(TransferType.GIRO)
                         .build());

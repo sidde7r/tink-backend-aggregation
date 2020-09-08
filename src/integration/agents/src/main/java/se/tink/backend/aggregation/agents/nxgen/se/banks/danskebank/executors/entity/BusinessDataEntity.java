@@ -39,5 +39,6 @@ public class BusinessDataEntity {
     private String creditorId;
     private String creditorName;
     private String creditorReference;
+    private String messageToReceiverText;
     private String registerPayment;
 }
