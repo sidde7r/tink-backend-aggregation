@@ -6,22 +6,22 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConfi
 public class HandelsbankenNOEncapConfiguration implements EncapConfiguration {
     @Override
     public String getEncapApiVersion() {
-        return EncapConstants.encapApiVersion;
+        return EncapConstants.ENCAP_API_VERSION;
     }
 
     @Override
     public String getCredentialsAppNameForEdb() {
-        return EncapConstants.credentialsAppNameForEdb;
+        return EncapConstants.CREDENTIALS_APP_NAME_FOR_EDB;
     }
 
     @Override
     public String getAppId() {
-        return EncapConstants.appId;
+        return EncapConstants.APP_ID;
     }
 
     @Override
     public String getRsaPubKeyString() {
-        return EncapConstants.rsaPubKeyString;
+        return EncapConstants.RSA_PUB_KEY_STRING;
     }
 
     @Override
