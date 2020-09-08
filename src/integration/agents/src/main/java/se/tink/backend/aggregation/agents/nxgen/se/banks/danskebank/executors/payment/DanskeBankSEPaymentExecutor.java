@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment;
 
+import java.util.Date;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferAccountType;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferPayType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.DanskeBankExecutorHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
@@ -41,5 +44,9 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
                                 configuration.getLanguageCode()));
 
         String giroName = executorHelper.validateGiro(transfer);
+
+        Date paymentDate =
+                executorHelper.validatePaymentDate(
+                        transfer, TransferAccountType.GIRO, TransferPayType.GIRO);
     }
 }

@@ -10,6 +10,12 @@ public class DanskeBankSEConstants {
     public static class TransferAccountType {
         public static final String INTERNAL = "internal";
         public static final String EXTERNAL = "external";
+        public static final String GIRO = "payBill";
+    }
+
+    public static class TransferPayType {
+        public static final String ACCOUNT = "";
+        public static final String GIRO = "B";
     }
 
     public static class TransferConfig {

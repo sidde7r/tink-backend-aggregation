@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferAccountType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment.rpc.ValidateGiroRequest;
@@ -54,18 +53,13 @@ public class DanskeBankExecutorHelper {
         this.supplementalRequester = supplementalRequester;
     }
 
-    public Date validatePaymentDate(Transfer transfer, boolean isOwnDestinationAccount) {
-        String transferType =
-                isOwnDestinationAccount
-                        ? TransferAccountType.INTERNAL
-                        : TransferAccountType.EXTERNAL;
-
+    public Date validatePaymentDate(Transfer transfer, String transferType, String payType) {
         ValidatePaymentDateRequest paymentDateRequest =
                 ValidatePaymentDateRequest.builder()
                         .bookingDate(transfer.getDueDate())
                         .countryCode(configuration.getMarketCode())
                         .isCurrencyTransaction(false)
-                        .payType("")
+                        .payType(payType)
                         .receiverAccount(transfer.getDestination().getIdentifier())
                         .transferType(transferType)
                         .build();
@@ -259,6 +253,16 @@ public class DanskeBankExecutorHelper {
     }
 
     public String validateGiro(Transfer transfer) {
+        ValidateGiroRequest validateGiroRequest =
+                ValidateGiroRequest.builder()
+                        .giroAccount(transfer.getDestination().getIdentifier())
+                        .payType("B")
+                        .build();
+
+        return apiClient.validateGiroRequest(validateGiroRequest).validate().getGiroName();
+    }
+
+    public String validateOCR(Transfer transfer) {
         ValidateGiroRequest validateGiroRequest =
                 ValidateGiroRequest.builder()
                         .giroAccount(transfer.getDestination().getIdentifier())
