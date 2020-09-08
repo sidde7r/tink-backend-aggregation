@@ -14,7 +14,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class IspAgentPaymentTest {
     private AgentIntegrationTest.Builder builder;
@@ -44,17 +44,17 @@ public class IspAgentPaymentTest {
     }
 
     private List<Payment> createRealDomesticPayment() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(IspAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
+        remittanceInformation.setValue("Isp");
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(IspAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
-
-        Reference reference = new Reference("Message", "ReferenceToCreditor");
 
         Amount amount = Amount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
@@ -67,7 +67,7 @@ public class IspAgentPaymentTest {
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
-                        .withReference(reference)
+                        .withRemittanceInformation(remittanceInformation)
                         .build());
     }
 

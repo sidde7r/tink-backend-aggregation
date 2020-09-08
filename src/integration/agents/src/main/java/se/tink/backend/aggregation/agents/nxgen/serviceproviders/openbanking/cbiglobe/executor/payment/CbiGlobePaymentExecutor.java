@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.enums.CbiGlobePaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -42,6 +43,8 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -75,15 +78,17 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
-
+        RemittanceInformation remittanceInformation =
+                paymentRequest.getPayment().getRemittanceInformation();
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
                         .withDebtorAccount(debtorEntity)
                         .withInstructedAmount(instructedAmountEntity)
                         .withCreditorAccount(creditorEntity)
                         .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
-                        .withRemittanceInformationUnstructured(
-                                paymentRequest.getPayment().getReference().getValue())
+                        .withRemittanceInformationUnstructured(remittanceInformation.getValue())
                         .withTransactionType(FormValues.TRANSACTION_TYPE)
                         .build();
 

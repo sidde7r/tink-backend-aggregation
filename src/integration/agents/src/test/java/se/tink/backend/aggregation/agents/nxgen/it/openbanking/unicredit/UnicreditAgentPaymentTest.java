@@ -17,7 +17,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Ignore
 public class UnicreditAgentPaymentTest {
@@ -52,6 +52,8 @@ public class UnicreditAgentPaymentTest {
     }
 
     private List<Payment> createRealDomesticPayment() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("ReferenceToCreditor");
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(UnicreditAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
@@ -61,8 +63,6 @@ public class UnicreditAgentPaymentTest {
                 new IbanIdentifier(
                         creditorDebtorManager.get(UnicreditAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
-
-        Reference reference = new Reference("Message", "To Creditor");
 
         Amount amount = Amount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
@@ -75,7 +75,7 @@ public class UnicreditAgentPaymentTest {
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
-                        .withReference(reference)
+                        .withRemittanceInformation(remittanceInformation)
                         .build());
     }
 

@@ -22,6 +22,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class BuddybankAgentPaymentTest {
     // https://authorization.api-sandbox.unicredit.eu:8403/sandbox/psd2/bg/loginPSD2_BG.html
@@ -66,9 +67,11 @@ public class BuddybankAgentPaymentTest {
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
             doReturn(Iban.random(CountryCode.IT).toString()).when(debtor).getAccountNumber();
 
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
             Amount amount = Amount.inSEK(new Random().nextInt(1000));
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
+            remittanceInformation.setValue("Buddy");
 
             listOfMockedPayments.add(
                     new Payment.Builder()
@@ -77,7 +80,7 @@ public class BuddybankAgentPaymentTest {
                             .withAmount(amount)
                             .withType(PaymentType.DOMESTIC)
                             .withExecutionDate(executionDate)
-                            .withReference(reference)
+                            .withRemittanceInformation(remittanceInformation)
                             .withCurrency(currency)
                             .build());
         }
