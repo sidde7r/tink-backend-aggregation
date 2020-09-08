@@ -6,7 +6,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferAccountType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferPayType;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.DanskeBankExecutorHelper;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.AcceptSignatureRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
@@ -59,5 +61,21 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
                 executorHelper
                         .registerPayment(transfer, accounts, giroName, paymentDate)
                         .validate();
+
+        executorHelper.signPayment(registerPaymentResponse);
+
+        apiClient
+                .acceptSignature(
+                        TransferType.GIRO,
+                        AcceptSignatureRequest.builder()
+                                .signatureId(registerPaymentResponse.getSignatureId())
+                                .signaturePackage(
+                                        executorHelper.getSignaturePackage(
+                                                injectJsCheckStep,
+                                                registerPaymentResponse.getUserId(),
+                                                registerPaymentResponse.getSignatureText()))
+                                .language(configuration.getLanguageCode())
+                                .build())
+                .validate();
     }
 }
