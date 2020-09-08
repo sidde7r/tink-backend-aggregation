@@ -7,11 +7,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferAccountType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferPayType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.DanskeBankExecutorHelper;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -52,5 +54,10 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
         executorHelper.validateOCR(transfer);
 
         HttpResponse injectJsCheckStep = this.apiClient.collectDynamicChallengeJavascript();
+
+        RegisterPaymentResponse registerPaymentResponse =
+                executorHelper
+                        .registerPayment(transfer, accounts, giroName, paymentDate)
+                        .validate();
     }
 }

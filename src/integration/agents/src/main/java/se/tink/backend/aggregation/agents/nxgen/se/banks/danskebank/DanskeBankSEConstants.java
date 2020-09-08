@@ -5,6 +5,7 @@ public class DanskeBankSEConstants {
     public static class TransferType {
         public static final String INTERNAL = "TransferToOwnAccountSEv2";
         public static final String EXTERNAL = "TransferToOtherAccountSE";
+        public static final String GIRO = "PayBillSE";
     }
 
     public static class TransferAccountType {

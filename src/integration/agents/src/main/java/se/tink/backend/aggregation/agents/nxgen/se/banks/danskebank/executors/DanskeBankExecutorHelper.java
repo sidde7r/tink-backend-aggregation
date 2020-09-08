@@ -275,6 +275,42 @@ public class DanskeBankExecutorHelper {
         apiClient.validateOcr(validateOCRRequest).validate();
     }
 
+    public RegisterPaymentResponse registerPayment(
+            Transfer transfer,
+            ListAccountsResponse accounts,
+            String creditorName,
+            Date paymentDate) {
+
+        AccountEntity sourceAccount = accounts.findAccount(transfer.getSource().getIdentifier());
+
+        BusinessDataEntity businessData =
+                BusinessDataEntity.builder()
+                        .accountNameFrom(sourceAccount.getAccountName())
+                        .accountNoExtFrom(sourceAccount.getAccountNoExt())
+                        .accountNoIntFrom(sourceAccount.getAccountNoInt())
+                        .accountProductFrom(sourceAccount.getAccountProduct())
+                        .amount(transfer.getAmount().getValue())
+                        .bookingDate(formatDate(paymentDate))
+                        .cardType(TransferPayType.GIRO)
+                        .creditorId(transfer.getDestination().getIdentifier())
+                        .creditorName(creditorName)
+                        .creditorReference(transfer.getRemittanceInformation().getValue())
+                        .currency(transfer.getAmount().getCurrency())
+                        .payeeName(creditorName)
+                        .regNoFromExt(sourceAccount.getAccountRegNoExt())
+                        .registerPayment("NO")
+                        .savePayee(false)
+                        .textFrom(transfer.getSourceMessage())
+                        .build();
+
+        return apiClient.registerPayment(
+                RegisterPaymentRequest.builder()
+                        .businessData(businessData)
+                        .language(configuration.getLanguageCode())
+                        .signatureType(TransferType.GIRO)
+                        .build());
+    }
+
     private TransferExecutionException bankIdTimeoutError() {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
