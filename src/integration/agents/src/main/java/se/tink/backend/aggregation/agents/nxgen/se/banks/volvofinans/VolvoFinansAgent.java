@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
@@ -53,6 +54,7 @@ public class VolvoFinansAgent extends NextGenerationAgent
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new TimeoutFilter());
         client.addFilter(new GatewayTimeoutFilter());
     }
