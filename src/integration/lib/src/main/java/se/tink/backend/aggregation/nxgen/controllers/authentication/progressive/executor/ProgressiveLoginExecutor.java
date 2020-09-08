@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -40,6 +41,7 @@ public final class ProgressiveLoginExecutor {
                     agent.login(
                             handleSupplementInformationRequest(stepResponse, credentialsRequest));
         }
+        credentialsRequest.getCredentials().setType(CredentialsTypes.PASSWORD);
     }
 
     private SteppableAuthenticationRequest handleSupplementInformationRequest(
