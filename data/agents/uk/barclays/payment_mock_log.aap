@@ -47,7 +47,7 @@ Content-Type: application/json
 X-Aggregator: Tink Testing
 x-idempotency-key: 0000000000000000
 Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
-x-fapi-financial-id: 001580000103UBKAA2
+x-fapi-financial-id: 0015800000jfAW1AAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 
@@ -96,7 +96,7 @@ Content-Type: application/json
 X-Aggregator: Tink Testing
 x-idempotency-key: 0000000000000000
 Authorization: Bearer DUMMY_ACCESS_TOKEN
-x-fapi-financial-id: 001580000103UBKAA2
+x-fapi-financial-id: 0015800000jfAW1AAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 
@@ -122,7 +122,7 @@ GET https://telesto.api.barclays:443/open-banking/v3.1/pisp/domestic-payments/BA
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 Accept: application/json
-x-fapi-financial-id: 001580000103UBKAA2
+x-fapi-financial-id: 0015800000jfAW1AAM
 x-idempotency-key : 0000000000000000
 X-Aggregator: Tink Testing
 Content-Type: application/json
