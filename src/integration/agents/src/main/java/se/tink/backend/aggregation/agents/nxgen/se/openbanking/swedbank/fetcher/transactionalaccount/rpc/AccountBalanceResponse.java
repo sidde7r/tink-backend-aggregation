@@ -1,21 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc;
 
+import com.google.common.collect.Lists;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.balance.BalanceAmount;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.balance.BalancesItem;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountBalanceResponse {
 
     private List<BalancesItem> balances;
 
-    public ExactCurrencyAmount getAvailableBalance() {
-        return balances.stream()
-                .map(BalancesItem::getBalanceAmount)
-                .map(BalanceAmount::getAmount)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Could not fetch balance"));
+    public List<BalancesItem> getBalances() {
+        return Optional.of(balances).orElseGet(Lists::newArrayList);
     }
 }
