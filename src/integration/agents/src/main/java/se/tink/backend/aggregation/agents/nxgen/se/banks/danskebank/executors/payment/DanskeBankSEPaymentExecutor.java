@@ -50,5 +50,7 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
                         transfer, TransferAccountType.GIRO, TransferPayType.GIRO);
 
         executorHelper.validateOCR(transfer);
+
+        HttpResponse injectJsCheckStep = this.apiClient.collectDynamicChallengeJavascript();
     }
 }
