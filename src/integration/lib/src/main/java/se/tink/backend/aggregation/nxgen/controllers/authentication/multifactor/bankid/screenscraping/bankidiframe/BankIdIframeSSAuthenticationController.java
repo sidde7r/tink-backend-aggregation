@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,6 +15,7 @@ import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 
 @RequiredArgsConstructor
+@Slf4j
 public class BankIdIframeSSAuthenticationController {
 
     private static final LocalizableKey ONLY_MOBILE_BANK_ID_MESSAGE =
@@ -73,6 +75,9 @@ public class BankIdIframeSSAuthenticationController {
                     webDriverHelper.getElement(driver, BANK_ID_MOBIL_BUTTON);
             webDriverHelper.clickButton(bankIdMobilAuthenticationSelectionButton);
         } catch (HtmlElementNotFoundException e) {
+            log.warn(
+                    "There is no mobile bank id, please check source to find methods: {}",
+                    driver.getPageSource());
             throw LoginError.NOT_SUPPORTED.exception(ONLY_MOBILE_BANK_ID_MESSAGE);
         }
     }
