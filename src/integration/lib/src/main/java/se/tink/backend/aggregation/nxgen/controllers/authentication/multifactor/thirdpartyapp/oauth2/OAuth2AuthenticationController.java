@@ -176,11 +176,11 @@ public class OAuth2AuthenticationController
 
         Map<String, String> callbackData = getCallbackData();
 
+        authenticator.handleSpecificCallbackDataError(callbackData);
+
         handleErrors(callbackData);
 
         String code = callbackData.getOrDefault(CallbackParams.CODE, null);
-
-        authenticator.handleSpecificCallbackDataError(callbackData);
 
         OAuth2Token oAuth2Token = authenticator.exchangeAuthorizationCode(code);
 
