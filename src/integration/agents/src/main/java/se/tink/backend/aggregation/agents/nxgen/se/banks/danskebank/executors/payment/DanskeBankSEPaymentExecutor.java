@@ -40,6 +40,6 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
                         ListAccountsRequest.createFromLanguageCode(
                                 configuration.getLanguageCode()));
 
-
+        String giroName = executorHelper.validateGiro(transfer);
     }
 }

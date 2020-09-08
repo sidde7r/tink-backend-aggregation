@@ -173,6 +173,10 @@ public class DanskeBankConstants {
         return getBaseUrl() + "/AcceptSignature?signatureType=" + signatureType;
     }
 
+    public String getValidateGiroRequestUrl() {
+        return getE4BaseUrl() + "/transfers/validateGiroSe";
+    }
+
     // == END Transfers ==
 
     public static class Device {

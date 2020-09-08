@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferAccountType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment.rpc.ValidateGiroRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.SignRequest;
@@ -255,6 +256,16 @@ public class DanskeBankExecutorHelper {
                 driver.quit();
             }
         }
+    }
+
+    public String validateGiro(Transfer transfer) {
+        ValidateGiroRequest validateGiroRequest =
+                ValidateGiroRequest.builder()
+                        .giroAccount(transfer.getDestination().getIdentifier())
+                        .payType("B")
+                        .build();
+
+        return apiClient.validateGiroRequest(validateGiroRequest).validate().getGiroName();
     }
 
     private TransferExecutionException bankIdTimeoutError() {
