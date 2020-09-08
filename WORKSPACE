@@ -726,6 +726,7 @@ maven_install(
         "com.netflix.governator:governator-core:1.17.2",
         "com.netflix.governator:governator:1.17.2",
         "com.nimbusds:srp6a:2.0.2",
+        "com.opsgenie.integration:sdk-shaded:jar:2.8.2",
         "com.sun.jersey.contribs:jersey-apache-client4:1.18.1",
         "com.sun.jersey:jersey-client:1.18.1",
         "com.sun.jersey:jersey-core:1.18.1",
