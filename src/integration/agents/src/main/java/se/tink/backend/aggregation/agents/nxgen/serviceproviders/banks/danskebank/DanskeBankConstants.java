@@ -177,6 +177,10 @@ public class DanskeBankConstants {
         return getE4BaseUrl() + "/transfers/validateGiroSe";
     }
 
+    public String getValidateOcrRequestUrl() {
+        return getE4BaseUrl() + "/transfers/validateOcrSe";
+    }
+
     // == END Transfers ==
 
     public static class Device {

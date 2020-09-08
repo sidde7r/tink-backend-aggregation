@@ -48,5 +48,7 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
         Date paymentDate =
                 executorHelper.validatePaymentDate(
                         transfer, TransferAccountType.GIRO, TransferPayType.GIRO);
+
+        executorHelper.validateOCR(transfer);
     }
 }

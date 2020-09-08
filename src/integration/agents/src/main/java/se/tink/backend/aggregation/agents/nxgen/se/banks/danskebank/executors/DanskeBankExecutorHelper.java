@@ -13,9 +13,11 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferPayType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment.rpc.ValidateGiroRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment.rpc.ValidateOCRRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.SignRequest;
@@ -256,20 +258,21 @@ public class DanskeBankExecutorHelper {
         ValidateGiroRequest validateGiroRequest =
                 ValidateGiroRequest.builder()
                         .giroAccount(transfer.getDestination().getIdentifier())
-                        .payType("B")
+                        .payType(TransferPayType.GIRO)
                         .build();
 
         return apiClient.validateGiroRequest(validateGiroRequest).validate().getGiroName();
     }
 
-    public String validateOCR(Transfer transfer) {
-        ValidateGiroRequest validateGiroRequest =
-                ValidateGiroRequest.builder()
+    public void validateOCR(Transfer transfer) {
+        ValidateOCRRequest validateOCRRequest =
+                ValidateOCRRequest.builder()
                         .giroAccount(transfer.getDestination().getIdentifier())
-                        .payType("B")
+                        .payType(TransferPayType.GIRO)
+                        .ocr(transfer.getRemittanceInformation().getValue())
                         .build();
 
-        return apiClient.validateGiroRequest(validateGiroRequest).validate().getGiroName();
+        apiClient.validateOcr(validateOCRRequest).validate();
     }
 
     private TransferExecutionException bankIdTimeoutError() {
