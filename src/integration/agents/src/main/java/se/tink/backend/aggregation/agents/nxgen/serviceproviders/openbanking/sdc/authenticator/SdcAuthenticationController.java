@@ -82,10 +82,7 @@ public class SdcAuthenticationController
         OAuth2Token accessToken = authenticator.exchangeAuthorizationCode(code);
 
         // SDC provides Oauth2 Token without information about token type
-        if (accessToken.getTokenType() == null) {
-            log.info("Missing token type in response, adding Bearer as token type.");
-            accessToken.setTokenType("Bearer");
-        }
+        OAuth2TokenEnricher.enrich(accessToken);
 
         authenticator.useAccessToken(accessToken);
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
