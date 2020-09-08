@@ -11,34 +11,34 @@ import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 public class N26Constants {
 
     public static final String BASIC_AUTHENTICATION_TOKEN =
-            "Basic aXBob25lOnNlY3JldA=="; // Deocded: iphone:secret
+            "Basic aXBob25lOnNlY3JldA=="; // Decoded: iphone:secret
     public static final String BEARER_TOKEN = "Bearer ";
     public static final String SPACE_ID = "spaceId";
     public static final String DEVICE_TOKEN = "device-token";
 
-    public static class Errors {
-        public static List<String> continueList =
+    static class Errors {
+        static final List<String> CONTINUE_LIST =
                 Arrays.asList("authorization_pending", "mfa_required");
-        public static GenericTypeMapper<AgentError, String> errorsMap =
+        static final GenericTypeMapper<AgentError, String> ERRORS_MAP =
                 GenericTypeMapper.<AgentError, String>genericBuilder()
                         .put(SupplementalInfoError.NO_VALID_CODE, "invalid_otp")
                         .put(LoginError.INCORRECT_CREDENTIALS, "invalid_grant")
                         .put(LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE, "too_many_sms")
-                        .ignoreKeys(continueList)
+                        .ignoreKeys(CONTINUE_LIST)
                         .build();
     }
 
-    public static class URLS {
-        public static final String HOST = "https://api.tech26.de";
-        public static final String BASE_AUTHENTICATION = "/oauth/token";
-        public static final String APP_AUTHENTICATION = "/api/mfa/challenge";
-        public static final String ME = "/api/me?full=true";
-        public static final String ACCOUNT = "/api/accounts";
-        public static final String TRANSACTION = "/api/smrt/transactions";
-        public static final String SAVINGS = "/api/hub/savings/accounts";
-        public static final String SPACES_TRANSACTIONS = "/api/spaces/{spaceId}/transactions";
-        public static final String SPACES_SAVINGS = "/api/spaces";
-        public static final String LOGOUT = "/api/me/logout";
+    static class URLS {
+        static final String HOST = "https://api.tech26.de";
+        static final String BASE_AUTHENTICATION = "/oauth/token";
+        static final String APP_AUTHENTICATION = "/api/mfa/challenge";
+        static final String ME = "/api/me?full=true";
+        static final String ACCOUNT = "/api/accounts";
+        static final String TRANSACTION = "/api/smrt/transactions";
+        static final String SAVINGS = "/api/hub/savings/accounts";
+        static final String SPACES_TRANSACTIONS = "/api/spaces/{spaceId}/transactions";
+        static final String SPACES_SAVINGS = "/api/spaces";
+        static final String LOGOUT = "/api/me/logout";
     }
 
     public static class Storage {
