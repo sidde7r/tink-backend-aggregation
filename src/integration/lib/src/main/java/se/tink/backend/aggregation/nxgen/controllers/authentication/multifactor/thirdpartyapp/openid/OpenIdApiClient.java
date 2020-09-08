@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
+import java.security.PublicKey;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.JsonWebKeySet;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenRequestForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
@@ -41,6 +44,7 @@ public class OpenIdApiClient {
 
     // Internal caching. Do not use these fields directly, always use the getters!
     private WellKnownResponse cachedWellKnownResponse;
+    private Map<String, PublicKey> cachedJwkPublicKeys;
     private OpenIdAuthenticatedHttpFilter aisAuthFilter;
     private OpenIdAuthenticatedHttpFilter pisAuthFilter;
     private OpenIdError openIdError;
@@ -309,5 +313,24 @@ public class OpenIdApiClient {
 
     public Optional<OpenIdError> getOpenIdError() {
         return Optional.ofNullable(openIdError);
+    }
+
+    public Optional<Map<String, PublicKey>> getJwkPublicKeys() {
+        if (Objects.nonNull(cachedJwkPublicKeys)) {
+            return Optional.of(cachedJwkPublicKeys);
+        }
+
+        String response =
+                httpClient.request(getWellKnownConfiguration().getJwksUri()).get(String.class);
+
+        JsonWebKeySet jsonWebKeySet =
+                SerializationUtils.deserializeFromString(response, JsonWebKeySet.class);
+
+        if (jsonWebKeySet == null) {
+            return Optional.empty();
+        }
+
+        cachedJwkPublicKeys = jsonWebKeySet.getAllKeysMap();
+        return Optional.ofNullable(cachedJwkPublicKeys);
     }
 }

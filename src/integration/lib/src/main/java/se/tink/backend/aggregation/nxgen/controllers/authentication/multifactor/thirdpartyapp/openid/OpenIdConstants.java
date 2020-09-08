@@ -48,11 +48,7 @@ public class OpenIdConstants {
                     .build();
 
     public static final ImmutableList<String> MANDATORY_RESPONSE_TYPES =
-            ImmutableList.<String>builder()
-                    .add("code")
-                    .add("id_token") // TODO: Enable when we have fragment implemented or when
-                    // response_mode=query has effect.
-                    .build();
+            ImmutableList.<String>builder().add("code").add(CallbackParams.ID_TOKEN).build();
 
     public static final ImmutableList<String> PREFERRED_ID_TOKEN_SIGNING_ALGORITHM =
             ImmutableList.<String>builder()
@@ -111,6 +107,7 @@ public class OpenIdConstants {
 
     public static class CallbackParams {
         public static final String CODE = "code";
+        public static final String ID_TOKEN = "id_token";
         public static final String ERROR = "error";
         public static final String ERROR_DESCRIPTION = "error_description";
     }

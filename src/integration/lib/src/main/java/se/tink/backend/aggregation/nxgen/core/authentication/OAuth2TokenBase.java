@@ -19,6 +19,7 @@ public abstract class OAuth2TokenBase {
     private String tokenType;
     private String accessToken;
     private String refreshToken;
+    private String idToken;
     private long expiresInSeconds;
     private long refreshExpiresInSeconds;
     private long issuedAt;
@@ -28,7 +29,6 @@ public abstract class OAuth2TokenBase {
     }
 
     public boolean hasAccessExpired() {
-        final long currentTime = getCurrentEpoch();
         final long validFor = getValidForSecondsTimeLeft();
         if (validFor > 0) {
             String logMessage =

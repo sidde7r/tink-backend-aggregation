@@ -90,6 +90,23 @@ X-Content-Type-Options: nosniff
 {"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":1799}
 
 REQUEST 5
+GET /0015800000jfAW1AAM/2SPmPNUU6KrtcgutPlkfBd.jwks
+Connection: keep-alive
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Thu, 30 Jan 2020 12:43:59 GMT
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+
+{"keys": []}
+
+REQUEST 6
 POST https://telesto.api.barclays:443/open-banking/v3.1/pisp/domestic-payments
 Accept: application/json
 Content-Type: application/json
@@ -102,7 +119,7 @@ x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 
 {"Risk":{},"Data":{"ConsentId":"BARCLAYS-P-10000000245531","Initiation":{"RemittanceInformation":{"Unstructured":"UK Demo"},"EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructionIdentification":"b900555d03124056b54930e1c53c9cac","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
 
-RESPONSE 5
+RESPONSE 6
 201
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
@@ -117,7 +134,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {"Data":{"DomesticPaymentId":"BARCLAYS-P-10000000245531","ConsentId":"BARCLAYS-P-10000000245531","CreationDateTime":"2020-03-04T14:35:17Z","Status":"AcceptedSettlementInProcess","StatusUpdateDateTime":"2020-03-04T14:35:13Z","Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"RemittanceInformation":{"Unstructured":"UK Demo"}}},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/pisp/domestic-payments"},"Meta":{}}
 
-REQUEST 6
+REQUEST 7
 GET https://telesto.api.barclays:443/open-banking/v3.1/pisp/domestic-payments/BARCLAYS-P-10000000245531
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -127,7 +144,7 @@ x-idempotency-key : 0000000000000000
 X-Aggregator: Tink Testing
 Content-Type: application/json
 
-RESPONSE 6
+RESPONSE 7
 200
 Content-Type: application/json;charset=UTF-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
