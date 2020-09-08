@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank;
 
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public final class SwedbankConstants {
 
@@ -184,6 +186,10 @@ public final class SwedbankConstants {
         public static final int ACCESS_EXCEEDED = 429;
     }
 
+    public static final class ErrorCodes {
+        public static final String KYC_INVALID = "KYC_INVALID";
+    }
+
     public enum HeadersToSign {
         X_REQUEST_ID("x-request-id"),
         TPP_REDIRECT_URI("tpp-redirect-uri"),
@@ -197,6 +203,22 @@ public final class SwedbankConstants {
 
         public String getHeader() {
             return header;
+        }
+    }
+
+    public enum EndUserMessage implements LocalizableEnum {
+        MUST_ANSWER_KYC(
+                new LocalizableKey(
+                        "To be able to refresh your accounts you need to answer some questions from your bank. Please log in to your bank's app or internet bank."));
+        private final LocalizableKey userMessage;
+
+        EndUserMessage(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return this.userMessage;
         }
     }
 }
