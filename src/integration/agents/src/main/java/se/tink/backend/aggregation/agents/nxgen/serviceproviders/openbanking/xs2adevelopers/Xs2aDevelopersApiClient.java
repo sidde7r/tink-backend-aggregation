@@ -163,6 +163,7 @@ public class Xs2aDevelopersApiClient {
         return createFetchingRequest(transactionFetchUrl)
                 .queryParam(QueryKeys.DATE_FROM, dateFormatter.format(dateFrom))
                 .queryParam(QueryKeys.DATE_TO, dateFormatter.format(LocalDate.now()))
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
     }
 
