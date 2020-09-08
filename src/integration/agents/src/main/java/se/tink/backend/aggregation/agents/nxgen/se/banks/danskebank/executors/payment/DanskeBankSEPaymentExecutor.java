@@ -5,7 +5,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.transfer.DanskeBankExecutorHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
@@ -24,5 +26,11 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public void executePayment(Transfer transfer) throws TransferExecutionException {}
+    public void executePayment(Transfer transfer) throws TransferExecutionException {
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                transfer.getRemittanceInformation(),
+                null,
+                RemittanceInformationType.UNSTRUCTURED,
+                RemittanceInformationType.OCR);
+    }
 }
