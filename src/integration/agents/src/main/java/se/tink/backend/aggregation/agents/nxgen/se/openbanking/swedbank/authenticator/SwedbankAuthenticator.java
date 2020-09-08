@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator;
 
-import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
@@ -62,10 +61,6 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
     public ConsentResponse getConsentForIbanList() {
         return apiClient.getConsentAccountDetails(
                 apiClient.mapAccountResponseToIbanList(apiClient.fetchAccounts()));
-    }
-
-    public List<String> getAccountList() {
-        return apiClient.mapAccountResponseToResourceList(apiClient.fetchAccounts());
     }
 
     public ConsentResponse getConsentForAllAccounts() {

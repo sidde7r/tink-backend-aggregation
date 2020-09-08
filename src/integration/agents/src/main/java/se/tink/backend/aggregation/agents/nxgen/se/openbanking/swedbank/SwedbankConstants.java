@@ -14,8 +14,6 @@ public final class SwedbankConstants {
     public static final int TRANSACTIONS_DOWNLOAD_RETRY_COUNT = 3;
 
     public static class Format {
-        public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
-        public static final String HEADER_TIMESTAMP = "E, dd MMM yyyy HH:mm:ss z";
         public static final String TRANSACTION_DESCRIPTION_SEPARATOR = " ";
     }
 
@@ -176,8 +174,6 @@ public final class SwedbankConstants {
     }
 
     public static final class LogMessages {
-        public static final String SIGNING_COMPLETE = "Signing complete";
-        public static final String WAITING_FOR_SIGNING = "Waiting for signing";
         public static final String TRANSACTION_SIGNING_TIMED_OUT =
                 "Sign for fetching transactions for the last 25 months, timed out";
     }
