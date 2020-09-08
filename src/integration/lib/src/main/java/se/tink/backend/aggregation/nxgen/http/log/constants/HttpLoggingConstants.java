@@ -54,6 +54,7 @@ public final class HttpLoggingConstants {
                     "via",
                     "x-aggregator",
                     "x-fapi-interaction-id",
+                    "x-fapi-financial-id",
                     "x-forwarded-for",
                     "x-forwarded-host",
                     "x-global-transaction-id",
