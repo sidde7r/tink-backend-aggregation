@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.OAuth;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.Urls;
@@ -39,6 +42,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static final Pattern IBAN_PATTERN = Pattern.compile("BE[0-9]{14}");
 
     private final Credentials credentials;
@@ -68,6 +74,7 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
     @Override
     public TransactionsKeyPaginatorBaseResponse fetchTransactions(String url) {
+        logger.info("Fetching transactions endpoint requested: {}", url);
         return getTransactionsRequestBuilder(url)
                 .header(BerlinGroupConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .get(TransactionsKeyPaginatorBaseResponse.class);

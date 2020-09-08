@@ -81,6 +81,30 @@
       "timestamp":0,
       "type":"DEFAULT",
       "upcoming":false
+    },
+    {
+      "amount":12.25,
+      "date":1596103200000,
+      "description":"SEPA CREDIT TRANSFER from PSD2Company",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    },
+    {
+      "amount":12.25,
+      "date":1596103200000,
+      "description":"SEPA CREDIT TRANSFER from PSD2Company123",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
     }
   ]
 }
