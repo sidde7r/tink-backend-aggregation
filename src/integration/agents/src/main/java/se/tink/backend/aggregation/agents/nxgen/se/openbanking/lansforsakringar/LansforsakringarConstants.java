@@ -166,4 +166,8 @@ public abstract class LansforsakringarConstants {
 
         public static final String PICKUP = "pickup";
     }
+
+    public class ErrorCodes {
+        public static final String SERVER = "server";
+    }
 }
