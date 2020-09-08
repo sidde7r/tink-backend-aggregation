@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.transfer;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors;
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
