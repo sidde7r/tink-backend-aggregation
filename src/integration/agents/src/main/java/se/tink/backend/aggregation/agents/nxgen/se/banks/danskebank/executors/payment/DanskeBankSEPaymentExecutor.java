@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.transfer.DanskeBankExecutorHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -32,5 +34,10 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
                 null,
                 RemittanceInformationType.UNSTRUCTURED,
                 RemittanceInformationType.OCR);
+
+        ListAccountsResponse accounts =
+                apiClient.listAccounts(
+                        ListAccountsRequest.createFromLanguageCode(
+                                configuration.getLanguageCode()));
     }
 }
