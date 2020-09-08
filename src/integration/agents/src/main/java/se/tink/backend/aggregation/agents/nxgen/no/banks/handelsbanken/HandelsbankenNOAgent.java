@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan.HandelsbankenNOLoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenNOAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenNOTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.filters.HandelsbankenNORetryFilter;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -28,6 +29,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class HandelsbankenNOAgent extends NextGenerationAgent
@@ -45,6 +48,7 @@ public class HandelsbankenNOAgent extends NextGenerationAgent
     public HandelsbankenNOAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         apiClient = new HandelsbankenNOApiClient(client, sessionStorage);
         encapClient =
                 new EncapClient(
@@ -69,6 +73,17 @@ public class HandelsbankenNOAgent extends NextGenerationAgent
                         new HandelsbankenNOLoanAccountFetcher(apiClient));
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+    }
+
+    private void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        HandelsbankenNOConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        HandelsbankenNOConstants.TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new HandelsbankenNORetryFilter(
+                        HandelsbankenNOConstants.RetryFilter.NUM_TIMEOUT_RETRIES,
+                        HandelsbankenNOConstants.RetryFilter.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override

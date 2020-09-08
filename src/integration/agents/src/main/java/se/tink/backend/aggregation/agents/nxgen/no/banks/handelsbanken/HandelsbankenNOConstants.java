@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HandelsbankenNOConstants {
     public static final DeviceProfile DEVICE_PROFILE = DeviceProfileConfiguration.IOS_STABLE;
 
@@ -62,10 +65,10 @@ public class HandelsbankenNOConstants {
                                 + UrlParameters.CUSTOMER_ID
                                 + "}"));
 
-        private URL url;
+        private final URL requestUrl;
 
-        Url(String url) {
-            this.url = new URL(url);
+        Url(String requestUrl) {
+            this.requestUrl = new URL(requestUrl);
         }
 
         public static String getNetbankEndpoint(String uri) {
@@ -86,24 +89,25 @@ public class HandelsbankenNOConstants {
 
         @Override
         public URL get() {
-            return this.url;
+            return this.requestUrl;
         }
 
         @Override
         public URL parameter(String key, String value) {
-            return this.url.parameter(key, value);
+            return this.requestUrl.parameter(key, value);
         }
 
         @Override
         public URL queryParam(String key, String value) {
-            return this.url.queryParam(key, value);
+            return this.requestUrl.queryParam(key, value);
         }
 
         public URL parameters(Object... params) {
-            return new URL(String.format(this.url.toString(), params));
+            return new URL(String.format(this.requestUrl.toString(), params));
         }
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class UrlParameters {
         public static final String HB_NETBANK_HOST = "https://nettbank.handelsbanken.no";
         public static final String CUSTOMER_PORTAL_HOST = "https://customerportal.edb.com";
@@ -116,6 +120,7 @@ public class HandelsbankenNOConstants {
         public static final String CUSTOMER_ID = "customerId";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class QueryParams {
         public static final String SO = "so";
         public static final String DATE = "date";
@@ -178,10 +183,12 @@ public class HandelsbankenNOConstants {
         }
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Header {
         public static final String EVRY_TOKEN = "X-EVRY-CLIENT-ACCESSTOKEN";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Tags {
         public static final String JSESSION_ID = "JSESSIONID";
         public static final String REFERENCE_WORD = "bidm_ref-word";
@@ -195,6 +202,7 @@ public class HandelsbankenNOConstants {
         public static final String LOGIN_ERROR = "bidmob-login-error";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class InitBankIdForm {
         public static final String FORM = "form1";
         public static final String FORM_VALUE = "form1";
@@ -204,12 +212,14 @@ public class HandelsbankenNOConstants {
         public static final String VIEWSTATE = "javax.faces.ViewState";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class BankIdAuthenticationStatus {
         public static final String NONE = "NONE";
         public static final String ERROR = "ERROR";
         public static final String COMPLETE = "COMPLETE";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class FinalizeBankIdForm {
         public static final String FORM = "bidmobStep2Form";
         public static final String FORM_VALUE = "bidmobStep2Form";
@@ -217,21 +227,25 @@ public class HandelsbankenNOConstants {
         public static final String VIEWSTATE = "javax.faces.ViewState";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class FinalizeInvestorLoginForm {
         public static final String RELAY_STATE = "RelayState";
         public static final String SAML_RESPONSE = "SAMLResponse";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class LogInRequestConstants {
         public static final String TOKEN_TYPE = "EvrySO";
         public static final String TOKEN_PROTOCOL_VERSION = "ATP-1.0";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class SMSConstants {
         public static final String TYPE = "SAM";
         public static final String LOCALE = "en_SE";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ActivationCodeFieldConstants {
         public static final String DESCRIPTION = "Activation code";
         public static final String NAME = "activationCode";
@@ -239,12 +253,14 @@ public class HandelsbankenNOConstants {
         public static final String PATTERN_ERROR = "The activation code is not valid";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AccountType {
         public static final String SAVING = "saving";
         public static final String YOUTH_SAVING = "bsu";
         public static final String SPENDING = "spending";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class InvestmentConstants {
         public static final String STOCK_PORTAL = "stock portal";
         public static final String INVESTOR_PORTAL = "investor";
@@ -252,29 +268,44 @@ public class HandelsbankenNOConstants {
         public static final String STATUS_CLOSED = "AVSLUTTET";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Storage {
         public static final String EVRY_TOKEN = "evryToken";
         public static final String ACTIVATE_EVRY_TOKEN = "activateEvryToken";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ErrorCode {
         public static final String WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE = "C161";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class EncapConstants {
 
-        public static final String encapApiVersion = "3.5.4";
+        public static final String ENCAP_API_VERSION = "3.5.4";
 
-        public static final String credentialsAppNameForEdb = "HANDELSBANKEN_SMBM";
+        public static final String CREDENTIALS_APP_NAME_FOR_EDB = "HANDELSBANKEN_SMBM";
 
-        public static final String appId = "com.evry.mobilbanken.handelsbanken";
+        public static final String APP_ID = "com.evry.mobilbanken.handelsbanken";
 
-        public static final String rsaPubKeyString =
+        public static final String RSA_PUB_KEY_STRING =
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv0zsNwsaDIgQ/6DKhpVeqdfRf"
                         + "8Xd6Bl+azzeTXA6jA7jzz65FmOWIKWDxj+NJDGvgbqYpawpLus1nYA/OzB9n82CGz/lFgx"
                         + "r//0JbASQP2QnCr19p0EXtwAHI1ctAFW3rxeR/+Y1Ji1Qa5h6pmuWggyC9TGNcrsrk8zRV"
                         + "Z9GBTavkQzDu4oxznfw9ERmWjkaYdGst7ULaH5rpPRuSiOAK2wHjP0yRrK1hSbNsedTCSR"
                         + "jDXl3/ISc12E9RNMKwk4YHFXhy8kqBwTW8rgDAaZdIWuqj650aYOGD4yDI3Fm1+yyIKAEq"
                         + "/f5nf7i+K8ZasjcqJ62nW3MV3cjJ/x2yUM8FwIDAQAB";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class TimeoutFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 3;
+        public static final long TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class RetryFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 10;
+        public static final long RETRY_SLEEP_MILLISECONDS = 10000;
     }
 }

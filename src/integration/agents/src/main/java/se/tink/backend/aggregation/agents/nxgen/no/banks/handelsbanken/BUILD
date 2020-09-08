@@ -12,6 +12,8 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/randomretry",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/retry",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/header",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
