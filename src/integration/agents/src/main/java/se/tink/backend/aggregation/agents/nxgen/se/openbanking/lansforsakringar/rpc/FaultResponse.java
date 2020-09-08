@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class FaultResponse {
     private String faultcode;
-    private String faultstring;
 
     @JsonIgnore
     public boolean isServerFault() {
