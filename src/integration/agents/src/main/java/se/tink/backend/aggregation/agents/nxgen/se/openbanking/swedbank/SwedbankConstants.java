@@ -16,6 +16,7 @@ public final class SwedbankConstants {
     public static class Format {
         public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
         public static final String HEADER_TIMESTAMP = "E, dd MMM yyyy HH:mm:ss z";
+        public static final String TRANSACTION_DESCRIPTION_SEPARATOR = " ";
     }
 
     public static class Urls {
