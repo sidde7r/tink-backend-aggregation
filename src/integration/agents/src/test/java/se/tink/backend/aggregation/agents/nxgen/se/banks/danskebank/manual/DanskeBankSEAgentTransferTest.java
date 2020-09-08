@@ -58,9 +58,31 @@ public final class DanskeBankSEAgentTransferTest {
                 .testBankTransfer(transfer);
     }
 
+    @Test
+    public void testFuturePayment() throws Exception {
+        Transfer payment = createPayment(true);
+        builder.addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
+                .build()
+                .testBankTransfer(payment);
+    }
+
+    @Test
+    public void testPaymentNoDate() throws Exception {
+        Transfer payment = createPayment(false);
+        builder.addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
+                .build()
+                .testBankTransfer(payment);
+    }
+
     private Transfer createTransfer(boolean futurePayment) {
         Transfer transfer = createBaseTransfer(futurePayment);
         transfer.setType(TransferType.BANK_TRANSFER);
+        return transfer;
+    }
+
+    private Transfer createPayment(boolean futurePayment) {
+        Transfer transfer = createBasePayment(futurePayment);
+        transfer.setType(TransferType.PAYMENT);
         return transfer;
     }
 
@@ -80,6 +102,29 @@ public final class DanskeBankSEAgentTransferTest {
         }
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("Reference");
+        transfer.setRemittanceInformation(remittanceInformation);
+        transfer.setSourceMessage("srcmsg");
+        return transfer;
+    }
+
+    private Transfer createBasePayment(boolean futurePayment) {
+        Transfer transfer = new Transfer();
+        transfer.setSource(
+                AccountIdentifier.create(
+                        Type.SE, toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
+        transfer.setDestination(
+                AccountIdentifier.create(
+                        Type.SE_BG,
+                        toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
+        transfer.setAmount(Amount.inSEK(1d));
+        if (futurePayment) {
+            transfer.setDueDate(getDueDateFuture());
+        } else {
+            transfer.setDueDate(null);
+        }
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.OCR);
         remittanceInformation.setValue("Reference");
         transfer.setRemittanceInformation(remittanceInformation);
         return transfer;
