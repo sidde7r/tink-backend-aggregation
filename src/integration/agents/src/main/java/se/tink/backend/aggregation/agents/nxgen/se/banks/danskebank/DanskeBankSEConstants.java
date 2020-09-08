@@ -16,7 +16,8 @@ public class DanskeBankSEConstants {
 
     public static class TransferPayType {
         public static final String ACCOUNT = "";
-        public static final String GIRO = "B";
+        public static final String BANK_GIRO = "B";
+        public static final String PLUS_GIRO = "P";
     }
 
     public static class TransferConfig {

@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -39,27 +40,32 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
 
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
-        RemittanceInformation remittanceInformation = validateAndGetRemittanceInformation(transfer);
-
         ListAccountsResponse accounts =
                 apiClient.listAccounts(
                         ListAccountsRequest.createFromLanguageCode(
                                 configuration.getLanguageCode()));
 
-        String giroName = executorHelper.validateGiro(transfer);
+        String payType = getPayType(transfer);
+
+        String giroName = executorHelper.validateGiro(transfer, payType);
 
         Date paymentDate =
-                executorHelper.validatePaymentDate(
-                        transfer, TransferAccountType.GIRO, TransferPayType.GIRO);
+                executorHelper.validatePaymentDate(transfer, TransferAccountType.GIRO, payType);
 
-        executorHelper.validateOCR(transfer);
+        RemittanceInformation remittanceInformation =
+                validateAndGetRemittanceInformation(transfer, payType);
 
         HttpResponse injectJsCheckStep = this.apiClient.collectDynamicChallengeJavascript();
 
         RegisterPaymentResponse registerPaymentResponse =
                 executorHelper
                         .registerPayment(
-                                transfer, accounts, giroName, paymentDate, remittanceInformation)
+                                transfer,
+                                accounts,
+                                giroName,
+                                paymentDate,
+                                remittanceInformation,
+                                payType)
                         .validate();
 
         executorHelper.signPayment(registerPaymentResponse);
@@ -79,7 +85,14 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
                 .validate();
     }
 
-    private RemittanceInformation validateAndGetRemittanceInformation(final Transfer transfer) {
+    private String getPayType(Transfer transfer) {
+        return transfer.getDestination().is(Type.SE_BG)
+                ? TransferPayType.BANK_GIRO
+                : TransferPayType.PLUS_GIRO;
+    }
+
+    private RemittanceInformation validateAndGetRemittanceInformation(
+            final Transfer transfer, String payType) {
         RemittanceInformation remittanceInformation = transfer.getRemittanceInformation();
 
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
@@ -90,6 +103,10 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
 
         if (remittanceInformation.getType() == null) {
             remittanceInformation.setType(decideRemittanceInformationType(remittanceInformation));
+        }
+
+        if (RemittanceInformationType.OCR.equals(remittanceInformation.getType())) {
+            executorHelper.validateOCR(transfer, payType);
         }
 
         return remittanceInformation;

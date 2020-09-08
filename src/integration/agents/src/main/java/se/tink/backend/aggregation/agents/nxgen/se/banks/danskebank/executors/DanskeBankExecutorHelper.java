@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferPayType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity.BusinessDataEntityBuilder;
@@ -257,21 +256,21 @@ public class DanskeBankExecutorHelper {
         }
     }
 
-    public String validateGiro(Transfer transfer) {
+    public String validateGiro(Transfer transfer, String payType) {
         ValidateGiroRequest validateGiroRequest =
                 ValidateGiroRequest.builder()
                         .giroAccount(transfer.getDestination().getIdentifier())
-                        .payType(TransferPayType.GIRO)
+                        .payType(payType)
                         .build();
 
         return apiClient.validateGiroRequest(validateGiroRequest).validate().getGiroName();
     }
 
-    public void validateOCR(Transfer transfer) {
+    public void validateOCR(Transfer transfer, String payType) {
         ValidateOCRRequest validateOCRRequest =
                 ValidateOCRRequest.builder()
                         .giroAccount(transfer.getDestination().getIdentifier())
-                        .payType(TransferPayType.GIRO)
+                        .payType(payType)
                         .ocr(transfer.getRemittanceInformation().getValue())
                         .build();
 
@@ -283,7 +282,8 @@ public class DanskeBankExecutorHelper {
             ListAccountsResponse accounts,
             String creditorName,
             Date paymentDate,
-            RemittanceInformation remittanceInformation) {
+            RemittanceInformation remittanceInformation,
+            String payType) {
 
         AccountEntity sourceAccount = accounts.findAccount(transfer.getSource().getIdentifier());
 
@@ -295,7 +295,7 @@ public class DanskeBankExecutorHelper {
                         .accountProductFrom(sourceAccount.getAccountProduct())
                         .amount(transfer.getAmount().getValue())
                         .bookingDate(formatDate(paymentDate))
-                        .cardType(TransferPayType.GIRO)
+                        .cardType(payType)
                         .creditorId(transfer.getDestination().getIdentifier())
                         .creditorName(creditorName)
                         .currency(transfer.getAmount().getCurrency())
