@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@Slf4j
 public class SdcAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -81,6 +83,7 @@ public class SdcAuthenticationController
 
         // SDC provides Oauth2 Token without information about token type
         if (accessToken.getTokenType() == null) {
+            log.info("Missing token type in response, adding Bearer as token type.");
             accessToken.setTokenType("Bearer");
         }
 
