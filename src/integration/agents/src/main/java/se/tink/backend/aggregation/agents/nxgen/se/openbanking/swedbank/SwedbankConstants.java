@@ -118,7 +118,7 @@ public final class SwedbankConstants {
         public static final String PSU_USER_AGENT = "Tink";
         public static final String SIGNATURE_HEADER =
                 "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
-        public static final String DATE_PATTERN = "EEE, dd MMM yyyy k:m:s zzz";
+        public static final String DATE_PATTERN = "EEE, dd MMM yyyy HH:mm:ss zzz";
         public static final String TPP_REDIRECT_PREFERRED = "false";
     }
 
