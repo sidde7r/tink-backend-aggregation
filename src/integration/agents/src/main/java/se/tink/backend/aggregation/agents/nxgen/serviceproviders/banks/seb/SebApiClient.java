@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Request;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Response;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.social.security.SocialSecurityNumber;
@@ -49,6 +50,8 @@ public class SebApiClient {
         this.sebConfiguration = sebConfiguration;
         this.sessionStorage = sebSessionStorage;
         sebUUID = UUID.randomUUID().toString().toUpperCase();
+
+        this.httpClient.addFilter(new ServiceUnavailableBankServiceErrorFilter());
     }
 
     public AuthenticationResponse initiateBankId() {
