@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class JyskeAbstractAgent extends BankdataAgent {
+public abstract class JyskeAbstractAgent extends BankdataAgent {
 
     protected final JyskeApiClient apiClient;
 
