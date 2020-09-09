@@ -40,4 +40,12 @@ public class GenericResponse {
                                 ErrorCodes.REFRESH_TOKEN_EXPIRED.equalsIgnoreCase(
                                         tppMessage.getText()));
     }
+
+    @JsonIgnore
+    public boolean hasWrongUserId() {
+        return getTppMessages().stream()
+                .anyMatch(
+                        tppMessage ->
+                                ErrorCodes.WRONG_USER_ID.equalsIgnoreCase(tppMessage.getText()));
+    }
 }

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authent
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
@@ -60,7 +61,16 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
     }
 
     public AuthenticationResponse init(String ssn) {
-        return apiClient.authenticate(ssn);
+        try {
+            return apiClient.authenticate(ssn);
+        } catch (HttpResponseException e) {
+            GenericResponse response = e.getResponse().getBody(GenericResponse.class);
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
+                    && response.hasWrongUserId()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw e;
+        }
     }
 
     public AuthenticationStatusResponse collect(String ssn, String collectAuthUri) {
