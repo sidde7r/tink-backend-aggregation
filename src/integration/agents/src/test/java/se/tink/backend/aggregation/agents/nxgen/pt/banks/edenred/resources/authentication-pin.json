@@ -1,0 +1,27 @@
+{
+    "data": {
+        "token": "super-pin-token",
+        "onBoardApplied": true,
+        "customer": {
+            "id": 191367,
+            "regVersion": 65,
+            "name": "Hans Tinker",
+            "birthDate": "1976-12-24T00:00:00",
+            "cellPhoneNumber": "123456789",
+            "workPostalCode": 1231231,
+            "residencePostalCode": 1231231,
+            "gender": "MALE",
+            "emailStatus": "VALIDATED",
+            "workPlace": "Miraflores",
+            "residencePlace": "Miraflores",
+            "registerStatus": "REGISTERED",
+            "latCoordinateWork": 0.01260970000001,
+            "lngCoordinateWork": 0.027375799999999,
+            "latCoordinateResidence": 0.01260970000001,
+            "lngCoordinateResidence": 0.027375799999999,
+            "passwordStatus": "DEFINED",
+            "email": "hans_tinker@sapo.pt"
+        }
+    },
+    "message": [null]
+}

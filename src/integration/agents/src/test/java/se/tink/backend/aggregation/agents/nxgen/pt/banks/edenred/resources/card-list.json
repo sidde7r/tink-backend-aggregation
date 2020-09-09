@@ -1,0 +1,30 @@
+{
+    "data": [{
+        "id": 123456,
+        "regVersion": null,
+        "number": "4331230107896123",
+        "ownerName": "HANS TINKER",
+        "status": "ACTIVE",
+        "product": {
+            "id": 43396601,
+            "bin": 43396601,
+            "name": "Euroticket Refeição Visa"
+        },
+        "associatedUsers": [],
+        "holder": {
+            "id": 128115,
+            "regVersion": 0,
+            "customer": {
+                "id": 191367,
+                "regVersion": 65,
+                "name": "Hans Tinker",
+                "registerDate": "2018-10-05T13:38:47.223+0000",
+                "lastLoginDateHour": "2020-09-09T08:03:15.905+0000",
+                "status": "ACTIVE"
+            },
+            "pointsEarned": null
+        },
+        "favorite": "TRUE"
+    }],
+    "message": ["Operação realizada com sucesso!"]
+}

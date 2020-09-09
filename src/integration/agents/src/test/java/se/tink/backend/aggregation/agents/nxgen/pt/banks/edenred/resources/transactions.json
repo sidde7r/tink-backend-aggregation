@@ -1,0 +1,26 @@
+{
+    "data": {
+        "account": {
+            "iban": null,
+            "cardNumber": "4331230107896123",
+            "availableBalance": 15.50,
+            "cardHolderFirstName": "HANS TINKER",
+            "cardHolderLastName": "ACE ACE ACE",
+            "cardActivated": true
+        },
+        "movementList": [{
+            "transactionDate": "2020-04-20T21:39:34.479+0000",
+            "transactionType": 4010,
+            "transactionName": "Compra: AS PALMEIRAS        TEL 12312312",
+            "amount": -13.48,
+            "mcc": "5812",
+            "category": {
+                "id": 1,
+                "description": "Refeição"
+            },
+            "categoryId": null,
+            "balance": 15.50
+        }]
+    },
+    "message": ["Operação realizada com sucesso!"]
+}
