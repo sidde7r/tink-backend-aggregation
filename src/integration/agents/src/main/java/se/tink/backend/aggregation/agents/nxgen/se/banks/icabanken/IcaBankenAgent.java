@@ -88,13 +88,13 @@ public class IcaBankenAgent extends NextGenerationAgent
                 new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
-                        new IcaBankenInvestmentFetcher(apiClient));
+                        new IcaBankenInvestmentFetcher(apiClient, icaBankenSessionStorage));
 
         this.loanRefreshController =
                 new LoanRefreshController(
                         metricRefreshController,
                         updateController,
-                        new IcaBankenLoanFetcher(apiClient));
+                        new IcaBankenLoanFetcher(apiClient, icaBankenSessionStorage));
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
@@ -143,7 +143,7 @@ public class IcaBankenAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         IcaBankenTransactionalAccountsFetcher transactionalAccountFetcher =
-                new IcaBankenTransactionalAccountsFetcher(apiClient);
+                new IcaBankenTransactionalAccountsFetcher(apiClient, icaBankenSessionStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -166,7 +166,8 @@ public class IcaBankenAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
-        IcaBankenCreditCardFetcher creditCardFetcher = new IcaBankenCreditCardFetcher(apiClient);
+        IcaBankenCreditCardFetcher creditCardFetcher =
+                new IcaBankenCreditCardFetcher(apiClient, icaBankenSessionStorage);
 
         return new CreditCardRefreshController(
                 metricRefreshController,
@@ -204,7 +205,8 @@ public class IcaBankenAgent extends NextGenerationAgent
 
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
-                metricRefreshController, new IcaBankenTransferDestinationFetcher(apiClient));
+                metricRefreshController,
+                new IcaBankenTransferDestinationFetcher(apiClient, icaBankenSessionStorage));
     }
 
     @Override
@@ -227,7 +229,7 @@ public class IcaBankenAgent extends NextGenerationAgent
     @Override
     public FetchEInvoicesResponse fetchEInvoices() {
         final IcaBankenEInvoiceFetcher eInvoiceFetcher =
-                new IcaBankenEInvoiceFetcher(apiClient, catalog);
+                new IcaBankenEInvoiceFetcher(apiClient, icaBankenSessionStorage, catalog);
         eInvoiceRefreshController =
                 Optional.ofNullable(eInvoiceRefreshController)
                         .orElseGet(

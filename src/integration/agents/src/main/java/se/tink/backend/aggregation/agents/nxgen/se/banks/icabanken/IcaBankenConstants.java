@@ -54,6 +54,8 @@ public class IcaBankenConstants {
         public static final URL EINVOICES = new URL(HOST + "/api/egiro/invoices");
         public static final URL INIT_EINVOICE_SIGN =
                 new URL(HOST + "/api/egiro/recipient/bankId/init/{invoiceId}");
+        public static final URL EVALUATED_POLICIES =
+                new URL(HOST + "/api/authorization/evaluatedpolicies");
         public static final URL CUSTOMER = new URL(HOST + "/api/customer");
     }
 
@@ -103,6 +105,7 @@ public class IcaBankenConstants {
         public static final String USER_INSTALLATION_ID = "userInstallationId";
         public static final String SESSION_ID_TAG = "sessionId";
         public static final String IDENTIFIER_TAG = "identifier";
+        public static final String POLICIES_TAG = "policies";
         public static final String TO_DATE_TAG = "toDate";
         public static final String FUND_ID_TAG = "fundId";
         public static final String GIRO_NUMBER_TAG = "pgnumber";
@@ -177,6 +180,20 @@ public class IcaBankenConstants {
     public static final class Error {
         public static final int MULTIPLE_LOGIN_ERROR_CODE = 1001;
         public static final int GENERIC_ERROR_CODE = 1000;
+    }
+
+    public static final class Policies {
+        // access accounts, events/future, events/unsigned
+        public static final String ACCOUNTS = "AccountOverview";
+        // access cards
+        public static final String CARDS = "MyCards";
+        // access engagement/loans
+        public static final String LOANS = "MyLoans";
+        // access depots
+        public static final String DEPOTS = "MyFundSavingsView";
+        // access recipients, accounts/transferBanks, egiro/invoices
+        public static final String PAYMENTS = "PaymentAndExternalTransfer";
+        public static final String RESULT_OK = "Ok";
     }
 
     public enum UserMessage implements LocalizableEnum {

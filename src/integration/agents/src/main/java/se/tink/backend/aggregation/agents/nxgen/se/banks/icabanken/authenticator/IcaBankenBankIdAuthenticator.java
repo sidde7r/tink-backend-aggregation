@@ -68,6 +68,9 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
                     || !customer.getEngagement().isHasActiveBank()) {
                 throw LoginError.NOT_CUSTOMER.exception();
             }
+
+            // Policies are used to decide which endpoints are allowed to fetch
+            icaBankenSessionStorage.savePolicies(apiClient.fetchPolicies().getOkPolicies());
         }
 
         return bankIdStatus;

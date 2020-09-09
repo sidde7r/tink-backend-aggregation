@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.Policies;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -21,14 +24,20 @@ public class IcaBankenTransactionalAccountsFetcher
 
     private final IcaBankenApiClient apiClient;
     private final IcaBankenTransactionFetcher icaBankenTransactionFetcher;
+    private final IcaBankenSessionStorage sessionStorage;
 
-    public IcaBankenTransactionalAccountsFetcher(IcaBankenApiClient apiClient) {
+    public IcaBankenTransactionalAccountsFetcher(
+            IcaBankenApiClient apiClient, IcaBankenSessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.icaBankenTransactionFetcher = new IcaBankenTransactionFetcher(apiClient);
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
+        if (!sessionStorage.hasPolicy(Policies.ACCOUNTS)) {
+            return Collections.emptyList();
+        }
 
         AccountsEntity userAccounts = apiClient.fetchAccounts();
 

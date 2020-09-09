@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenCons
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdAuthInitBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdAuthPollBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.EvaluatedPoliciesBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.SessionBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdAuthPollResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdAuthRequest;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.EvaluatedPoliciesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.PaymentNameBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.TransferBankEntity;
@@ -143,6 +145,12 @@ public class IcaBankenApiClient {
         }
 
         return cachedAccounts;
+    }
+
+    public EvaluatedPoliciesBodyEntity fetchPolicies() {
+        return createRequest(Urls.EVALUATED_POLICIES)
+                .get(EvaluatedPoliciesResponse.class)
+                .getBody();
     }
 
     public CustomerBodyEntity fetchCustomer() {
