@@ -1,6 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -10,11 +12,13 @@ public class AccountInfoEntity {
     @JsonProperty("account_credit")
     private AmountEntity accountCredit;
 
-    private AmountEntity collateral;
+    @Getter private AmountEntity collateral;
 
+    @Getter
     @JsonProperty("pawn_value")
     private AmountEntity pawnValue;
 
+    @Getter
     @JsonProperty("trading_power")
     private AmountEntity tradingPower;
 
@@ -29,8 +33,6 @@ public class AccountInfoEntity {
 
     @JsonProperty("account_currency")
     private String accountCurrency;
-
-    private AmountEntity interest;
 
     @JsonProperty("account_sum")
     private AmountEntity accountSum;
@@ -68,27 +70,13 @@ public class AccountInfoEntity {
     @JsonProperty("accid")
     private String accountId;
 
-    public String getAccountId() {
-        return accountId;
-    }
-
+    @JsonIgnore
     public ExactCurrencyAmount getAccountSum() {
         return new ExactCurrencyAmount(accountSum.getValue(), accountSum.getCurrency());
     }
 
+    @JsonIgnore
     public ExactCurrencyAmount getFullMarketValue() {
         return new ExactCurrencyAmount(fullMarketvalue.getValue(), fullMarketvalue.getCurrency());
-    }
-
-    public AmountEntity getTradingPower() {
-        return tradingPower;
-    }
-
-    public AmountEntity getPawnValue() {
-        return pawnValue;
-    }
-
-    public AmountEntity getCollateral() {
-        return collateral;
     }
 }

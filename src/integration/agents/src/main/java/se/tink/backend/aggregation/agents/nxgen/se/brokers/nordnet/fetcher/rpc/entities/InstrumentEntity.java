@@ -1,11 +1,14 @@
-package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.Getter;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@JsonObject
 public class InstrumentEntity {
+
     @JsonProperty("price_type")
     private String priceType;
 
@@ -43,36 +46,4 @@ public class InstrumentEntity {
     private String name;
 
     private String institute;
-
-    public String getId() {
-        return id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getGroupType() {
-        return groupType;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public String getIsin() {
-        return isin;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getInstitute() {
-        return institute;
-    }
 }

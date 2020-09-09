@@ -9,12 +9,11 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.NordnetBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.NordnetBankIdAutoStartAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.NordnetPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.investment.NordnetInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.transactionalaccount.NordnetTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.session.NordnetSessionHandler;
-import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -44,20 +43,20 @@ public class NordnetAgent extends NextGenerationAgent
         super(componentProvider);
         this.sessionStorage = new SessionStorage();
         this.apiClient =
-                new NordnetApiClient(client, persistentStorage, sessionStorage, credentials);
+                new NordnetApiClient(client, credentials, persistentStorage, sessionStorage);
         this.investmentRefreshController = constructInvestmentRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-        client.setUserAgent(CommonHeaders.DEFAULT_USER_AGENT);
         client.setFollowRedirects(false);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
+
         return new TypedAuthenticationController(
                 new BankIdAuthenticationController<>(
                         supplementalRequester,
-                        new NordnetBankIdAuthenticator(apiClient, sessionStorage),
+                        new NordnetBankIdAutoStartAuthenticator(apiClient, persistentStorage),
                         persistentStorage,
                         credentials),
                 new PasswordAuthenticationController(
@@ -66,7 +65,7 @@ public class NordnetAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new NordnetSessionHandler(apiClient, persistentStorage, sessionStorage);
+        return new NordnetSessionHandler(apiClient);
     }
 
     @Override

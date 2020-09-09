@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.entities.AccountInfoEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.entities.AccountInfoEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -35,10 +35,9 @@ public class NordnetInvestmentFetcher
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-
-        AccountResponse accounts =
+        AccountsResponse accounts =
                 sessionStorage
-                        .get(NordnetConstants.StorageKeys.ACCOUNTS, AccountResponse.class)
+                        .get(StorageKeys.ACCOUNTS, AccountsResponse.class)
                         .orElseGet(apiClient::fetchAccounts);
 
         return accounts.stream()
@@ -52,18 +51,10 @@ public class NordnetInvestmentFetcher
     private Optional<InvestmentAccount> toTinkInvestmentAccount(AccountEntity account) {
 
         AccountInfoEntity accountInfoEntity = fetchAccountInfo(account.getAccountId());
-
         List<InstrumentModule> instruments = getInstruments(account.getAccountId());
-
         PortfolioModule portfolio = account.toPortfolioModule(accountInfoEntity, instruments);
 
         return account.toInvestmentAccount(accountInfoEntity, portfolio);
-    }
-
-    private AccountInfoEntity fetchAccountInfo(String accid) {
-        return apiClient.fetchAccountInfo(accid).stream()
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Could not fetch account info"));
     }
 
     private List<InstrumentModule> getInstruments(String accountId) {
@@ -76,6 +67,12 @@ public class NordnetInvestmentFetcher
             }
         }
         return Collections.emptyList();
+    }
+
+    private AccountInfoEntity fetchAccountInfo(String accid) {
+        return apiClient.fetchAccountInfo(accid).stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not fetch account info"));
     }
 
     @Override

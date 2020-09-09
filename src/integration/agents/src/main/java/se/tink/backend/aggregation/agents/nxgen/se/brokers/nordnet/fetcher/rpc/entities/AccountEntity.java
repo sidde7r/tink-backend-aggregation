@@ -1,10 +1,13 @@
-package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -19,21 +22,10 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Getter
+@JsonInclude(Include.NON_NULL)
 @JsonObject
 public class AccountEntity {
-
-    @JsonProperty("default")
-    private boolean jsonMemberDefault;
-
-    @JsonProperty("bank_accno")
-    private String bankAccountNumber;
-
-    @JsonProperty("account_code")
-    private String accountCode;
-
-    private String symbol;
-
-    private String role;
 
     @JsonProperty("accno")
     private String accountNumber;
@@ -41,13 +33,23 @@ public class AccountEntity {
     @JsonProperty("accid")
     private String accountId;
 
-    private String alias;
+    @JsonProperty("bank_accno")
+    private String bankAccountNumber;
 
     private String type;
 
-    public String getAccountId() {
-        return accountId;
-    }
+    private String symbol;
+
+    @JsonProperty("account_code")
+    private String accountCode;
+
+    private String role;
+
+    @JsonProperty("default")
+    private boolean jsonMemberDefault;
+
+    @JsonProperty("alias")
+    private String alias;
 
     @JsonIgnore
     public boolean isTransactionalAccount() {

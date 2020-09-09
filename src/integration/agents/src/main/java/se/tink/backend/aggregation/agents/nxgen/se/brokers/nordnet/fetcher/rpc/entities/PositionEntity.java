@@ -1,13 +1,16 @@
-package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
+import lombok.Getter;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@JsonObject
 public class PositionEntity {
+
     @JsonProperty("accno")
     private String accountNumber;
 
@@ -42,54 +45,6 @@ public class PositionEntity {
 
     @JsonProperty("is_custom_gav")
     private boolean isCustomerGav;
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
-
-    public InstrumentEntity getInstrument() {
-        return instrument;
-    }
-
-    public void setInstrument(InstrumentEntity instrument) {
-        this.instrument = instrument;
-    }
-
-    public AmountEntity getMainMarketPrice() {
-        return mainMarketPrice;
-    }
-
-    public double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
-    }
-
-    public AmountEntity getMarketValue() {
-        return marketValue;
-    }
-
-    public void setMarketValue(AmountEntity marketValue) {
-        this.marketValue = marketValue;
-    }
-
-    public AmountEntity getAcquisitionPrice() {
-        return acquisitionPrice;
-    }
 
     private InstrumentModule.InstrumentType getType() {
         if (getInstrument() == null || getInstrument().getGroupType() == null) {
