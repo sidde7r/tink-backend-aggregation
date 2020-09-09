@@ -12,6 +12,10 @@ tags = [
     "manual",
 ]
 
+runtime_deps = [
+    "//third_party:org_apache_httpcomponents_httpclient",
+]
+
 junit_test(
     name = "service",
     srcs = glob(["*.java"]),
@@ -22,9 +26,7 @@ junit_test(
     data = data,
     tags = tags,
     visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//third_party:org_apache_httpcomponents_httpclient",
-    ],
+    runtime_deps = runtime_deps,
     deps = [
         "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/utils",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
@@ -55,9 +57,7 @@ junit_test(
     data = data,
     tags = tags,
     visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//third_party:org_apache_httpcomponents_httpclient",
-    ],
+    runtime_deps = runtime_deps,
     deps = [
         "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/utils",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
