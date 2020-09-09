@@ -109,6 +109,8 @@ public final class DnbConstants {
     public final class Messages {
         public static final String GENERIC_BANKID_ERROR =
                 "du har ikke tilgang til å logge på med bankid. ta kontakt med din administrator.";
+        public static final String LOGIN_TIMEOUT =
+                "påloggingsforsøket ditt ble avbrutt på grunn av inaktivitet.";
         public static final String BANKID_TIMEOUT = "feilkode c302";
         public static final String BANKID_ALREADY_IN_PROGRESS = "feilkode c293";
         public static final String INCORRECT_PHONE_NUMER_OR_INACTIVATED_MOBILE_BANKID =
