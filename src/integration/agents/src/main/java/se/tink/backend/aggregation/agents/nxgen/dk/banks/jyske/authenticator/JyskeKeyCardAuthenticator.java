@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskePersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.KeycardChallengeEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.KeycardEnrollEntity;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdErrorEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdInstallIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdLoginEncryptionEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdLoginInstallIdEncryptionEntity;
@@ -26,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuthenticator {
@@ -57,21 +55,14 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuth
 
         apiClient.nemIdInit(token);
 
-        try {
-            NemIdLoginEncryptionEntity encryptionEntity =
-                    new NemIdLoginEncryptionEntity(
-                            this.persistentStorage.getUserId(),
-                            this.persistentStorage.getPincode());
+        NemIdLoginEncryptionEntity encryptionEntity =
+                new NemIdLoginEncryptionEntity(
+                        this.persistentStorage.getUserId(), this.persistentStorage.getPincode());
 
-            KeycardChallengeEntity challengeEntity =
-                    getKeycardChallengeEntity(encryptionEntity, token);
-            this.persistentStorage.setKeycardChallengeEntity(challengeEntity);
+        KeycardChallengeEntity challengeEntity = getKeycardChallengeEntity(encryptionEntity, token);
+        this.persistentStorage.setKeycardChallengeEntity(challengeEntity);
 
-            return new KeyCardInitValues(challengeEntity.getKeycardNo(), challengeEntity.getKey());
-        } catch (HttpResponseException e) {
-            NemIdErrorEntity.throwError(e);
-            throw e; // will never get here because exception already thrown.
-        }
+        return new KeyCardInitValues(challengeEntity.getKeycardNo(), challengeEntity.getKey());
     }
 
     /*
@@ -119,23 +110,14 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuth
                         challengeEntity.getSecurityDevice());
 
         NemIdResponse enrollment;
-        try {
-            enrollment = apiClient.nemIdEnroll(enrollEntity, token);
-        } catch (HttpResponseException e) {
-            NemIdErrorEntity.throwError(e);
-            throw e; // will never get here because exception already thrown.
-        }
+        enrollment = apiClient.nemIdEnroll(enrollEntity, token);
 
         NemIdInstallIdEntity installIdEntity =
                 new Decryptor(token).read(enrollment, NemIdInstallIdEntity.class);
 
         String installId = installIdEntity.getInstallId();
 
-        try {
-            authenticateWithInstallId(username, password, installId, token);
-        } catch (HttpResponseException e) {
-            NemIdErrorEntity.throwError(e);
-        }
+        authenticateWithInstallId(username, password, installId, token);
 
         persistentStorage.setInstallId(installId);
     }
