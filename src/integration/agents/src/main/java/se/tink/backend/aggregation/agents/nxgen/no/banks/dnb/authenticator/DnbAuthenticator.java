@@ -208,11 +208,7 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
             return BankIdStatus.WAITING;
         }
 
-        if (collectBankId
-                .getMessage()
-                .getUserMessage()
-                .toLowerCase()
-                .contains(DnbConstants.Messages.BANKID_TIMEOUT)) {
+        if (isTimeout(collectBankId)) {
             return BankIdStatus.TIMEOUT;
         }
 
@@ -227,5 +223,11 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
                         "user message: %s, error message: %s",
                         collectBankId.getMessage().getUserMessage(),
                         collectBankId.getMessage().getErrorMessage()));
+    }
+
+    private boolean isTimeout(CollectChallengeResponse collectBankId) {
+        String userMessage = collectBankId.getMessage().getUserMessage().toLowerCase();
+        return userMessage.contains(DnbConstants.Messages.BANKID_TIMEOUT)
+                || userMessage.contains(DnbConstants.Messages.LOGIN_TIMEOUT);
     }
 }
