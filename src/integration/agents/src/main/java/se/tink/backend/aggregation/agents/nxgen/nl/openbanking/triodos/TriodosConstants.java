@@ -7,6 +7,7 @@ public final class TriodosConstants {
     }
 
     public static final String BASE_URL = "https://api-ma.triodos.com";
+    public static final String AUTH_BASE_URL = "https://api.triodos.com";
     public static final String PSU_IPADDRESS = "0.0.0.0";
 
     public static class Urls {
