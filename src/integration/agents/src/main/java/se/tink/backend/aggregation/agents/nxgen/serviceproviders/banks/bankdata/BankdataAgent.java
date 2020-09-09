@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -76,7 +77,7 @@ public class BankdataAgent extends NextGenerationAgent
 
     protected void configureHttpClient(TinkHttpClient client) {
         // Known bankdata errors
-        client.addFilter(new KnownErrorsFilter());
+        client.addFilter(constructKnowErrorsFilter());
         // Catches the various timeouts, one of them is "connect timeout" after it is retried few
         // times in filter below
         client.addFilter(new TimeoutFilter());
@@ -86,6 +87,10 @@ public class BankdataAgent extends NextGenerationAgent
                         TimeoutRetryFilterParams.NUM_TIMEOUT_RETRIES,
                         TimeoutRetryFilterParams.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
         client.setTimeout(HttpClientParams.CLIENT_TIMEOUT);
+    }
+
+    protected Filter constructKnowErrorsFilter() {
+        return new KnownErrorsFilter();
     }
 
     @Override

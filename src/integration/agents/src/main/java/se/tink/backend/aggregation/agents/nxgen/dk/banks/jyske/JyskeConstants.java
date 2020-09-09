@@ -74,12 +74,6 @@ public final class JyskeConstants {
         public static final String KEYCARD_CHALLENGE_ENTITY = "keycardChallengeEntity";
     }
 
-    public static final class ErrorCode {
-        public static final int INVALID_CREDENTIAL = 112;
-        public static final int NOT_SIGNED_UP_FOR_MOBILE_BANK = 109;
-        public static final int INROLL_BAD_REQUEST = 1;
-    }
-
     public static final class ErrorMessages {
         public static final String BANK_UNAVAILABLE_DURING_MIDNIGHT =
                 "mobilbanken er lukket hverdage og ";

@@ -25,4 +25,21 @@ public class ErrorResponse {
     public String getStatus() {
         return status;
     }
+
+    @Override
+    public String toString() {
+        return "ErrorResponse{"
+                + "errorCode="
+                + errorCode
+                + ", errorMessage='"
+                + errorMessage
+                + '\''
+                + ", debugMessage='"
+                + debugMessage
+                + '\''
+                + ", status='"
+                + status
+                + '\''
+                + '}';
+    }
 }
