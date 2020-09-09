@@ -6,6 +6,12 @@ data = [
     "//src/aggregation/service:aggregation_decoupled_image.tar",
 ]
 
+tags = [
+    # These tests are not fully hermetic as they depend on Docker. Also a bit slow. Ergo, manual.
+    "external",
+    "manual",
+]
+
 junit_test(
     name = "service",
     srcs = glob(["*.java"]),
@@ -14,11 +20,7 @@ junit_test(
         "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources:local",
     ],
     data = data,
-    tags = [
-        # These tests are not fully hermetic as they depend on Docker. Also a bit slow. Ergo, manual.
-        "external",
-        "manual",
-    ],
+    tags = tags,
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:org_apache_httpcomponents_httpclient",
@@ -51,11 +53,7 @@ junit_test(
         "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources:ci",
     ],
     data = data,
-    tags = [
-        # These tests are not fully hermetic as they depend on Docker. Also a bit slow. Ergo, manual.
-        "external",
-        "manual",
-    ],
+    tags = tags,
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:org_apache_httpcomponents_httpclient",
