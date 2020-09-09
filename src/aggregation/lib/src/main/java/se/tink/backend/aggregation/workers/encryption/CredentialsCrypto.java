@@ -62,7 +62,11 @@ public class CredentialsCrypto {
         }
 
         String sensitiveData =
-                pickMostRecentSensitiveData(cachedSensitiveData, credentialsSensitiveData);
+                pickMostRecentSensitiveData(
+                        cachedSensitiveData,
+                        credentialsSensitiveData,
+                        request.getProvider().getName());
+
         Preconditions.checkState(
                 !Strings.isNullOrEmpty(sensitiveData), "Sensitive data was not set.");
 
@@ -179,7 +183,7 @@ public class CredentialsCrypto {
                         .contains(FeatureFlags.ALPHA_TEST_CREDENTIALS_REVAMP);
     }
 
-    private String pickMostRecentSensitiveData(String a, String b) {
+    private String pickMostRecentSensitiveData(String a, String b, String provider) {
         // Return the other one if one is null.
         if (Strings.isNullOrEmpty(a)) {
             return b;
@@ -194,10 +198,17 @@ public class CredentialsCrypto {
         EncryptedPayloadHead baseB =
                 SerializationUtils.deserializeFromString(b, EncryptedPayloadHead.class);
 
-        if (baseA.getTimestamp().after(baseB.getTimestamp())) {
-            return a;
-        } else {
-            return b;
+        try {
+            if (baseA.getTimestamp().after(baseB.getTimestamp())) {
+                return a;
+            } else {
+                return b;
+            }
+        } catch (NullPointerException e) {
+            logger.warn("{DEBUG_NPE}: provider: " + provider);
+            logger.warn("{DEBUG_NPE}: a: " + a, e);
+            logger.warn("{DEBUG_NPE}: b: " + b, e);
+            throw e;
         }
     }
 }
