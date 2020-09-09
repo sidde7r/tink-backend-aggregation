@@ -45,7 +45,17 @@ import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEnti
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.service.utils.SystemTestUtils;
 
-/** These tests assume that the Docker daemon is running. */
+/**
+ * These tests assume that the Docker daemon is running.
+ *
+ * <p>It is also necessary to pull the image from our private Docker registry:
+ *
+ * <pre>
+ * $ gcloud auth login
+ * $ gcloud auth configure-docker
+ * $ docker pull gcr.io/tink-containers/ryuk:0.2.3
+ * </pre>
+ */
 @Slf4j
 @RunWith(SpringRunner.class)
 public class SystemTest {
