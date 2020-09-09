@@ -38,10 +38,7 @@ deps = [
 junit_test(
     name = "service",
     srcs = glob(["*.java"]),
-    classpath_resources = [
-        # This will place it at bazel-out/k8-fastbuild/bin/src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/service.jar:testcontainers.properties
-        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources:local",
-    ],
+    classpath_resources = ["//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources:local"],
     data = data,
     tags = tags,
     visibility = ["//visibility:public"],
@@ -52,10 +49,7 @@ junit_test(
 junit_test(
     name = "ci",
     srcs = glob(["*.java"]),
-    classpath_resources = [
-        # This will place it at bazel-out/k8-fastbuild/bin/src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/service.jar:testcontainers.properties
-        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources:ci",
-    ],
+    classpath_resources = ["//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources:ci"],
     data = data,
     tags = tags,
     visibility = ["//visibility:public"],
