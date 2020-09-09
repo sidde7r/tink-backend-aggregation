@@ -1,5 +1,11 @@
 load("//tools/bzl:junit_old.bzl", "junit_test")
 
+data = [
+    "//data:agents",
+    "//src/aggregation/fake_aggregation_controller/src/main/java/se/tink/backend/fake_aggregation_controller:image.tar",
+    "//src/aggregation/service:aggregation_decoupled_image.tar",
+]
+
 junit_test(
     name = "service",
     srcs = glob(["*.java"]),
@@ -7,11 +13,7 @@ junit_test(
         # This will place it at bazel-out/k8-fastbuild/bin/src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/service.jar:testcontainers.properties
         "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources:local",
     ],
-    data = [
-        "//data:agents",
-        "//src/aggregation/fake_aggregation_controller/src/main/java/se/tink/backend/fake_aggregation_controller:image.tar",
-        "//src/aggregation/service:aggregation_decoupled_image.tar",
-    ],
+    data = data,
     tags = [
         # These tests are not fully hermetic as they depend on Docker. Also a bit slow. Ergo, manual.
         "external",
@@ -48,11 +50,7 @@ junit_test(
         # This will place it at bazel-out/k8-fastbuild/bin/src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/service.jar:testcontainers.properties
         "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources:ci",
     ],
-    data = [
-        "//data:agents",
-        "//src/aggregation/fake_aggregation_controller/src/main/java/se/tink/backend/fake_aggregation_controller:image.tar",
-        "//src/aggregation/service:aggregation_decoupled_image.tar",
-    ],
+    data = data,
     tags = [
         # These tests are not fully hermetic as they depend on Docker. Also a bit slow. Ergo, manual.
         "external",
