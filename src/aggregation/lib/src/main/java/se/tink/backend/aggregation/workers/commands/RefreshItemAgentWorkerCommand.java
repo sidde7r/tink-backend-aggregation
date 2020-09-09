@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.compliance.customer_restrictions.CustomerDataFetchingRestrictions;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
@@ -45,6 +46,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.client.AgentD
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
 import se.tink.eventproducerservice.events.grpc.RefreshResultEventProto.RefreshResultEvent.AdditionalInfo;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.DataFetchingRestrictions;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.pair.Pair;
@@ -61,6 +63,9 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private final DataTrackerEventProducer dataTrackerEventProducer;
     private final RefreshEventProducer refreshEventProducer;
+    private final List<DataFetchingRestrictions> dataFetchingRestrictions;
+    private final CustomerDataFetchingRestrictions customerDataFetchingRestrictions =
+            new CustomerDataFetchingRestrictions();
 
     private final String agentName;
     private final String provider;
@@ -96,6 +101,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         this.agentName = request.getProvider().getClassName();
         this.provider = request.getProvider().getName();
         this.market = request.getProvider().getMarket();
+        this.dataFetchingRestrictions = request.getDataFetchingRestrictions();
     }
 
     public RefreshableItem getRefreshableItem() {
@@ -109,6 +115,17 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
+        if (isNotAllowedToRefreshItem()) {
+            log.info(
+                    "Item: {} is restricted from refresh - restrictions: {}",
+                    item,
+                    dataFetchingRestrictions);
+            // TODO this is commented out for now to be able to double-check (by verifying the logs)
+            // that everything works as expected. Once that done the below return sis to be
+            // uncommented https://tinkab.atlassian.net/browse/AGG-475
+            // return AgentWorkerCommandResult.CONTINUE;
+        }
+
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
         try {
             MetricAction action =
@@ -186,6 +203,10 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         }
 
         return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    private boolean isNotAllowedToRefreshItem() {
+        return customerDataFetchingRestrictions.shouldBeRestricted(item, dataFetchingRestrictions);
     }
 
     private boolean isAbleToRefreshItem(Agent agent, RefreshableItem item) {
