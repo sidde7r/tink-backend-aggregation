@@ -283,7 +283,7 @@ public final class SwedbankApiClient {
                 .get(AccountBalanceResponse.class);
     }
 
-    public <T> T getTransactions(String accountId, Date fromDate, Date toDate, Class<T> response) {
+    public HttpResponse getTransactions(String accountId, Date fromDate, Date toDate) {
         return createRequestInSession(
                         Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParameters.ACCOUNT_ID, accountId),
                         true)
@@ -296,7 +296,7 @@ public final class SwedbankApiClient {
                 .queryParam(
                         SwedbankConstants.QueryKeys.BOOKING_STATUS,
                         SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
-                .get(response);
+                .get(HttpResponse.class);
     }
 
     public HttpResponse getTransactions(String endPoint) {

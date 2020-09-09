@@ -185,6 +185,7 @@ public final class SwedbankConstants {
 
     public static final class ErrorCodes {
         public static final String KYC_INVALID = "KYC_INVALID";
+        public static final String SCA_REQUIRED = "SCA_REQUIRED";
     }
 
     public enum HeadersToSign {
