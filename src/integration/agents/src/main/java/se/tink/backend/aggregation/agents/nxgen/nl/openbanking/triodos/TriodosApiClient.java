@@ -82,7 +82,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         persistentStorage.put(BerlinGroupConstants.StorageKeys.CODE_VERIFIER, codeVerifier);
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         persistentStorage.put(BerlinGroupConstants.StorageKeys.CONSENT_ID, consentId);
-        final String authUrl = TriodosConstants.BASE_URL + Urls.AUTH;
+        final String authUrl = TriodosConstants.AUTH_BASE_URL + Urls.AUTH;
 
         return getAuthorizeUrl(authUrl, state, getConfiguration().getClientId(), getRedirectUrl())
                 .queryParam(QueryKeys.SCOPE, TriodosConstants.QueryValues.SCOPE + consentId)
