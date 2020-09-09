@@ -5,7 +5,7 @@ junit_test(
     srcs = glob(["*.java"]),
     classpath_resources = [
         # This will place it at bazel-out/k8-fastbuild/bin/src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/service.jar:testcontainers.properties
-        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources",
+        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources:ci",
     ],
     data = [
         "//data:agents",

@@ -1,7 +1,7 @@
 filegroup(
-    name = "resources",
+    name = "ci",
     srcs = glob(
-        include = ["*"],
+        include = ["ci/**/*"],
         exclude = [
             "BUILD",
         ],
