@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -242,8 +241,7 @@ public class IcaBankenAgent extends NextGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         IcaBankenIdentityDataFetcher identityDataFetcher =
-                new IcaBankenIdentityDataFetcher(
-                        apiClient, credentials.getField(Field.Key.USERNAME));
+                new IcaBankenIdentityDataFetcher(apiClient);
         return identityDataFetcher.getIdentityDataResponse();
     }
 }
