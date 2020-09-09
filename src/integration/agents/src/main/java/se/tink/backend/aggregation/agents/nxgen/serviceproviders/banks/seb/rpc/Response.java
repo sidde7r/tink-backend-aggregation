@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.BusinessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.Payload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.ResultInfoMessage;
@@ -93,7 +94,7 @@ public class Response {
     }
 
     @JsonIgnore
-    public BusinessEntity getCompanyInformation(String orgNumber) {
+    public BusinessEntity getMatchingCompanyInformation(String orgNumber) {
         return payload.getBusinessEntities().stream()
                 .filter(
                         businessEntity ->
@@ -102,7 +103,7 @@ public class Response {
                                         .substring(0, 10)
                                         .equals(orgNumber))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Invalid organization number"));
+                .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
     }
 
     @JsonIgnore

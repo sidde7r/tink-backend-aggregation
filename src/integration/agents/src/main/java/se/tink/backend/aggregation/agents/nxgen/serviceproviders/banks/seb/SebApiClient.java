@@ -289,7 +289,7 @@ public class SebApiClient {
 
         if (sebConfiguration.isBusinessAgent()) {
             sessionStorage.putCompanyInformation(
-                    activateSessionResponse.getCompanyInformation(
+                    activateSessionResponse.getMatchingCompanyInformation(
                             sebConfiguration.getOrganizationNumber()));
             activateRole();
         }
