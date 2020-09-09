@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.CredentialKeys;
 
 public class TriodosAgentTest {
 
@@ -18,12 +19,13 @@ public class TriodosAgentTest {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("nl", "nl-triodos-ob")
-                        .addCredentialField("IBAN", manager.get(IbanArgumentEnum.IBAN))
+                        .addCredentialField(
+                                CredentialKeys.IBANS, manager.get(IbanArgumentEnum.IBAN))
                         .setFinancialInstitutionId("triodos")
                         .setAppId("tink")
                         .setClusterId("oxford-preprod")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 
