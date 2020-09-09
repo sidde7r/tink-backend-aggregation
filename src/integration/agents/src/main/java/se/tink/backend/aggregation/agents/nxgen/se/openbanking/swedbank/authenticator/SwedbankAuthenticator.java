@@ -1,16 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator;
 
-import java.util.List;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -36,7 +39,17 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
-        OAuth2Token token = apiClient.refreshToken(refreshToken);
+        OAuth2Token token;
+        try {
+            token = apiClient.refreshToken(refreshToken);
+        } catch (HttpResponseException e) {
+            GenericResponse response = e.getResponse().getBody(GenericResponse.class);
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
+                    && response.refreshTokenHasExpired()) {
+                throw SessionError.SESSION_EXPIRED.exception(e);
+            }
+            throw e;
+        }
         persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, token);
         return token;
     }
@@ -62,10 +75,6 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
     public ConsentResponse getConsentForIbanList() {
         return apiClient.getConsentAccountDetails(
                 apiClient.mapAccountResponseToIbanList(apiClient.fetchAccounts()));
-    }
-
-    public List<String> getAccountList() {
-        return apiClient.mapAccountResponseToResourceList(apiClient.fetchAccounts());
     }
 
     public ConsentResponse getConsentForAllAccounts() {

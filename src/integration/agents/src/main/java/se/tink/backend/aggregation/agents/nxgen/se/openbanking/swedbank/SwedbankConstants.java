@@ -14,8 +14,6 @@ public final class SwedbankConstants {
     public static final int TRANSACTIONS_DOWNLOAD_RETRY_COUNT = 3;
 
     public static class Format {
-        public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
-        public static final String HEADER_TIMESTAMP = "E, dd MMM yyyy HH:mm:ss z";
         public static final String TRANSACTION_DESCRIPTION_SEPARATOR = " ";
     }
 
@@ -118,7 +116,7 @@ public final class SwedbankConstants {
         public static final String PSU_USER_AGENT = "Tink";
         public static final String SIGNATURE_HEADER =
                 "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
-        public static final String DATE_PATTERN = "EEE, dd MMM yyyy k:m:s zzz";
+        public static final String DATE_PATTERN = "EEE, dd MMM yyyy HH:mm:ss zzz";
         public static final String TPP_REDIRECT_PREFERRED = "false";
     }
 
@@ -176,8 +174,6 @@ public final class SwedbankConstants {
     }
 
     public static final class LogMessages {
-        public static final String SIGNING_COMPLETE = "Signing complete";
-        public static final String WAITING_FOR_SIGNING = "Waiting for signing";
         public static final String TRANSACTION_SIGNING_TIMED_OUT =
                 "Sign for fetching transactions for the last 25 months, timed out";
     }
@@ -189,6 +185,8 @@ public final class SwedbankConstants {
 
     public static final class ErrorCodes {
         public static final String KYC_INVALID = "KYC_INVALID";
+        public static final String SCA_REQUIRED = "SCA_REQUIRED";
+        public static final String REFRESH_TOKEN_EXPIRED = "Provided refresh_token expired";
     }
 
     public enum HeadersToSign {

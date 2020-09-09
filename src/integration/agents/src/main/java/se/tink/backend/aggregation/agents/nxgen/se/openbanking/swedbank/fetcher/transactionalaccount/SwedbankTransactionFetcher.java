@@ -26,11 +26,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.Swedbank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -55,10 +57,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     private boolean checkIfScaIsRequired(HttpResponseException e) {
         return (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
-                && e.getResponse()
-                        .getBody(String.class)
-                        .toLowerCase()
-                        .contains(SwedbankConstants.ErrorMessages.SCA_REQUIRED));
+                && e.getResponse().getBody(GenericResponse.class).requiresSca());
     }
 
     private String startScaAuthorization(String account, Date fromDate, Date toDate) {
@@ -87,12 +86,9 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     private Optional<FetchTransactionsResponse> fetchAllTransactions(TransactionalAccount account) {
 
-        StatementResponse statementResponse;
+        HttpResponse httpResponse;
         try {
-
-            statementResponse =
-                    apiClient.getTransactions(
-                            account.getApiIdentifier(), fromDate, toDate, StatementResponse.class);
+            httpResponse = apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
         } catch (HttpResponseException e) {
             if (checkIfScaIsRequired(e)) {
                 String scaStatus =
@@ -100,18 +96,27 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                 if (!scaStatus.equalsIgnoreCase(AuthStatus.FINALIZED)) {
                     return Optional.empty();
                 }
-                statementResponse =
-                        apiClient.getTransactions(
-                                account.getApiIdentifier(),
-                                fromDate,
-                                toDate,
-                                StatementResponse.class);
+                httpResponse =
+                        apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
             } else {
                 throw e;
             }
         }
-
-        return downaloadZippedTransactions(statementResponse.getLinks().getDownload().getHref());
+        boolean isOnlineStatement =
+                TimeUnit.DAYS.convert(
+                                Instant.now().toEpochMilli() - fromDate.getTime(),
+                                TimeUnit.MILLISECONDS)
+                        <= TimeValues.ONLINE_STATEMENT_MAX_DAYS;
+        if (isOnlineStatement) {
+            return Optional.ofNullable((httpResponse.getBody(FetchTransactionsResponse.class)));
+        } else {
+            return downaloadZippedTransactions(
+                    httpResponse
+                            .getBody(StatementResponse.class)
+                            .getLinks()
+                            .getDownload()
+                            .getHref());
+        }
     }
 
     private Optional<FetchTransactionsResponse> downaloadZippedTransactions(String downloadLink) {
@@ -148,21 +153,8 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        Optional<FetchTransactionsResponse> fetchTransactionsResponse;
-        if (TimeUnit.DAYS.convert(
-                        Instant.now().toEpochMilli() - fromDate.getTime(), TimeUnit.MILLISECONDS)
-                <= TimeValues.ONLINE_STATEMENT_MAX_DAYS) {
-            fetchTransactionsResponse =
-                    Optional.of(
-                            apiClient.getTransactions(
-                                    account.getApiIdentifier(),
-                                    fromDate,
-                                    toDate,
-                                    FetchTransactionsResponse.class));
-        } else {
-            fetchTransactionsResponse = fetchAllTransactions(account);
-        }
-
+        Optional<FetchTransactionsResponse> fetchTransactionsResponse =
+                fetchAllTransactions(account);
         return Stream.of(
                         fetchTransactionsResponse
                                 .map(FetchTransactionsResponse::getTransactions)

@@ -1,15 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.balance.BalanceAmount;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.balance.BalancesItem;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -21,6 +24,7 @@ public class AccountEntity {
     private String product;
     private String resourceId;
     private String name;
+    private List<BalancesItem> balances;
 
     @JsonProperty("_links")
     private AccountLinksEntity links;
@@ -65,13 +69,16 @@ public class AccountEntity {
         return resourceId;
     }
 
-    public Optional<TransactionalAccount> toTinkAccount(
-            AccountBalanceResponse accountBalanceResponse) {
+    public List<BalancesItem> getBalances() {
+        return balances;
+    }
+
+    public Optional<TransactionalAccount> toTinkAccount(List<BalancesItem> balances) {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance()))
+                .withBalance(BalanceModule.of(getAvailableBalance(balances)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(bban)
@@ -82,5 +89,13 @@ public class AccountEntity {
                 .putInTemporaryStorage(SwedbankConstants.StorageKeys.ACCOUNT_ID, iban)
                 .setApiIdentifier(resourceId)
                 .build();
+    }
+
+    private ExactCurrencyAmount getAvailableBalance(List<BalancesItem> balances) {
+        return balances.stream()
+                .map(BalancesItem::getBalanceAmount)
+                .map(BalanceAmount::getAmount)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not fetch balance"));
     }
 }

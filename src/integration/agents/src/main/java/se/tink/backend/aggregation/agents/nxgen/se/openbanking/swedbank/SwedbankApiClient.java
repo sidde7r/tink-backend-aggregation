@@ -176,12 +176,6 @@ public final class SwedbankApiClient {
                 .collect(Collectors.toList());
     }
 
-    public List<String> mapAccountResponseToResourceList(FetchAccountResponse accounts) {
-        return accounts.getAccountList().stream()
-                .map(AccountEntity::getResourceId)
-                .collect(Collectors.toList());
-    }
-
     public URL getAuthorizeUrl(String state) {
         HttpResponse response =
                 createRequest(SwedbankConstants.Urls.AUTHORIZATION)
@@ -289,7 +283,7 @@ public final class SwedbankApiClient {
                 .get(AccountBalanceResponse.class);
     }
 
-    public <T> T getTransactions(String accountId, Date fromDate, Date toDate, Class<T> response) {
+    public HttpResponse getTransactions(String accountId, Date fromDate, Date toDate) {
         return createRequestInSession(
                         Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParameters.ACCOUNT_ID, accountId),
                         true)
@@ -302,7 +296,7 @@ public final class SwedbankApiClient {
                 .queryParam(
                         SwedbankConstants.QueryKeys.BOOKING_STATUS,
                         SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
-                .get(response);
+                .get(HttpResponse.class);
     }
 
     public HttpResponse getTransactions(String endPoint) {
@@ -337,13 +331,6 @@ public final class SwedbankApiClient {
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
                 .body(new AuthorizeRequest(), MediaType.APPLICATION_JSON_TYPE)
                 .put(AuthenticationResponse.class);
-    }
-
-    public boolean checkStatus(String statusEndpoint) {
-        return createRequestInSession(new URL(Urls.BASE.concat(statusEndpoint)), true)
-                .get(ConsentResponse.class)
-                .getStatementStatus()
-                .equalsIgnoreCase(SwedbankConstants.ConsentStatus.SIGNED);
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
@@ -425,10 +412,6 @@ public final class SwedbankApiClient {
                 .post(PaymentAuthorisationResponse.class);
     }
 
-    private String getHeaderTimeStamp() {
-        return new SimpleDateFormat(SwedbankConstants.Format.HEADER_TIMESTAMP).format(new Date());
-    }
-
     private String createDigest(String body) {
         return String.format(
                 "SHA-256=".concat("%s"), Base64.getEncoder().encodeToString(Hash.sha256(body)));
@@ -440,8 +423,6 @@ public final class SwedbankApiClient {
                         .map(HeadersToSign::getHeader)
                         .filter(headers::containsKey)
                         .collect(Collectors.joining(" "));
-
-        System.out.println(signedHeaders);
 
         String signedHeadersWithValues =
                 Arrays.stream(HeadersToSign.values())
