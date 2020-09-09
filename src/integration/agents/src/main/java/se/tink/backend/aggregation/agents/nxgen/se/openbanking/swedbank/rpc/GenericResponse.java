@@ -31,4 +31,13 @@ public class GenericResponse {
                         tppMessage ->
                                 ErrorCodes.SCA_REQUIRED.equalsIgnoreCase(tppMessage.getCode()));
     }
+
+    @JsonIgnore
+    public boolean refreshTokenHasExpired() {
+        return getTppMessages().stream()
+                .anyMatch(
+                        tppMessage ->
+                                ErrorCodes.REFRESH_TOKEN_EXPIRED.equalsIgnoreCase(
+                                        tppMessage.getText()));
+    }
 }
