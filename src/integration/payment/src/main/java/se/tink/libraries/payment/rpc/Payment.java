@@ -183,6 +183,11 @@ public class Payment {
     }
 
     public boolean isSepa() {
+        if (debtor == null) {
+            return creditor.getAccountIdentifierType() == Type.IBAN
+                    && sepaCountriesWithEur.contains(
+                            IbanUtil.getCountryCode(creditor.getAccountNumber()));
+        }
         return debtor.getAccountIdentifierType() == Type.IBAN
                 && creditor.getAccountIdentifierType() == Type.IBAN
                 && sepaCountriesWithEur.contains(IbanUtil.getCountryCode(debtor.getAccountNumber()))
