@@ -54,6 +54,7 @@ public class IcaBankenConstants {
         public static final URL EINVOICES = new URL(HOST + "/api/egiro/invoices");
         public static final URL INIT_EINVOICE_SIGN =
                 new URL(HOST + "/api/egiro/recipient/bankId/init/{invoiceId}");
+        public static final URL CUSTOMER = new URL(HOST + "/api/customer");
     }
 
     public static final class Headers {

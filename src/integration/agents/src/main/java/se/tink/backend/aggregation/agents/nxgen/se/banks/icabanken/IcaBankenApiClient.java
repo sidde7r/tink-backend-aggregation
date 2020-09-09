@@ -34,6 +34,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accou
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.UpcomingTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.EInvoiceBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.rpc.EInvoiceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata.entities.CustomerBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata.rpc.CustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.DepotEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.FundDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.rpc.InstrumentResponse;
@@ -62,6 +64,7 @@ public class IcaBankenApiClient {
     private final IcabankenPersistentStorage icabankenPersistentStorage;
 
     private AccountsEntity cachedAccounts;
+    private CustomerBodyEntity cachedCustomer;
 
     public IcaBankenApiClient(
             TinkHttpClient client,
@@ -140,6 +143,16 @@ public class IcaBankenApiClient {
         }
 
         return cachedAccounts;
+    }
+
+    public CustomerBodyEntity fetchCustomer() {
+        if (cachedCustomer == null) {
+            cachedCustomer =
+                    createRequest(IcaBankenConstants.Urls.CUSTOMER)
+                            .get(CustomerResponse.class)
+                            .getBody();
+        }
+        return cachedCustomer;
     }
 
     public TransactionsBodyEntity fetchTransactionsWithDate(Account account, Date toDate) {

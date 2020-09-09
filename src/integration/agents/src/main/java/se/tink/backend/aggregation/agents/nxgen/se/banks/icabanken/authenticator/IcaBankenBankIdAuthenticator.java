@@ -7,11 +7,13 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdAuthInitBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdAuthPollBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.SessionBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata.entities.CustomerBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -59,6 +61,13 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
         if (bankIdStatus == BankIdStatus.DONE) {
             final SessionBodyEntity authResponse = apiClient.authenticateBankId(reference);
             icaBankenSessionStorage.saveSessionId(authResponse.getSessionId());
+
+            final CustomerBodyEntity customer = apiClient.fetchCustomer();
+            if (!customer.isCustomer()
+                    || customer.getEngagement() == null
+                    || !customer.getEngagement().isHasActiveBank()) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
         }
 
         return bankIdStatus;
