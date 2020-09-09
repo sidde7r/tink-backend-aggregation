@@ -45,7 +45,7 @@ import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEnti
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.service.utils.SystemTestUtils;
 
-/** These tests assume that the Docker daemon is running. */
+/** These tests assume that Docker is running. */
 @Slf4j
 @RunWith(SpringRunner.class)
 public class SystemTest {
