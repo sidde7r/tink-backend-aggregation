@@ -23,7 +23,6 @@ public class NordnetConstants {
         public static final String BANKID_POLL =
                 AUTH_BASE + "/api/2/authentication/eid/se/bankid/poll";
         public static final String OAUTH2_TOKEN = BASE + "/oauth2/token";
-        public static final String REQUIRED_ACTION = AUTH_BASE + "/customers/required_actions";
         public static final String CUSTOMER_INFO = BASE + "/api/2/customers/contact_info";
         public static final String ACCOUNTS = BASE + "/api/2/accounts";
         public static final String ACCOUNT_INFO = BASE + "/api/2/accounts/{account-id}/info";

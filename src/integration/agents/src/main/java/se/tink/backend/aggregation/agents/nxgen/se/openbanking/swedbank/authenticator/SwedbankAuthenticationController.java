@@ -124,7 +124,8 @@ public class SwedbankAuthenticationController
             authenticationStatusResponse = authenticator.collect(ssn, collectAuthUri);
         } catch (HttpResponseException e) {
             GenericResponse genericResponse = e.getResponse().getBody(GenericResponse.class);
-            if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN
+            if ((e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN
+                            || e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED)
                     && genericResponse.isKycError()) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception(
                         EndUserMessage.MUST_ANSWER_KYC.getKey());

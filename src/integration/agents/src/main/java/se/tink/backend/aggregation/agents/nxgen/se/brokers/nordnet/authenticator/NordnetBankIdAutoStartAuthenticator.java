@@ -246,8 +246,6 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
 
     private String getCode() {
 
-        executeRequiredAction();
-
         RequestBuilder requestBuilder =
                 apiClient
                         .createBasicRequest(
@@ -276,17 +274,6 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                         .findFirst()
                         .orElseThrow(
                                 () -> new IllegalStateException("Fetch authorization code error")));
-    }
-
-    private void executeRequiredAction() {
-        RequestBuilder requestBuilder =
-                apiClient
-                        .createBasicRequest(new URL(Urls.REQUIRED_ACTION))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
-                        .header(HeaderKeys.REFERER, HeaderValues.REFERER);
-
-        apiClient.get(requestBuilder, HttpResponse.class);
     }
 
     private String getAuthCodeFrom(String location) {

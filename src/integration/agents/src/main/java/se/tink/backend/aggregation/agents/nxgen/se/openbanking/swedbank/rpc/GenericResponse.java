@@ -21,7 +21,9 @@ public class GenericResponse {
         return getTppMessages().stream()
                 .anyMatch(
                         tppMessage ->
-                                ErrorCodes.KYC_INVALID.equalsIgnoreCase(tppMessage.getCode()));
+                                ErrorCodes.KYC_INVALID.equalsIgnoreCase(tppMessage.getCode())
+                                        || ErrorCodes.MISSING_BANK_AGREEMENT.equalsIgnoreCase(
+                                                tppMessage.getCode()));
     }
 
     @JsonIgnore
