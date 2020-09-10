@@ -1,118 +1,404 @@
 
 REQUEST 1
-POST https://appserver.icabanken.se/api/session/login/bankid/199909091234
+POST https://appserver.icabanken.se/api/authentication/mobilebankid/create
 Content-Type: application/json
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
+
+{"PersonalIdentityNumber":"199909091234"}
 
 RESPONSE 1 SET AUTH_1
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:42:30 GMT
 Connection: close
 
-{"Body":{"RequestId":"requestId","AutostartToken":"autostartToken","Status":"Pending"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+{
+	"Body": {
+		"OrderStatus": "Pending",
+		"OrderRef": "00000000-0000-4000-0000-eeeeeeeeeeee",
+		"AutoStartToken": "00000000-0000-4000-0000-aaaaaaaaaaaa"
+	},
+	"ResponseStatus": {
+		"Code": 0,
+		"ServerMessage": "",
+		"ClientMessage": ""
+	}
+}
 
 REQUEST 2 MATCH AUTH_1
-GET https://appserver.icabanken.se/api/session/login/bankid/requestId
+GET https://appserver.icabanken.se/api/authentication/mobilebankid/collect/00000000-0000-4000-0000-eeeeeeeeeeee
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 2 SET AUTH_2
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:42:32 GMT
 Connection: close
 
-{"Body":{"RequestId":"requestId","Status":"Pending"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+{"Body":{"OrderRef":"00000000-0000-4000-0000-eeeeeeeeeeee","OrderStatus":"Pending"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
 
 REQUEST 3 MATCH AUTH_2
-GET https://appserver.icabanken.se/api/session/login/bankid/requestId
+GET https://appserver.icabanken.se/api/authentication/mobilebankid/collect/00000000-0000-4000-0000-eeeeeeeeeeee
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 3
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
-Expires: -1
-Date: Mon, 20 Jul 2020 14:42:38 GMT
-Connection: close
 
-{"Body":{"RequestId":"requestId","Status":"Ok","SessionId":"sessionId"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+{"Body":{"OrderRef":"00000000-0000-4000-0000-eeeeeeeeeeee","OrderStatus":"Ok"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
 
 REQUEST 4
-GET https://appserver.icabanken.se/api/session
+POST https://appserver.icabanken.se/api/authentication/mobilebankid/auth
+Content-Type: application/json
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
+
+{"orderRef":"00000000-0000-4000-0000-eeeeeeeeeeee"}
 
 RESPONSE 4
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
-Expires: -1
-Date: Mon, 20 Jul 2020 14:42:38 GMT
-Connection: close
 
-{"Body":{"Session":{"SessionId":"sessionId","ClientSessionTimeToLive":300,"HeartbeatInterval":120},"Customer":{"DataWarehouseCustomerId":"155882939","ABCustomerId":"","UserInstallationId":"0909cef1-a12f-4567-890e-cedeb1c24a14","IsAbove16":true,"IsAbove18":true,"IsStudent":false,"Kdk":{"MustUpdate":false,"PostponesLeft":3}},"Settings":{"QuickBalanceBalanceOnly":false,"NotificationSubscription":{"MessageTypes":[{"Id":1,"Description":"Säkra meddelanden","Subscribing":false},{"Id":2,"Description":"Avvisade händelser","Subscribing":false}]}},"ClosedChannels":[],"StaticData":{"NextMonthlyDrawDate":"2020-07-28","FundTradingHours":{"TradingHours":{"Affärsdagar vid köp":"1-2 dagar","Affärsdagar vid sälj":"1-2 dagar","Bryttid":"kl 00.00","Syns på fondsparandet":"2-5 dagar"},"GeneralInfo":["Dagen efter en fondorder, skickas denna till respektive fondbolag som utför ordern. Handelstiden hos fondbolaget avgör det slutgiltiga försäljningspriset.","Vid helgdag skickas ordern nästkommande bankdag. Halvdagar har olika rutiner beroende på fondbolag som mottar försäljningsordern."]},"SecurityLevels":[{"Id":"accountInformation","Permissions":{"View":"A4","Update":"A2"}},{"Id":"internalTransfer","Permissions":{"View":"A4","Create":"A4","Update":"A4","Delete":"A4"}},{"Id":"externalTransfer","Permissions":{"View":"A4","Create":"A2","Update":"A2","Delete":"A2"}},{"Id":"internationalPayment","Permissions":{"View":"A4"}},{"Id":"payment","Permissions":{"View":"A4","Create":"A2","Update":"A2","Delete":"A2"}},{"Id":"creditGranted","Permissions":{"View":"A4"}},{"Id":"transferRecipient","Permissions":{"View":"A4","Create":"A2","Update":"A2","Delete":"A2"}},{"Id":"paymentRecipient","Permissions":{"View":"A4","Create":"A2","Update":"A2","Delete":"A2"}},{"Id":"egiroRecipient","Permissions":{"View":"A4"}},{"Id":"electronicInvoice","Permissions":{"View":"A4","Update":"A2","Delete":"A2"}},{"Id":"autogiro","Permissions":{"View":"A4","Create":"A2","Update":"A2","Delete":"A2"}},{"Id":"card","Permissions":{"View":"A4","Update":"A4"}},{"Id":"cardRegion","Permissions":{"View":"A4","Update":"A4"}},{"Id":"loan","Permissions":{"View":"A4"}},{"Id":"insurance","Permissions":{"View":"A4"}},{"Id":"secureMessage","Permissions":{"View":"A4","Create":"A4","Delete":"A4"}},{"Id":"mobileSecurityDevice","Permissions":{"View":"A4","Create":"A1","Update":"A2","Delete":"A4"}},{"Id":"personalDevice","Permissions":{"View":"A4","Delete":"A4"}},{"Id":"quickBalance","Permissions":{"View":"A4","Create":"A2","Update":"A2","Delete":"A4"}},{"Id":"mobileBankId","Permissions":{"View":"A4","Update":"A1"}},{"Id":"mobileBankIdApplication","Permissions":{"View":"A4","Create":"A1","Update":"A4"}},{"Id":"swish","Permissions":{"View":"A4","Create":"A2","Update":"A2","Delete":"A4"}},{"Id":"fundOrder","Permissions":{"View":"A4","Create":"A2","Delete":"A2"}},{"Id":"depots","Permissions":{"View":"A4"}},{"Id":"monthlySavings","Permissions":{"View":"A4","Create":"A2","Update":"A2","Delete":"A2"}}]}},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+{"Body":{"ClientSessionTimeToLive":300,"HeartbeatInterval":120,"SessionId":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","UserInstallationId":"00000000-0000-4000-0000-000000000000"},"ResponseStatus":{"ClientMessage":"","Code":0,"ServerMessage":""}}
 
 REQUEST 5
-GET https://appserver.icabanken.se/api/accounts
+GET https://appserver.icabanken.se/api/customer
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 5
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
-Expires: -1
-Date: Mon, 20 Jul 2020 14:42:38 GMT
-Connection: close
 
-{"Body":{"OwnAccountsTotalCurrentAmount":7540,"OwnAccountsTotalAvailableAmount":7540,"JointAccountsTotalCurrentAmount":2298.06,"JointAccountsTotalAvailableAmount":817.6,"MinorsAccountsTotalCurrentAmount":0,"MinorsAccountsTotalAvailableAmount":0,"DefaultAccountIdForPayments":"","DefaultAccountIdForTransfers":"","DefaultAccountIdForEgiros":"","DefaultAccountIdForInvest":"","Accounts":{"OwnAccounts":[{"Type":"SavingsAccount","AccountId":"0000200580","ActiveBankAccountType":"SK","AccountNumber":"9272-000 008 2","Name":"name","AvailableAmount":7540,"CurrentAmount":7540,"OutstandingAmount":0,"CreditLimit":0,"ValidFor":["TransferFrom","TransferTo"],"IBAN":"SE1192700000092720000082","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname","Services":[],"AccountOwner":{"FullName":"name","NationalIdWithCentury":"199909091234"},"Swish":[]}],"JointAccounts":[{"Type":"IcaAccount","AccountId":"0000100575","ActiveBankAccountType":"IK","AccountNumber":"9272-000 003 3","Name":"name","AvailableAmount":10817.6,"CurrentAmount":2298.06,"OutstandingAmount":1480.46,"CreditLimit":10000,"ValidFor":["PaymentFrom","TransferFrom","TransferTo"],"IBAN":"SE4792700000092720000033","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname, Firstname2 Lastname","Services":[],"AccountOwner":{"FullName":"name","NationalIdWithCentury":"199909091234"},"Swish":["46735833767"]},{"Type":"SavingsAccount","AccountId":"0000300576","ActiveBankAccountType":"SK","AccountNumber":"9272-000 001 6","Name":"name","AvailableAmount":500,"CurrentAmount":1500,"OutstandingAmount":1000,"CreditLimit":0,"ValidFor":["TransferFrom","TransferTo"],"IBAN":"SE9792700000092720000016","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname, Firstname2 Lastname","Services":[],"AccountOwner":{"FullName":"name","NationalIdWithCentury":"199909091234"},"Swish":[]}],"MinorsAccounts":[]}},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+{
+	"Body": {
+		"Address": {
+			"City": "MOCKHOLM",
+			"CoName": "",
+			"Country": "UNDERLAND",
+			"IsProtectedAddress": false,
+			"IsSwedishAddress": true,
+			"PostalCode": "12345",
+			"Street": "FEJKGATAN 123 LGH 1234"
+		},
+		"Email": "example@example.com",
+		"Engagement": {
+			"HadActiveBank": false,
+			"HasAccount": true,
+			"HasAccountWithDisposition": false,
+			"HasActiveAccountsInActiveBank": true,
+			"HasActiveBank": true,
+			"HasCard": false,
+			"HasCardICALoyalty": true,
+			"HasCardICALoyaltyDebitPayment": false,
+			"HasEGiro": true,
+			"HasFund": false,
+			"HasFundWithDisposition": false,
+			"HasHomeLoan": false,
+			"HasInsuranceExternal": false,
+			"HasInsuranceICA": false,
+			"HasUnsecuredPrivateLoan": false
+		},
+		"ExpectKDK": true,
+		"FirstName": "Firstname",
+		"HasCustodianApprovalToApplyForMobileBankId": false,
+		"HomePhone": "1234567890",
+		"IsCustomer": true,
+		"IsDeceased": false,
+		"IsFullyLoaded": true,
+		"IsMBIDApproved": true,
+		"IsStudent": false,
+		"IsUnderAdministration": false,
+		"LastName": "Lastname",
+		"MainFrameCustomerId": "123456789",
+		"MobilePhone": "1234567890",
+		"PersonalIdentityNumber": "199909091234",
+		"ReceiveOffers": true,
+		"UpdatedKDK": true,
+		"VerifiedIdentification": true
+	},
+	"ResponseStatus": {
+		"ClientMessage": "",
+		"Code": 0,
+		"ServerMessage": ""
+	}
+}
 
 REQUEST 6
-GET https://appserver.icabanken.se/api/engagement/loans
-Accept: application/json
+GET https://appserver.icabanken.se/api/authorization/evaluatedpolicies
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 6
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
-Expires: -1
-Date: Mon, 20 Jul 2020 14:42:38 GMT
-Connection: close
 
-{"Body":{"LoanList":{"Loans":[],"TotalDebt":0.0},"MortgageList":{"Mortgages":[],"TotalDebt":0.0}},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+{
+	"Body": {
+		"Policies": [{
+			"AccessResult": "Ok",
+			"Name": "PublicAccess"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ViewBankInformation"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "LoggedInUnblocked"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "DigitalApplication"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "Wso2ProxyDigitalApplication"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "DigitalApplicationSwish"
+		}, {
+			"AccessResult": "PersonalSituation",
+			"Name": "DigitalApplicationStudentHomeInsurance"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "DigitalApplicationStatus"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "CheckForPendingDigitalApplications"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ApplyForLoan"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ApplyForLoanPaymentProtection"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ApplyForCard"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ApplyForCardMaestro"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ApplyForAccount"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ApplyForSharedAccount"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ApplyForSharedAccountReceipt"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ApplyForFund"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ApplyForCredit"
+		}, {
+			"AccessResult": "InsufficientAuthentication",
+			"Name": "ApplyForNewMobileBankId"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "AccountOverview"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "InternalTransfer"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "PaymentAndExternalTransfer"
+		}, {
+			"AccessResult": "PersonalSituation",
+			"Name": "PaymentAndTransferCSN"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "MyEconomy"
+		}, {
+			"AccessResult": "EngagementMissing",
+			"Name": "MyCards"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "MyIcaBonus"
+		}, {
+			"AccessResult": "EngagementMissing",
+			"Name": "MyFundSavingsView"
+		}, {
+			"AccessResult": "EngagementMissing",
+			"Name": "MyFundSavingsActivity"
+		}, {
+			"AccessResult": "EngagementMissing",
+			"Name": "MyInsurances"
+		}, {
+			"AccessResult": "EngagementMissing",
+			"Name": "MyLoans"
+		}, {
+			"AccessResult": "EngagementMissing",
+			"Name": "MyBlancoLoans"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "MyProfile"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "MyProfileNameAccount"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "MyProfileDefaultAccounts"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "UpdatePersonalData"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "MyMarketingChoices"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "MyMarketingChoicesBank"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "MyMarketingChoicesInsuranceCompany"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "MyDocuments"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "SecureMessaging"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "MyBudget"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "SavingsGoal"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "SwishView"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "SwishEdit"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "QuickAccountSettings"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "SecureId"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "SecureIdMobileBankId"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "SecureIdPersonalDevice"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "SecureIdManagePassword"
+		}, {
+			"AccessResult": "InsufficientAuthentication",
+			"Name": "SigningWithPersonalDevice"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "UpdateKDK"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "AcceptTerms"
+		}, {
+			"AccessResult": "EngagementMissing",
+			"Name": "BecomeCustomer"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "UpgradeICALoyaltyCard"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "ReadCustomerData"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "AppserverLogin"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "PublicDataFromAppServer"
+		}, {
+			"AccessResult": "InsufficientAuthentication",
+			"Name": "PublicDataFromWeb"
+		}, {
+			"AccessResult": "Ok",
+			"Name": "Elmer"
+		}]
+	},
+	"ResponseStatus": {
+		"ClientMessage": "",
+		"Code": 0,
+		"ServerMessage": ""
+	}
+}
 
 REQUEST 7
-GET https://appserver.icabanken.se/api/depots
+GET https://appserver.icabanken.se/api/accounts
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 7
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
-Expires: -1
-Date: Mon, 20 Jul 2020 14:42:39 GMT
-Connection: close
 
-{"Body":{"Depots":[],"TotalBalance":0.0,"TotalValue":0.0,"NextMonthlySavingsStartDate":"2020-07-28"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+{"Body":{"OwnAccountsTotalCurrentAmount":7540,"OwnAccountsTotalAvailableAmount":7540,"JointAccountsTotalCurrentAmount":2298.06,"JointAccountsTotalAvailableAmount":817.6,"MinorsAccountsTotalCurrentAmount":0,"MinorsAccountsTotalAvailableAmount":0,"DefaultAccountIdForPayments":"","DefaultAccountIdForTransfers":"","DefaultAccountIdForEgiros":"","DefaultAccountIdForInvest":"","Accounts":{"OwnAccounts":[{"Type":"SavingsAccount","AccountId":"0000200580","ActiveBankAccountType":"SK","AccountNumber":"9272-000 008 2","Name":"name","AvailableAmount":7540,"CurrentAmount":7540,"OutstandingAmount":0,"CreditLimit":0,"ValidFor":["TransferFrom","TransferTo"],"IBAN":"SE1192700000092720000082","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname","Services":[],"AccountOwner":{"FullName":"Firstname Lastname","NationalIdWithCentury":"199909091234"},"Swish":[]}],"JointAccounts":[{"Type":"IcaAccount","AccountId":"0000100575","ActiveBankAccountType":"IK","AccountNumber":"9272-000 003 3","Name":"name","AvailableAmount":10817.6,"CurrentAmount":2298.06,"OutstandingAmount":1480.46,"CreditLimit":10000,"ValidFor":["PaymentFrom","TransferFrom","TransferTo"],"IBAN":"SE4792700000092720000033","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname, Firstname2 Lastname","Services":[],"AccountOwner":{"FullName":"Firstname2 Lastname","NationalIdWithCentury":"199909091234"},"Swish":["46735833767"]},{"Type":"SavingsAccount","AccountId":"0000300576","ActiveBankAccountType":"SK","AccountNumber":"9272-000 001 6","Name":"name","AvailableAmount":500,"CurrentAmount":1500,"OutstandingAmount":1000,"CreditLimit":0,"ValidFor":["TransferFrom","TransferTo"],"IBAN":"SE9792700000092720000016","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname, Firstname2 Lastname","Services":[],"AccountOwner":{"FullName":"Firstname Lastname","NationalIdWithCentury":"199909091234"},"Swish":[]}],"MinorsAccounts":[]}},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
 
 REQUEST 8
 GET https://appserver.icabanken.se/api/events/future
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 8
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:42:40 GMT
@@ -123,11 +409,17 @@ Connection: close
 REQUEST 9
 GET https://appserver.icabanken.se/api/accounts/0000200580/transactions
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 9
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:42:41 GMT
@@ -138,11 +430,17 @@ Connection: close
 REQUEST 10
 GET https://appserver.icabanken.se/api/accounts/0000200580/reservedTransactions
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 10
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:42:41 GMT
@@ -153,11 +451,17 @@ Connection: close
 REQUEST 11
 GET https://appserver.icabanken.se/api/accounts/0000200580/transactions?toDate=2020-06-01
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 11
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:42:42 GMT
@@ -168,11 +472,17 @@ Connection: close
 REQUEST 12
 GET https://appserver.icabanken.se/api/accounts/0000100575/transactions
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 12
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:42:56 GMT
@@ -183,11 +493,17 @@ Connection: close
 REQUEST 13
 GET https://appserver.icabanken.se/api/accounts/0000100575/reservedTransactions
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 13
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:42:57 GMT
@@ -198,11 +514,17 @@ Connection: close
 REQUEST 14
 GET https://appserver.icabanken.se/api/accounts/0000100575/transactions?toDate=2020-05-31
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 14
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:42:57 GMT
@@ -213,11 +535,17 @@ Connection: close
 REQUEST 15
 GET https://appserver.icabanken.se/api/accounts/0000300576/transactions
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 15
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:44:06 GMT
@@ -228,11 +556,17 @@ Connection: close
 REQUEST 16
 GET https://appserver.icabanken.se/api/accounts/0000300576/reservedTransactions
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 16
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:44:07 GMT
@@ -243,11 +577,17 @@ Connection: close
 REQUEST 17
 GET https://appserver.icabanken.se/api/accounts/0000300576/transactions?toDate=2020-06-25
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 17
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:44:09 GMT
@@ -258,11 +598,17 @@ Connection: close
 REQUEST 18
 GET https://appserver.icabanken.se/api/accounts/0000300576/transactions?toDate=2020-03-13
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 18
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:44:10 GMT
@@ -273,11 +619,17 @@ Connection: close
 REQUEST 19
 GET https://appserver.icabanken.se/api/egiro/invoices
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 19
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:44:27 GMT
@@ -288,11 +640,17 @@ Connection: close
 REQUEST 20
 GET https://appserver.icabanken.se/api/recipients
 Accept: application/json
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 20
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:44:27 GMT
@@ -302,11 +660,17 @@ Connection: close
 
 REQUEST 21
 GET https://appserver.icabanken.se/api/session/heartbeat
+ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
+ApiVersion: 12
+ClientOS: iOS
+ClientOSVersion: 13.3.1
+ClientAppVersion: 1.65.1
+ClientHardware: iPhone
+User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
+userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 21
 200
-Cache-Control: no-cache
-Pragma: no-cache
 Content-Type: application/json; charset=utf-8
 Expires: -1
 Date: Mon, 20 Jul 2020 14:44:27 GMT

@@ -129,8 +129,12 @@
         },
         "nameElements": [
             {
-                "type": "FULLNAME",
-                "value": "name"
+                "type": "FIRST_NAME",
+                "value": "Firstname"
+            },
+            {
+                "type": "SURNAME",
+                "value": "Lastname"
             }
         ]
     },
