@@ -9,8 +9,6 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/nordea",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/nordeabase",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/nordea/mock/module",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
