@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
@@ -23,6 +24,7 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
 
+    private String ssn;
     private String autostarttoken;
 
     public IcaBankenBankIdAuthenticator(
@@ -33,6 +35,7 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
 
     @Override
     public String init(String ssn) throws AuthenticationException, AuthorizationException {
+        this.ssn = ssn;
         try {
             final BankIdAuthInitBodyEntity response = apiClient.initBankId(ssn);
             autostarttoken = response.getAutoStartToken();
@@ -79,6 +82,12 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     @Override
     public Optional<String> getAutostartToken() {
         return Optional.ofNullable(autostarttoken);
+    }
+
+    @Override
+    public String refreshAutostartToken()
+            throws BankServiceException, AuthorizationException, AuthenticationException {
+        return init(this.ssn);
     }
 
     @Override

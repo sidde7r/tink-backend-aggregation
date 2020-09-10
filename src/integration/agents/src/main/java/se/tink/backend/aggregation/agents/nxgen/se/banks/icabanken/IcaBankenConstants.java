@@ -91,7 +91,7 @@ public class IcaBankenConstants {
                     .put(BankIdStatus.DONE, "ok")
                     .put(BankIdStatus.WAITING, "pending")
                     .put(BankIdStatus.CANCELLED, "aborted")
-                    .put(BankIdStatus.TIMEOUT, "timedout")
+                    .put(BankIdStatus.EXPIRED_AUTOSTART_TOKEN, "timedout")
                     .put(BankIdStatus.FAILED_UNKNOWN, BankIdErrors.STATUS_FAILED)
                     .setDefaultTranslationValue(BankIdStatus.FAILED_UNKNOWN)
                     .build();
