@@ -10,7 +10,6 @@ junit_test(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/context",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
-        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:core",
         "//src/libraries/metrics:counters",
