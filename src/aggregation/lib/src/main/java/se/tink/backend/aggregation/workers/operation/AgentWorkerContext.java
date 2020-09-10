@@ -186,11 +186,20 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         List<Transaction> transactionsToProcess = accountDataCache.getTransactionsToBeProcessed();
         if (transactionsToProcess.isEmpty()) {
             // Don't update transactions if we don't have any.
+            logger.info(
+                    "Skipping transaction processing because we don't have any [UserId:{} CredentialsId:{}]",
+                    credentials.getUserId(),
+                    credentials.getId());
             return;
         }
 
         // Update each transaction with information about the credentials and user as well as
         // additional formatting.
+        logger.info(
+                "Processing {} transactions. [UserId:{} CredentialsId:{}]",
+                transactionsToProcess.size(),
+                credentials.getUserId(),
+                credentials.getId());
         transactionsToProcess.forEach(
                 transaction -> {
                     transaction.setCredentialsId(credentials.getId());
