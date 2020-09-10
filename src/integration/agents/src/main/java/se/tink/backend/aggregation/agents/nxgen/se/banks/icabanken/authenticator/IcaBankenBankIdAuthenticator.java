@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
@@ -70,6 +71,11 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
                     || customer.getEngagement() == null
                     || !customer.getEngagement().isHasActiveBank()) {
                 throw LoginError.NOT_CUSTOMER.exception();
+            }
+
+            if (!customer.isUpdatedKDK()) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                        IcaBankenConstants.UserMessage.KNOW_YOUR_CUSTOMER.getKey());
             }
 
             // Policies are used to decide which endpoints are allowed to fetch
