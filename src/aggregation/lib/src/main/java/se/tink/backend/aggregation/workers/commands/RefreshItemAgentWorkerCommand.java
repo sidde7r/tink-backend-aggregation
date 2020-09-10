@@ -120,10 +120,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                     "Item: {} is restricted from refresh - restrictions: {}",
                     item,
                     dataFetchingRestrictions);
-            // TODO this is commented out for now to be able to double-check (by verifying the logs)
-            // that everything works as expected. Once that done the below return sis to be
-            // uncommented https://tinkab.atlassian.net/browse/AGG-475
-            // return AgentWorkerCommandResult.CONTINUE;
+            return AgentWorkerCommandResult.CONTINUE;
         }
 
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
