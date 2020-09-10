@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -127,6 +128,7 @@ public class VolksbankAgent
     private void configureHttpClient(TinkHttpClient client) {
         // Prevent read timeouts
         client.setTimeout(HttpClient.READ_TIMEOUT_MILLISECONDS);
+        client.addFilter(new TimeoutFilter());
         client.addFilter(
                 new TimeoutRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
