@@ -106,7 +106,7 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
 
         ThirdPartyAppAuthenticationPayload.Android androidPayload =
                 new ThirdPartyAppAuthenticationPayload.Android();
-        androidPayload.setIntent("https://codeapp.e-nettet.dk?return=tink://");
+        androidPayload.setIntent("android-app://dk.e_nettet.mobilekey.everyone");
         androidPayload.setPackageName("dk.e_nettet.mobilekey.everyone");
         payload.setAndroid(androidPayload);
 
