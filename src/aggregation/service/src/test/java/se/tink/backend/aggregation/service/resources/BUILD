@@ -1,7 +1,18 @@
 filegroup(
-    name = "resources",
+    name = "local",
     srcs = glob(
-        include = ["*"],
+        include = ["local/**/*"],
+        exclude = [
+            "BUILD",
+        ],
+    ),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "ci",
+    srcs = glob(
+        include = ["ci/**/*"],
         exclude = [
             "BUILD",
         ],
