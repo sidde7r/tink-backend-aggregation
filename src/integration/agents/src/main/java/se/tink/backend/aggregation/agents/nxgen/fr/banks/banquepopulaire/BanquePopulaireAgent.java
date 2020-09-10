@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import java.util.List;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
@@ -57,6 +58,8 @@ public class BanquePopulaireAgent extends BpceGroupBaseAgent {
                 new BanquePopulaireIdentityFetcher(this.banquePopulaireStorage);
         this.transferDestinationRefreshController =
                 constructTransferDestinationRefreshController(this.apiClient);
+
+        storeBankId();
     }
 
     @Override
@@ -124,5 +127,21 @@ public class BanquePopulaireAgent extends BpceGroupBaseAgent {
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return this.transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private void storeBankId() {
+        final String bankShortId = this.provider.getPayload();
+        final String bankId = getBankId(bankShortId);
+
+        this.banquePopulaireStorage.storeBankShortId(bankShortId);
+        this.banquePopulaireStorage.storeBankId(bankId);
+    }
+
+    private static String getBankId(String bankShortId) {
+        if (StringUtils.isBlank(bankShortId) || bankShortId.length() < 3) {
+            throw new IllegalArgumentException("Incorrect bank short Id: " + bankShortId);
+        }
+
+        return (bankShortId.length() == 3) ? "1" + bankShortId.substring(1) + "07" : bankShortId;
     }
 }

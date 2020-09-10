@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.steps;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.apiclient.BanquePopulaireApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.apiclient.dto.authorize.AppConfigDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.apiclient.dto.authorize.BankResourceDto;
@@ -23,17 +22,13 @@ public class InitiateSessionStep extends AbstractAuthenticationStep {
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request) {
-        final String bankShortId = request.getCredentials().getPayload();
-        final String bankId = getBankId(bankShortId);
-
         apiClient.checkUpdateStatus();
 
-        final BankResourceDto bankResourceDto = getBankGeneralConfiguration(bankShortId);
+        final BankResourceDto bankResourceDto = getBankGeneralConfiguration();
         final AppConfigDto appConfigDto = getAppConfigForTheBank(bankResourceDto);
 
         apiClient.sendMessageServiceRequest(bankResourceDto);
 
-        banquePopulaireStorage.storeBankId(bankId);
         banquePopulaireStorage.storeMembershipType(MembershipType.PART);
         banquePopulaireStorage.storeBankResource(bankResourceDto);
         banquePopulaireStorage.storeAppConfig(appConfigDto);
@@ -46,7 +41,8 @@ public class InitiateSessionStep extends AbstractAuthenticationStep {
         return STEP_ID;
     }
 
-    private BankResourceDto getBankGeneralConfiguration(String bankShortId) {
+    private BankResourceDto getBankGeneralConfiguration() {
+        final String bankShortId = banquePopulaireStorage.getBankShortId();
         final GeneralConfigurationResponseDto generalConfigurationResponseDto =
                 apiClient.getGeneralConfig();
 
@@ -62,13 +58,5 @@ public class InitiateSessionStep extends AbstractAuthenticationStep {
 
     private AppConfigDto getAppConfigForTheBank(BankResourceDto bankResourceDto) {
         return apiClient.getBankConfig(bankResourceDto).getAppConfig();
-    }
-
-    private static String getBankId(String bankShortId) {
-        if (StringUtils.isBlank(bankShortId) || bankShortId.length() < 3) {
-            throw new IllegalArgumentException("Incorrect bank short Id: " + bankShortId);
-        }
-
-        return (bankShortId.length() == 3) ? "1" + bankShortId.substring(1) + "07" : bankShortId;
     }
 }
