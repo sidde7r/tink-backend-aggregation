@@ -372,20 +372,28 @@ public class NordeaBaseApiClient implements TokenInterface {
         List<String> scopes = configuration.getScopes();
         if (scopes.stream().allMatch(Scopes.AIS::equalsIgnoreCase)) {
             // Return only AIS scopes
-            return SCOPE_WITHOUT_PAYMENT;
+            return getScopeWithoutPayment();
         } else if (scopes.stream()
                 .allMatch(
                         scope ->
                                 Scopes.AIS.equalsIgnoreCase(scope)
                                         || Scopes.PIS.equalsIgnoreCase(scope))) {
             // Return AIS + PIS scopes
-            return SCOPE;
+            return getScope();
         } else {
             throw new IllegalArgumentException(
                     String.format(
                             "%s contain invalid scope(s), only support scopes AIS and PIS",
                             scopes.toString()));
         }
+    }
+
+    protected String getScope() {
+        return SCOPE;
+    }
+
+    protected String getScopeWithoutPayment() {
+        return SCOPE_WITHOUT_PAYMENT;
     }
 
     private String createSignature(
