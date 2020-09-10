@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UkOpenBankingV31PisUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.RemittanceInformation;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -27,7 +27,7 @@ public class InternationalPaymentConsentInitiationReq {
     public InternationalPaymentConsentInitiationReq(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
         this.remittanceInformation =
-                RemittanceInformation.ofUnstructured(payment.getReference().getValue());
+                RemittanceInformation.ofUnstructured(payment.getRemittanceInformation().getValue());
         this.currencyOfTransfer = payment.getCurrency();
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;
@@ -36,13 +36,15 @@ public class InternationalPaymentConsentInitiationReq {
     }
 
     public PaymentResponse toPaymentResponse(String status, String consentId) {
+        se.tink.libraries.transfer.rpc.RemittanceInformation transferRemittanceInformation =
+                new se.tink.libraries.transfer.rpc.RemittanceInformation();
+        transferRemittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        transferRemittanceInformation.setValue(remittanceInformation.getUnstructured());
         Payment payment =
                 new Payment.Builder()
                         .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))
                         .withExactCurrencyAmount(instructedAmount.toTinkAmount())
-                        .withReference(
-                                UkOpenBankingV31PisUtils.createTinkReference(
-                                        remittanceInformation.getUnstructured()))
+                        .withRemittanceInformation(transferRemittanceInformation)
                         .withCreditor(creditorAccount.toCreditor())
                         .withCurrency(currencyOfTransfer)
                         .build();

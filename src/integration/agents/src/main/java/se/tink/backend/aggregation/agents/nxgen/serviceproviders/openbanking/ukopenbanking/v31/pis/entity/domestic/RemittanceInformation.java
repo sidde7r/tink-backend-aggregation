@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.payment.rpc.Reference;
 
 /**
  * https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1077806532/Domestic+Payment+Message+Formats+-+v3.1.2#DomesticPaymentMessageFormats-v3.1.2-ISO20022
@@ -21,11 +20,6 @@ public class RemittanceInformation {
 
     // Used in serialization unit tests
     protected RemittanceInformation() {}
-
-    public RemittanceInformation(String unstructured, Reference reference) {
-        this.unstructured = unstructured;
-        this.reference = reference.getValue();
-    }
 
     public static RemittanceInformation ofUnstructured(String unstructured) {
         RemittanceInformation remittanceInformation = new RemittanceInformation();

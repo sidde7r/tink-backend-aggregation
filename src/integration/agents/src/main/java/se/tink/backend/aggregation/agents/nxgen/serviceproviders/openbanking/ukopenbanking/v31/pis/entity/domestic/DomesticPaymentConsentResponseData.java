@@ -6,13 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants.PaymentStatusCode;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UkOpenBankingV31PisUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Payment.Builder;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -33,6 +34,9 @@ public class DomesticPaymentConsentResponseData {
     }
 
     public PaymentResponse toTinkPaymentResponse() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue(initiation.getUnstructuredRemittanceInformation());
         Payment payment =
                 new Builder()
                         .withExactCurrencyAmount(initiation.toTinkAmount())
@@ -40,9 +44,7 @@ public class DomesticPaymentConsentResponseData {
                         .withDebtor(initiation.getDebtor())
                         .withCreditor(initiation.getCreditor())
                         .withCurrency(initiation.toTinkAmount().getCurrencyCode())
-                        .withReference(
-                                UkOpenBankingV31PisUtils.createTinkReference(
-                                        initiation.getReference()))
+                        .withRemittanceInformation(remittanceInformation)
                         .withUniqueId(initiation.getInstructionIdentification())
                         .build();
 

@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.InternationalPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.UKPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.FundsConfirmationResponse;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
@@ -57,6 +58,8 @@ import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePaymentExecutor {
     private static Logger log = LoggerFactory.getLogger(UKOpenbankingV31Executor.class);
@@ -342,6 +345,10 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
     private PaymentMultiStepResponse executePayment(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
+        RemittanceInformation remittanceInformation =
+                paymentMultiStepRequest.getPayment().getRemittanceInformation();
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
         String endToEndIdentification =
                 paymentMultiStepRequest.getPayment().getUniqueIdForUKOPenBanking();
         String instructionIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
