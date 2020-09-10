@@ -22,6 +22,7 @@ public class OAuth2Token extends OAuth2TokenBase {
             String tokenType,
             String accessToken,
             String refreshToken,
+            String idToken,
             long expiresInSeconds,
             long refreshExpiresInSeconds,
             long issuedAt) {
@@ -29,6 +30,7 @@ public class OAuth2Token extends OAuth2TokenBase {
                 tokenType,
                 accessToken,
                 refreshToken,
+                idToken,
                 expiresInSeconds,
                 refreshExpiresInSeconds,
                 issuedAt);
@@ -43,6 +45,7 @@ public class OAuth2Token extends OAuth2TokenBase {
                 tokenType,
                 accessToken,
                 refreshToken,
+                null,
                 accessExpiresInSeconds,
                 OAuth2TokenBase.REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED,
                 getCurrentEpoch());
@@ -58,6 +61,24 @@ public class OAuth2Token extends OAuth2TokenBase {
                 tokenType,
                 accessToken,
                 refreshToken,
+                null,
+                accessExpiresInSeconds,
+                refreshExpiresInSeconds,
+                getCurrentEpoch());
+    }
+
+    public static OAuth2Token create(
+            String tokenType,
+            String accessToken,
+            String refreshToken,
+            String idToken,
+            long accessExpiresInSeconds,
+            long refreshExpiresInSeconds) {
+        return new OAuth2Token(
+                tokenType,
+                accessToken,
+                refreshToken,
+                idToken,
                 accessExpiresInSeconds,
                 refreshExpiresInSeconds,
                 getCurrentEpoch());

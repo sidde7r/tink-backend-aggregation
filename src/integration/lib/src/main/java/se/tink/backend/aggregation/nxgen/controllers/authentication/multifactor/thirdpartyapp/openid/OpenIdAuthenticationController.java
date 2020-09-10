@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.BANK_SIDE_FAILURE;
 
 import com.google.common.base.Strings;
+import java.security.PublicKey;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Date;
@@ -27,9 +28,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.Params;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.validator.IdTokenValidator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.validator.IdTokenValidator.ValidatorMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
@@ -282,13 +287,15 @@ public class OpenIdAuthenticationController
                                             "callbackData did not contain code.");
                                 });
 
-        // todo: verify idToken{s_hash, c_hash}
-        // TODO: Right now many banks don't give us idToken to verify, enable when this standard is
-        // mandatory.
-        //        String idToken = getCallbackElement(callbackData,
-        // OpenIdConstants.CallbackParams.ID_TOKEN)
-        //                .orElseThrow(() -> new IllegalStateException("callbackData did not contain
-        // id_token."));
+        String state = getCallbackElement(callbackData, Params.STATE).orElse(null);
+
+        Optional<String> idToken = getCallbackElement(callbackData, CallbackParams.ID_TOKEN);
+
+        if (idToken.isPresent()) {
+            validateIdToken(idToken.get(), code, state);
+        } else {
+            logger.warn("ID Token (code and state) validation - no token provided");
+        }
 
         OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(code);
 
@@ -301,6 +308,12 @@ public class OpenIdAuthenticationController
                     String.format("Unknown token type '%s'.", oAuth2Token.getTokenType()));
         }
 
+        if (oAuth2Token.getIdToken() != null) {
+            validateIdToken(oAuth2Token.getIdToken(), oAuth2Token.getAccessToken());
+        } else {
+            logger.warn("ID Token (access token) validation - no token provided");
+        }
+
         credentials.setSessionExpiryDate(
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                         oAuth2Token, tokenLifetime, tokenLifetimeUnit));
@@ -310,6 +323,39 @@ public class OpenIdAuthenticationController
         instantiateAuthFilter(oAuth2Token);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+    }
+
+    private void validateIdToken(String idToken, String code, String state) {
+        Optional<Map<String, PublicKey>> publicKeys = apiClient.getJwkPublicKeys();
+        if (publicKeys.isPresent()) {
+            boolean valid =
+                    new IdTokenValidator(idToken, publicKeys.get())
+                            .withCHashValidation(code)
+                            .withSHashValidation(state)
+                            .withMode(ValidatorMode.LOGGING)
+                            .execute();
+            if (valid) {
+                logger.info("ID Token (code and state) validation successful");
+            }
+        } else {
+            logger.warn("ID Token (code and state) validation not possible - no public keys");
+        }
+    }
+
+    private void validateIdToken(String idToken, String accessToken) {
+        Optional<Map<String, PublicKey>> publicKeys = apiClient.getJwkPublicKeys();
+        if (publicKeys.isPresent()) {
+            boolean valid =
+                    new IdTokenValidator(idToken, publicKeys.get())
+                            .withAtHashValidation(accessToken)
+                            .withMode(ValidatorMode.LOGGING)
+                            .execute();
+            if (valid) {
+                logger.info("ID Token (access token) validation successful");
+            }
+        } else {
+            logger.warn("ID Token (access token) validation not possible - no public keys");
+        }
     }
 
     private void saveAccessToken(OAuth2Token oAuth2Token) {

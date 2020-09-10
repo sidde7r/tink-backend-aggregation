@@ -29,6 +29,7 @@ public class HmacToken extends OAuth2TokenBase {
                 tokenType,
                 accessToken,
                 refreshToken,
+                null,
                 expiresInSeconds,
                 OAuth2TokenBase.REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED,
                 getCurrentEpoch());

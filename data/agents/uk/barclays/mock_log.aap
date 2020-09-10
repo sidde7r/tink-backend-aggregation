@@ -93,6 +93,23 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 {"access_token":"DUMMY_ACCESS_TOKEN","refresh_token":"DUMMY_REFRESH_TOKEN","scope":"openid accounts","id_token":"DUMMY_ID_TOKEN","token_type":"bearer","expires_in":3600}
 
 REQUEST 5
+GET /MOCK_ORG_ID/2SPmPNUU6KrtcgutPlkfBd.jwks
+Connection: keep-alive
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Date: Thu, 30 Jan 2020 12:43:59 GMT
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+
+{"keys": []}
+
+REQUEST 6
 GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts
 Accept: application/json
 X-Aggregator: Tink Testing
@@ -103,7 +120,7 @@ Connection : keep-alive
 User-Agent : Tink (+https://www.tink.se/; noc@tink.se)
 Accept-Encoding : gzip,deflate
 
-RESPONSE 5
+RESPONSE 6
 200
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
@@ -115,28 +132,8 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {"Data":{"Account":[{"Account":[{"Identification":"00000000000000","SchemeName":"UK.OBIE.SortCodeAccountNumber"}],"AccountId":"DUMMY_ACCOUNT_ID","Currency":"GBP","AccountType":"Personal","AccountSubType":"CurrentAccount"}]},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts"},"Meta":{}}
 
-REQUEST 6
-GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/parties
-Accept: application/json
-X-Aggregator: Tink Testing
-Authorization: Bearer DUMMY_ACCESS_TOKEN
-x-fapi-financial-id: 0015800000jfAW1AAM
-x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
-
-RESPONSE 6
-200
-Content-Type: application/json;charset=UTF-8
-Transfer-Encoding: chunked
-Connection: keep-alive
-Date: Thu, 30 Jan 2020 12:44:02 GMT
-Server: Apache
-Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store,private
-x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
-
-{"Data":{"Party":[{"PartyId":"00000000000000000000","FullLegalName":"LITTLE BIG DIGITAL LTD"}]},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/parties"},"Meta":{}}
-
 REQUEST 7
-GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts
+GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/parties
 Accept: application/json
 X-Aggregator: Tink Testing
 Authorization: Bearer DUMMY_ACCESS_TOKEN
@@ -148,15 +145,15 @@ RESPONSE 7
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
 Connection: keep-alive
-Date: Thu, 30 Jan 2020 12:44:05 GMT
+Date: Thu, 30 Jan 2020 12:44:02 GMT
 Server: Apache
 Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store,private
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"Account":[{"Account":[{"Identification":"00000000000000","SchemeName":"UK.OBIE.SortCodeAccountNumber"}],"AccountId":"DUMMY_ACCOUNT_ID","Currency":"GBP","AccountType":"Personal","AccountSubType":"CurrentAccount"}]},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts"},"Meta":{}}
+{"Data":{"Party":[{"PartyId":"00000000000000000000","FullLegalName":"LITTLE BIG DIGITAL LTD"}]},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/parties"},"Meta":{}}
 
 REQUEST 8
-GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/balances
+GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts
 Accept: application/json
 X-Aggregator: Tink Testing
 Authorization: Bearer DUMMY_ACCESS_TOKEN
@@ -168,6 +165,26 @@ RESPONSE 8
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
 Connection: keep-alive
+Date: Thu, 30 Jan 2020 12:44:05 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store,private
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Data":{"Account":[{"Account":[{"Identification":"00000000000000","SchemeName":"UK.OBIE.SortCodeAccountNumber"}],"AccountId":"DUMMY_ACCOUNT_ID","Currency":"GBP","AccountType":"Personal","AccountSubType":"CurrentAccount"}]},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts"},"Meta":{}}
+
+REQUEST 9
+GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/balances
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-financial-id: 0015800000jfAW1AAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 9
+200
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
 Date: Thu, 30 Jan 2020 12:44:09 GMT
 Server: Apache
 Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store,private
@@ -175,7 +192,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {"Data":{"Balance":[{"AccountId":"DUMMY_ACCOUNT_ID","Amount":{"Amount":"30.00","Currency":"GBP"},"CreditDebitIndicator":"Credit","DateTime":"2020-01-30T12:44:09Z","Type":"Expected"}]},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/balances"},"Meta":{}}
 
-REQUEST 9
+REQUEST 10
 GET https://telesto.api.barclays:443/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
 Accept: application/json
 X-Aggregator: Tink Testing
@@ -186,7 +203,7 @@ User-Agent : Tink (+https://www.tink.se/; noc@tink.se)
 Connection : keep-alive
 Accept-Encoding : gzip,deflate
 
-RESPONSE 9
+RESPONSE 10
 200
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
@@ -198,7 +215,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {"Data":{"Transaction":[{"AccountId":"DUMMY_ACCOUNT_ID","Amount":{"Amount":"20.00","Currency":"GBP"},"Balance":{"Amount":{"Amount":"30.00","Currency":"GBP"},"CreditDebitIndicator":"Credit","Type":"Information"},"BookingDateTime":"2020-01-21T06:53:08Z","CreditDebitIndicator":"Credit","Status":"Booked","TransactionInformation":"DUMMY_VALUE","ValueDateTime":"2020-01-21T00:00:00.000Z"},{"AccountId":"DUMMY_ACCOUNT_ID","Amount":{"Amount":"10.00","Currency":"GBP"},"Balance":{"Amount":{"Amount":"10.00","Currency":"GBP"},"CreditDebitIndicator":"Credit","Type":"Information"},"BookingDateTime":"2020-01-17T17:29:48Z","CreditDebitIndicator":"Credit","Status":"Booked","TransactionInformation":"DUMMY_VALUE","ValueDateTime":"2020-01-17T00:00:00.000Z"},{"AccountId":"DUMMY_ACCOUNT_ID","Amount":{"Amount":"319.31","Currency":"GBP"},"Balance":{"Amount":{"Amount":"0.00","Currency":"GBP"},"CreditDebitIndicator":"Credit","Type":"Information"},"BookingDateTime":"2020-01-17T17:21:51Z","CreditDebitIndicator":"Debit","MerchantDetails":{"MerchantName":"Barclayscurrentaccount"},"Status":"Booked","TransactionInformation":"DUMMY_VALUE","ValueDateTime":"2020-01-17T00:00:00.000Z"},{"AccountId":"DUMMY_ACCOUNT_ID","Amount":{"Amount":"6.50","Currency":"GBP"},"Balance":{"Amount":{"Amount":"319.31","Currency":"GBP"},"CreditDebitIndicator":"Credit","Type":"Information"},"BookingDateTime":"2020-01-09T00:33:59Z","CreditDebitIndicator":"Debit","Status":"Booked","TransactionInformation":"DUMMY_VALUE","ValueDateTime":"2020-01-09T00:00:00.000Z"},{"AccountId":"DUMMY_ACCOUNT_ID","Amount":{"Amount":"282.29","Currency":"GBP"},"Balance":{"Amount":{"Amount":"325.81","Currency":"GBP"},"CreditDebitIndicator":"Credit","Type":"Information"},"BookingDateTime":"2020-01-05T11:03:10Z","CreditDebitIndicator":"Debit","MerchantDetails":{"MerchantName":"AmericanExpress"},"Status":"Booked","TransactionInformation":"DUMMY_VALUE","ValueDateTime":"2020-01-06T00:00:00.000Z"}]},"Links":{"First":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?toBookingDateTime=2020-01-30T00:00:00.000Z&offset=0&fromBookingDateTime=2018-02-28T00:00:00.000Z&limit=50&includePendingRecords=true","Next":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?toBookingDateTime=2020-01-30T00:00:00.000Z&offset=50&fromBookingDateTime=2018-02-28T00:00:00.000Z&limit=50&includePendingRecords=false","Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?toBookingDateTime=2020-01-30T00:00:00.000Z&fromBookingDateTime=2018-02-28T00:00:00.000Z"},"Meta":{}}
 
-REQUEST 10
+REQUEST 11
 GET https://telesto.api.barclays/open-banking/v3.1/aisp/accounts/DUMMY_ACCOUNT_ID/transactions?toBookingDateTime=2020-01-30T00:00:00.000Z&offset=50&fromBookingDateTime=2018-02-28T00:00:00.000Z&limit=50&includePendingRecords=false
 Accept: application/json
 X-Aggregator: Tink Testing
@@ -206,7 +223,7 @@ Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-financial-id: 0015800000jfAW1AAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 10
+RESPONSE 11
 200
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
