@@ -134,7 +134,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                         .filter(e -> Objects.equals(e.getValue(), "true"))
                         .map(Map.Entry::getKey)
                         .collect(Collectors.toList());
-
+        log.info("Total {} of optInAccounts.", optInAccounts.size());
         filterOptInAccounts(optInAccounts);
 
         return AgentWorkerCommandResult.CONTINUE;
