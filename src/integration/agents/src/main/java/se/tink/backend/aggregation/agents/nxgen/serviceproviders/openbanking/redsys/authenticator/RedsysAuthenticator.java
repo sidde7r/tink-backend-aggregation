@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator;
 
+import java.util.Date;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -15,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class RedsysAuthenticator implements OAuth2Authenticator {
+    private static final Logger log = LoggerFactory.getLogger(RedsysAuthenticator.class);
     private final RedsysApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final String codeVerifier;
@@ -32,13 +36,18 @@ public class RedsysAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws AuthenticationException {
-        return apiClient.getToken(code, this.codeVerifier);
+        final OAuth2Token token = apiClient.getToken(code, this.codeVerifier);
+        debugLogToken("Got token", token);
+        return token;
     }
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
         try {
-            return apiClient.refreshToken(refreshToken);
+            log.info("Using refresh token: {}", Hash.sha256AsHex(refreshToken));
+            final OAuth2Token oAuth2Token = apiClient.refreshToken(refreshToken);
+            debugLogToken("Refreshed token", oAuth2Token);
+            return oAuth2Token;
         } catch (HttpResponseException hre) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
@@ -46,6 +55,7 @@ public class RedsysAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
+        debugLogToken("Using token", accessToken);
         sessionStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
     }
 
@@ -56,5 +66,15 @@ public class RedsysAuthenticator implements OAuth2Authenticator {
 
     private String generateCodeVerifier() {
         return RandomUtils.generateRandomBase64UrlEncoded(48);
+    }
+
+    private static void debugLogToken(String tag, OAuth2Token token) {
+        log.info(
+                "{}: type={}, access={}, refresh={}, validUntil={}",
+                tag,
+                token.getTokenType(),
+                Hash.sha256AsHex(token.getAccessToken()),
+                token.getRefreshToken().map(Hash::sha256AsHex).orElse("null"),
+                new Date(token.getAccessExpireEpoch() * 1000));
     }
 }
