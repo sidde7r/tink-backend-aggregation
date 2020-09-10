@@ -120,7 +120,8 @@ public class IdTokenValidator {
             if (!validateHash(source, alg, hash)) {
                 handleError(errorMessage);
             }
-        } catch (UnsupportedOperationException ex) {
+        } catch (Exception ex) {
+            /* any exception has to be caught in case of logging mode */
             handleError(ex.getMessage(), ex);
         }
     }
@@ -208,7 +209,7 @@ public class IdTokenValidator {
             if (mode == ValidatorMode.TERMINATING) {
                 throw new IdTokenValidationException(message, cause);
             } else {
-                log.warn(message);
+                log.warn("ID Token validation failed: " + message, cause);
             }
         }
     }
