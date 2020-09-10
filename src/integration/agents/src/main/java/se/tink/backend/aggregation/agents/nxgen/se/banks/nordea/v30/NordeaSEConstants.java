@@ -103,7 +103,7 @@ public class NordeaSEConstants {
 
     public static class ApiService {
         public static final String LOGIN_BANKID_AUTOSTART =
-                "ca/auth-sign-v3/bankidse/authentications/";
+                "ca/bankidse-v1/bankidse/authentications/";
         public static final String FETCH_LOGIN_CODE =
                 "ca/user-accounts-service-v1/user-accounts/primary/authorization";
         public static final String FETCH_ACCESS_TOKEN = "ca/token-service-v3/oauth/token";
