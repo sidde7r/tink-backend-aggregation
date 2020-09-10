@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2;
 
+import com.google.common.base.Strings;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Map;
@@ -179,6 +180,10 @@ public class OAuth2AuthenticationController
         handleErrors(callbackData);
 
         String code = callbackData.getOrDefault(CallbackParams.CODE, null);
+        if (Strings.isNullOrEmpty(code)) {
+            throw new IllegalStateException(
+                    "callbackData did not contain 'code' and no error was handled");
+        }
 
         OAuth2Token oAuth2Token = authenticator.exchangeAuthorizationCode(code);
 

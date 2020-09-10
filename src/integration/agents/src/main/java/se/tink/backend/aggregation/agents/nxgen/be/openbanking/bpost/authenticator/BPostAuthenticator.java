@@ -22,7 +22,6 @@ public class BPostAuthenticator extends Xs2aDevelopersAuthenticator {
     @Override
     public void handleSpecificCallbackDataError(Map<String, String> callbackData)
             throws AuthenticationException {
-        super.handleSpecificCallbackDataError(callbackData);
         String value = callbackData.getOrDefault(CallbackParams.ERROR, null);
         if (!Strings.isNullOrEmpty(value)
                 && value.contains(
