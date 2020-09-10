@@ -5,7 +5,10 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferAccountType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferConfig;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferPayType;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.DanskeBankExecutorHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.AcceptSignatureRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.CreditorResponse;
@@ -72,7 +75,9 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
 
     private Optional<String> executeOwnDestinationAccountTransfer(
             Transfer transfer, ListAccountsResponse accounts, boolean isOwnDestinationAccount) {
-        Date paymentDate = executorHelper.validatePaymentDate(transfer, isOwnDestinationAccount);
+        Date paymentDate =
+                executorHelper.validatePaymentDate(
+                        transfer, TransferAccountType.INTERNAL, TransferPayType.ACCOUNT);
 
         AccountEntity ownDestinationAccount =
                 accounts.findAccount(transfer.getDestination().getIdentifier());
@@ -114,7 +119,9 @@ public class DanskeBankSETransferExecutor implements BankTransferExecutor {
         CreditorResponse creditorName = apiClient.creditorName(creditorRequest);
         CreditorResponse creditorBankName = apiClient.creditorBankName(creditorRequest);
 
-        Date paymentDate = executorHelper.validatePaymentDate(transfer, isOwnDestinationAccount);
+        Date paymentDate =
+                executorHelper.validatePaymentDate(
+                        transfer, TransferAccountType.EXTERNAL, TransferPayType.ACCOUNT);
 
         HttpResponse injectJsCheckStep = this.apiClient.collectDynamicChallengeJavascript();
 

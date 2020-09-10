@@ -33,4 +33,12 @@ public class BusinessDataEntity {
     private boolean sendReceiptToFrom;
     private String textFrom;
     private String textTo;
+
+    // Payment Specific
+    private String cardType;
+    private String creditorId;
+    private String creditorName;
+    private String creditorReference;
+    private String messageToReceiverText;
+    private String registerPayment;
 }

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.transfer;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors;
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -13,9 +13,11 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferAccountType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.TransferType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity.BusinessDataEntity.BusinessDataEntityBuilder;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment.rpc.ValidateGiroRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment.rpc.ValidateOCRRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.RegisterPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.SignRequest;
@@ -33,6 +35,8 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class DanskeBankExecutorHelper {
@@ -53,18 +57,13 @@ public class DanskeBankExecutorHelper {
         this.supplementalRequester = supplementalRequester;
     }
 
-    public Date validatePaymentDate(Transfer transfer, boolean isOwnDestinationAccount) {
-        String transferType =
-                isOwnDestinationAccount
-                        ? TransferAccountType.INTERNAL
-                        : TransferAccountType.EXTERNAL;
-
+    public Date validatePaymentDate(Transfer transfer, String transferType, String payType) {
         ValidatePaymentDateRequest paymentDateRequest =
                 ValidatePaymentDateRequest.builder()
                         .bookingDate(transfer.getDueDate())
                         .countryCode(configuration.getMarketCode())
                         .isCurrencyTransaction(false)
-                        .payType("")
+                        .payType(payType)
                         .receiverAccount(transfer.getDestination().getIdentifier())
                         .transferType(transferType)
                         .build();
@@ -255,6 +254,70 @@ public class DanskeBankExecutorHelper {
                 driver.quit();
             }
         }
+    }
+
+    public String validateGiro(Transfer transfer, String payType) {
+        ValidateGiroRequest validateGiroRequest =
+                ValidateGiroRequest.builder()
+                        .giroAccount(transfer.getDestination().getIdentifier())
+                        .payType(payType)
+                        .build();
+
+        return apiClient.validateGiroRequest(validateGiroRequest).validate().getGiroName();
+    }
+
+    public void validateOCR(Transfer transfer, String payType) {
+        ValidateOCRRequest validateOCRRequest =
+                ValidateOCRRequest.builder()
+                        .giroAccount(transfer.getDestination().getIdentifier())
+                        .payType(payType)
+                        .ocr(transfer.getRemittanceInformation().getValue())
+                        .build();
+
+        apiClient.validateOcr(validateOCRRequest).validate();
+    }
+
+    public RegisterPaymentResponse registerPayment(
+            Transfer transfer,
+            ListAccountsResponse accounts,
+            String creditorName,
+            Date paymentDate,
+            RemittanceInformation remittanceInformation,
+            String payType) {
+
+        AccountEntity sourceAccount = accounts.findAccount(transfer.getSource().getIdentifier());
+
+        BusinessDataEntityBuilder businessDataEntityBuilder =
+                BusinessDataEntity.builder()
+                        .accountNameFrom(sourceAccount.getAccountName())
+                        .accountNoExtFrom(sourceAccount.getAccountNoExt())
+                        .accountNoIntFrom(sourceAccount.getAccountNoInt())
+                        .accountProductFrom(sourceAccount.getAccountProduct())
+                        .amount(transfer.getAmount().getValue())
+                        .bookingDate(formatDate(paymentDate))
+                        .cardType(payType)
+                        .creditorId(transfer.getDestination().getIdentifier())
+                        .creditorName(creditorName)
+                        .currency(transfer.getAmount().getCurrency())
+                        .payeeName(creditorName)
+                        .regNoFromExt(sourceAccount.getAccountRegNoExt())
+                        .registerPayment("NO")
+                        .savePayee(false)
+                        .textFrom(transfer.getSourceMessage());
+
+        if (remittanceInformation.isOfType(RemittanceInformationType.OCR)) {
+            businessDataEntityBuilder.creditorReference(remittanceInformation.getValue());
+        } else {
+            businessDataEntityBuilder.creditorReference("");
+            businessDataEntityBuilder.messageToReceiverText(remittanceInformation.getValue());
+        }
+
+        return apiClient.registerPayment(
+                RegisterPaymentRequest.builder()
+                        .businessData(businessDataEntityBuilder.build())
+                        .language(configuration.getLanguageCode())
+                        .signatureType(TransferType.GIRO)
+                        .build());
     }
 
     private TransferExecutionException bankIdTimeoutError() {
