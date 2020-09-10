@@ -42,7 +42,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         super(componentProvider);
 
         configuration = getConfiguration(baseUrl);
-        apiClient = new Xs2aDevelopersApiClient(client, persistentStorage, configuration);
+        apiClient = getApiClient();
         oauth2Authenticator =
                 new Xs2aDevelopersAuthenticator(apiClient, persistentStorage, configuration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -54,7 +54,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
-    private Xs2aDevelopersProviderConfiguration getConfiguration(String baseUrl) {
+    protected Xs2aDevelopersProviderConfiguration getConfiguration(String baseUrl) {
         AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(Xs2aDevelopersConfiguration.class);
@@ -68,6 +68,10 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         String redirectUrl = agentConfiguration.getRedirectUrl();
         return new Xs2aDevelopersProviderConfiguration(
                 organizationIdentifier, baseUrl, redirectUrl);
+    }
+
+    protected Xs2aDevelopersApiClient getApiClient() {
+        return new Xs2aDevelopersApiClient(client, persistentStorage, configuration);
     }
 
     @Override
