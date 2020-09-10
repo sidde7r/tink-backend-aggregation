@@ -39,4 +39,8 @@ public final class TriodosConstants {
     public static class HeaderValues {
         public static final String TENANT = "nl";
     }
+
+    public static class CredentialKeys {
+        public static final String IBANS = "ibans";
+    }
 }

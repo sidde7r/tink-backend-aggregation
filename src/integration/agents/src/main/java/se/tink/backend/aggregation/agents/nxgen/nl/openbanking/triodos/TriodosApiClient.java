@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.Urls;
@@ -149,7 +152,12 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     @Override
     public String getConsentId() {
         final AccessEntity accessEntity =
-                new AccessEntity.Builder().addIban(credentials.getField("IBAN")).build();
+                new AccessEntity.Builder()
+                        .addIbans(
+                                Lists.newArrayList(
+                                        Splitter.on(",")
+                                                .split(credentials.getField(CredentialKeys.IBANS))))
+                        .build();
         final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
         consentsRequest.setAccess(accessEntity);
 
