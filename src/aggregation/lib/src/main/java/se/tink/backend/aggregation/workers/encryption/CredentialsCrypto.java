@@ -199,7 +199,7 @@ public class CredentialsCrypto {
                 SerializationUtils.deserializeFromString(b, EncryptedPayloadHead.class);
 
         try {
-            if (baseA.getTimestamp().after(baseB.getTimestamp())) {
+            if (baseB.getTimestamp() == null || baseA.getTimestamp().after(baseB.getTimestamp())) {
                 return a;
             } else {
                 return b;
