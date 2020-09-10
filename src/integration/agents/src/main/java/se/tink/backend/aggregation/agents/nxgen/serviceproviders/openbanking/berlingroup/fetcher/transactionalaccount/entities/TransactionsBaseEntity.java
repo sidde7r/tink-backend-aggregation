@@ -27,6 +27,14 @@ public class TransactionsBaseEntity {
         return links.getNextLink();
     }
 
+    public List<BookedTransactionBaseEntity> getBooked() {
+        return booked;
+    }
+
+    public List<PendingTransactionBaseEntity> getPending() {
+        return pending;
+    }
+
     public Collection<Transaction> toTinkTransactions() {
         final Stream<Transaction> bookedTransactionsStream =
                 booked.stream().map(BookedTransactionBaseEntity::toTinkTransaction);

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.fetcher;
 
 import com.google.common.base.Strings;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.QueryValues;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@Slf4j
 public class KbcTransactionFetcher extends BerlinGroupTransactionFetcher {
     protected final KbcApiClient apiClient;
 
@@ -22,6 +24,7 @@ public class KbcTransactionFetcher extends BerlinGroupTransactionFetcher {
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String nextUrl) {
+        log.info("Is next page param exists: {}", Strings.isNullOrEmpty(nextUrl));
         final String url =
                 Strings.isNullOrEmpty(nextUrl)
                         ? new URL(Urls.BASE_URL + Urls.TRANSACTIONS)
