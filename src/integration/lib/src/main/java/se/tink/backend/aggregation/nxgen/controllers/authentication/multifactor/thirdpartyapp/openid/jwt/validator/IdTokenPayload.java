@@ -28,9 +28,9 @@ public class IdTokenPayload {
 
     private String iss;
 
-    private Integer exp;
+    private Long exp;
 
-    private Integer iat;
+    private Long iat;
 
     private String nonce;
 }
