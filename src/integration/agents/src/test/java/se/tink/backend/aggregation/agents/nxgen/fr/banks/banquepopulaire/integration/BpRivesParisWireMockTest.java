@@ -11,7 +11,6 @@ import se.tink.libraries.enums.MarketCode;
 
 public class BpRivesParisWireMockTest {
 
-    private static final String BANK_SHORT_ID = "002";
     private static final String RESOURCES_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/banquepopulaire/integration/resources/";
 
@@ -28,7 +27,6 @@ public class BpRivesParisWireMockTest {
                                 wireMockFilePath)
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), "DUMMY_USER")
                         .addCredentialField(Field.Key.PASSWORD.getFieldKey(), "DUMMY_PASSWORD")
-                        .addCredentialPayload(BANK_SHORT_ID)
                         .addCallbackData(Field.Key.OTP_INPUT.getFieldKey(), "DUMMY_OTP_CODE")
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)

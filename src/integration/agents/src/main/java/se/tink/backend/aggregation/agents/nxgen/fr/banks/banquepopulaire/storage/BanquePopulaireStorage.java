@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BanquePopulaireStorage extends BpceStorage {
 
+    private static final String BANK_SHORT_ID = "BANK_SHORT_ID";
     private static final String BANK_RESOURCE = "BANK_RESOURCE";
     private static final String APP_CONFIG = "APP_CONFIG";
     private static final String USER_IDENTITY_DATA = "USER_IDENTITY_DATA";
@@ -16,6 +17,14 @@ public class BanquePopulaireStorage extends BpceStorage {
 
     public BanquePopulaireStorage(PersistentStorage persistentStorage) {
         super(persistentStorage);
+    }
+
+    public String getBankShortId() {
+        return getOrThrowException(BANK_SHORT_ID, String.class);
+    }
+
+    public void storeBankShortId(String bankShortId) {
+        persistentStorage.put(BANK_SHORT_ID, bankShortId);
     }
 
     public BankResourceDto getBankResource() {
