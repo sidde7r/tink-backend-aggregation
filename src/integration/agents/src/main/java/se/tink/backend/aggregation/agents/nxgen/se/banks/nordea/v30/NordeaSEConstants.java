@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 
 public class NordeaSEConstants {
-    public static final int NUM_TRANSACTIONS_PER_PAGE = 200;
     public static final int NUM_CREDIT_CARD_TRANSACTIONS_PER_PAGE = 30;
     public static final String CURRENCY = "SEK";
+    public static final String PROUDCT_CODE = "product_code";
 
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
             ImmutableMap.<String, String>builder()
@@ -112,7 +112,7 @@ public class NordeaSEConstants {
         public static final String PASSWORD_TOKEN = "ca/token-service-v3/oauth/token";
         public static final String FETCH_ACCOUNTS = "ca/accounts-v3/accounts/";
         public static final String FETCH_TRANSACTIONS =
-                "ca/accounts-v1/accounts/{accountNumber}/transactions";
+                "ca/accounts-v3/accounts/{accountNumber}/transactions";
         public static final String FETCH_CARDS = "ca/cards-v2/cards/";
         public static final String FETCH_CARD_TRANSACTIONS =
                 "ca/cards-v2/cards/{cardId}/transactions";
@@ -144,8 +144,8 @@ public class NordeaSEConstants {
     }
 
     public static class QueryParams {
-        public static final String OFFSET = "offset";
-        public static final String LIMIT = "limit";
+        public static final String START_DATE = "start_date";
+        public static final String END_DATE = "end_date";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
         public static final String PAGE_SIZE_LIMIT =

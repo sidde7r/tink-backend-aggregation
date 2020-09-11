@@ -94,7 +94,8 @@ public class AccountEntity implements GeneralAccountEntity {
                                         .addIdentifier(identifier)
                                         .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                                         .build())
-                        .setApiIdentifier(accountId);
+                        .setApiIdentifier(accountId)
+                        .putInTemporaryStorage(NordeaSEConstants.PROUDCT_CODE, productCode);
 
         if (hasAccountOwnerName()) {
             transactionalBuildStep.addHolderName(generalGetName());
