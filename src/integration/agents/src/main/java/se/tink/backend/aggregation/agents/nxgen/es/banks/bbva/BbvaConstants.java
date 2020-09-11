@@ -37,7 +37,6 @@ public final class BbvaConstants {
 
     public static final class StorageKeys {
         public static final String USER_ID = "userId";
-        public static final String ID_TYPE_CODE = "idTypeCode";
         public static final String TSEC = "tsec";
     }
 

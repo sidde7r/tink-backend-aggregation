@@ -163,6 +163,6 @@ public abstract class SebBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
-        return new FetchTransactionsResponse(Collections.EMPTY_MAP);
+        return new FetchTransactionsResponse(Collections.emptyMap());
     }
 }
