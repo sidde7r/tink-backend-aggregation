@@ -110,7 +110,8 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
-                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));

@@ -383,7 +383,8 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
-                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));
@@ -496,7 +497,8 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
-                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));
@@ -738,7 +740,8 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
-                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
+                new CredentialsCrypto(
+                        cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
         return Lists.newArrayList(
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
@@ -808,7 +811,8 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
-                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
+                new CredentialsCrypto(
+                        cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
         return Lists.newArrayList(
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
@@ -876,7 +880,8 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
-                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
+                new CredentialsCrypto(
+                        cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -916,7 +921,8 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
-                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
+                new CredentialsCrypto(
+                        cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ClearSensitiveInformationCommand(context));
@@ -955,7 +961,8 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
-                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
+                new CredentialsCrypto(
+                        cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
@@ -1021,11 +1028,17 @@ public class AgentWorkerOperationFactory {
                         new DecryptCredentialsWorkerCommand(
                                 context,
                                 new CredentialsCrypto(
-                                        cacheClient, controllerWrapper, cryptoWrapper)),
+                                        cacheClient,
+                                        controllerWrapper,
+                                        cryptoWrapper,
+                                        metricRegistry)),
                         new EncryptCredentialsWorkerCommand(
                                 context,
                                 new CredentialsCrypto(
-                                        cacheClient, controllerWrapper, cryptoWrapper)));
+                                        cacheClient,
+                                        controllerWrapper,
+                                        cryptoWrapper,
+                                        metricRegistry)));
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operation, request, commands, context);
@@ -1093,7 +1106,8 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
-                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
+                new CredentialsCrypto(
+                        cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -1239,7 +1253,8 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
-                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));

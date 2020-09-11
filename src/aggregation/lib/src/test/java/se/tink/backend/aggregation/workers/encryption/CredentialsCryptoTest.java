@@ -30,6 +30,7 @@ import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.encryptedpayload.EncryptedPayloadHead;
 import se.tink.libraries.encryptedpayload.EncryptedPayloadV1;
 import se.tink.libraries.encryptedpayload.EncryptedPayloadV2;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.user.rpc.User;
 
@@ -51,7 +52,10 @@ public class CredentialsCryptoTest {
 
         crypto =
                 new CredentialsCrypto(
-                        new FakeCacheClient(), mock(ControllerWrapper.class), fakeCryptoWrapper);
+                        new FakeCacheClient(),
+                        mock(ControllerWrapper.class),
+                        fakeCryptoWrapper,
+                        new MetricRegistry());
 
         credentials = new Credentials();
         credentials.addSensitivePayload(

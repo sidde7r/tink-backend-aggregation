@@ -18,6 +18,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.encryptedpayload.EncryptedPayloadHead;
 import se.tink.libraries.encryptedpayload.EncryptedPayloadV2;
 import se.tink.libraries.encryptedpayload.VersionDeserializer;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsCrypto {
@@ -27,18 +29,23 @@ public class CredentialsCrypto {
     // according to
     // https://grafana.global-production.tink.network/d/000000054/aggregation-service?editPanel=8&orgId=1&from=now-2d&to=now
     private static final int CACHE_EXPIRE_TIME = Math.toIntExact(TimeUnit.MINUTES.toSeconds(150));
+    public static final MetricId CREDENTIALS_DECRYPT = MetricId.newId("credentials_decrypt");
+    public static final MetricId CREDENTIALS_ENCRYPT = MetricId.newId("credentials_encrypt");
 
     private final CacheClient cacheClient;
     private final ControllerWrapper controllerWrapper;
     private final CryptoWrapper cryptoWrapper;
+    private final MetricRegistry metricRegistry;
 
     public CredentialsCrypto(
             CacheClient cacheClient,
             ControllerWrapper controllerWrapper,
-            CryptoWrapper cryptoWrapper) {
+            CryptoWrapper cryptoWrapper,
+            MetricRegistry metricRegistry) {
         this.cacheClient = cacheClient;
         this.controllerWrapper = controllerWrapper;
         this.cryptoWrapper = cryptoWrapper;
+        this.metricRegistry = metricRegistry;
     }
 
     public boolean decrypt(CredentialsRequest request) {
@@ -77,12 +84,26 @@ public class CredentialsCrypto {
                                     String.format(
                                             "EncryptedCredentials version not recognized: %d",
                                             head.getVersion()));
+
+                            cryptoMetrics(CREDENTIALS_DECRYPT, head, false);
                             return false;
                         })
                 .setVersion1Handler(
                         v1 -> {
                             byte[] key = cryptoWrapper.getCryptoKeyByKeyId(v1.getKeyId());
-                            CredentialsCryptoV1.decryptCredential(key, credentials, v1);
+
+                            try {
+                                CredentialsCryptoV1.decryptCredential(key, credentials, v1);
+                                cryptoMetrics(CREDENTIALS_DECRYPT, v1, true);
+                            } catch (Exception e) {
+                                logger.error(
+                                        "Decryption failed for credentialsId {}",
+                                        credentials.getId(),
+                                        e);
+
+                                cryptoMetrics(CREDENTIALS_DECRYPT, v1, false);
+                                throw e;
+                            }
                             return true;
                         })
                 .setVersion2Handler(
@@ -92,8 +113,20 @@ public class CredentialsCrypto {
                             byte[] payloadKey =
                                     cryptoWrapper.getCryptoKeyByKeyId(v2.getPayload().getKeyId());
 
-                            CredentialsCryptoV2.decryptCredential(
-                                    fieldsKey, payloadKey, credentials, v2);
+                            try {
+                                CredentialsCryptoV2.decryptCredential(
+                                        fieldsKey, payloadKey, credentials, v2);
+                                cryptoMetrics(CREDENTIALS_DECRYPT, v2, true);
+                            } catch (Exception e) {
+                                logger.error(
+                                        "Decryption failed for credentialsId {}",
+                                        credentials.getId(),
+                                        e);
+
+                                cryptoMetrics(CREDENTIALS_DECRYPT, v2, false);
+                                throw e;
+                            }
+
                             return true;
                         })
                 .handle(sensitiveData);
@@ -157,6 +190,8 @@ public class CredentialsCrypto {
                 CACHE_EXPIRE_TIME,
                 serializedEncryptedCredentials);
 
+        cryptoMetrics(CREDENTIALS_ENCRYPT, encryptedCredentials, true);
+
         if (doUpdateCredential) {
             logger.info("Updating sensitive data");
             controllerWrapper.updateCredentialSensitive(
@@ -166,6 +201,15 @@ public class CredentialsCrypto {
         }
 
         return true;
+    }
+
+    private void cryptoMetrics(
+            MetricId metricId, EncryptedPayloadHead encryptedCredentials, boolean success) {
+        metricRegistry
+                .meter(
+                        metricId.label("success", success)
+                                .label("version", encryptedCredentials.getVersion()))
+                .inc();
     }
 
     private boolean isV2(Credentials credentials) {
