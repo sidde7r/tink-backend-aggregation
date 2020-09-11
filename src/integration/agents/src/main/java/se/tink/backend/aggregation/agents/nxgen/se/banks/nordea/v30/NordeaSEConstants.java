@@ -119,7 +119,7 @@ public class NordeaSEConstants {
         public static final String FETCH_INVESTMENTS = "ca/savings-v1/savings/custodies";
         public static final String FETCH_LOANS = "ca/loans-v1/loans/";
         public static final String FETCH_LOAN_DETAILS = "ca/loans-v1/loans/{loanId}";
-        public static final String FETCH_IDENTITY_DATA = "se/customerinfo-v2/customers/info";
+        public static final String FETCH_IDENTITY_DATA = "se/customerinfo-v3/customers/self/info";
         public static final String FETCH_PAYMENTS = "se/payments-v2/payments/";
         public static final String FETCH_PAYMENTS_DETAILS = "se/payments-v2/payments/{paymentId}";
         public static final String FETCH_BENEFICIARIES = "ca/beneficiary-v1/beneficiaries";
