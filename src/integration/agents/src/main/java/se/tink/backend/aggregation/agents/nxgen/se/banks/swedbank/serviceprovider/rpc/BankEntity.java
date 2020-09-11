@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -36,18 +38,33 @@ public class BankEntity {
     }
 
     @JsonIgnore
+    public PrivateProfileEntity getProfileForSetup() {
+        if (businessProfiles.isEmpty()) {
+            return privateProfile;
+        }
+
+        return getMatchingBusinessProfile()
+                .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
+    }
+
+    @JsonIgnore
     public PrivateProfileEntity getProfile() {
         if (businessProfiles.isEmpty()) {
             return privateProfile;
         }
+
+        return getMatchingBusinessProfile().orElseThrow(IllegalStateException::new);
+    }
+
+    @JsonIgnore
+    private Optional<BusinessProfileEntity> getMatchingBusinessProfile() {
         return businessProfiles.stream()
                 .filter(
                         profile ->
                                 profile.getCustomerNumber().contains(orgNumber)
                                         || profile.getCustomerNumber()
                                                 .contains(orgNumber.replace("-", "")))
-                .findAny()
-                .orElseThrow(IllegalStateException::new);
+                .findAny();
     }
 
     @JsonIgnore
