@@ -115,7 +115,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
             if (ErrorText.BANKID_BLOCKED.equalsIgnoreCase(errorElement.text().trim())) {
                 throw BankIdError.BLOCKED.exception();
             } else if (errorElement
-                    .data()
+                    .text()
                     .contains(ErrorCode.WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE)) {
                 throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception();
             } else {
