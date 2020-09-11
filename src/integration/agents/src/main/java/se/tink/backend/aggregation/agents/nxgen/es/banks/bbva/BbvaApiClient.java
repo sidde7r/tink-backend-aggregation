@@ -205,10 +205,6 @@ public class BbvaApiClient {
         return sessionStorage.get(BbvaConstants.StorageKeys.USER_ID);
     }
 
-    private void setIdTypeCode(String idTypeCode) {
-        sessionStorage.put(BbvaConstants.StorageKeys.ID_TYPE_CODE, idTypeCode);
-    }
-
     public void setUserId(String userId) {
         sessionStorage.put(BbvaConstants.StorageKeys.USER_ID, userId);
     }
