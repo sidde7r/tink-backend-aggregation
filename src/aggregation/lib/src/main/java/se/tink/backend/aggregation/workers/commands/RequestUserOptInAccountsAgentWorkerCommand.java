@@ -126,7 +126,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         }
 
         updateCredentialsExcludingSensitiveInformation();
-
+        log.info("Total {} elements of supplementalInformation.", supplementalInformation.size());
         // Add the optIn account id:s to the context to use them when doing the refresh and
         // processing.
         List<String> optInAccounts =
