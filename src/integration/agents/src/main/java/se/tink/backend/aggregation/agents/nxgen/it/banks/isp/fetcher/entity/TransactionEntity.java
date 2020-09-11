@@ -52,10 +52,7 @@ public class TransactionEntity {
                         .setPayload(TransactionPayloadTypes.DETAILS, longDescription);
 
         if (categories != null) {
-            builder =
-                    builder.setPayload(
-                            TransactionPayloadTypes.BANK_PROVIDED_CATEGORIZATION,
-                            categories.toString());
+            builder = builder.setPayload(TransactionPayloadTypes.MESSAGE, categories.toString());
         }
 
         return builder.build();
