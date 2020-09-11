@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.net.UrlEscapers;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -36,6 +37,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdResponse;
+import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardInfoResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardOverviewResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardResponse;
@@ -81,6 +83,7 @@ public class NorwegianAgent extends AbstractAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
+    private static final String USER_AGENT = "User-Agent";
     private static final int AUTHENTICATION_BANK_ID_RETRIES = 60;
 
     private static final String BASE_URL = "https://www.banknorwegian.se/";
@@ -93,7 +96,8 @@ public class NorwegianAgent extends AbstractAgent
     private static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
 
     private static final int PAGINATION_MONTH_STEP = 3;
-    private static final Date PAGINATION_LIMIT = new GregorianCalendar(2012, 1, 1).getTime();
+    private static final Date PAGINATION_LIMIT =
+            new GregorianCalendar(2012, Calendar.JANUARY, 1).getTime();
 
     private Account cachedAccount;
 
@@ -245,7 +249,7 @@ public class NorwegianAgent extends AbstractAgent
         CollectBankIdRequest collectBankIdRequest = new CollectBankIdRequest();
         collectBankIdRequest.setOrderRef(orderBankIdResponse.getOrderRef());
 
-        CollectBankIdResponse collectResponse = null;
+        CollectBankIdResponse collectResponse = new CollectBankIdResponse();
 
         // Poll BankID status periodically until the process is complete.
 
@@ -259,11 +263,10 @@ public class NorwegianAgent extends AbstractAgent
             if (error != null) {
                 switch (error.getCode().toUpperCase()) {
                     case "CANCELLED":
+                    case "ALREADY_IN_PROGRESS":
                         throw BankIdError.ALREADY_IN_PROGRESS.exception();
                     case "USER_CANCEL":
                         throw BankIdError.CANCELLED.exception();
-                    case "ALREADY_IN_PROGRESS":
-                        throw BankIdError.ALREADY_IN_PROGRESS.exception();
                     default:
                         throw new IllegalStateException(
                                 String.format(
@@ -275,10 +278,6 @@ public class NorwegianAgent extends AbstractAgent
             if ("COMPLETE".equalsIgnoreCase(collectResponse.getProgressStatus())) {
                 break;
             }
-
-            // Only necessary when running locally.
-            // log.info(String.format("Awaiting BankID authentication - %s",
-            // collectResponse.getProgressStatus()));
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
@@ -306,7 +305,7 @@ public class NorwegianAgent extends AbstractAgent
 
         return createClientRequest(CREDIT_CARD_OVERVIEW_URL).get(CreditCardOverviewResponse.class)
                 .getCreditCardList().stream()
-                .filter(creditCardEntity -> creditCardEntity.hasValidBankId())
+                .filter(CreditCardEntity::hasValidBankId)
                 .findFirst()
                 .map(
                         creditCardEntity ->
@@ -514,13 +513,13 @@ public class NorwegianAgent extends AbstractAgent
 
     private RequestBuilder createScrapeRequest(String url) {
         return client.request(url)
-                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
+                .header(USER_AGENT, CommonHeaders.DEFAULT_USER_AGENT)
                 .accept(MediaType.TEXT_HTML);
     }
 
     private RequestBuilder createClientRequest(String url) {
         return client.request(url)
-                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
+                .header(USER_AGENT, CommonHeaders.DEFAULT_USER_AGENT)
                 .accept(MediaType.APPLICATION_JSON);
     }
 
@@ -532,7 +531,7 @@ public class NorwegianAgent extends AbstractAgent
 
         HttpResponse response =
                 client.request(url)
-                        .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
+                        .header(USER_AGENT, CommonHeaders.DEFAULT_USER_AGENT)
                         .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML)
                         .get(HttpResponse.class);
 
@@ -547,7 +546,7 @@ public class NorwegianAgent extends AbstractAgent
     }
 
     @Override
-    public void logout() throws Exception {
+    public void logout() {
         // NOP
     }
 }
