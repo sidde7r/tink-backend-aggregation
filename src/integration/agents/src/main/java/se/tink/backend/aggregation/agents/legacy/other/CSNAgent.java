@@ -97,6 +97,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
             Account account = new Account();
 
             account.setName("Studielån");
+            account.setAccountNumber("CSN");
             account.setBankId(String.format("%s: %s", this.credentials.getUsername(), description));
             account.setBalance(balance);
             account.setType(AccountTypes.LOAN);
