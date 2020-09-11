@@ -110,7 +110,7 @@ public class NordeaSEConstants {
         public static final String LOGIN_BANKID =
                 "se/authentication-bankid-v1/security/oauth/token";
         public static final String PASSWORD_TOKEN = "ca/token-service-v3/oauth/token";
-        public static final String FETCH_ACCOUNTS = "ca/accounts-v1/accounts/";
+        public static final String FETCH_ACCOUNTS = "ca/accounts-v3/accounts/";
         public static final String FETCH_TRANSACTIONS =
                 "ca/accounts-v1/accounts/{accountNumber}/transactions";
         public static final String FETCH_CARDS = "ca/cards-v2/cards/";
