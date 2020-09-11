@@ -347,8 +347,13 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         // Look for the logonPackage in the main dom.
         // `logonPackage` is assigned in the dom by the JavaScript snippet we constructed.
         driver.switchTo().defaultContent();
-        return webDriverHelper.waitForElementWithAttribute(
-                driver, By.tagName("body"), "logonPackage");
+        Optional<String> logonPackage =
+                webDriverHelper.waitForElementWithAttribute(
+                        driver, By.tagName("body"), "logonPackage");
+        if (!logonPackage.isPresent()) {
+            log.warn("No logon package, please verify source: {}", driver.getPageSource());
+        }
+        return logonPackage;
     }
 
     private String authenticateWithBankId(String username, String bankIdPassword)
