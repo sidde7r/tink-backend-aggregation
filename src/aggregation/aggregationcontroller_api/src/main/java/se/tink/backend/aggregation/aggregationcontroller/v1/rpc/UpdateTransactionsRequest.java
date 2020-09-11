@@ -18,6 +18,7 @@ public class UpdateTransactionsRequest {
     private CredentialsRequestType requestType;
     private String aggregationId;
     private String operationId;
+    private String market;
 
     public String getCredentials() {
         return credentials;
@@ -99,5 +100,13 @@ public class UpdateTransactionsRequest {
 
     public void setOperationId(String operationId) {
         this.operationId = operationId;
+    }
+
+    public String getMarket() {
+        return market;
+    }
+
+    public void setMarket(String market) {
+        this.market = market;
     }
 }

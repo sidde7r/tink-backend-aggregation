@@ -222,6 +222,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateTransactionsRequest.setUser(credentials.getUserId());
         updateTransactionsRequest.setCredentials(credentials.getId());
         updateTransactionsRequest.setUserTriggered(request.isManual());
+        updateTransactionsRequest.setMarket(request.getProvider().getMarket());
         updateTransactionsRequest.setRequestTypeFromService(getRequest().getType());
         updateTransactionsRequest.setOperationId(request.getOperationId());
         getRefreshId().ifPresent(updateTransactionsRequest::setAggregationId);
