@@ -12,6 +12,7 @@ junit_test(
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/user:rpc",
         "//src/libraries/cache",
+        "//src/libraries/metrics:registry",
         "//src/libraries/serialization",
         "//third_party:com_google_guava_guava",
         "//third_party:org_mockito_mockito_core",
