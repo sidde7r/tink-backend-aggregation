@@ -91,7 +91,7 @@ public class SibsGetPaymentResponse {
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor())
-                        .withDebtor(debtorAccount.toTinkDebtor())
+                        .withDebtor(debtorAccount != null ? debtorAccount.toTinkDebtor() : null)
                         .withExactCurrencyAmount(instructedAmount.toTinkAmount())
                         .withExecutionDate(
                                 SibsUtils.convertStringToLocalDate(requestedExecutionDate))

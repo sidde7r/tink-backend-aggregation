@@ -133,6 +133,9 @@ public class SibsAccountReferenceEntity {
 
     public static SibsAccountReferenceEntity fromDebtor(Payment payment)
             throws PaymentValidationException {
+        if (payment.getDebtor() == null) {
+            return null;
+        }
         return SibsAccountReferenceEntity.of(
                 () -> payment.getDebtor().getAccountIdentifierType(),
                 () -> payment.getDebtor().getAccountNumber());

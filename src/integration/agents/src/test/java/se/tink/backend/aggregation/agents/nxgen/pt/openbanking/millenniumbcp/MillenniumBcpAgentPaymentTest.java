@@ -16,6 +16,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Ignore
 public class MillenniumBcpAgentPaymentTest {
@@ -57,7 +58,8 @@ public class MillenniumBcpAgentPaymentTest {
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
             doReturn(IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY).when(debtor).getAccountNumber();
-
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
+            remittanceInformation.setValue("PIS");
             listOfMockedPayments.add(
                     new Payment.Builder()
                             .withCreditor(creditor)
@@ -66,6 +68,7 @@ public class MillenniumBcpAgentPaymentTest {
                                     new ExactCurrencyAmount(new BigDecimal(AMOUNT), currency))
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
+                            .withRemittanceInformation(remittanceInformation)
                             .build());
         }
 
