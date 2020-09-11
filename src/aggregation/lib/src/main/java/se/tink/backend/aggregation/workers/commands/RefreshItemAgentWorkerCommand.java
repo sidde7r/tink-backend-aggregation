@@ -115,12 +115,21 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
-        if (isNotAllowedToRefreshItem()) {
+        try {
             log.info(
-                    "Item: {} is restricted from refresh - restrictions: {}",
-                    item,
+                    "[Restrict] Restrictions for credentialsId: {} are: {}",
+                    context.getRequest().getCredentials().getId(),
                     dataFetchingRestrictions);
-            return AgentWorkerCommandResult.CONTINUE;
+            if (isNotAllowedToRefreshItem()) {
+                log.info(
+                        "Item: {} is restricted from refresh - restrictions: {}, credentialsId: {}",
+                        item,
+                        dataFetchingRestrictions,
+                        context.getRequest().getCredentials().getId());
+                return AgentWorkerCommandResult.CONTINUE;
+            }
+        } catch (RuntimeException e) {
+            log.warn("[Restrict] Failed: ", e);
         }
 
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
