@@ -29,7 +29,6 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/i18n",
-        "//src/libraries/pair",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:com_google_code_findbugs_jsr305",
