@@ -12,11 +12,9 @@ junit_test(
     ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sebopenbanking",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbase",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/models",
         "//src/integration/user:rpc",
         "//src/libraries/serialization",
