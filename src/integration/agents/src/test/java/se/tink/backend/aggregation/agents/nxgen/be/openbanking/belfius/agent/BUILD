@@ -15,11 +15,8 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/lib",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
-        "//src/integration/models",
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
-        "//src/libraries/serialization",
         "//third_party:org_mockito_mockito_core",
     ],
 )
