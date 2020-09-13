@@ -11,7 +11,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/module",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/factory",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//third_party:com_google_inject_guice",
     ],
