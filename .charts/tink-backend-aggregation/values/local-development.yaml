@@ -1,4 +1,5 @@
 replicas: 1
+initialDelaySeconds: "120"
 
 aggregationdb:
   username: tink
@@ -27,8 +28,6 @@ agents:
 clients:
   provision-job-testing:
     aggregatorIdentifier: "Provision Job Testing"
-
-initialDelaySeconds: 10
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"

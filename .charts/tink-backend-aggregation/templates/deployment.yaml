@@ -357,11 +357,7 @@ spec:
           periodSeconds: 10
           failureThreshold: 10
           timeoutSeconds: 1
-          {{- if  (eq .Values.Environment "development") }}
-          initialDelaySeconds: 120
-          {{- else }}
-          initialDelaySeconds: 300
-          {{- end }}
+          initialDelaySeconds: {{ default "300" .Values.initialDelaySeconds }}
 
         # The pod will only receive traffic if the readinessProbe is succeeding,
         # it's also used when rolling out a new version, to know if the new version
@@ -382,11 +378,7 @@ spec:
           failureThreshold: 3
           successThreshold: 3
           timeoutSeconds: 10
-          {{- if  (eq .Values.Environment "development") }}
-          initialDelaySeconds: 120
-          {{- else }}
-          initialDelaySeconds: 300
-          {{- end }}
+          initialDelaySeconds: {{ default "300" .Values.initialDelaySeconds }}
 
         volumeMounts:
         - name: tmp

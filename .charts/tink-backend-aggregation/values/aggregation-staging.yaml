@@ -1,4 +1,5 @@
 coordinationHosts: 10.89.60.29:2181
+initialDelaySeconds: "300"
 
 cacheHosts: main.wazhro.0001.euw1.cache.amazonaws.com:11211
 
