@@ -14,9 +14,6 @@ public class TransactionEntity {
     private final List<BookedTransactionEntity> booked = Collections.emptyList();
     private final List<PendingTransactionEntity> pending = Collections.emptyList();
 
-    @JsonProperty("_links")
-    private TransactionLinksEntity links;
-
     public Collection<Transaction> toTinkTransactions() {
         return Stream.concat(
                         mapToTinkTransactionStream(booked), mapToTinkTransactionStream(pending))
