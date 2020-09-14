@@ -11,4 +11,5 @@ public class LoansEntity extends StandardResponse {
     private boolean error;
     private String loanStatus;
     private List<PropertiesEntity> properties;
+    private List<SBABLoansEntity> privateLoans;
 }

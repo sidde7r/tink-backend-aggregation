@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @Getter
 public class PropertiesEntity {
-    private List<PropertyLoansEntity> propertyLoans;
+    private List<SBABLoansEntity> propertyLoans;
     private String propertyName;
     private BigDecimal totalDebt;
 }

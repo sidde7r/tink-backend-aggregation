@@ -20,7 +20,11 @@ public class SBABConstants {
     }
 
     public static final ImmutableMap<String, Type> LOAN_TYPES =
-            ImmutableMap.<String, Type>builder().put("MORTGAGE_LOAN", Type.MORTGAGE).build();
+            ImmutableMap.<String, Type>builder()
+                    .put("BLANCO_LOAN", Type.BLANCO)
+                    .put("CAR_LOAN", Type.VEHICLE)
+                    .put("MORTGAGE_LOAN", Type.MORTGAGE)
+                    .build();
 
     public static final ImmutableMap<String, TransactionTypes> TRANSACTION_TYPES =
             ImmutableMap.<String, TransactionTypes>builder()

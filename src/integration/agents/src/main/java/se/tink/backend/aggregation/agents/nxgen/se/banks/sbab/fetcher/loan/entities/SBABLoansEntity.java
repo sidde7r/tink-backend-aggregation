@@ -17,7 +17,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @Getter
-public class PropertyLoansEntity {
+public class SBABLoansEntity {
     private List<BorrowersEntity> borrowers;
     private String contractor;
     private String discountType;
@@ -88,11 +88,19 @@ public class PropertyLoansEntity {
     }
 
     private LocalDate getNextDayOfTermsChange() {
-        return LocalDate.parse(getLoanTerms().getChangeOfConditionDate());
+        final String changeOfConditionDate = getLoanTerms().getChangeOfConditionDate();
+        if (changeOfConditionDate == null) {
+            return null;
+        }
+        return LocalDate.parse(changeOfConditionDate);
     }
 
     private LocalDate getInitialDate() {
-        return LocalDate.parse(getLoanTerms().getStartDate());
+        final String startDate = getLoanTerms().getStartDate();
+        if (startDate == null) {
+            return null;
+        }
+        return LocalDate.parse(startDate);
     }
 
     private ExactCurrencyAmount getOriginalLoanAmount() {
