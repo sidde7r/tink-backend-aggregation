@@ -155,6 +155,7 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -669,7 +670,9 @@ public class LansforsakringarAgent extends AbstractAgent
                 LansforsakringarDateUtil.getNextPossiblePaymentDateForBgPg(transfer.getDueDate()));
         if (Objects.equal(recipientNameResponse.getOcrType(), "OCR_REQUIRED")) {
             if (!LFUtils.isValidOCR(transfer.getRemittanceInformation().getValue())) {
-                cancelTransfer(TransferExecutionException.EndUserMessage.INVALID_OCR);
+                cancelTransfer(
+                        TransferExecutionException.EndUserMessage.INVALID_OCR,
+                        InternalStatus.INVALID_OCR);
             } else {
                 paymentRequest.setReferenceType("OCR");
             }
@@ -916,12 +919,14 @@ public class LansforsakringarAgent extends AbstractAgent
         if (LFUtils.isClientResponseCancel(clientResponse)) {
             switch (clientResponse.getHeaders().getFirst("Error-Code")) {
                 case "122111":
-                    throw cancelTransfer(EndUserMessage.EXCESS_AMOUNT);
+                    throw cancelTransfer(
+                            EndUserMessage.EXCESS_AMOUNT, InternalStatus.INSUFFICIENT_FUNDS);
                 case "99351":
                     throw cancelTransfer(
-                            EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY);
+                            EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY,
+                            InternalStatus.INVALID_DUE_DATE);
                 case "12215":
-                    throw cancelTransfer(EndUserMessage.INVALID_OCR);
+                    throw cancelTransfer(EndUserMessage.INVALID_OCR, InternalStatus.INVALID_OCR);
                 case "122422":
                     throw BankServiceError.BANK_SIDE_FAILURE.exception();
                 default:
@@ -930,7 +935,8 @@ public class LansforsakringarAgent extends AbstractAgent
                                     "Error code: %s, error message: %s",
                                     clientResponse.getHeaders().getFirst("Error-Code"),
                                     clientResponse.getHeaders().getFirst("Error-Message")),
-                            TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
+                            TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED,
+                            InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
             }
         } else if (clientResponse.getStatus() != HttpStatus.SC_OK) {
             throw failTransfer(TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
@@ -950,7 +956,8 @@ public class LansforsakringarAgent extends AbstractAgent
         if (!destination.is(AccountIdentifier.Type.SE)) {
             throw cancelTransferWithMessage(
                     "Transfer account identifiers other than Swedish are not supported.",
-                    TransferExecutionException.EndUserMessage.INVALID_SOURCE);
+                    EndUserMessage.INVALID_DESTINATION,
+                    InternalStatus.INVALID_DESTINATION_ACCOUNT);
         }
 
         TransferrableResponse sourceAccounts = fetchTransferSourceAccounts();
@@ -996,10 +1003,13 @@ public class LansforsakringarAgent extends AbstractAgent
             if (!Strings.isNullOrEmpty(errorCode)) {
                 switch (errorCode) {
                     case "502203":
-                        throw cancelTransfer(EndUserMessage.INVALID_DESTINATION);
+                        throw cancelTransfer(
+                                EndUserMessage.INVALID_DESTINATION,
+                                InternalStatus.INVALID_DESTINATION_ACCOUNT);
                     case "502204":
                     case "99142":
-                        throw cancelTransfer(EndUserMessage.EXCESS_AMOUNT);
+                        throw cancelTransfer(
+                                EndUserMessage.EXCESS_AMOUNT, InternalStatus.INSUFFICIENT_FUNDS);
                     default:
                         throw failTransferWithMessage(
                                 String.format(
@@ -1067,7 +1077,8 @@ public class LansforsakringarAgent extends AbstractAgent
                     return clearingNumber.getBankName();
                 } else {
                     throw cancelTransfer(
-                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION);
+                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION,
+                            InternalStatus.INVALID_DESTINATION_ACCOUNT);
                 }
             }
         }
@@ -1878,15 +1889,20 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     private TransferExecutionException cancelTransfer(
-            TransferExecutionException.EndUserMessage endUserMessage) {
-        return cancelTransferWithMessage(endUserMessage.getKey().get(), endUserMessage);
+            TransferExecutionException.EndUserMessage endUserMessage,
+            InternalStatus internalStatus) {
+        return cancelTransferWithMessage(
+                endUserMessage.getKey().get(), endUserMessage, internalStatus);
     }
 
     private TransferExecutionException cancelTransferWithMessage(
-            String message, TransferExecutionException.EndUserMessage endUserMessage) {
+            String message,
+            TransferExecutionException.EndUserMessage endUserMessage,
+            InternalStatus internalStatus) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(message)
                 .setEndUserMessage(catalog.getString(endUserMessage))
+                .setInternalStatus(internalStatus.toString())
                 .build();
     }
 
