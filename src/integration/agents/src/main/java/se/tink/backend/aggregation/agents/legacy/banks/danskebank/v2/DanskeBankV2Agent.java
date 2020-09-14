@@ -115,6 +115,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -270,6 +271,7 @@ public class DanskeBankV2Agent extends AbstractAgent
                     .setMessage(
                             bankIDStatusCode
                                     + " - Timed out or did not open app: Failed to sign transfer with BankID")
+                    .setInternalStatus(InternalStatus.BANKID_NO_RESPONSE.toString())
                     .build();
         } else if (bankIdResponse.isUserCancelled()) {
             return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
@@ -279,6 +281,7 @@ public class DanskeBankV2Agent extends AbstractAgent
                     .setMessage(
                             bankIDStatusCode
                                     + " - User cancelled: Failed to sign transfer with BankID")
+                    .setInternalStatus(InternalStatus.BANKID_CANCELLED.toString())
                     .build();
         } else {
             String logMessage = bankIDStatusCode + " - Failed to sign transfer with BankID";
@@ -420,6 +423,10 @@ public class DanskeBankV2Agent extends AbstractAgent
                                                                             .CHALLENGE_NO_RESPONSE))
                                                     .setMessage(
                                                             "Failed to get challenge response from user")
+                                                    .setInternalStatus(
+                                                            InternalStatus
+                                                                    .SECURITY_TOKEN_NO_RESPONSE
+                                                                    .toString())
                                                     .build());
 
             challengeResponseRequest.setResponse(challengeResponse);
