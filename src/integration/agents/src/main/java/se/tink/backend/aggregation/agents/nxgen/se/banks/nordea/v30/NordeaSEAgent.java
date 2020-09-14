@@ -44,7 +44,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
@@ -153,8 +153,7 @@ public class NordeaSEAgent extends NextGenerationAgent
                 new NordeaTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionIndexPaginationController<>(
-                                transactionFetcher, NordeaSEConstants.NUM_TRANSACTIONS_PER_PAGE),
+                        new TransactionDatePaginationController<>(transactionFetcher),
                         transactionFetcher));
     }
 

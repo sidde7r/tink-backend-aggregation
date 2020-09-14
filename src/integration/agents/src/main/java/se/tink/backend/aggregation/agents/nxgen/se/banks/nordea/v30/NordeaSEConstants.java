@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 
 public class NordeaSEConstants {
-    public static final int NUM_TRANSACTIONS_PER_PAGE = 200;
     public static final int NUM_CREDIT_CARD_TRANSACTIONS_PER_PAGE = 30;
     public static final String CURRENCY = "SEK";
+    public static final String PROUDCT_CODE = "product_code";
 
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
             ImmutableMap.<String, String>builder()
@@ -110,16 +110,16 @@ public class NordeaSEConstants {
         public static final String LOGIN_BANKID =
                 "se/authentication-bankid-v1/security/oauth/token";
         public static final String PASSWORD_TOKEN = "ca/token-service-v3/oauth/token";
-        public static final String FETCH_ACCOUNTS = "ca/accounts-v1/accounts/";
+        public static final String FETCH_ACCOUNTS = "ca/accounts-v3/accounts/";
         public static final String FETCH_TRANSACTIONS =
-                "ca/accounts-v1/accounts/{accountNumber}/transactions";
-        public static final String FETCH_CARDS = "ca/cards-v2/cards/";
+                "ca/accounts-v3/accounts/{accountNumber}/transactions";
+        public static final String FETCH_CARDS = "ca/cards-v4/cards/";
         public static final String FETCH_CARD_TRANSACTIONS =
-                "ca/cards-v2/cards/{cardId}/transactions";
+                "ca/cards-v4/cards/{cardId}/transactions";
         public static final String FETCH_INVESTMENTS = "ca/savings-v1/savings/custodies";
         public static final String FETCH_LOANS = "ca/loans-v1/loans/";
         public static final String FETCH_LOAN_DETAILS = "ca/loans-v1/loans/{loanId}";
-        public static final String FETCH_IDENTITY_DATA = "se/customerinfo-v2/customers/info";
+        public static final String FETCH_IDENTITY_DATA = "se/customerinfo-v3/customers/self/info";
         public static final String FETCH_PAYMENTS = "se/payments-v2/payments/";
         public static final String FETCH_PAYMENTS_DETAILS = "se/payments-v2/payments/{paymentId}";
         public static final String FETCH_BENEFICIARIES = "ca/beneficiary-v1/beneficiaries";
@@ -144,8 +144,8 @@ public class NordeaSEConstants {
     }
 
     public static class QueryParams {
-        public static final String OFFSET = "offset";
-        public static final String LIMIT = "limit";
+        public static final String START_DATE = "start_date";
+        public static final String END_DATE = "end_date";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
         public static final String PAGE_SIZE_LIMIT =

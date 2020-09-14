@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.identitydata.entities.PreferredNameEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.giro.validation.LuhnCheck;
 import se.tink.libraries.identitydata.IdentityData;
@@ -17,36 +18,31 @@ public class FetchIdentityDataResponse {
     private static final String SSN_PATTERN =
             "^(19|20)\\d{2}(0[1-9]|1[0-2])([0-2]\\d|3[0-1])\\d{4}$";
 
-    // e.g. 199201234567
-    @JsonProperty("customer_id")
-    private String customerId;
-
-    private String segment;
-
-    @JsonProperty("loyalty_group")
-    private String loyaltyGroup;
-
-    // e.g. 199201234567
-    @JsonProperty("person_id")
-    private String personId;
-
     // e.g, 1992-01-23
     @JsonProperty("birth_date")
     private String birthDate;
 
-    @JsonProperty("first_name")
-    private String firstName;
+    @JsonProperty("branch_id")
+    private String branchId;
 
-    @JsonProperty("last_name")
-    private String lastName;
+    // ssn e.g. 199201234567
+    @JsonProperty("customer_id")
+    private String customerId;
 
-    @JsonProperty("phone_number")
-    private String phoneNumber;
+    @JsonProperty("loyalty_group")
+    private String loyaltyGroup;
 
-    private boolean employee;
+    @JsonProperty("loyalty_group_in_raw")
+    private String loyaltyGroupInRaw;
 
-    @JsonProperty("us_resident")
-    private boolean usResident;
+    // ssn e.g. 199201234567
+    @JsonProperty("person_id")
+    private String personId;
+
+    @JsonProperty("preferred_name")
+    private PreferredNameEntity preferredName;
+
+    private String segment;
 
     public IdentityData toTinkIdentityData() {
         // Both customerId and personId are SSN, but personId is missing sometimes.
@@ -58,12 +54,13 @@ public class FetchIdentityDataResponse {
 
         final String ssn = Optional.ofNullable(personId).orElse(customerId);
         if (isValidSsn(ssn)) {
-            return SeIdentityData.of(firstName, lastName, ssn);
+            return SeIdentityData.of(
+                    preferredName.getGivenName(), preferredName.getFamilyName(), ssn);
         }
 
         return IdentityData.builder()
-                .addFirstNameElement(firstName)
-                .addSurnameElement(lastName)
+                .addFirstNameElement(preferredName.getGivenName())
+                .addSurnameElement(preferredName.getFamilyName())
                 .setDateOfBirth(LocalDate.parse(birthDate))
                 .build();
     }

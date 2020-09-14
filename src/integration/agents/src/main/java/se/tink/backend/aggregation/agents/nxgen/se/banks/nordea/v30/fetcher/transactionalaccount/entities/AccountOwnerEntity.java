@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountOwnerEntity {
-    @JsonProperty("last_name")
-    private String lastName;
+    @JsonProperty("name")
+    private String name;
 
     @JsonProperty private String role;
 
@@ -18,11 +18,11 @@ public class AccountOwnerEntity {
 
     @JsonIgnore
     public String getOwnerName() {
-        return lastName;
+        return name;
     }
 
     @JsonIgnore
     public boolean hasOwnerName() {
-        return !Strings.isNullOrEmpty(lastName);
+        return !Strings.isNullOrEmpty(name);
     }
 }

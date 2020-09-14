@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 
 import io.vavr.control.Option;
+import java.util.Date;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.FormParams;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.TagValues;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.AuthDeviceRequest;
@@ -48,12 +50,14 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.rpc.FetchBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
 
 public class NordeaSEApiClient {
@@ -158,12 +162,19 @@ public class NordeaSEApiClient {
     }
 
     public FetchAccountTransactionResponse fetchAccountTransactions(
-            int offset, int limit, String accountId) {
+            TransactionalAccount account, Date fromDate, Date toDate) {
         final URL url =
                 NordeaSEConstants.Urls.FETCH_ACCOUNT_TRANSACTIONS
-                        .parameter(NordeaSEConstants.IdTags.ACCOUNT_NUMBER, accountId)
-                        .queryParam(NordeaSEConstants.QueryParams.OFFSET, Integer.toString(offset))
-                        .queryParam(NordeaSEConstants.QueryParams.LIMIT, Integer.toString(limit));
+                        .parameter(IdTags.ACCOUNT_NUMBER, account.getApiIdentifier())
+                        .queryParam(
+                                NordeaSEConstants.PROUDCT_CODE,
+                                account.getFromTemporaryStorage(NordeaSEConstants.PROUDCT_CODE))
+                        .queryParam(
+                                QueryParams.START_DATE,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                        .queryParam(
+                                QueryParams.END_DATE,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate));
 
         final RequestBuilder request =
                 httpClient.request(url).accept(MediaType.APPLICATION_JSON_TYPE);

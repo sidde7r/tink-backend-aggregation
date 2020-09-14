@@ -27,11 +27,13 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class AccountEntity implements GeneralAccountEntity {
     @JsonProperty private PermissionsEntity permissions;
 
-    @JsonProperty("account_number")
-    private String accountNumber;
-
-    @JsonProperty("display_account_number")
+    // e..g NAID-SE-SEK-920123-1234
+    @JsonProperty("account_id")
     private String accountId;
+
+    // e.g. 920123-1234
+    @JsonProperty("display_account_number")
+    private String displayAccountNumber;
 
     @JsonProperty private String iban;
     @JsonProperty private String bic;
@@ -92,7 +94,8 @@ public class AccountEntity implements GeneralAccountEntity {
                                         .addIdentifier(identifier)
                                         .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                                         .build())
-                        .setApiIdentifier(accountNumber);
+                        .setApiIdentifier(accountId)
+                        .putInTemporaryStorage(NordeaSEConstants.PROUDCT_CODE, productCode);
 
         if (hasAccountOwnerName()) {
             transactionalBuildStep.addHolderName(generalGetName());
@@ -153,18 +156,17 @@ public class AccountEntity implements GeneralAccountEntity {
     }
 
     @JsonIgnore
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getAccountId() {
+        return accountId;
     }
 
     @JsonIgnore
     public String formatAccountNumber() {
         final Pattern p = Pattern.compile(".*?([0-9]{10,})");
         // account number comes in format "NAID-SE-SEK-<ACCOUNTNUMBER>"
-        Matcher matcher = p.matcher(accountNumber);
+        Matcher matcher = p.matcher(accountId);
         if (!matcher.find()) {
-            throw new IllegalArgumentException(
-                    "Could not parse account number from " + accountNumber);
+            throw new IllegalArgumentException("Could not parse account number from " + accountId);
         }
         return matcher.group(1);
     }
@@ -198,7 +200,7 @@ public class AccountEntity implements GeneralAccountEntity {
     // This method used for setting uniqueId is taken from the legacy Nordea agent.
     @JsonIgnore
     private String maskAccountNumber() {
-        return "************" + accountNumber.substring(accountNumber.length() - 4);
+        return "************" + accountId.substring(accountId.length() - 4);
     }
 
     @JsonIgnore
