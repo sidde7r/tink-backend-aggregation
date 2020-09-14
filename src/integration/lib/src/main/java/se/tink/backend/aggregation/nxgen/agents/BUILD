@@ -6,7 +6,6 @@ java_library(
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
-        "//src/integration/enums",
         "//src/integration/identity_data",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/bankid/status",

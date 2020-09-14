@@ -7,7 +7,6 @@ java_library(
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/enums",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/psd2_payment_account/result",
     ],

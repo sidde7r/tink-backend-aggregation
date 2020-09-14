@@ -5,7 +5,6 @@ java_library(
     deps = [
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:rpc",
-        "//src/integration/user:rpc",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
