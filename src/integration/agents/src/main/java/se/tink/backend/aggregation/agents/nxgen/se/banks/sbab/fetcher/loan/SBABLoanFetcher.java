@@ -3,9 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.entities.PropertiesEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.entities.PropertyLoansEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.entities.SBABLoansEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -21,10 +22,13 @@ public class SBABLoanFetcher implements AccountFetcher<LoanAccount> {
     public Collection<LoanAccount> fetchAccounts() {
         final AccountsResponse accountsResponse = apiClient.fetchAccounts();
 
-        return accountsResponse.getLoans().getProperties().stream()
-                .map(PropertiesEntity::getPropertyLoans)
-                .flatMap(List::stream)
-                .map(PropertyLoansEntity::toTinkLoanAccount)
+        return Stream.concat(
+                        accountsResponse.getLoans().getProperties().stream()
+                                .map(PropertiesEntity::getPropertyLoans)
+                                .flatMap(List::stream)
+                                .map(SBABLoansEntity::toTinkLoanAccount),
+                        accountsResponse.getLoans().getPrivateLoans().stream()
+                                .map(SBABLoansEntity::toTinkLoanAccount))
                 .collect(Collectors.toList());
     }
 }
