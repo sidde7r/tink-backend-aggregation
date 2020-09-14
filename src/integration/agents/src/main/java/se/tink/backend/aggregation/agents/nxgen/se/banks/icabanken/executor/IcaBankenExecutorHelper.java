@@ -76,6 +76,7 @@ public class IcaBankenExecutorHelper {
                                                 .getString(
                                                         TransferExecutionException.EndUserMessage
                                                                 .INVALID_SOURCE))
+                                .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                                 .build());
     }
 
@@ -102,6 +103,10 @@ public class IcaBankenExecutorHelper {
                                                                                         TransferExecutionException
                                                                                                 .EndUserMessage
                                                                                                 .INVALID_DESTINATION))
+                                                                .setInternalStatus(
+                                                                        InternalStatus
+                                                                                .INVALID_DESTINATION_ACCOUNT
+                                                                                .toString())
                                                                 .build()));
     }
 
@@ -349,6 +354,7 @@ public class IcaBankenExecutorHelper {
                 .setEndUserMessage(
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage.BANKID_CANCELLED))
+                .setInternalStatus(InternalStatus.BANKID_CANCELLED.toString())
                 .build();
     }
 
@@ -359,6 +365,7 @@ public class IcaBankenExecutorHelper {
                 .setEndUserMessage(
                         catalog.getString(
                                 IcaBankenConstants.UserMessage.BANKID_TRANSFER_INTERRUPTED))
+                .setInternalStatus(InternalStatus.BANKID_ANOTHER_IN_PROGRESS.toString())
                 .setException(e)
                 .build();
     }
