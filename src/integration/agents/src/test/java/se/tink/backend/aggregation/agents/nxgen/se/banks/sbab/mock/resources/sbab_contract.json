@@ -5,9 +5,9 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "SEK",
-        "unscaledValue": 985,
-        "scale": 2,
         "doubleValue": 9.85,
+        "scale": 2,
+        "unscaledValue": 985,
         "exactValue": 9.85
       },
       "currencyCode": "SEK",
@@ -42,9 +42,9 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "SEK",
-        "unscaledValue": -10000000,
-        "scale": 1,
         "doubleValue": -1000000.0,
+        "scale": 1,
+        "unscaledValue": -10000000,
         "exactValue": -1000000.0
       },
       "currencyCode": "SEK",
@@ -64,13 +64,76 @@
       "balance": -1000000.0
     },
     {
+      "accountNumber": "45612378912",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "SEK",
+        "doubleValue": -20824.0,
+        "scale": 1,
+        "unscaledValue": -208240,
+        "exactValue": -20824.0
+      },
+      "currencyCode": "SEK",
+      "bankId": "45612378912",
+      "excluded": false,
+      "favored": false,
+      "name": "BLANCO",
+      "ownership": 1.0,
+      "type": "LOAN",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[\"se://45612378912\"]",
+      "closed": false,
+      "flags": "[]",
+      "availableCredit": 0.0,
+      "balance": -20824.0
+    },
+    {
+      "accountNumber": "1234567",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "SEK",
+        "doubleValue": 94.99,
+        "scale": 2,
+        "unscaledValue": 9499,
+        "exactValue": 94.99
+      },
+      "currencyCode": "SEK",
+      "bankId": "1234567",
+      "excluded": false,
+      "favored": false,
+      "name": "Gemensamt spar",
+      "ownership": 1.0,
+      "type": "SAVINGS",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[]",
+      "closed": false,
+      "holderName": "FIRSTNAME LASTNAME",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "FIRSTNAME LASTNAME",
+            "role": null
+          }
+        ]
+      },
+      "flags": "[]",
+      "availableCredit": 0.0,
+      "balance": 94.99
+    },
+    {
       "accountNumber": "56789123456",
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "SEK",
-        "unscaledValue": 517932,
-        "scale": 2,
         "doubleValue": 5179.32,
+        "scale": 2,
+        "unscaledValue": 517932,
         "exactValue": 5179.32
       },
       "currencyCode": "SEK",
@@ -509,6 +572,8 @@
     "dateOfBirth": {
       "year": 1912,
       "month": "DECEMBER",
+      "monthValue": 12,
+      "dayOfMonth": 12,
       "dayOfWeek": "THURSDAY",
       "leapYear": true,
       "dayOfYear": 347,
@@ -516,8 +581,6 @@
         "id": "ISO",
         "calendarType": "iso8601"
       },
-      "monthValue": 12,
-      "dayOfMonth": 12,
       "era": "CE"
     }
   }
