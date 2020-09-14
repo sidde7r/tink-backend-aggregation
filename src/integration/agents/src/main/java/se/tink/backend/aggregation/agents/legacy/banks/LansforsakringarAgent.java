@@ -641,7 +641,9 @@ public class LansforsakringarAgent extends AbstractAgent
         Optional<AccountEntity> sourceAccount = GeneralUtils.find(source, fetchPaymentAccounts());
 
         if (!sourceAccount.isPresent()) {
-            throw failTransfer(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND);
+            throw cancelTransfer(
+                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND,
+                    InternalStatus.INVALID_SOURCE_ACCOUNT);
         }
 
         return sourceAccount.get();
@@ -1041,7 +1043,9 @@ public class LansforsakringarAgent extends AbstractAgent
                 LFUtils.find(source, sourceAccounts.getAccounts());
 
         if (!fromAccountDetails.isPresent()) {
-            throw failTransfer(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND);
+            throw cancelTransfer(
+                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND,
+                    InternalStatus.INVALID_SOURCE_ACCOUNT);
         }
     }
 
