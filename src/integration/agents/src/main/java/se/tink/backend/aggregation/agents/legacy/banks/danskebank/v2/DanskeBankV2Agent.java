@@ -301,10 +301,11 @@ public class DanskeBankV2Agent extends AbstractAgent
         Optional<TransferAccountEntity> fromAccount =
                 findAccount(source, detailsResponse.getFromAccounts());
         if (!fromAccount.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
                             catalog.getString(
                                     TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
+                    .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                     .build();
         }
 
@@ -350,10 +351,11 @@ public class DanskeBankV2Agent extends AbstractAgent
         Optional<TransferAccountEntity> fromAccount =
                 findAccount(source, detailsResponse.getFromAccounts());
         if (!fromAccount.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
                             catalog.getString(
                                     TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
+                    .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                     .build();
         }
 
