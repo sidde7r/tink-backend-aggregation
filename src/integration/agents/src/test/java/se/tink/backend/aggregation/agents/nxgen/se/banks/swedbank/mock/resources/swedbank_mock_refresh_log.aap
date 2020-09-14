@@ -24,7 +24,7 @@ POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/
 Accept: application/json
 Content-Type: application/json
 
-{"generateEasyLoginId":true,"userId":"","useEasyLogin":false}
+{"bankIdOnSameDevice": true}
 
 RESPONSE 2
 200

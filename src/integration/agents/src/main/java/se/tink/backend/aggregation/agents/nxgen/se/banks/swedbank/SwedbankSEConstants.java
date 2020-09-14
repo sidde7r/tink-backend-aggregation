@@ -18,7 +18,7 @@ public class SwedbankSEConstants {
 
     public static final ImmutableMap<String, ProfileParameters> PROFILE_PARAMETERS =
             new ImmutableMap.Builder<String, ProfileParameters>()
-                    .put("swedbank", new ProfileParameters("swedbank", "rMKD7LKhhFNVOXJK", false))
+                    .put("swedbank", new ProfileParameters("swedbank", "HhJS3oGdParaOGix", false))
                     .put(
                             "swedbank-youth",
                             new ProfileParameters("swedbank-youth", "ap4TcWEoEGV42UVn", false))

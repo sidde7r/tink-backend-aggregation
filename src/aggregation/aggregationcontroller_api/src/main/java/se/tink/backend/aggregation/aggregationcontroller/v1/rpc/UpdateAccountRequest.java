@@ -13,6 +13,7 @@ public class UpdateAccountRequest {
     private String credentialsId;
     private ExactCurrencyAmount availableBalance;
     private ExactCurrencyAmount creditLimit;
+    private String operationId;
 
     public String getCredentialsId() {
         return credentialsId;
@@ -63,5 +64,13 @@ public class UpdateAccountRequest {
 
     public void setCreditLimit(ExactCurrencyAmount creditLimit) {
         this.creditLimit = creditLimit;
+    }
+
+    public String getOperationId() {
+        return operationId;
+    }
+
+    public void setOperationId(String operationId) {
+        this.operationId = operationId;
     }
 }

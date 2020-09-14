@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -30,9 +33,14 @@ public class SwedbankDefaultBankIdAuthenticator
         implements BankIdAuthenticator<AbstractBankIdAuthResponse> {
     private static final Logger log =
             LoggerFactory.getLogger(SwedbankDefaultBankIdAuthenticator.class);
+
     private final SwedbankDefaultApiClient apiClient;
-    private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
     private final SessionStorage sessionStorage;
+
+    private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
+    private String givenSsn;
+    private String autoStartToken;
+    private int pollCount;
 
     public SwedbankDefaultBankIdAuthenticator(
             SwedbankDefaultApiClient apiClient, SessionStorage sessionStorage) {
@@ -43,8 +51,11 @@ public class SwedbankDefaultBankIdAuthenticator
     @Override
     public AbstractBankIdAuthResponse init(String ssn)
             throws BankIdException, BankServiceException, AuthorizationException {
-        previousStatus = null;
-        InitBankIdResponse initBankIdResponse = initBankId(ssn);
+        this.previousStatus = null;
+        this.givenSsn = ssn;
+        this.pollCount = 0;
+
+        InitBankIdResponse initBankIdResponse = refreshAutostartToken();
 
         LinkEntity linkEntity = initBankIdResponse.getLinks().getNextOrThrow();
         Preconditions.checkState(
@@ -70,11 +81,12 @@ public class SwedbankDefaultBankIdAuthenticator
             SwedbankBaseConstants.BankIdResponseStatus bankIdResponseStatus =
                     collectBankIdResponse.getBankIdStatus();
 
-            previousStatus = bankIdResponseStatus;
+            this.previousStatus = bankIdResponseStatus;
 
             switch (bankIdResponseStatus) {
                 case CLIENT_NOT_STARTED:
                 case USER_SIGN:
+                    pollCount++;
                     return BankIdStatus.WAITING;
                 case CANCELLED:
                     return BankIdStatus.CANCELLED;
@@ -97,39 +109,55 @@ public class SwedbankDefaultBankIdAuthenticator
                             "Login failed - Cannot proceed with unknown bankId status");
             }
         } catch (HttpResponseException hre) {
-            HttpResponse httpResponse = hre.getResponse();
-            // when timing out, this can also be the response
-            int responseStatus = httpResponse.getStatus();
-            if (responseStatus == HttpStatus.SC_UNAUTHORIZED) {
-                ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-                if (errorResponse.hasErrorCode(
-                        SwedbankBaseConstants.BankErrorMessage.LOGIN_FAILED)) {
-                    return BankIdStatus.TIMEOUT;
-                } else if (errorResponse.hasErrorCode(
-                        SwedbankBaseConstants.BankErrorMessage.SESSION_INVALIDATED)) {
-                    // When user has bank app running, and starts a refresh, both sessions will be
-                    // invalidated
-                    throw SessionError.SESSION_ALREADY_ACTIVE.exception();
-                }
-            } else if (responseStatus == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                // This code is a temporary fix until Swedbank returns a better error message.
-                // What we belive to be the problem is that when multiple request are sent to bankid
-                // at the same time
-                // bankid cancels all requests.
-                if (previousStatus
-                        == SwedbankBaseConstants.BankIdResponseStatus.CLIENT_NOT_STARTED) {
-                    return BankIdStatus.INTERRUPTED;
-                }
-            }
-
-            // unknown error re-throw
-            throw hre;
+            return handleBankIdErrors(hre);
         }
+    }
+
+    private BankIdStatus handleBankIdErrors(HttpResponseException hre) {
+        HttpResponse httpResponse = hre.getResponse();
+        // when timing out, this can also be the response
+        int responseStatus = httpResponse.getStatus();
+        if (responseStatus == HttpStatus.SC_UNAUTHORIZED) {
+            ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+            if (errorResponse.hasErrorCode(SwedbankBaseConstants.BankErrorMessage.LOGIN_FAILED)) {
+                if (pollCount < 10) {
+                    return BankIdStatus.FAILED_UNKNOWN;
+                }
+
+                if (SwedbankBaseConstants.BankIdResponseStatus.CLIENT_NOT_STARTED.equals(
+                        previousStatus)) {
+                    return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+                }
+            } else if (errorResponse.hasErrorCode(
+                    SwedbankBaseConstants.BankErrorMessage.SESSION_INVALIDATED)) {
+                // When user has bank app running, and starts a refresh, both sessions will be
+                // invalidated
+                throw SessionError.SESSION_ALREADY_ACTIVE.exception();
+            }
+        } else if (responseStatus == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                && SwedbankBaseConstants.BankIdResponseStatus.CLIENT_NOT_STARTED.equals(
+                        previousStatus)) {
+            // This code is a temporary fix until Swedbank returns a better error message.
+            // What we belive to be the problem is that when multiple request are sent to bankid
+            // at the same time bankid cancels all requests.
+            return BankIdStatus.INTERRUPTED;
+        }
+
+        // unknown error re-throw
+        throw hre;
     }
 
     @Override
     public Optional<String> getAutostartToken() {
-        return Optional.empty();
+        return Optional.ofNullable(autoStartToken);
+    }
+
+    @Override
+    public InitBankIdResponse refreshAutostartToken() throws BankServiceException {
+        InitBankIdResponse initBankIdResponse = apiClient.initBankId();
+        this.autoStartToken = initBankIdResponse.getAutoStartToken();
+
+        return initBankIdResponse;
     }
 
     @Override
@@ -144,23 +172,18 @@ public class SwedbankDefaultBankIdAuthenticator
 
     private void completeBankIdLogin(CollectBankIdResponse collectBankIdResponse)
             throws AuthenticationException {
-        apiClient.completeAuthentication(collectBankIdResponse.getLinks().getNextOrThrow());
+        ProfileResponse profileResponse =
+                apiClient.completeAuthentication(collectBankIdResponse.getLinks().getNextOrThrow());
+
+        // If SSN is given, check that it matches the authenticated user
+        if (!Strings.isNullOrEmpty(this.givenSsn)) {
+            verifyIdentity(profileResponse);
+        }
     }
 
-    private InitBankIdResponse initBankId(String ssn) throws BankIdException {
-        try {
-            return apiClient.initBankId(ssn);
-        } catch (HttpResponseException hre) {
-            HttpResponse httpResponse = hre.getResponse();
-            if (httpResponse.getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-
-                if (errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.USER_ID)) {
-                    throw BankIdError.USER_VALIDATION_ERROR.exception(hre);
-                }
-            }
-
-            throw hre;
+    private void verifyIdentity(ProfileResponse profileResponse) {
+        if (!this.givenSsn.equalsIgnoreCase(profileResponse.getUserId())) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
 }
