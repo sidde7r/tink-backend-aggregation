@@ -48,7 +48,6 @@ import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -132,7 +131,6 @@ public class AggregationServiceResource implements AggregationService {
         if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
-        logDPF(request, "configureWhitelistInformation");
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationConfigureWhitelist(request, clientInfo));
     }
@@ -157,7 +155,6 @@ public class AggregationServiceResource implements AggregationService {
         if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
-        logDPF(request, "refreshWhitelistInformation");
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationWhitelistRefresh(request, clientInfo));
     }
@@ -166,7 +163,6 @@ public class AggregationServiceResource implements AggregationService {
     public void refreshInformation(final RefreshInformationRequest request, ClientInfo clientInfo)
             throws Exception {
         if (request.isManual()) {
-            logDPF(request, "refreshInformation");
             agentWorker.execute(
                     agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
         } else {
@@ -177,18 +173,6 @@ public class AggregationServiceResource implements AggregationService {
                         AgentWorkerRefreshOperationCreatorWrapper.of(
                                 agentWorkerCommandFactory, request, clientInfo));
             }
-        }
-    }
-
-    private void logDPF(CredentialsRequest request, String method) {
-        try {
-            logger.info(
-                    "{} for credentialsId: {}, restrictions: {}",
-                    method,
-                    request.getCredentials().getId(),
-                    request.getDataFetchingRestrictions());
-        } catch (RuntimeException e) {
-            logger.warn("Couldn't log: ", e);
         }
     }
 
