@@ -50,6 +50,7 @@ public final class RefreshExecutorUtils {
                     .put(
                             RefreshableItem.INVESTMENT_TRANSACTIONS,
                             RefreshInvestmentAccountsExecutor.class)
+                    .put(RefreshableItem.LIST_BENEFICIARIES, RefreshBeneficiariesExecutor.class)
                     .build();
 
     private static Class getRefreshExecutor(RefreshableItem item) {
@@ -74,6 +75,12 @@ public final class RefreshExecutorUtils {
                     context.updateTransferDestinationPatterns(
                             ((RefreshTransferDestinationExecutor) agent)
                                     .fetchTransferDestinations(context.getUpdatedAccounts())
+                                    .getTransferDestinations());
+                    break;
+                case LIST_BENEFICIARIES:
+                    context.updateTransferDestinationPatterns(
+                            ((RefreshBeneficiariesExecutor) agent)
+                                    .fetchBeneficiaries(context.getUpdatedAccounts())
                                     .getTransferDestinations());
                     break;
                 case CHECKING_ACCOUNTS:

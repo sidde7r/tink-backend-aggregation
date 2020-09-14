@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
@@ -241,6 +242,8 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 return agent instanceof RefreshInvestmentAccountsExecutor;
             case IDENTITY_DATA:
                 return agent instanceof RefreshIdentityDataExecutor;
+            case LIST_BENEFICIARIES:
+                return agent instanceof RefreshBeneficiariesExecutor;
             default:
                 return false;
         }

@@ -31,7 +31,8 @@ public enum RefreshableItem {
     INVESTMENT_ACCOUNTS(AccountTypes.INVESTMENT),
     INVESTMENT_TRANSACTIONS(AccountTypes.INVESTMENT),
 
-    IDENTITY_DATA;
+    IDENTITY_DATA,
+    LIST_BENEFICIARIES;
 
     private final List<AccountTypes> accountTypes;
 
@@ -54,6 +55,7 @@ public enum RefreshableItem {
                             RefreshableItem.LOAN_TRANSACTIONS,
                             RefreshableItem.INVESTMENT_TRANSACTIONS,
                             RefreshableItem.EINVOICES,
+                            RefreshableItem.LIST_BENEFICIARIES,
                             RefreshableItem.TRANSFER_DESTINATIONS,
                             RefreshableItem.ACCOUNTS,
                             RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
@@ -92,6 +94,7 @@ public enum RefreshableItem {
                     .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
                     .add(RefreshableItem.EINVOICES)
                     .add(RefreshableItem.TRANSFER_DESTINATIONS)
+                    .add(RefreshableItem.LIST_BENEFICIARIES)
                     // TODO: Should IDENTITY_DATA be here? If so, make sure this is expected
                     // everywhere REFRESHABLE_ITEMS_ALL is used.
                     .build();

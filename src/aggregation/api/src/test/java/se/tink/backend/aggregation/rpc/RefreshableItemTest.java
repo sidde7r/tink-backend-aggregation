@@ -27,7 +27,8 @@ public class RefreshableItemTest {
                             RefreshableItem.TRANSFER_DESTINATIONS,
                             RefreshableItem.ACCOUNTS,
                             RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
-                            RefreshableItem.IDENTITY_DATA));
+                            RefreshableItem.IDENTITY_DATA,
+                            RefreshableItem.LIST_BENEFICIARIES));
 
     @Test
     public void testOrderingAll() {
@@ -51,6 +52,7 @@ public class RefreshableItemTest {
         Assert.assertEquals(
                 RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS, sorted.get(13));
         Assert.assertEquals(RefreshableItem.IDENTITY_DATA, sorted.get(14));
+        Assert.assertEquals(RefreshableItem.LIST_BENEFICIARIES, sorted.get(15));
     }
 
     @Test

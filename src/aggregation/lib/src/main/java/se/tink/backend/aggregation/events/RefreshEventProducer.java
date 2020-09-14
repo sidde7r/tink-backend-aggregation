@@ -153,6 +153,9 @@ public class RefreshEventProducer {
                 case IDENTITY_DATA:
                     item = RefreshableItem.IDENTITY_DATA;
                     break;
+                case LIST_BENEFICIARIES:
+                    item = RefreshableItem.LIST_BENEFICIARIES;
+                    break;
                 default:
                     throw new Exception(
                             String.format(
