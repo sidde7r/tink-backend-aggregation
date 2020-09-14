@@ -113,9 +113,9 @@ public class NordeaSEConstants {
         public static final String FETCH_ACCOUNTS = "ca/accounts-v3/accounts/";
         public static final String FETCH_TRANSACTIONS =
                 "ca/accounts-v3/accounts/{accountNumber}/transactions";
-        public static final String FETCH_CARDS = "ca/cards-v2/cards/";
+        public static final String FETCH_CARDS = "ca/cards-v4/cards/";
         public static final String FETCH_CARD_TRANSACTIONS =
-                "ca/cards-v2/cards/{cardId}/transactions";
+                "ca/cards-v4/cards/{cardId}/transactions";
         public static final String FETCH_INVESTMENTS = "ca/savings-v1/savings/custodies";
         public static final String FETCH_LOANS = "ca/loans-v1/loans/";
         public static final String FETCH_LOAN_DETAILS = "ca/loans-v1/loans/{loanId}";
