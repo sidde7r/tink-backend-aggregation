@@ -6,10 +6,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.Headers;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdAuthInitBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdAuthPollBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.EvaluatedPoliciesBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.SessionBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdAuthPollResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdAuthRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdAuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdInitRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.SessionInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.EvaluatedPoliciesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.PaymentNameBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.TransferBankEntity;
@@ -26,6 +36,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accou
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.UpcomingTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.EInvoiceBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.rpc.EInvoiceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata.entities.CustomerBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata.rpc.CustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.DepotEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.FundDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.rpc.InstrumentResponse;
@@ -54,6 +66,7 @@ public class IcaBankenApiClient {
     private final IcabankenPersistentStorage icabankenPersistentStorage;
 
     private AccountsEntity cachedAccounts;
+    private CustomerBodyEntity cachedCustomer;
 
     public IcaBankenApiClient(
             TinkHttpClient client,
@@ -62,6 +75,7 @@ public class IcaBankenApiClient {
         this.client = client;
         this.icaBankenSessionStorage = icaBankenSessionStorage;
         this.icabankenPersistentStorage = icabankenPersistentStorage;
+        client.setUserAgent(Headers.VALUE_USER_AGENT);
 
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
     }
@@ -88,11 +102,9 @@ public class IcaBankenApiClient {
         return request;
     }
 
-    public BankIdBodyEntity initBankId(String ssn) {
-        return createPostRequest(
-                        IcaBankenConstants.Urls.LOGIN_BANKID.parameter(
-                                IcaBankenConstants.IdTags.IDENTIFIER_TAG, ssn))
-                .post(BankIdResponse.class)
+    public BankIdAuthInitBodyEntity initBankId(String ssn) {
+        return createPostRequest(Urls.BANKID_CREATE)
+                .post(BankIdInitResponse.class, new BankIdInitRequest(ssn))
                 .getBody();
     }
 
@@ -102,11 +114,12 @@ public class IcaBankenApiClient {
                 .getBody();
     }
 
-    public BankIdResponse pollBankId(String reference) {
+    public BankIdAuthPollBodyEntity pollBankId(String reference) {
         return createRequest(
-                        IcaBankenConstants.Urls.LOGIN_BANKID.parameter(
+                        Urls.BANKID_COLLECT.parameter(
                                 IcaBankenConstants.IdTags.IDENTIFIER_TAG, reference))
-                .get(BankIdResponse.class);
+                .get(BankIdAuthPollResponse.class)
+                .getBody();
     }
 
     public BankIdResponse pollTransferBankId(String requestId) {
@@ -116,12 +129,9 @@ public class IcaBankenApiClient {
                 .get(BankIdResponse.class);
     }
 
-    public SessionBodyEntity fetchSessionInfo() {
-        return createRequest(IcaBankenConstants.Urls.SESSION)
-                .queryParam(
-                        IcaBankenConstants.IdTags.DEVICE_APPLICATION_ID,
-                        icabankenPersistentStorage.getDeviceApplicationId())
-                .get(SessionInfoResponse.class)
+    public SessionBodyEntity authenticateBankId(String reference) {
+        return createPostRequest(Urls.BANKID_AUTH)
+                .post(BankIdAuthResponse.class, new BankIdAuthRequest(reference))
                 .getBody();
     }
 
@@ -135,6 +145,22 @@ public class IcaBankenApiClient {
         }
 
         return cachedAccounts;
+    }
+
+    public EvaluatedPoliciesBodyEntity fetchPolicies() {
+        return createRequest(Urls.EVALUATED_POLICIES)
+                .get(EvaluatedPoliciesResponse.class)
+                .getBody();
+    }
+
+    public CustomerBodyEntity fetchCustomer() {
+        if (cachedCustomer == null) {
+            cachedCustomer =
+                    createRequest(IcaBankenConstants.Urls.CUSTOMER)
+                            .get(CustomerResponse.class)
+                            .getBody();
+        }
+        return cachedCustomer;
     }
 
     public TransactionsBodyEntity fetchTransactionsWithDate(Account account, Date toDate) {

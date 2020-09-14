@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -77,7 +76,9 @@ public class IcaBankenAgent extends NextGenerationAgent
         super(componentProvider);
         configureHttpClient(client);
         this.icaBankenSessionStorage = new IcaBankenSessionStorage(sessionStorage);
-        this.icaBankenPersistentStorage = new IcabankenPersistentStorage(persistentStorage);
+        this.icaBankenPersistentStorage =
+                new IcabankenPersistentStorage(
+                        persistentStorage, componentProvider.getRandomValueGenerator());
         this.apiClient =
                 new IcaBankenApiClient(client, icaBankenSessionStorage, icaBankenPersistentStorage);
         this.eInvoiceRefreshController = null;
@@ -86,13 +87,13 @@ public class IcaBankenAgent extends NextGenerationAgent
                 new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
-                        new IcaBankenInvestmentFetcher(apiClient));
+                        new IcaBankenInvestmentFetcher(apiClient, icaBankenSessionStorage));
 
         this.loanRefreshController =
                 new LoanRefreshController(
                         metricRefreshController,
                         updateController,
-                        new IcaBankenLoanFetcher(apiClient));
+                        new IcaBankenLoanFetcher(apiClient, icaBankenSessionStorage));
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
@@ -114,8 +115,7 @@ public class IcaBankenAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
-                new IcaBankenBankIdAuthenticator(
-                        apiClient, icaBankenSessionStorage, icaBankenPersistentStorage),
+                new IcaBankenBankIdAuthenticator(apiClient, icaBankenSessionStorage),
                 persistentStorage,
                 credentials);
     }
@@ -142,7 +142,7 @@ public class IcaBankenAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         IcaBankenTransactionalAccountsFetcher transactionalAccountFetcher =
-                new IcaBankenTransactionalAccountsFetcher(apiClient);
+                new IcaBankenTransactionalAccountsFetcher(apiClient, icaBankenSessionStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -165,7 +165,8 @@ public class IcaBankenAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
-        IcaBankenCreditCardFetcher creditCardFetcher = new IcaBankenCreditCardFetcher(apiClient);
+        IcaBankenCreditCardFetcher creditCardFetcher =
+                new IcaBankenCreditCardFetcher(apiClient, icaBankenSessionStorage);
 
         return new CreditCardRefreshController(
                 metricRefreshController,
@@ -203,7 +204,8 @@ public class IcaBankenAgent extends NextGenerationAgent
 
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
-                metricRefreshController, new IcaBankenTransferDestinationFetcher(apiClient));
+                metricRefreshController,
+                new IcaBankenTransferDestinationFetcher(apiClient, icaBankenSessionStorage));
     }
 
     @Override
@@ -226,7 +228,7 @@ public class IcaBankenAgent extends NextGenerationAgent
     @Override
     public FetchEInvoicesResponse fetchEInvoices() {
         final IcaBankenEInvoiceFetcher eInvoiceFetcher =
-                new IcaBankenEInvoiceFetcher(apiClient, catalog);
+                new IcaBankenEInvoiceFetcher(apiClient, icaBankenSessionStorage, catalog);
         eInvoiceRefreshController =
                 Optional.ofNullable(eInvoiceRefreshController)
                         .orElseGet(
@@ -239,8 +241,7 @@ public class IcaBankenAgent extends NextGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         IcaBankenIdentityDataFetcher identityDataFetcher =
-                new IcaBankenIdentityDataFetcher(
-                        apiClient, credentials.getField(Field.Key.USERNAME));
+                new IcaBankenIdentityDataFetcher(apiClient);
         return identityDataFetcher.getIdentityDataResponse();
     }
 }

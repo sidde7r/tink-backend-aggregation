@@ -32,7 +32,7 @@ public class IcaBankenSessionHandler implements SessionHandler {
             // expired,
             // this is why we also try to fetch accounts
             apiClient.keepAlive();
-            apiClient.fetchAccounts();
+            apiClient.fetchCustomer();
         } catch (HttpResponseException e) {
             throw SessionError.SESSION_EXPIRED.exception(e);
         }

@@ -8,22 +8,30 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.Policies;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.DepotEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.FundDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.FundHoldingsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IcaBankenInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final IcaBankenApiClient apiClient;
+    private final IcaBankenSessionStorage sessionStorage;
 
-    public IcaBankenInvestmentFetcher(IcaBankenApiClient apiClient) {
+    public IcaBankenInvestmentFetcher(
+            IcaBankenApiClient apiClient, IcaBankenSessionStorage sessionStorage) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
+        if (!sessionStorage.hasPolicy(Policies.DEPOTS)) {
+            return Collections.emptyList();
+        }
         return apiClient.getInvestments().stream()
                 .map(this::toInvestmentAccount)
                 .collect(Collectors.toList());

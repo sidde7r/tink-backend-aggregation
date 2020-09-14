@@ -11,34 +11,42 @@ import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuil
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.Policies;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.IcaDestinationType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.IcaSourceType;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class IcaBankenTransferDestinationFetcher implements TransferDestinationFetcher {
     private final IcaBankenApiClient apiClient;
+    private final IcaBankenSessionStorage sessionStorage;
 
     private List<AccountEntity> accountEntities;
     private List<RecipientEntity> recipientEntities;
     private Collection<Account> tinkAccounts;
 
-    public IcaBankenTransferDestinationFetcher(IcaBankenApiClient apiClient) {
+    public IcaBankenTransferDestinationFetcher(
+            IcaBankenApiClient apiClient, IcaBankenSessionStorage sessionStorage) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
-        this.tinkAccounts = accounts;
-        this.accountEntities = apiClient.fetchAccounts().getTransferSourceAccounts();
-        this.recipientEntities = apiClient.fetchDestinationAccounts();
-
         TransferDestinationsResponse transferDestinations = new TransferDestinationsResponse();
+        this.tinkAccounts = accounts;
 
-        transferDestinations.addDestinations(getTransferAccountDestinations());
-        transferDestinations.addDestinations(getPaymentAccountDestinations());
+        if (sessionStorage.hasPolicy(Policies.ACCOUNTS)
+                && sessionStorage.hasPolicy(Policies.PAYMENTS)) {
+            this.accountEntities = apiClient.fetchAccounts().getTransferSourceAccounts();
+            this.recipientEntities = apiClient.fetchDestinationAccounts();
+
+            transferDestinations.addDestinations(getTransferAccountDestinations());
+            transferDestinations.addDestinations(getPaymentAccountDestinations());
+        }
 
         return transferDestinations;
     }
