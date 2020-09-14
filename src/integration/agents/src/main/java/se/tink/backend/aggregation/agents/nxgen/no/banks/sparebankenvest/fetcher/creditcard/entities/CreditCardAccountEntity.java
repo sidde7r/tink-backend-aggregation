@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetche
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -30,21 +33,40 @@ public class CreditCardAccountEntity {
     @JsonProperty(value = "kortnummerGuid")
     private String cardNumberGuid;
 
-    @JsonProperty(value = "kontonummer")
+    @JsonProperty(value = "transaksjonskontonummer")
     private String transactionAccountNumber;
 
-    @JsonProperty(value = "kontonummerGuid")
+    @JsonProperty(value = "transaksjonskontonummerGuid")
     private String transactionAccountNumberGuid;
 
     public CreditCardAccount toTinkCreditCardAccount() {
-        // spv uses positive amount for balance of a credit card
-        return CreditCardAccount.builder(
-                        transactionAccountNumber,
-                        ExactCurrencyAmount.inNOK(balance),
-                        ExactCurrencyAmount.inNOK(available))
-                .setAccountNumber(cardNumber)
-                .setName(name)
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(prepareCardModule())
+                .withInferredAccountFlags()
+                .withId(prepareIdModule())
+                .setApiIdentifier(cardId)
                 .setBankIdentifier(createBankIdentifier())
+                .build();
+    }
+
+    private CreditCardModule prepareCardModule() {
+        return CreditCardModule.builder()
+                .withCardNumber(cardNumber)
+                // spv uses positive amount for balance of a credit card
+                .withBalance(ExactCurrencyAmount.inNOK(balance))
+                .withAvailableCredit(ExactCurrencyAmount.inNOK(available))
+                .withCardAlias(name)
+                .build();
+    }
+
+    private IdModule prepareIdModule() {
+        return IdModule.builder()
+                .withUniqueIdentifier(transactionAccountNumber)
+                .withAccountNumber(transactionAccountNumber)
+                .withAccountName(name)
+                .addIdentifier(
+                        AccountIdentifier.create(
+                                AccountIdentifier.Type.PAYMENT_CARD_NUMBER, cardNumber))
                 .build();
     }
 
