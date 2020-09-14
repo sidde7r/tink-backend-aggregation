@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeAuthenticator;
@@ -40,7 +39,6 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public final class NordeaSeAgent extends NordeaBaseAgent
         implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
                 RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor {
 
@@ -85,16 +83,6 @@ public final class NordeaSeAgent extends NordeaBaseAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     @Override
