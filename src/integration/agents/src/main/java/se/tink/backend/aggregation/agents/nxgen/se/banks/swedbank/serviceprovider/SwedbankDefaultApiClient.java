@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Retry;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitAuthenticationRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeRequest;
@@ -223,11 +224,11 @@ public class SwedbankDefaultApiClient {
                 .cookie(new Cookie(SwedbankBaseConstants.Url.DSID_KEY, dsid));
     }
 
-    public InitBankIdResponse initBankId(String ssn) {
+    public InitBankIdResponse initBankId() {
         try {
             return makePostRequest(
                     SwedbankBaseConstants.Url.INIT_BANKID.get(host),
-                    InitAuthenticationRequest.createFromUserId(ssn),
+                    InitBankIdRequest.create(),
                     InitBankIdResponse.class,
                     true);
         } catch (HttpClientException hce) {
