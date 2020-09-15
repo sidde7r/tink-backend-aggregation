@@ -15,7 +15,7 @@ public class SBABAgentWireMockTest {
         final String contractFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/sbab/mock/resources/sbab_contract.json";
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(MarketCode.SE, "se-sbab-bankid", wireMockFilePath)
+                AgentWireMockRefreshTest.builder(MarketCode.SE, "sbab-bankid", wireMockFilePath)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .build();

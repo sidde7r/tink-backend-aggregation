@@ -7,7 +7,7 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 public class SBABAgentTest {
     @Test
     public void test() throws Exception {
-        new AgentIntegrationTest.Builder("se", "se-sbab-bankid")
+        new AgentIntegrationTest.Builder("se", "sbab-bankid")
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .loadCredentialsBefore(false)
