@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public enum ThirdPartyAppError implements AgentError {
-    CANCELLED(new LocalizableKey("Authentication cancelled by the app. Please try again.")),
+    CANCELLED(new LocalizableKey("Authentication was cancelled. Please try again.")),
     TIMED_OUT(new LocalizableKey("Authentication timed out.")),
     ALREADY_IN_PROGRESS(new LocalizableKey("Another client is already trying to sign in.")),
     AUTHENTICATION_ERROR(new LocalizableKey("Authentication error."));
