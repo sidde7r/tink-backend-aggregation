@@ -1919,7 +1919,7 @@ public class SEBApiAgent extends AbstractAgent
 
     public void ensureIsValidTransferAmount(Transfer transfer) throws TransferExecutionException {
         if (transfer.getAmount().isLessThan(1.00)) {
-            cancelTransfer(
+            cancelTransferWithInternalStatusAndThrow(
                     catalog.getString(
                             TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT),
                     InternalStatus.INVALID_MINIMUM_AMOUNT);
@@ -1942,7 +1942,7 @@ public class SEBApiAgent extends AbstractAgent
 
         AccountIdentifier destination = transfer.getDestination();
         if (!sourceAccount.get().isAllowedToTransferTo(destination)) {
-            cancelTransfer(
+            cancelTransferWithInternalStatusAndThrow(
                     catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE),
                     InternalStatus.INVALID_SOURCE_ACCOUNT);
         }
@@ -2029,7 +2029,7 @@ public class SEBApiAgent extends AbstractAgent
     /** Ensure we only find one entity for a given destination of the same type as the transfer. */
     private void validateBGPGTransferOrThrow(Optional<List<GiroEntity>> searchResult) {
         if (!searchResult.isPresent() || searchResult.get().size() != 1) {
-            cancelTransfer(
+            cancelTransferWithInternalStatusAndThrow(
                     catalog.getString(
                             TransferExecutionException.EndUserMessage.INVALID_DESTINATION),
                     InternalStatus.INVALID_DESTINATION_ACCOUNT);
@@ -2043,7 +2043,7 @@ public class SEBApiAgent extends AbstractAgent
         GiroMessageValidator messageValidator = giroEntity.createMessageValidator();
 
         if (remittanceInformationValue.length() > 100) {
-            cancelTransfer(
+            cancelTransferWithInternalStatusAndThrow(
                     catalog.getString(
                             TransferExecutionException.EndUserMessageParametrized
                                     .INVALID_MESSAGE_WHEN_MAX_LENGTH
@@ -2079,7 +2079,8 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         if (!isValidMessage) {
-            cancelTransfer(errorMessage, InternalStatus.INVALID_DESTINATION_MESSAGE);
+            cancelTransferWithInternalStatusAndThrow(
+                    errorMessage, InternalStatus.INVALID_DESTINATION_MESSAGE);
         }
 
         return validationResult;
@@ -2204,7 +2205,7 @@ public class SEBApiAgent extends AbstractAgent
             Thread.sleep(2000);
         }
 
-        cancelTransfer(
+        cancelTransferWithInternalStatusAndThrow(
                 catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE),
                 InternalStatus.BANKID_NO_RESPONSE);
     }
@@ -2213,12 +2214,12 @@ public class SEBApiAgent extends AbstractAgent
             throws TransferExecutionException {
         if (FluentIterable.from(response.getErrors())
                 .anyMatch(ERROR_IS_BANKID_TRANSFER_SIGN_CANCELLED)) {
-            cancelTransfer(
+            cancelTransferWithInternalStatusAndThrow(
                     catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED),
                     InternalStatus.BANKID_CANCELLED);
         } else if (FluentIterable.from(response.getErrors())
                 .anyMatch(ERROR_IS_BANKID_TRANSFER_TIMEOUT)) {
-            cancelTransfer(
+            cancelTransferWithInternalStatusAndThrow(
                     catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE),
                     InternalStatus.BANKID_NO_RESPONSE);
         }
@@ -2227,15 +2228,15 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private void failTransfer(String message) throws TransferExecutionException {
-        abortTransfer(SignableOperationStatuses.FAILED, message);
+        abortTransferAndThrow(SignableOperationStatuses.FAILED, message);
     }
 
     private void failTransfer(String message, String internalStatus)
             throws TransferExecutionException {
-        abortTransfer(SignableOperationStatuses.FAILED, message, internalStatus);
+        abortTransferAndThrow(SignableOperationStatuses.FAILED, message, internalStatus);
     }
 
-    private void abortTransfer(
+    private void abortTransferAndThrow(
             SignableOperationStatuses failed, String message, String internalStatus) {
         throw TransferExecutionException.builder(failed)
                 .setEndUserMessage(message)
@@ -2244,34 +2245,20 @@ public class SEBApiAgent extends AbstractAgent
                 .build();
     }
 
-    private void cancelTransfer(String message, InternalStatus internalStatus)
-            throws TransferExecutionException {
-        abortTransferWithInternalStatus(
-                SignableOperationStatuses.CANCELLED, message, internalStatus);
-    }
-
-    private void abortTransfer(SignableOperationStatuses status, String message)
-            throws TransferExecutionException {
-        throw TransferExecutionException.builder(status)
-                .setEndUserMessage(message)
-                .setMessage(formatErrorMessage(message))
-                .build();
-    }
-
-    private void abortTransferWithInternalStatus(
-            SignableOperationStatuses status, String message, InternalStatus internalStatus)
-            throws TransferExecutionException {
-        throw TransferExecutionException.builder(status)
+    private void cancelTransferWithInternalStatusAndThrow(
+            String message, InternalStatus internalStatus) throws TransferExecutionException {
+        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(message)
                 .setMessage(formatErrorMessage(message))
                 .setInternalStatus(internalStatus.toString())
                 .build();
     }
 
-    private void abortTransfer(ResultInfoMessage error) throws TransferExecutionException {
-        throw TransferExecutionException.builder(error.getSignableOperationStatus())
-                .setEndUserMessage(error.getErrorText())
-                .setMessage(error.getDescription())
+    private void abortTransferAndThrow(SignableOperationStatuses status, String message)
+            throws TransferExecutionException {
+        throw TransferExecutionException.builder(status)
+                .setEndUserMessage(message)
+                .setMessage(formatErrorMessage(message))
                 .build();
     }
 
