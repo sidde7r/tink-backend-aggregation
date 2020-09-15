@@ -1472,3 +1472,9 @@ msgid ""
 "Continue by clicking update when you have verified the reference and signed "
 "with Mobile BankID."
 msgstr ""
+
+msgid "Authentication was cancelled. Please try again."
+msgstr ""
+
+msgid "Authentication error."
+msgstr ""
