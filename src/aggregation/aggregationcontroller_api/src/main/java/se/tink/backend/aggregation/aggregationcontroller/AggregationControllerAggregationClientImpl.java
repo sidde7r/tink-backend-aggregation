@@ -45,7 +45,6 @@ import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.http.client.WebResourceFactory;
 import se.tink.libraries.jersey.utils.JerseyUtils;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
-import se.tink.libraries.tracing.jersey.filter.ClientTracingFilter;
 
 public class AggregationControllerAggregationClientImpl
         implements AggregationControllerAggregationClient {
@@ -82,7 +81,6 @@ public class AggregationControllerAggregationClientImpl
                         EMPTY_PASSWORD,
                         hostConfiguration.isDisablerequestcompression(),
                         this.config);
-        client.addFilter(new ClientTracingFilter());
 
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 

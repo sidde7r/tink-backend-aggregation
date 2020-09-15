@@ -9,7 +9,6 @@ import se.tink.backend.integration.agent_data_availability_tracker.module.AgentD
 import se.tink.libraries.discovery.CoordinationModule;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientModule;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
-import se.tink.libraries.tracing.configuration.guice.TracingModuleFactory;
 
 public class AggregationModuleFactory {
 
@@ -45,8 +44,7 @@ public class AggregationModuleFactory {
                         new EventProducerServiceClientModule(
                                 configuration
                                         .getEndpoints()
-                                        .getEventProducerServiceConfiguration()))
-                .addAll(TracingModuleFactory.getModules(null));
+                                        .getEventProducerServiceConfiguration()));
         // TODO: Switch to TracingModuleFactory once we've solved cross-cluster jaeger setup
     }
 
