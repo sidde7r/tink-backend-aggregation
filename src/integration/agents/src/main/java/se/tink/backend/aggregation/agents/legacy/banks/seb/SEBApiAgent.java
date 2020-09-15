@@ -2316,8 +2316,7 @@ public class SEBApiAgent extends AbstractAgent
     private void abortTransferIfErrorIsPresent(SebResponse sebResponse)
             throws TransferExecutionException {
         Optional<ResultInfoMessage> error = sebResponse.getFirstErrorWithErrorText();
-
-        error.ifPresent(this::abortTransfer);
+        error.ifPresent(ResultInfoMessage::abortTransferAndThrow);
     }
 
     private <T> T postAsJSON(String url, Object entity, Class<T> responseEntityType) {
