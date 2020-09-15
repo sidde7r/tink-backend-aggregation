@@ -28,7 +28,8 @@ public enum ProcessableItem {
             builder.add(ProcessableItem.EINVOICES);
         }
 
-        if (refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
+        if (refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)
+                || refreshableItems.contains(RefreshableItem.LIST_BENEFICIARIES)) {
             builder.add(ProcessableItem.TRANSFER_DESTINATIONS);
         }
 

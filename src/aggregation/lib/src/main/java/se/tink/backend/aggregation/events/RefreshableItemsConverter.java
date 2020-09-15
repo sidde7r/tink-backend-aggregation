@@ -49,6 +49,9 @@ public class RefreshableItemsConverter {
                             RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
                             RefreshableItems
                                     .REFRESHABLE_ITEMS_TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS)
+                    .put(
+                            RefreshableItem.LIST_BENEFICIARIES,
+                            RefreshableItems.REFRESHABLE_ITEMS_LIST_BENEFICIARIES)
                     .build();
 
     public static RefreshableItems convert(RefreshableItem item) {

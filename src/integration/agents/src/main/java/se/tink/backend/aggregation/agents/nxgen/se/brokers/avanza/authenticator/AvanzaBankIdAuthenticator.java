@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
@@ -84,6 +85,9 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
 
             final BankIdStatus status = bankIdResponse.getBankIdStatus();
             if (status == BankIdStatus.DONE) {
+                if (bankIdResponse.getLogins().isEmpty()) {
+                    throw LoginError.NOT_CUSTOMER.exception();
+                }
                 // Complete the authentication and store auth session + security token for all
                 // profiles
                 bankIdResponse

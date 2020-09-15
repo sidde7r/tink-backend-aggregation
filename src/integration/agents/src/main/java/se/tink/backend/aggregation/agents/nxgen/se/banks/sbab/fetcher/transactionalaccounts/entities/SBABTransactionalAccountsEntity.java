@@ -17,17 +17,17 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @Getter
-public class SharedAccountsEntity extends StandardResponse {
-    private String name;
+public class SBABTransactionalAccountsEntity extends StandardResponse {
     private String accountNumber;
-    private BigDecimal balance;
-    private BigDecimal availableForWithdrawal;
-    private BigDecimal interestRate;
-    private BigDecimal accruedInterestCredit;
-    private String status;
     private String accountType;
+    private BigDecimal accruedInterestCredit;
+    private BigDecimal availableForWithdrawal;
+    private BigDecimal balance;
+    private BigDecimal interestRate;
     private List<AccountHoldersEntity> accountHolders;
     private List<MandatesEntity> mandates;
+    private String name;
+    private String status;
     private TransfersEntity transfers;
 
     public Optional<TransactionalAccount> toTinkTransactionalAccount() {
