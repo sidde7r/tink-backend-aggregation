@@ -1,22 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator;
 
-import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_OPERATOR_ERROR_RETRY_1;
-import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_OPERATOR_ERROR_RETRY_2;
-import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE;
-
 import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.AuthenticationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
@@ -77,10 +68,10 @@ public class SetupSessionStep implements AuthenticationStep {
                         credentials);
 
         OidcSessionDetails oidcSessionDetails =
-                extractBankIdSessionDetails(bankIdInitializationResponse);
+                OidcSessionHelper.extractBankIdSessionDetails(bankIdInitializationResponse);
 
         if (!oidcSessionDetails.isInProperState()) {
-            handleErrorMessages(oidcSessionDetails);
+            OidcSessionHelper.throwBankIdError(oidcSessionDetails.getErrorCode());
         }
 
         String oidcSessionId = oidcSessionDetails.getSessionId();
@@ -92,38 +83,6 @@ public class SetupSessionStep implements AuthenticationStep {
 
     private String calculateCodeChallenge(String codeVerifier) {
         return EncodingUtils.encodeAsBase64UrlSafe(Hash.sha256(codeVerifier));
-    }
-
-    private OidcSessionDetails extractBankIdSessionDetails(
-            HttpResponse bankIdInitializationResponse) {
-        Document oidcSessionInfo = Jsoup.parse(bankIdInitializationResponse.getBody(String.class));
-        Map<String, String> metaElements =
-                oidcSessionInfo.getElementsByTag("meta").stream()
-                        .filter(x -> x.attr("name") != null && x.attr("name").startsWith("oidc-"))
-                        .collect(Collectors.toMap(x -> x.attr("name"), z -> z.attr("content")));
-
-        return new OidcSessionDetails(
-                metaElements.get("oidc-action"),
-                metaElements.get("oidc-error"),
-                metaElements.get("oidc-errorCode"),
-                metaElements.get("oidc-errorMessage"),
-                metaElements.get("oidc-merchantReference"),
-                metaElements.get("oidc-sid"));
-    }
-
-    private void handleErrorMessages(OidcSessionDetails oidcSessionDetails) {
-        switch (oidcSessionDetails.getErrorCode()) {
-            case WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE:
-                throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception();
-            case MOBILE_OPERATOR_ERROR_RETRY_1:
-            case MOBILE_OPERATOR_ERROR_RETRY_2:
-                throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
-                        new LocalizableKey(
-                                "Error Code C131. This error indicates that your mobile operator has trouble or a process is"
-                                        + " running on your phone number. Restart your phone and try again in 5 minutes."));
-            default:
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
     }
 
     private void displayBankIdPrompt(Credentials credentials, String referenceNumber) {
