@@ -113,6 +113,7 @@ ignoredAgentsForCapabilityTest:
   - nxgen.se.business.swedbank.SwedbankSEBusinessAgent
   - nxgen.pt.openbanking.cofidis.CofidisAgent
   - nxgen.pt.openbanking.unicre.UnicreAgent
+  - nxgen.demo.openbanking.demobank.DemobankAgent
 
 #
 #  These agents are temporarily ignored for initialisation tests,
