@@ -710,7 +710,7 @@ public class LansforsakringarAgent extends AbstractAgent
             Optional<String> uniqueId = findFailedPaymentInSignedList(paymentRequest);
 
             if (!uniqueId.isPresent()) {
-                return false;
+                return true;
             }
 
             return deleteAndValidateRemovalOfTransaction(
