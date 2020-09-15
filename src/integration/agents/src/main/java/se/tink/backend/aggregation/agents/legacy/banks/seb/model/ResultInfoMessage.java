@@ -1,52 +1,16 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableMap;
-import java.util.Optional;
+import com.google.common.base.Strings;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.Builder;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
 public class ResultInfoMessage {
-    private static final ImmutableMap<String, String> CANCELLED_DESCRIPTIONS_BY_CODE =
-            ImmutableMap.<String, String>builder()
-                    .put("PCB046H", "Transfer validation: DueDate is before next business day")
-                    .put(
-                            "PCB046N",
-                            "Transfer validation: The date you selected has already passed. Please select a later date.")
-                    .put(
-                            "PCB046Q",
-                            "Transfer validation: There already exists  a similar assignment in upcoming events.")
-                    .put(
-                            "PCB049H",
-                            "Transfer Validation: Please change expiration date. Choose a day that is a weekday")
-                    .put(
-                            "PCB03H6",
-                            "The bank giro account does not accept OCR numbers. Enter any message in the recipient message under message type.")
-                    .put("PCB03G0", "Transfer validation: The user does not have enough money")
-                    .put("PCB03K1", "Transfer validation: The destination account is not correct")
-                    .put(
-                            "PCB03E3",
-                            "Transfer validation: Exact same payment already exist. Please sign it in your bank's app before creating a new payment")
-                    .put(
-                            "PCB0464",
-                            "Transfer validation: The user lacks permission for this action")
-                    .put(
-                            "PCB049I",
-                            "Transfer validation: Transfer can be made next business day as earliest, change due date")
-                    .put(
-                            "PCB03L1",
-                            "Transfer validation: Supplied destination account doesn't exist in any Swedish bank")
-                    .put(
-                            "PCB0792",
-                            "Transfer validation: Transfer limit for business account has been reached")
-                    .put(
-                            "PCB0354",
-                            "Transfer validation: Destination account doesn't exist at bank") // Seems to be a specific error for SEB destination accounts
-                    .put(
-                            "2000",
-                            "Transfer validation: To protect your money from fraudulent attempts, we have blocked this transfer. We can help you transfer the money by calling us at 0771-365 365.")
-                    .build();
 
     public String TableName;
     public Integer ErrorRowId;
@@ -64,30 +28,77 @@ public class ResultInfoMessage {
         return "2000".equalsIgnoreCase(getErrorCode()) ? "Banken har blockerat överföringen" : text;
     }
 
-    private Optional<String> getOptionalDescription() {
-        return Optional.ofNullable(CANCELLED_DESCRIPTIONS_BY_CODE.get(getErrorCode()));
+    public void abortTransferAndThrow() throws TransferExecutionException {
+        if (!Strings.isNullOrEmpty(getErrorCode())) {
+            switch (getErrorCode()) {
+                case "PCB046H":
+                case "PCB046N":
+                case "PCB049H":
+                case "PCB049I":
+                    throw cancelTransfer(
+                            EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY,
+                            InternalStatus.INVALID_DUE_DATE);
+                case "PCB046Q":
+                    throw cancelTransfer(
+                            EndUserMessage.DUPLICATE_PAYMENT, InternalStatus.DUPLICATE_PAYMENT);
+                case "PCB03H6":
+                    throw cancelTransfer(
+                            EndUserMessage.INVALID_DESTINATION_MESSAGE,
+                            InternalStatus.INVALID_DESTINATION_MESSAGE_TYPE);
+                case "PCB03G0":
+                    throw cancelTransfer(
+                            EndUserMessage.EXCESS_AMOUNT, InternalStatus.INSUFFICIENT_FUNDS);
+                case "PCB03K1":
+                case "PCB03L1":
+                case "PCB0354":
+                    throw cancelTransfer(
+                            EndUserMessage.INVALID_DESTINATION,
+                            InternalStatus.INVALID_DESTINATION_ACCOUNT);
+                case "PCB03E3":
+                    throw cancelTransfer(
+                            EndUserMessage.EXISTING_UNSIGNED_TRANSFERS,
+                            InternalStatus.EXISTING_UNSIGNED_TRANSFERS);
+                case "PCB0464":
+                    throw cancelTransfer(null, InternalStatus.USER_REQUIRES_TRANSFER_PERMISSION);
+                case "PCB0792":
+                    throw cancelTransfer(
+                            EndUserMessage.EXCESS_AMOUNT_FOR_BENEFICIARY,
+                            InternalStatus.TRANSFER_LIMIT_REACHED);
+                case "2000":
+                    throw cancelTransfer(null, InternalStatus.ACCOUNT_BLOCKED_FOR_TRANSFER);
+                default:
+                    // NOP
+            }
+        }
+        throw failTransfer(
+                String.format(
+                        "Unknown error: %s",
+                        MoreObjects.toStringHelper(this)
+                                .add("ErrorText", getErrorText())
+                                .add("ErrorCode", getErrorCode())
+                                .toString()));
     }
 
-    public String getDescription() {
-        Optional<String> description = getOptionalDescription();
-
-        if (description.isPresent()) {
-            return description.get();
-        } else {
-            return String.format(
-                    "Unknown error: %s",
-                    MoreObjects.toStringHelper(this)
-                            .add("ErrorText", getErrorText())
-                            .add("ErrorCode", getErrorCode())
-                            .toString());
-        }
+    private TransferExecutionException failTransfer(String message) {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setEndUserMessage(getErrorText())
+                .setMessage(message)
+                .build();
     }
 
-    public SignableOperationStatuses getSignableOperationStatus() {
-        if (CANCELLED_DESCRIPTIONS_BY_CODE.containsKey(getErrorCode())) {
-            return SignableOperationStatuses.CANCELLED;
+    private TransferExecutionException cancelTransfer(
+            EndUserMessage endUserMessage, InternalStatus internalStatus) {
+        Builder builder =
+                TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                        .setInternalStatus(internalStatus.toString());
+        if (endUserMessage != null) {
+            builder.setEndUserMessage(endUserMessage);
+            builder.setMessage(endUserMessage.getKey().get());
         } else {
-            return SignableOperationStatuses.FAILED;
+            builder.setEndUserMessage(getErrorText());
+            builder.setMessage(getErrorText());
         }
+
+        return builder.build();
     }
 }

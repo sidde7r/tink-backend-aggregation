@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
@@ -44,8 +45,12 @@ public class SebResultInfoMessageTest {
                         + "}";
         ResultInfoMessage resultInfoMessage =
                 SerializationUtils.deserializeFromString(source, ResultInfoMessage.class);
-        Assert.assertEquals(
-                SignableOperationStatuses.CANCELLED,
-                resultInfoMessage.getSignableOperationStatus());
+
+        try {
+            resultInfoMessage.abortTransferAndThrow();
+        } catch (TransferExecutionException e) {
+            Assert.assertEquals(
+                    SignableOperationStatuses.CANCELLED, e.getSignableOperationStatus());
+        }
     }
 }
