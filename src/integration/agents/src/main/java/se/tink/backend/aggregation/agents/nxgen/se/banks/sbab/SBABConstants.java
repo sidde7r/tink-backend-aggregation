@@ -42,6 +42,22 @@ public class SBABConstants {
                     .put("client-version", "production 2.3 1 2020-05-01T09:16:17Z se.sbab.bankapp")
                     .build();
 
+    public static final ImmutableMap<String, Integer> INTEREST_NUMBERS =
+            ImmutableMap.<String, Integer>builder()
+                    .put("ONE", 1)
+                    .put("TWO", 2)
+                    .put("THREE", 3)
+                    .put("FOUR", 4)
+                    .put("FIVE", 5)
+                    .put("SIX", 6)
+                    .put("SEVEN", 7)
+                    .put("EIGHT", 8)
+                    .put("NINE", 9)
+                    .put("TEN", 10)
+                    .put("ELEVEN", 11)
+                    .put("TWELVE", 12)
+                    .build();
+
     public static class FormKeys {
         public static final String CLIENT_ID = "clientid";
         public static final String PENDING_CODE = "pending_code";

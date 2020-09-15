@@ -42,6 +42,7 @@ public class SBABLoansEntity {
                                 .withType(getLoanType())
                                 .withBalance(getLoanAmount().negate())
                                 .withInterestRate(getLoanTerms().getInterestRate().doubleValue())
+                                .setNumMonthsBound(calculateNumMonthsBound())
                                 .setAmortized(getAmortizied())
                                 .setApplicants(getApplicants())
                                 .setCoApplicant(hasCoApplicants())
@@ -105,5 +106,22 @@ public class SBABLoansEntity {
 
     private ExactCurrencyAmount getOriginalLoanAmount() {
         return ExactCurrencyAmount.of(originalLoanAmount, SBABConstants.CURRENCY);
+    }
+
+    // values comes as for example "THREE_MONTHS" or "THREE_YEARS"
+    private Integer calculateNumMonthsBound() {
+        final String fixedInterestPeriod = getLoanTerms().getFixedInterestPeriod();
+        if (fixedInterestPeriod == null) {
+            return null;
+        }
+        final String numberOfMonthsOrYearsAsString = fixedInterestPeriod.split("_")[0];
+        final String monthsOrYears = fixedInterestPeriod.split("_")[1];
+        final Integer numberOfMonthsOrYears =
+                SBABConstants.INTEREST_NUMBERS.get(numberOfMonthsOrYearsAsString);
+
+        if (monthsOrYears.contains("YEAR")) {
+            return numberOfMonthsOrYears * 12;
+        }
+        return numberOfMonthsOrYears;
     }
 }
