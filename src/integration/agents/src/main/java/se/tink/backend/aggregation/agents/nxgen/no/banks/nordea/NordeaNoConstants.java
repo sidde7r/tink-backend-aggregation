@@ -168,5 +168,7 @@ public class NordeaNoConstants {
         public static final String WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE = "C161";
         public static final String MOBILE_OPERATOR_ERROR_RETRY_1 = "C131";
         public static final String MOBILE_OPERATOR_ERROR_RETRY_2 = "C325";
+        public static final String MOBILE_BANK_ID_BLOCKED_1 = "C30E";
+        public static final String MOBILE_BANK_ID_BLOCKED_2 = "C30F";
     }
 }
