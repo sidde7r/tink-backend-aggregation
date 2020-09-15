@@ -79,6 +79,7 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         updateCredentialsStatusRequest.setCredentials(coreCredentials);
         updateCredentialsStatusRequest.setUserId(credentials.getUserId());
         updateCredentialsStatusRequest.setRequestType(context.getRequest().getType());
+        updateCredentialsStatusRequest.setOperationId(context.getRequest().getOperationId());
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);

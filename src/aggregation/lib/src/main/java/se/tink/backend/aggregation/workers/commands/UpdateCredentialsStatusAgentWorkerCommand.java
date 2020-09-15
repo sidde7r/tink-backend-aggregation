@@ -95,6 +95,7 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
                 CoreCredentialsMapper.fromAggregationCredentials(credentialsCopy));
         updateCredentialsStatusRequest.setRequestType(context.getRequest().getType());
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
+        updateCredentialsStatusRequest.setOperationId(context.getRequest().getOperationId());
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }
