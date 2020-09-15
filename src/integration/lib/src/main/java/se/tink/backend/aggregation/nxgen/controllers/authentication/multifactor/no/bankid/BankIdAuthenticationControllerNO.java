@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BankIdAuthenticationControllerNO
@@ -33,11 +34,15 @@ public class BankIdAuthenticationControllerNO
 
     private final BankIdAuthenticatorNO authenticator;
     private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
 
     public BankIdAuthenticationControllerNO(
-            SupplementalRequester supplementalRequester, BankIdAuthenticatorNO authenticator) {
+            SupplementalRequester supplementalRequester,
+            BankIdAuthenticatorNO authenticator,
+            Catalog catalog) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.supplementalRequester = Preconditions.checkNotNull(supplementalRequester);
+        this.catalog = catalog;
     }
 
     @Override
@@ -75,7 +80,8 @@ public class BankIdAuthenticationControllerNO
                         .description("Reference")
                         .value(bankIdReference)
                         .helpText(
-                                "Continue by clicking update when you have verified the reference and signed with Mobile BankID.")
+                                catalog.getString(
+                                        "Continue by clicking update when you have verified the reference and signed with Mobile BankID."))
                         .build();
 
         credentials.setSupplementalInformation(

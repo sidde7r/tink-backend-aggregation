@@ -104,7 +104,7 @@ public class Sparebank1Agent extends NextGenerationAgent
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator),
+                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator, catalog),
                 authenticator);
     }
 

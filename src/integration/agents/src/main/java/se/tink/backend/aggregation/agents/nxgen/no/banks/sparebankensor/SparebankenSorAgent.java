@@ -102,7 +102,7 @@ public class SparebankenSorAgent extends NextGenerationAgent
                 request,
                 systemUpdater,
                 new BankIdAuthenticationControllerNO(
-                        supplementalRequester, multiFactorAuthenticator),
+                        supplementalRequester, multiFactorAuthenticator, catalog),
                 autoAuthenticator);
     }
 

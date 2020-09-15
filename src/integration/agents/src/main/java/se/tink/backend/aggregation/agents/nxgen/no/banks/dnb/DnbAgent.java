@@ -69,7 +69,7 @@ public class DnbAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationControllerNO(supplementalRequester, authenticator);
+        return new BankIdAuthenticationControllerNO(supplementalRequester, authenticator, catalog);
     }
 
     @Override

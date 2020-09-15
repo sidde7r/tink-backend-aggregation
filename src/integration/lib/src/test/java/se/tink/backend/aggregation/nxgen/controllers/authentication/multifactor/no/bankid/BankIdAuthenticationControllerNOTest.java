@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.i18n.Catalog;
 
 public class BankIdAuthenticationControllerNOTest {
     private static final String USERNAME = "username";
@@ -23,33 +24,18 @@ public class BankIdAuthenticationControllerNOTest {
     private final Credentials credentials = new Credentials();
     private BankIdAuthenticationControllerNO authenticationController;
     private BankIdAuthenticatorNO authenticator;
-    private SupplementalRequester supplementalRequester;
 
     @Before
     public void setup() throws AuthenticationException, AuthorizationException {
         authenticator = Mockito.mock(BankIdAuthenticatorNO.class);
-        supplementalRequester = Mockito.mock(SupplementalRequester.class);
+        SupplementalRequester supplementalRequester = Mockito.mock(SupplementalRequester.class);
         Mockito.when(authenticator.collect()).thenReturn(BankIdStatus.DONE);
+        Catalog catalog = Catalog.getCatalog("en");
 
         authenticationController =
-                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator);
+                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator, catalog);
 
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void ensureExceptionIsThrown_whenBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationControllerNO(supplementalRequester, null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void ensureExceptionIsThrown_whenContext_isNull() {
-        new BankIdAuthenticationControllerNO(null, authenticator);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void ensureExceptionIsThrown_whenBothContextAndBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationControllerNO(null, null);
     }
 
     @Test
