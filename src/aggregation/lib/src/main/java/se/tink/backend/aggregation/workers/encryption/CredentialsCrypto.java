@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.encryption;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
@@ -221,10 +222,13 @@ public class CredentialsCrypto {
     }
 
     private boolean isAlphaUser(CredentialsRequest request) {
-        return request.getUser().getFlags() != null
-                && request.getUser()
-                        .getFlags()
-                        .contains(FeatureFlags.ALPHA_TEST_CREDENTIALS_REVAMP);
+        final List<String> flags = request.getUser().getFlags();
+        if (flags == null) return false;
+
+        return flags.contains(FeatureFlags.ALPHA_TEST_CREDENTIALS_REVAMP)
+                || flags.contains(FeatureFlags.TINK_EMPLOYEE)
+                || flags.contains(FeatureFlags.IOS_BETA)
+                || flags.contains(FeatureFlags.ANDROID_BETA);
     }
 
     private String pickMostRecentSensitiveData(String a, String b, String provider) {

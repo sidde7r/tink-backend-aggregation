@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -55,6 +56,7 @@ public final class BankdataApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final String baseUrl;
     private final String baseAuthUrl;
 
@@ -65,10 +67,12 @@ public final class BankdataApiClient {
     public BankdataApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             String baseUrl,
             String baseAuthUrl) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.baseUrl = baseUrl;
         this.baseAuthUrl = baseAuthUrl;
     }
@@ -126,7 +130,7 @@ public final class BankdataApiClient {
         URL url = new URL(baseUrl + Endpoints.AUTHORIZE_CONSENT);
 
         client.request(url.parameter(IdTags.CONSENT_ID, consentId))
-                .addBearerToken(getTokenFromSession())
+                .addBearerToken(getOauthToken())
                 .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
@@ -160,7 +164,7 @@ public final class BankdataApiClient {
 
         final List<BalanceEntity> balances =
                 client.request(url)
-                        .addBearerToken(getTokenFromSession())
+                        .addBearerToken(getOauthToken())
                         .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
                         .header(HeaderKeys.X_REQUEST_ID, requestId)
                         .type(MediaType.APPLICATION_JSON)
@@ -205,7 +209,7 @@ public final class BankdataApiClient {
 
         try {
             CreatePaymentResponse response =
-                    createPaymentRequestInSession(url, StorageKeys.INITIAL_TOKEN)
+                    createPaymentRequestInSession(url)
                             .post(CreatePaymentResponse.class, paymentRequest);
 
             authorizePayment(response.getPaymentId(), type);
@@ -225,8 +229,7 @@ public final class BankdataApiClient {
         String paymentProduct = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
         FetchPaymentResponse fetchPaymentResponse =
-                createPaymentRequestInSession(url, StorageKeys.INITIAL_TOKEN)
-                        .get(FetchPaymentResponse.class);
+                createPaymentRequestInSession(url).get(FetchPaymentResponse.class);
         PaymentStatusResponse paymentStatusResponse = getPaymentStatus(paymentProduct, paymentId);
         fetchPaymentResponse.setTransactionStatus(paymentStatusResponse.getTransactionStatus());
         return fetchPaymentResponse;
@@ -238,8 +241,7 @@ public final class BankdataApiClient {
                         .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
-        return createPaymentRequestInSession(url, StorageKeys.INITIAL_TOKEN)
-                .get(PaymentStatusResponse.class);
+        return createPaymentRequestInSession(url).get(PaymentStatusResponse.class);
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -249,13 +251,13 @@ public final class BankdataApiClient {
     }
 
     private RequestBuilder createRequestInSession(URL url) {
-        final OAuth2Token authToken = getTokenFromSession();
+        final OAuth2Token authToken = getOauthToken();
 
         return createRequest(url).addBearerToken(authToken);
     }
 
-    private RequestBuilder createPaymentRequestInSession(URL url, String storageKey) {
-        final OAuth2Token authToken = getPaymentTokenFromSession(storageKey);
+    private RequestBuilder createPaymentRequestInSession(URL url) {
+        final OAuth2Token authToken = getPaymentInitialToken();
         final String requestId = UUID.randomUUID().toString();
 
         return createRequest(url)
@@ -271,8 +273,7 @@ public final class BankdataApiClient {
                 new URL(baseUrl + productType + Endpoints.AUTHORIZE_PAYMENT)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
-        return createPaymentRequestInSession(url, StorageKeys.INITIAL_TOKEN)
-                .post(AuthorizePaymentResponse.class, "{}");
+        return createPaymentRequestInSession(url).post(AuthorizePaymentResponse.class, "{}");
     }
 
     public URL getSigningPaymentUrl(String paymentId) {
@@ -300,8 +301,8 @@ public final class BankdataApiClient {
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .post(TokenResponse.class, request.toData());
 
-        sessionStorage.put(StorageKeys.OAUTH_TOKEN, response.toTinkToken());
-        sessionStorage.put(
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, response.toTinkToken());
+        persistentStorage.put(
                 StorageKeys.INITIAL_TOKEN, response.toTinkToken()); // i need this token for pis
     }
 
@@ -313,7 +314,7 @@ public final class BankdataApiClient {
 
         ConsentResponse response =
                 client.request(url)
-                        .addBearerToken(getTokenFromSession())
+                        .addBearerToken(getOauthToken())
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_REQUEST_ID, requestId)
                         .body(consentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
@@ -322,22 +323,20 @@ public final class BankdataApiClient {
         return response.getConsentId();
     }
 
-    private OAuth2Token getTokenFromSession() {
-        return sessionStorage
+    OAuth2Token getOauthToken() {
+        return persistentStorage
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
-    private OAuth2Token getPaymentTokenFromSession(String storageKey) {
-        return sessionStorage
-                .get(storageKey, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+    private OAuth2Token getPaymentInitialToken() {
+        return persistentStorage
+                .get(StorageKeys.INITIAL_TOKEN, OAuth2Token.class)
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
-    public void setTokenToSession(OAuth2Token accessToken, String storageKey) {
-        sessionStorage.put(storageKey, accessToken);
+    public void setTokenToSession(OAuth2Token accessToken) {
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
