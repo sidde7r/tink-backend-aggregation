@@ -23,33 +23,17 @@ public class BankIdAuthenticationControllerNOTest {
     private final Credentials credentials = new Credentials();
     private BankIdAuthenticationControllerNO authenticationController;
     private BankIdAuthenticatorNO authenticator;
-    private SupplementalRequester supplementalRequester;
 
     @Before
     public void setup() throws AuthenticationException, AuthorizationException {
         authenticator = Mockito.mock(BankIdAuthenticatorNO.class);
-        supplementalRequester = Mockito.mock(SupplementalRequester.class);
+        SupplementalRequester supplementalRequester = Mockito.mock(SupplementalRequester.class);
         Mockito.when(authenticator.collect()).thenReturn(BankIdStatus.DONE);
 
         authenticationController =
                 new BankIdAuthenticationControllerNO(supplementalRequester, authenticator);
 
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void ensureExceptionIsThrown_whenBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationControllerNO(supplementalRequester, null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void ensureExceptionIsThrown_whenContext_isNull() {
-        new BankIdAuthenticationControllerNO(null, authenticator);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void ensureExceptionIsThrown_whenBothContextAndBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationControllerNO(null, null);
     }
 
     @Test
