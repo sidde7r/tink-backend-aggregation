@@ -106,6 +106,7 @@ public final class IcaBankenConstants {
         public static final String SERVER_ERROR = "server_error";
         public static final String RESOURCE_BLOCKED = "RESOURCE_BLOCKED";
         public static final String RESOURCE_UNKNOWN = "RESOURCE_UNKNOWN";
+        public static final String UNKNOWN = "UNKNOWN";
     }
 
     public static class ErrorMessages {
@@ -117,6 +118,9 @@ public final class IcaBankenConstants {
         public static final String UNEXPECTED_INTERNAL_EXCEPTION = "unexpected internal exception";
         public static final String OLD_KYC_INFO = "Old KYC information";
         public static final String NO_ACCOUNT_INFO = "Accountinformation not found";
+        public static final String INTERNAL_SERVER_ERROR = "internal server error";
+        public static final String START_FAILED = "startfailed";
+        public static final String CANCEL = "cancel";
     }
 
     public static class FormKeys {

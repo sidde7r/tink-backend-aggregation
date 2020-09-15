@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator;
 
 import java.security.cert.CertificateException;
+import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -13,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryKeys;
@@ -26,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configu
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -133,6 +137,37 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {}
+
+    @Override
+    public void handleSpecificCallbackDataError(Map<String, String> callbackData)
+            throws AuthenticationException {
+        String errorType = callbackData.getOrDefault(CallbackParams.ERROR, null);
+
+        if (!IcaBankenConstants.ErrorTypes.UNKNOWN.equalsIgnoreCase(errorType)) {
+            return;
+        }
+
+        String errorDescription =
+                callbackData.getOrDefault(CallbackParams.ERROR_DESCRIPTION, "").toLowerCase();
+
+        // ICA returns "userCancel", "cancelled", or "User Cancelled" if user cancels the SCA
+        if (errorDescription.contains(IcaBankenConstants.ErrorMessages.CANCEL)) {
+            throw ThirdPartyAppError.CANCELLED.exception();
+        }
+
+        // ICA returns "startFailed" if user waits for more than 30 seconds to sign with bankID,
+        // treating it as a timeout.
+        if (errorDescription.contains(IcaBankenConstants.ErrorMessages.START_FAILED)) {
+            throw ThirdPartyAppError.TIMED_OUT.exception();
+        }
+
+        if (errorDescription.contains(
+                        IcaBankenConstants.ErrorMessages.UNEXPECTED_INTERNAL_EXCEPTION)
+                || errorDescription.contains(
+                        IcaBankenConstants.ErrorMessages.INTERNAL_SERVER_ERROR)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+    }
 
     /**
      * Verifies that customer has updated KYC info and is a customer by trying to fetch accounts.
