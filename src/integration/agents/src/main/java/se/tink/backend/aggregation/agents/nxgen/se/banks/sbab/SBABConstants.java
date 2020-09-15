@@ -22,6 +22,7 @@ public class SBABConstants {
     public static final ImmutableMap<String, Type> LOAN_TYPES =
             ImmutableMap.<String, Type>builder()
                     .put("BLANCO_LOAN", Type.BLANCO)
+                    .put("BLANCO_MORTGAGE_LOAN", Type.DERIVE_FROM_NAME)
                     .put("CAR_LOAN", Type.VEHICLE)
                     .put("MORTGAGE_LOAN", Type.MORTGAGE)
                     .build();
