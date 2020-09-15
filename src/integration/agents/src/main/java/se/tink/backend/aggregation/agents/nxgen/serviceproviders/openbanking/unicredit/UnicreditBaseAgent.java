@@ -69,7 +69,8 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                 new UnicreditAuthenticationController(
                         supplementalInformationHelper,
                         new UnicreditAuthenticator(apiClient, credentials),
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         authenticator =
                 new AutoAuthenticationController(

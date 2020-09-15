@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IccreaAuthenticator extends CbiGlobeAuthenticator {
 
@@ -18,8 +19,9 @@ public class IccreaAuthenticator extends CbiGlobeAuthenticator {
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
             CbiGlobeConfiguration configuration,
-            SupplementalRequester supplementalRequester) {
-        super(apiClient, strongAuthenticationState, userState, configuration);
+            SupplementalRequester supplementalRequester,
+            CredentialsRequest request) {
+        super(apiClient, strongAuthenticationState, userState, configuration, request);
 
         this.supplementalRequester = supplementalRequester;
     }

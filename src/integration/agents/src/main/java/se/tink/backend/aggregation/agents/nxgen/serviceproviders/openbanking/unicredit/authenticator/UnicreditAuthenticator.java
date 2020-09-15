@@ -33,6 +33,10 @@ public class UnicreditAuthenticator {
         return apiClient.getConsentStatus().isValidConsent();
     }
 
+    public void invalidateConsent() {
+        apiClient.removeConsentFromPersistentStorage();
+    }
+
     public void autoAuthenticate() throws SessionException {
         ConsentStatusResponse consentStatus;
         try {

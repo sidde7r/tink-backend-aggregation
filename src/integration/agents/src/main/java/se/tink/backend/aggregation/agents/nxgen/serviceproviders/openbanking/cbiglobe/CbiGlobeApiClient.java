@@ -318,4 +318,8 @@ public class CbiGlobeApiClient {
             return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
         } else return requestBuilder;
     }
+
+    public void invalidateToken() {
+        persistentStorage.remove(StorageKeys.OAUTH_TOKEN);
+    }
 }
