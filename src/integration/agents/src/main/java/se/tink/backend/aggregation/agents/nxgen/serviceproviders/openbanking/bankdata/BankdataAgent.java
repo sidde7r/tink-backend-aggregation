@@ -45,7 +45,9 @@ public abstract class BankdataAgent extends NextGenerationAgent
 
         this.baseUrl = baseUrl;
         this.baseAuthUrl = baseAuthUrl;
-        apiClient = new BankdataApiClient(client, sessionStorage, baseUrl, baseAuthUrl);
+        apiClient =
+                new BankdataApiClient(
+                        client, sessionStorage, persistentStorage, baseUrl, baseAuthUrl);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -127,7 +129,7 @@ public abstract class BankdataAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new BankdataSessionHandler(apiClient);
     }
 
     @Override
