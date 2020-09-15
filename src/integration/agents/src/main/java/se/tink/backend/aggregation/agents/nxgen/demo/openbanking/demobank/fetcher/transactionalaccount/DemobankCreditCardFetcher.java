@@ -8,16 +8,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DemobankCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
     private final DemobankApiClient apiClient;
-    private final SessionStorage sessionStorage;
 
-    public DemobankCreditCardFetcher(DemobankApiClient apiClient, SessionStorage sessionStorage) {
+    public DemobankCreditCardFetcher(DemobankApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override

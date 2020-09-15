@@ -90,7 +90,7 @@ public class DemobankAgent extends NextGenerationAgent
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
         final DemobankCreditCardFetcher demobankCreditCardFetcher =
-                new DemobankCreditCardFetcher(apiClient, sessionStorage);
+                new DemobankCreditCardFetcher(apiClient);
 
         return new CreditCardRefreshController(
                 metricRefreshController,
