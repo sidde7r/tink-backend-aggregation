@@ -17,9 +17,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class VdkAgent extends Xs2aDevelopersTransactionalAgent {
 
+    private VdkAuthenticator authenticator;
+
     @Inject
     public VdkAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, "https://xs2a-api.vdk.be");
+        authenticator = new VdkAuthenticator(apiClient, persistentStorage, configuration);
     }
 
     @Override
