@@ -1369,3 +1369,9 @@ msgstr ""
 
 msgid "There was a problem connecting to the bank."
 msgstr "Ocorreu um problema ao conectar com o banco."
+
+msgid "Cancel on payment signing (test)"
+msgstr "Cancelar autenticação de pagamento (teste)"
+
+msgid "The transfer amount is larger than what is available on the account (test)"
+msgstr "O montante a transferir é superior ao montante disponível na sua conta (teste)"
