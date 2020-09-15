@@ -49,16 +49,19 @@ public class IngCardReaderAuthenticator {
     public ChallengeExchangeValues initEnroll(String ingId, String cardNumber, String otp)
             throws AuthenticationException, AuthorizationException {
         // Get cookies and authentication urls
+        Delayer.delay(200, 800);
         MobileHelloResponseEntity mobileHelloResponseEntity = this.apiClient.mobileHello();
         this.ingHelper.addRequestUrls(mobileHelloResponseEntity.getRequests());
 
         // Send authentication values
         String authUrl = this.ingHelper.getUrl(IngConstants.RequestNames.AUTHENTICATE);
+        Delayer.delay(200, 800);
         this.apiClient.trustBuilderEnroll(
                 authUrl, ingId, cardNumber, otp, this.cryptoInitValues.getDeviceId());
 
         // Initiate enrollment of new device
         String initEnrollUrl = this.ingHelper.getUrl(IngConstants.RequestNames.ENROL_DEVICE);
+        Delayer.delay(200, 800);
         HttpResponse initEnrollHttpResponse =
                 this.apiClient.initEnroll(
                         initEnrollUrl, ingId, cardNumber, this.cryptoInitValues.getDeviceId());

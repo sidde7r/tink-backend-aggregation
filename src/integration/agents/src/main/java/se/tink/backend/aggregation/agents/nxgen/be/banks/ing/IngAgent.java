@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.filter.IngHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.session.IngSessionHandler;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.progressive.AutoAuthenticationProgressiveController;
@@ -32,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
@@ -50,9 +52,11 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
     private final AutoAuthenticationProgressiveController authenticator;
 
     @Inject
-    public IngAgent(final AgentComponentProvider componentProvider) {
+    public IngAgent(
+            final AgentComponentProvider componentProvider,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
         super(componentProvider);
-        configureHttpClient(client);
+        configureHttpClient(client, agentsServiceConfiguration);
         this.apiClient =
                 new IngApiClient(
                         client,
@@ -77,7 +81,8 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
                         new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper, request));
     }
 
-    protected void configureHttpClient(TinkHttpClient client) {
+    protected void configureHttpClient(
+            TinkHttpClient client, AgentsServiceConfiguration agentsServiceConfiguration) {
         client.setUserAgent(Headers.USER_AGENT);
         client.setFollowRedirects(false);
         client.addFilter(new IngHttpFilter());
@@ -86,6 +91,10 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
                         IngConstants.HttpClient.MAX_RETRIES,
                         IngConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new TimeoutFilter());
+
+        final MultiIpGateway gateway =
+                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
+        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
     }
 
     @Override
