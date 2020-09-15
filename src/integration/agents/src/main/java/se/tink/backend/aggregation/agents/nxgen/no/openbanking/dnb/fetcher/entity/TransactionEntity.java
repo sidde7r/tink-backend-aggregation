@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
