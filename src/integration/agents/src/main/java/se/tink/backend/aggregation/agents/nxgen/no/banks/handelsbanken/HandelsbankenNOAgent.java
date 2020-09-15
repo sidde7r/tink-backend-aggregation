@@ -103,7 +103,7 @@ public class HandelsbankenNOAgent extends NextGenerationAgent
                 request,
                 systemUpdater,
                 new BankIdAuthenticationControllerNO(
-                        supplementalRequester, multiFactorAuthenticator),
+                        supplementalRequester, multiFactorAuthenticator, catalog),
                 autoAuthenticator);
     }
 

@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.i18n.Catalog;
 
 public class BankIdAuthenticationControllerNOTest {
     private static final String USERNAME = "username";
@@ -29,9 +30,10 @@ public class BankIdAuthenticationControllerNOTest {
         authenticator = Mockito.mock(BankIdAuthenticatorNO.class);
         SupplementalRequester supplementalRequester = Mockito.mock(SupplementalRequester.class);
         Mockito.when(authenticator.collect()).thenReturn(BankIdStatus.DONE);
+        Catalog catalog = Catalog.getCatalog("en");
 
         authenticationController =
-                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator);
+                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator, catalog);
 
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
     }
