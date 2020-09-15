@@ -150,7 +150,6 @@ public final class SwedbankApiClient {
             accounts =
                     createRequestInSession(SwedbankConstants.Urls.ACCOUNTS, true)
                             .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
-                            .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
                             .get(FetchAccountResponse.class);
         }
         return accounts;

@@ -75,7 +75,6 @@ public final class SwedbankConstants {
         public static final String GRANT_TYPE = "grant_type";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String BOOKING_STATUS = "bookingStatus";
-        public static final String WITH_BALANCE = "withBalance";
     }
 
     public static class QueryValues {
@@ -83,7 +82,6 @@ public final class SwedbankConstants {
         public static final String GRANT_TYPE_CODE = "authorization_code";
         public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
         public static final String BOOKING_STATUS_BOTH = "both";
-        public static final String WITH_BALANCE = "true";
     }
 
     public static class HeaderKeys {
