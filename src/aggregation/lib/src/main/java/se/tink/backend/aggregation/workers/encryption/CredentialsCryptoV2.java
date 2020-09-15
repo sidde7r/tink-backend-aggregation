@@ -19,7 +19,7 @@ public class CredentialsCryptoV2 {
     public static EncryptedPayloadV2 encryptCredential(
             int keyId, byte[] key, Credentials credential) {
         EncryptedPayloadV2 encryptedCredentialsV2 = new EncryptedPayloadV2();
-        encryptedCredentialsV2.setKeyId(keyId);
+        encryptedCredentialsV2.setKeyId(0); // Not used in V2, fields + payload have their own keyId
         encryptedCredentialsV2.setTimestamp(new Date());
 
         AesEncryptedData encryptedFields =
@@ -27,7 +27,7 @@ public class CredentialsCryptoV2 {
                         key,
                         credential.getFieldsSerialized(),
                         asAAD(encryptedCredentialsV2.getVersion()),
-                        asAAD(encryptedCredentialsV2.getKeyId()),
+                        asAAD(keyId),
                         asAAD(encryptedCredentialsV2.getTimestamp().getTime()));
 
         AesEncryptedData encryptedPayload =
@@ -35,13 +35,13 @@ public class CredentialsCryptoV2 {
                         key,
                         credential.getSensitivePayloadSerialized(),
                         asAAD(encryptedCredentialsV2.getVersion()),
-                        asAAD(encryptedCredentialsV2.getKeyId()),
+                        asAAD(keyId),
                         asAAD(encryptedCredentialsV2.getTimestamp().getTime()));
 
         final OpaquePayload fields =
                 OpaquePayload.newBuilder()
                         .setVersion(encryptedCredentialsV2.getVersion())
-                        .setKeyId(encryptedCredentialsV2.getKeyId())
+                        .setKeyId(keyId)
                         .setTimestamp(timestamp(encryptedCredentialsV2.getTimestamp()))
                         .setPayload(SerializationUtils.serializeToString(encryptedFields))
                         .build();
@@ -49,7 +49,7 @@ public class CredentialsCryptoV2 {
         final OpaquePayload payload =
                 OpaquePayload.newBuilder()
                         .setVersion(encryptedCredentialsV2.getVersion())
-                        .setKeyId(encryptedCredentialsV2.getKeyId())
+                        .setKeyId(keyId)
                         .setTimestamp(timestamp(encryptedCredentialsV2.getTimestamp()))
                         .setPayload(SerializationUtils.serializeToString(encryptedPayload))
                         .build();
