@@ -30,6 +30,7 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
     protected final CbiUserState userState;
     protected final ConsentManager consentManager;
     private final CbiGlobeConfiguration configuration;
+    private final CredentialsRequest request;
 
     public CbiGlobeAuthenticator(
             CbiGlobeApiClient apiClient,
@@ -42,10 +43,8 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
         this.userState = userState;
         this.consentManager = new ConsentManager(apiClient, userState);
         this.configuration = configuration;
-
-        if (ForceAuthentication.shouldForceAuthentication(request)) {
-            apiClient.invalidateToken();
-        }
+        this.request = request;
+        handleForceAuthenticate();
     }
 
     CbiGlobeAuthenticator(
@@ -53,12 +52,15 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
             ConsentManager consentManager,
-            CbiGlobeConfiguration configuration) {
+            CbiGlobeConfiguration configuration,
+            CredentialsRequest request) {
         this.apiClient = apiClient;
         this.strongAuthenticationState = strongAuthenticationState;
         this.userState = userState;
         this.consentManager = consentManager;
         this.configuration = configuration;
+        this.request = request;
+        handleForceAuthenticate();
     }
 
     @Override
@@ -103,7 +105,8 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
         try {
             return !userState.isManualAuthenticationInProgress()
                     && fetchToken()
-                    && consentManager.isConsentAccepted();
+                    && consentManager.isConsentAccepted()
+                    && !ForceAuthentication.shouldForceAuthentication(request);
         } catch (SessionException e) {
             return false;
         }
@@ -146,5 +149,11 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
 
     public GetAccountsResponse fetchAccounts() {
         return apiClient.fetchAccounts();
+    }
+
+    private void handleForceAuthenticate() {
+        if (ForceAuthentication.shouldForceAuthentication(request)) {
+            apiClient.invalidateToken();
+        }
     }
 }
