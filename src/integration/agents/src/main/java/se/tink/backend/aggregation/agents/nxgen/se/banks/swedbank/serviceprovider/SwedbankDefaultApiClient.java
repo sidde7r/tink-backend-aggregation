@@ -545,7 +545,7 @@ public class SwedbankDefaultApiClient {
             bank.setOrgNumber(organizationNumber);
             // fetch all profile details
             Map<String, MenuItemLinkEntity> menuItems =
-                    fetchProfile(bank.getProfile().getLinks().getNextOrThrow());
+                    fetchProfile(bank.getProfileForSetup().getLinks().getNextOrThrow());
             bankProfileHandler.setMenuItems(menuItems);
             EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
             PaymentBaseinfoResponse paymentBaseinfoResponse = fetchPaymentBaseinfo();
