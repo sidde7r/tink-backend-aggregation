@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
 
@@ -16,8 +17,9 @@ public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
             CbiGlobeApiClient apiClient,
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
-            CbiGlobeConfiguration configuration) {
-        super(apiClient, strongAuthenticationState, userState, configuration);
+            CbiGlobeConfiguration configuration,
+            CredentialsRequest request) {
+        super(apiClient, strongAuthenticationState, userState, configuration, request);
     }
 
     @Override

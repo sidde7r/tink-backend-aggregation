@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -34,12 +35,17 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
             CbiGlobeApiClient apiClient,
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
-            CbiGlobeConfiguration configuration) {
+            CbiGlobeConfiguration configuration,
+            CredentialsRequest request) {
         this.apiClient = apiClient;
         this.strongAuthenticationState = strongAuthenticationState;
         this.userState = userState;
         this.consentManager = new ConsentManager(apiClient, userState);
         this.configuration = configuration;
+
+        if (ForceAuthentication.shouldForceAuthentication(request)) {
+            apiClient.invalidateToken();
+        }
     }
 
     CbiGlobeAuthenticator(

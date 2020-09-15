@@ -83,7 +83,8 @@ public abstract class FabricAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new FabricAuthenticator(apiClient, persistentStorage, credentials),
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request);
 
         return new AutoAuthenticationController(
                 request,
