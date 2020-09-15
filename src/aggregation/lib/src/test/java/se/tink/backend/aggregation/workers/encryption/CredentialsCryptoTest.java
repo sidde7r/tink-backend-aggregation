@@ -138,7 +138,9 @@ public class CredentialsCryptoTest {
 
         CredentialsRequest decryptRequest = requestFrom(clone, user, provider);
         assertNotNull(v2);
-        assertEquals(1, v2.getKeyId());
+        assertEquals(0, v2.getKeyId());
+        assertEquals(1, v2.getFields().getKeyId());
+        assertEquals(1, v2.getPayload().getKeyId());
         assertTrue(crypto.decrypt(decryptRequest));
 
         final Map<String, String> decryptedPayload = clone.getSensitivePayloadAsMap();
