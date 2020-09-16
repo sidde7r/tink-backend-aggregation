@@ -228,7 +228,8 @@ public class CredentialsCrypto {
         return flags.contains(FeatureFlags.ALPHA_TEST_CREDENTIALS_REVAMP)
                 || flags.contains(FeatureFlags.TINK_EMPLOYEE)
                 || flags.contains(FeatureFlags.IOS_BETA)
-                || flags.contains(FeatureFlags.ANDROID_BETA);
+                || flags.contains(FeatureFlags.ANDROID_BETA)
+                || flags.contains(FeatureFlags.FRAUD_PROTECTION);
     }
 
     private String pickMostRecentSensitiveData(String a, String b, String provider) {
