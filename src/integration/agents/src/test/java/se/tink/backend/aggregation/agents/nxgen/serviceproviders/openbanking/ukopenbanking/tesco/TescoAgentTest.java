@@ -7,12 +7,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
 
 @Ignore
 public class TescoAgentTest {
@@ -68,7 +68,9 @@ public class TescoAgentTest {
                         .withExactCurrencyAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
-                        .withReference(new Reference("TRANSFER", "test Tink"))
+                        .withRemittanceInformation(
+                                RemittanceInformationUtils
+                                        .generateUnstructuredRemittanceInformation("Message"))
                         .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
                         .build());
 
