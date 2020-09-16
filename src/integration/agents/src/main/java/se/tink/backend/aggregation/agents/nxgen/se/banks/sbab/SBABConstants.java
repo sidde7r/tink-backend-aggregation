@@ -24,6 +24,7 @@ public class SBABConstants {
                     .put("BLANCO_LOAN", Type.BLANCO)
                     .put("BLANCO_MORTGAGE_LOAN", Type.DERIVE_FROM_NAME)
                     .put("CAR_LOAN", Type.VEHICLE)
+                    .put("ENERGY_LOAN", Type.OTHER)
                     .put("MORTGAGE_LOAN", Type.MORTGAGE)
                     .build();
 
