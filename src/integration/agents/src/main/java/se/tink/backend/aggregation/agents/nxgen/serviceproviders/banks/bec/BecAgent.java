@@ -164,6 +164,6 @@ public class BecAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
         return new BecAuthenticator(
-                this.apiClient, sessionStorage, persistentStorage, supplementalRequester);
+                this.apiClient, sessionStorage, supplementalRequester, persistentStorage, catalog);
     }
 }

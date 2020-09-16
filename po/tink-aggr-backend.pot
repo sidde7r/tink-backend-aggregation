@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-15 09:58+0200\n"
+"POT-Creation-Date: 2020-09-16 11:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1477,4 +1477,8 @@ msgid "Authentication was cancelled. Please try again."
 msgstr ""
 
 msgid "Authentication error."
+msgstr ""
+
+#, java-format
+msgid "Please enter code {0} from key card number {1}"
 msgstr ""
