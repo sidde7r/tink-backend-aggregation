@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import lombok.Getter;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.utils.SwedbankSeSerializationUtils;
@@ -13,6 +14,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
+@Getter
 @JsonObject
 public abstract class AccountEntity extends AbstractAccountEntity {
     protected boolean selectedForQuickbalance;
@@ -24,46 +26,11 @@ public abstract class AccountEntity extends AbstractAccountEntity {
     protected boolean availableForFavouriteAccount;
     protected boolean availableForPriorityAccount;
     protected String type;
-
-    public boolean isSelectedForQuickbalance() {
-        return selectedForQuickbalance;
-    }
-
-    public LinksEntity getLinks() {
-        return links;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public DetailsEntity getDetails() {
-        return details;
-    }
-
-    public String getBalance() {
-        return balance;
-    }
+    protected TransactionsEntity transactions;
 
     @JsonIgnore
     public ExactCurrencyAmount getTinkAmount() {
         return SwedbankSeSerializationUtils.parseAmountForInput(balance, currency);
-    }
-
-    public boolean isAvailableForFavouriteAccount() {
-        return availableForFavouriteAccount;
-    }
-
-    public boolean isAvailableForPriorityAccount() {
-        return availableForPriorityAccount;
-    }
-
-    public String getType() {
-        return type;
     }
 
     private boolean isBalanceUndefined() {
@@ -88,7 +55,9 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                         .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
                         .putInTemporaryStorage(
                                 SwedbankBaseConstants.StorageKey.NEXT_LINK,
-                                links != null ? links.getNext() : null)
+                                transactions.getLinks() != null
+                                        ? transactions.getLinks().getNext()
+                                        : links.getNext())
                         .putInTemporaryStorage(
                                 SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
                         .setHolderName(new HolderName(bankProfile.getBank().getHolderName()))
