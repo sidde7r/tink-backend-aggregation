@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
@@ -47,6 +48,7 @@ public class RegisteredTransfersResponse {
                                     .get())
                     .setMessage(
                             SwedbankBaseConstants.ErrorMessage.NOT_EXACTLY_ONE_UNSIGNED_TRANSFER)
+                    .setInternalStatus(InternalStatus.EXISTING_UNSIGNED_TRANSFERS.toString())
                     .build();
         }
     }

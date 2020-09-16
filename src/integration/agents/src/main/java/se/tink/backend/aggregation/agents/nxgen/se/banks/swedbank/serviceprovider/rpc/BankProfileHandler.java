@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
@@ -77,6 +78,7 @@ public class BankProfileHandler {
                                     SwedbankBaseConstants.UserMessage
                                             .STRONGER_AUTHENTICATION_NEEDED))
                     .setMessage(SwedbankBaseConstants.ErrorMessage.NEEDS_EXTENDED_USE)
+                    .setInternalStatus(InternalStatus.BANKID_NEEDS_EXTENDED_USE_ENABLED.toString())
                     .build();
         }
     }

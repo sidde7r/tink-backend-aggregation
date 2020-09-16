@@ -110,6 +110,7 @@ public class SwedbankTransferHelper {
                                     TransferExecutionException.EndUserMessage
                                             .BANKID_ANOTHER_IN_PROGRESS)
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                            .setInternalStatus(InternalStatus.BANKID_ANOTHER_IN_PROGRESS.toString())
                             .build();
                 default:
                     throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
@@ -140,6 +141,7 @@ public class SwedbankTransferHelper {
                                     TransferExecutionException.EndUserMessage
                                             .BANKID_ANOTHER_IN_PROGRESS)
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                            .setInternalStatus(InternalStatus.BANKID_ANOTHER_IN_PROGRESS.toString())
                             .setException(hre)
                             .build();
                 }
@@ -228,6 +230,7 @@ public class SwedbankTransferHelper {
                     .setEndUserMessage(
                             TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
                     .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
+                    .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
                     .build();
         }
 
@@ -277,6 +280,10 @@ public class SwedbankTransferHelper {
                                                                                 TransferExecutionException
                                                                                         .EndUserMessage
                                                                                         .NEW_RECIPIENT_NAME_ABSENT))
+                                                                .setInternalStatus(
+                                                                        InternalStatus
+                                                                                .NEW_RECIPIENT_NAME_ABSENT
+                                                                                .toString())
                                                                 .build()));
     }
 
@@ -421,6 +428,7 @@ public class SwedbankTransferHelper {
                     .setEndUserMessage(
                             TransferExecutionException.EndUserMessage.CHALLENGE_NO_RESPONSE)
                     .setMessage(SwedbankBaseConstants.ErrorMessage.CHALLENGE_NO_RESPONSE)
+                    .setInternalStatus(InternalStatus.SECURITY_TOKEN_NO_RESPONSE.toString())
                     .build();
         }
 
@@ -437,6 +445,7 @@ public class SwedbankTransferHelper {
                     .setEndUserMessage(
                             TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED)
                     .setMessage(SwedbankBaseConstants.ErrorMessage.TOKEN_SIGN_FAILED)
+                    .setInternalStatus(InternalStatus.INVALID_SECURITY_TOKEN.toString())
                     .setException(sie)
                     .build();
         }
