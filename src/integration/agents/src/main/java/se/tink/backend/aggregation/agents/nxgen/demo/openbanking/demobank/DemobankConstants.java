@@ -65,6 +65,7 @@ public class DemobankConstants {
 
     public static class AccountTypes {
         public static final String CHECKING = "CHECKING";
+        public static final String CREDIT_CARD = "CREDIT_CARD";
     }
 
     public static class ClusterSpecificCallbacks {

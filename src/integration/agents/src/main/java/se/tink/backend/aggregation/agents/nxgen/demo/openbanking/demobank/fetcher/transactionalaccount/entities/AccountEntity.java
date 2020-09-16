@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -66,6 +68,33 @@ public class AccountEntity {
     }
 
     @JsonIgnore
+    public CreditCardAccount toTinkCreditCardAccount(List<AccountHolder> accountHolders) {
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(
+                        CreditCardModule.builder()
+                                .withCardNumber(accountNumber)
+                                .withBalance(getBalance())
+                                .withAvailableCredit(getAvailableBalance())
+                                .withCardAlias(accountNumber)
+                                .build())
+                .withPaymentAccountFlag()
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountNumber)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(description)
+                                .addIdentifier(new IbanIdentifier(accountNumber))
+                                .build())
+                .addHolders(
+                        accountHolders.stream()
+                                .map(AccountHolder::getName)
+                                .map(Holder::of)
+                                .collect(Collectors.toList()))
+                .setApiIdentifier(getId())
+                .build();
+    }
+
+    @JsonIgnore
     private ExactCurrencyAmount getAvailableBalance() {
         return ExactCurrencyAmount.of(availableBalance, currency);
     }
@@ -80,6 +109,10 @@ public class AccountEntity {
         if (AccountTypes.CHECKING.equalsIgnoreCase(accountType)) {
             return TransactionalAccountType.CHECKING;
         } else return TransactionalAccountType.SAVINGS;
+    }
+
+    public boolean isNotCreditCard() {
+        return !accountType.equalsIgnoreCase(AccountTypes.CREDIT_CARD);
     }
 
     @JsonIgnore
