@@ -128,6 +128,10 @@ public class SwedbankDefaultBankIdAuthenticator
                         previousStatus)) {
                     return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
                 }
+
+                if (SwedbankBaseConstants.BankIdResponseStatus.USER_SIGN.equals(previousStatus)) {
+                    return BankIdStatus.TIMEOUT;
+                }
             } else if (errorResponse.hasErrorCode(
                     SwedbankBaseConstants.BankErrorMessage.SESSION_INVALIDATED)) {
                 // When user has bank app running, and starts a refresh, both sessions will be
