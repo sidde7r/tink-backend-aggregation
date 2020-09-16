@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
+@Getter
 @JsonObject
 public class TokenResponse {
 
@@ -21,36 +22,11 @@ public class TokenResponse {
     @JsonProperty("scope")
     private String scope;
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    private String getRefreshToken() {
-        return refreshToken;
-    }
-
-    private Long getExpiresIn() {
-        return Long.parseLong(expiresIn);
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
     public OAuth2Token toOauthToken() {
         return OAuth2Token.create(
                 IcaBankenConstants.QueryKeys.BEARER,
-                getAccessToken(),
-                getRefreshToken(),
-                getExpiresIn());
-    }
-
-    // Used only for sandbox
-    @JsonProperty("token_type")
-    private String tokenType;
-
-    @JsonIgnore
-    public OAuth2Token toTinkToken() {
-        return OAuth2Token.create(tokenType, accessToken, "", Long.parseLong(expiresIn));
+                accessToken,
+                refreshToken,
+                Long.parseLong(expiresIn));
     }
 }
