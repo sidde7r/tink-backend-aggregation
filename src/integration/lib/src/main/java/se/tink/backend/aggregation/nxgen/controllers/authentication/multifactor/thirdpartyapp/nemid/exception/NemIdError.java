@@ -1,7 +1,6 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception;
 
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public enum NemIdError implements AgentError {

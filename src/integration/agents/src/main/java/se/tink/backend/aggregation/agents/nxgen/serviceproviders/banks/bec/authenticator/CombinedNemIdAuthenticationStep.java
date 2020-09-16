@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppTokenEncryptedPayload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.LoggedInEntity;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdPollTimeoutException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -67,8 +68,9 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
         Field field =
                 Field.builder()
                         .immutable(true)
-                        .description("Please open the NemId app and confirm login.")
-                        .value("Please open the NemId app and confirm login")
+                        .description(
+                                NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP.getKey().get())
+                        .value(NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP.getKey().get())
                         .name("name")
                         .build();
 

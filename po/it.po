@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-07-03 11:05+0000\n"
-"PO-Revision-Date: 2020-07-03 11:05+0000\n"
+"POT-Creation-Date: 2020-09-16 15:21+0000\n"
+"PO-Revision-Date: 2020-09-16 15:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -1364,9 +1364,3 @@ msgstr ""
 
 msgid "There was a problem connecting to the bank."
 msgstr "C'è stato un problema nel connettersi alla banca."
-
-msgid "Cancel on payment signing (test)"
-msgstr "Annulla la firma del pagamento (test)"
-
-msgid "The transfer amount is larger than what is available on the account (test)"
-msgstr "L'importo del trasferimento è maggiore dell'ammontare disponibile sul conto (test)"

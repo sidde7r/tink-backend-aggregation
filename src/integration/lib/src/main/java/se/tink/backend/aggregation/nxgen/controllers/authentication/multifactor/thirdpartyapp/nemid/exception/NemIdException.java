@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception;
 
 import se.tink.backend.aggregation.agents.exceptions.MultiFactorAuthenticationException;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error.NemIdError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class NemIdException extends MultiFactorAuthenticationException {

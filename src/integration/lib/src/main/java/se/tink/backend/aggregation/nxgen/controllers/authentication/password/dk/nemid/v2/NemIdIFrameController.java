@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 // Temporarily renaming this to V2. V1 will be removed once the Nordea DK update is finished
@@ -261,8 +262,9 @@ public class NemIdIFrameController {
         Field field =
                 Field.builder()
                         .immutable(true)
-                        .description("Please open the NemId app and confirm login.")
-                        .value("Please open the NemId app and confirm login")
+                        .description(
+                                NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP.getKey().get())
+                        .value(NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP.getKey().get())
                         .name("name")
                         .build();
 
