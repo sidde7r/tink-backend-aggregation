@@ -37,15 +37,14 @@ public class AccountMapper {
         account.setType(AccountTypes.CREDIT_CARD);
 
         // Temporary log to investigate Zero balance - Only log when balance is Zero
-        double creditLeftAmount = input.getCreditLeftToUse();
-        double creditLimitAmount = input.getCreditLimit();
-        double authorizedBalance = input.getAuthorizedBalance();
-        if (creditLeftAmount - creditLimitAmount == 0) {
-            log.info(
-                    String.format(
-                            "Credit left: %.2f, Credit limit: %.2f, Authorized balance: %.2f",
-                            creditLeftAmount, creditLimitAmount, authorizedBalance));
-        }
+        String creditLeftAmount = Double.toString(input.getCreditLeftToUse());
+        String creditLimitAmount = Double.toString(input.getCreditLimit());
+        String authorizedBalance = Double.toString(input.getAuthorizedBalance());
+        log.info(
+                String.format(
+                        "Credit left: %s, Credit limit: %s, Authorized balance: %s",
+                        creditLeftAmount, creditLimitAmount, authorizedBalance));
+
         account.setBalance(input.getCreditLeftToUse() - input.getCreditLimit());
 
         return account;
