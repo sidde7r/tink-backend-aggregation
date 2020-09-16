@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -24,9 +24,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.Usernam
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
+@Slf4j
+@RequiredArgsConstructor
 public class BecAuthenticator extends StatelessProgressiveAuthenticator {
-    private static final Logger log = LoggerFactory.getLogger(BecAuthenticator.class);
 
     private static final Pattern USERNAME_PATTERN = Pattern.compile("\\d{10,11}");
     private static final Pattern MOBILECODE_PATTERN = Pattern.compile("\\d{4}");
@@ -35,17 +38,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     private final SessionStorage sessionStorage;
     private final SupplementalRequester supplementalRequester;
     private final PersistentStorage persistentStorage;
-
-    public BecAuthenticator(
-            BecApiClient apiClient,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage,
-            SupplementalRequester supplementalRequester) {
-        this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
-        this.supplementalRequester = supplementalRequester;
-    }
+    private final Catalog catalog;
 
     @Override
     public List<AuthenticationStep> authenticationSteps() {
@@ -104,14 +97,15 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     private Field prepareKeyCardField() {
-        String message =
-                String.format(
-                        "Please enter code %s from key card number %s",
-                        sessionStorage.get(StorageKeys.CHALLENGE_STORAGE_KEY),
-                        sessionStorage.get(StorageKeys.KEY_CARD_NUMBER_STORAGE_KEY));
+        LocalizableParametrizedKey codeFromKeyCard =
+                new LocalizableParametrizedKey("Please enter code {0} from key card number {1}")
+                        .cloneWith(
+                                sessionStorage.get(StorageKeys.CHALLENGE_STORAGE_KEY),
+                                sessionStorage.get(StorageKeys.KEY_CARD_NUMBER_STORAGE_KEY));
+
         return Field.builder()
                 .immutable(false)
-                .description(message)
+                .description(catalog.getString(codeFromKeyCard))
                 .name("challengeValue")
                 .numeric(true)
                 .minLength(6)
