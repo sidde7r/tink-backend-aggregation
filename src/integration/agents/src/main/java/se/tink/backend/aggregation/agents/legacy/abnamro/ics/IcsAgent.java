@@ -179,7 +179,7 @@ public class IcsAgent extends AbstractAgent implements RefreshCreditCardAccounts
 
             Account account =
                     AccountMapper.toAccount(
-                            creditCardAccount, shouldUseNewIcsAccountFormat(user.getFlags()));
+                            creditCardAccount, shouldUseNewIcsAccountFormat(user.getFlags()), log);
 
             List<Transaction> transactions =
                     creditCardAccount.getTransactions().stream()
