@@ -75,7 +75,7 @@ def cli(cli_args):
         args = parse_args(args=cli_args)
 
         config = resolve_config(args)
-        process_auth(args, config)
+        return process_auth(args, config)
     except google.ExpectedGoogleException as ex:
         print(ex)
         sys.exit(1)
@@ -278,7 +278,7 @@ def process_auth(args, config):
         print("Credentials Expiration: " + format(amazon_client.expiration.astimezone(get_localzone())))
 
     if config.print_creds:
-        amazon_client.print_export_line()
+        return amazon_client.print_export_line()
 
     if config.profile:
         config.write(amazon_client)
