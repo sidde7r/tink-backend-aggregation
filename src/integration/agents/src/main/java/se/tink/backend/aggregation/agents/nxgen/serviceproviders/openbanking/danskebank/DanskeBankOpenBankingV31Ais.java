@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class DanskeBankOpenBankingV31Ais extends UkOpenBankingV31Ais {
+class DanskeBankOpenBankingV31Ais extends UkOpenBankingV31Ais {
 
     DanskeBankOpenBankingV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig,

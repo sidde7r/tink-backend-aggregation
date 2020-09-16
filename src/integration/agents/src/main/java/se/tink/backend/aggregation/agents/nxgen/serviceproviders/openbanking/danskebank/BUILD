@@ -26,6 +26,7 @@ java_library(
         "//src/libraries/mapper",
         "//src/libraries/retrypolicy",
         "//third_party:com_google_code_findbugs_jsr305",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",

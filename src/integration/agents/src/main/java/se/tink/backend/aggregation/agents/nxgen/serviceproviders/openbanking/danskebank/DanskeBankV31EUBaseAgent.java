@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
-import java.util.List;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -19,11 +18,12 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-public abstract class DanskeBankV31BaseAgent extends NextGenerationAgent
+import java.util.List;
+
+public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
@@ -33,7 +33,7 @@ public abstract class DanskeBankV31BaseAgent extends NextGenerationAgent
     private final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingBaseAgentImpl ukOpenBankingBaseAgent;
 
-    public DanskeBankV31BaseAgent(
+    public DanskeBankV31EUBaseAgent(
             AgentComponentProvider componentProvider,
             AgentsServiceConfiguration configuration,
             UkOpenBankingAisConfig aisConfig) {
@@ -99,8 +99,6 @@ public abstract class DanskeBankV31BaseAgent extends NextGenerationAgent
     }
 
     private class UkOpenBankingBaseAgentImpl extends UkOpenBankingBaseAgent {
-        private final LocalDateTimeSource localDateTimeSource;
-
         UkOpenBankingBaseAgentImpl(
                 AgentComponentProvider componentProvider,
                 AgentsServiceConfiguration configuration,
@@ -114,7 +112,6 @@ public abstract class DanskeBankV31BaseAgent extends NextGenerationAgent
                             UkOpenBankingBaseAgentImpl.class),
                     agentConfig,
                     disableSslVerification);
-            this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         }
 
         @Override

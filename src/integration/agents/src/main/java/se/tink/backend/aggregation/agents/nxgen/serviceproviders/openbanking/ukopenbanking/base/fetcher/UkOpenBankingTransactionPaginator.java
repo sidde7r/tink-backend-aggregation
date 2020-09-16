@@ -40,7 +40,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private static final String FETCHED_TRANSACTIONS_UNTIL = "fetchedTxUntil:";
     protected final UkOpenBankingApiClient apiClient;
     protected final Class<ResponseType> responseType;
-    protected final TransactionConverter<ResponseType, AccountType> transactionConverter;
+    private final TransactionConverter<ResponseType, AccountType> transactionConverter;
 
     private String lastAccount;
     private int paginationCount;
@@ -76,7 +76,9 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             AccountType account, String key) {
 
         updateAccountPaginationCount(account.getApiIdentifier());
-        if (isPaginationCountOverLimit()) return TransactionKeyPaginatorResponseImpl.createEmpty();
+        if (isPaginationCountOverLimit()) {
+            return TransactionKeyPaginatorResponseImpl.createEmpty();
+        }
         key = initialisePaginationKeyIfNull(account, key);
 
         try {
@@ -172,7 +174,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         paginationCount++;
     }
 
-    protected void setFetchingTransactionsUntil(String accountId, LocalDateTime requestTime) {
+    private void setFetchingTransactionsUntil(String accountId, LocalDateTime requestTime) {
         final String fetchedUntilDate = requestTime.format(DateTimeFormatter.ISO_DATE_TIME);
         persistentStorage.put(FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
     }
@@ -186,7 +188,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                                         .atOffset(ZoneOffset.UTC));
     }
 
-    protected OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
+    private OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
         final Optional<OffsetDateTime> lastTransactionsFetchedDate =
                 fetchedTransactionsUntil(accountId);
 
