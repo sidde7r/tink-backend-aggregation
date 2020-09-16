@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.business.nordea.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
@@ -12,31 +14,28 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class TransactionEntity {
-    private String fromProductIdentity;
-    private String transactionText;
-    private String transactionKey;
+    private String amount;
+    private Boolean booked;
+    private String currency;
+    private String title;
+
+    @JsonProperty("to_account_number")
+    private String toAccountNumber;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date transactionDate;
+    @JsonProperty("booking_date")
+    private Date bookingDate;
 
-    private String transactionFromAccountNumber;
-    private String transactionToAccountNumber;
-    private boolean isCoverReservationTransaction;
-    private boolean fileImport;
-    private TransactionAmountEntity transactionAmount;
-
-    public String getTransactionKey() {
-        return transactionKey;
+    public boolean isBooked() {
+        return booked;
     }
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(
-                        ExactCurrencyAmount.of(
-                                transactionAmount.getAmount(), transactionAmount.getCurrency()))
-                .setDate(transactionDate)
-                .setDescription(transactionText)
-                .setPending(isCoverReservationTransaction)
+                .setAmount(ExactCurrencyAmount.of(amount, currency))
+                .setDate(bookingDate)
+                .setDescription(title)
+                .setPending(!booked)
                 .setPayload(
                         TransactionPayloadTypes.DETAILS,
                         SerializationUtils.serializeToString(getTransactionDetails()))
@@ -45,6 +44,6 @@ public class TransactionEntity {
 
     @JsonIgnore
     public TransactionDetails getTransactionDetails() {
-        return new TransactionDetails(StringUtils.EMPTY, transactionToAccountNumber);
+        return new TransactionDetails(StringUtils.EMPTY, Strings.nullToEmpty(toAccountNumber));
     }
 }
