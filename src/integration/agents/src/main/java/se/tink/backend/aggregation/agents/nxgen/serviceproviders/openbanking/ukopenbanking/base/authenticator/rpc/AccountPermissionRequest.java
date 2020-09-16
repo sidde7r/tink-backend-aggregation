@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.entities.AccountPermissionDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.entities.RiskEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -19,7 +19,7 @@ public class AccountPermissionRequest {
         this.risk = risk;
     }
 
-    public static AccountPermissionRequest create(List<String> additionalPermissions) {
+    public static AccountPermissionRequest create(Set<String> additionalPermissions) {
         return new AccountPermissionRequest(
                 AccountPermissionDataEntity.create(additionalPermissions), new RiskEntity());
     }

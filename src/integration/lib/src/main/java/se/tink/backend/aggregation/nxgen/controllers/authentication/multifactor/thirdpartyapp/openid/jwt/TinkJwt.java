@@ -98,7 +98,11 @@ public final class TinkJwt {
      * @return this same TinkJwt instance.
      */
     public TinkJwt withAudience(String... audience) {
-        addClaim(JwtClaims.AUDIENCE, audience);
+        if (audience != null && audience.length == 1) {
+            addClaim(JwtClaims.AUDIENCE, audience[0]);
+        } else {
+            addClaim(JwtClaims.AUDIENCE, audience);
+        }
         return this;
     }
 

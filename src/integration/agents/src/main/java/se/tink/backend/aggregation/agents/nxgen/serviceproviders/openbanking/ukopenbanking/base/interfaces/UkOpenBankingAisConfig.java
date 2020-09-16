@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces;
 
-import java.util.List;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
@@ -36,7 +36,7 @@ public interface UkOpenBankingAisConfig {
 
     URL getAppToAppURL();
 
-    List<String> getAdditionalPermissions();
+    Set<String> getAdditionalPermissions();
 
     void setIdentityData(IdentityDataEntity identityData);
 
