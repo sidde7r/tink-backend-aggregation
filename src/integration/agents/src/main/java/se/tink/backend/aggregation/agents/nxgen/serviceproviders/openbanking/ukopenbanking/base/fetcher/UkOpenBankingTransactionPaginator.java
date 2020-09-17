@@ -38,15 +38,15 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private static final long DEFAULT_MAX_ALLOWED_DAYS = 89;
     private static final String FROM_BOOKING_DATE_TIME = "?fromBookingDateTime=";
     private static final String FETCHED_TRANSACTIONS_UNTIL = "fetchedTxUntil:";
-    private final UkOpenBankingApiClient apiClient;
-    private final Class<ResponseType> responseType;
+    protected final UkOpenBankingApiClient apiClient;
+    protected final Class<ResponseType> responseType;
     private final TransactionConverter<ResponseType, AccountType> transactionConverter;
 
     private String lastAccount;
     private int paginationCount;
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final PersistentStorage persistentStorage;
-    private final LocalDateTimeSource localDateTimeSource;
+    protected final LocalDateTimeSource localDateTimeSource;
 
     /**
      * @param apiClient Ukob api client
@@ -76,11 +76,67 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             AccountType account, String key) {
 
         updateAccountPaginationCount(account.getApiIdentifier());
-
-        if (paginationCount > PAGINATION_LIMIT) {
+        if (isPaginationCountOverLimit()) {
             return TransactionKeyPaginatorResponseImpl.createEmpty();
         }
+        key = initialisePaginationKeyIfNull(account, key);
 
+        try {
+            return fetchTransactions(account, key);
+        } catch (HttpResponseException e) {
+
+            // NatWest seems to have an bug where they will send us next links even though it goes
+            // out of range for how
+            // many pages of transactions they actually can give us, causing an internal server
+            // error.
+            // This code ignores http 500 error if we have already fetched several pages from the
+            // given account.
+            if (paginationCount > PAGINATION_GRACE_LIMIT && e.getResponse().getStatus() == 500) {
+                logger.warn("Ignoring http 500 (Internal server error) in pagination.", e);
+                return TransactionKeyPaginatorResponseImpl.createEmpty();
+            }
+
+            if (e.getResponse().getStatus() == 401 || e.getResponse().getStatus() == 403) {
+                return handle401Or403ResponseErrorStatus(account, e);
+            }
+            throw e;
+        }
+    }
+
+    protected TransactionKeyPaginatorResponse<String> fetchTransactions(
+            AccountType account, String key) {
+        LocalDateTime requestTime = localDateTimeSource.now();
+        TransactionKeyPaginatorResponse<String> response =
+                transactionConverter.toPaginatorResponse(
+                        apiClient.fetchAccountTransactions(key, responseType), account);
+        setFetchingTransactionsUntil(account.getApiIdentifier(), requestTime);
+        return response;
+    }
+
+    protected TransactionKeyPaginatorResponse<String> handle401Or403ResponseErrorStatus(
+            AccountType account, HttpResponseException e) {
+        /*
+        There will be cases when credentials are already created and we try to use refresh tokens
+        to fetch the transactions. Since the call to fetchTransactions will try to fetch
+        transactions for last 23 months and this might result in 401 so if that is the case then
+        we should try to fetch the transactions for last 89 days which should work.
+        401 is to cover Danske as they send 401 instead of 403.
+         */
+        String key;
+        logger.error(
+                "Trying to fetch transactions again for last 89 days. Got 401 in previous request",
+                e);
+
+        key =
+                ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
+                                account.getApiIdentifier())
+                        + FROM_BOOKING_DATE_TIME
+                        + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
+                                localDateTimeSource.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
+        return fetchTransactions(account, key);
+    }
+
+    protected String initialisePaginationKeyIfNull(AccountType account, String key) {
         if (key == null) {
             final OffsetDateTime fromDate =
                     getLastTransactionsFetchedDate(account.getApiIdentifier());
@@ -101,60 +157,14 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                             + FROM_BOOKING_DATE_TIME
                             + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(fromDate);
         }
-
-        try {
-            LocalDateTime requestTime = localDateTimeSource.now();
-            TransactionKeyPaginatorResponse<String> response =
-                    transactionConverter.toPaginatorResponse(
-                            apiClient.fetchAccountTransactions(key, responseType), account);
-            setFetchingTransactionsUntil(account.getApiIdentifier(), requestTime);
-            return response;
-        } catch (HttpResponseException e) {
-
-            // NatWest seems to have an bug where they will send us next links even though it goes
-            // out of range for how
-            // many pages of transactions they actually can give us, causing an internal server
-            // error.
-            // This code ignores http 500 error if we have already fetched several pages from the
-            // given account.
-            if (paginationCount > PAGINATION_GRACE_LIMIT && e.getResponse().getStatus() == 500) {
-                logger.warn("Ignoring http 500 (Internal server error) in pagination.", e);
-                return TransactionKeyPaginatorResponseImpl.createEmpty();
-            }
-
-            /*
-            There will be cases when credentials are already created and we try to use refresh tokens
-            to fetch the transactions. Since the call to fetchTransactions will try to fetch
-            transactions for last 23 months and this might result in 401 so if that is the case then
-            we should try to fetch the transactions for last 89 days which should work.
-            401 is to cover Danske as they send 401 instead of 403.
-             */
-            if (e.getResponse().getStatus() == 401 || e.getResponse().getStatus() == 403) {
-                logger.error(
-                        "Trying to fetch transactions again for last 89 days. Got 401 in previous request",
-                        e);
-
-                key =
-                        ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
-                                        account.getApiIdentifier())
-                                + FROM_BOOKING_DATE_TIME
-                                + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
-                                        localDateTimeSource
-                                                .now()
-                                                .minusDays(DEFAULT_MAX_ALLOWED_DAYS));
-                LocalDateTime requestTime = localDateTimeSource.now();
-                TransactionKeyPaginatorResponse<String> response =
-                        transactionConverter.toPaginatorResponse(
-                                apiClient.fetchAccountTransactions(key, responseType), account);
-                setFetchingTransactionsUntil(account.getApiIdentifier(), requestTime);
-                return response;
-            }
-
-            throw e;
-        }
+        return key;
     }
 
-    private void updateAccountPaginationCount(String accountBankIdentifier) {
+    protected boolean isPaginationCountOverLimit() {
+        return paginationCount > PAGINATION_LIMIT;
+    }
+
+    protected void updateAccountPaginationCount(String accountBankIdentifier) {
 
         if (!accountBankIdentifier.equalsIgnoreCase(lastAccount)) {
             paginationCount = 0;

@@ -33,9 +33,9 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class UkOpenBankingV31Ais implements UkOpenBankingAis {
 
-    private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
-    private final PersistentStorage persistentStorage;
-    private final LocalDateTimeSource localDateTimeSource;
+    protected final UkOpenBankingAisConfig ukOpenBankingAisConfig;
+    protected final PersistentStorage persistentStorage;
+    protected final LocalDateTimeSource localDateTimeSource;
     private final AccountMapper<CreditCardAccount> creditCardAccountMapper;
     private final AccountMapper<TransactionalAccount> transactionalAccountMapper;
 
