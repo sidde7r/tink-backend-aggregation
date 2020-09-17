@@ -6,14 +6,10 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.abnamro.client.model.creditcards.CreditCardAccountEntity;
 
 @RunWith(JUnitParamsRunner.class)
 public class AccountMapperTest {
-
-    private Logger log = LoggerFactory.getLogger(AccountMapperTest.class);
 
     @Test
     @Parameters({
@@ -30,7 +26,7 @@ public class AccountMapperTest {
         entity.setAuthorizedBalance(10D);
 
         entity.setContractNumber(contractNumber);
-        assertThat(AccountMapper.toAccount(entity, log)).isNotNull();
+        assertThat(AccountMapper.toAccount(entity)).isNotNull();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -40,7 +36,7 @@ public class AccountMapperTest {
         entity.setAuthorizedBalance(10D);
 
         entity.setContractNumber("1111111111");
-        assertThat(AccountMapper.toAccount(entity, log)).isNotNull();
+        assertThat(AccountMapper.toAccount(entity)).isNotNull();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -50,7 +46,7 @@ public class AccountMapperTest {
         entity.setAuthorizedBalance(10D);
 
         entity.setContractNumber("11111111111111111");
-        assertThat(AccountMapper.toAccount(entity, log)).isNotNull();
+        assertThat(AccountMapper.toAccount(entity)).isNotNull();
     }
 
     @Test
@@ -60,6 +56,6 @@ public class AccountMapperTest {
         entity.setAuthorizedBalance(.37D);
         entity.setContractNumber("1234567890123456");
 
-        assertThat(AccountMapper.toAccount(entity, log).getBalance()).isEqualTo(-13.37D);
+        assertThat(AccountMapper.toAccount(entity).getBalance()).isEqualTo(-13.37D);
     }
 }
