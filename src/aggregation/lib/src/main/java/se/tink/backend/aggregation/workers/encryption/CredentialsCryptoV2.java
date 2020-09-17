@@ -18,45 +18,45 @@ public class CredentialsCryptoV2 {
 
     public static EncryptedPayloadV2 encryptV2(
             int keyId, byte[] key, String serializedFields, String serializedSensitivePayload) {
-        EncryptedPayloadV2 encryptedCredentialsV2 = new EncryptedPayloadV2();
-        encryptedCredentialsV2.setKeyId(0); // Not used in V2, fields + payload have their own keyId
-        encryptedCredentialsV2.setTimestamp(new Date());
+        EncryptedPayloadV2 encryptedPayloadV2 = new EncryptedPayloadV2();
+        encryptedPayloadV2.setKeyId(0); // Not used in V2, fields + payload have their own keyId
+        encryptedPayloadV2.setTimestamp(new Date());
 
         AesEncryptedData encryptedFields =
                 encrypt(
                         key,
                         serializedFields,
-                        asAAD(encryptedCredentialsV2.getVersion()),
+                        asAAD(encryptedPayloadV2.getVersion()),
                         asAAD(keyId),
-                        asAAD(encryptedCredentialsV2.getTimestamp().getTime()));
+                        asAAD(encryptedPayloadV2.getTimestamp().getTime()));
 
         AesEncryptedData encryptedPayload =
                 encrypt(
                         key,
                         serializedSensitivePayload,
-                        asAAD(encryptedCredentialsV2.getVersion()),
+                        asAAD(encryptedPayloadV2.getVersion()),
                         asAAD(keyId),
-                        asAAD(encryptedCredentialsV2.getTimestamp().getTime()));
+                        asAAD(encryptedPayloadV2.getTimestamp().getTime()));
 
         final OpaquePayload fields =
                 OpaquePayload.newBuilder()
-                        .setVersion(encryptedCredentialsV2.getVersion())
+                        .setVersion(encryptedPayloadV2.getVersion())
                         .setKeyId(keyId)
-                        .setTimestamp(timestamp(encryptedCredentialsV2.getTimestamp()))
+                        .setTimestamp(timestamp(encryptedPayloadV2.getTimestamp()))
                         .setPayload(SerializationUtils.serializeToString(encryptedFields))
                         .build();
 
         final OpaquePayload payload =
                 OpaquePayload.newBuilder()
-                        .setVersion(encryptedCredentialsV2.getVersion())
+                        .setVersion(encryptedPayloadV2.getVersion())
                         .setKeyId(keyId)
-                        .setTimestamp(timestamp(encryptedCredentialsV2.getTimestamp()))
+                        .setTimestamp(timestamp(encryptedPayloadV2.getTimestamp()))
                         .setPayload(SerializationUtils.serializeToString(encryptedPayload))
                         .build();
 
-        encryptedCredentialsV2.setFields(fields);
-        encryptedCredentialsV2.setPayload(payload);
-        return encryptedCredentialsV2;
+        encryptedPayloadV2.setFields(fields);
+        encryptedPayloadV2.setPayload(payload);
+        return encryptedPayloadV2;
     }
 
     public static void decryptV2(
