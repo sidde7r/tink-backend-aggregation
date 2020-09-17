@@ -66,15 +66,15 @@ public class CredentialsCryptoV2 {
     public static DecryptedDataV2 decryptV2(
             byte[] fieldsKey,
             byte[] payloadKey,
-            EncryptedPayloadV2 encryptedCredentialsV2) {
+            EncryptedPayloadV2 encryptedPayloadV2) {
         DecryptedDataV2 result = new DecryptedDataV2();
 
-        String decryptedFields = decryptFields(fieldsKey, encryptedCredentialsV2);
+        String decryptedFields = decryptFields(fieldsKey, encryptedPayloadV2);
         if (!Strings.isNullOrEmpty(decryptedFields)) {
             result.decryptedFields = decryptedFields;
         }
 
-        String decryptedPayload = decryptPayload(payloadKey, encryptedCredentialsV2);
+        String decryptedPayload = decryptPayload(payloadKey, encryptedPayloadV2);
         if (!Strings.isNullOrEmpty(decryptedPayload)) {
             result.decryptedPayload = decryptedPayload;
         }
