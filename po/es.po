@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-03-31 08:25+0000\n"
-"PO-Revision-Date: 2020-03-31 08:25+0000\n"
+"POT-Creation-Date: 2020-09-16 15:21+0000\n"
+"PO-Revision-Date: 2020-09-16 15:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -10,18 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "Input the code from your code card"
-msgstr "Introduce la clave de tu tarjeta de coordenadas"
-
-msgid "Key card index"
-msgstr "Número de coordenada"
-
-msgid "Key card code"
-msgstr "Clave"
-
-msgid "The code you entered is not valid"
-msgstr "La clave que has introducido no es válida"
 
 msgid "Input the code from your code card"
 msgstr "Introduce la clave de tu tarjeta de coordenadas"
@@ -46,6 +34,12 @@ msgid ""
 msgstr ""
 "Se cerró la sesión automáticamente porque inició sesión en otro canal; El "
 "cierre de sesión se realiza por su seguridad."
+
+msgid "Invalid username type"
+msgstr "Tipo de usuario inválido"
+
+msgid "The code you entered is not valid"
+msgstr "La clave que has introducido no es válida"
 
 msgid "Enter the code you received from the bank"
 msgstr "Introduce la clave que has recibido del banco"
