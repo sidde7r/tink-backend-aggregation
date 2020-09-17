@@ -6,9 +6,9 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST;
 
 import com.google.common.base.Preconditions;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
@@ -29,7 +29,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     private final boolean accountPartyEndpointEnabled;
     private final boolean accountPartiesEndpointEnabled;
 
-    private final List<String> additionalPermissions;
+    private final Set<String> additionalPermissions;
     private IdentityDataEntity identityData;
     private String holderName;
     private AccountOwnershipType allowedAccountOwnershipType;
@@ -43,7 +43,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
             boolean partyEndpointEnabled,
             boolean accountPartyEndpointEnabled,
             boolean accountPartiesEndpointEnabled,
-            List<String> additionalPermissions,
+            Set<String> additionalPermissions,
             AccountOwnershipType allowedAccountOwnershipType,
             String organisationId) {
         this.apiBaseURL = apiBaseURL;
@@ -127,7 +127,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         private URL wellKnownURL;
         private URL identityDataURL;
         private URL appToAppURL;
-        private List<String> additionalPermissions;
+        private Set<String> additionalPermissions;
         private boolean partyEndpointEnabled;
         private boolean accountPartyEndpointEnabled;
         private boolean accountPartiesEndpointEnabled;
@@ -173,7 +173,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
 
         public Builder withAdditionalPermission(final String additionalPermission) {
             if (Objects.isNull(this.additionalPermissions)) {
-                this.additionalPermissions = new ArrayList<>();
+                this.additionalPermissions = new HashSet<>();
             }
             this.additionalPermissions.add(additionalPermission);
             return this;

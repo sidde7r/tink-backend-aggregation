@@ -11,15 +11,16 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
@@ -86,7 +87,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     private <T extends AccountPermissionResponse> T createAccountIntentId(Class<T> responseType) {
         // Account Permissions are added to persistentStorage
-        List<String> accountPermissions = new ArrayList<>(ACCOUNT_PERMISSIONS);
+        Set<String> accountPermissions = new HashSet<>(ACCOUNT_PERMISSIONS);
         if (Objects.nonNull(aisConfig.getAdditionalPermissions())) {
             accountPermissions.addAll(aisConfig.getAdditionalPermissions());
         }
