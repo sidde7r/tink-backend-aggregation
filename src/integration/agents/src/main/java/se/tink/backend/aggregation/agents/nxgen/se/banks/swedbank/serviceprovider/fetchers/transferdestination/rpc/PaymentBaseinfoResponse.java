@@ -142,6 +142,7 @@ public class PaymentBaseinfoResponse {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
                     .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND)
+                    .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                     .build();
         }
 

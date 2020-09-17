@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -84,6 +85,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
                     .setEndUserMessage(
                             TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
                     .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
+                    .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
                     .build();
         }
 
@@ -153,6 +155,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
                             catalog.getString("You can only make payments to Swedish destinations"))
+                    .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
                     .build();
         }
 

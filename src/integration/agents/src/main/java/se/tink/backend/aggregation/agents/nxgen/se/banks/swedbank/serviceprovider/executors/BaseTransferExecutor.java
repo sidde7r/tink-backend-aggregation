@@ -77,6 +77,7 @@ public class BaseTransferExecutor {
         throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
                 .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND)
+                .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                 .build();
     }
 
@@ -150,6 +151,7 @@ public class BaseTransferExecutor {
                                 TransferExecutionException.EndUserMessage
                                         .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY)
                         .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
+                        .setInternalStatus(InternalStatus.INVALID_DUE_DATE.toString())
                         .setException(hre)
                         .build();
             } else if (errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.REFERENCE)) {

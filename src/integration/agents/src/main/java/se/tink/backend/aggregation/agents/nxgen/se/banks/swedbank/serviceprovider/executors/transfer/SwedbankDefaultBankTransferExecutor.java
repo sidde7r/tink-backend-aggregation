@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -55,6 +56,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
                                     .getKey()
                                     .get())
                     .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION_MESSAGE)
+                    .setInternalStatus(InternalStatus.INVALID_DESTINATION_MESSAGE.toString())
                     .build();
         }
 
@@ -131,6 +133,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
                             catalog.getString("You can only make transfers to Swedish accounts"))
+                    .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
                     .build();
         }
 
