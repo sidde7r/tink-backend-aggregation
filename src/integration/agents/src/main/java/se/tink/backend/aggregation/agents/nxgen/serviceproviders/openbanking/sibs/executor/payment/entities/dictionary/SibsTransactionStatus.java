@@ -14,6 +14,7 @@ public enum SibsTransactionStatus {
     ACSC(PaymentStatus.PAID),
     ACCC(PaymentStatus.PAID),
     RJC(PaymentStatus.REJECTED),
+    RJCT(PaymentStatus.REJECTED),
     CANC(PaymentStatus.CANCELLED);
 
     private PaymentStatus paymentStatus;
