@@ -8,13 +8,13 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
 
 public class BnpParibasAgentPaymentTest {
 
@@ -59,7 +59,9 @@ public class BnpParibasAgentPaymentTest {
                         .withDebtor(new Debtor(debtorAccountIdentifier))
                         .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
                         .withCurrency("EUR")
-                        .withReference(new Reference("Message", "ReferenceToCreditor"))
+                        .withRemittanceInformation(
+                                RemittanceInformationUtils
+                                        .generateUnstructuredRemittanceInformation("Message"))
                         .withUniqueId(UUID.randomUUID().toString())
                         .build());
     }

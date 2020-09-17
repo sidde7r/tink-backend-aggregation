@@ -9,13 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
 
 public class CreditMutuelPaymentTest {
     private AgentIntegrationTest.Builder builder;
@@ -56,8 +56,6 @@ public class CreditMutuelPaymentTest {
                         creditorDebtorManager.get(CreditMutuelPaymentTest.Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-        Reference reference = new Reference("Message", "ReferenceToCreditor");
-
         Amount amount = Amount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
         return Collections.singletonList(
@@ -66,7 +64,9 @@ public class CreditMutuelPaymentTest {
                         .withDebtor(debtor)
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
-                        .withReference(reference)
+                        .withRemittanceInformation(
+                                RemittanceInformationUtils
+                                        .generateUnstructuredRemittanceInformation("Message"))
                         .withUniqueId(UUID.randomUUID().toString())
                         .build());
     }
