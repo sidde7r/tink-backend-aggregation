@@ -14,29 +14,29 @@ public class CredentialsCryptoV1 {
 
     public static EncryptedPayloadV1 encryptV1(
             int keyId, byte[] key, String serializedFields, String serializedSensitivePayload) {
-        EncryptedPayloadV1 encryptedCredentialsV1 = new EncryptedPayloadV1();
-        encryptedCredentialsV1.setKeyId(keyId);
-        encryptedCredentialsV1.setTimestamp(new Date());
+        EncryptedPayloadV1 encryptedPayloadV1 = new EncryptedPayloadV1();
+        encryptedPayloadV1.setKeyId(keyId);
+        encryptedPayloadV1.setTimestamp(new Date());
 
         AesEncryptedData encryptedFields =
                 encrypt(
                         key,
                         serializedFields,
-                        encryptedCredentialsV1.getVersionAsAAD(),
-                        encryptedCredentialsV1.getKeyIdAsAAD(),
-                        encryptedCredentialsV1.getTimestampAsAAD());
+                        encryptedPayloadV1.getVersionAsAAD(),
+                        encryptedPayloadV1.getKeyIdAsAAD(),
+                        encryptedPayloadV1.getTimestampAsAAD());
 
         AesEncryptedData encryptedPayload =
                 encrypt(
                         key,
                         serializedSensitivePayload,
-                        encryptedCredentialsV1.getVersionAsAAD(),
-                        encryptedCredentialsV1.getKeyIdAsAAD(),
-                        encryptedCredentialsV1.getTimestampAsAAD());
+                        encryptedPayloadV1.getVersionAsAAD(),
+                        encryptedPayloadV1.getKeyIdAsAAD(),
+                        encryptedPayloadV1.getTimestampAsAAD());
 
-        encryptedCredentialsV1.setFields(encryptedFields);
-        encryptedCredentialsV1.setPayload(encryptedPayload);
-        return encryptedCredentialsV1;
+        encryptedPayloadV1.setFields(encryptedFields);
+        encryptedPayloadV1.setPayload(encryptedPayload);
+        return encryptedPayloadV1;
     }
 
     public static void decryptCredential(
