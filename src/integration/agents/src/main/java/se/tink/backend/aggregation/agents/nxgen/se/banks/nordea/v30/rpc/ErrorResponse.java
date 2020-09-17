@@ -246,6 +246,7 @@ public class ErrorResponse {
     public static TransferExecutionException invalidPaymentType() {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage("You can only make payments to Swedish destinations")
+                .setInternalStatus(InternalStatus.INVALID_PAYMENT_TYPE.toString())
                 .build();
     }
 
@@ -257,6 +258,7 @@ public class ErrorResponse {
                                 .get())
                 .setEndUserMessage(
                         TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS)
+                .setInternalStatus(InternalStatus.BANKID_ANOTHER_IN_PROGRESS.toString())
                 .setException(e)
                 .build();
     }
@@ -317,6 +319,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(ErrorCodes.UNREGISTERED_RECIPIENT)
                 .setEndUserMessage(EndUserMessage.UNREGISTERED_RECIPIENT)
+                .setInternalStatus(InternalStatus.UNREGISTERED_RECIPIENT.toString())
                 .build();
     }
 
@@ -348,6 +351,7 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(NordeaSEConstants.LogMessages.USER_UNAUTHORIZED_MESSAGE)
                 .setEndUserMessage(EndUserMessage.USER_UNAUTHORIZED)
+                .setInternalStatus(InternalStatus.USER_UNAUTHORIZED.toString())
                 .build();
     }
 }
