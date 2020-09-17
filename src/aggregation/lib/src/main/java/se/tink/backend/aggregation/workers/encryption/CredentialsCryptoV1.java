@@ -12,7 +12,7 @@ import se.tink.libraries.encryptedpayload.EncryptedPayloadV1;
 
 public class CredentialsCryptoV1 {
 
-    public static EncryptedPayloadV1 encryptCredential(
+    public static EncryptedPayloadV1 encryptV1(
             int keyId, byte[] key, String serializedFields, String serializedSensitivePayload) {
         EncryptedPayloadV1 encryptedCredentialsV1 = new EncryptedPayloadV1();
         encryptedCredentialsV1.setKeyId(keyId);
