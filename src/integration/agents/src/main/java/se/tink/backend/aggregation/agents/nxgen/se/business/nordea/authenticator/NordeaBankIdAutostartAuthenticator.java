@@ -27,11 +27,13 @@ public class NordeaBankIdAutostartAuthenticator
     private String ssn;
     private String codeVerifier;
     private String autoStartToken;
+    public final String orgNumber;
 
     public NordeaBankIdAutostartAuthenticator(
-            NordeaSEApiClient apiClient, SessionStorage sessionStorage) {
+            NordeaSEApiClient apiClient, SessionStorage sessionStorage, String orgNumber) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.orgNumber = orgNumber;
     }
 
     @Override

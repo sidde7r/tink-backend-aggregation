@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.business.nordea;
 
 import com.google.inject.Inject;
+import java.util.Optional;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -31,6 +33,7 @@ public class NordeaSEAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor {
     private final NordeaSEApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final String orgNumber;
 
     @Inject
     public NordeaSEAgent(AgentComponentProvider componentProvider) {
@@ -38,6 +41,15 @@ public class NordeaSEAgent extends NextGenerationAgent
         client.addFilter(new NordeaSEFilter());
         apiClient = new NordeaSEApiClient(client, sessionStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        orgNumber =
+                Optional.ofNullable(
+                                componentProvider
+                                        .getCredentialsRequest()
+                                        .getCredentials()
+                                        .getField(Key.CORPORATE_ID))
+                        .map(s -> s.replace("-", ""))
+                        .map(String::trim)
+                        .orElse("");
     }
 
     @Override
@@ -45,7 +57,8 @@ public class NordeaSEAgent extends NextGenerationAgent
         BankIdAuthenticationController<BankIdAutostartResponse> bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         context,
-                        new NordeaBankIdAutostartAuthenticator(apiClient, sessionStorage),
+                        new NordeaBankIdAutostartAuthenticator(
+                                apiClient, sessionStorage, orgNumber),
                         persistentStorage,
                         credentials);
 
