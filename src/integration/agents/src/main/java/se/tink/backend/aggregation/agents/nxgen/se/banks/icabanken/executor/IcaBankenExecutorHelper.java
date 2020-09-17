@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -75,6 +76,7 @@ public class IcaBankenExecutorHelper {
                                                 .getString(
                                                         TransferExecutionException.EndUserMessage
                                                                 .INVALID_SOURCE))
+                                .setInternalStatus(InternalStatus.INVALID_SOURCE_ACCOUNT.toString())
                                 .build());
     }
 
@@ -101,6 +103,10 @@ public class IcaBankenExecutorHelper {
                                                                                         TransferExecutionException
                                                                                                 .EndUserMessage
                                                                                                 .INVALID_DESTINATION))
+                                                                .setInternalStatus(
+                                                                        InternalStatus
+                                                                                .INVALID_DESTINATION_ACCOUNT
+                                                                                .toString())
                                                                 .build()));
     }
 
@@ -132,7 +138,8 @@ public class IcaBankenExecutorHelper {
                 constructAndThrowCancelledTransferExecutionExceptionWithMessage(
                         IcaBankenConstants.LogMessage.NO_SAVE_NEW_RECIPIENT_MESSAGE,
                         TransferExecutionException.EndUserMessage
-                                .COULD_NOT_SAVE_NEW_RECIPIENT_MESSAGE);
+                                .COULD_NOT_SAVE_NEW_RECIPIENT_MESSAGE,
+                        InternalStatus.COULD_NOT_SAVE_NEW_RECIPIENT);
             }
         } catch (HttpResponseException e) {
             handelHttpExceptionResponse(e.getResponse());
@@ -240,6 +247,7 @@ public class IcaBankenExecutorHelper {
                                 .getCatalog()
                                 .getString(
                                         "Could not find a bank for the given destination account. Check the account number and try again."))
+                .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
                 .build();
     }
 
@@ -279,6 +287,7 @@ public class IcaBankenExecutorHelper {
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage
                                         .BANKID_ANOTHER_IN_PROGRESS))
+                .setInternalStatus(InternalStatus.BANKID_ANOTHER_IN_PROGRESS.toString())
                 .setException(initialException)
                 .build();
     }
@@ -334,6 +343,7 @@ public class IcaBankenExecutorHelper {
                 .setEndUserMessage(
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE))
+                .setInternalStatus(InternalStatus.BANKID_NO_RESPONSE.toString())
                 .build();
     }
 
@@ -344,6 +354,7 @@ public class IcaBankenExecutorHelper {
                 .setEndUserMessage(
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage.BANKID_CANCELLED))
+                .setInternalStatus(InternalStatus.BANKID_CANCELLED.toString())
                 .build();
     }
 
@@ -354,6 +365,7 @@ public class IcaBankenExecutorHelper {
                 .setEndUserMessage(
                         catalog.getString(
                                 IcaBankenConstants.UserMessage.BANKID_TRANSFER_INTERRUPTED))
+                .setInternalStatus(InternalStatus.BANKID_ANOTHER_IN_PROGRESS.toString())
                 .setException(e)
                 .build();
     }
@@ -425,6 +437,7 @@ public class IcaBankenExecutorHelper {
                             catalog.getString(
                                     TransferExecutionException.EndUserMessage
                                             .EXISTING_UNSIGNED_TRANSFERS))
+                    .setInternalStatus(InternalStatus.EXISTING_UNSIGNED_TRANSFERS.toString())
                     .build();
         }
     }
@@ -465,6 +478,7 @@ public class IcaBankenExecutorHelper {
                                         transferResponse,
                                         TransferExecutionException.EndUserMessage
                                                 .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY))
+                        .setInternalStatus(InternalStatus.INVALID_DUE_DATE.toString())
                         .setException(exception)
                         .build();
             }
@@ -499,16 +513,20 @@ public class IcaBankenExecutorHelper {
                 constructAndThrowCancelledTransferExecutionExceptionWithMessage(
                         IcaBankenConstants.LogMessage.NO_SAVE_NEW_RECIPIENT_MESSAGE,
                         TransferExecutionException.EndUserMessage
-                                .COULD_NOT_SAVE_NEW_RECIPIENT_MESSAGE);
+                                .COULD_NOT_SAVE_NEW_RECIPIENT_MESSAGE,
+                        InternalStatus.COULD_NOT_SAVE_NEW_RECIPIENT);
             }
         }
     }
 
     private void constructAndThrowCancelledTransferExecutionExceptionWithMessage(
-            String message, TransferExecutionException.EndUserMessage endUserMessage) {
+            String message,
+            TransferExecutionException.EndUserMessage endUserMessage,
+            InternalStatus internalStatus) {
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage((message))
                 .setEndUserMessage(statusUpdater.getCatalog().getString(endUserMessage))
+                .setInternalStatus(internalStatus.toString())
                 .build();
     }
 }
