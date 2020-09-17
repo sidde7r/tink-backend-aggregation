@@ -10,7 +10,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.entities.SecurityParamsRequestBody;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.entities.BankIdentifier;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.entities.ApiIdentifier;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.rpc.FetchCreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.rpc.InnloggetRequest;
@@ -261,17 +261,17 @@ public class SparebankenVestApiClient {
     }
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(
-            BankIdentifier bankIdentifier, Date fromDate, Date toDate, int startIndex) {
+            ApiIdentifier apiIdentifier, Date fromDate, Date toDate, int startIndex) {
         int endIndex =
                 startIndex + SparebankenVestConstants.PagePagination.MAX_TRANSACTIONS_IN_BATCH - 1;
 
         return getRequest(SparebankenVestConstants.Urls.CREDIT_CARD_TRANSACTIONS)
                 .queryParam(
                         SparebankenVestConstants.QueryParams.CARD_NUMBER_GUID_KEY,
-                        bankIdentifier.getCardNumberGuid())
+                        apiIdentifier.getCardNumberGuid())
                 .queryParam(
                         SparebankenVestConstants.QueryParams.KID_GUID_KEY,
-                        bankIdentifier.getKidGuid())
+                        apiIdentifier.getKidGuid())
                 .queryParam(
                         SparebankenVestConstants.QueryParams.FROM_DATE_KEY,
                         jsonFormatDate(fromDate))
