@@ -5,8 +5,10 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class GetCardResponse {
@@ -147,20 +149,32 @@ public class GetCardResponse {
     }
 
     public CreditCardAccount toTinkCard(String cardId) {
-        return CreditCardAccount.builder(
-                        StringUtils.hashAsStringSHA1(cardNumber),
-                        getCardBalance(),
-                        ExactCurrencyAmount.of(availableAmount, "NOK"))
-                .setAccountNumber(cardNumber.replace(" ", ""))
-                .setName(productName)
-                .setBankIdentifier(cardId)
-                .putInTemporaryStorage(
-                        DnbConstants.CreditCard.TRANSACTION_TYPE, getTransactionType())
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(
+                        CreditCardModule.builder()
+                                .withCardNumber(cardNumber)
+                                .withBalance(getOutstandingBalance())
+                                .withAvailableCredit(ExactCurrencyAmount.of(availableAmount, "NOK"))
+                                .withCardAlias(productName)
+                                .build())
+                .withInferredAccountFlags()
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(buildUniqueIdentifier())
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(productName)
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.PAYMENT_CARD_NUMBER,
+                                                cardNumber))
+                                .build())
+                .setApiIdentifier(cardId)
+                .addHolderName(firstName + " " + lastName)
                 .build();
     }
 
     @JsonIgnore
-    private ExactCurrencyAmount getCardBalance() {
+    private ExactCurrencyAmount getOutstandingBalance() {
         if (mainCard) {
             return ExactCurrencyAmount.of(-balanceAmount, "NOK");
         } else {
@@ -171,5 +185,12 @@ public class GetCardResponse {
     @JsonIgnore
     private String getTransactionType() {
         return mainCard ? DnbConstants.CreditCard.MAINHOLDER : DnbConstants.CreditCard.COHOLDER;
+    }
+
+    private String buildUniqueIdentifier() {
+        // cardNumber is represented as
+        // **** **** ***5 1234
+        // for parity with OB, we take only last four digits as uniqueIdentifier
+        return cardNumber.substring(cardNumber.length() - 4);
     }
 }

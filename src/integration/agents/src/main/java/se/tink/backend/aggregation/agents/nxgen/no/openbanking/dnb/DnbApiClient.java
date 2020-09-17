@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.paym
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.CreditCardAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.CreditCardTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.TransactionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -89,7 +90,7 @@ public class DnbApiClient {
                                     DnbConstants.BASE_URL.concat(
                                             String.format(
                                                     Urls.CREDIT_CARD_TRANSACTION,
-                                                    account.getAccountNumber()))))
+                                                    account.getApiIdentifier()))))
                     .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                     .queryParam(
                             QueryKeys.FROM_DATE,
@@ -97,7 +98,7 @@ public class DnbApiClient {
                     .queryParam(
                             QueryKeys.TO_DATE, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                     .header(HeaderKeys.CONSENT_ID, getConsentId())
-                    .get(TransactionResponse.class);
+                    .get(CreditCardTransactionResponse.class);
         } catch (HttpResponseException e) {
             return PaginatorResponseImpl.createEmpty(false);
         }
