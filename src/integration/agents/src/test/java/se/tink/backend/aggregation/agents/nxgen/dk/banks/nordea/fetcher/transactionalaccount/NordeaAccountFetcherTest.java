@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.ACCOUNT_1_API_ID;
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.ACCOUNT_API_ID_WITH_TRANSACTIONS_WITHOUT_DATE;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.ACCOUNT_WITH_CREDIT_API_ID;
 
 import java.math.BigDecimal;
@@ -10,11 +11,17 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.NordeaAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkTestUtils;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class AccountFetcherTest {
+public class NordeaAccountFetcherTest {
 
     private NordeaAccountFetcher fetcher;
 
@@ -109,5 +116,33 @@ public class AccountFetcherTest {
         assertThat(transaction1.get().getExactAmount().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("6100.00"));
         assertThat(transaction1.get().getDate()).isEqualToIgnoringHours("2020-03-05");
+    }
+
+    @Test
+    public void shouldFetchTransactionsWithoutDate() {
+        // given
+        TransactionalAccount accountWithTransactionsWithoutDate = getTransactionalAccount();
+        // when
+        List<AggregationTransaction> transactions =
+                fetcher.fetchTransactionsFor(accountWithTransactionsWithoutDate);
+        // then
+        assertThat(transactions).hasSize(3);
+    }
+
+    private TransactionalAccount getTransactionalAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.inDKK(1)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier("UNIQUE_IDENTIFIER")
+                                .withAccountNumber("")
+                                .withAccountName("")
+                                .addIdentifier(AccountIdentifier.create(Type.IBAN, ""))
+                                .build())
+                .setApiIdentifier(ACCOUNT_API_ID_WITH_TRANSACTIONS_WITHOUT_DATE)
+                .build()
+                .orElseThrow(IllegalStateException::new);
     }
 }

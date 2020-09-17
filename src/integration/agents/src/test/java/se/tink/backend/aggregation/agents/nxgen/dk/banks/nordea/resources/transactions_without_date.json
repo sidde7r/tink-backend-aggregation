@@ -1,0 +1,60 @@
+{
+  "result": [
+    {
+      "has_details": false,
+      "booked": false,
+      "amount": -202.00,
+      "currency": "DKK",
+      "title": "H M 853",
+      "description": "Nordea Pay H M 853",
+      "balance_after": 4288.86,
+      "transaction_type": {
+        "transaction_code": "00000",
+        "transaction_code_text": ""
+      },
+      "exchange": {
+        "original_amount": 0.00,
+        "original_currency": "DKK",
+        "original_rate": 0.000000
+      },
+      "reconciliation_status": "not_possible",
+      "reconciliation_id": "UjQwMjYyMDY5OTM1NTU4NjYyMDIwLTA5LTExLTEyLjM3LjUzLjE1MDg4OQ"
+    },
+    {
+      "has_details": false,
+      "booked": true,
+      "amount": -50.00,
+      "currency": "DKK",
+      "title": "MobilePay: Camilla B",
+      "description": "MobilePay: Camilla B               Reference 028033571930234",
+      "balance_after": 4490.86,
+      "transaction_type": {
+        "transaction_code": "00571",
+        "transaction_code_text": "MOBILEPAY"
+      },
+      "reconciliation_status": "not_possible",
+      "reconciliation_id": "SDA3NTM4MTAzNTgwMDAwMDEwOTQ4"
+    },
+    {
+      "has_details": false,
+      "booked": true,
+      "amount": -121.00,
+      "currency": "DKK",
+      "booking_date": "2020-09-14",
+      "interest_date": "2020-09-14",
+      "transaction_date": "2020-09-14",
+      "title": " . Hylde Deluxe     Den 10.09",
+      "description": "Nordea pay køb, . Hylde Deluxe     Den 10.09",
+      "balance_after": 4540.86,
+      "transaction_type": {
+        "transaction_code": "00484",
+        "transaction_code_text": "NORDEA PAY KØB"
+      },
+      "reconciliation_status": "not_possible",
+      "reconciliation_id": "SDA3NTM4MTAzNTgwMDAwMDEwOTQ3"
+    }
+  ],
+  "total_size": null,
+  "continuation_key": null,
+  "sub_system_errors": []
+}

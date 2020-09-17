@@ -41,6 +41,7 @@ public class NordeaCreditCardFetcher
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
         CreditCardTransactionsResponse response;
         List<AggregationTransaction> transactions = new ArrayList<>();
+        // TODO paging should be investigated in https://tinkab.atlassian.net/browse/ITE-1445
         int pageSize = 1;
         do {
             response = bankClient.fetchCreditCardTransactions(account.getApiIdentifier(), pageSize);

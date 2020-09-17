@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
@@ -16,7 +17,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaDkTestUtils {
 
-    static NordeaDkApiClient mockApiClient() {
+    public static NordeaDkApiClient mockApiClient() {
         NordeaDkApiClient client = mock(NordeaDkApiClient.class);
 
         when(client.getAccounts())
@@ -67,6 +68,41 @@ public class NordeaDkTestUtils {
                         SerializationUtils.deserializeFromString(
                                 new File(NordeaTestData.FETCH_INVESTMENT_ACCOUNTS_FILE_PATH),
                                 CustodyAccountsResponse.class));
+
+        mockTransactionsForAccount(
+                client,
+                NordeaTestData.ACCOUNT_API_ID_WITH_TRANSACTIONS_WITHOUT_DATE,
+                NordeaTestData.TRANSACTIONS_WITHOUT_DATE);
+
+        mockTransactionsForCreditCard(
+                client,
+                NordeaTestData.CREDIT_CARD_ID_WITH_TRANSACTIONS_WITHOUT_DATE,
+                NordeaTestData.CREDIT_CARD_TRANSACTIONS_WITHOUT_DATE);
+
         return client;
+    }
+
+    private static void mockTransactionsForAccount(
+            NordeaDkApiClient client, String accountId, String filePath) {
+        when(client.getAccountTransactions(contains(accountId), any(), isNull()))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                new File(filePath), TransactionsResponse.class));
+    }
+
+    private static void mockTransactionsForCreditCard(
+            NordeaDkApiClient client, String creditCardId, String filePath) {
+        when(client.fetchCreditCardTransactions(creditCardId, 1))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                new File(filePath), CreditCardTransactionsResponse.class));
+        // TODO nasty part should be removed with https://tinkab.atlassian.net/browse/ITE-1445
+        when(client.fetchCreditCardTransactions(creditCardId, 2))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                new File(
+                                        NordeaTestData
+                                                .FETCH_CREDIT_TRANSACTIONS_CONTINUATION_FILE_PATH),
+                                CreditCardTransactionsResponse.class));
     }
 }

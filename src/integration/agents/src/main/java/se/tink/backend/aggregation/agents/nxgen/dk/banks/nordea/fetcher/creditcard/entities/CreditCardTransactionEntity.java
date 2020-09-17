@@ -2,11 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditc
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.google.common.base.Strings;
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.exception.MandatoryDataMissingException;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.exception.UnsupportedCurrencyException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -25,23 +26,21 @@ public class CreditCardTransactionEntity {
     private String transactionId;
 
     public Transaction toTinkTransaction() {
-        return Transaction.builder()
-                .setDate(date())
-                .setPending(!booked)
-                .setAmount(amount())
-                .setDescription(title)
-                .setPayload(TransactionPayloadTypes.EXTERNAL_ID, transactionId)
-                .build();
+        Transaction.Builder builder =
+                Transaction.builder()
+                        .setPending(!booked)
+                        .setAmount(amount())
+                        .setDescription(title)
+                        .setPayload(TransactionPayloadTypes.EXTERNAL_ID, transactionId);
+        dateFromTransaction().ifPresent(builder::setDate);
+        return builder.build();
     }
 
-    private LocalDate date() {
-        if (!Strings.isNullOrEmpty(bookingDate)) {
-            return LocalDate.parse(bookingDate);
-        }
-        if (!Strings.isNullOrEmpty(transactionDate)) {
-            return LocalDate.parse(transactionDate);
-        }
-        throw new MandatoryDataMissingException("Cannot parse transaction with no valid date");
+    private Optional<LocalDate> dateFromTransaction() {
+        return Stream.of(bookingDate, transactionDate)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(LocalDate::parse);
     }
 
     private ExactCurrencyAmount amount() {
