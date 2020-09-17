@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.e
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentRequestLinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -44,7 +45,6 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
 
 public class SocieteGeneralePaymentExecutorTest {
 
@@ -261,8 +261,6 @@ public class SocieteGeneralePaymentExecutorTest {
         AccountIdentifier debtorAccountIdentifier = new IbanIdentifier(destinationIban.toString());
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-        Reference reference = new Reference("Message", "ReferenceToCreditor");
-
         Amount amount = Amount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
         return new PaymentRequest(
@@ -271,7 +269,9 @@ public class SocieteGeneralePaymentExecutorTest {
                         .withDebtor(debtor)
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
-                        .withReference(reference)
+                        .withRemittanceInformation(
+                                RemittanceInformationUtils
+                                        .generateUnstructuredRemittanceInformation("Message"))
                         .withUniqueId(UUID.randomUUID().toString())
                         .build());
     }
