@@ -8,14 +8,13 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.transfer.enums.RemittanceInformationType;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class CicAgentPaymentTest {
 
@@ -53,9 +52,6 @@ public class CicAgentPaymentTest {
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(CicAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
-        RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
-        remittanceInformation.setValue("CicAgentPaymentTest.");
 
         return Collections.singletonList(
                 new Payment.Builder()
@@ -63,7 +59,9 @@ public class CicAgentPaymentTest {
                         .withDebtor(new Debtor(debtorAccountIdentifier))
                         .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
                         .withCurrency("EUR")
-                        .withRemittanceInformation(remittanceInformation)
+                        .withRemittanceInformation(
+                                RemittanceInformationUtils
+                                        .generateUnstructuredRemittanceInformation("Message"))
                         .withUniqueId(UUID.randomUUID().toString())
                         .build());
     }
