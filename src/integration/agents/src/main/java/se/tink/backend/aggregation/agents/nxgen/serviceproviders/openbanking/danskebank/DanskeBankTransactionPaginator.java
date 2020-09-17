@@ -43,8 +43,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
-            S account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(S account, String key) {
         updateAccountPaginationCount(account.getApiIdentifier());
         if (isPaginationCountOverLimit()) {
             return TransactionKeyPaginatorResponseImpl.createEmpty();
@@ -58,11 +57,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
             String finalKey = key;
             return retryExecutor.execute(
                     (RetryCallback<TransactionKeyPaginatorResponse<String>, BankServiceException>)
-                            () -> {
-                                log.warn(
-                                        "Received http 500 (Internal server error) in pagination. Trying to fetch data again");
-                                return fetchTransactions(account, finalKey);
-                            });
+                            () -> fetchTransactions(account, finalKey));
         } catch (BankServiceException e) {
             log.warn("Ignoring http 500 (Internal server error) in pagination.", e);
             return TransactionKeyPaginatorResponseImpl.createEmpty();
