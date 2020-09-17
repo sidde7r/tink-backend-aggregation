@@ -171,7 +171,7 @@ public class ErrorResponse {
                     .build();
         }
         if (isExternalServiceCallFailed()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage(NordeaSEConstants.LogMessages.BANKSIDE_ERROR_WHEN_SEARCHING_OUTBOX)
                     .setEndUserMessage(EndUserMessage.TRANSFER_EXECUTE_FAILED)
                     .build();
