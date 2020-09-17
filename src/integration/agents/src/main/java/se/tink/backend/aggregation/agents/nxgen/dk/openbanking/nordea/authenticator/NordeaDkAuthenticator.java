@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordea.authentic
 
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordea.NordeaDkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.AuthorizeRequest.AuthorizeRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class NordeaDkAuthenticator extends NordeaBaseAuthenticator {
@@ -14,6 +15,7 @@ public class NordeaDkAuthenticator extends NordeaBaseAuthenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        return apiClient.getAuthorizeUrl(state, COUNTRY);
+        return apiClient.getAuthorizeUrl(
+                new AuthorizeRequestBuilder().withCountry(COUNTRY).withState(state));
     }
 }

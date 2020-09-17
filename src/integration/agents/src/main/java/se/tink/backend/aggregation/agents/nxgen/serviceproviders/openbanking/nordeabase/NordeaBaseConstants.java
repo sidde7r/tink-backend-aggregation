@@ -51,21 +51,21 @@ public final class NordeaBaseConstants {
     }
 
     public static class ApiService {
-        private static final String VERSION = "/v4";
-        public static final String AUTHORIZE = VERSION + "/authorize";
-        public static final String GET_TOKEN = VERSION + "/authorize/token";
-        public static final String GET_ASSETS = VERSION + "/assets";
-        public static final String GET_ACCOUNTS = VERSION + "/accounts";
-        public static final String GET_TRANSACTIONS =
-                VERSION + "/accounts/{accountId}/transactions";
-        public static final String GET_CARDS = VERSION + "/cards";
-        public static final String GET_CARD_TRANSACTIONS = VERSION + "/cards/{cardId}/transactions";
-        public static final String GET_CARD_DETAILS = VERSION + "/cards/{cardId}";
-        public static final String INITIATE_PAYMENT = VERSION + "/payments/{paymentType}";
+        private static final String V_4 = "/v4";
+        private static final String V_5 = "/v5";
+        public static final String AUTHORIZE = V_5 + "/authorize";
+        public static final String GET_TOKEN = V_5 + "/authorize/token";
+        public static final String GET_ASSETS = V_4 + "/assets";
+        public static final String GET_ACCOUNTS = V_4 + "/accounts";
+        public static final String GET_TRANSACTIONS = V_4 + "/accounts/{accountId}/transactions";
+        public static final String GET_CARDS = V_4 + "/cards";
+        public static final String GET_CARD_TRANSACTIONS = V_4 + "/cards/{cardId}/transactions";
+        public static final String GET_CARD_DETAILS = V_4 + "/cards/{cardId}";
+        public static final String INITIATE_PAYMENT = V_4 + "/payments/{paymentType}";
         public static final String CONFIRM_PAYMENT =
-                VERSION + "/payments/{paymentType}/{paymentId}/confirm";
-        public static final String GET_PAYMENT = VERSION + "/payments/{paymentType}/{paymentId}";
-        public static final String GET_PAYMENTS = VERSION + "/payments/{paymentType}";
+                V_4 + "/payments/{paymentType}/{paymentId}/confirm";
+        public static final String GET_PAYMENT = V_4 + "/payments/{paymentType}/{paymentId}";
+        public static final String GET_PAYMENTS = V_4 + "/payments/{paymentType}";
         public static final String GET_CORPORATE_ACCOUNTS = "/v2/accounts";
         public static final String GET_CORPORATE_TRANSACTIONS =
                 "/v2/accounts/{accountId}/transactions";
@@ -88,14 +88,13 @@ public final class NordeaBaseConstants {
     }
 
     public static class QueryValues {
-        public static final String DURATION_MINUTES = "129600";
+
         public static final String DEFAULT_LANGUAGE = "en";
         public static final String SCOPE_WITHOUT_PAYMENT =
                 "ACCOUNTS_BALANCES,ACCOUNTS_BASIC,ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,CARDS_INFORMATION,CARDS_TRANSACTIONS";
         public static final String SCOPE =
                 "ACCOUNTS_BALANCES,ACCOUNTS_BASIC,"
                         + "ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,PAYMENTS_MULTIPLE,CARDS_INFORMATION,CARDS_TRANSACTIONS";
-        public static final String FETCH_NUMBER_OF_MONTHS = "12";
     }
 
     public static class HeaderKeys {
@@ -106,10 +105,18 @@ public final class NordeaBaseConstants {
         public static final String DIGEST = "digest";
         public static final String ORIGINATING_DATE = "X-Nordea-Originating-Date";
         public static final String ORIGINATING_HOST = "X-Nordea-Originating-Host";
+        public static final String LOCATION = "Location";
     }
 
     public static class HeaderValues {
         public static final String HOST = "open.nordea.com";
+    }
+
+    public static class BodyValues {
+        public static final String ALL_ACCOUNTS = "ALL";
+        public static final boolean SKIP_ACCOUNT_SELECTION = true;
+        public static final int DURATION_MINUTES = 129600;
+        public static final int FETCH_NUMBER_OF_MONTHS = 12;
     }
 
     public static class Signature {

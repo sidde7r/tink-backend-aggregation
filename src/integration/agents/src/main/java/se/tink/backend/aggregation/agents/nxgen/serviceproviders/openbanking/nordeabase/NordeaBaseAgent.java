@@ -27,6 +27,10 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
         super.setConfiguration(configuration);
         apiClient.setConfiguration(getAgentConfiguration());
         this.client.setEidasProxy(configuration.getEidasProxy());
+        /* The agent is not supposed to follow the authorization redirect. The authorize redirect
+        is between user (PSU) and the bank (ASPSP) handled in a third party app (browser) without
+        TPP involvement */
+        this.client.setFollowRedirects(false);
     }
 
     protected AgentConfiguration<NordeaBaseConfiguration> getAgentConfiguration() {
