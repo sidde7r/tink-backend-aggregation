@@ -1,9 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.business.nordea;
 
+import static se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.StorageKeys.SENSITIVE_PAYLOAD_PASSWORD;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import java.util.Map;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class NordeaSEConstants {
 
@@ -14,7 +19,7 @@ public class NordeaSEConstants {
     public static class Urls {
         private Urls() {}
 
-        public static final String BASE_URL = "https://se.smemobilebank.prod.nordea.com";
+        public static final String BASE_URL = "https://corporate.nordea.se/api/dbf/";
 
         public static final String INIT_BANKID = BASE_URL + Endpoints.INIT_BANKID;
         public static final String POLL_BANKID = BASE_URL + Endpoints.POLL_BANKID;
@@ -23,6 +28,61 @@ public class NordeaSEConstants {
         public static final String FETCH_ACCOUNT_DETAILS =
                 BASE_URL + Endpoints.FETCH_ACCOUNT_DETAILS;
         public static final String FETCH_TRANSACTIONS = BASE_URL + Endpoints.FETCH_TRANSACTIONS;
+        public static final URL LOGIN_BANKID_AUTOSTART =
+                new URL(BASE_URL + ApiService.LOGIN_BANKID_AUTOSTART);
+        public static final URL FETCH_LOGIN_CODE = new URL(BASE_URL + ApiService.FETCH_LOGIN_CODE);
+        public static final URL FETCH_ACCESS_TOKEN =
+                new URL(BASE_URL + ApiService.FETCH_ACCESS_TOKEN);
+        public static final URL LOGIN_BANKID = new URL(BASE_URL + ApiService.LOGIN_BANKID);
+        public static final URL FETCH_ACCOUNTS = new URL(BASE_URL + ApiService.FETCH_ACCOUNTS);
+        public static final URL FETCH_ACCOUNT_TRANSACTIONS =
+                new URL(BASE_URL + ApiService.FETCH_TRANSACTIONS);
+        public static final URL FETCH_CARDS = new URL(BASE_URL + ApiService.FETCH_CARDS);
+        public static final URL FETCH_CARD_TRANSACTIONS =
+                new URL(BASE_URL + ApiService.FETCH_CARD_TRANSACTIONS);
+        public static final URL FETCH_INVESTMENTS =
+                new URL(BASE_URL + ApiService.FETCH_INVESTMENTS);
+        public static final URL FETCH_LOANS = new URL(BASE_URL + ApiService.FETCH_LOANS);
+        public static final URL FETCH_LOAN_DETAILS =
+                new URL(BASE_URL + ApiService.FETCH_LOAN_DETAILS);
+        public static final URL FETCH_IDENTITY_DATA =
+                new URL(BASE_URL + ApiService.FETCH_IDENTITY_DATA);
+    }
+
+    public static class IdTags {
+        public static final String ACCOUNT_NUMBER = "accountNumber";
+        public static final String CARD_ID = "cardId";
+        public static final String PAYMENT_ID = "paymentId";
+        public static final String APPLICATION_ID = "applicationId";
+    }
+
+    public static class StorageKeys {
+        public static final String ACCESS_TOKEN = "auth_token";
+        public static final String TOKEN_TYPE = "token_type";
+        public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String ID_TOKEN = "id_token";
+        public static final String UH = "uh";
+        public static final String SSN = "ssn";
+        public static final String TOKEN_AUTH_METHOD = "auth_type";
+        public static final String SENSITIVE_PAYLOAD_PASSWORD = "password";
+        public static final String SECURITY_TOKEN = "security_token";
+        public static final String HOLDER_NAME = "holder_name";
+    }
+
+    public static class FormParams {
+        public static final String AUTH_METHOD = "auth_method";
+        public static final String CLIENT_ID = "client_id";
+        public static final String CODE = "code";
+        public static final String COUNTRY = "country";
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String SCOPE = "scope";
+        public static final String USERNAME = "username";
+        public static final String TOKEN = "token";
+        public static final String TOKEN_TYPE = "access_token";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String CODE_VERIFIER = "code_verifier";
+        public static final String COUNTRY_VALUE = "SE";
+        public static final String CLIENT_ID_VALUE = "NDHMSE";
     }
 
     public static class Endpoints {
@@ -33,9 +93,44 @@ public class NordeaSEConstants {
         public static final String POLL_BANKID =
                 "/SE/MobileBankIdServiceV1.1/MobileBankIdAuthenticationResult/";
         public static final String FETCH_TOKEN = "/SE/AuthenticationServiceV1.1/SecurityToken";
-        public static final String FETCH_ACCOUNTS = "/SE/BankingServiceV1.1/initialContext";
-        public static final String FETCH_ACCOUNT_DETAILS = "/SE/BankingServiceV1.1/Accounts/";
-        public static final String FETCH_TRANSACTIONS = "/SE/BankingServiceV1.1/Transactions";
+        public static final String FETCH_ACCOUNTS = "ca/accounts-v2/accounts/";
+        public static final String FETCH_ACCOUNT_DETAILS = "SE/BankingServiceV1.1/Accounts/";
+        public static final String FETCH_TRANSACTIONS = "SE/BankingServiceV1.1/Transactions";
+    }
+
+    public static class ApiService {
+        public static final String LOGIN_BANKID_AUTOSTART =
+                "ca/bankidse-v1/bankidse/authentications/";
+        public static final String FETCH_LOGIN_CODE =
+                "ca/user-accounts-service-v1/user-accounts/primary/authorization";
+        public static final String FETCH_ACCESS_TOKEN = "ca/token-service-v3/oauth/token";
+        public static final String LOGIN_BANKID =
+                "se/authentication-bankid-v1/security/oauth/token";
+        public static final String FETCH_ACCOUNTS = "ca/accounts-v3/accounts/";
+        public static final String FETCH_TRANSACTIONS =
+                "ca/accounts-v3/accounts/{accountNumber}/transactions";
+        public static final String FETCH_CARDS = "ca/cards-v2/cards/";
+        public static final String FETCH_CARD_TRANSACTIONS =
+                "ca/cards-v3/cards/{cardId}/transactions";
+        public static final String FETCH_INVESTMENTS = "ca/savings-v1/savings/custodies";
+        public static final String FETCH_LOANS = "ca/loans-v1/loans/";
+        public static final String FETCH_LOAN_DETAILS = "ca/loans-v1/loans/{loanId}";
+        public static final String FETCH_IDENTITY_DATA = "se/customerinfo-v2/customers/info";
+    }
+
+    public static class LogMessages {
+        public static final String BANKSIDE_ERROR_WHEN_SEARCHING_OUTBOX =
+                "Error from bank when trying to fetch details about payment outbox";
+        public static final String WRONG_TO_ACCOUNT_LENGTH =
+                "Invalid destination account number, it is too long.";
+        public static final String WRONG_OCR_MESSAGE = "Error in reference number (OCR)";
+        public static final String USER_UNAUTHORIZED_MESSAGE = "User not authorised to operation";
+    }
+
+    public static final class HeaderParams {
+        public static final String LANGUAGE = "en-SE";
+        public static final String REFERER_VALUE =
+                "https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true";
     }
 
     public static class QueryKeys {
@@ -50,48 +145,78 @@ public class NordeaSEConstants {
 
         public static final String REQUEST_ID = "x-Request-Id";
         public static final String SECURITY_TOKEN = "x-Security-Token";
+        public static final String REFERER = "Referer";
     }
 
     public static final ImmutableMap<String, Object> NORDEA_CUSTOM_HEADERS =
             ImmutableMap.<String, Object>builder()
                     .put("x-App-Country", "SE")
-                    .put("x-App-Language", "en")
-                    .put("x-App-Name", "SME")
-                    .put("x-App-Version", "1.3.5-18")
+                    .put("x-App-Language", "en_SE")
+                    .put("x-App-Version", "3.14.0.148")
                     .put("x-Device-Make", "Apple")
                     .put("x-Device-Model", "iPhone9,4")
                     .put("x-Platform-Type", "iOS")
                     .put("x-Platform-Version", "13.3.1")
-                    .put("User-Agent", "SMEMobileBankSE/18 CFNetwork/1121.2.2 Darwin/19.3.0")
+                    .put("x-app-segment", "corporate")
+                    .put("x-device-ec", 1)
+                    .put("x-Device-Id", "934B5E23-119E-4E8F-BE66-D7D3B285F744")
+                    .put(
+                            "User-Agent",
+                            "com.nordea.SMEMobileBank.se/3.14.0.148 (Apple iPhone9,4; iOS 13.3.1)")
                     .build();
-
-    public static class StorageKeys {
-        private StorageKeys() {}
-
-        public static final String SECURITY_TOKEN = "security_token";
-        public static final String HOLDER_NAME = "holder_name";
-    }
+    public static final ImmutableMap<String, String> REQUEST_TOKEN_FORM =
+            ImmutableMap.<String, String>builder()
+                    .put(FormParams.AUTH_METHOD, AuthMethod.BANKID_SE)
+                    .put(FormParams.CLIENT_ID, TagValues.APPLICATION_ID)
+                    .put(FormParams.COUNTRY, FormParams.COUNTRY_VALUE)
+                    .put(FormParams.GRANT_TYPE, "authorization_code")
+                    .put(FormParams.REDIRECT_URI, TagValues.REDIRECT_URI)
+                    .put(FormParams.SCOPE, TagValues.SCOPE_VALUE)
+                    .build();
+    public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
+            ImmutableMap.<String, String>builder()
+                    .put(FormParams.AUTH_METHOD, AuthMethod.BANKID_SE)
+                    .put(FormParams.CLIENT_ID, FormParams.CLIENT_ID_VALUE)
+                    .put(FormParams.COUNTRY, FormParams.COUNTRY_VALUE)
+                    .put(FormParams.GRANT_TYPE, SENSITIVE_PAYLOAD_PASSWORD)
+                    .put(FormParams.SCOPE, TagValues.SCOPE_VALUE)
+                    .build();
+    public static final ImmutableMap<String, String> REFRESH_TOKEN_FORM =
+            ImmutableMap.<String, String>builder()
+                    .put(FormParams.CLIENT_ID, FormParams.CLIENT_ID_VALUE)
+                    .build();
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "transaction")
+                    .put(AccountTypes.SAVINGS, "savings")
+                    .put(AccountTypes.CREDIT_CARD, "credit", "combined")
+                    .put(AccountTypes.LOAN, "mortgage")
+                    .build();
 
     public static class BankIdStatus {
         private BankIdStatus() {}
 
         public static final String COMPLETE = "COMPLETE";
         public static final String WAITING = "OUTSTANDING_TRANSACTION";
-        public static final String USER_SIGNING = "USER_SIGN";
         public static final String NO_CLIENT = "NO_CLIENT";
     }
 
-    public static class ErrorCodes {
-        private ErrorCodes() {}
+    public static class NordeaBankIdStatus {
+        private NordeaBankIdStatus() {}
 
-        public static final String NOT_CUSTOMER = "MBS8636";
-        public static final String BANKID_CANCEL = "MBS0902";
-    }
-
-    public static class ErrorMessages {
-        private ErrorMessages() {}
-
-        public static final String URL_ENCODING_ERROR = "Url is not well defined.";
+        public static final String BANKID_AUTOSTART_PENDING = "assignment_pending";
+        public static final String BANKID_AUTOSTART_SIGN_PENDING = "confirmation_pending";
+        public static final String BANKID_AUTOSTART_COMPLETED = "completed";
+        public static final String BANKID_AUTOSTART_CANCELLED = "cancelled";
+        public static final String AGREEMENTS_UNAVAILABLE = "agreements_unavailable";
+        public static final String EXTERNAL_AUTHENTICATION_REQUIRED =
+                "external_authentication_required";
+        public static final String AUTHENTICATION_CANCELLED = "authentication_cancelled";
+        public static final String EXTERNAL_AUTHENTICATION_PENDING =
+                "external_authentication_pending";
+        public static final String PENDING = "PENDING";
+        public static final String CANCELLED = "CANCELLED";
+        public static final String OK = "OK";
     }
 
     public static class AccountType {
@@ -350,17 +475,74 @@ public class NordeaSEConstants {
                     TransactionalAccountType.SAVINGS);
         }
 
-        public static String getAccountNameForCode(String code) {
-            return ACCOUNT_NAMES_BY_CODE.getOrDefault(code, "");
-        }
-
-        public static TransactionalAccountType getAccountTypeForCode(String code) {
-            return ACCOUNT_TYPES_BY_CODE.getOrDefault(code, TransactionalAccountType.CHECKING);
-        }
-
         private static void addType(String code, String name, TransactionalAccountType type) {
             ACCOUNT_TYPES_BY_CODE.put(code, type);
             ACCOUNT_NAMES_BY_CODE.put(code, name);
         }
+    }
+
+    public static class ErrorCodes {
+        public static final String TOKEN_REQUIRED = "token_required";
+        public static final String NOT_CUSTOMER = "MBS8636";
+
+        public static final String AGREEMENT_NOT_CONFIRMED =
+                "RBO_ACCESS_DENIED_AGREEMENT_NOT_CONFIRMED";
+        public static final String CLASSIFICATION_NOT_CONFIRMED =
+                "RBO_ACCESS_DENIED_CLASSIFICATION_NOT_CONFIRMED";
+
+        public static final String UNABLE_TO_LOAD_CUSTOMER = "ERROR_OSIA_UNABLE_TO_LOAD_CUSTOMER";
+        public static final String INVALID_TOKEN = "invalid_token";
+        public static final String INVALID_GRANT = "invalid_grant";
+        public static final String AUTHENTICATION_COLLISION = "authentication_collision";
+        public static final String AUTHENTICATION_FAILED = "authentication_failed";
+        public static final String UNABLE_TO_FETCH_ACCOUNTS = "Could not retrieve accounts.";
+        public static final String DUPLICATE_PAYMENT =
+                "Duplicate payment. Technical code. Please try again.";
+        public static final String PAYMENT_ERROR = "Something went wrong with the payment.";
+        public static final String UNREGISTERED_RECIPIENT =
+                "Recipient accounts missing from accounts ledger";
+        public static final String NOT_ENOUGH_FUNDS = "Not enough funds";
+        public static final String EXTERNAL_SERVICE_CALL_FAILED = "External service call failed";
+        public static final String INTERNAL_SERVER_ERROR = "internal_server_error";
+
+        public static final String SIGNING_COLLISION = "signing_collision";
+        public static final String SIGNING_COLLISION_MESSAGE = "A signing collision has occurred.";
+        public static final String WRONG_TO_ACCOUNT_LENGTH = "BESE1125";
+        public static final String WRONG_TO_ACCOUNT_LENGHT_MESSAGE =
+                "Wrong To account length for the chosen bank";
+        public static final String HYSTRIX_CIRCUIT_SHORT_CIRCUITED =
+                "Hystrix circuit short".toLowerCase();
+        public static final String TIMEOUT_AFTER_MESSAGE = "Timeout after".toLowerCase();
+        public static final String ERROR_CORE_UNKNOWN = "error_core_unknown";
+        public static final String INVALID_PARAMETERS_FOR_PAYMENT =
+                "Invalid parameter(s) for payment";
+        public static final String BESE1076 = "BESE1076".toLowerCase();
+        public static final String INVALID_OCR_ERROR_CODE = "BESE1009";
+        public static final String OWN_MESSAGE_CONSTRAINTS =
+                "Own message must be between".toLowerCase();
+        public static final String UNEXPECTED_EXECUTION_ERROR_CODE = "unexpected_execution_error";
+        public static final String UNEXPECTED_EXECUTION_ERROR =
+                "An unexpected execution error has occurred".toLowerCase();
+        public static final String USER_UNAUTHORIZED = "error_core_unauthorized";
+        public static final String USER_UNAUTHORIZED_MESSAGE = "User not authorised to operation";
+    }
+
+    public class AuthMethod {
+        public static final String BANKID_SE = "bankid_se";
+    }
+
+    public static class TagValues {
+        public static final String APPLICATION_ID = "Hjh7wsmPVojMkPioAvky";
+        public static final String REDIRECT_URI = "com.nordea.SMEMobileBank.se://auth-callback";
+        public static final String SCOPE_VALUE = "ndf";
+    }
+
+    public static class QueryParams {
+        public static final String START_DATE = "start_date";
+        public static final String END_DATE = "end_date";
+        public static final String LIMIT = "limit";
+        public static final String PAGE = "page";
+        public static final String PAGE_SIZE = "page_size";
+        public static final String STATUS = "status";
     }
 }

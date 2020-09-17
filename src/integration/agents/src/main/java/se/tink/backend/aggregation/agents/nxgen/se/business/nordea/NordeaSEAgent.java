@@ -10,7 +10,8 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.NordeaSEBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.NordeaBankIdAutostartAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.BankIdAutostartResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.fetcher.transactionalaccount.NordeaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.fetcher.transactionalaccount.NordeaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.rpc.filter.NordeaSEFilter;
@@ -18,9 +19,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.session.Norde
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.identitydata.IdentityData;
@@ -31,7 +33,7 @@ public class NordeaSEAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor {
     private final NordeaSEApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final NordeaSEBankIdAuthenticator nordeaSEBankIdAuthenticator;
+    private final String orgNumber;
 
     @Inject
     public NordeaSEAgent(AgentComponentProvider componentProvider) {
@@ -39,24 +41,28 @@ public class NordeaSEAgent extends NextGenerationAgent
         client.addFilter(new NordeaSEFilter());
         apiClient = new NordeaSEApiClient(client, sessionStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-        nordeaSEBankIdAuthenticator =
-                new NordeaSEBankIdAuthenticator(
-                        apiClient,
-                        sessionStorage,
-                        Optional.ofNullable(
-                                        componentProvider
-                                                .getCredentialsRequest()
-                                                .getCredentials()
-                                                .getField(Key.CORPORATE_ID))
-                                .map(s -> s.replace("-", ""))
-                                .map(String::trim)
-                                .orElse(""));
+        orgNumber =
+                Optional.ofNullable(
+                                componentProvider
+                                        .getCredentialsRequest()
+                                        .getCredentials()
+                                        .getField(Key.CORPORATE_ID))
+                        .map(s -> s.replace("-", ""))
+                        .map(String::trim)
+                        .orElse("");
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(
-                supplementalRequester, nordeaSEBankIdAuthenticator, persistentStorage, credentials);
+        BankIdAuthenticationController<BankIdAutostartResponse> bankIdAuthenticationController =
+                new BankIdAuthenticationController<>(
+                        context,
+                        new NordeaBankIdAutostartAuthenticator(
+                                apiClient, sessionStorage, orgNumber),
+                        persistentStorage,
+                        credentials);
+
+        return new TypedAuthenticationController(bankIdAuthenticationController);
     }
 
     @Override
@@ -85,14 +91,15 @@ public class NordeaSEAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        final NordeaTransactionFetcher transactionFetcher = new NordeaTransactionFetcher(apiClient);
+        NordeaTransactionFetcher transactionFetcher = new NordeaTransactionFetcher(apiClient);
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
                 new NordeaTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController<>(transactionFetcher, 1),
+                        transactionFetcher));
     }
 
     @Override

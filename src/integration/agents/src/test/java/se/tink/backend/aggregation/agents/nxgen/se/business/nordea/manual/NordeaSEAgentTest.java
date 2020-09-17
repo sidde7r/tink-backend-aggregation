@@ -35,7 +35,8 @@ public class NordeaSEAgentTest {
                 .addCredentialField(
                         Field.Key.CORPORATE_ID, psuIdManager.get(BusinessIdArgumentEnum.CPI))
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true)
+                .saveCredentialsAfter(false)
+                .expectLoggedIn(false)
                 .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                 .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
                 .addRefreshableItems(RefreshableItem.SAVING_ACCOUNTS)
