@@ -1,32 +1,6 @@
 {
     "accounts": [
         {
-            "accountNumber": "3333 33 33333",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "SEK",
-                "exactValue": 46868.5,
-                "scale": 1,
-                "unscaledValue": 468685,
-                "doubleValue": 46868.5
-            },
-            "currencyCode": "SEK",
-            "bankId": "3333",
-            "excluded": false,
-            "favored": false,
-            "name": "SPARKONTO FÖRETAG",
-            "ownership": 1.0,
-            "type": "SAVINGS",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"se://33333333333\"]",
-            "closed": false,
-            "flags": "[]",
-            "availableCredit": 0.0,
-            "balance": 46868.5
-        },
-        {
             "accountNumber": "44 44 44-4",
             "accountExclusion": "NONE",
             "exactBalance": {
@@ -37,7 +11,7 @@
                 "doubleValue": 908386.3
             },
             "currencyCode": "SEK",
-            "bankId": "4444",
+            "bankId": "SE6195000099603404444444",
             "excluded": false,
             "favored": false,
             "name": "PLUSGIROKONTO FTG",
@@ -51,6 +25,32 @@
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "availableCredit": 0.0,
             "balance": 908386.3
+        },
+        {
+            "accountNumber": "3333 33 33333",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "exactValue": 46868.5,
+                "scale": 1,
+                "unscaledValue": 468685,
+                "doubleValue": 46868.5
+            },
+            "currencyCode": "SEK",
+            "bankId": "SE1730000000033333333333",
+            "excluded": false,
+            "favored": false,
+            "name": "SPARKONTO FÖRETAG",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "flags": "[]",
+            "availableCredit": 0.0,
+            "balance": 46868.5
         }
     ],
     "transactions": [
