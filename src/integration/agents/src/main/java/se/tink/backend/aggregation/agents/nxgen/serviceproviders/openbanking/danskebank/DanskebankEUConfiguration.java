@@ -36,9 +36,8 @@ public class DanskebankEUConfiguration implements UkOpenBankingClientConfigurati
             "Algorithm which the TPP uses to authenticate with the token endpoint if using private_key_jwt or client_secret_jwt. This must be the same algorithm as the one chosen during registration. Must be specified if token_endpoint_auth_method is private_key_jwt or client_secret_jwt")
     @JsonSchemaInject(strings = {@JsonSchemaString(path = "pattern", value = "^(RS256|PS256)$")})
     @JsonSchemaExamples("PS256")
-    @JsonProperty
     @Secret
-    private String tokenEndpointAuthSigningAlg;
+    private String tokenEndpointAuthSigningAlg = "PS256";
 
     @JsonSchemaTitle("Token Endpoint Authentication Method")
     @JsonSchemaDescription(
@@ -51,9 +50,8 @@ public class DanskebankEUConfiguration implements UkOpenBankingClientConfigurati
                                 "^(private_key_jwt|client_secret_basic|client_secret_post|tls_client_auth)$")
             })
     @JsonSchemaExamples("tls_client_auth")
-    @JsonProperty(required = false)
     @Secret
-    private String tokenEndpointAuthMethod;
+    private String tokenEndpointAuthMethod = "tls_client_auth";
 
     @Override
     public ClientInfo getProviderConfiguration() {
