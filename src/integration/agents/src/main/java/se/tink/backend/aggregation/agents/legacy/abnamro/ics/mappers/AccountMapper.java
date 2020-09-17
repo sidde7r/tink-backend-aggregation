@@ -12,12 +12,12 @@ public class AccountMapper {
 
     private static final Pattern VALID_BANK_ID_PATTERN = Pattern.compile("\\d{11,16}");
 
-    public static Account toAccount(CreditCardAccountEntity input, Logger log) {
-        return toAccount(input, false, log);
+    public static Account toAccount(CreditCardAccountEntity input, Logger logger) {
+        return toAccount(input, false, logger);
     }
 
     public static Account toAccount(
-            CreditCardAccountEntity input, boolean shouldCleanBankId, Logger log) {
+            CreditCardAccountEntity input, boolean shouldCleanBankId, Logger logger) {
         Preconditions.checkNotNull(input.getContractNumber());
         Preconditions.checkArgument(
                 VALID_BANK_ID_PATTERN.matcher(input.getContractNumber()).matches(),
@@ -38,7 +38,7 @@ public class AccountMapper {
         String creditLeftAmount = Double.toString(input.getCreditLeftToUse());
         String creditLimitAmount = Double.toString(input.getCreditLimit());
         String authorizedBalance = Double.toString(input.getAuthorizedBalance());
-        log.info(
+        logger.info(
                 String.format(
                         "Credit left: %s, Credit limit: %s, Authorized balance: %s",
                         creditLeftAmount, creditLimitAmount, authorizedBalance));
