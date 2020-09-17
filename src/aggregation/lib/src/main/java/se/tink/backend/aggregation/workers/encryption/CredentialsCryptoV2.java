@@ -8,13 +8,17 @@ import com.google.protobuf.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.credentials_revamp.grpc.OpaquePayload;
 import se.tink.libraries.encryptedpayload.AesEncryptedData;
 import se.tink.libraries.encryptedpayload.EncryptedPayloadV2;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsCryptoV2 {
+
+    public static class DecryptedDataV2 {
+        public String decryptedFields;
+        public String decryptedPayload;
+    }
 
     public static EncryptedPayloadV2 encryptV2(
             int keyId, byte[] key, String serializedFields, String serializedSensitivePayload) {
@@ -59,20 +63,23 @@ public class CredentialsCryptoV2 {
         return encryptedPayloadV2;
     }
 
-    public static void decryptV2(
+    public static DecryptedDataV2 decryptV2(
             byte[] fieldsKey,
             byte[] payloadKey,
-            Credentials credential,
             EncryptedPayloadV2 encryptedCredentialsV2) {
+        DecryptedDataV2 result = new DecryptedDataV2();
+
         String decryptedFields = decryptFields(fieldsKey, encryptedCredentialsV2);
         if (!Strings.isNullOrEmpty(decryptedFields)) {
-            credential.addSerializedFields(decryptedFields);
+            result.decryptedFields = decryptedFields;
         }
 
         String decryptedPayload = decryptPayload(payloadKey, encryptedCredentialsV2);
         if (!Strings.isNullOrEmpty(decryptedPayload)) {
-            credential.setSensitivePayloadSerialized(decryptedPayload);
+            result.decryptedPayload = decryptedPayload;
         }
+
+        return result;
     }
 
     private static String decryptFields(byte[] key, EncryptedPayloadV2 encryptedCredentialsV2) {

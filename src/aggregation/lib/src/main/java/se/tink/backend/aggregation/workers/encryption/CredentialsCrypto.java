@@ -114,8 +114,13 @@ public class CredentialsCrypto {
                                     cryptoWrapper.getCryptoKeyByKeyId(v2.getPayload().getKeyId());
 
                             try {
-                                CredentialsCryptoV2.decryptV2(
-                                        fieldsKey, payloadKey, credentials, v2);
+                                CredentialsCryptoV2.DecryptedDataV2 result =
+                                        CredentialsCryptoV2.decryptV2(fieldsKey, payloadKey, v2);
+                                // be aware of side-effect here! this is same credentials object as
+                                // on the Request
+                                credentials.addSerializedFields(result.decryptedFields);
+                                credentials.setSensitivePayloadSerialized(result.decryptedPayload);
+
                                 cryptoMetrics(CREDENTIALS_DECRYPT, v2, true);
                             } catch (Exception e) {
                                 logger.error(
