@@ -80,3 +80,4 @@ pinnedCertificates: CERTSHA256:9B7F4D67F6FA395C07B9B22EBC39CED8C0B99B854275B1AD1
 sendAgentLoginCompletedEvents: true
 sendAgentRefreshEvents: true
 sendAccountInformationServiceEvents: true
+startupProbeEnabled: true
