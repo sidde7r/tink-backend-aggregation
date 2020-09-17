@@ -87,7 +87,8 @@ public class CredentialsCrypto {
                             byte[] key = cryptoWrapper.getCryptoKeyByKeyId(v1.getKeyId());
 
                             try {
-                                CredentialsCryptoV1.DecryptedDataV1 result = CredentialsCryptoV1.decryptV1(key, v1);
+                                CredentialsCryptoV1.DecryptedDataV1 result =
+                                        CredentialsCryptoV1.decryptV1(key, v1);
 
                                 // be aware of side-effect here! this is same credentials object as
                                 // on the Request

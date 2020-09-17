@@ -64,9 +64,7 @@ public class CredentialsCryptoV2 {
     }
 
     public static DecryptedDataV2 decryptV2(
-            byte[] fieldsKey,
-            byte[] payloadKey,
-            EncryptedPayloadV2 encryptedPayloadV2) {
+            byte[] fieldsKey, byte[] payloadKey, EncryptedPayloadV2 encryptedPayloadV2) {
         DecryptedDataV2 result = new DecryptedDataV2();
 
         String decryptedFields = decryptFields(fieldsKey, encryptedPayloadV2);
