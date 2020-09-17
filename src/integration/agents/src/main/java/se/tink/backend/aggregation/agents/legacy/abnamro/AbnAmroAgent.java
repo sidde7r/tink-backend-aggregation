@@ -217,7 +217,7 @@ public class AbnAmroAgent extends AbstractAgent
                 getCreditCardAccountEntities(accountNumber);
 
         return accountEntity
-                .map(acc -> -(acc.getCurrentBalance() + acc.getAuthorizedBalance()))
+                .map(acc -> acc.getCreditLeftToUse() - acc.getCreditLimit())
                 .orElse(0.0);
     }
 

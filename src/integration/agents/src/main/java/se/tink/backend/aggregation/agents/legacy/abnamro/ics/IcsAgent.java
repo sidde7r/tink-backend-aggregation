@@ -4,7 +4,6 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Preconditions;
-import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,7 +15,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.assertj.core.util.Lists;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -57,8 +55,6 @@ import se.tink.libraries.user.rpc.User;
  * accounts cannot be added. - This agent can and should only be used by ABN AMRO.
  */
 public class IcsAgent extends AbstractAgent implements RefreshCreditCardAccountsExecutor {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Credentials credentials;
     private final MetricRegistry metricRegistry;
@@ -73,8 +69,6 @@ public class IcsAgent extends AbstractAgent implements RefreshCreditCardAccounts
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
-        // Temporary log to indicate the agent is called
-        logger.info("ICS agent started");
         this.credentials = request.getCredentials();
         this.user = request.getUser();
         this.metricRegistry = context.getMetricRegistry();
@@ -186,10 +180,7 @@ public class IcsAgent extends AbstractAgent implements RefreshCreditCardAccounts
 
             Account account =
                     AccountMapper.toAccount(
-                            creditCardAccount,
-                            shouldUseNewIcsAccountFormat(user.getFlags()),
-                            logger);
-
+                            creditCardAccount, shouldUseNewIcsAccountFormat(user.getFlags()));
             List<Transaction> transactions =
                     creditCardAccount.getTransactions().stream()
                             .filter(TransactionContainerEntity::isInEUR)
