@@ -51,9 +51,7 @@ public final class BelfiusApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
-                .header(HeaderKeys.ACCEPT, HeaderValues.ACCEPT);
+        return client.request(url).acceptLanguage(HeaderValues.ACCEPT_LANGUAGE);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -69,6 +67,8 @@ public final class BelfiusApiClient {
         ConsentResponse[] consentResponses =
                 createRequestInSession(url)
                         .queryParam(QueryKeys.IBAN, iban)
+                        .queryParam(QueryKeys.SCOPE, "AIS")
+                        .header(HeaderKeys.ACCEPT, HeaderValues.CONSENT_ACCEPT)
                         .header(HeaderKeys.CODE_CHALLENGE, CryptoUtils.getCodeChallenge(code))
                         .header(HeaderKeys.CODE_CHALLENGE_METHOD, HeaderValues.CODE_CHALLENGE_TYPE)
                         .get(ConsentResponse[].class);
@@ -79,7 +79,9 @@ public final class BelfiusApiClient {
     public TokenResponse postToken(URL url, String tokenEntity) {
         return createRequest(url)
                 .addBasicAuth(configuration.getClientId(), configuration.getClientSecret())
+                .header(HeaderKeys.ACCEPT, HeaderValues.TOKEN_ACCEPT)
                 .header(HeaderKeys.REQUEST_ID, randomValueGenerator.getUUID())
+                .header(HeaderKeys.CONTENT_TYPE, HeaderValues.CONTENT_TYPE)
                 .body(tokenEntity, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class);
     }
@@ -88,6 +90,7 @@ public final class BelfiusApiClient {
 
         return createRequestInSession(
                         new URL(configuration.getBaseUrl() + Urls.FETCH_ACCOUNT_PATH + logicalId))
+                .header(HeaderKeys.ACCEPT, HeaderValues.ACCOUNT_ACCEPT)
                 .addBearerToken(oAuth2Token)
                 .get(FetchAccountResponse.class);
     }
@@ -100,7 +103,10 @@ public final class BelfiusApiClient {
                         .queryParam(QueryKeys.NEXT, key);
 
         HttpResponse httpResponse =
-                createRequestInSession(url).addBearerToken(oAuth2Token).get(HttpResponse.class);
+                createRequestInSession(url)
+                        .header(HeaderKeys.ACCEPT, HeaderValues.TRANSACTION_ACCEPT)
+                        .addBearerToken(oAuth2Token)
+                        .get(HttpResponse.class);
 
         try {
             return OBJECT_MAPPER.readValue(
@@ -116,6 +122,7 @@ public final class BelfiusApiClient {
                 createRequestInSession(
                                 new URL(configuration.getBaseUrl().concat(Urls.CREATE_PAYMENT)))
                         .type(MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.ACCEPT, HeaderValues.PAYMENT_ACCEPT)
                         .header(
                                 HeaderKeys.CODE_CHALLENGE,
                                 CryptoUtils.getCodeChallenge(CryptoUtils.getCodeVerifier()))

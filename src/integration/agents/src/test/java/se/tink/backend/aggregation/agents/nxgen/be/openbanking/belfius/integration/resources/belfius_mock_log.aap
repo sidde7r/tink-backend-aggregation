@@ -1,7 +1,7 @@
 REQUEST 1
 GET https://psd2.b2b.belfius.be:8443/consent-uris?iban=BE39000000076000
 Accept-Language: fr
-Accept: application/vnd.belfius.api+json; version=1
+Accept: application/vnd.belfius.api+json; version=2
 Client-ID: DUMMY_ID
 
 RESPONSE 1
@@ -18,7 +18,7 @@ Content-Length: 669
 REQUEST 2
 POST https://psd2.b2b.belfius.be:8443/token
 Accept-Language: fr
-Accept: application/vnd.belfius.api+json; version=1
+Accept: application/vnd.belfius.api+json; version=1.1
 Authorization: Basic RFVNTVlfSUQ6RFVNTVlfU0VDUkVU
 Request-ID: 00000000-0000-4000-0000-000000000000
 Content-Type: application/x-www-form-urlencoded

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.entities.BankIdentifier;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.entities.ApiIdentifier;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -29,27 +29,27 @@ public class SparebankenVestCreditCardTransactionFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             CreditCardAccount account, Date fromDate, Date toDate) {
-        List<CreditCardTransaction> transactions = new ArrayList<>();
 
-        BankIdentifier bankIdentifier = new BankIdentifier(account.getApiIdentifier());
+        ApiIdentifier apiIdentifier = new ApiIdentifier(account.getApiIdentifier());
 
-        CreditCardTransactionsResponse transactionsResponse =
-                apiClient.fetchCreditCardTransactions(bankIdentifier, fromDate, toDate, 0);
+        CreditCardTransactionsResponse ccTransactionsResponse =
+                apiClient.fetchCreditCardTransactions(apiIdentifier, fromDate, toDate, 0);
 
-        transactions.addAll(transactionsResponse.getTinkTransactions());
+        List<CreditCardTransaction> ccTransactions =
+                new ArrayList<>(ccTransactionsResponse.getTinkTransactions());
 
-        // transactions are batched within dates, batch(step) size in Constants
-        while (transactionsResponse.hasMoreTransactions()) {
-            transactionsResponse =
+        // ccTransactions are batched within dates, batch(step) size in Constants
+        while (ccTransactionsResponse.hasMoreTransactions()) {
+            ccTransactionsResponse =
                     apiClient.fetchCreditCardTransactions(
-                            bankIdentifier,
+                            apiIdentifier,
                             fromDate,
                             toDate,
-                            transactionsResponse.getNextStartOffset());
+                            ccTransactionsResponse.getNextStartOffset());
 
-            transactions.addAll(transactionsResponse.getTinkTransactions());
+            ccTransactions.addAll(ccTransactionsResponse.getTinkTransactions());
         }
 
-        return PaginatorResponseImpl.create(transactions);
+        return PaginatorResponseImpl.create(ccTransactions);
     }
 }

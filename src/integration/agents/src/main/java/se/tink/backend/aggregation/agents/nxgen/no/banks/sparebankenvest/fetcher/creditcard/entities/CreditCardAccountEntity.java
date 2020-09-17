@@ -44,8 +44,7 @@ public class CreditCardAccountEntity {
                 .withCardDetails(prepareCardModule())
                 .withInferredAccountFlags()
                 .withId(prepareIdModule())
-                .setApiIdentifier(cardId)
-                .setBankIdentifier(createBankIdentifier())
+                .setApiIdentifier(createApiIdentifier())
                 .build();
     }
 
@@ -70,7 +69,7 @@ public class CreditCardAccountEntity {
                 .build();
     }
 
-    private String createBankIdentifier() {
-        return new BankIdentifier(cardNumberGuid, cardId).getBankIdentifier();
+    private String createApiIdentifier() {
+        return new ApiIdentifier(cardNumberGuid, cardId).getApiIdentifier();
     }
 }

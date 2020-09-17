@@ -44,6 +44,7 @@ public final class BelfiusConstants {
         public static final String CODE_CHALLENGE_METHOD = "Code-Challenge-Method";
         public static final String SIGNATURE = "Signature";
         public static final String LOCATION = "Location";
+        public static final String CONTENT_TYPE = "Content-Type";
     }
 
     public static class FormKeys {
@@ -68,9 +69,20 @@ public final class BelfiusConstants {
     public static class HeaderValues {
         private HeaderValues() {}
 
-        public static final String ACCEPT = "application/vnd.belfius.api+json; version=1";
+        public static final String BASE_ACCEPT = "application/vnd.belfius.api+json; version=";
+        public static final String CONSENT_VERSION = "2";
+        public static final String TOKEN_VERSION = "1.1";
+        public static final String ACCOUNT_VERSION = "1";
+        public static final String TRANSACTION_VERSION = "1";
+        public static final String PAYMENT_VERSION = "1";
+        public static final String CONSENT_ACCEPT = BASE_ACCEPT + CONSENT_VERSION;
+        public static final String TOKEN_ACCEPT = BASE_ACCEPT + TOKEN_VERSION;
+        public static final String ACCOUNT_ACCEPT = BASE_ACCEPT + ACCOUNT_VERSION;
+        public static final String TRANSACTION_ACCEPT = BASE_ACCEPT + TRANSACTION_VERSION;
+        public static final String PAYMENT_ACCEPT = BASE_ACCEPT + PAYMENT_VERSION;
         public static final String ACCEPT_LANGUAGE = "fr";
         public static final String CODE_CHALLENGE_TYPE = "S256";
+        public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
     }
 
     public static class CredentialKeys {
@@ -87,5 +99,6 @@ public final class BelfiusConstants {
         public static final String FROM_DATE = "date_from";
         public static final String TO_DATE = "date_to";
         public static final String NEXT = "next";
+        public static final String SCOPE = "scope";
     }
 }
