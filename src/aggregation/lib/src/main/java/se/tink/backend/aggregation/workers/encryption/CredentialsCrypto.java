@@ -153,7 +153,10 @@ public class CredentialsCrypto {
         // Encrypt with most recent version, currently: V2
         EncryptedPayloadHead encryptedCredentials =
                 CredentialsCryptoV2.encryptV2(
-                        clusterKeyId, clusterKey, sensitiveInformationCredentials);
+                        clusterKeyId,
+                        clusterKey,
+                        sensitiveInformationCredentials.getFieldsSerialized(),
+                        sensitiveInformationCredentials.getSensitivePayloadSerialized());
 
         String serializedEncryptedCredentials =
                 SerializationUtils.serializeToString(encryptedCredentials);

@@ -17,7 +17,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class CredentialsCryptoV2 {
 
     public static EncryptedPayloadV2 encryptV2(
-            int keyId, byte[] key, Credentials credential) {
+            int keyId, byte[] key, String serializedFields, String serializedSensitivePayload) {
         EncryptedPayloadV2 encryptedCredentialsV2 = new EncryptedPayloadV2();
         encryptedCredentialsV2.setKeyId(0); // Not used in V2, fields + payload have their own keyId
         encryptedCredentialsV2.setTimestamp(new Date());
@@ -25,7 +25,7 @@ public class CredentialsCryptoV2 {
         AesEncryptedData encryptedFields =
                 encrypt(
                         key,
-                        credential.getFieldsSerialized(),
+                        serializedFields,
                         asAAD(encryptedCredentialsV2.getVersion()),
                         asAAD(keyId),
                         asAAD(encryptedCredentialsV2.getTimestamp().getTime()));
@@ -33,7 +33,7 @@ public class CredentialsCryptoV2 {
         AesEncryptedData encryptedPayload =
                 encrypt(
                         key,
-                        credential.getSensitivePayloadSerialized(),
+                        serializedSensitivePayload,
                         asAAD(encryptedCredentialsV2.getVersion()),
                         asAAD(keyId),
                         asAAD(encryptedCredentialsV2.getTimestamp().getTime()));
