@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.workers.encryption;
+package se.tink.backend.aggregation.workers.encryption.versions;
 
-import static se.tink.backend.aggregation.workers.encryption.AesGcmCrypto.aesGcm;
-import static se.tink.backend.aggregation.workers.encryption.AesGcmCrypto.encrypt;
+import static se.tink.backend.aggregation.workers.encryption.versions.AesGcmCrypto.aesGcm;
+import static se.tink.backend.aggregation.workers.encryption.versions.AesGcmCrypto.encrypt;
 
 import com.google.common.base.Strings;
 import java.util.Date;

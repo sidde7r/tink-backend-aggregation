@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
+import se.tink.backend.aggregation.workers.encryption.versions.CredentialsCryptoV1;
+import se.tink.backend.aggregation.workers.encryption.versions.CredentialsCryptoV2;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;

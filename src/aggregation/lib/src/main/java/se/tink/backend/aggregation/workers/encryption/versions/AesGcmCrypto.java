@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers.encryption;
+package se.tink.backend.aggregation.workers.encryption.versions;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
