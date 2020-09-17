@@ -87,7 +87,13 @@ public class CredentialsCrypto {
                             byte[] key = cryptoWrapper.getCryptoKeyByKeyId(v1.getKeyId());
 
                             try {
-                                CredentialsCryptoV1.decryptCredential(key, credentials, v1);
+                                CredentialsCryptoV1.DecryptedDataV1 result = CredentialsCryptoV1.decryptV1(key, v1);
+
+                                // be aware of side-effect here! this is same credentials object as
+                                // on the Request
+                                credentials.addSerializedFields(result.decryptedFields);
+                                credentials.setSensitivePayloadSerialized(result.decryptedPayload);
+
                                 cryptoMetrics(CREDENTIALS_DECRYPT, v1, true);
                             } catch (Exception e) {
                                 logger.error(

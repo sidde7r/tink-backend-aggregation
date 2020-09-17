@@ -6,11 +6,15 @@ import static se.tink.backend.aggregation.workers.encryption.AesGcmCrypto.encryp
 import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.Objects;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.encryptedpayload.AesEncryptedData;
 import se.tink.libraries.encryptedpayload.EncryptedPayloadV1;
 
 public class CredentialsCryptoV1 {
+
+    public static class DecryptedDataV1 {
+        public String decryptedFields;
+        public String decryptedPayload;
+    }
 
     public static EncryptedPayloadV1 encryptV1(
             int keyId, byte[] key, String serializedFields, String serializedSensitivePayload) {
@@ -39,17 +43,20 @@ public class CredentialsCryptoV1 {
         return encryptedPayloadV1;
     }
 
-    public static void decryptCredential(
-            byte[] key, Credentials credential, EncryptedPayloadV1 encryptedCredentialsV1) {
-        String decryptedFields = CredentialsCryptoV1.decryptFields(key, encryptedCredentialsV1);
+    public static DecryptedDataV1 decryptV1(byte[] key, EncryptedPayloadV1 encryptedPayloadV1) {
+        DecryptedDataV1 result = new DecryptedDataV1();
+
+        String decryptedFields = CredentialsCryptoV1.decryptFields(key, encryptedPayloadV1);
         if (!Strings.isNullOrEmpty(decryptedFields)) {
-            credential.addSerializedFields(decryptedFields);
+            result.decryptedFields = decryptedFields;
         }
 
-        String decryptedPayload = CredentialsCryptoV1.decryptPayload(key, encryptedCredentialsV1);
+        String decryptedPayload = CredentialsCryptoV1.decryptPayload(key, encryptedPayloadV1);
         if (!Strings.isNullOrEmpty(decryptedPayload)) {
-            credential.setSensitivePayloadSerialized(decryptedPayload);
+            result.decryptedPayload = decryptedPayload;
         }
+
+        return result;
     }
 
     private static String decryptFields(byte[] key, EncryptedPayloadV1 encryptedCredentialsV1) {
