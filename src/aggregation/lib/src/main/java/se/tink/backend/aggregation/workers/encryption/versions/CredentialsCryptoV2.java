@@ -94,6 +94,11 @@ public class CredentialsCryptoV2 {
                 SerializationUtils.deserializeFromString(
                         opaquePayload.getPayload(), AesEncryptedData.class);
 
+        if (encryptedData == null) {
+            // An empty data object means that it had nothing to encrypt. (see encrypt())
+            return "";
+        }
+
         if (Objects.isNull(encryptedData.getData()) && Objects.isNull(encryptedData.getIv())) {
             // An empty data object means that it had nothing to encrypt. (see encrypt())
             return "";
