@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclHeaderValueProvider;
@@ -58,7 +58,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 public final class LclAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshIdentityDataExecutor,
-                RefreshTransferDestinationExecutor {
+                RefreshBeneficiariesExecutor {
 
     private static final ZoneId ZONE_ID = ZoneId.of("CET");
 
@@ -156,7 +156,8 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
     }
 
     @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
+        /* TODO: In the future add dedicated RefreshController for beneficiary listing. */
         return this.transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
