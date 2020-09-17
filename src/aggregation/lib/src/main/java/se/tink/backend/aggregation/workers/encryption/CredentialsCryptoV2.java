@@ -16,7 +16,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsCryptoV2 {
 
-    public static EncryptedPayloadV2 encryptCredential(
+    public static EncryptedPayloadV2 encryptV2(
             int keyId, byte[] key, Credentials credential) {
         EncryptedPayloadV2 encryptedCredentialsV2 = new EncryptedPayloadV2();
         encryptedCredentialsV2.setKeyId(0); // Not used in V2, fields + payload have their own keyId
@@ -59,7 +59,7 @@ public class CredentialsCryptoV2 {
         return encryptedCredentialsV2;
     }
 
-    public static void decryptCredential(
+    public static void decryptV2(
             byte[] fieldsKey,
             byte[] payloadKey,
             Credentials credential,

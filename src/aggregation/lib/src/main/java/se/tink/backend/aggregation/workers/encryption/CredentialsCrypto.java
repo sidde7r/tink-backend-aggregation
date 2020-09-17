@@ -114,7 +114,7 @@ public class CredentialsCrypto {
                                     cryptoWrapper.getCryptoKeyByKeyId(v2.getPayload().getKeyId());
 
                             try {
-                                CredentialsCryptoV2.decryptCredential(
+                                CredentialsCryptoV2.decryptV2(
                                         fieldsKey, payloadKey, credentials, v2);
                                 cryptoMetrics(CREDENTIALS_DECRYPT, v2, true);
                             } catch (Exception e) {
@@ -152,7 +152,7 @@ public class CredentialsCrypto {
 
         // Encrypt with most recent version, currently: V2
         EncryptedPayloadHead encryptedCredentials =
-                CredentialsCryptoV2.encryptCredential(
+                CredentialsCryptoV2.encryptV2(
                         clusterKeyId, clusterKey, sensitiveInformationCredentials);
 
         String serializedEncryptedCredentials =
