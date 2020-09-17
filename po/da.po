@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-09-16 15:21+0000\n"
-"PO-Revision-Date: 2020-09-16 15:21+0000\n"
+"POT-Creation-Date: 2020-09-17 12:42+0000\n"
+"PO-Revision-Date: 2020-09-17 12:42+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: da\n"
@@ -11,9 +11,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Please open the NemId app and confirm login"
+msgstr "Venligst åben NemID app’en og bekræft dit login"
+
 msgid ""
 "You use your card reader and personal code the same way as you would in the "
 "bank's mobile app."
 msgstr ""
 "Du bruger din kortlæser og personlige kode på samme måde som du ville i "
 "bankens mobilapp."
+
+#, java-format
+msgid "Please enter code {0} from key card number {1}"
+msgstr "Indtast venligst din nøgle {0} fra dit nøglekort nummer {1}"
