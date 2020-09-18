@@ -6,9 +6,10 @@ import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class BankEntity {
     private String name;
@@ -38,18 +39,8 @@ public class BankEntity {
     }
 
     @JsonIgnore
-    public PrivateProfileEntity getProfileForSetup() {
-        if (businessProfiles.isEmpty()) {
-            return privateProfile;
-        }
-
-        return getMatchingBusinessProfile()
-                .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
-    }
-
-    @JsonIgnore
     public PrivateProfileEntity getProfile() {
-        if (businessProfiles.isEmpty()) {
+        if (Strings.isNullOrEmpty(orgNumber)) {
             return privateProfile;
         }
 
@@ -57,7 +48,7 @@ public class BankEntity {
     }
 
     @JsonIgnore
-    private Optional<BusinessProfileEntity> getMatchingBusinessProfile() {
+    public Optional<BusinessProfileEntity> getMatchingBusinessProfile() {
         return businessProfiles.stream()
                 .filter(
                         profile ->
@@ -69,9 +60,10 @@ public class BankEntity {
 
     @JsonIgnore
     public String getHolderName() {
+        PrivateProfileEntity profile = getProfile();
         // For business, activeProfileName is set to company name
-        return Strings.isNullOrEmpty(getProfile().getActiveProfileName())
-                ? getProfile().getCustomerName()
-                : getProfile().getActiveProfileName();
+        return Strings.isNullOrEmpty(profile.getActiveProfileName())
+                ? profile.getCustomerName()
+                : profile.getActiveProfileName();
     }
 }

@@ -55,10 +55,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfileHandler;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BusinessProfileEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.MenuItemLinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.PrivateProfileEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.SelectedProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.TouchResponse;
@@ -541,24 +543,44 @@ public class SwedbankDefaultApiClient {
     private void setupProfiles(ProfileResponse profileResponse) {
         bankProfileHandler = new BankProfileHandler();
 
-        for (BankEntity bank : profileResponse.getBanks()) {
-            bank.setOrgNumber(organizationNumber);
-            // fetch all profile details
-            Map<String, MenuItemLinkEntity> menuItems =
-                    fetchProfile(bank.getProfileForSetup().getLinks().getNextOrThrow());
-            bankProfileHandler.setMenuItems(menuItems);
-            EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
-            PaymentBaseinfoResponse paymentBaseinfoResponse = fetchPaymentBaseinfo();
-            // create and add profile
-            BankProfile bankProfile =
-                    new BankProfile(
-                            bank, menuItems, engagementOverViewResponse, paymentBaseinfoResponse);
-            bankProfileHandler.addBankProfile(bankProfile);
-            // profile is already activated
-            bankProfileHandler.setActiveBankProfile(bankProfile);
+        if (Strings.isNullOrEmpty(organizationNumber)) {
+            for (BankEntity bank : profileResponse.getBanks()) {
+                createAndAddProfileToHandler(bank, bank.getPrivateProfile());
+            }
+        } else {
+            for (BankEntity bank : profileResponse.getBanks()) {
+                bank.setOrgNumber(organizationNumber);
+                Optional<BusinessProfileEntity> matchingBusinessProfile =
+                        bank.getMatchingBusinessProfile();
+
+                matchingBusinessProfile.ifPresent(
+                        businessProfileEntity ->
+                                createAndAddProfileToHandler(bank, businessProfileEntity));
+            }
+
+            if (bankProfileHandler.getBankProfiles().isEmpty()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(
+                        "No business profile matched organisation number provider by user.");
+            }
         }
 
         swedbankStorage.setBankProfileHandler(bankProfileHandler);
+    }
+
+    private void createAndAddProfileToHandler(BankEntity bank, PrivateProfileEntity profileEntity) {
+        // fetch all profile details
+        Map<String, MenuItemLinkEntity> menuItems =
+                fetchProfile(profileEntity.getLinks().getNextOrThrow());
+        bankProfileHandler.setMenuItems(menuItems);
+        EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
+        PaymentBaseinfoResponse paymentBaseinfoResponse = fetchPaymentBaseinfo();
+        // create and add profile
+        BankProfile bankProfile =
+                new BankProfile(
+                        bank, menuItems, engagementOverViewResponse, paymentBaseinfoResponse);
+        bankProfileHandler.addBankProfile(bankProfile);
+        // profile is already activated
+        bankProfileHandler.setActiveBankProfile(bankProfile);
     }
 
     private BankProfileHandler getBankProfileHandler() {
