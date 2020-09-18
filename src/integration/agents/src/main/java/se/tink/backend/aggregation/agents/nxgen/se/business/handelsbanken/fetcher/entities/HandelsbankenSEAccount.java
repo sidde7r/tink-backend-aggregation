@@ -54,7 +54,6 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                                 .addIdentifier(new SwedishIdentifier(accountNo))
                                 .addIdentifier(new SwedishSHBInternalIdentifier(accountNo))
                                 .build())
-                .addHolderName("") // should set corporate name here
                 .setApiIdentifier(accountNo)
                 .setBankIdentifier(accountNo)
                 .build();
