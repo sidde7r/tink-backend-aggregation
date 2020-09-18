@@ -127,6 +127,8 @@ public class OpenIdConstants {
     public static class Errors {
         public static final String ACCESS_DENIED = "access_denied";
         public static final String LOGIN_REQUIRED = "login_required";
+        public static final String SERVER_ERROR = "server_error";
+        public static final String TEMPORARILY_UNAVAILABLE = "temporarily_unavailable";
     }
 
     public static class PS256 {
