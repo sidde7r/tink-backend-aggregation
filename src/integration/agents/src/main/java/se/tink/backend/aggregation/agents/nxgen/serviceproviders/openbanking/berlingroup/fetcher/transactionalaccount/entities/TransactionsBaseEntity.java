@@ -35,14 +35,6 @@ public class TransactionsBaseEntity {
         return pending;
     }
 
-    public void setBooked(List<BookedTransactionBaseEntity> booked) {
-        this.booked = booked;
-    }
-
-    public void setPending(List<PendingTransactionBaseEntity> pending) {
-        this.pending = pending;
-    }
-
     public Collection<Transaction> toTinkTransactions() {
         final Stream<Transaction> bookedTransactionsStream =
                 booked.stream().map(BookedTransactionBaseEntity::toTinkTransaction);

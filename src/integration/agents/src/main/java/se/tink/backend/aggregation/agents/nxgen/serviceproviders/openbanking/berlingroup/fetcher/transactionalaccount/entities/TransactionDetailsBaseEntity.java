@@ -19,11 +19,6 @@ public abstract class TransactionDetailsBaseEntity {
     protected String remittanceInformationUnstructured;
     protected BalanceAmountBaseEntity transactionAmount;
     protected String transactionId;
-    protected String entryReference;
-
-    public String getEntryReference() {
-        return entryReference;
-    }
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     protected Date valueDate;

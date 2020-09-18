@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -20,15 +20,15 @@ public class SamlinkTransactionFetcherTest {
     private BerlinGroupApiClient apiClient;
     private BerlinGroupTransactionFetcher fetcher;
 
-    private static final TransactionsResponse TRANSACTIONS_PENDING_RESPONSE =
+    private static final TransactionsKeyPaginatorBaseResponse TRANSACTIONS_PENDING_RESPONSE =
             SerializationUtils.deserializeFromString(
                     "{\"account\" : { \"iban\" : \"FI0000000000000003\" } , \"transactions\": { \"booked\" : [] , \"pending\" : [{\"valueDate\" : \"2000-10-10\", \"transactionAmount\" : { \"amount\" : \"6.66\" , \"currency\" : \"EUR\"}, \"creditorName\" : \"JOHN DOE\" , \"remittanceInformationUnstructured\":\"DESCRIPTION\", \"debtorAccount\" : { \"iban\" : \"FI0000000000000003\" } } ] } }",
-                    TransactionsResponse.class);
+                    TransactionsKeyPaginatorBaseResponse.class);
 
-    private static final TransactionsResponse TRANSACTIONS_BOOKED_RESPONSE =
+    private static final TransactionsKeyPaginatorBaseResponse TRANSACTIONS_BOOKED_RESPONSE =
             SerializationUtils.deserializeFromString(
                     "{\"account\" : { \"iban\" : \"FI0000000000000003\" } , \"transactions\": { \"booked\" : [{ \"entryReference\" : \"000000000000111\" , \"bookingDate\" : \"2000-10-10\", \"transactionAmount\" : { \"amount\" : \"6.66\" , \"currency\" : \"EUR\"}, \"debtorName\" : \"JOHN DOE\" , \"remittanceInformationUnstructured\":\"DESCRIPTION\"} ] } }",
-                    TransactionsResponse.class);
+                    TransactionsKeyPaginatorBaseResponse.class);
 
     @Before
     public void init() {

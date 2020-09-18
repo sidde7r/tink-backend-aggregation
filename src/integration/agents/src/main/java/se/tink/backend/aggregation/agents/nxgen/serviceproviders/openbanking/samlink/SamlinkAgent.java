@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.transactionalaccount.SamlinkTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.transactionalaccount.SamlinkTransactionFetcher;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
