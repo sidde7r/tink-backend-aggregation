@@ -29,6 +29,7 @@ class SupplementalStdin(object):
             if field.get("value"):
                 value = field.get("value")
                 print("%s: %s" % (desc, value))
+                input("Press enter to continue.")
             else:
                 value = input("%s: " % desc)
 
