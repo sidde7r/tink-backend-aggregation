@@ -127,13 +127,6 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         updateCredentialsExcludingSensitiveInformation();
 
-        // nordea seems not always put value true so optInAccount filtered out
-        // value is more about true / false, so the log should be okay
-        supplementalInformation.forEach(
-                (k, v) -> {
-                    log.info("SupplementalInformation value: {}" + v);
-                });
-
         // Add the optIn account id:s to the context to use them when doing the refresh and
         // processing.
         List<String> optInAccounts =
