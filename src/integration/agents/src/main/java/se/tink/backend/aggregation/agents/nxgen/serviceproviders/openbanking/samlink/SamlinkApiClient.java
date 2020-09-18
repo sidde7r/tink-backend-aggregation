@@ -16,12 +16,12 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
@@ -30,10 +30,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountEntityBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.BookingStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.provider.SamlinkAuthorisationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.provider.SamlinkSignatureEntity;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -92,8 +93,7 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
     public AccountsBaseResponseBerlinGroup fetchAccounts() {
         AccountsBaseResponseBerlinGroup response =
                 createRequestInSession(
-                                new URL(agentConfiguration.getBaseUrl()).concat(Urls.ACCOUNTS),
-                                StringUtils.EMPTY)
+                                new URL(agentConfiguration.getBaseUrl()).concat(Urls.ACCOUNTS), "")
                         .get(AccountsBaseResponseBerlinGroup.class);
 
         final List<AccountEntityBaseEntity> accountsWithBalances =
@@ -111,9 +111,7 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
                                 .getBaseUrl()
                                 .concat(accountBaseEntity.getBalancesLink()));
         final List<BalanceBaseEntity> balances =
-                createRequestInSession(url, StringUtils.EMPTY)
-                        .get(AccountEntityBaseEntity.class)
-                        .getBalances();
+                createRequestInSession(url, "").get(AccountEntityBaseEntity.class).getBalances();
         accountBaseEntity.setBalances(balances);
 
         return accountBaseEntity;
@@ -125,7 +123,6 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
 
         try {
             return client.request(url)
-                    .header(Psd2Headers.Keys.PSU_IP_ADDRESS, "0.0.0.0")
                     .header(HeaderKeys.X_REQUEST_ID, requestId)
                     .header(HeaderKeys.DIGEST, digest)
                     .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
@@ -152,9 +149,10 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
 
     // The bookingStatus parameter "both" is not supported by Samlink
     @Override
-    public TransactionsResponse fetchTransactions(final String url) {
-        return createRequestInSession(new URL(url), StringUtils.EMPTY)
-                .get(TransactionsResponse.class);
+    public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
+        return createRequestInSession(new URL(url), "")
+                .queryParam(QueryKeys.BOOKING_STATUS, BookingStatus.BOOKED)
+                .get(TransactionsKeyPaginatorBaseResponse.class);
     }
 
     @Override

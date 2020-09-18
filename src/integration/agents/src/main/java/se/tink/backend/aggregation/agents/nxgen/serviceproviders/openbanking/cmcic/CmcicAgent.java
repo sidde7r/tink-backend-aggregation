@@ -7,10 +7,10 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.CmcicAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
@@ -43,7 +43,7 @@ public abstract class CmcicAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
-                RefreshBeneficiariesExecutor {
+                RefreshTransferDestinationExecutor {
 
     private final CmcicApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -160,7 +160,7 @@ public abstract class CmcicAgent extends NextGenerationAgent
     }
 
     @Override
-    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 

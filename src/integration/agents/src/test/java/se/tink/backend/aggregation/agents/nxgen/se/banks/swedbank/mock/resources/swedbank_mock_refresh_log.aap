@@ -1,17 +1,35 @@
 
+REQUEST 1
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch?dsid=AAAAAAAA
+Accept: application/json
+
+RESPONSE 1
+200
+Server: -
+Date: Fri, 24 Apr 2020 11:34:13 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Set-cookie: ***
+Set-cookie: ***
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"chosenProfileName":"","identifiedUserName":"","identifiedUser":"","chosenProfile":"","authMethodName":"UNIDENTIFIED","authMethodDescription":"Unidentified","bankId":"","bankName":"","chosenProfileLanguage":"sv","client":{"software":{"name":"Tink","version":"unknown","family":"OTHER"},"os":{"name":"+https://www.tink.se/","version":"noc@tink.se)","family":"OTHER"},"device":{"manufacturer":"unknown","model":"unknown"}},"authenticationRole":"CUSTOMER","serverTime":"20200424 13:34","formattedServerTime":"2020-04-24 13:34"}
+
 REQUEST 2
 POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile?dsid=AAAAAAAA
 Accept: application/json
 Content-Type: application/json
 
-{"bankIdOnSameDevice":true}
+{"bankIdOnSameDevice": true}
 
-RESPONSE 2 SET NEXT_1
+RESPONSE 2
 200
 Server: -
-Date: Thu, 17 Sep 2020 07:34:11 GMT
-Set-cookie: *** MASKED ***
-Set-cookie: *** MASKED ***
+Date: Fri, 24 Apr 2020 11:34:13 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -20,53 +38,16 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"status":"USER_SIGN","autoStartToken":"74495342-4a40-47e5-b1de-e97798a7e2aa","links":{"next":{"method":"GET","uri":"/v5/identification/bankid/mobile/verify"}}}
-
-
-REQUEST 3 MATCH NEXT_1
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify?dsid=AAAAAAAA
-Accept: application/json
-
-RESPONSE 3 SET NEXT_2
-200
-Server: -
-Date: Thu, 17 Sep 2020 07:34:11 GMT
-Content-language: sv_SE
-Content-type: application/json; charset=UTF-8
-Pragma: no-cache
-Cache-control: no-cache, no-store, max-age=0
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
-Vary: Accept-Encoding
-Connection: Keep-Alive
-
-{"extendedUsage":false,"status":"CLIENT_NOT_STARTED","links":{"next":{"method":"GET","uri":"/v5/identification/bankid/mobile/verify"}},"serverTime":"20200917 09:34","formattedServerTime":"2020-09-17 09:34"}
-
-REQUEST 4 MATCH NEXT_2
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify?dsid=AAAAAAAA
-Accept: application/json
-
-RESPONSE 4
-200
-Server: -
-Date: Thu, 17 Sep 2020 07:34:26 GMT
-Content-language: sv_SE
-Content-type: application/json; charset=UTF-8
-Pragma: no-cache
-Cache-control: no-cache, no-store, max-age=0
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
-Vary: Accept-Encoding
-Connection: Keep-Alive
-
-{"extendedUsage":false,"status":"COMPLETE","links":{"next":{"method":"GET","uri":"/v5/profile/"}},"maskedUserId":"19850430****","serverTime":"20200917 09:34","formattedServerTime":"2020-09-17 09:34"}
+{"status":"USER_SIGN","links":{"next":{"method":"GET","uri":"/v5/identification/bankid/mobile/verify"}}}
 
 REQUEST 5
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify?dsid=AAAAAAAA
 Accept: application/json
 
-RESPONSE 5
+RESPONSE 5 SET BANKID_POLLING01
 200
 Server: -
-Date: Thu, 17 Sep 2020 07:34:26 GMT
+Date: Fri, 24 Apr 2020 11:34:17 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -75,18 +56,16 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"banks":[{"name":"Swedbank AB (publ)","bankId":"11111","url":"https://www.swedbank.se","privateProfile":{"activeProfileLanguage":"sv","targetType":"PRIVATE","customerName":"Wiremock Agent","customerNumber":"20200202-0202","id":"a75351cc3a0908277184af20086b919a680e6e3f","bankId":"11111","bankName":"Swedbank AB (publ)","url":"https://www.swedbank.se","customerInternational":false,"youthProfile":false,"links":{"edit":{"method":"PUT","uri":"/v5/profile/subscription/a75351cc3a0908277184af20086b919a680e6e3f"},"next":{"method":"POST","uri":"/v5/profile/a75351cc3a0908277184af20086b919a680e6e3f"}}},"corporateProfiles":[]}],"hasSwedbankProfile":true,"hasSavingbankProfile":false,"userId":"202002020202"}
+{"extendedUsage":false,"status":"USER_SIGN","links":{"next":{"method":"GET","uri":"/v5/identification/bankid/mobile/verify"}},"serverTime":"20200424 13:34","formattedServerTime":"2020-04-24 13:34"}
 
-
-REQUEST 6
-POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/a75351cc3a0908277184af20086b919a680e6e3f?dsid=AAAAAAAA
+REQUEST 6 MATCH BANKID_POLLING01
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify?dsid=AAAAAAAA
 Accept: application/json
-Content-Type: application/json
 
 RESPONSE 6
-201
+200
 Server: -
-Date: Thu, 17 Sep 2020 07:34:26 GMT
+Date: Fri, 24 Apr 2020 11:34:19 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -95,17 +74,16 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"nibprimaryUser":false,"selectedProfile":{"activeProfileLanguage":"sv","targetType":"PRIVATE","customerName":"Wiremock Agent","customerNumber":"20200202-0202","id":"a75351cc3a0908277184af20086b919a680e6e3f","bankId":"11111","bankName":"Swedbank AB (publ)","url":"https://www.swedbank.se","customerInternational":false,"youthProfile":false},"menuItems":{"CustomerValueMgmtNBASendFeedback":{"name":"Send response","uri":"/v5/user/recommendation/{aRecommendationId}","method":"POST","authorization":"AUTHORIZED"},"IdentificationDevice":{"name":"Kontrollera device","uri":"/v5/identification/device/","method":"GET","authorization":"AUTHORIZED"},"SecuritiesNotificationsResearch":{"name":"Hämta notificationer","uri":"/v5/securities/notifications/research","method":"GET","authorization":"AUTHORIZED"},"ContactInformationTelephone":{"name":"Hämta telefonnummer","uri":"/v5/contactinformation/phone","method":"GET","authorization":"AUTHORIZED"},"InsuranceOverviewCases":{"name":"Hämta försäkringsärenden","uri":"/v5/insurance/cases","method":"GET","authorization":"AUTHORIZED"},"DivisionPrivateCorporate":{"name":"Sorting agreements division private corporate","uri":"/v5/soleproprietor/admin/noSerivices","method":"OPTIONS","authorization":"UNAUTHORIZED"},"LendingConsumerLoanValidateApplication":{"name":"Consumer loan validate application","uri":"/v5/lending/consumerloan/application/validate","method":"POST","authorization":"AUTHORIZED"},"SecuritiesCustodyMultimarketinfo":{"name":"Hämta flera marknadsinformationer","uri":"/v5/securities/custody/{custodyId}/multimarketinfo/","method":"GET","authorization":"AUTHORIZED"},"IdentificationMethods":{"name":"Hämta inloggningsmetoder","uri":"/v5/identification/","method":"GET","authorization":"AUTHORIZED"},"AgreementCreditCards":{"name":"Credit Crads","uri":"/v5/engagement/creditCards","method":"OPTIONS","authorization":"AUTHORIZED"},"PaymentRejected":{"name":"Avvisade betalningar ","uri":"/v5/payment/rejected","method":"GET","authorization":"AUTHORIZED"},"PaymentDirectDebit":{"name":"Autogiron","uri":"/v5/payment/directdebit/mandate","method":"GET","authorization":"AUTHORIZED"},"EngagementOverview":{"name":"Ekonomisk översikt","uri":"/v5/engagement/overview","method":"GET","authorization":"AUTHORIZED"},"MeetingMgmtVirtualChat":{"name":"Fråga oss","uri":"/v5/meeting/token/{type}","method":"GET","authorization":"AUTHORIZED"},"UpcomingTransactions":{"name":"Hämta framtida transaktioner","uri":"/v5/event/calendar","method":"GET","authorization":"AUTHORIZED"},"FundMarketinfo":{"name":"Hämta fond","uri":"/v5/fund/marketinfo/{aFundCode}","method":"GET","authorization":"AUTHORIZED"},"IdentificationLogout":{"name":"Logga ut","uri":"/v5/identification/logout","method":"PUT","authorization":"AUTHORIZED"},"PortfolioHoldingsoverview":{"name":"Sparmål och innehav","uri":"/v5/portfolio/holdingsoverview","method":"GET","authorization":"AUTHORIZED"},"SecuritiesUserlistListid":{"name":"Favoritlista","uri":"/v5/securities/userlist/{listid}","method":"GET","authorization":"AUTHORIZED"},"PortfolioMarket":{"name":"Marknaden ","uri":"/v5/portfolio/market","method":"OPTIONS","authorization":"AUTHORIZED"},"AgreementMasterPass":{"name":"Master Pass","uri":"/v5/engagement/masterPass","method":"OPTIONS","authorization":"AUTHORIZED"},"LendingLoanOverviewV2":{"name":"Låneöversikt","uri":"/v5/lending/loan/overview/v2","method":"GET","authorization":"AUTHORIZED"},"PaymentsHistory":{"name":"Hämta historiska betalningar","uri":"/v5/payment/historical","method":"GET","authorization":"AUTHORIZED"},"LoanCreateRequestPrivateLoan":{"name":"Skapa privat låneförfrågan","uri":"/v5/loan/request/private","method":"POST","authorization":"AUTHORIZED"},"AgreementNewAccount":{"name":"New Account","uri":"/v5/engagement/newAccount","method":"OPTIONS","authorization":"AUTHORIZED"},"LendingConsumerLoanBaseInfoV2":{"name":"Consumer loan simulation","uri":"/v5/lending/consumerloan/baseinfov1","method":"GET","authorization":"AUTHORIZED"},"LendingConsumerLoanBaseInfoV3":{"name":"Consumer loan simulation","uri":"/v5/lending/consumerloan/baseinfo","method":"GET","authorization":"AUTHORIZED"},"EinvoiceIncoming":{"name":"Lista E-fakturor","uri":"/v5/einvoice/incoming","method":"GET","authorization":"AUTHORIZED"},"Consent":{"name":"Hämta medgivande","uri":"/v5/customer/consent/{aTypeCode}","method":"GET","authorization":"AUTHORIZED"},"EinvoiceIssuer":{"name":"Hämta e-invoice utställare","uri":"/v5/einvoice/issuer","method":"GET","authorization":"AUTHORIZED"},"DepositFetchSelectedOffering":{"name":"Öppna nytt konto","uri":"/v5/deposit/offerings/{aOfferingId}","method":"GET","authorization":"AUTHORIZED"},"MessageBoxThreadListing":{"name":"Mina meddelanden","uri":"/v5/message/messagebox/{boxId}/thread","method":"GET","authorization":"AUTHORIZED"},"DepositFetchProducts":{"name":"Öppna nytt konto","uri":"/v5/deposit/products","method":"GET","authorization":"AUTHORIZED"},"FundMarketinfoTradeinfo":{"name":"Fondköpsinformation","uri":"/v5/fund/marketinfo/{aFundCode}/tradeinfo","method":"GET","authorization":"AUTHORIZED"},"ActiveDebitCardMenu":{"name":"ActiveDebitCardMenu","uri":"/v5/card/debitcard/active","method":"GET","authorization":"AUTHORIZED"},"LendingMortgageLoanCommitmentBaseInfo":{"name":"Bolånelöfte","uri":"/v5/lending/mortgageloan/commitment/baseinfo/{bankId}","method":"GET","authorization":"AUTHORIZED"},"LoanCalculationHousingmortage":{"name":"Beräkna bolån","uri":"/v5/loan/calculation/housingmortgage","method":"POST","authorization":"AUTHORIZED"},"ActivateInternetPayments":{"name":"Activate Internet Payments","uri":"/v5/payment/noSerivices","method":"OPTIONS","authorization":"UNAUTHORIZED"},"PortfolioSearchAndBuy":{"name":"Sök och köp","uri":"/v5/portfolio/searchAndBuy","method":"OPTIONS","authorization":"AUTHORIZED"},"AgreementHSB":{"name":"HSB","uri":"/v5/engagement/accessHSB","method":"OPTIONS","authorization":"AUTHORIZED"},"UpdateDeviceAddress":{"name":"Uppdatera device-adress","uri":"/v5/monitor/device","method":"PUT","authorization":"AUTHORIZED"},"PaymentQuicktransferPerform":{"name":"Spontanspara","uri":"/v5/quicktransfer/","method":"POST","authorization":"AUTHORIZED"},"SecuritiesQuickuserlistDelete":{"name":"Ta bort från favoritlista","uri":"/v5/securities/quickuserlist/{vpsubscriptionid}/{instrumenttype}/{instrumentid}","method":"DELETE","authorization":"AUTHORIZED"},"MeetingMgmtChatLive":{"name":"Fråga oss","uri":"/v5/meeting/session","method":"GET","authorization":"AUTHORIZED"},"LendingMortgageMoreBaseInfo":{"name":"Låna mer","uri":"/v5/lending/mortgageLoan/more/baseinfo","method":"GET","authorization":"AUTHORIZED"},"PaymentRegisterTransfer":{"name":"","uri":"/v5/payment/registered/transfer","method":"POST","authorization":"AUTHORIZED"},"LendingLoanOverview":{"name":"Låneöversikt","uri":"/v5/lending/loan/overview","method":"GET","authorization":"AUTHORIZED"},"SecuritiesOrderstatusTrades":{"name":"Lista avslut","uri":"/v5/securities/orderstatus/trades","method":"GET","authorization":"AUTHORIZED"},"CustomerValueMgmtNBAFetchNBAS":{"name":"Fetch NBAs","uri":"/v5/user/recommendations","method":"GET","authorization":"AUTHORIZED"},"SecuritiesMultimarketinfo":{"name":"Hämta flera marknadsinformationer","uri":"/v5/securities/multimarketinfo/","method":"GET","authorization":"AUTHORIZED"},"IdentificationAdministrationBankidOptions":{"name":"Mobilt BankID","uri":"/v5/identification/administration/bankid/mobile/options","method":"GET","authorization":"AUTHORIZED"},"MeetingMgmtChatVirtual":{"name":"Fråga oss","uri":"/v5/meeting/session","method":"GET","authorization":"AUTHORIZED"},"ProfileList":{"name":"Visa profiler","uri":"/v5/profile/","method":"GET","authorization":"AUTHORIZED"},"PaymentBaseinfo":{"name":"Information för att skapa en betalning","uri":"/v5/payment/baseinfo","method":"GET","authorization":"AUTHORIZED"},"FinanceMgmtSettingAccount":{"name":"Hämtar FinanceMgmt konton","uri":"/v5/customer/financemgmt/setting/account","method":"GET","authorization":"AUTHORIZED"},"FinanceMgmtAccounts":{"name":"Hämtar FinanceMgmt konton","uri":"/v5/customer/financemgmt/accounts","method":"GET","authorization":"AUTHORIZED"},"SecuritiesQuickuserlist":{"name":"Favoritlista utloggad","uri":"/v5/securities/quickuserlist/{vpsubscriptionid}","method":"GET","authorization":"AUTHORIZED"},"AgreementQuickbalanceUnsubscribe":{"name":"Ta bort snabbsaldo","uri":"/v5/quickbalance/subscription/{aSubscriptionId}","method":"DELETE","authorization":"AUTHORIZED"},"AdministrationGuardian":{"name":"Administrera barn","uri":"/v5/administration/guardian","method":"GET","authorization":"AUTHORIZED"},"SecuritiesAppropriatenessAnswers":{"name":"Utför passandebedömning","uri":"/v5/securities/appropriateness","method":"POST","authorization":"AUTHORIZED"},"PortfolioNewSavings":{"name":"öppna nytt sparande","uri":"/v5/portfolio/newSavings","method":"OPTIONS","authorization":"AUTHORIZED"},"SavingsgoalQuickdeposit":{"name":"Snabbspar","uri":"/v5/savingsgoal/{aId}/quickdeposit","method":"POST","authorization":"AUTHORIZED"},"SecuritiesAlert":{"name":"Hämta bevakningar","uri":"/v5/securities/alert","method":"GET","authorization":"AUTHORIZED"},"LendingConsumerLoanBaseInfo":{"name":"Consumer loan simulation","uri":"/v5/lending/consumerloan/baseinfov1","method":"GET","authorization":"AUTHORIZED"},"SecuritiesCustodyOffering":{"name":"Aktuella placeringserbjudanden","uri":"/v5/securities/custody/{custodyId}/offering","method":"GET","authorization":"UNAUTHORIZED"},"PaymentPayee":{"name":"Hämta betalningsmottagare","uri":"/v5/payment/payee/{aType}/{aAccountNumber}","method":"GET","authorization":"AUTHORIZED"},"PortfolioPensions":{"name":"Innehav pension","uri":"/v5/portfolio/pensions","method":"GET","authorization":"AUTHORIZED"},"FetchMonitorSubscriptions":{"name":"Hämta notis-prenumerationer","uri":"/v5/monitor/subscriptions","method":"GET","authorization":"AUTHORIZED"},"AddInstitute":{"name":"Add external institute","uri":"/v5/aggregation/institutes/{aInstituteId}","method":"POST","authorization":"UNAUTHORIZED"},"PortfolioResearchArticlesAndBlogs":{"name":"Analyser, artiklar och bloggar","uri":"/v5/portfolio/researchAndBlogs","method":"OPTIONS","authorization":"AUTHORIZED"},"SecuritiesAppropriatenessQuestions":{"name":"Hämta frågor passandebedömning","uri":"/v5/securities/appropriateness","method":"GET","authorization":"AUTHORIZED"},"FundMarketinfoMovers":{"name":"Fonder - Vinnare och förlorare","uri":"/v5/fund/marketinfo/funds/movers","method":"GET","authorization":"AUTHORIZED"},"SecuritiesSubscription":{"name":"Ta bort favoritlista utloggad","uri":"/v5/securities/subscription/{vpsubscriptionid}","method":"DELETE","authorization":"AUTHORIZED"},"FundMarketinfoFundList":{"name":"Fondlista","uri":"/v5/fund/marketinfo/funds","method":"POST","authorization":"AUTHORIZED"},"LendingConsumerLoanSubmitApplication":{"name":"Consumer loan application","uri":"/v5/lending/consumerloan/application","method":"POST","authorization":"AUTHORIZED"},"SecuritiesCustodyMarketinfoSearch":{"name":"Sök marknadsinformation","uri":"/v5/securities/custody/{custodyId}/marketinfo/{selection}","method":"GET","authorization":"AUTHORIZED"},"PortfolioFavorites":{"name":"Favoriter","uri":"/v5/portfolio/favorites","method":"OPTIONS","authorization":"AUTHORIZED"},"PortfolioMonthlySavingBaseInfo":{"name":"Starta månadsspar","uri":"/v5/portfolio/monthlysaving/baseinfo","method":"GET","authorization":"AUTHORIZED"},"FundAccountAgreements":{"name":"Öppna fondkonto","uri":"/v5/fund/account/agreements","method":"GET","authorization":"AUTHORIZED"},"PaymentConfirmed":{"name":"Godkända betalningar","uri":"/v5/payment/confirmed","method":"GET","authorization":"AUTHORIZED"},"InsuranceNonLifeSignUpVehicle":{"name":"Teckna fordonsförsäkring","uri":"/v5/insurance/non-life/vehicle/products","method":"GET","authorization":"AUTHORIZED"},"PortfolioHoldings":{"name":"Innehav","uri":"/v5/portfolio/holdings","method":"GET","authorization":"AUTHORIZED"},"SecuritiesAlertAdd":{"name":"Skapa bevakning","uri":"/v5/securities/alert","method":"POST","authorization":"AUTHORIZED"},"FininstrSix":{"name":"SIX ID","uri":"/v5/financialinstrument/sixid","method":"GET","authorization":"AUTHORIZED"},"BankCalendar":{"name":"Bank-kalender","uri":"/v5/bank/calendar","method":"GET","authorization":"AUTHORIZED"},"PaymentRegisterExternalRecipient":{"name":"Skapa överföringsmottagare","uri":"/v5/payment/recipient","method":"POST","authorization":"REQUIRES_AUTH_METHOD_CHANGE"},"ContactInformationAddTelephone":{"name":"Skapa telefonnummer","uri":"/v5/contactinformation/phone","method":"POST","authorization":"AUTHORIZED"},"DocumentsView":{"name":"View documents  ","uri":"/v5/message/noSerivices","method":"OPTIONS","authorization":"AUTHORIZED"},"ProfileCoordinationNumber":{"name":"Sammordnings nummer","uri":"/v5/profile/coordinationNumber","method":"OPTIONS","authorization":"AUTHORIZED"},"FundMarketinfoPerformance":{"name":"Fondutveckling","uri":"/v5/fund/marketinfo/{aFundCode}/performance/{aTimePeriod}","method":"GET","authorization":"AUTHORIZED"},"MessageReminders":{"name":"Hämta påminnelser","uri":"/v5/message/reminders","method":"GET","authorization":"AUTHORIZED"},"ProfileMenu":{"name":"Meny","uri":"/v5/profile/menu","method":"GET","authorization":"AUTHORIZED"},"PaymentRegisterPayment":{"name":"Registrera betalning","uri":"/v5/payment/registered/payment","method":"POST","authorization":"AUTHORIZED"},"LendingLoanOngoing":{"name":"Pågående lån","uri":"/v5/lending/loan/ongoing","method":"GET","authorization":"AUTHORIZED"},"PaymentPerformSingleTransfer":{"name":"Genomför enkel överföring","uri":"/v5/payment/singletransfer","method":"POST","authorization":"AUTHORIZED"},"PortfolioAlerts":{"name":"Bevakningar","uri":"/v5/portfolio/alerts","method":"OPTIONS","authorization":"AUTHORIZED"},"AgreementQuickbalanceFetch":{"name":"Hämta snabbsaldo","uri":"/v5/quickbalance/{aSubscriptionId}","method":"GET","authorization":"AUTHORIZED"},"InsuranceOverview":{"name":"Hämta försäkringsöversikt","uri":"/v5/insurance/overview","method":"GET","authorization":"AUTHORIZED"},"PaymentDirectDebitBaseinfo":{"name":"Autogiro baseinfo","uri":"/v5/payment/directdebit/baseinfo","method":"GET","authorization":"AUTHORIZED"},"InternalOrganisationFetchClearingNumbers":{"name":"Hämta clearingnummer","uri":"/v5/bank/clearingnumber","method":"GET","authorization":"AUTHORIZED"},"CurrencyConversion":{"name":"Beräkna valutakurs","uri":"/v5/currency/conversion","method":"GET","authorization":"AUTHORIZED"},"PaymentRegistered":{"name":"Registrerade betalningar","uri":"/v5/payment/registered","method":"GET","authorization":"AUTHORIZED"},"SecuritiesMarketinfoSearch":{"name":"Sök marknadsinformation","uri":"/v5/securities/marketinfo/{selection}","method":"GET","authorization":"AUTHORIZED"},"LendingMortgageNewExistingBaseInfo":{"name":"Mortgage new existing","uri":"/v5/lending/mortgage-loan/new-existing/base-info","method":"GET","authorization":"AUTHORIZED"},"SecuritiesUserlist":{"name":"Favoritlistor","uri":"/v5/securities/userlist","method":"GET","authorization":"AUTHORIZED"},"ChangeDocumentsDistributionSettings":{"name":"Documents Change Distribution Settings","uri":"/v5/message/noSerivices","method":"OPTIONS","authorization":"AUTHORIZED"},"FundMarketinfoHolding":{"name":"Fondinnehav","uri":"/v5/fund/marketinfo/{aFundCode}/holding","method":"GET","authorization":"AUTHORIZED"},"UploadAttachments":{"name":"Ladda upp attachments","uri":"/v5/message/attachment","method":"POST","authorization":"AUTHORIZED"},"CardsWithInternetPurchasesMenu":{"name":"CardsWithInternetPurchasesMenu","uri":"/v5/card/debitcard/internetpurchases","method":"GET","authorization":"AUTHORIZED"},"CaseMgmtCaseOverview":{"name":"Mina ärenden","uri":"/v5/customer-case","method":"GET","authorization":"AUTHORIZED"},"AddAggregated":{"name":"External aggregation","uri":"/v5/aggregation/institute/{aRealmUserId}/accounts","method":"POST","authorization":"UNAUTHORIZED"},"MessageBoxes":{"name":"Mina meddelanden","uri":"/v5/message/messagebox","method":"GET","authorization":"AUTHORIZED"},"RecurringCostsGetAgreement":{"name":"Anslut till Abonnemangshjälpen","uri":"/v5/recurringcosts/agreement","method":"GET","authorization":"AUTHORIZED"},"PaymentAgreementSwishStart":{"name":"Swish","uri":"/v5/payment/agreement/swish/signup/baseinfo","method":"GET","authorization":"AUTHORIZED"},"LoanRatesPrivate":{"name":"Räntor privatlån","uri":"/v5/loan/rates/private/{aBankId}","method":"GET","authorization":"AUTHORIZED"},"FundAccountOrderValidate":{"name":"Handla fond","uri":"/v5/fund/account/order/validation","method":"GET","authorization":"AUTHORIZED"},"PortfolioHoldingsDetails":{"name":"Innehav på detaljnivå","uri":"/v5/portfolio/holdings/{aId}","method":"GET","authorization":"AUTHORIZED"},"DownloadAttachments":{"name":"Ladda ner attachments","uri":"/v5/message/attachment/{attachmentId}","method":"GET","authorization":"AUTHORIZED"},"SecuritiesSecuritylistListid":{"name":"Hämta index-lista","uri":"/v5/securities/securitylist/{listid}","method":"GET","authorization":"AUTHORIZED"},"FundMarketinfoIndexPerformance":{"name":"Fondutveckling index","uri":"/v5/fund/marketinfo/index/{aIndexCode}/performance/{aTimePeriod}","method":"GET","authorization":"AUTHORIZED"},"SecuritiesUserlistCreate":{"name":"Skapa ny favoritlista","uri":"/v5/securities/userlist/{name}","method":"POST","authorization":"AUTHORIZED"},"EinvoicePayee":{"name":"Hämta E-faktura mottagare","uri":"/v5/einvoice/payee","method":"GET","authorization":"AUTHORIZED"},"CurrencyExchangerates":{"name":"Hämta växlingskurser","uri":"/v5/currency/exchangerates","method":"GET","authorization":"AUTHORIZED"},"FundAccountOrderBaseinfo":{"name":"Fondinnehav","uri":"/v5/fund/account/order/baseinfo","method":"GET","authorization":"AUTHORIZED"},"FundAccountHoldingtransfer":{"name":"Flytta fonder","uri":"/v5/fund/account/holdingtransfer","method":"GET","authorization":"AUTHORIZED"},"LoanCalculationPrivate":{"name":"Beräkna privatlån","uri":"/v5/loan/calculation/private","method":"POST","authorization":"AUTHORIZED"},"LendingLoanApplication":{"name":"Låneansökan","uri":"/v5/lending/loan/applyLoan","method":"OPTIONS","authorization":"AUTHORIZED"},"MarketinfoLinks":{"name":"Länkar för finansiella instrument","uri":"/v5/financial-instrument/market-info/links/{isin}","method":"GET","authorization":"AUTHORIZED"},"SecuritiesOffering":{"name":"Aktuella placeringserbjudanden","uri":"/v5/securities/offering","method":"GET","authorization":"UNAUTHORIZED"},"UsersettingAccountFavouriteAccount":{"name":"Uppdatera favoritkonto","uri":"/v5/channel/usersetting/account/favourite","method":"POST","authorization":"AUTHORIZED"},"FundMarketinfoFunds":{"name":"Fondlista","uri":"/v5/fund/marketinfo/funds","method":"GET","authorization":"AUTHORIZED"},"PaymentRegisterPayee":{"name":"Skapa betalningsmottagare","uri":"/v5/payment/payee","method":"POST","authorization":"REQUIRES_AUTH_METHOD_CHANGE"},"FundMarketinfoFundsFilters":{"name":"Filtreringsinformation","uri":"/v5/fund/marketinfo/funds/filters","method":"GET","authorization":"AUTHORIZED"},"LendingConsumerLoanEnrolledBanks":{"name":"Enrolled banks","uri":"/v5/lending/consumerloan/enrolledbanks","method":"GET","authorization":"AUTHORIZED"},"ExpenseControlSignup":{"name":"Samtycke för Utgiftskollen","uri":"/v5/expensecontrol/signup","method":"POST","authorization":"AUTHORIZED"},"SecuritiesSecuritylist":{"name":"Hämta index-listor","uri":"/v5/securities/securitylist/","method":"GET","authorization":"AUTHORIZED"},"ProfileDelete":{"name":"Radera profiler","uri":"/v5/profile/subscription/{aSubscriptionId}","method":"DELETE","authorization":"AUTHORIZED"},"ContactInformationAddEmail":{"name":"Skapa e-mail","uri":"/v5/contactinformation/email","method":"POST","authorization":"AUTHORIZED"},"AgreementQuickbalanceAccounts":{"name":"Hämta konton","uri":"/v5/quickbalance/accounts","method":"GET","authorization":"AUTHORIZED"},"PaymentQuicktransferUnsubscribe":{"name":"Ta bort spontanspar","uri":"/v5/quicktransfer/subscription/{aSubscriptionHashId}","method":"DELETE","authorization":"AUTHORIZED"},"SecuritiesFactsheet":{"name":"Hämta faktablad","uri":"/v5/securities/factsheet/{isin}","method":"GET","authorization":"AUTHORIZED"},"UsersettingAccountPrioritizedaccounts":{"name":"Uppdatera prioriterade konton","uri":"/v5/channel/usersetting/account/priority","method":"POST","authorization":"AUTHORIZED"},"ContactInformationEmail":{"name":"Hämta e-mail","uri":"/v5/contactinformation/email","method":"GET","authorization":"AUTHORIZED"},"PersonalizedTracking":{"name":"Fetch Pseudo ID","uri":"/v5/tracking/alias/{type}","method":"GET","authorization":"AUTHORIZED"},"PortfolioMonthlySavingOverview":{"name":"Månadsspar","uri":"/v5/portfolio/monthlysaving","method":"GET","authorization":"AUTHORIZED"},"CardPictureoncardBaseinfo":{"name":"Kort på kort","uri":"/v5/card/pictureoncard/baseinfo","method":"GET","authorization":"AUTHORIZED"},"FundAccountTradeinfo":{"name":"Hämta fond","uri":"/v5/fund/account/tradeinfo/{aFundCode}","method":"GET","authorization":"AUTHORIZED"},"InsuranceNonLifeSignUpHome":{"name":"Teckna hemförsäkring","uri":"/v5/insurance/non-life/home/categories","method":"GET","authorization":"AUTHORIZED"},"LoanRatesMortage":{"name":"Räntor bolån","uri":"/v5/loan/rates/mortgage/{aBankid}","method":"GET","authorization":"AUTHORIZED"},"PortfolioDetailOverview":{"name":"Innehav detalj","uri":"/v5/portfolio/holdingDetailsOverview","method":"OPTIONS","authorization":"AUTHORIZED"},"FinanceMgmtBaseinfo":{"name":"Personal finance manager","uri":"/v5/customer/financemgmt/baseinfo","method":"GET","authorization":"UNAUTHORIZED"},"ChangeDebitCardInternetPurchasesMenu":{"name":"ChangeDebitCardInternetPurchasesMenu","uri":"/v5/card/debitcard/{cardId}/internetpurchases","method":"PUT","authorization":"AUTHORIZED"},"DepositFetchSelectedProduct":{"name":"Öppna nytt konto","uri":"/v5/deposit/products/{aProductId}","method":"GET","authorization":"AUTHORIZED"},"UpdateMonitorSubscriptions":{"name":"Uppdatera notis-prenumerationer","uri":"/v5/monitor/subscriptions","method":"PUT","authorization":"AUTHORIZED"},"IssueTicket":{"name":"???[identification.federative.v5]Menu_Identification_Federative???","uri":"/v5/identification/federative/issue/ticket","method":"GET","authorization":"AUTHORIZED"},"ProfileFetchDefault":{"name":"Hämta default profiler","uri":"/v5/profile/default/{aSubscriptionId}","method":"POST","authorization":"AUTHORIZED"},"LendingCarLoanBaseInfo":{"name":"Car loan application","uri":"/v5/lending/carloan/baseinfo","method":"GET","authorization":"AUTHORIZED"},"DepositFetchOfferings":{"name":"Öppna nytt konto","uri":"/v5/deposit/offerings","method":"GET","authorization":"AUTHORIZED"},"PaymentQuicktransferAccounts":{"name":"Hämta konton för spontanspar","uri":"/v5/quicktransfer/accounts","method":"GET","authorization":"AUTHORIZED"},"IdentificationTouch":{"name":"Uppdatera session","uri":"/v5/identification/touch","method":"GET","authorization":"AUTHORIZED"},"SavingsgoalBaseinfo":{"name":"Information för sparmål","uri":"/v5/savingsgoal/baseinfo","method":"GET","authorization":"AUTHORIZED"},"ConsentList":{"name":"Hämta medgivandelista","uri":"/v5/customer/consent","method":"GET","authorization":"AUTHORIZED"},"PortfolioSustainability":{"name":"Hållbarhet","uri":"/v5/portfolio/sustainability","method":"OPTIONS","authorization":"AUTHORIZED"},"SavingsgoalList":{"name":"Hämta sparmål","uri":"/v5/savingsgoal/","method":"GET","authorization":"AUTHORIZED"},"CustomerValueMgmtNBARequestCallMeBack":{"name":"Send response","uri":"/v5/user/recommendation/{aRecommendationId}","method":"POST","authorization":"AUTHORIZED"},"FundMarketinfoIndex":{"name":"Fondindex","uri":"/v5/fund/marketinfo/index","method":"GET","authorization":"AUTHORIZED"},"FetchMonitorNotifications":{"name":"Hämta aktuella notiser","uri":"/v5/monitor/notifications","method":"GET","authorization":"AUTHORIZED"},"ContactInformation":{"name":"Hämta kontaktinformation","uri":"/v5/contactinformation","method":"GET","authorization":"AUTHORIZED"},"InternalOrganisationSearchBranches":{"name":"Kontorsök","uri":"/v5/search/branches","method":"GET","authorization":"AUTHORIZED"},"InteractionTextChat":{"name":"Chatta med oss","uri":"/v5/interaction/text-chat","method":"POST","authorization":"AUTHORIZED"},"SecuritiesAlertCancel":{"name":"Ta bort bevakning","uri":"/v5/securities/alert/{aAlertId}","method":"DELETE","authorization":"AUTHORIZED"},"IssueToken":{"name":"Utfärda token","uri":"/v5/identification/federative/oauth/issue/token/{systemId}","method":"GET","authorization":"AUTHORIZED"},"LoanCalculationHousingmortageBaseinfo":{"name":"Belopp bolån","uri":"/v5/loan/calculation/housingmortgage/baseinfo","method":"GET","authorization":"AUTHORIZED"},"FundMarketinfoPerformanceHistory":{"name":"Historisk fondutveckling","uri":"/v5/fund/marketinfo/{aFundCode}/performance/history","method":"GET","authorization":"AUTHORIZED"}},"mobile":true,"cacheGroup":"menu"}
-
+{"extendedUsage":false,"status":"COMPLETE","links":{"next":{"method":"GET","uri":"/v5/profile/"}},"easyLoginId":"QGxI0y2cwy_wK7r5XxuJJi0AEYgL9a6iFZCxX0SFv4c=","authenticationRole":"CUSTOMER","maskedUserId":"19781006****","serverTime":"20200424 13:34","formattedServerTime":"2020-04-24 13:34"}
 
 REQUEST 7
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/overview?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/?dsid=AAAAAAAA
 Accept: application/json
 
 RESPONSE 7
 200
 Server: -
-Date: Thu, 17 Sep 2020 07:34:26 GMT
+Date: Fri, 24 Apr 2020 11:34:20 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -114,17 +92,17 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"closedMigratedCurrencyAccounts":[],"cardCredit":{},"showCreditCardLink":true,"errorFetchingCreditCards":false,"transactionAccounts":[{"productId":"TRP00103","availableAmount":"0,00","singleLegalAccount":false,"selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/2afd29de9249d2245ff6a5232170cb65a913ae7d"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"favouriteAccount":true,"id":"2afd29de9249d2245ff6a5232170cb65a913ae7d","name":"Bokonto","accountNumber":"111 111 111-1","clearingNumber":"1111-1","fullyFormattedNumber":"1111-1,111 111 111-1","nonFormattedNumber":"111111111111111","balance":"0,00","currency":"SEK","priority":"1","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/2afd29de9249d2245ff6a5232170cb65a913ae7d"}}},"originalName":"Bokonto","transactions":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/2afd29de9249d2245ff6a5232170cb65a913ae7d/transactions"}}}},{"productId":"TRP00502","availableAmount":"383,62","singleLegalAccount":false,"selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/a86130f25b3d66d64e557108346fa61d298e7fbd"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"id":"a86130f25b3d66d64e557108346fa61d298e7fbd","name":"Privatkonto","accountNumber":"222 222 222-2","clearingNumber":"2222-2","fullyFormattedNumber":"2222-2,222 222 222-2","nonFormattedNumber":"222222222222222","balance":"383,62","currency":"SEK","priority":"2","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/a86130f25b3d66d64e557108346fa61d298e7fbd"}}},"originalName":"Privatkonto","transactions":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/a86130f25b3d66d64e557108346fa61d298e7fbd/transactions"}}}}],"savingAccounts":[{"productId":"SPP00103","availableAmount":"8,64","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/01a858b71922aaac69b0cfa7be179129c6a498d8"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"id":"01a858b71922aaac69b0cfa7be179129c6a498d8","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"3333-3","fullyFormattedNumber":"3333-3,333 333 333-3","nonFormattedNumber":"333333333333333","balance":"8,64","currency":"SEK","priority":"3","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8"}}},"transactions":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions"}}}}],"loanAccounts":[],"transactionDisposalAccounts":[],"cardAccounts":[],"supplementaryCardAccounts":[],"eligibleForOverdraftLimit":true,"accessToHSB":false}
-
+{"banks":[{"name":"Swedbank AB (publ)","bankId":"08999","url":"https://www.swedbank.se","privateProfile":{"activeProfileLanguage":"sv","targetType":"PRIVATE","customerName":"Jenny Skoog","customerNumber":"19781006-6667","id":"907c4475dbdcb9598b327306a890bffe92fad1c3","bankId":"08999","bankName":"Swedbank AB (publ)","url":"https://www.swedbank.se","customerInternational":false,"youthProfile":false,"links":{"edit":{"method":"PUT","uri":"/v5/profile/subscription/907c4475dbdcb9598b327306a890bffe92fad1c3"},"next":{"method":"POST","uri":"/v5/profile/907c4475dbdcb9598b327306a890bffe92fad1c3"}}},"corporateProfiles":[]}],"hasSwedbankProfile":true,"hasSavingbankProfile":false,"userId":"***MASKED***"}
 
 REQUEST 8
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/baseinfo?dsid=AAAAAAAA
+POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/907c4475dbdcb9598b327306a890bffe92fad1c3?dsid=AAAAAAAA
 Accept: application/json
+Content-Type: application/json
 
 RESPONSE 8
-200
+201
 Server: -
-Date: Thu, 17 Sep 2020 07:34:27 GMT
+Date: Fri, 24 Apr 2020 11:34:20 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -133,17 +111,34 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"addRecipientStatus":{"allowed":false,"notAllowedMessage":{"message":"Aktivera Mobilt BankID med utökad användning för att lägga till mottagare med Mobilt BankID.<br><br>Detta gör du i internetbanken på sidan BankID.","headline":"Du har inte aktiverat utökad användning för Mobilt BankID"},"links":{"next":{"method":"POST","uri":"/v5/payment/recipient"}}},"addPayeeStatus":{"allowed":false,"notAllowedMessage":{"message":"Aktivera Mobilt BankID med utökad användning för att lägga till mottagare med Mobilt BankID.<br><br>Detta gör du i internetbanken på sidan BankID.","headline":"Du har inte aktiverat utökad användning för Mobilt BankID"},"links":{"next":{"method":"POST","uri":"/v5/payment/recipient"}}},"transactionAccountGroups":[{"accounts":[{"currencyCode":"SEK","disposed":false,"silAccount":false,"slaSubAccount":false,"currencyAccount":false,"scopes":["PAYMENT_FROM","TRANSFER_FROM","QUICKTRANSFER_TO","QUICKTRANSFER_FROM","TRANSFER_TO"],"amount":"0,00","iskAccount":false,"name":"Bokonto","accountNumber":"111 111 111-1","clearingNumber":"1111-1","id":"bf3643ca602003db3efb0f43c10a58761c333d68","fullyFormattedNumber":"1111-1,111 111 111-1"},{"currencyCode":"SEK","disposed":false,"silAccount":false,"slaSubAccount":false,"currencyAccount":false,"scopes":["PAYMENT_FROM","TRANSFER_FROM","QUICKTRANSFER_TO","QUICKTRANSFER_FROM","TRANSFER_TO"],"amount":"383,62","iskAccount":false,"name":"Privatkonto","accountNumber":"222 222 222-2","clearingNumber":"2222-2","id":"9fd34979a55b3d07fbc35208ae68f7107b04d9ae","fullyFormattedNumber":"2222-2,222 222 222-2"}],"name":"Konton i svenska kronor"},{"accounts":[{"currencyCode":"SEK","disposed":false,"silAccount":false,"slaSubAccount":false,"currencyAccount":false,"scopes":["PAYMENT_FROM","TRANSFER_FROM","QUICKTRANSFER_TO","QUICKTRANSFER_FROM","TRANSFER_TO"],"amount":"8,64","iskAccount":false,"name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"3333-3","id":"d706fab52e7fb1feba488b4f8b410523ab9cc5ad","fullyFormattedNumber":"3333-3,333 333 333-3"}],"name":"Sparkonton"}],"transfer":{"periodicities":["NONE","WEEKLY","EVERY_OTHER_WEEK","MONTHLY","EVERY_OTHER_MONTH","QUARTERLY","SEMI_ANNUALLY","ANNUALLY"],"externalRecipients":[{"name":"Wiremock Tink","lastUsed":"2019-08-20","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/a21083a5f2e824ca52dc4179898ca7cb2590d289"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/a21083a5f2e824ca52dc4179898ca7cb2590d289"}},"accountNumber":"444 444 444-4","clearingNumber":"4444-4","id":"a21083a5f2e824ca52dc4179898ca7cb2590d289","fullyFormattedNumber":"4444-4,444 444 444-4","bank":"Swedbank AB (publ)"},{"name":"Wiremock","lastUsed":"2019-07-02","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/78a8d7320a702ca09c03103f1e63e590d89197b7"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/78a8d7320a702ca09c03103f1e63e590d89197b7"}},"accountNumber":"555 555-5","clearingNumber":"5555","id":"78a8d7320a702ca09c03103f1e63e590d89197b7","fullyFormattedNumber":"555 555 555-5","bank":"Skandinaviska Enskilda Banken AB"},{"name":"Wiremock","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/4536c79f791b7577d2e2d9aa510ac5334a10e9cf"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/4536c79f791b7577d2e2d9aa510ac5334a10e9cf"}},"accountNumber":"666 666-6","clearingNumber":"6666","id":"4536c79f791b7577d2e2d9aa510ac5334a10e9cf","fullyFormattedNumber":"6666 666 666-6","bank":"Avanza Bank AB"},{"name":"Wiremock Agent","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/7486390e5ff0efe4a4ea55ecc0050b48415235f1"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/7486390e5ff0efe4a4ea55ecc0050b48415235f1"}},"accountNumber":"777 777-7","clearingNumber":"7777","id":"7486390e5ff0efe4a4ea55ecc0050b48415235f1","fullyFormattedNumber":"7777 777 777-7","bank":"Skandinaviska Enskilda Banken AB"},{"name":"Wiremock Test","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/10aa35a3144ab8a288822fbaa3b58af334d1abc6"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/10aa35a3144ab8a288822fbaa3b58af334d1abc6"}},"accountNumber":"88 888 888-8","clearingNumber":"8888","id":"10aa35a3144ab8a288822fbaa3b58af334d1abc6","fullyFormattedNumber":"8888 88 888 888-8","bank":"Svenska Handelsbanken AB"},{"name":"Wiremock Test","lastUsed":"2019-08-20","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/083dea7334f68f9b76e4d4b883ef1148e589314a"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/083dea7334f68f9b76e4d4b883ef1148e589314a"}},"accountNumber":"999 999-9","clearingNumber":"9999","id":"083dea7334f68f9b76e4d4b883ef1148e589314a","fullyFormattedNumber":"9999 999 999-9","bank":"Skandinaviska Enskilda Banken AB"},{"name":"Wiremock Test","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/076ae21558fa63486ac2cff0f74fce89328a64d2"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/076ae21558fa63486ac2cff0f74fce89328a64d2"}},"accountNumber":"101 010-1","clearingNumber":"1010","id":"076ae21558fa63486ac2cff0f74fce89328a64d2","fullyFormattedNumber":"1010 101 010-1","bank":"Skandinaviska Enskilda Banken AB"},{"name":"Wireock Test","lastUsed":"2019-08-12","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/2699c81a325e10a56e4968d12b05aa672905dc70"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/2699c81a325e10a56e4968d12b05aa672905dc70"}},"accountNumber":"202 020 202-0","clearingNumber":"2020-2","id":"2699c81a325e10a56e4968d12b05aa672905dc70","fullyFormattedNumber":"2020-2,202 020 202-0","bank":"Swedbank AB (publ)"},{"name":"Wiremock Test","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/7df31984015492631bbcc511aedffb16f9faba7f"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/7df31984015492631bbcc511aedffb16f9faba7f"}},"accountNumber":"30 303 030-3","clearingNumber":"3030","id":"7df31984015492631bbcc511aedffb16f9faba7f","fullyFormattedNumber":"3030 30 303 030-3","bank":"Svenska Handelsbanken AB"},{"name":"Wiremock Test","lastUsed":"2019-08-20","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/f672153d2de6cdbb7e1a298e5a7a98bcf24eb612"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/f672153d2de6cdbb7e1a298e5a7a98bcf24eb612"}},"accountNumber":"404 040-4","clearingNumber":"4040","id":"f672153d2de6cdbb7e1a298e5a7a98bcf24eb612","fullyFormattedNumber":"4040 404 040-4","bank":"Skandinaviska Enskilda Banken AB"},{"name":"Wiremock Test","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/b6bb91cfc5c38a18272faddc20da0dcbd78e6a4d"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/b6bb91cfc5c38a18272faddc20da0dcbd78e6a4d"}},"accountNumber":"50 505 050-5","clearingNumber":"5050","id":"b6bb91cfc5c38a18272faddc20da0dcbd78e6a4d","fullyFormattedNumber":"5050 50 505 050-5","bank":"Svenska Handelsbanken AB"},{"name":"Wiremock Test","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/b2296643eb2d844e792d0ce9af2a922746647daa"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/b2296643eb2d844e792d0ce9af2a922746647daa"}},"accountNumber":"606 060 606-0","clearingNumber":"6060-6","id":"b2296643eb2d844e792d0ce9af2a922746647daa","fullyFormattedNumber":"6060-6,606 060 606-0","bank":"Swedbank AB (publ)"},{"name":"Wiremock Test","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/9034195a6c6ff0d53b58e07813953da221b319be"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/9034195a6c6ff0d53b58e07813953da221b319be"}},"accountNumber":"707 070-7","clearingNumber":"5403","id":"9034195a6c6ff0d53b58e07813953da221b319be","fullyFormattedNumber":"7070 707 070-7","bank":"Skandinaviska Enskilda Banken AB"},{"name":"Wiremock Test","lastUsed":"2016-07-18","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/cd183876cf833218047053108c74529b6be89376"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/cd183876cf833218047053108c74529b6be89376"}},"accountNumber":"808 080-8","clearingNumber":"8080","id":"cd183876cf833218047053108c74529b6be89376","fullyFormattedNumber":"8080 808 080-8","bank":"Skandinaviska Enskilda Banken AB"},{"name":"Wiremock Test","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/ae177782709860f268ff26642e3a457a438da403"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/ae177782709860f268ff26642e3a457a438da403"}},"accountNumber":"909 090-9","clearingNumber":"9090","id":"ae177782709860f268ff26642e3a457a438da403","fullyFormattedNumber":"9090 909 090-9","bank":"NORDEA BANK ABP"}],"links":{"next":{"method":"POST","uri":"/v5/payment/registered/transfer"}}},"payment":{"payees":[],"links":{"next":{"method":"POST","uri":"/v5/payment/registered/payment"}}}}
+{"nibprimaryUser":false,"selectedProfile":{"activeProfileLanguage":"sv","targetType":"PRIVATE","customerName":"Jenny Skoog","customerNumber":"19781006-6667","id":"907c4475dbdcb9598b327306a890bffe92fad1c3","bankId":"08999","bankName":"Swedbank AB (publ)","url":"https://www.swedbank.se","customerInternational":false,"youthProfile":false},"menuItems":{"CustomerValueMgmtNBASendFeedback":{"name":"Send response","uri":"/v5/user/recommendation/{aRecommendationId}","method":"POST","authorization":"AUTHORIZED"},"IdentificationDevice":{"name":"Kontrollera device","uri":"/v5/identification/device/","method":"GET","authorization":"AUTHORIZED"},"SecuritiesNotificationsResearch":{"name":"Hämta notificationer","uri":"/v5/securities/notifications/research","method":"GET","authorization":"AUTHORIZED"},"ContactInformationTelephone":{"name":"Hämta telefonnummer","uri":"/v5/contactinformation/phone","method":"GET","authorization":"AUTHORIZED"},"InsuranceOverviewCases":{"name":"Hämta försäkringsärenden","uri":"/v5/insurance/cases","method":"GET","authorization":"AUTHORIZED"},"DivisionPrivateCorporate":{"name":"Sorting agreements division private corporate","uri":"/v5/soleproprietor/admin/noSerivices","method":"OPTIONS","authorization":"UNAUTHORIZED"},"LendingConsumerLoanValidateApplication":{"name":"Consumer loan validate application","uri":"/v5/lending/consumerloan/application/validate","method":"POST","authorization":"AUTHORIZED"},"IdentificationMethods":{"name":"Hämta inloggningsmetoder","uri":"/v5/identification/","method":"GET","authorization":"AUTHORIZED"},"AgreementCreditCards":{"name":"Credit Crads","uri":"/v5/engagement/creditCards","method":"OPTIONS","authorization":"AUTHORIZED"},"PaymentRejected":{"name":"Avvisade betalningar ","uri":"/v5/payment/rejected","method":"GET","authorization":"AUTHORIZED"},"PaymentDirectDebit":{"name":"Autogiron","uri":"/v5/payment/directdebit/mandate","method":"GET","authorization":"AUTHORIZED"},"EngagementOverview":{"name":"Ekonomisk översikt","uri":"/v5/engagement/overview","method":"GET","authorization":"AUTHORIZED"},"MeetingMgmtVirtualChat":{"name":"Fråga oss","uri":"/v5/meeting/token/{type}","method":"GET","authorization":"AUTHORIZED"},"UpcomingTransactions":{"name":"Hämta framtida transaktioner","uri":"/v5/event/calendar","method":"GET","authorization":"AUTHORIZED"},"FundMarketinfo":{"name":"Hämta fond","uri":"/v5/fund/marketinfo/{aFundCode}","method":"GET","authorization":"AUTHORIZED"},"IdentificationLogout":{"name":"Logga ut","uri":"/v5/identification/logout","method":"PUT","authorization":"AUTHORIZED"},"PortfolioHoldingsoverview":{"name":"Sparmål och innehav","uri":"/v5/portfolio/holdingsoverview","method":"GET","authorization":"AUTHORIZED"},"SecuritiesUserlistListid":{"name":"Favoritlista","uri":"/v5/securities/userlist/{listid}","method":"GET","authorization":"AUTHORIZED"},"PortfolioMarket":{"name":"Marknaden ","uri":"/v5/portfolio/market","method":"OPTIONS","authorization":"AUTHORIZED"},"AgreementMasterPass":{"name":"Master Pass","uri":"/v5/engagement/masterPass","method":"OPTIONS","authorization":"AUTHORIZED"},"LendingLoanOverviewV2":{"name":"Låneöversikt","uri":"/v5/lending/loan/overview/v2","method":"GET","authorization":"AUTHORIZED"},"PaymentsHistory":{"name":"Hämta historiska betalningar","uri":"/v5/payment/historical","method":"GET","authorization":"AUTHORIZED"},"LoanCreateRequestPrivateLoan":{"name":"Skapa privat låneförfrågan","uri":"/v5/loan/request/private","method":"POST","authorization":"AUTHORIZED"},"AgreementNewAccount":{"name":"New Account","uri":"/v5/engagement/newAccount","method":"OPTIONS","authorization":"AUTHORIZED"},"LendingConsumerLoanBaseInfoV2":{"name":"Consumer loan simulation","uri":"/v5/lending/consumerloan/baseinfov1","method":"GET","authorization":"AUTHORIZED"},"LendingConsumerLoanBaseInfoV3":{"name":"Consumer loan simulation","uri":"/v5/lending/consumerloan/baseinfo","method":"GET","authorization":"AUTHORIZED"},"EinvoiceIncoming":{"name":"Lista E-fakturor","uri":"/v5/einvoice/incoming","method":"GET","authorization":"AUTHORIZED"},"Consent":{"name":"Hämta medgivande","uri":"/v5/customer/consent/{aTypeCode}","method":"GET","authorization":"AUTHORIZED"},"EinvoiceIssuer":{"name":"Hämta e-invoice utställare","uri":"/v5/einvoice/issuer","method":"GET","authorization":"AUTHORIZED"},"DepositFetchSelectedOffering":{"name":"Öppna nytt konto","uri":"/v5/deposit/offerings/{aOfferingId}","method":"GET","authorization":"AUTHORIZED"},"MessageBoxThreadListing":{"name":"Mina meddelanden","uri":"/v5/message/messagebox/{boxId}/thread","method":"GET","authorization":"AUTHORIZED"},"DepositFetchProducts":{"name":"Öppna nytt konto","uri":"/v5/deposit/products","method":"GET","authorization":"AUTHORIZED"},"FundMarketinfoTradeinfo":{"name":"Fondköpsinformation","uri":"/v5/fund/marketinfo/{aFundCode}/tradeinfo","method":"GET","authorization":"AUTHORIZED"},"ActiveDebitCardMenu":{"name":"ActiveDebitCardMenu","uri":"/v5/card/debitcard/active","method":"GET","authorization":"AUTHORIZED"},"LendingMortgageLoanCommitmentBaseInfo":{"name":"Bolånelöfte","uri":"/v5/lending/mortgageloan/commitment/baseinfo/{bankId}","method":"GET","authorization":"AUTHORIZED"},"LoanCalculationHousingmortage":{"name":"Beräkna bolån","uri":"/v5/loan/calculation/housingmortgage","method":"POST","authorization":"AUTHORIZED"},"ActivateInternetPayments":{"name":"Activate Internet Payments","uri":"/v5/payment/noSerivices","method":"OPTIONS","authorization":"UNAUTHORIZED"},"PortfolioSearchAndBuy":{"name":"Sök och köp","uri":"/v5/portfolio/searchAndBuy","method":"OPTIONS","authorization":"AUTHORIZED"},"AgreementHSB":{"name":"HSB","uri":"/v5/engagement/accessHSB","method":"OPTIONS","authorization":"AUTHORIZED"},"UpdateDeviceAddress":{"name":"Uppdatera device-adress","uri":"/v5/monitor/device","method":"PUT","authorization":"AUTHORIZED"},"PaymentQuicktransferPerform":{"name":"Spontanspara","uri":"/v5/quicktransfer/","method":"POST","authorization":"AUTHORIZED"},"SecuritiesQuickuserlistDelete":{"name":"Ta bort från favoritlista","uri":"/v5/securities/quickuserlist/{vpsubscriptionid}/{instrumenttype}/{instrumentid}","method":"DELETE","authorization":"AUTHORIZED"},"MeetingMgmtChatLive":{"name":"Fråga oss","uri":"/v5/meeting/session","method":"GET","authorization":"AUTHORIZED"},"LendingMortgageMoreBaseInfo":{"name":"Låna mer","uri":"/v5/lending/mortgageLoan/more/baseinfo","method":"GET","authorization":"AUTHORIZED"},"PaymentRegisterTransfer":{"name":"","uri":"/v5/payment/registered/transfer","method":"POST","authorization":"AUTHORIZED"},"LendingLoanOverview":{"name":"Låneöversikt","uri":"/v5/lending/loan/overview","method":"GET","authorization":"AUTHORIZED"},"SecuritiesOrderstatusTrades":{"name":"Lista avslut","uri":"/v5/securities/orderstatus/trades","method":"GET","authorization":"AUTHORIZED"},"CustomerValueMgmtNBAFetchNBAS":{"name":"Fetch NBAs","uri":"/v5/user/recommendations","method":"GET","authorization":"AUTHORIZED"},"SecuritiesMultimarketinfo":{"name":"Hämta flera marknadsinformationer","uri":"/v5/securities/multimarketinfo/","method":"GET","authorization":"AUTHORIZED"},"IdentificationAdministrationBankidOptions":{"name":"Mobilt BankID","uri":"/v5/identification/administration/bankid/mobile/options","method":"GET","authorization":"AUTHORIZED"},"MeetingMgmtChatVirtual":{"name":"Fråga oss","uri":"/v5/meeting/session","method":"GET","authorization":"AUTHORIZED"},"ProfileList":{"name":"Visa profiler","uri":"/v5/profile/","method":"GET","authorization":"AUTHORIZED"},"PaymentBaseinfo":{"name":"Information för att skapa en betalning","uri":"/v5/payment/baseinfo","method":"GET","authorization":"AUTHORIZED"},"FinanceMgmtSettingAccount":{"name":"Manage pfm accounts","uri":"/v5/customer/financemgmt/setting/account","method":"GET","authorization":"AUTHORIZED"},"SecuritiesQuickuserlist":{"name":"Favoritlista utloggad","uri":"/v5/securities/quickuserlist/{vpsubscriptionid}","method":"GET","authorization":"AUTHORIZED"},"AgreementQuickbalanceUnsubscribe":{"name":"Ta bort snabbsaldo","uri":"/v5/quickbalance/subscription/{aSubscriptionId}","method":"DELETE","authorization":"AUTHORIZED"},"AdministrationGuardian":{"name":"Administrera barn","uri":"/v5/administration/guardian","method":"GET","authorization":"AUTHORIZED"},"SecuritiesAppropriatenessAnswers":{"name":"Utför passandebedömning","uri":"/v5/securities/appropriateness","method":"POST","authorization":"AUTHORIZED"},"PortfolioNewSavings":{"name":"öppna nytt sparande","uri":"/v5/portfolio/newSavings","method":"OPTIONS","authorization":"AUTHORIZED"},"SavingsgoalQuickdeposit":{"name":"Snabbspar","uri":"/v5/savingsgoal/{aId}/quickdeposit","method":"POST","authorization":"AUTHORIZED"},"SecuritiesAlert":{"name":"Hämta bevakningar","uri":"/v5/securities/alert","method":"GET","authorization":"AUTHORIZED"},"LendingConsumerLoanBaseInfo":{"name":"Consumer loan simulation","uri":"/v5/lending/consumerloan/baseinfov1","method":"GET","authorization":"AUTHORIZED"},"PaymentPayee":{"name":"Hämta betalningsmottagare","uri":"/v5/payment/payee/{aType}/{aAccountNumber}","method":"GET","authorization":"AUTHORIZED"},"PortfolioPensions":{"name":"Innehav pension","uri":"/v5/portfolio/pensions","method":"GET","authorization":"AUTHORIZED"},"FetchMonitorSubscriptions":{"name":"Hämta notis-prenumerationer","uri":"/v5/monitor/subscriptions","method":"GET","authorization":"AUTHORIZED"},"PortfolioResearchArticlesAndBlogs":{"name":"Analyser, artiklar och bloggar","uri":"/v5/portfolio/researchAndBlogs","method":"OPTIONS","authorization":"AUTHORIZED"},"SecuritiesAppropriatenessQuestions":{"name":"Hämta frågor passandebedömning","uri":"/v5/securities/appropriateness","method":"GET","authorization":"AUTHORIZED"},"FundMarketinfoMovers":{"name":"Fonder - Vinnare och förlorare","uri":"/v5/fund/marketinfo/funds/movers","method":"GET","authorization":"AUTHORIZED"},"SecuritiesSubscription":{"name":"Ta bort favoritlista utloggad","uri":"/v5/securities/subscription/{vpsubscriptionid}","method":"DELETE","authorization":"AUTHORIZED"},"FundMarketinfoFundList":{"name":"Fondlista","uri":"/v5/fund/marketinfo/funds","method":"POST","authorization":"AUTHORIZED"},"LendingConsumerLoanSubmitApplication":{"name":"Consumer loan application","uri":"/v5/lending/consumerloan/application","method":"POST","authorization":"AUTHORIZED"},"PortfolioFavorites":{"name":"Favoriter","uri":"/v5/portfolio/favorites","method":"OPTIONS","authorization":"AUTHORIZED"},"PortfolioMonthlySavingBaseInfo":{"name":"Starta månadsspar","uri":"/v5/portfolio/monthlysaving/baseinfo","method":"GET","authorization":"AUTHORIZED"},"FundAccountAgreements":{"name":"Öppna fondkonto","uri":"/v5/fund/account/agreements","method":"GET","authorization":"AUTHORIZED"},"PaymentConfirmed":{"name":"Godkända betalningar","uri":"/v5/payment/confirmed","method":"GET","authorization":"AUTHORIZED"},"InsuranceNonLifeSignUpVehicle":{"name":"Teckna fordonsförsäkring","uri":"/v5/insurance/non-life/vehicle/products","method":"GET","authorization":"AUTHORIZED"},"PortfolioHoldings":{"name":"Innehav","uri":"/v5/portfolio/holdings","method":"GET","authorization":"AUTHORIZED"},"SecuritiesAlertAdd":{"name":"Skapa bevakning","uri":"/v5/securities/alert","method":"POST","authorization":"AUTHORIZED"},"FininstrSix":{"name":"SIX ID","uri":"/v5/financialinstrument/sixid","method":"GET","authorization":"AUTHORIZED"},"BankCalendar":{"name":"Bank-kalender","uri":"/v5/bank/calendar","method":"GET","authorization":"AUTHORIZED"},"PaymentRegisterExternalRecipient":{"name":"Skapa överföringsmottagare","uri":"/v5/payment/recipient","method":"POST","authorization":"REQUIRES_AUTH_METHOD_CHANGE"},"ContactInformationAddTelephone":{"name":"Skapa telefonnummer","uri":"/v5/contactinformation/phone","method":"POST","authorization":"AUTHORIZED"},"DocumentsView":{"name":"View documents  ","uri":"/v5/message/noSerivices","method":"OPTIONS","authorization":"AUTHORIZED"},"ProfileCoordinationNumber":{"name":"Sammordnings nummer","uri":"/v5/profile/coordinationNumber","method":"OPTIONS","authorization":"AUTHORIZED"},"FundMarketinfoPerformance":{"name":"Fondutveckling","uri":"/v5/fund/marketinfo/{aFundCode}/performance/{aTimePeriod}","method":"GET","authorization":"AUTHORIZED"},"MessageReminders":{"name":"Hämta påminnelser","uri":"/v5/message/reminders","method":"GET","authorization":"AUTHORIZED"},"ProfileMenu":{"name":"Meny","uri":"/v5/profile/menu","method":"GET","authorization":"AUTHORIZED"},"PaymentRegisterPayment":{"name":"Registrera betalning","uri":"/v5/payment/registered/payment","method":"POST","authorization":"AUTHORIZED"},"LendingLoanOngoing":{"name":"Pågående lån","uri":"/v5/lending/loan/ongoing","method":"GET","authorization":"AUTHORIZED"},"PaymentPerformSingleTransfer":{"name":"Genomför enkel överföring","uri":"/v5/payment/singletransfer","method":"POST","authorization":"AUTHORIZED"},"PortfolioAlerts":{"name":"Bevakningar","uri":"/v5/portfolio/alerts","method":"OPTIONS","authorization":"AUTHORIZED"},"AgreementQuickbalanceFetch":{"name":"Hämta snabbsaldo","uri":"/v5/quickbalance/{aSubscriptionId}","method":"GET","authorization":"AUTHORIZED"},"InsuranceOverview":{"name":"Hämta försäkringsöversikt","uri":"/v5/insurance/overview","method":"GET","authorization":"AUTHORIZED"},"PaymentDirectDebitBaseinfo":{"name":"Autogiro baseinfo","uri":"/v5/payment/directdebit/baseinfo","method":"GET","authorization":"AUTHORIZED"},"InternalOrganisationFetchClearingNumbers":{"name":"Hämta clearingnummer","uri":"/v5/bank/clearingnumber","method":"GET","authorization":"AUTHORIZED"},"PaymentRegistered":{"name":"Registrerade betalningar","uri":"/v5/payment/registered","method":"GET","authorization":"AUTHORIZED"},"SecuritiesMarketinfoSearch":{"name":"Sök marknadsinformation","uri":"/v5/securities/marketinfo/{selection}","method":"GET","authorization":"AUTHORIZED"},"SecuritiesUserlist":{"name":"Favoritlistor","uri":"/v5/securities/userlist","method":"GET","authorization":"AUTHORIZED"},"ChangeDocumentsDistributionSettings":{"name":"Documents Change Distribution Settings","uri":"/v5/message/noSerivices","method":"OPTIONS","authorization":"AUTHORIZED"},"FundMarketinfoHolding":{"name":"Fondinnehav","uri":"/v5/fund/marketinfo/{aFundCode}/holding","method":"GET","authorization":"AUTHORIZED"},"UploadAttachments":{"name":"Ladda upp attachments","uri":"/v5/message/attachment","method":"POST","authorization":"AUTHORIZED"},"CardsWithInternetPurchasesMenu":{"name":"CardsWithInternetPurchasesMenu","uri":"/v5/card/debitcard/internetpurchases","method":"GET","authorization":"AUTHORIZED"},"AddAggregated":{"name":"External aggregation","uri":"/v5/aggregation/institute/{aRealmUserId}/accounts","method":"POST","authorization":"UNAUTHORIZED"},"MessageBoxes":{"name":"Mina meddelanden","uri":"/v5/message/messagebox","method":"GET","authorization":"AUTHORIZED"},"RecurringCostsGetAgreement":{"name":"Anslut till Abonnemangshjälpen","uri":"/v5/recurringcosts/agreement","method":"GET","authorization":"AUTHORIZED"},"PaymentAgreementSwishStart":{"name":"Swish","uri":"/v5/payment/agreement/swish","method":"GET","authorization":"AUTHORIZED"},"LoanRatesPrivate":{"name":"Räntor privatlån","uri":"/v5/loan/rates/private/{aBankId}","method":"GET","authorization":"AUTHORIZED"},"FundAccountOrderValidate":{"name":"Handla fond","uri":"/v5/fund/account/order/validation","method":"GET","authorization":"AUTHORIZED"},"DownloadAttachments":{"name":"Ladda ner attachments","uri":"/v5/message/attachment/{attachmentId}","method":"GET","authorization":"AUTHORIZED"},"SecuritiesSecuritylistListid":{"name":"Hämta index-lista","uri":"/v5/securities/securitylist/{listid}","method":"GET","authorization":"AUTHORIZED"},"FundMarketinfoIndexPerformance":{"name":"Fondutveckling index","uri":"/v5/fund/marketinfo/index/{aIndexCode}/performance/{aTimePeriod}","method":"GET","authorization":"AUTHORIZED"},"SecuritiesUserlistCreate":{"name":"Skapa ny favoritlista","uri":"/v5/securities/userlist/{name}","method":"POST","authorization":"AUTHORIZED"},"EinvoicePayee":{"name":"Hämta E-faktura mottagare","uri":"/v5/einvoice/payee","method":"GET","authorization":"AUTHORIZED"},"FundAccountOrderBaseinfo":{"name":"Fondinnehav","uri":"/v5/fund/account/order/baseinfo","method":"GET","authorization":"AUTHORIZED"},"FundAccountHoldingtransfer":{"name":"Flytta fonder","uri":"/v5/fund/account/holdingtransfer","method":"GET","authorization":"AUTHORIZED"},"LoanCalculationPrivate":{"name":"Beräkna privatlån","uri":"/v5/loan/calculation/private","method":"POST","authorization":"AUTHORIZED"},"LendingLoanApplication":{"name":"Låneansökan","uri":"/v5/lending/loan/applyLoan","method":"OPTIONS","authorization":"AUTHORIZED"},"MarketinfoLinks":{"name":"Länkar för finansiella instrument","uri":"/v5/financial-instrument/market-info/links/{isin}","method":"GET","authorization":"AUTHORIZED"},"SecuritiesOffering":{"name":"Aktuella placeringserbjudanden","uri":"/v5/securities/offering","method":"GET","authorization":"UNAUTHORIZED"},"UsersettingAccountFavouriteAccount":{"name":"Uppdatera favoritkonto","uri":"/v5/channel/usersetting/account/favourite","method":"POST","authorization":"AUTHORIZED"},"FundMarketinfoFunds":{"name":"Fondlista","uri":"/v5/fund/marketinfo/funds","method":"GET","authorization":"AUTHORIZED"},"PaymentRegisterPayee":{"name":"Skapa betalningsmottagare","uri":"/v5/payment/payee","method":"POST","authorization":"REQUIRES_AUTH_METHOD_CHANGE"},"FundMarketinfoFundsFilters":{"name":"Filtreringsinformation","uri":"/v5/fund/marketinfo/funds/filters","method":"GET","authorization":"AUTHORIZED"},"LendingConsumerLoanEnrolledBanks":{"name":"Enrolled banks","uri":"/v5/lending/consumerloan/enrolledbanks","method":"GET","authorization":"AUTHORIZED"},"ExpenseControlSignup":{"name":"Samtycke för Utgiftskollen","uri":"/v5/expensecontrol/signup","method":"POST","authorization":"AUTHORIZED"},"SecuritiesSecuritylist":{"name":"Hämta index-listor","uri":"/v5/securities/securitylist/","method":"GET","authorization":"AUTHORIZED"},"ProfileDelete":{"name":"Radera profiler","uri":"/v5/profile/subscription/{aSubscriptionId}","method":"DELETE","authorization":"AUTHORIZED"},"ContactInformationAddEmail":{"name":"Skapa e-mail","uri":"/v5/contactinformation/email","method":"POST","authorization":"AUTHORIZED"},"AgreementQuickbalanceAccounts":{"name":"Hämta konton","uri":"/v5/quickbalance/accounts","method":"GET","authorization":"AUTHORIZED"},"PaymentQuicktransferUnsubscribe":{"name":"Ta bort spontanspar","uri":"/v5/quicktransfer/subscription/{aSubscriptionHashId}","method":"DELETE","authorization":"AUTHORIZED"},"SecuritiesFactsheet":{"name":"Hämta faktablad","uri":"/v5/securities/factsheet/{isin}","method":"GET","authorization":"AUTHORIZED"},"FinanceMgmtFeed":{"name":"Fetch FinanceMgmt feed","uri":"/v5/customer/financemgmt/feed","method":"GET","authorization":"UNAUTHORIZED"},"UsersettingAccountPrioritizedaccounts":{"name":"Uppdatera prioriterade konton","uri":"/v5/channel/usersetting/account/priority","method":"POST","authorization":"AUTHORIZED"},"ContactInformationEmail":{"name":"Hämta e-mail","uri":"/v5/contactinformation/email","method":"GET","authorization":"AUTHORIZED"},"PortfolioMonthlySavingOverview":{"name":"Månadsspar","uri":"/v5/portfolio/monthlysaving","method":"GET","authorization":"AUTHORIZED"},"CardPictureoncardBaseinfo":{"name":"Kort på kort","uri":"/v5/card/pictureoncard/baseinfo","method":"GET","authorization":"AUTHORIZED"},"FundAccountTradeinfo":{"name":"Hämta fond","uri":"/v5/fund/account/tradeinfo/{aFundCode}","method":"GET","authorization":"AUTHORIZED"},"InsuranceNonLifeSignUpHome":{"name":"Teckna hemförsäkring","uri":"/v5/insurance/non-life/home/categories","method":"GET","authorization":"AUTHORIZED"},"LoanRatesMortage":{"name":"Räntor bolån","uri":"/v5/loan/rates/mortgage/{aBankid}","method":"GET","authorization":"AUTHORIZED"},"PortfolioDetailOverview":{"name":"Innehav detalj","uri":"/v5/portfolio/holdingDetailsOverview","method":"OPTIONS","authorization":"AUTHORIZED"},"FinanceMgmtBaseinfo":{"name":"Personal finance manager","uri":"/v5/customer/financemgmt/baseinfo","method":"GET","authorization":"UNAUTHORIZED"},"ChangeDebitCardInternetPurchasesMenu":{"name":"ChangeDebitCardInternetPurchasesMenu","uri":"/v5/card/debitcard/{cardId}/internetpurchases","method":"PUT","authorization":"AUTHORIZED"},"DepositFetchSelectedProduct":{"name":"Öppna nytt konto","uri":"/v5/deposit/products/{aProductId}","method":"GET","authorization":"AUTHORIZED"},"UpdateMonitorSubscriptions":{"name":"Uppdatera notis-prenumerationer","uri":"/v5/monitor/subscriptions","method":"PUT","authorization":"AUTHORIZED"},"IssueTicket":{"name":"???[identification.federative.v5]Menu_Identification_Federative???","uri":"/v5/identification/federative/issue/ticket","method":"GET","authorization":"AUTHORIZED"},"ProfileFetchDefault":{"name":"Hämta default profiler","uri":"/v5/profile/default/{aSubscriptionId}","method":"POST","authorization":"AUTHORIZED"},"LendingCarLoanBaseInfo":{"name":"Car loan application","uri":"/v5/lending/carloan/baseinfo","method":"GET","authorization":"AUTHORIZED"},"DepositFetchOfferings":{"name":"Öppna nytt konto","uri":"/v5/deposit/offerings","method":"GET","authorization":"AUTHORIZED"},"PaymentQuicktransferAccounts":{"name":"Hämta konton för spontanspar","uri":"/v5/quicktransfer/accounts","method":"GET","authorization":"AUTHORIZED"},"IdentificationTouch":{"name":"Uppdatera session","uri":"/v5/identification/touch","method":"GET","authorization":"AUTHORIZED"},"SavingsgoalBaseinfo":{"name":"Information för sparmål","uri":"/v5/savingsgoal/baseinfo","method":"GET","authorization":"AUTHORIZED"},"ConsentList":{"name":"Hämta medgivandelista","uri":"/v5/customer/consent","method":"GET","authorization":"AUTHORIZED"},"PortfolioSustainability":{"name":"Hållbarhet","uri":"/v5/portfolio/sustainability","method":"OPTIONS","authorization":"AUTHORIZED"},"SavingsgoalList":{"name":"Hämta sparmål","uri":"/v5/savingsgoal/","method":"GET","authorization":"AUTHORIZED"},"CustomerValueMgmtNBARequestCallMeBack":{"name":"Send response","uri":"/v5/user/recommendation/{aRecommendationId}","method":"POST","authorization":"AUTHORIZED"},"FundMarketinfoIndex":{"name":"Fondindex","uri":"/v5/fund/marketinfo/index","method":"GET","authorization":"AUTHORIZED"},"FetchMonitorNotifications":{"name":"Hämta aktuella notiser","uri":"/v5/monitor/notifications","method":"GET","authorization":"AUTHORIZED"},"ContactInformation":{"name":"Hämta kontaktinformation","uri":"/v5/contactinformation","method":"GET","authorization":"AUTHORIZED"},"InternalOrganisationSearchBranches":{"name":"Kontorsök","uri":"/v5/search/branches","method":"GET","authorization":"AUTHORIZED"},"SecuritiesAlertCancel":{"name":"Ta bort bevakning","uri":"/v5/securities/alert/{aAlertId}","method":"DELETE","authorization":"AUTHORIZED"},"IssueToken":{"name":"Utfärda token","uri":"/v5/identification/federative/oauth/issue/token/{systemId}","method":"GET","authorization":"AUTHORIZED"},"LoanCalculationHousingmortageBaseinfo":{"name":"Belopp bolån","uri":"/v5/loan/calculation/housingmortgage/baseinfo","method":"GET","authorization":"AUTHORIZED"},"FundMarketinfoPerformanceHistory":{"name":"Historisk fondutveckling","uri":"/v5/fund/marketinfo/{aFundCode}/performance/history","method":"GET","authorization":"AUTHORIZED"}},"mobile":false,"cacheGroup":"menu"}
 
+REQUEST 9
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/overview?dsid=AAAAAAAA
+Accept: application/json
+
+RESPONSE 9 SET FETCHED_ACC01
+200
+Server: -
+Date: Fri, 24 Apr 2020 11:34:20 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"closedMigratedCurrencyAccounts":[],"cardCredit":{},"showCreditCardLink":true,"errorFetchingCreditCards":false,"transactionAccounts":[{"productId":"TRP00502","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"favouriteAccount":true,"id":"8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f","name":"Privatkonto","accountNumber":"803 853 955-0","clearingNumber":"8452-5","fullyFormattedNumber":"3333-3,333 333 333-3","nonFormattedNumber":"111111111111111","balance":"22 370,87","currency":"SEK","priority":"1","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f"}}},"originalName":"Privatkonto"}],"savingAccounts":[{"productId":"SPP00103","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/90a9f165727b5b51d439895e9bdf7b488ea19a81"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"id":"90a9f165727b5b51d439895e9bdf7b488ea19a81","name":"e-sparkonto","accountNumber":"974 405 945-3","clearingNumber":"8452-5","fullyFormattedNumber":"2222-2,222 222 222-2","nonFormattedNumber":"222222222222222","balance":"96 720,91","currency":"SEK","priority":"2","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/90a9f165727b5b51d439895e9bdf7b488ea19a81"}}}},{"productId":"SPP00103","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/e6eeba088463c3a6038c3b1316ba024b008b88a4"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"id":"e6eeba088463c3a6038c3b1316ba024b008b88a4","name":"pensionssparande","accountNumber":"964 191 495-8","clearingNumber":"8452-5","fullyFormattedNumber":"1111-1,111 111 111-1","nonFormattedNumber":"123456789876543","balance":"36 800,00","currency":"SEK","priority":"3","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/e6eeba088463c3a6038c3b1316ba024b008b88a4"}}}}],"loanAccounts":[],"transactionDisposalAccounts":[],"cardAccounts":[],"supplementaryCardAccounts":[],"eligibleForOverdraftLimit":true,"accessToHSB":false}
 
 REQUEST 10
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/baseinfo?dsid=AAAAAAAA
 Accept: application/json
 
 RESPONSE 10
 200
 Server: -
-Date: Thu, 17 Sep 2020 07:34:27 GMT
+Date: Fri, 24 Apr 2020 11:34:20 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -152,17 +147,34 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"fundAccountPresent":false,"fundAccounts":[],"endowmentInsurances":[],"equityTraders":[],"savingsAccounts":[{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"transactionsLink":{"type":"TRANSACTION_LIST_DECORATED","links":{"next":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions"}}},"links":{"self":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8"},"next":{"method":"GET","uri":"/v5/engagement/transactions/01a858b71922aaac69b0cfa7be179129c6a498d8"}},"id":"01a858b71922aaac69b0cfa7be179129c6a498d8","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"1111-1","balance":{"amount":"8,64","currencyCode":"SEK"},"fullyFormattedNumber":"1111-1,333 333 333-3"}],"investmentSavings":[],"serverTime":"09:34","totalValue":{"amount":"8,64","currencyCode":"SEK"}}
+{"addRecipientStatus":{"allowed":false,"notAllowedMessage":{"message":"Aktivera Mobilt BankID med utökad användning för att lägga till mottagare med Mobilt BankID.<br><br>Detta gör du i internetbanken på sidan BankID.","headline":"Du har inte aktiverat utökad användning för Mobilt BankID"},"links":{"next":{"method":"POST","uri":"/v5/payment/recipient"}}},"addPayeeStatus":{"allowed":false,"notAllowedMessage":{"message":"Aktivera Mobilt BankID med utökad användning för att lägga till mottagare med Mobilt BankID.<br><br>Detta gör du i internetbanken på sidan BankID.","headline":"Du har inte aktiverat utökad användning för Mobilt BankID"},"links":{"next":{"method":"POST","uri":"/v5/payment/recipient"}}},"transactionAccountGroups":[{"accounts":[{"currencyCode":"SEK","disposed":false,"silAccount":false,"currencyAccount":false,"scopes":["PAYMENT_FROM","QUICKTRANSFER_TO","TRANSFER_FROM","TRANSFER_TO","QUICKTRANSFER_FROM"],"amount":"22 370,87","iskAccount":false,"name":"Privatkonto","accountNumber":"803 853 955-0","clearingNumber":"8452-5","id":"8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f","fullyFormattedNumber":"3333-3,333 333 333-3"}],"name":"Konton i svenska kronor"},{"accounts":[{"currencyCode":"SEK","disposed":false,"silAccount":false,"currencyAccount":false,"scopes":["PAYMENT_FROM","QUICKTRANSFER_TO","TRANSFER_FROM","TRANSFER_TO","QUICKTRANSFER_FROM"],"amount":"96 720,91","iskAccount":false,"name":"e-sparkonto","accountNumber":"974 405 945-3","clearingNumber":"8452-5","id":"90a9f165727b5b51d439895e9bdf7b488ea19a81","fullyFormattedNumber":"2222-2,222 222 222-2"},{"currencyCode":"SEK","disposed":false,"silAccount":false,"currencyAccount":false,"scopes":["PAYMENT_FROM","QUICKTRANSFER_TO","TRANSFER_FROM","TRANSFER_TO","QUICKTRANSFER_FROM"],"amount":"36 800,00","iskAccount":false,"name":"pensionssparande","accountNumber":"964 191 495-8","clearingNumber":"8452-5","id":"e6eeba088463c3a6038c3b1316ba024b008b88a4","fullyFormattedNumber":"1111-1,111 111 111-1"}],"name":"Sparkonton"}],"transfer":{"periodicities":["NONE","WEEKLY","EVERY_OTHER_WEEK","MONTHLY","EVERY_OTHER_MONTH","QUARTERLY","SEMI_ANNUALLY","ANNUALLY"],"externalRecipients":[{"name":"84244 9249865487","lastUsed":"2018-09-14","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/1f04d7def8f3e6c0d6115e12099105f259f51925"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/1f04d7def8f3e6c0d6115e12099105f259f51925"}},"accountNumber":"924 986 548-7","clearingNumber":"8424-4","id":"1f04d7def8f3e6c0d6115e12099105f259f51925","fullyFormattedNumber":"8424-4,924 986 548-7","bank":"Swedbank AB (publ)"},{"name":"Berit Öberg","lastUsed":"2019-06-27","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/31992c189ce8ffb6c8690ffdf0010b7f8e2a4153"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/31992c189ce8ffb6c8690ffdf0010b7f8e2a4153"}},"accountNumber":"77 007 413-8","clearingNumber":"6561","id":"31992c189ce8ffb6c8690ffdf0010b7f8e2a4153","fullyFormattedNumber":"6561 77 007 413-8","bank":"Svenska Handelsbanken AB"},{"name":"johanna bråhte","lastUsed":"2017-07-25","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/3339f04edeaef3b8b39046171ddd29e9d57dde5f"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/3339f04edeaef3b8b39046171ddd29e9d57dde5f"}},"accountNumber":"973 697 199-6","clearingNumber":"8452-5","id":"3339f04edeaef3b8b39046171ddd29e9d57dde5f","fullyFormattedNumber":"8452-5,973 697 199-6","bank":"Swedbank AB (publ)"},{"name":"johnny","lastUsed":"2016-02-26","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/ce0095456e7812a0b356ee19ebec20e5e22b03c1"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/ce0095456e7812a0b356ee19ebec20e5e22b03c1"}},"accountNumber":"933 505 680-1","clearingNumber":"8452-5","id":"ce0095456e7812a0b356ee19ebec20e5e22b03c1","fullyFormattedNumber":"8452-5,933 505 680-1","bank":"Swedbank AB (publ)"},{"name":"Liga","lastUsed":"2015-04-29","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/ea4fcbded7d333c8897577a60ce8b1d1ca4ebe98"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/ea4fcbded7d333c8897577a60ce8b1d1ca4ebe98"}},"accountNumber":"891116-5689","clearingNumber":"3300","id":"ea4fcbded7d333c8897577a60ce8b1d1ca4ebe98","fullyFormattedNumber":"3300 891116-5689","bank":"NORDEA BANK ABP"},{"name":"nettan","lastUsed":"2020-01-17","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/647cc122a7b841531a0f34e37e267bbcc2b9367a"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/647cc122a7b841531a0f34e37e267bbcc2b9367a"}},"accountNumber":"803 842 693-1","clearingNumber":"8452-5","id":"647cc122a7b841531a0f34e37e267bbcc2b9367a","fullyFormattedNumber":"8452-5,803 842 693-1","bank":"Swedbank AB (publ)"},{"name":"ninabil","lastUsed":"2018-06-10","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/74a7b00f6796430f64b3e4b0adc3a486452a46d3"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/74a7b00f6796430f64b3e4b0adc3a486452a46d3"}},"accountNumber":"339 353-8","clearingNumber":"5332","id":"74a7b00f6796430f64b3e4b0adc3a486452a46d3","fullyFormattedNumber":"5332 339 353-8","bank":"Skandinaviska Enskilda Banken AB"},{"name":"Tim kort","lastUsed":"2020-04-24","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/3465a19ded65e65593beb529254b19950b5f6963"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/3465a19ded65e65593beb529254b19950b5f6963"}},"accountNumber":"964 187 412-9","clearingNumber":"8452-5","id":"3465a19ded65e65593beb529254b19950b5f6963","fullyFormattedNumber":"8452-5,964 187 412-9","bank":"Swedbank AB (publ)"},{"name":"Åsa Törnström","lastUsed":"2015-09-23","links":{"edit":{"method":"PUT","uri":"/v5/payment/recipient/a4ea07ccda3fd262a721716fdb90b5fe038a9b2f"},"delete":{"method":"DELETE","uri":"/v5/payment/recipient/a4ea07ccda3fd262a721716fdb90b5fe038a9b2f"}},"accountNumber":"022 083-2","clearingNumber":"3048","id":"a4ea07ccda3fd262a721716fdb90b5fe038a9b2f","fullyFormattedNumber":"3048 022 083-2","bank":"NORDEA BANK ABP"}],"links":{"next":{"method":"POST","uri":"/v5/payment/registered/transfer"}}},"payment":{"payees":[{"referenceType":"OCR","id":"552a900003081f1345142c36f2c030751192295d","name":"3 (HI3G ACCESS AB)","type":"BGACCOUNT","accountNumber":"319-9973","lastUsed":"2013-12-23","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/552a900003081f1345142c36f2c030751192295d"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/552a900003081f1345142c36f2c030751192295d"}}},{"referenceType":"OCR","id":"96bf1114cca790e8baf335eadc98ef44da43d9cd","name":"APOTEKET AB","type":"BGACCOUNT","accountNumber":"5048-3247","lastUsed":"2018-01-26","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/96bf1114cca790e8baf335eadc98ef44da43d9cd"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/96bf1114cca790e8baf335eadc98ef44da43d9cd"}}},{"referenceType":"OCR","id":"08821cdadcdf90b737f65c21c3c48224a9d5d995","name":"ARVATO FINANCE AB","type":"PGACCOUNT","accountNumber":"491 91 00-0","lastUsed":"2017-09-21","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/08821cdadcdf90b737f65c21c3c48224a9d5d995"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/08821cdadcdf90b737f65c21c3c48224a9d5d995"}}},{"referenceType":"OCR","id":"499a623f6320962724ac5c0d5b456b36f9449115","name":"Bonnier Magazines & Brands AB","type":"BGACCOUNT","accountNumber":"469-0962","lastUsed":"2020-01-24","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/499a623f6320962724ac5c0d5b456b36f9449115"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/499a623f6320962724ac5c0d5b456b36f9449115"}}},{"referenceType":"OCR","id":"87c11ec2eb19eac4ab2a3f7d44cf7e6d4b78e763","name":"CENTRALA STUDIESTÖDSNÄMNDEN","type":"BGACCOUNT","accountNumber":"5580-3084","lastUsed":"2016-11-20","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/87c11ec2eb19eac4ab2a3f7d44cf7e6d4b78e763"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/87c11ec2eb19eac4ab2a3f7d44cf7e6d4b78e763"}}},{"referenceType":"OCR","id":"a1dc1564b21e00d051ce99fe304f1a4dd057855d","name":"COLLAGE DIGITALFOTO PROXY AB","type":"BGACCOUNT","accountNumber":"5140-2626","lastUsed":"2017-10-10","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/a1dc1564b21e00d051ce99fe304f1a4dd057855d"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/a1dc1564b21e00d051ce99fe304f1a4dd057855d"}}},{"referenceType":"OCR","id":"7e73f86efbd27ae3480c8e4b35c3b2ca890a0b14","name":"COLLECTOR BANK AB","type":"PGACCOUNT","accountNumber":"417 74 04-3","lastUsed":"2019-12-05","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/7e73f86efbd27ae3480c8e4b35c3b2ca890a0b14"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/7e73f86efbd27ae3480c8e4b35c3b2ca890a0b14"}}},{"referenceType":"OCR","id":"c3644decf3542387937a17078d0111b1a35d0159","name":"E ON FÖRSÄLJNING SVERIGE AB","type":"BGACCOUNT","accountNumber":"5014-0045","lastUsed":"2014-03-25","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/c3644decf3542387937a17078d0111b1a35d0159"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/c3644decf3542387937a17078d0111b1a35d0159"}}},{"referenceType":"OCR","id":"33ddca9c28c1e6572976434075c3bb566c04ff01","name":"EMIL P & CO AB","type":"BGACCOUNT","accountNumber":"155-8030","lastUsed":"2020-04-24","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/33ddca9c28c1e6572976434075c3bb566c04ff01"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/33ddca9c28c1e6572976434075c3bb566c04ff01"}}},{"referenceType":"OCR","id":"30bce078a89037b35246c1603fc6bf0f3565236c","name":"FOLKSAM ÖMSESIDIG SAKFÖRSÄKRING","type":"BGACCOUNT","accountNumber":"5786-2690","lastUsed":"2020-03-26","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/30bce078a89037b35246c1603fc6bf0f3565236c"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/30bce078a89037b35246c1603fc6bf0f3565236c"}}},{"referenceType":"OCR","id":"50714a873c7de2ffd4dc09d4cb9050580c1c28ca","name":"FORDONSSKATT TRANSPORTSTYRELSEN","type":"BGACCOUNT","accountNumber":"5051-6822","lastUsed":"2019-05-26","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/50714a873c7de2ffd4dc09d4cb9050580c1c28ca"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/50714a873c7de2ffd4dc09d4cb9050580c1c28ca"}}},{"referenceType":"OCR","id":"c5975a3f5fc5d981f5d63673a3bc0ca6c135226b","name":"FUJICOLOR SV FILIAL TILL","type":"PGACCOUNT","accountNumber":"414 08 04-8","lastUsed":"2016-07-01","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/c5975a3f5fc5d981f5d63673a3bc0ca6c135226b"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/c5975a3f5fc5d981f5d63673a3bc0ca6c135226b"}}},{"referenceType":"OCR","id":"1113e592e7c36b91bc1ea14e6da0e8418c82b4ea","name":"H & M ONLINE AB","type":"PGACCOUNT","accountNumber":"81 75 00-2","lastUsed":"2019-10-25","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/1113e592e7c36b91bc1ea14e6da0e8418c82b4ea"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/1113e592e7c36b91bc1ea14e6da0e8418c82b4ea"}}},{"referenceType":"OCR","id":"73df119cee17050b710a570a58e8a01126ea763c","name":"Hyresgästföreningen Region Mitt","type":"BGACCOUNT","accountNumber":"960-5858","lastUsed":"2020-04-24","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/73df119cee17050b710a570a58e8a01126ea763c"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/73df119cee17050b710a570a58e8a01126ea763c"}}},{"referenceType":"OCR","id":"8db1f7dad56888249ff7ca5d6938ecd28c31c031","name":"Infrastrukturavgift , Singel","type":"BGACCOUNT","accountNumber":"250-5683","lastUsed":"2019-08-26","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/8db1f7dad56888249ff7ca5d6938ecd28c31c031"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/8db1f7dad56888249ff7ca5d6938ecd28c31c031"}}},{"referenceType":"OCR","id":"2dd23166ddcc6e2dd699c0d7e80e47de47e7b526","name":"KLARNA AB /NORDEA FINANS","type":"PGACCOUNT","accountNumber":"415 85 02-7","lastUsed":"2018-07-12","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/2dd23166ddcc6e2dd699c0d7e80e47de47e7b526"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/2dd23166ddcc6e2dd699c0d7e80e47de47e7b526"}}},{"referenceType":"OCR","id":"092e2781204132a3f26cc2416d794393ae9603ff","name":"Körkortsavgifter","type":"BGACCOUNT","accountNumber":"387-4468","lastUsed":"2016-07-01","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/092e2781204132a3f26cc2416d794393ae9603ff"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/092e2781204132a3f26cc2416d794393ae9603ff"}}},{"referenceType":"OCR","id":"e46c31806924e5999e749ef0bda63e05ec01ff75","name":"KÖRKORTSAVGIFTER TRANSPORTSTYRELSEN","type":"BGACCOUNT","accountNumber":"5051-6913","lastUsed":"2019-03-26","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/e46c31806924e5999e749ef0bda63e05ec01ff75"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/e46c31806924e5999e749ef0bda63e05ec01ff75"}}},{"id":"db13a8b43413f7d5e27612c76727cfca8fe7e0dc","name":"LINDBERGS BUSS AB","type":"PGACCOUNT","accountNumber":"416 12 04-5","lastUsed":"2016-02-21","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/db13a8b43413f7d5e27612c76727cfca8fe7e0dc"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/db13a8b43413f7d5e27612c76727cfca8fe7e0dc"}}},{"referenceType":"OCR","id":"f0001052cdbd2973ae79609965569fc7d0ae06ec","name":"Nordea Finans/Qliro AB","type":"BGACCOUNT","accountNumber":"233-0470","lastUsed":"2020-03-11","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/f0001052cdbd2973ae79609965569fc7d0ae06ec"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/f0001052cdbd2973ae79609965569fc7d0ae06ec"}}},{"id":"8bc71c7e2aed5450caba98cc2ecb4ef46e283644","name":"OLAUS PETRI PASTORSEXPEDI","type":"PGACCOUNT","accountNumber":"640 09 78-0","lastUsed":"2016-02-26","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/8bc71c7e2aed5450caba98cc2ecb4ef46e283644"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/8bc71c7e2aed5450caba98cc2ecb4ef46e283644"}}},{"referenceType":"OCR","id":"f262a7e4425d684ddfe2d2003d4eb4767d3bff36","name":"Opus Bilprovning AB","type":"BGACCOUNT","accountNumber":"550-2513","lastUsed":"2015-12-26","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/f262a7e4425d684ddfe2d2003d4eb4767d3bff36"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/f262a7e4425d684ddfe2d2003d4eb4767d3bff36"}}},{"referenceType":"OCR","id":"00fc7498796a938ce709c4040efa958ad3724fef","name":"Resurs Bank AB","type":"BGACCOUNT","accountNumber":"735-5837","lastUsed":"2018-02-22","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/00fc7498796a938ce709c4040efa958ad3724fef"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/00fc7498796a938ce709c4040efa958ad3724fef"}}},{"referenceType":"OCR","id":"8104b601d82ffda7026d5c611d6e1ef03e90ea17","name":"Resurs Bank AB (Ellos)","type":"BGACCOUNT","accountNumber":"607-4876","lastUsed":"2019-01-25","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/8104b601d82ffda7026d5c611d6e1ef03e90ea17"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/8104b601d82ffda7026d5c611d6e1ef03e90ea17"}}},{"referenceType":"OCR","id":"4408a82108ae8cec7ea296e3f9f17ffb8c381f9a","name":"Resurs Bank AB (Jotex)","type":"BGACCOUNT","accountNumber":"5728-4408","lastUsed":"2018-02-22","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/4408a82108ae8cec7ea296e3f9f17ffb8c381f9a"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/4408a82108ae8cec7ea296e3f9f17ffb8c381f9a"}}},{"referenceType":"OCR","id":"dde3d2e2cbee62d42f1dacbc6416bc86e30e8796","name":"SKATTEVERKET","type":"BGACCOUNT","accountNumber":"5050-1055","lastUsed":"2016-04-21","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/dde3d2e2cbee62d42f1dacbc6416bc86e30e8796"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/dde3d2e2cbee62d42f1dacbc6416bc86e30e8796"}}},{"referenceType":"OCR","id":"5ada979863d65b3abf9ec3dfd572b224d729b024","name":"Smartphoto Nordic Ab","type":"BGACCOUNT","accountNumber":"255-8617","lastUsed":"2017-04-11","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/5ada979863d65b3abf9ec3dfd572b224d729b024"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/5ada979863d65b3abf9ec3dfd572b224d729b024"}}},{"referenceType":"OCR","id":"e2ea8d2f4370a111cd4c02a9e1d0ab717d4715e5","name":"TELIASONERA SVERIGE AB","type":"BGACCOUNT","accountNumber":"820-0040","lastUsed":"2020-04-24","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/e2ea8d2f4370a111cd4c02a9e1d0ab717d4715e5"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/e2ea8d2f4370a111cd4c02a9e1d0ab717d4715e5"}}},{"id":"e8e7f03d14c31735a5f10e0cb8516789ab2a0386","name":"TRAFIKSKOLAN HÄR GÅR MAN AB","type":"BGACCOUNT","accountNumber":"5012-4254","lastUsed":"2018-02-02","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/e8e7f03d14c31735a5f10e0cb8516789ab2a0386"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/e8e7f03d14c31735a5f10e0cb8516789ab2a0386"}}},{"id":"feaf42f743bc379d5309237d516657651c42f75f","name":"TRAFIKVERKET FÖRARPROV,IN","type":"PGACCOUNT","accountNumber":"417 65 03-3","lastUsed":"2017-01-12","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/feaf42f743bc379d5309237d516657651c42f75f"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/feaf42f743bc379d5309237d516657651c42f75f"}}},{"id":"d36ebf10c7dee4d4976d067f54d7dc4022f93d11","name":"Zalando GmbH","type":"BGACCOUNT","accountNumber":"852-7541","lastUsed":"2020-03-04","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/d36ebf10c7dee4d4976d067f54d7dc4022f93d11"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/d36ebf10c7dee4d4976d067f54d7dc4022f93d11"}}},{"referenceType":"OCR","id":"8d97501d7acf1e0bf018c55e49bb0ef697b3f896","name":"ÖREBRO KOMMUN","type":"BGACCOUNT","accountNumber":"5081-1686","lastUsed":"2018-04-26","links":{"edit":{"method":"PUT","uri":"/v5/payment/payee/8d97501d7acf1e0bf018c55e49bb0ef697b3f896"},"delete":{"method":"DELETE","uri":"/v5/payment/payee/8d97501d7acf1e0bf018c55e49bb0ef697b3f896"}}}],"links":{"next":{"method":"POST","uri":"/v5/payment/registered/payment"}}}}
 
+REQUEST 11 MATCH FETCHED_ACC01
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/overview?dsid=AAAAAAAA
+Accept: application/json
+
+RESPONSE 11 SET FETCHED_ACC02
+200
+Server: -
+Date: Fri, 24 Apr 2020 11:34:21 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"closedMigratedCurrencyAccounts":[],"cardCredit":{},"showCreditCardLink":true,"errorFetchingCreditCards":false,"transactionAccounts":[{"productId":"TRP00502","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"favouriteAccount":true,"id":"8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f","name":"Privatkonto","accountNumber":"803 853 955-0","clearingNumber":"8452-5","fullyFormattedNumber":"3333-3,333 333 333-3","nonFormattedNumber":"111111111111111","balance":"22 370,87","currency":"SEK","priority":"1","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f"}}},"originalName":"Privatkonto"}],"savingAccounts":[{"productId":"SPP00103","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/90a9f165727b5b51d439895e9bdf7b488ea19a81"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"id":"90a9f165727b5b51d439895e9bdf7b488ea19a81","name":"e-sparkonto","accountNumber":"974 405 945-3","clearingNumber":"8452-5","fullyFormattedNumber":"2222-2,222 222 222-2","nonFormattedNumber":"222222222222222","balance":"96 720,91","currency":"SEK","priority":"2","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/90a9f165727b5b51d439895e9bdf7b488ea19a81"}}}},{"productId":"SPP00103","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/e6eeba088463c3a6038c3b1316ba024b008b88a4"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"id":"e6eeba088463c3a6038c3b1316ba024b008b88a4","name":"pensionssparande","accountNumber":"964 191 495-8","clearingNumber":"8452-5","fullyFormattedNumber":"1111-1,111 111 111-1","nonFormattedNumber":"123456789876543","balance":"36 800,00","currency":"SEK","priority":"3","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/e6eeba088463c3a6038c3b1316ba024b008b88a4"}}}}],"loanAccounts":[],"transactionDisposalAccounts":[],"cardAccounts":[],"supplementaryCardAccounts":[],"eligibleForOverdraftLimit":true,"accessToHSB":false}
 
 REQUEST 12
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/overview?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings?dsid=AAAAAAAA
 Accept: application/json
 
 RESPONSE 12
 200
 Server: -
-Date: Thu, 17 Sep 2020 07:34:27 GMT
+Date: Fri, 24 Apr 2020 11:34:21 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -171,17 +183,34 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"brokerAgencyLink":"https://www.fastighetsbyran.se/swedbank-vardering","isOngoingCasesActionRequired":false,"carLoans":[],"consumptionLoans":[],"collaterals":[],"mortgageLoanCommitments":[],"ongoingLoans":[],"mortgageCalculatorLink":"https://lana.swedbank.se/app/lana/bolanelofte/oinloggad/guide?tab=2&bankId=11111"}
+{"fundAccountPresent":false,"fundAccounts":[],"endowmentInsurances":[],"equityTraders":[],"savingsAccounts":[{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"links":{"self":{"method":"GET","uri":"/v5/engagement/account/90a9f165727b5b51d439895e9bdf7b488ea19a81"},"next":{"method":"GET","uri":"/v5/engagement/transactions/90a9f165727b5b51d439895e9bdf7b488ea19a81"}},"id":"90a9f165727b5b51d439895e9bdf7b488ea19a81","name":"e-sparkonto","accountNumber":"974 405 945-3","clearingNumber":"8452-5","balance":{"amount":"96 720,91","currencyCode":"SEK"},"fullyFormattedNumber":"2222-2,222 222 222-2"},{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"links":{"self":{"method":"GET","uri":"/v5/engagement/account/e6eeba088463c3a6038c3b1316ba024b008b88a4"},"next":{"method":"GET","uri":"/v5/engagement/transactions/e6eeba088463c3a6038c3b1316ba024b008b88a4"}},"id":"e6eeba088463c3a6038c3b1316ba024b008b88a4","name":"pensionssparande","accountNumber":"964 191 495-8","clearingNumber":"8452-5","balance":{"amount":"36 800,00","currencyCode":"SEK"},"fullyFormattedNumber":"1111-1,111 111 111-1"}],"investmentSavings":[],"serverTime":"13:34","totalValue":{"amount":"133 520,91","currencyCode":"SEK"}}
 
+REQUEST 13 MATCH FETCHED_ACC02
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/overview?dsid=AAAAAAAA
+Accept: application/json
+
+RESPONSE 13 SET FETCHED_ACC03
+200
+Server: -
+Date: Fri, 24 Apr 2020 11:34:21 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"closedMigratedCurrencyAccounts":[],"cardCredit":{},"showCreditCardLink":true,"errorFetchingCreditCards":false,"transactionAccounts":[{"productId":"TRP00502","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"favouriteAccount":true,"id":"8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f","name":"Privatkonto","accountNumber":"803 853 955-0","clearingNumber":"8452-5","fullyFormattedNumber":"3333-3,333 333 333-3","nonFormattedNumber":"111111111111111","balance":"22 370,87","currency":"SEK","priority":"1","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f"}}},"originalName":"Privatkonto"}],"savingAccounts":[{"productId":"SPP00103","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/90a9f165727b5b51d439895e9bdf7b488ea19a81"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"id":"90a9f165727b5b51d439895e9bdf7b488ea19a81","name":"e-sparkonto","accountNumber":"974 405 945-3","clearingNumber":"8452-5","fullyFormattedNumber":"2222-2,222 222 222-2","nonFormattedNumber":"222222222222222","balance":"96 720,91","currency":"SEK","priority":"2","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/90a9f165727b5b51d439895e9bdf7b488ea19a81"}}}},{"productId":"SPP00103","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/e6eeba088463c3a6038c3b1316ba024b008b88a4"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"id":"e6eeba088463c3a6038c3b1316ba024b008b88a4","name":"pensionssparande","accountNumber":"964 191 495-8","clearingNumber":"8452-5","fullyFormattedNumber":"1111-1,111 111 111-1","nonFormattedNumber":"123456789876543","balance":"36 800,00","currency":"SEK","priority":"3","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/e6eeba088463c3a6038c3b1316ba024b008b88a4"}}}}],"loanAccounts":[],"transactionDisposalAccounts":[],"cardAccounts":[],"supplementaryCardAccounts":[],"eligibleForOverdraftLimit":true,"accessToHSB":false}
 
 REQUEST 14
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/overview?dsid=AAAAAAAA
 Accept: application/json
 
 RESPONSE 14
 200
 Server: -
-Date: Thu, 17 Sep 2020 07:34:27 GMT
+Date: Fri, 24 Apr 2020 11:34:21 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -190,17 +219,16 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"fundAccountPresent":false,"fundAccounts":[],"endowmentInsurances":[],"equityTraders":[],"savingsAccounts":[{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"transactionsLink":{"type":"TRANSACTION_LIST_DECORATED","links":{"next":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions"}}},"links":{"self":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8"},"next":{"method":"GET","uri":"/v5/engagement/transactions/01a858b71922aaac69b0cfa7be179129c6a498d8"}},"id":"01a858b71922aaac69b0cfa7be179129c6a498d8","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"1111-1","balance":{"amount":"8,64","currencyCode":"SEK"},"fullyFormattedNumber":"1111-1,333 333 333-3"}],"investmentSavings":[],"serverTime":"09:34","totalValue":{"amount":"8,64","currencyCode":"SEK"}}
+{"brokerAgencyLink":"https://www.fastighetsbyran.se/swedbank-vardering","isOngoingCasesActionRequired":false,"carLoans":[],"consumptionLoans":[],"collaterals":[],"mortgageLoanCommitments":[],"ongoingLoans":[],"eligibleForCarLoan":true,"mortgageCalculatorLink":"https://lana.swedbank.se/app/lana/bolanelofte/oinloggad/guide?tab=2&bankId=08999"}
 
-
-REQUEST 15
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/confirmed?dsid=AAAAAAAA
+REQUEST 15 MATCH FETCHED_ACC03
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/overview?dsid=AAAAAAAA
 Accept: application/json
 
 RESPONSE 15
 200
 Server: -
-Date: Thu, 17 Sep 2020 07:34:27 GMT
+Date: Fri, 24 Apr 2020 11:34:21 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -209,17 +237,16 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"totalFees":"0,00","currency":"SEK","confirmedTransactions":[],"totalSum":"0,00"}
-
+{"closedMigratedCurrencyAccounts":[],"cardCredit":{},"showCreditCardLink":true,"errorFetchingCreditCards":false,"transactionAccounts":[{"productId":"TRP00502","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"favouriteAccount":true,"id":"8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f","name":"Privatkonto","accountNumber":"803 853 955-0","clearingNumber":"8452-5","fullyFormattedNumber":"3333-3,333 333 333-3","nonFormattedNumber":"111111111111111","balance":"22 370,87","currency":"SEK","priority":"1","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f"}}},"originalName":"Privatkonto"}],"savingAccounts":[{"productId":"SPP00103","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/90a9f165727b5b51d439895e9bdf7b488ea19a81"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"id":"90a9f165727b5b51d439895e9bdf7b488ea19a81","name":"e-sparkonto","accountNumber":"974 405 945-3","clearingNumber":"8452-5","fullyFormattedNumber":"2222-2,222 222 222-2","nonFormattedNumber":"222222222222222","balance":"96 720,91","currency":"SEK","priority":"2","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/90a9f165727b5b51d439895e9bdf7b488ea19a81"}}}},{"productId":"SPP00103","selectedForQuickbalance":false,"links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/e6eeba088463c3a6038c3b1316ba024b008b88a4"}},"availableForFavouriteAccount":true,"availableForPriorityAccount":true,"id":"e6eeba088463c3a6038c3b1316ba024b008b88a4","name":"pensionssparande","accountNumber":"964 191 495-8","clearingNumber":"8452-5","fullyFormattedNumber":"1111-1,111 111 111-1","nonFormattedNumber":"123456789876543","balance":"36 800,00","currency":"SEK","priority":"3","details":{"links":{"next":{"method":"GET","uri":"/v5/engagement/account/e6eeba088463c3a6038c3b1316ba024b008b88a4"}}}}],"loanAccounts":[],"transactionDisposalAccounts":[],"cardAccounts":[],"supplementaryCardAccounts":[],"eligibleForOverdraftLimit":true,"accessToHSB":false}
 
 REQUEST 16
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/account/2afd29de9249d2245ff6a5232170cb65a913ae7d/transactions?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings?dsid=AAAAAAAA
 Accept: application/json
 
 RESPONSE 16
 200
 Server: -
-Date: Thu, 17 Sep 2020 07:34:28 GMT
+Date: Fri, 24 Apr 2020 11:34:21 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -228,17 +255,14 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"totalTransactionsCountTDE":0,"account":{"availableAmount":"0,00","categorizationStatus":"INACTIVATED","accountId":"1504828","categorization":"INACTIVATED","financeMgmtAccountId":"1504828","reservedAmount":"0,00","creditGranted":"0,00","quickbalanceSubscription":{"id":"bffca20db5b3b4eaa619d4f368d1d69492c96dad","active":false,"links":{"next":{"method":"POST","uri":"/v5/quickbalance/subscription/bffca20db5b3b4eaa619d4f368d1d69492c96dad"}}},"currencyAccount":false,"internalAccount":false,"bic":"SWEDSESS","iban":"SE98 8000 0832 7991 4293 1063 ","availableForFavouriteAccount":false,"availableForPriorityAccount":false,"id":"2afd29de9249d2245ff6a5232170cb65a913ae7d","name":"Bokonto","accountNumber":"111 111 111-1","clearingNumber":"1111-1","fullyFormattedNumber":"1111-1,111 111 111-1","nonFormattedNumber":"111111111111111","balance":"0,00","currency":"SEK","originalName":"Bokonto"},"transactions":[],"reservedTransactions":[],"moreTransactionsAvailable":false,"numberOfReservedTransactions":0,"numberOfTransactions":0,"totalTransactionsCount":0}
+{"fundAccountPresent":false,"fundAccounts":[],"endowmentInsurances":[],"equityTraders":[],"savingsAccounts":[{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"links":{"self":{"method":"GET","uri":"/v5/engagement/account/90a9f165727b5b51d439895e9bdf7b488ea19a81"},"next":{"method":"GET","uri":"/v5/engagement/transactions/90a9f165727b5b51d439895e9bdf7b488ea19a81"}},"id":"90a9f165727b5b51d439895e9bdf7b488ea19a81","name":"e-sparkonto","accountNumber":"974 405 945-3","clearingNumber":"8452-5","balance":{"amount":"96 720,91","currencyCode":"SEK"},"fullyFormattedNumber":"2222-2,222 222 222-2"},{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"links":{"self":{"method":"GET","uri":"/v5/engagement/account/e6eeba088463c3a6038c3b1316ba024b008b88a4"},"next":{"method":"GET","uri":"/v5/engagement/transactions/e6eeba088463c3a6038c3b1316ba024b008b88a4"}},"id":"e6eeba088463c3a6038c3b1316ba024b008b88a4","name":"pensionssparande","accountNumber":"964 191 495-8","clearingNumber":"8452-5","balance":{"amount":"36 800,00","currencyCode":"SEK"},"fullyFormattedNumber":"1111-1,111 111 111-1"}],"investmentSavings":[],"serverTime":"13:34","totalValue":{"amount":"133 520,91","currencyCode":"SEK"}}
 
-
-REQUEST 18
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/account/a86130f25b3d66d64e557108346fa61d298e7fbd/transactions?dsid=AAAAAAAA
+REQUEST 19
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/confirmed?dsid=AAAAAAAA
 Accept: application/json
 
-RESPONSE 18
+RESPONSE 19
 200
-Server: -
-Date: Thu, 17 Sep 2020 07:34:28 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -247,61 +271,2551 @@ Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"totalTransactionsCountTDE":27,"account":{"availableAmount":"383,62","categorizationStatus":"INACTIVATED","accountId":"1504831","categorization":"INACTIVATED","financeMgmtAccountId":"1504831","reservedAmount":"0,00","creditGranted":"0,00","quickbalanceSubscription":{"id":"a9bf5e5cfdfc0ddb6607af22755acfe661ce9e72","active":false,"links":{"next":{"method":"POST","uri":"/v5/quickbalance/subscription/a9bf5e5cfdfc0ddb6607af22755acfe661ce9e72"}}},"currencyAccount":false,"internalAccount":false,"bic":"SWEDSESS","iban":"SE27 8000 0832 7997 3634 9532 ","availableForFavouriteAccount":false,"availableForPriorityAccount":false,"id":"a86130f25b3d66d64e557108346fa61d298e7fbd","name":"Privatkonto","accountNumber":"222 222 222-2","clearingNumber":"2222-2","fullyFormattedNumber":"2222-2,222 222 222-2","nonFormattedNumber":"222222222222222","balance":"383,62","currency":"SEK","originalName":"Privatkonto"},"transactions":[{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-22T00:00:00","dateFormatted":"2019-08-22","amount":1.0,"currency":"SEK","text":"Överföring","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-20T00:00:00","dateFormatted":"2019-08-20","amount":-1.0,"currency":"SEK","text":"Övf via internet","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-20T00:00:00","dateFormatted":"2019-08-20","amount":-1.0,"currency":"SEK","text":"Övf via internet","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-20T00:00:00","dateFormatted":"2019-08-20","amount":-1.0,"currency":"SEK","text":"Övf via internet","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-20T00:00:00","dateFormatted":"2019-08-20","amount":-1.0,"currency":"SEK","text":"Övf via internet","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-20T00:00:00","dateFormatted":"2019-08-20","amount":-1.0,"currency":"SEK","text":"Övf via internet","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-20T00:00:00","dateFormatted":"2019-08-20","amount":-1.0,"currency":"SEK","text":"Övf via internet 832799836613696","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-19T00:00:00","dateFormatted":"2019-08-19","amount":-1.0,"currency":"SEK","text":"Övf via internet","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-19T00:00:00","dateFormatted":"2019-08-19","amount":-1.0,"currency":"SEK","text":"Övf via internet 832799836613696","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-14T00:00:00","dateFormatted":"2019-08-14","amount":-1.0,"currency":"SEK","text":"Övf via internet 832799836613696","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-13T00:00:00","dateFormatted":"2019-08-13","amount":1.0,"currency":"SEK","text":"Överföring","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-12T00:00:00","dateFormatted":"2019-08-12","amount":1.0,"currency":"SEK","text":"Överföring","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-12T00:00:00","dateFormatted":"2019-08-12","amount":-1.0,"currency":"SEK","text":"Övf via internet 832799949428453","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-12T00:00:00","dateFormatted":"2019-08-12","amount":-1.0,"currency":"SEK","text":"Övf via internet 832799836613696","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-12T00:00:00","dateFormatted":"2019-08-12","amount":-1.0,"currency":"SEK","text":"Övf via internet 832799836613696","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-09T00:00:00","dateFormatted":"2019-08-09","amount":-1.0,"currency":"SEK","text":"Övf via internet","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-08T00:00:00","dateFormatted":"2019-08-08","amount":-1.0,"currency":"SEK","text":"Övf via internet 832799836613696","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-08-06T00:00:00","dateFormatted":"2019-08-06","amount":-1.0,"currency":"SEK","text":"1kr","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-07-03T00:00:00","dateFormatted":"2019-07-03","amount":-5.0,"currency":"SEK","text":"Övf via internet 832799836613696","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2019-03-08T00:00:00","dateFormatted":"2019-03-08","amount":300.0,"currency":"SEK","text":"Tv-avgift","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2017-01-24T00:00:00","dateFormatted":"2017-01-24","amount":100.0,"currency":"SEK","text":"Egen överföring","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2016-07-19T00:00:00","dateFormatted":"2016-07-19","amount":-19004.0,"currency":"SEK","text":"Överföring Johannes","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2016-07-18T00:00:00","dateFormatted":"2016-07-18","amount":19000.0,"currency":"SEK","text":"Överföring","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-09-30T00:00:00","dateFormatted":"2012-09-30","amount":-1.5,"currency":"SEK","text":"GOOGLE *Sarah No","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-09-30T00:00:00","dateFormatted":"2012-09-30","amount":-1.5,"currency":"SEK","text":"GOOGLE *Full Fat","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-09-28T00:00:00","dateFormatted":"2012-09-28","amount":-1.5,"currency":"SEK","text":"GOOGLE *KEMCO","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-09-28T00:00:00","dateFormatted":"2012-09-28","amount":-1.5,"currency":"SEK","text":"GOOGLE *Rovio Mo","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false}],"reservedTransactions":[],"moreTransactionsAvailable":false,"numberOfReservedTransactions":0,"numberOfTransactions":27,"totalTransactionsCount":0}
-
+{"currency": "", "totalSum": "", "confirmedTransactions": []}
 
 REQUEST 20
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions?dsid=AAAAAAAA
+GET /TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f?dsid=AAAAAAAA
 Accept: application/json
 
 RESPONSE 20
 200
-Server: -
-Date: Thu, 17 Sep 2020 07:34:29 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
-Pragma: no-cache
-Cache-control: no-cache, no-store, max-age=0
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"totalTransactionsCountTDE":18,"account":{"availableAmount":"8,64","categorizationStatus":"INACTIVATED","accountId":"1504836","categorization":"INACTIVATED","financeMgmtAccountId":"1504836","reservedAmount":"0,00","creditGranted":"0,00","quickbalanceSubscription":{"id":"e0e766c99a3ce65934f6e3b2e6b167d5c16c25f1","active":false,"links":{"next":{"method":"POST","uri":"/v5/quickbalance/subscription/e0e766c99a3ce65934f6e3b2e6b167d5c16c25f1"}}},"currencyAccount":false,"internalAccount":false,"bic":"SWEDSESS","iban":"SE72 8000 0832 7997 4815 5562 ","availableForFavouriteAccount":false,"availableForPriorityAccount":false,"id":"01a858b71922aaac69b0cfa7be179129c6a498d8","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"1111-1","fullyFormattedNumber":"1111-1,333 333 333-3","nonFormattedNumber":"832799748155562","balance":"8,64","currency":"SEK","originalName":"e-sparkonto"},"transactions":[{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2017-01-24T00:00:00","dateFormatted":"2017-01-24","amount":-100.0,"currency":"SEK","text":"Överföring 0222222222222222","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2015-12-31T00:00:00","dateFormatted":"2015-12-31","amount":0.02,"currency":"SEK","text":"Sparränta","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2014-12-31T00:00:00","dateFormatted":"2014-12-31","amount":0.17,"currency":"SEK","text":"Sparränta","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2013-12-31T00:00:00","dateFormatted":"2013-12-31","amount":0.51,"currency":"SEK","text":"Sparränta","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-12-31T00:00:00","dateFormatted":"2012-12-31","amount":-45.0,"currency":"SEK","text":"Prel skatt","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-12-31T00:00:00","dateFormatted":"2012-12-31","amount":152.94,"currency":"SEK","text":"Sparränta","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-04-04T00:00:00","dateFormatted":"2012-04-04","amount":-79028.66,"currency":"SEK","text":"Övf via internet","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-03-29T00:00:00","dateFormatted":"2012-03-29","amount":24000.0,"currency":"SEK","text":"Övf via internet 222222222222222","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-03-03T00:00:00","dateFormatted":"2012-03-03","amount":-8000.0,"currency":"SEK","text":"Övf via internet 222222222222222","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-03-03T00:00:00","dateFormatted":"2012-03-03","amount":4000.0,"currency":"SEK","text":"Övf via internet 222222222222222","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-02-25T00:00:00","dateFormatted":"2012-02-25","amount":20000.0,"currency":"SEK","text":"Övf via internet 222222222222222","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-02-19T00:00:00","dateFormatted":"2012-02-19","amount":-11070.0,"currency":"SEK","text":"Övf via internet","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-02-04T00:00:00","dateFormatted":"2012-02-04","amount":-5000.0,"currency":"SEK","text":"Övf via internet 222222222222222","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-01-30T00:00:00","dateFormatted":"2012-01-30","amount":40000.0,"currency":"SEK","text":"Övf via internet 222222222222222","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2012-01-03T00:00:00","dateFormatted":"2012-01-03","amount":15000.0,"currency":"SEK","text":"Övf via internet 222222222222222","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2011-12-31T00:00:00","dateFormatted":"2011-12-31","amount":-42.0,"currency":"SEK","text":"Prel skatt","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2011-12-31T00:00:00","dateFormatted":"2011-12-31","amount":140.42,"currency":"SEK","text":"Sparränta","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false},{"accountId":0,"uniqueTransactionId":"","comments":[],"id":0,"date":"2011-10-22T00:00:00","dateFormatted":"2011-10-22","amount":-683.0,"currency":"SEK","text":"Övf via internet 222222222222222","categoryId":-2,"detectedCategories":[],"isOwnAccountTransfer":false}],"reservedTransactions":[],"moreTransactionsAvailable":false,"numberOfReservedTransactions":0,"numberOfTransactions":18,"totalTransactionsCount":0}
+{
+	"statementTimestamp": "2020-09-01T10:28:24+0200",
+	"export": [
+		{
+			"format": "XLSX",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/xlsx/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "CSV",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/csv/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "PDF",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/pdf/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "TXT",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/txt/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "PDFVIEW",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/pdfview/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		}
+	],
+	"totalTransactionsCount": 0,
+	"account": {
+		"availableAmount": "22 370,87",
+		"antalTransaktionerTotalt": 240,
+		"creditGranted": "0,00",
+		"quickbalanceSubscription": {
+			"id": "7c5f00c5211c9a227810da7c3e35afe82f22b07e",
+			"active": false,
+			"links": {
+				"next": {
+					"method": "POST",
+					"uri": "/v5/quickbalance/subscription/7c5f00c5211c9a227810da7c3e35afe82f22b07e"
+				}
+			}
+		},
+		"currencyAccount": false,
+		"internalAccount": false,
+		"bic": "SWEDSESS",
+		"iban": "SE44 8000 0833 3333 3333 3333",
+		"availableForFavouriteAccount": false,
+		"availableForPriorityAccount": false,
+		"id": "8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f",
+		"name": "Privatkonto",
+		"accountNumber": "333 333 333-3",
+		"clearingNumber": "3333-3",
+		"fullyFormattedNumber": "3333-3,333 333 333-3",
+		"nonFormattedNumber": "333333333333333",
+		"balance": "22 370,87",
+		"currency": "SEK",
+		"expenseControl": {
+			"status": "ACTIVE",
+			"viewCategorizations": true,
+			"links": {
+				"edit": {
+					"method": "PUT",
+					"uri": "/v5/expensecontrol/accounts/47fced9493ed727dfc62512125178c9eb26908d9"
+				},
+				"delete": {
+					"method": "DELETE",
+					"uri": "/v5/expensecontrol/accounts/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		"originalName": "Privatkonto"
+	},
+	"transactions": [
+		{
+			"categoryId": 0,
+			"date": "2019-12-22",
+			"amount": "-50 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SAVINGS",
+						"id": "9d28a6826df53f56e5abdcee672b7b9bbb651fe8",
+						"amount": "-50 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/149ae067e8a6b99cc03487b2524058545a0878be/categories"
+					}
+				}
+			},
+			"id": "149ae067e8a6b99cc03487b2524058545a0878be",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/149ae067e8a6b99cc03487b2524058545a0878be/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/149ae067e8a6b99cc03487b2524058545a0878be/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-23",
+			"accountingBalance": {
+				"amount": "39 031,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-20",
+			"amount": "-9,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Hobby och sport",
+						"group": "ID_SHOPPING",
+						"id": "839b055d11a7c16da618b92e6a47d8e93dc1cb3b",
+						"amount": "-9,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/c426306eab165e7c473d070cb84f21abf16a3703/categories"
+					}
+				}
+			},
+			"id": "c426306eab165e7c473d070cb84f21abf16a3703",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/c426306eab165e7c473d070cb84f21abf16a3703/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/c426306eab165e7c473d070cb84f21abf16a3703/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-20",
+			"accountingBalance": {
+				"amount": "57 319,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-19",
+			"amount": "-69,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SHOPPING",
+						"id": "f76ccfed892388e55c565cce1aacf946df55234e",
+						"amount": "-69,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/b08d6c34785f8a069cb85d60f303237e56fa4a3f/categories"
+					}
+				}
+			},
+			"id": "b08d6c34785f8a069cb85d60f303237e56fa4a3f",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/b08d6c34785f8a069cb85d60f303237e56fa4a3f/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/b08d6c34785f8a069cb85d60f303237e56fa4a3f/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-19",
+			"accountingBalance": {
+				"amount": "57 434,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-19",
+			"amount": "-106,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-106,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/45d40afcb7e5d940621029363697bbe4561dba78/categories"
+					}
+				}
+			},
+			"id": "45d40afcb7e5d940621029363697bbe4561dba78",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/45d40afcb7e5d940621029363697bbe4561dba78/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/45d40afcb7e5d940621029363697bbe4561dba78/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-19",
+			"accountingBalance": {
+				"amount": "57 328,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-16",
+			"amount": "-99,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-99,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/8c1731693c51aba3619a24a144d8e49f00deb0ad/categories"
+					}
+				}
+			},
+			"id": "8c1731693c51aba3619a24a144d8e49f00deb0ad",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/8c1731693c51aba3619a24a144d8e49f00deb0ad/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/8c1731693c51aba3619a24a144d8e49f00deb0ad/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-16",
+			"accountingBalance": {
+				"amount": "57 503,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-15",
+			"amount": "-265,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-265,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/66eadd52a0da05db1e1ed179a0fcca6f575b0dab/categories"
+					}
+				}
+			},
+			"id": "66eadd52a0da05db1e1ed179a0fcca6f575b0dab",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/66eadd52a0da05db1e1ed179a0fcca6f575b0dab/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-16",
+			"accountingBalance": {
+				"amount": "57 602,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-13",
+			"amount": "-265,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-265,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/0c2dc1fa6f979a2d5e12ed49722e162277fc39a7/categories"
+					}
+				}
+			},
+			"id": "0c2dc1fa6f979a2d5e12ed49722e162277fc39a7",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/0c2dc1fa6f979a2d5e12ed49722e162277fc39a7/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-13",
+			"accountingBalance": {
+				"amount": "57 867,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-11",
+			"amount": "-10 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SAVINGS",
+						"id": "9d28a6826df53f56e5abdcee672b7b9bbb651fe8",
+						"amount": "-10 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/723db9faa789cd8a89c5013756feb0f3e78a1929/categories"
+					}
+				}
+			},
+			"id": "723db9faa789cd8a89c5013756feb0f3e78a1929",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/723db9faa789cd8a89c5013756feb0f3e78a1929/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/723db9faa789cd8a89c5013756feb0f3e78a1929/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-11",
+			"accountingBalance": {
+				"amount": "58 132,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-07",
+			"amount": "-315,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-315,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/d6336b7722814aa9749ffa472e5ecc67ee4c4c71/categories"
+					}
+				}
+			},
+			"id": "d6336b7722814aa9749ffa472e5ecc67ee4c4c71",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/d6336b7722814aa9749ffa472e5ecc67ee4c4c71/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-09",
+			"accountingBalance": {
+				"amount": "67 817,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-07",
+			"amount": "315,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "315,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/67ac8a64358619ce97d096260cbf1c49ba07be92/categories"
+					}
+				}
+			},
+			"id": "67ac8a64358619ce97d096260cbf1c49ba07be92",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/67ac8a64358619ce97d096260cbf1c49ba07be92/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-09",
+			"accountingBalance": {
+				"amount": "68 132,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-02",
+			"amount": "-115,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Försäkringar",
+						"group": "ID_OTHER",
+						"id": "8c45498447f292f77bc15c9df618472b62fe3681",
+						"amount": "-115,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/e7c157e453a62eeb0dd4e80d40354cdd8db422f6/categories"
+					}
+				}
+			},
+			"id": "e7c157e453a62eeb0dd4e80d40354cdd8db422f6",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/e7c157e453a62eeb0dd4e80d40354cdd8db422f6/labels4830ce2084c3f050fb22c17659d9882822a06347"
+							}
+						},
+						"id": "4830ce2084c3f050fb22c17659d9882822a06347",
+						"name": "Bankgiro",
+						"type": "SYSTEM"
+					},
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/e7c157e453a62eeb0dd4e80d40354cdd8db422f6/labels06aa8ad7e48c02e0d3e9e1a347634afc9b812357"
+							}
+						},
+						"id": "06aa8ad7e48c02e0d3e9e1a347634afc9b812357",
+						"name": "Autogiro",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/e7c157e453a62eeb0dd4e80d40354cdd8db422f6/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-02",
+			"accountingBalance": {
+				"amount": "68 132,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-12-01",
+			"amount": "-315,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-315,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/e0ba94f7f15e000636becc80e370139563a810c4/categories"
+					}
+				}
+			},
+			"id": "e0ba94f7f15e000636becc80e370139563a810c4",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/e0ba94f7f15e000636becc80e370139563a810c4/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-12-02",
+			"accountingBalance": {
+				"amount": "68 247,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-29",
+			"amount": "-265,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-265,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/d7e1ae35397cf1fd15d51da418aee601dc3128bf/categories"
+					}
+				}
+			},
+			"id": "d7e1ae35397cf1fd15d51da418aee601dc3128bf",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/d7e1ae35397cf1fd15d51da418aee601dc3128bf/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-29",
+			"accountingBalance": {
+				"amount": "68 562,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-29",
+			"amount": "-119,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "TV, bredband, telefoni",
+						"group": "ID_ACCOMMODATION",
+						"id": "dacb3f0bc705340bc84bb018bdef756f3dad6d1b",
+						"amount": "-119,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/36d84b093d9786c7fadaa0a92ac229e2e9165c20/categories"
+					}
+				}
+			},
+			"id": "36d84b093d9786c7fadaa0a92ac229e2e9165c20",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/36d84b093d9786c7fadaa0a92ac229e2e9165c20/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/36d84b093d9786c7fadaa0a92ac229e2e9165c20/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-29",
+			"accountingBalance": {
+				"amount": "68 827,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-28",
+			"amount": "3 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "3 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/25478c6772f59d4a0d0c9f7eaf21d1cce6e91343/categories"
+					}
+				}
+			},
+			"id": "25478c6772f59d4a0d0c9f7eaf21d1cce6e91343",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/25478c6772f59d4a0d0c9f7eaf21d1cce6e91343/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/25478c6772f59d4a0d0c9f7eaf21d1cce6e91343/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-28",
+			"accountingBalance": {
+				"amount": "68 946,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-27",
+			"amount": "-10 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SAVINGS",
+						"id": "9d28a6826df53f56e5abdcee672b7b9bbb651fe8",
+						"amount": "-10 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/31a2c808803a12ded84f9232fcc2dc8ca99e8478/categories"
+					}
+				}
+			},
+			"id": "31a2c808803a12ded84f9232fcc2dc8ca99e8478",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/31a2c808803a12ded84f9232fcc2dc8ca99e8478/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/31a2c808803a12ded84f9232fcc2dc8ca99e8478/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-27",
+			"accountingBalance": {
+				"amount": "66 116,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-27",
+			"amount": "-270,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SHOPPING",
+						"id": "f76ccfed892388e55c565cce1aacf946df55234e",
+						"amount": "-270,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/3ea2f3587bcb25ec5ee2c041c993c0732a05e8ca/categories"
+					}
+				}
+			},
+			"id": "3ea2f3587bcb25ec5ee2c041c993c0732a05e8ca",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/3ea2f3587bcb25ec5ee2c041c993c0732a05e8ca/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/3ea2f3587bcb25ec5ee2c041c993c0732a05e8ca/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-27",
+			"accountingBalance": {
+				"amount": "76 116,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-27",
+			"amount": "-170,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-170,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/4734d00c3f0e58773f6c30d67c86f8e75d97c2c3/categories"
+					}
+				}
+			},
+			"id": "4734d00c3f0e58773f6c30d67c86f8e75d97c2c3",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/4734d00c3f0e58773f6c30d67c86f8e75d97c2c3/labels31eac9f553caa1a89db8ffb41f05325101398df2"
+							}
+						},
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"name": "Swish",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/4734d00c3f0e58773f6c30d67c86f8e75d97c2c3/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-28",
+			"accountingBalance": {
+				"amount": "65 946,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "34 412,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Inkomst",
+						"group": "ID_INCOME",
+						"id": "3c5e5b73020cdb789788ff23b1b451780c815501",
+						"amount": "34 412,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/df6362bfdf5fe41fca60fbe925c2613735c68c2a/categories"
+					}
+				}
+			},
+			"id": "df6362bfdf5fe41fca60fbe925c2613735c68c2a",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/df6362bfdf5fe41fca60fbe925c2613735c68c2a/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-22",
+			"accountingBalance": {
+				"amount": "80 055,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "-2 700,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Avgift och hyra",
+						"group": "ID_ACCOMMODATION",
+						"id": "f4567db156735cae9b2a3641e973732d1d5fe3b6",
+						"amount": "-2 700,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/20105c7f74fb235879167cf7a9fbbb0dece3c625/categories"
+					}
+				}
+			},
+			"id": "20105c7f74fb235879167cf7a9fbbb0dece3c625",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/20105c7f74fb235879167cf7a9fbbb0dece3c625/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/20105c7f74fb235879167cf7a9fbbb0dece3c625/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-25",
+			"accountingBalance": {
+				"amount": "76 386,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "-64,95",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SHOPPING",
+						"id": "f76ccfed892388e55c565cce1aacf946df55234e",
+						"amount": "-64,95"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/879387ee875cd614e0960a297b6d45b118085fae/categories"
+					}
+				}
+			},
+			"id": "879387ee875cd614e0960a297b6d45b118085fae",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/879387ee875cd614e0960a297b6d45b118085fae/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/879387ee875cd614e0960a297b6d45b118085fae/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-25",
+			"accountingBalance": {
+				"amount": "79 991,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "-349,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "TV, bredband, telefoni",
+						"group": "ID_ACCOMMODATION",
+						"id": "dacb3f0bc705340bc84bb018bdef756f3dad6d1b",
+						"amount": "-349,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/510c6cb12b6d9a20d77b52ff79225ac5b843b10e/categories"
+					}
+				}
+			},
+			"id": "510c6cb12b6d9a20d77b52ff79225ac5b843b10e",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/510c6cb12b6d9a20d77b52ff79225ac5b843b10e/labels33813c4818abf8222e63642087269c2506b53525"
+							}
+						},
+						"id": "33813c4818abf8222e63642087269c2506b53525",
+						"name": "Plusgiro",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/510c6cb12b6d9a20d77b52ff79225ac5b843b10e/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-25",
+			"accountingBalance": {
+				"amount": "79 642,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "-272,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Fackavgift och a-kassa",
+						"group": "ID_OTHER",
+						"id": "0a2031aa69d538a9f0186296a74df532157734b2",
+						"amount": "-272,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/2a564784f0fc5cbdd17e93091a313f3ccdb8a7d6/categories"
+					}
+				}
+			},
+			"id": "2a564784f0fc5cbdd17e93091a313f3ccdb8a7d6",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/2a564784f0fc5cbdd17e93091a313f3ccdb8a7d6/labels4830ce2084c3f050fb22c17659d9882822a06347"
+							}
+						},
+						"id": "4830ce2084c3f050fb22c17659d9882822a06347",
+						"name": "Bankgiro",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/2a564784f0fc5cbdd17e93091a313f3ccdb8a7d6/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-25",
+			"accountingBalance": {
+				"amount": "79 370,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-25",
+			"amount": "-284,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Fackavgift och a-kassa",
+						"group": "ID_OTHER",
+						"id": "0a2031aa69d538a9f0186296a74df532157734b2",
+						"amount": "-284,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/fda78ce967cacf868192024c44c95ae9ec107520/categories"
+					}
+				}
+			},
+			"id": "fda78ce967cacf868192024c44c95ae9ec107520",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/fda78ce967cacf868192024c44c95ae9ec107520/labels4830ce2084c3f050fb22c17659d9882822a06347"
+							}
+						},
+						"id": "4830ce2084c3f050fb22c17659d9882822a06347",
+						"name": "Bankgiro",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/fda78ce967cacf868192024c44c95ae9ec107520/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-25",
+			"accountingBalance": {
+				"amount": "79 086,04",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-22",
+			"amount": "105,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "105,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/aa634c13eeefb476dfc31c9891b95e9487cf5506/categories"
+					}
+				}
+			},
+			"id": "aa634c13eeefb476dfc31c9891b95e9487cf5506",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/aa634c13eeefb476dfc31c9891b95e9487cf5506/labels31eac9f553caa1a89db8ffb41f05325101398df2"
+							}
+						},
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"name": "Swish",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/aa634c13eeefb476dfc31c9891b95e9487cf5506/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-22",
+			"accountingBalance": {
+				"amount": "45 643,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-20",
+			"amount": "-106,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-106,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/f2c5568464892dfcfaefb203d319082497808814/categories"
+					}
+				}
+			},
+			"id": "f2c5568464892dfcfaefb203d319082497808814",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/f2c5568464892dfcfaefb203d319082497808814/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/f2c5568464892dfcfaefb203d319082497808814/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-20",
+			"accountingBalance": {
+				"amount": "45 547,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-20",
+			"amount": "-9,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Hobby och sport",
+						"group": "ID_SHOPPING",
+						"id": "839b055d11a7c16da618b92e6a47d8e93dc1cb3b",
+						"amount": "-9,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/559173ea08d2d2b521005d4f4aa05d374daf3a2d/categories"
+					}
+				}
+			},
+			"id": "559173ea08d2d2b521005d4f4aa05d374daf3a2d",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/559173ea08d2d2b521005d4f4aa05d374daf3a2d/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/559173ea08d2d2b521005d4f4aa05d374daf3a2d/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-20",
+			"accountingBalance": {
+				"amount": "45 538,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-19",
+			"amount": "-69,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SHOPPING",
+						"id": "f76ccfed892388e55c565cce1aacf946df55234e",
+						"amount": "-69,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/e296cfe87dfcfe45940617451860da70f259d2d5/categories"
+					}
+				}
+			},
+			"id": "e296cfe87dfcfe45940617451860da70f259d2d5",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/e296cfe87dfcfe45940617451860da70f259d2d5/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/e296cfe87dfcfe45940617451860da70f259d2d5/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-19",
+			"accountingBalance": {
+				"amount": "45 758,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-19",
+			"amount": "-105,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-105,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/25c0f1a78b39a12dd2f6ea0a889bc7f0a1efef7c/categories"
+					}
+				}
+			},
+			"id": "25c0f1a78b39a12dd2f6ea0a889bc7f0a1efef7c",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/25c0f1a78b39a12dd2f6ea0a889bc7f0a1efef7c/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/25c0f1a78b39a12dd2f6ea0a889bc7f0a1efef7c/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-19",
+			"accountingBalance": {
+				"amount": "45 653,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-17",
+			"amount": "-5 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SAVINGS",
+						"id": "9d28a6826df53f56e5abdcee672b7b9bbb651fe8",
+						"amount": "-5 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/945d6a7e5dcf55fa26433cec23bb812a25dee284/categories"
+					}
+				}
+			},
+			"id": "945d6a7e5dcf55fa26433cec23bb812a25dee284",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/945d6a7e5dcf55fa26433cec23bb812a25dee284/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/945d6a7e5dcf55fa26433cec23bb812a25dee284/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-18",
+			"accountingBalance": {
+				"amount": "45 827,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-16",
+			"amount": "-99,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-99,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/34e213f73e730c184f88b5252959991ec08a2043/categories"
+					}
+				}
+			},
+			"id": "34e213f73e730c184f88b5252959991ec08a2043",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/34e213f73e730c184f88b5252959991ec08a2043/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/34e213f73e730c184f88b5252959991ec08a2043/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-18",
+			"accountingBalance": {
+				"amount": "50 827,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-15",
+			"amount": "-999,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Hobby och sport",
+						"group": "ID_SHOPPING",
+						"id": "839b055d11a7c16da618b92e6a47d8e93dc1cb3b",
+						"amount": "-999,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/44bec610c0acc3023c7638b2bc540f29b0172b93/categories"
+					}
+				}
+			},
+			"id": "44bec610c0acc3023c7638b2bc540f29b0172b93",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/44bec610c0acc3023c7638b2bc540f29b0172b93/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/44bec610c0acc3023c7638b2bc540f29b0172b93/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-15",
+			"accountingBalance": {
+				"amount": "50 926,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-14",
+			"amount": "-109,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-109,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/e98b2ec36980a2c0b9f2164594a86ae75e926877/categories"
+					}
+				}
+			},
+			"id": "e98b2ec36980a2c0b9f2164594a86ae75e926877",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/e98b2ec36980a2c0b9f2164594a86ae75e926877/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/e98b2ec36980a2c0b9f2164594a86ae75e926877/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-14",
+			"accountingBalance": {
+				"amount": "52 054,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-14",
+			"amount": "-129,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-129,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/c9ac7ac59b48c0531d51528b2ce48b55460c8df3/categories"
+					}
+				}
+			},
+			"id": "c9ac7ac59b48c0531d51528b2ce48b55460c8df3",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/c9ac7ac59b48c0531d51528b2ce48b55460c8df3/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/c9ac7ac59b48c0531d51528b2ce48b55460c8df3/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-14",
+			"accountingBalance": {
+				"amount": "51 925,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-10",
+			"amount": "-435,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-435,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/ba3de07508647ff4165b1f1aaeac820fe68f80c1/categories"
+					}
+				}
+			},
+			"id": "ba3de07508647ff4165b1f1aaeac820fe68f80c1",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/ba3de07508647ff4165b1f1aaeac820fe68f80c1/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-11",
+			"accountingBalance": {
+				"amount": "52 163,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-09",
+			"amount": "650,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "650,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/1ac9ad40af469cd7ecc4414bcaa6405d325f9466/categories"
+					}
+				}
+			},
+			"id": "1ac9ad40af469cd7ecc4414bcaa6405d325f9466",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/1ac9ad40af469cd7ecc4414bcaa6405d325f9466/labels31eac9f553caa1a89db8ffb41f05325101398df2"
+							}
+						},
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"name": "Swish",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/1ac9ad40af469cd7ecc4414bcaa6405d325f9466/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-11",
+			"accountingBalance": {
+				"amount": "52 704,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-09",
+			"amount": "3 400,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "3 400,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/68e0bd629351095477d5801ea04ff93fc09f1802/categories"
+					}
+				}
+			},
+			"id": "68e0bd629351095477d5801ea04ff93fc09f1802",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/68e0bd629351095477d5801ea04ff93fc09f1802/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/68e0bd629351095477d5801ea04ff93fc09f1802/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-11",
+			"accountingBalance": {
+				"amount": "50 554,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-09",
+			"amount": "1 500,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "1 500,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/ddf90bf5193c21b3b591bbb9f2e9f550cd09dd6f/categories"
+					}
+				}
+			},
+			"id": "ddf90bf5193c21b3b591bbb9f2e9f550cd09dd6f",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/ddf90bf5193c21b3b591bbb9f2e9f550cd09dd6f/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/ddf90bf5193c21b3b591bbb9f2e9f550cd09dd6f/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-11",
+			"accountingBalance": {
+				"amount": "52 054,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-09",
+			"amount": "-106,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-106,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/1b054f7c91ac6699e77d6b18762c46f4dced0313/categories"
+					}
+				}
+			},
+			"id": "1b054f7c91ac6699e77d6b18762c46f4dced0313",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/1b054f7c91ac6699e77d6b18762c46f4dced0313/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/1b054f7c91ac6699e77d6b18762c46f4dced0313/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-11",
+			"accountingBalance": {
+				"amount": "52 598,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-08",
+			"amount": "-315,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Okategoriserat",
+						"group": "ID_OTHER",
+						"id": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+						"amount": "-315,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/081fd190badab708a3bb2ac839fdbe27481fbc29/categories"
+					}
+				}
+			},
+			"id": "081fd190badab708a3bb2ac839fdbe27481fbc29",
+			"labelings": {
+				"labels": [
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/081fd190badab708a3bb2ac839fdbe27481fbc29/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-08",
+			"accountingBalance": {
+				"amount": "47 279,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-08",
+			"amount": "-106,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-106,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/de0e18cd3ba078adb3dca90e53dae0d253156eff/categories"
+					}
+				}
+			},
+			"id": "de0e18cd3ba078adb3dca90e53dae0d253156eff",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/de0e18cd3ba078adb3dca90e53dae0d253156eff/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/de0e18cd3ba078adb3dca90e53dae0d253156eff/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-08",
+			"accountingBalance": {
+				"amount": "47 594,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-08",
+			"amount": "-125,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Restaurang och café",
+						"group": "ID_HOUSEHOLD",
+						"id": "38399563798e78f29d151a8e035f8948fa549db5",
+						"amount": "-125,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/88914d5419565a383423f01227aa90f15f47b11c/categories"
+					}
+				}
+			},
+			"id": "88914d5419565a383423f01227aa90f15f47b11c",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/88914d5419565a383423f01227aa90f15f47b11c/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/88914d5419565a383423f01227aa90f15f47b11c/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-08",
+			"accountingBalance": {
+				"amount": "47 154,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-07",
+			"amount": "-10 000,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_SAVINGS",
+						"id": "9d28a6826df53f56e5abdcee672b7b9bbb651fe8",
+						"amount": "-10 000,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/ea6708b809a6676f46978c865221b6789664590e/categories"
+					}
+				}
+			},
+			"id": "ea6708b809a6676f46978c865221b6789664590e",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/ea6708b809a6676f46978c865221b6789664590e/labels21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e"
+							}
+						},
+						"id": "21fd828ad30ecccf1e3028d44f4ff3bdcfb63a8e",
+						"name": "Överföring",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/ea6708b809a6676f46978c865221b6789664590e/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-07",
+			"accountingBalance": {
+				"amount": "47 700,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-05",
+			"amount": "19,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "19,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/b26b78761aafe31b08513792ebd74a5044a70794/categories"
+					}
+				}
+			},
+			"id": "b26b78761aafe31b08513792ebd74a5044a70794",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/b26b78761aafe31b08513792ebd74a5044a70794/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/b26b78761aafe31b08513792ebd74a5044a70794/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-05",
+			"accountingBalance": {
+				"amount": "57 681,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-05",
+			"amount": "19,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Generell",
+						"group": "ID_INCOME",
+						"id": "31eac9f553caa1a89db8ffb41f05325101398df2",
+						"amount": "19,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/f6e0b194e90f6984d95e87bd4e5e2f844a1c38e5/categories"
+					}
+				}
+			},
+			"id": "f6e0b194e90f6984d95e87bd4e5e2f844a1c38e5",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/f6e0b194e90f6984d95e87bd4e5e2f844a1c38e5/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/f6e0b194e90f6984d95e87bd4e5e2f844a1c38e5/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-05",
+			"accountingBalance": {
+				"amount": "57 700,99",
+				"currencyCode": "SEK"
+			}
+		},
+		{
+			"categoryId": 0,
+			"date": "2019-11-04",
+			"amount": "-228,00",
+			"description": "dummyDescription",
+			"currency": "SEK",
+			"categorizations": {
+				"categories": [
+					{
+						"name": "Resor",
+						"group": "ID_SHOPPING",
+						"id": "841813e74b5ee9ac2223d83a0399e418b24acc68",
+						"amount": "-228,00"
+					}
+				],
+				"links": {
+					"edit": {
+						"method": "PUT",
+						"uri": "/v5/expensecontrol/transactions/9415cf454a367797833c10cd80e0623b35a98c25/categories"
+					}
+				}
+			},
+			"id": "9415cf454a367797833c10cd80e0623b35a98c25",
+			"labelings": {
+				"labels": [
+					{
+						"links": {
+							"delete": {
+								"method": "DELETE",
+								"uri": "/v5/expensecontrol/transactions/9415cf454a367797833c10cd80e0623b35a98c25/labels357f420f361717a935b020a1aa6c8d418a3f430e"
+							}
+						},
+						"id": "357f420f361717a935b020a1aa6c8d418a3f430e",
+						"name": "Bankkort",
+						"type": "SYSTEM"
+					}
+				],
+				"links": {
+					"next": {
+						"method": "POST",
+						"uri": "/v5/expensecontrol/transactions/9415cf454a367797833c10cd80e0623b35a98c25/labels"
+					}
+				}
+			},
+			"expenseControlIncluded": "INCLUDED",
+			"accountingDate": "2019-11-04",
+			"accountingBalance": {
+				"amount": "57 780,99",
+				"currencyCode": "SEK"
+			}
+		}
+	],
+	"reservedTransactions": [
 
+	],
+	"moreTransactionsAvailable": true,
+	"numberOfTransactions": 46,
+	"numberOfReservedTransactions": 0,
+	"uncategorizedIncomeTransactions": 0,
+	"uncategorizedExpenseTransactions": 6,
+	"uncategorizedSubcategoryId": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+	"uncategorizedSortOfReceivers": 5,
+	"numberOfBankGiroPrognosisTransactions": 0,
+	"bankGiroPrognosisTransactions": [
+
+	],
+	"links": {
+		"next": {
+			"method": "GET",
+			"uri": "/v5/engagement/transactions/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f?transactionsPerPage=46&paginationId=8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f&page=2"
+		}
+	}
+}
+
+REQUEST 20A
+GET /TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f?transactionsPerPage=46&paginationId=8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f&page=2&dsid=AAAAAAAA
+Accept: application/json
+
+RESPONSE 20A
+200
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{
+	"statementTimestamp": "2020-09-01T10:28:24+0200",
+	"export": [
+		{
+			"format": "XLSX",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/xlsx/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "CSV",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/csv/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "PDF",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/pdf/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "TXT",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/txt/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		{
+			"format": "PDFVIEW",
+			"links": {
+				"next": {
+					"method": "GET",
+					"uri": "/v5/engagement/transactions/pdfview/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		}
+	],
+	"totalTransactionsCount": 0,
+	"account": {
+		"availableAmount": "22 370,87",
+		"antalTransaktionerTotalt": 240,
+		"creditGranted": "0,00",
+		"quickbalanceSubscription": {
+			"id": "7c5f00c5211c9a227810da7c3e35afe82f22b07e",
+			"active": false,
+			"links": {
+				"next": {
+					"method": "POST",
+					"uri": "/v5/quickbalance/subscription/7c5f00c5211c9a227810da7c3e35afe82f22b07e"
+				}
+			}
+		},
+		"currencyAccount": false,
+		"internalAccount": false,
+		"bic": "SWEDSESS",
+		"iban": "SE44 8000 0833 3333 3333 3333",
+		"availableForFavouriteAccount": false,
+		"availableForPriorityAccount": false,
+		"id": "8b82d8a02e1adb1d9bb9ae0e43a7b72f214b577f",
+		"name": "Privatkonto",
+		"accountNumber": "333 333 333-3",
+		"clearingNumber": "3333-3",
+		"fullyFormattedNumber": "3333-3,333 333 333-3",
+		"nonFormattedNumber": "333333333333333",
+		"balance": "22 370,87",
+		"currency": "SEK",
+		"expenseControl": {
+			"status": "ACTIVE",
+			"viewCategorizations": true,
+			"links": {
+				"edit": {
+					"method": "PUT",
+					"uri": "/v5/expensecontrol/accounts/47fced9493ed727dfc62512125178c9eb26908d9"
+				},
+				"delete": {
+					"method": "DELETE",
+					"uri": "/v5/expensecontrol/accounts/47fced9493ed727dfc62512125178c9eb26908d9"
+				}
+			}
+		},
+		"originalName": "Privatkonto"
+	},
+	"transactions": [],
+	"reservedTransactions": [
+	],
+	"moreTransactionsAvailable": true,
+	"numberOfTransactions": 46,
+	"numberOfReservedTransactions": 0,
+	"uncategorizedIncomeTransactions": 0,
+	"uncategorizedExpenseTransactions": 6,
+	"uncategorizedSubcategoryId": "d0a3980c1bdaec7c675cd55a24be85c973d4c1c1",
+	"uncategorizedSortOfReceivers": 5,
+	"numberOfBankGiroPrognosisTransactions": 0,
+	"bankGiroPrognosisTransactions": [
+	]
+}
 
 REQUEST 21
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/einvoice/incoming?dsid=AAAAAAAA
+GET /TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/90a9f165727b5b51d439895e9bdf7b488ea19a81?dsid=AAAAAAAA
 Accept: application/json
 
 RESPONSE 21
 200
-Server: -
-Date: Thu, 17 Sep 2020 07:34:29 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
-Pragma: no-cache
-Cache-control: no-cache, no-store, max-age=0
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"totalSum":"0,00","einvoices":[],"fromAccountGroups":[{"accounts":[{"currencyCode":"SEK","scopes":["PAYMENT_FROM","TRANSFER_FROM"],"amount":"0,00","name":"Bokonto","accountNumber":"111 111 111-1","clearingNumber":"1111-1","id":"2afd29de9249d2245ff6a5232170cb65a913ae7d","fullyFormattedNumber":"1111-1,111 111 111-1"},{"currencyCode":"SEK","scopes":["PAYMENT_FROM","TRANSFER_FROM"],"amount":"383,62","name":"Privatkonto","accountNumber":"222 222 222-2","clearingNumber":"2222-2","id":"a86130f25b3d66d64e557108346fa61d298e7fbd","fullyFormattedNumber":"2222-2,222 222 222-2"}],"name":"Konton i svenska kronor"},{"accounts":[{"currencyCode":"SEK","scopes":["PAYMENT_FROM","TRANSFER_FROM"],"amount":"8,64","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"3333-3","id":"01a858b71922aaac69b0cfa7be179129c6a498d8","fullyFormattedNumber":"3333-3,333 333 333-3"}],"name":"Sparkonton"}]}
+{}
 
-
-REQUEST 24
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch?dsid=AAAAAAAA
+REQUEST 22
+GET /TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/e6eeba088463c3a6038c3b1316ba024b008b88a4?dsid=AAAAAAAA
 Accept: application/json
 
-RESPONSE 24
+RESPONSE 22
 200
-Server: -
-Date: Thu, 17 Sep 2020 07:34:29 GMT
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
-Pragma: no-cache
-Cache-control: no-cache, no-store, max-age=0
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"chosenProfileName":"Kristoffer Gauffin","identifiedUserName":"Kristoffer Gauffin","identifiedUser":"19850430-0255","chosenProfile":"198504300255","authMethodName":"BANKID_MOBILE","authMethodDescription":"Mobile BankID","authMethodExtendedUsage":false,"bankId":"11111","bankName":"Swedbank AB (publ)","chosenProfileLanguage":"sv","client":{"software":{"name":"SwedbankMOBPrivateIOS","version":"7.23.0","family":"SWEDBANK_APP"},"os":{"name":"iOS","version":"13.6.1","family":"IOS"},"device":{"manufacturer":"Apple","model":"iPhone8,1"}},"authenticationRole":"CUSTOMER","serverTime":"20200917 09:34","formattedServerTime":"2020-09-17 09:34"}
+{}
+
+REQUEST 23
+GET /TDE_DAP_Portal_REST_WEB/api/v5/einvoice/incoming?dsid=AAAAAAAA
+Accept: application/json
+
+RESPONSE 23
+200
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{}
+

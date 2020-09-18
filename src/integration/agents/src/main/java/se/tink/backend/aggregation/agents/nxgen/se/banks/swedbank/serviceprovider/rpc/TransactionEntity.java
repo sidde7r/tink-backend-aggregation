@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.Optional;
-import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
@@ -16,11 +15,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@Getter
 @JsonObject
 public class TransactionEntity extends AbstractTransactionEntity {
     private String id;
-    private String text;
     private String expenseControlIncluded;
     private LabelingsEntity labelings;
     private CategorizationsEntity categorizations;
@@ -31,8 +28,48 @@ public class TransactionEntity extends AbstractTransactionEntity {
 
     private AmountEntity accountingBalance;
 
+    public String getId() {
+        return id;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public String getExpenseControlIncluded() {
+        return expenseControlIncluded;
+    }
+
+    public LabelingsEntity getLabelings() {
+        return labelings;
+    }
+
+    public CategorizationsEntity getCategorizations() {
+        return categorizations;
+    }
+
+    public Date getAccountingDate() {
+        return accountingDate;
+    }
+
+    public AmountEntity getAccountingBalance() {
+        return accountingBalance;
+    }
+
     public Optional<Transaction> toTinkTransaction() {
-        if (this.date == null || this.text == null) {
+        if (this.date == null || this.description == null) {
             return Optional.empty();
         }
 
@@ -49,9 +86,9 @@ public class TransactionEntity extends AbstractTransactionEntity {
                         .setPayload(
                                 TransactionPayloadTypes.DETAILS,
                                 SerializationUtils.serializeToString(getTransactionDetails()))
-                        .setDescription(SwedbankBaseConstants.Description.clean(this.text));
+                        .setDescription(SwedbankBaseConstants.Description.clean(this.description));
 
-        if (SwedbankBaseConstants.Description.PENDING_TRANSACTIONS.contains(this.text)) {
+        if (SwedbankBaseConstants.Description.PENDING_TRANSACTIONS.contains(this.description)) {
             transactionBuilder.setPending(true);
         }
 
@@ -75,7 +112,7 @@ public class TransactionEntity extends AbstractTransactionEntity {
                         : "";
         key += getAmount();
         key += getCurrency();
-        key += getText();
+        key += getDescription();
 
         return key;
     }
