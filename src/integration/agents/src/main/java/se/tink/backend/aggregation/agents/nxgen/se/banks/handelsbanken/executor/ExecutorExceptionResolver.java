@@ -15,31 +15,13 @@ public class ExecutorExceptionResolver {
         this.catalog = catalog;
     }
 
-    public void throwIf(boolean condition, ExceptionMessage exceptionMessage) {
-        if (condition) {
-            throw asException(exceptionMessage);
-        }
-    }
-
-    public void throwIf(boolean condition, Messageable messageable) {
-        if (condition) {
-            throw asException(messageable);
-        }
-    }
-
-    public TransferExecutionException asException(ExceptionMessage exceptionMessage) {
-        return TransferExecutionException.builder(exceptionMessage.getStatus())
-                .setEndUserMessage(translateMessage(exceptionMessage::getEndUserMessage))
-                .setMessage(translateMessage(exceptionMessage::getUserMessage))
-                .build();
-    }
-
     private String translateMessage(Supplier<LocalizableKey> message) {
         return catalog.getString(message.get());
     }
 
     public TransferExecutionException asException(Messageable messageable) {
-        return asException(
+        return abortTransfer(
+                messageable,
                 new ExceptionMessage() {
                     private LocalizableKey errorMessage =
                             new LocalizableKey(
@@ -54,11 +36,6 @@ public class ExecutorExceptionResolver {
                                                                             .getKey()
                                                                             .get()))
                                             .replaceAll("\n", ""));
-
-                    @Override
-                    public SignableOperationStatuses getStatus() {
-                        return toStatus(messageable);
-                    }
 
                     @Override
                     public LocalizableKey getEndUserMessage() {
