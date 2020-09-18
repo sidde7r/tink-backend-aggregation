@@ -37,16 +37,14 @@ public class BoursoramaConstants {
                 HOST + API_VERSION + "_user_/_{userHash}_/session/otp/checkemail/{otpNumber}";
         static final String ACK_MESSAGE =
                 HOST + API_VERSION + "_user_/_{userHash}_/customer/messages/ack";
-
-        // %s is the user hash, received from response.
         static final String LIST_ACCOUNTS =
                 HOST + API_VERSION + "_user_/_{userHash}_/bank/accounts/summary";
         public static final String IDENTITY_DATA =
                 HOST + API_VERSION + "_user_/_{userHash}_/customer/profile/basic";
-        // First %s is the user hash, second one is the account key.
         static final String LIST_TRANSACTIONS_FROM_ACCOUNT =
-                HOST + API_VERSION + "_user_/_{userHash}_/bank/account/operations/";
-        public static final String LOGOUT = HOST + API_VERSION + "_user_/_%s_/session/auth/logout";
+                HOST + API_VERSION + "_user_/_{userHash}_/bank/account/operations/{accountKey}";
+        public static final String LOGOUT =
+                HOST + API_VERSION + "_user_/_{userHash}_/session/auth/logout";
         public static final String KEEP_ALIVE =
                 HOST + API_VERSION + "_user_/_{userHash}_/session/auth/refresh";
     }

@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
-@Getter
 @JsonObject
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
-public class CheckBeneficiaryResponse {
-    private String bic;
-    private List<AdditionalMessageEntity> additionalMessages;
+@AllArgsConstructor
+public class PrepareBeneficiaryResponse {
+
+    @JsonProperty("dataId")
+    private String beneficiaryId;
 }

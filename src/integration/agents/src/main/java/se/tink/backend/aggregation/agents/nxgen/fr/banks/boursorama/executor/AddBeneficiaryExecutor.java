@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.BoursoramaAp
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.ChallengeDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.CheckBeneficiaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.ConfirmBeneficiaryUnauthorizedResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.PrepareRecipientResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.PrepareBeneficiaryResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -29,7 +29,7 @@ import se.tink.libraries.payment.rpc.CreateBeneficiary;
 @RequiredArgsConstructor
 public class AddBeneficiaryExecutor implements CreateBeneficiaryExecutor {
 
-    private static final String SMS_OTP_CODE = "Sms-otp-code";
+    private static final String SMS_OTP_CODE = "";
     private static final String EMAIL_OTP_CODE = "Email-otp-code";
 
     private final BoursoramaApiClient apiClient;
@@ -52,8 +52,8 @@ public class AddBeneficiaryExecutor implements CreateBeneficiaryExecutor {
                 String.join(" ", Arrays.asList(Arrays.copyOfRange(names, 1, names.length)));
         String bankName = "bank";
 
-        PrepareRecipientResponse prepareRecipientResponse = apiClient.prepareBeneficiary();
-        String beneficiaryId = prepareRecipientResponse.getDataId();
+        PrepareBeneficiaryResponse prepareBeneficiaryResponse = apiClient.prepareBeneficiary();
+        String beneficiaryId = prepareBeneficiaryResponse.getBeneficiaryId();
         sessionStorage.put("beneficiaryId", beneficiaryId);
 
         CheckBeneficiaryResponse checkBeneficiaryResponse =
@@ -69,7 +69,10 @@ public class AddBeneficiaryExecutor implements CreateBeneficiaryExecutor {
                 || checkBeneficiaryResponse.getBic().isEmpty()) {
             throw new BeneficiaryException("Incorrect validation of beneficiary on bank sie");
         }
-        return CreateBeneficiaryResponse.of(createBeneficiaryRequest);
+
+        CreateBeneficiaryResponse response = CreateBeneficiaryResponse.of(createBeneficiaryRequest);
+        response.getBeneficiary().setStatus(CreateBeneficiaryStatus.INITIATED);
+        return response;
     }
 
     @Override

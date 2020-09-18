@@ -13,11 +13,11 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.AckMessageRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.CheckBeneficiaryRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.CheckBeneficiaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.CheckOtpRequest;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.CheckRecipientRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.ConfirmBeneficiaryResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.PrepareRecipientResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.PrepareBeneficiaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.StartOtpResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.fetcher.identity.rpc.IdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -127,8 +127,8 @@ public class BoursoramaApiClient {
         RequestBuilder requestBuilder =
                 prepareAuthenticatedRequest(
                         createUserHashUrl(
-                                BoursoramaConstants.UserUrls.LIST_TRANSACTIONS_FROM_ACCOUNT
-                                        + accountKey));
+                                        BoursoramaConstants.UserUrls.LIST_TRANSACTIONS_FROM_ACCOUNT)
+                                .parameter("accountKey", accountKey));
         if (StringUtils.isNotEmpty(continuationToken)) {
             requestBuilder.queryParam(
                     BoursoramaConstants.Transaction.CONTINUATION_TOKEN_QUERY_KEY,
@@ -170,10 +170,10 @@ public class BoursoramaApiClient {
         return new URL(urlBase).parameter("userHash", userHash);
     }
 
-    public PrepareRecipientResponse prepareBeneficiary() {
+    public PrepareBeneficiaryResponse prepareBeneficiary() {
         return prepareAuthenticatedRequest(
                         createUserHashUrl(BoursoramaConstants.UserUrls.PREPARE_BENEFICIARY))
-                .get(PrepareRecipientResponse.class);
+                .get(PrepareBeneficiaryResponse.class);
     }
 
     private RequestBuilder prepareAuthenticatedRequest(URL url) {
@@ -195,13 +195,13 @@ public class BoursoramaApiClient {
             String iban,
             String bankName) {
 
-        CheckRecipientRequest checkRecipientRequest =
-                new CheckRecipientRequest(nickname, firstName, surname, iban, bankName);
+        CheckBeneficiaryRequest checkBeneficiaryRequest =
+                new CheckBeneficiaryRequest(nickname, firstName, surname, iban, bankName);
 
         return prepareAuthenticatedRequest(
                         createUserHashUrl(BoursoramaConstants.UserUrls.CHECK_BENEFICIARY)
                                 .parameter(BENEFICIARY_ID, beneficiaryId))
-                .post(CheckBeneficiaryResponse.class, checkRecipientRequest);
+                .post(CheckBeneficiaryResponse.class, checkBeneficiaryRequest);
     }
 
     public ConfirmBeneficiaryResponse confirmBeneficiary(String beneficiaryId) {

@@ -4,6 +4,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/amount",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/identity_data",
         "//src/integration/lib",
@@ -26,6 +27,7 @@ java_library(
         "//third_party:io_vavr",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_slf4j_slf4j_api",

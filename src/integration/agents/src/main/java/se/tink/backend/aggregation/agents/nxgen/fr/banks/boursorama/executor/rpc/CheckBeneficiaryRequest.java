@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @RequiredArgsConstructor
-public class CheckRecipientRequest {
+public class CheckBeneficiaryRequest {
 
     private final String label;
     private final String beneficiaryFirstname;
