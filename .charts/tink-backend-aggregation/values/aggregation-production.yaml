@@ -6,6 +6,7 @@ heapSize: "4G"
 replicas: 12
 maxReplicas: 20
 targetAverageCpuValue: "1750m"
+initialDelaySeconds: "300"
 
 nodeZones:
 - "eu-west-1a"

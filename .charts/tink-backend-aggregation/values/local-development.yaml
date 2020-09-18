@@ -1,4 +1,5 @@
 replicas: 1
+initialDelaySeconds: "120"
 
 aggregationdb:
   username: tink
@@ -28,8 +29,6 @@ clients:
   provision-job-testing:
     aggregatorIdentifier: "Provision Job Testing"
 
-initialDelaySeconds: 10
-
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
@@ -39,3 +38,4 @@ providerConfigurationServiceConfiguration:
   enabled: false
 
 pinnedCertificates: CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390
+startupProbeEnabled: true

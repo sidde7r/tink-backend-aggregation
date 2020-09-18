@@ -1,5 +1,6 @@
 {{- $clusterName := printf "%s-%s" .Values.Cluster .Values.Environment }}
 {{- $agentsConfig := .Values.agents | default dict }}
+{{- $startupProbeEnabled := .Values.startupProbeEnabled | default false }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -357,12 +358,9 @@ spec:
           periodSeconds: 10
           failureThreshold: 10
           timeoutSeconds: 1
-          {{- if  (eq .Values.Environment "development") }}
-          initialDelaySeconds: 120
-          {{- else }}
-          initialDelaySeconds: 300
+          {{- if not $startupProbeEnabled }}
+          initialDelaySeconds: {{ default "300" .Values.initialDelaySeconds }}
           {{- end }}
-
         # The pod will only receive traffic if the readinessProbe is succeeding,
         # it's also used when rolling out a new version, to know if the new version
         # is working or not
@@ -370,7 +368,7 @@ spec:
           httpGet:
             # This is named start as this is emulating a startupProbe which will not be ready until
             # we upgrade to k8s 1.17+
-            {{- if  (eq .Values.Environment "development") }}
+            {{- if  (eq .Values.Environment "development") or $startupProbeEnabled }}
             # No need to start external dependencies when running in local minikube
             path: /aggregation/ping
             {{- else }}
@@ -382,11 +380,25 @@ spec:
           failureThreshold: 3
           successThreshold: 3
           timeoutSeconds: 10
-          {{- if  (eq .Values.Environment "development") }}
-          initialDelaySeconds: 120
-          {{- else }}
-          initialDelaySeconds: 300
+          {{- if not $startupProbeEnabled }}
+          initialDelaySeconds: {{ default "300" .Values.initialDelaySeconds }}
           {{- end }}
+
+        {{- if $startupProbeEnabled }}
+        startupProbe:
+          httpGet:
+            {{- if  (eq .Values.Environment "development") }}
+            # No need to start external dependencies when running in local minikube
+            path: /aggregation/ping
+            {{- else }}
+            path: /aggregation/started
+            {{- end }}
+            port: 8443
+            scheme: HTTPS
+          periodSeconds: 5
+          timeoutSeconds: 10
+          failureThreshold: 60
+        {{- end }}
 
         volumeMounts:
         - name: tmp
