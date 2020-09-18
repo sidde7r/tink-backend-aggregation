@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class ExecutorExceptionResolver {
@@ -49,27 +50,44 @@ public class ExecutorExceptionResolver {
                 });
     }
 
-    private SignableOperationStatuses toStatus(Messageable messageable) {
+    public TransferExecutionException abortTransfer(
+            Messageable messageable, ExceptionMessage exceptionMessage) {
         String code = messageable.getCode();
         if (StringUtils.isBlank(code)) {
-            return SignableOperationStatuses.FAILED;
+            return failTransfer(exceptionMessage);
         }
         switch (code) {
             case "1010": // "The transfer amount exceeds the available amount on the account"
-            case "11041": //  "Payment exceeds the allowed maximum"
+                return cancelTransfer(exceptionMessage, InternalStatus.INSUFFICIENT_FUNDS);
             case "6242": // "The payment date is too soon or not a business day"
+            case "1026": // "The payment date is too soon or not a business day"
+                return cancelTransfer(exceptionMessage, InternalStatus.INVALID_DUE_DATE);
             case "1014": // "The amount you entered is too large. exceed maximum amount per day"
             case "1011": // "The amount you entered is too large. exceed maximum amount per day"
-            case "1026": // "The payment date is too soon or not a business day"
-                return SignableOperationStatuses.CANCELLED;
+            case "11041": // "Payment exceeds the allowed maximum"
+                return cancelTransfer(exceptionMessage, InternalStatus.INVALID_MAXIMUM_AMOUNT);
             default:
-                return SignableOperationStatuses.FAILED;
+                return failTransfer(exceptionMessage);
         }
     }
 
-    public interface ExceptionMessage {
+    private TransferExecutionException failTransfer(ExceptionMessage exceptionMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setEndUserMessage(translateMessage(exceptionMessage::getUserMessage))
+                .setMessage(translateMessage(exceptionMessage::getUserMessage))
+                .build();
+    }
 
-        SignableOperationStatuses getStatus();
+    public TransferExecutionException cancelTransfer(
+            ExceptionMessage exceptionMessage, InternalStatus internalStatus) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setEndUserMessage(translateMessage(exceptionMessage::getUserMessage))
+                .setMessage(translateMessage(exceptionMessage::getUserMessage))
+                .setInternalStatus(internalStatus.toString())
+                .build();
+    }
+
+    public interface ExceptionMessage {
 
         LocalizableKey getEndUserMessage();
 
