@@ -9,10 +9,10 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.payment.CreditAgricolePaymentApiClient;
@@ -42,7 +42,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
-                RefreshTransferDestinationExecutor {
+                RefreshBeneficiariesExecutor {
 
     private final CreditAgricoleBaseApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -111,7 +111,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
     }
 
     @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 

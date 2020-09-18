@@ -8,10 +8,10 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.SocieteGeneraleAuthenticator;
@@ -44,16 +44,14 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
-                RefreshTransferDestinationExecutor {
+                RefreshBeneficiariesExecutor {
 
     private final SocieteGeneraleApiClient apiClient;
     private final SocieteGeneraleAuthenticator authenticator;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
-    private final SignatureHeaderProvider signatureHeaderProvider;
     private final AgentConfiguration<SocieteGeneraleConfiguration> agentConfiguration;
-    private final SocieteGeneraleConfiguration societeGeneraleConfiguration;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
@@ -62,8 +60,10 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
         super(componentProvider);
 
         agentConfiguration = getAgentConfiguration();
-        societeGeneraleConfiguration = agentConfiguration.getProviderSpecificConfiguration();
-        signatureHeaderProvider =
+
+        final SocieteGeneraleConfiguration societeGeneraleConfiguration =
+                agentConfiguration.getProviderSpecificConfiguration();
+        final SignatureHeaderProvider signatureHeaderProvider =
                 new SignatureHeaderProvider(qsealcSigner, societeGeneraleConfiguration);
 
         apiClient =
@@ -140,7 +140,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
     }
 
     @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
