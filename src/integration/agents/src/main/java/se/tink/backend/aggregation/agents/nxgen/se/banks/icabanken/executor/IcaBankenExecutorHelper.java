@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
@@ -202,6 +203,8 @@ public class IcaBankenExecutorHelper {
                             statusUpdater
                                     .getCatalog()
                                     .getString(IcaBankenConstants.LogMessage.NO_RECIPIENT_NAME))
+                    .setEndUserMessage(EndUserMessage.NEW_RECIPIENT_NAME_ABSENT)
+                    .setInternalStatus(InternalStatus.NEW_RECIPIENT_NAME_ABSENT.toString())
                     .build();
         } catch (SupplementalInfoException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
@@ -209,6 +212,8 @@ public class IcaBankenExecutorHelper {
                             statusUpdater
                                     .getCatalog()
                                     .getString(IcaBankenConstants.LogMessage.NO_RECIPIENT_NAME))
+                    .setEndUserMessage(EndUserMessage.NEW_RECIPIENT_NAME_ABSENT)
+                    .setInternalStatus(InternalStatus.NEW_RECIPIENT_NAME_ABSENT.toString())
                     .setException(e)
                     .build();
         }
