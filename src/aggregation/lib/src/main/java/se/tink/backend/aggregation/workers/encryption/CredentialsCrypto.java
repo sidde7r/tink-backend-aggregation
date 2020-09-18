@@ -3,13 +3,11 @@ package se.tink.backend.aggregation.workers.encryption;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.FeatureFlags;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
@@ -17,7 +15,6 @@ import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.encryptedpayload.EncryptedPayloadHead;
-import se.tink.libraries.encryptedpayload.EncryptedPayloadV2;
 import se.tink.libraries.encryptedpayload.VersionDeserializer;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -147,18 +144,10 @@ public class CredentialsCrypto {
         Credentials sensitiveInformationCredentials = originalCredentials.clone();
         sensitiveInformationCredentials.onlySensitiveInformation(request.getProvider());
 
-        EncryptedPayloadHead encryptedCredentials;
-        if (isAlphaUser(request) || isV2(request.getCredentials())) {
-            // Upgrade to crypto V2 for new Aggregation Engine-based credentials revamp users
-            encryptedCredentials =
-                    CredentialsCryptoV2.encryptCredential(
-                            clusterKeyId, clusterKey, sensitiveInformationCredentials);
-        } else {
-            // Regularly use V1
-            encryptedCredentials =
-                    CredentialsCryptoV1.encryptCredential(
-                            clusterKeyId, clusterKey, sensitiveInformationCredentials);
-        }
+        // Encrypt with most recent version, currently: V2
+        EncryptedPayloadHead encryptedCredentials =
+                CredentialsCryptoV2.encryptCredential(
+                        clusterKeyId, clusterKey, sensitiveInformationCredentials);
 
         String serializedEncryptedCredentials =
                 SerializationUtils.serializeToString(encryptedCredentials);
@@ -207,25 +196,6 @@ public class CredentialsCrypto {
                         metricId.label("success", success)
                                 .label("version", encryptedCredentials.getVersion()))
                 .inc();
-    }
-
-    private boolean isV2(Credentials credentials) {
-        EncryptedPayloadHead previous =
-                SerializationUtils.deserializeFromString(
-                        credentials.getSensitiveDataSerialized(), EncryptedPayloadHead.class);
-
-        return previous != null && previous.getVersion() == EncryptedPayloadV2.VERSION;
-    }
-
-    private boolean isAlphaUser(CredentialsRequest request) {
-        final List<String> flags = request.getUser().getFlags();
-        if (flags == null) return false;
-
-        return flags.contains(FeatureFlags.ALPHA_TEST_CREDENTIALS_REVAMP)
-                || flags.contains(FeatureFlags.TINK_EMPLOYEE)
-                || flags.contains(FeatureFlags.IOS_BETA)
-                || flags.contains(FeatureFlags.ANDROID_BETA)
-                || flags.contains(FeatureFlags.FRAUD_PROTECTION);
     }
 
     private String pickMostRecentSensitiveData(String a, String b) {

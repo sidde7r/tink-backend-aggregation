@@ -15,9 +15,9 @@ import com.google.common.io.BaseEncoding;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.FeatureFlags;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -83,6 +83,7 @@ public class CredentialsCryptoTest {
     }
 
     @Test
+    @Ignore("CredentialsCrypto will not encrypt to v1 anymore. Keep this test for reference.")
     public void v1ToV1() {
         final User user = new User();
         user.setFlags(ImmutableList.of());
@@ -116,9 +117,8 @@ public class CredentialsCryptoTest {
     }
 
     @Test
-    public void v1ToV2ForAlphaUsers() {
+    public void v1ToV2Migration() {
         final User user = new User();
-        user.setFlags(ImmutableList.of(FeatureFlags.ALPHA_TEST_CREDENTIALS_REVAMP));
 
         CredentialsRequest request = requestFrom(credentials, user, provider);
         assertTrue(crypto.encrypt(request, true));
@@ -151,7 +151,7 @@ public class CredentialsCryptoTest {
     }
 
     @Test
-    public void v2ToV2ForAll() {
+    public void v2ToV2() {
         final User user = new User();
         user.setFlags(ImmutableList.of());
 
