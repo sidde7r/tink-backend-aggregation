@@ -19,6 +19,10 @@ public class TransactionsKeyPaginatorBaseResponse
         return transactions;
     }
 
+    public void setTransactions(TransactionsBaseEntity transactions) {
+        this.transactions = transactions;
+    }
+
     public Collection<Transaction> toTinkTransactions() {
         return transactions.toTinkTransactions();
     }
