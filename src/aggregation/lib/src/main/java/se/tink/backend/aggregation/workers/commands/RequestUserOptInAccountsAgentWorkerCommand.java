@@ -141,7 +141,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
             statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
-        log.info("Total {} of optInAccounts.", optInAccounts.size());
+
         filterOptInAccounts(optInAccounts);
 
         return AgentWorkerCommandResult.CONTINUE;
