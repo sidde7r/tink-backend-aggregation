@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
+import org.junit.Ignore;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 
-class ClientConfigurationTemplateBuilderTest {
+@Ignore
+public class ClientConfigurationTemplateBuilderTest {
     private final Provider provider;
     private final boolean includeDescriptions;
     private final boolean includeExamples;
