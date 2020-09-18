@@ -2,12 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authe
 
 import com.google.common.base.Strings;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEConstants.BankIdAuthentication;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEConstants.DeviceAuthentication;
@@ -16,12 +20,15 @@ import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authen
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Mandate;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<InitBankIdResponse> {
+    private static final Logger LOG =
+            LoggerFactory.getLogger(HandelsbankenBankIdAuthenticator.class);
     private final HandelsbankenSEApiClient client;
     private final Credentials credentials;
     private final HandelsbankenPersistentStorage persistentStorage;
@@ -63,6 +70,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
         switch (bankIdStatus) {
             case DONE:
                 AuthorizeResponse authorize = client.authorize(authenticate);
+                validateOrganizationNumber(authorize);
 
                 ApplicationEntryPointResponse applicationEntryPoint =
                         client.applicationEntryPoint(authorize);
@@ -85,6 +93,24 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
                 break;
         }
         return bankIdStatus;
+    }
+
+    private void validateOrganizationNumber(AuthorizeResponse authorize)
+            throws AuthorizationException {
+        if (authorize.getMandates().isEmpty()) {
+            throw LoginError.NOT_CUSTOMER.exception();
+        }
+
+        if (authorize.getMandates().size() > 1) {
+            LOG.error("Expected 1 mandate, got {}", authorize.getMandates().size());
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        final Mandate mandate = authorize.getMandates().get(0);
+        if (!mandate.getCustomerNumber().equalsIgnoreCase(credentials.getField(Key.CORPORATE_ID))) {
+            LOG.error("Organization number mismatch");
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
     }
 
     @Override
