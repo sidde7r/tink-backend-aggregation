@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.BANK_SIDE_FAILURE;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.NO_BANK_SERVICE;
 
 import com.google.common.base.Strings;
 import java.security.PublicKey;
@@ -30,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.Errors;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.Params;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
@@ -423,8 +425,10 @@ public class OpenIdAuthenticationController
             apiClient.storeOpenIdError(OpenIdError.create(errorType, errorDescription));
 
             throw LoginError.INCORRECT_CREDENTIALS.exception();
-        } else if ("server_error".equalsIgnoreCase(errorType)) {
+        } else if (Errors.SERVER_ERROR.equalsIgnoreCase(errorType)) {
             throw BANK_SIDE_FAILURE.exception(errorDescription);
+        } else if (Errors.TEMPORARILY_UNAVAILABLE.equalsIgnoreCase(errorType)) {
+            throw NO_BANK_SERVICE.exception(errorDescription);
         }
 
         throw new IllegalStateException(
