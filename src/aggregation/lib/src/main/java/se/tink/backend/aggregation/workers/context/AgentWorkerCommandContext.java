@@ -208,10 +208,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         getAccountDataCache()
                 .getFilteredAccounts()
                 .forEach(
-                        filteredAccount -> {
-                            log.info("Sending account to UpdateService.");
-                            sendAccountToUpdateService(filteredAccount.getBankId());
-                        });
+                        filteredAccount -> sendAccountToUpdateService(filteredAccount.getBankId()));
     }
 
     public void sendAllCachedAccountsHoldersToUpdateService() {
