@@ -127,13 +127,6 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         updateCredentialsExcludingSensitiveInformation();
 
-        // nordea seems not always put value true so optInAccount filtered out
-        // value is more about true / false, so the log should be okay
-        supplementalInformation.forEach(
-                (k, v) -> {
-                    log.info("SupplementalInformation value: {}" + v);
-                });
-
         // Add the optIn account id:s to the context to use them when doing the refresh and
         // processing.
         List<String> optInAccounts =
@@ -141,7 +134,14 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                         .filter(e -> Objects.equals(e.getValue(), "true"))
                         .map(Map.Entry::getKey)
                         .collect(Collectors.toList());
-        log.info("Total {} of optInAccounts.", optInAccounts.size());
+        // Abort if there is no optIn accounts matched from supplemental info
+        // The main reason is due to unexpected supplemental info back
+        if (optInAccounts == null || optInAccounts.isEmpty()) {
+            log.info("Total 0 of optInAccounts.");
+            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+            return AgentWorkerCommandResult.ABORT;
+        }
+
         filterOptInAccounts(optInAccounts);
 
         return AgentWorkerCommandResult.CONTINUE;
