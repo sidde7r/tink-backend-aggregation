@@ -94,8 +94,9 @@ public class CredentialsCrypto {
 
                                 // be aware of side-effect here! this is same credentials object as
                                 // on the Request
-                                credentials.addSerializedFields(result.decryptedFields);
-                                credentials.setSensitivePayloadSerialized(result.decryptedPayload);
+                                credentials.addSerializedFields(result.getDecryptedFields());
+                                credentials.setSensitivePayloadSerialized(
+                                        result.getDecryptedPayload());
 
                                 cryptoMetrics(CREDENTIALS_DECRYPT, v1, true);
                             } catch (Exception e) {
@@ -121,8 +122,9 @@ public class CredentialsCrypto {
                                         CredentialsCryptoV2.decryptV2(fieldsKey, payloadKey, v2);
                                 // be aware of side-effect here! this is same credentials object as
                                 // on the Request
-                                credentials.addSerializedFields(result.decryptedFields);
-                                credentials.setSensitivePayloadSerialized(result.decryptedPayload);
+                                credentials.addSerializedFields(result.getDecryptedFields());
+                                credentials.setSensitivePayloadSerialized(
+                                        result.getDecryptedPayload());
 
                                 cryptoMetrics(CREDENTIALS_DECRYPT, v2, true);
                             } catch (Exception e) {

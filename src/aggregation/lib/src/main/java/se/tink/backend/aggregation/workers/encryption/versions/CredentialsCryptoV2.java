@@ -16,8 +16,16 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class CredentialsCryptoV2 {
 
     public static class DecryptedDataV2 {
-        public String decryptedFields;
-        public String decryptedPayload;
+        private String decryptedFields;
+        private String decryptedPayload;
+
+        public String getDecryptedFields() {
+            return decryptedFields;
+        }
+
+        public String getDecryptedPayload() {
+            return decryptedPayload;
+        }
     }
 
     public static EncryptedPayloadV2 encryptV2(
@@ -117,7 +125,7 @@ public class CredentialsCryptoV2 {
         return new String(decryptedData);
     }
 
-    public static Timestamp timestamp(Date date) {
+    private static Timestamp timestamp(Date date) {
         Instant instant = date.toInstant();
         return Timestamp.newBuilder()
                 .setSeconds(instant.getEpochSecond())
@@ -125,7 +133,7 @@ public class CredentialsCryptoV2 {
                 .build();
     }
 
-    public static long timestamp(Timestamp timestamp) {
+    private static long timestamp(Timestamp timestamp) {
         return Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos()).toEpochMilli();
     }
 

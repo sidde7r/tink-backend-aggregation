@@ -12,8 +12,16 @@ import se.tink.libraries.encryptedpayload.EncryptedPayloadV1;
 public class CredentialsCryptoV1 {
 
     public static class DecryptedDataV1 {
-        public String decryptedFields;
-        public String decryptedPayload;
+        private String decryptedFields;
+        private String decryptedPayload;
+
+        public String getDecryptedFields() {
+            return decryptedFields;
+        }
+
+        public String getDecryptedPayload() {
+            return decryptedPayload;
+        }
     }
 
     public static EncryptedPayloadV1 encryptV1(
