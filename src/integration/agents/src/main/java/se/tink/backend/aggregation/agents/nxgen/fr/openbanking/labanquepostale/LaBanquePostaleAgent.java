@@ -6,8 +6,8 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
@@ -34,7 +34,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public final class LaBanquePostaleAgent
         extends BerlinGroupAgent<LaBanquePostaleApiClient, LaBanquePostaleConfiguration>
-        implements RefreshIdentityDataExecutor, RefreshTransferDestinationExecutor {
+        implements RefreshIdentityDataExecutor, RefreshBeneficiariesExecutor {
 
     private final QsealcSigner qsealcSigner;
     private final LaBanquePostaleIdentityDataFetcher identityDataFetcher;
@@ -112,7 +112,7 @@ public final class LaBanquePostaleAgent
     }
 
     @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 

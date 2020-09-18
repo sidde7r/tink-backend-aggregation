@@ -43,4 +43,17 @@ public class SwedbankSEConstants {
     public static class Endpoint {
         public static final String TRANSACTIONS_BASE = "/v5/engagement/transactions";
     }
+
+    public static class HeaderKeys {
+        public static final String X_CLIENT = "X-Client";
+        public static final String ADRUM = "ADRUM";
+        public static final String ADRUM_1 = "ADRUM_1";
+    }
+
+    public static class HeaderValues {
+        public static final String APPS_VERSION =
+                "SwedbankMOBPrivateIOS/7.23.0_(iOS;_13.6.1)_Apple/iPhone8,1";
+        public static final String ADRUM = "isMobile:true";
+        public static final String ADRUM_1 = "isAjax:true";
+    }
 }
