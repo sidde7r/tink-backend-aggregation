@@ -162,7 +162,7 @@ public final class AbancaApiClient {
                 BalanceResponse.class);
     }
 
-    public TransactionKeyPaginatorResponse<String> fetchTranscations(
+    public TransactionKeyPaginatorResponse<String> fetchTransactions(
             TransactionalAccount account, String key) {
 
         URL url =
