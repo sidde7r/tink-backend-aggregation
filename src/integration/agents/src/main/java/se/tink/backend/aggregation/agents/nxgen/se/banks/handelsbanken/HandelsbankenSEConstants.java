@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class HandelsbankenSEConstants {
 
@@ -205,11 +204,6 @@ public class HandelsbankenSEConstants {
 
             ExceptionMessages(String userMessage) {
                 this.userMessage = userMessage;
-            }
-
-            @Override
-            public SignableOperationStatuses getStatus() {
-                return SignableOperationStatuses.FAILED;
             }
 
             @Override
