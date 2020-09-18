@@ -308,6 +308,7 @@ public class SwedbankTransferHelper {
                     .setEndUserMessage(
                             TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED)
                     .setMessage(SwedbankBaseConstants.ErrorMessage.TOKEN_SIGN_FAILED)
+                    .setInternalStatus(InternalStatus.SECURITY_TOKEN_NO_RESPONSE.toString())
                     .setException(sie)
                     .build();
         } catch (Exception e) {
