@@ -31,7 +31,6 @@ public class PinCodeGeneratorAuthenticationStep extends AbstractAuthenticationSt
         for (int i = 1; i <= length; i++) {
             pin.append(RAND.nextInt(10));
         }
-        callbackProcessor.process(pin.toString());
-        return AuthenticationStepResponse.executeNextStep();
+        return callbackProcessor.process(pin.toString());
     }
 }

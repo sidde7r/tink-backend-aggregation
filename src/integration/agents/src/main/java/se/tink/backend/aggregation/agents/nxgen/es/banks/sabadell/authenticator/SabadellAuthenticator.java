@@ -51,13 +51,15 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
         return authenticationSteps;
     }
 
-    private void login(String username, String password) throws LoginException {
+    private AuthenticationStepResponse login(String username, String password)
+            throws LoginException {
         final String csid = getCSID();
         final SessionResponse response = apiClient.initiateSession(username, password, csid, null);
         SabadellSessionData sessionData = fetchSessionData();
         sessionData.setSessionResponse(response);
         sessionData.setCredentials(username, password);
         storeSessionData(sessionData);
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private AuthenticationStepResponse checkSCA() {

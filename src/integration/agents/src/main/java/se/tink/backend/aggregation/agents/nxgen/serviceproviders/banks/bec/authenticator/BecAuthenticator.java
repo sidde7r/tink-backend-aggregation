@@ -67,7 +67,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
         return AuthenticationStepResponse.executeNextStep();
     }
 
-    private void fetchScaOptions(String username, String password)
+    private AuthenticationStepResponse fetchScaOptions(String username, String password)
             throws LoginException, NemIdException {
         auditCredentials(username, password);
         ScaOptionsEncryptedPayload payload =
@@ -78,6 +78,8 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
         else if (payload.getSecondFactorOptions().contains(ScaOptions.KEYCARD_OPTION))
             sessionStorage.put(StorageKeys.SCA_OPTION_KEY, ScaOptions.KEYCARD_OPTION);
         else throw NemIdError.SECOND_FACTOR_NOT_REGISTERED.exception();
+
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private void auditCredentials(String username, String password) {

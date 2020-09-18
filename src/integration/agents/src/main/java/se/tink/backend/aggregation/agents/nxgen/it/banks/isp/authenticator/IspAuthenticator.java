@@ -75,7 +75,7 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
                                 this::confirmDevice, CONFIRM_DEVICE_STEP_NAME));
     }
 
-    private void processUsernamePassword(String username, String password)
+    private AuthenticationStepResponse processUsernamePassword(String username, String password)
             throws AuthenticationException {
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
@@ -91,6 +91,7 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
             }
             throw e;
         }
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private AuthenticationStepResponse registerDevice() throws LoginException {
