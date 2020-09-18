@@ -1913,6 +1913,7 @@ public class SEBApiAgent extends AbstractAgent
                                     .getString(
                                             TransferExecutionException.EndUserMessage
                                                     .EXISTING_UNSIGNED_TRANSFERS))
+                    .setInternalStatus(InternalStatus.EXISTING_UNSIGNED_TRANSFERS.toString())
                     .build();
         }
     }
