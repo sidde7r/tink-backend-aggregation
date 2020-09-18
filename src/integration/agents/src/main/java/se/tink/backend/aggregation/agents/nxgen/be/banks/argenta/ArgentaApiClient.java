@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class ArgentaApiClient {
 
@@ -131,8 +132,8 @@ public class ArgentaApiClient {
                     response.getBody(ArgentaErrorResponse.class);
             handleKnownErrorResponses(argentaErrorResponse, responseException);
             LOGGER.warn(getErrorMessage(argentaErrorResponse), responseException);
-            throw new IllegalArgumentException(
-                    getErrorMessage(argentaErrorResponse), responseException);
+            throw LoginError.DEFAULT_MESSAGE.exception(
+                    new LocalizableKey(getErrorMessage(argentaErrorResponse)), responseException);
         }
     }
 
