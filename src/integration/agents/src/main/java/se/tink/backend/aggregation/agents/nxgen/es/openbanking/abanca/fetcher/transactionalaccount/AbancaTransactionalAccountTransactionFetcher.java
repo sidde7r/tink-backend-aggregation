@@ -17,6 +17,6 @@ public class AbancaTransactionalAccountTransactionFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        return apiClient.fetchTranscations(account, key);
+        return apiClient.fetchTransactions(account, key);
     }
 }
