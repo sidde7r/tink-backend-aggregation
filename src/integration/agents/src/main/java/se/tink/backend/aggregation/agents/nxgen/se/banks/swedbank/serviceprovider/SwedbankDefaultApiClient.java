@@ -55,7 +55,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfileHandler;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BusinessProfileEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
@@ -550,12 +549,11 @@ public class SwedbankDefaultApiClient {
         } else {
             for (BankEntity bank : profileResponse.getBanks()) {
                 bank.setOrgNumber(organizationNumber);
-                Optional<BusinessProfileEntity> matchingBusinessProfile =
-                        bank.getMatchingBusinessProfile();
 
-                matchingBusinessProfile.ifPresent(
-                        businessProfileEntity ->
-                                createAndAddProfileToHandler(bank, businessProfileEntity));
+                bank.getMatchingBusinessProfile()
+                        .ifPresent(
+                                businessProfileEntity ->
+                                        createAndAddProfileToHandler(bank, businessProfileEntity));
             }
 
             if (bankProfileHandler.getBankProfiles().isEmpty()) {
