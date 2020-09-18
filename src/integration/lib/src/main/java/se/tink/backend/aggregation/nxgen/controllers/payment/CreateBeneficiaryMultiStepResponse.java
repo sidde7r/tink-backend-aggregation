@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import se.tink.backend.agents.rpc.Field;
@@ -22,12 +23,17 @@ public class CreateBeneficiaryMultiStepResponse extends CreateBeneficiaryRespons
     public CreateBeneficiaryMultiStepResponse(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest,
             String step,
-            ArrayList<Field> fields) {
+            List<Field> fields) {
         super(
                 createBeneficiaryMultiStepRequest.getBeneficiary(),
                 createBeneficiaryMultiStepRequest.getStorage());
         this.step = step;
         this.fields = fields;
+    }
+
+    public CreateBeneficiaryMultiStepResponse(
+            CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest, String step) {
+        this(createBeneficiaryMultiStepRequest, step, Collections.emptyList());
     }
 
     public CreateBeneficiaryMultiStepResponse(

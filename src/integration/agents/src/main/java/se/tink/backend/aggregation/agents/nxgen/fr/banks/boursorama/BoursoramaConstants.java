@@ -12,20 +12,43 @@ public class BoursoramaConstants {
     }
 
     public static final class UserUrls {
-        static final String HOST = "https://api.boursorama.com/";
+
         static final String API_VERSION = "services/api/v1.7/";
+        static final String HOST = "https://api.boursorama.com/";
+        static final String PREPARE_BENEFICIARY =
+                HOST
+                        + API_VERSION
+                        + "_user_/_{userHash}_/bank/cashtransfer/preparerecipient?responseFormat=1";
+        static final String CHECK_BENEFICIARY =
+                HOST
+                        + API_VERSION
+                        + "_user_/_{userHash}_/bank/cashtransfer/checkrecipient/{beneficiaryId}";
+        static final String CONFIRM_BENEFICIARY =
+                HOST
+                        + API_VERSION
+                        + "_user_/_{userHash}_/bank/cashtransfer/confirmrecipient/{beneficiaryId}";
+        static final String START_SMS =
+                HOST + API_VERSION + "_user_/_{userHash}_/session/otp/startsms/{otpNumber}";
+        static final String START_EMAIL =
+                HOST + API_VERSION + "_user_/_{userHash}_/session/otp/startemail/{otpNumber}";
+        static final String CHECK_SMS =
+                HOST + API_VERSION + "_user_/_{userHash}_/session/otp/checksms/{otpNumber}";
+        static final String CHECK_EMAIL =
+                HOST + API_VERSION + "_user_/_{userHash}_/session/otp/checkemail/{otpNumber}";
+        static final String ACK_MESSAGE =
+                HOST + API_VERSION + "_user_/_{userHash}_/customer/messages/ack";
 
         // %s is the user hash, received from response.
         static final String LIST_ACCOUNTS =
-                HOST + API_VERSION + "_user_/_%s_/bank/accounts/summary";
+                HOST + API_VERSION + "_user_/_{userHash}_/bank/accounts/summary";
         public static final String IDENTITY_DATA =
-                HOST + API_VERSION + "_user_/_%s_/customer/profile/basic";
+                HOST + API_VERSION + "_user_/_{userHash}_/customer/profile/basic";
         // First %s is the user hash, second one is the account key.
         static final String LIST_TRANSACTIONS_FROM_ACCOUNT =
-                HOST + API_VERSION + "_user_/_%s_/bank/account/operations/";
+                HOST + API_VERSION + "_user_/_{userHash}_/bank/account/operations/";
         public static final String LOGOUT = HOST + API_VERSION + "_user_/_%s_/session/auth/logout";
         public static final String KEEP_ALIVE =
-                HOST + API_VERSION + "_user_/_%s_/session/auth/refresh";
+                HOST + API_VERSION + "_user_/_{userHash}_/session/auth/refresh";
     }
 
     public static final class Errors {
