@@ -75,3 +75,53 @@ Do what it says, once you are authenticated the login information will be cahced
   - In each folder with timestamp, for each different provider, there will be a folder with the name of the provider.
   - In each provider folder, there will be enumerated (0,1,2,...) folders. The logs that are in the same folder end in a call to the same endpoint.
   - In each enumerated folder, there will be "<requestId>.log".
+
+## What to do when it stops working
+
+This is a guide for how to fix this extension when it starts not working.
+
+- First of all, check which version of aws_google_auth module this extension is using in this project and which version tink_infrastructure is using. 
+
+    - To check which version this extension is using, simply go to `python_server/aws_google_auth/_version.py`
+    - To check which version tink_infrastructure is using, go to https://console.cloud.google.com/gcr/images/tink-containers/GLOBAL/aws-google-auth and check the tag of the latest image
+
+- If the versions are different, then probably this is the reason for the failure. To fix the issue, you need to do the followings:
+
+- In a Terminal (let's call it Terminal 1) execute the following command
+
+``` 
+docker run -it gcr.io/tink-containers/aws-google-auth:latest
+```
+
+- In another Terminal (Terminal 2) execute the following command:
+
+``` 
+docker container ls
+```
+
+There you need to copy the containerId for the image `gcr.io/tink-containers/aws-google-auth:latest`
+
+- Now in Terminal 2 execute
+
+``` 
+docker cp <containerId>:/aws-google-auth/aws_google_auth <path_to_tink_backend_aggregation_repo_root>/aws_log_fetcher/python_server
+```
+
+After executing this command you can close Terminal 2 and in Terminal 1, after executing `exit` you can close Terminal 1 as well. Then do the following:
+
+- Go to `<path_to_tink_backend_aggregation_repo_root>/aws_log_fetcher/python_server` and remove the `tests` folder it is redundant.
+
+- There is a commit with name `feat(AWSLogFetcher): Patch for aws_google_auth v0.0.36`. Find this commit, check the changes and apply the same patch in the necessary Python files in `python_server/aws_google_auth` folder. Note that since the version of aws_google_auth will be different, it is possible that there will be no one-to-one match so you might need to be careful and adapt to the curernt version when applying the patch.
+
+- Now try to run the Python server, you might fail due to missing dependencies. If this is the case install the missing dependencies by using `pip install <...>`
+
+- When you can run the Python server, go to `python_server` folder in Terminal and execute 
+
+```
+pip freeze > requirements.txt
+```
+
+- Make a commit where you include all changes in `python_server` folder.
+
+That's all, have fun using the extension :)
+
