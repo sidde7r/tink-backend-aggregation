@@ -22,6 +22,7 @@ public final class HttpLoggingConstants {
                     "content-language",
                     "content-length",
                     "content-type",
+                    "correlation-id",
                     "date",
                     "encoded-error-message",
                     "error-code",
@@ -53,8 +54,9 @@ public final class HttpLoggingConstants {
                     "vary",
                     "via",
                     "x-aggregator",
-                    "x-fapi-interaction-id",
+                    "x-correlation-id",
                     "x-fapi-financial-id",
+                    "x-fapi-interaction-id",
                     "x-forwarded-for",
                     "x-forwarded-host",
                     "x-global-transaction-id",
@@ -68,6 +70,5 @@ public final class HttpLoggingConstants {
                     "x-ratelimit-limit",
                     "x-ratelimit-remaining",
                     "x-request-id",
-                    "x-response-id",
-                    "Set-Cookie");
+                    "x-response-id");
 }
