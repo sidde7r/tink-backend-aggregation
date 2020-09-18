@@ -134,6 +134,13 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                         .filter(e -> Objects.equals(e.getValue(), "true"))
                         .map(Map.Entry::getKey)
                         .collect(Collectors.toList());
+        // Abort if there is no optIn accounts matched from supplemental info
+        // The main reason is due to unexpected supplemental info back
+        if (optInAccounts.size() == 0) {
+            log.info("Total 0 of optInAccounts.");
+            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+            return AgentWorkerCommandResult.ABORT;
+        }
         log.info("Total {} of optInAccounts.", optInAccounts.size());
         filterOptInAccounts(optInAccounts);
 
