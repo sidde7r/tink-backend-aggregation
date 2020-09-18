@@ -294,7 +294,8 @@ public class AgentWorkerOperationFactory {
                             regulatoryRestrictions,
                             psd2PaymentAccountClassifier,
                             accountInformationServiceEventsProducer,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
@@ -442,7 +443,8 @@ public class AgentWorkerOperationFactory {
                         regulatoryRestrictions,
                         psd2PaymentAccountClassifier,
                         accountInformationServiceEventsProducer,
-                        controllerWrapper));
+                        controllerWrapper,
+                        false));
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
@@ -597,7 +599,8 @@ public class AgentWorkerOperationFactory {
                                 regulatoryRestrictions,
                                 psd2PaymentAccountClassifier,
                                 accountInformationServiceEventsProducer,
-                                controllerWrapper));
+                                controllerWrapper,
+                                false));
                 commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
                 commands.addAll(
                         createOrderedRefreshableItemsCommands(
@@ -663,7 +666,8 @@ public class AgentWorkerOperationFactory {
                             regulatoryRestrictions,
                             psd2PaymentAccountClassifier,
                             accountInformationServiceEventsProducer,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.addAll(
                     createOrderedRefreshableItemsCommands(
@@ -1341,7 +1345,8 @@ public class AgentWorkerOperationFactory {
                             regulatoryRestrictions,
                             psd2PaymentAccountClassifier,
                             accountInformationServiceEventsProducer,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
             // If this is an optIn request we request the caller do supply supplemental information
             // with the
             // accounts they want to whitelist.
