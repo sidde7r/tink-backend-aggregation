@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.utils.SwedbankSeSerializationUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -86,12 +87,16 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                         .setName(name)
                         .setBankIdentifier(id)
                         .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
-                        .putInTemporaryStorage(
-                                SwedbankBaseConstants.StorageKey.NEXT_LINK,
-                                links != null ? links.getNext() : null)
+                        .putInTemporaryStorage(StorageKey.NEXT_LINK, getLinkOrNull())
                         .putInTemporaryStorage(
                                 SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
                         .setHolderName(new HolderName(bankProfile.getBank().getHolderName()))
                         .build());
+    }
+
+    private LinkEntity getLinkOrNull() {
+        return transactions != null
+                ? transactions.getLinks().getNext()
+                : Optional.ofNullable(links).map(LinksEntity::getNext).orElse(null);
     }
 }
