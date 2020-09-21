@@ -239,7 +239,7 @@ public class DemobankAgent extends NextGenerationAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        final IdentityDataFetcher fetcher = new DemobankIdentityDataFetcher();
+        final IdentityDataFetcher fetcher = new DemobankIdentityDataFetcher(apiClient);
         return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }
