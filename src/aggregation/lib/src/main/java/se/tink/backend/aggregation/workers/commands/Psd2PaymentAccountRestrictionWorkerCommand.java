@@ -28,6 +28,7 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private final ControllerWrapper controllerWrapper;
+    private final boolean shouldRemoveAlreadyAggregatedAccounts;
 
     public Psd2PaymentAccountRestrictionWorkerCommand(
             AgentWorkerCommandContext context,
@@ -35,13 +36,15 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
             RegulatoryRestrictions regulatoryRestrictions,
             Psd2PaymentAccountClassifier psd2PaymentAccountClassifier,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
-            ControllerWrapper controllerWrapper) {
+            ControllerWrapper controllerWrapper,
+            boolean shouldRemoveAlreadyAggregatedAccounts) {
         this.context = context;
         this.refreshInformationRequest = request;
         this.regulatoryRestrictions = regulatoryRestrictions;
         this.psd2PaymentAccountClassifier = psd2PaymentAccountClassifier;
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
         this.controllerWrapper = controllerWrapper;
+        this.shouldRemoveAlreadyAggregatedAccounts = shouldRemoveAlreadyAggregatedAccounts;
     }
 
     private boolean shouldFilterRestrictedAccount(Account account) {
@@ -81,7 +84,9 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                                 }
                                 sendEvents(account);
                             });
-            removeRestrictedAccounts(restrictedAccounts);
+            if (shouldRemoveAlreadyAggregatedAccounts) {
+                removeRestrictedAccounts(restrictedAccounts);
+            }
             // TODO register account filtering https://tinkab.atlassian.net/browse/AGG-421
         } catch (RuntimeException e) {
             log.warn("Could not execute Psd2PaymentAccountRestrictionWorkerCommand", e);

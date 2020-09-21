@@ -294,7 +294,8 @@ public class AgentWorkerOperationFactory {
                             regulatoryRestrictions,
                             psd2PaymentAccountClassifier,
                             accountInformationServiceEventsProducer,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
@@ -378,8 +379,8 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(
-                new LockAgentWorkerCommand(
-                        context, metricsName, interProcessSemaphoreMutexFactory));
+                new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
+                        .withLoginEvent(loginAgentEventProducer));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -442,7 +443,8 @@ public class AgentWorkerOperationFactory {
                         regulatoryRestrictions,
                         psd2PaymentAccountClassifier,
                         accountInformationServiceEventsProducer,
-                        controllerWrapper));
+                        controllerWrapper,
+                        false));
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
@@ -492,8 +494,8 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(
-                new LockAgentWorkerCommand(
-                        context, metricsName, interProcessSemaphoreMutexFactory));
+                new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
+                        .withLoginEvent(loginAgentEventProducer));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -597,7 +599,8 @@ public class AgentWorkerOperationFactory {
                                 regulatoryRestrictions,
                                 psd2PaymentAccountClassifier,
                                 accountInformationServiceEventsProducer,
-                                controllerWrapper));
+                                controllerWrapper,
+                                false));
                 commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
                 commands.addAll(
                         createOrderedRefreshableItemsCommands(
@@ -663,7 +666,8 @@ public class AgentWorkerOperationFactory {
                             regulatoryRestrictions,
                             psd2PaymentAccountClassifier,
                             accountInformationServiceEventsProducer,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.addAll(
                     createOrderedRefreshableItemsCommands(
@@ -752,7 +756,8 @@ public class AgentWorkerOperationFactory {
                         request.getProvider()),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
                 new LockAgentWorkerCommand(
-                        context, operationName, interProcessSemaphoreMutexFactory),
+                                context, operationName, interProcessSemaphoreMutexFactory)
+                        .withLoginEvent(loginAgentEventProducer),
                 new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo),
@@ -1132,8 +1137,8 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(
-                new LockAgentWorkerCommand(
-                        context, metricsName, interProcessSemaphoreMutexFactory));
+                new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
+                        .withLoginEvent(loginAgentEventProducer));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
@@ -1249,7 +1254,8 @@ public class AgentWorkerOperationFactory {
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(
                 new LockAgentWorkerCommand(
-                        context, operationMetricName, interProcessSemaphoreMutexFactory));
+                                context, operationMetricName, interProcessSemaphoreMutexFactory)
+                        .withLoginEvent(loginAgentEventProducer));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -1341,7 +1347,8 @@ public class AgentWorkerOperationFactory {
                             regulatoryRestrictions,
                             psd2PaymentAccountClassifier,
                             accountInformationServiceEventsProducer,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
             // If this is an optIn request we request the caller do supply supplemental information
             // with the
             // accounts they want to whitelist.

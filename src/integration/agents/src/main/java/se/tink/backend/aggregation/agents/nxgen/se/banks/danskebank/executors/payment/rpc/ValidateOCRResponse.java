@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @Getter
@@ -24,6 +25,7 @@ public class ValidateOCRResponse extends AbstractResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(EndUserMessage.INVALID_OCR.getKey().get())
                 .setEndUserMessage(EndUserMessage.INVALID_OCR)
+                .setInternalStatus(InternalStatus.INVALID_OCR.toString())
                 .build();
     }
 }

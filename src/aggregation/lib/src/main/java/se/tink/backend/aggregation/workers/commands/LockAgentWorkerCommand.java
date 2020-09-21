@@ -4,10 +4,12 @@ import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.recipes.locks.InterProcessLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /*
@@ -24,6 +26,9 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
     private final String operation;
     private final InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
 
+    private LoginAgentEventProducer loginAgentEventProducer;
+    private Long startTime;
+
     public LockAgentWorkerCommand(
             AgentWorkerCommandContext context,
             String operation,
@@ -31,6 +36,12 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
         this.context = context;
         this.operation = operation;
         this.interProcessSemaphoreMutexFactory = interProcessSemaphoreMutexFactory;
+    }
+
+    public LockAgentWorkerCommand withLoginEvent(LoginAgentEventProducer loginAgentEventProducer) {
+        this.loginAgentEventProducer = loginAgentEventProducer;
+        this.startTime = System.nanoTime();
+        return this;
     }
 
     @Override
@@ -54,6 +65,10 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
                 hasAcquiredLock ? "acquired" : "NOT acquired",
                 operation);
 
+        if (!hasAcquiredLock) {
+            emitLockFailedEvent();
+        }
+
         return hasAcquiredLock
                 ? AgentWorkerCommandResult.CONTINUE
                 : AgentWorkerCommandResult.REJECT;
@@ -75,6 +90,22 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
             lock.release();
         } catch (Exception e) {
             log.error("Caught exception while releasing lock", e);
+        }
+    }
+
+    private void emitLockFailedEvent() {
+        if (loginAgentEventProducer != null) {
+            long finishTime = System.nanoTime();
+            long elapsedTime = finishTime - startTime;
+
+            loginAgentEventProducer.sendLoginCompletedEvent(
+                    context.getRequest().getCredentials().getProviderName(),
+                    context.getCorrelationId(),
+                    LoginResult.COULD_NOT_LOCK_CREDENTIALS,
+                    elapsedTime,
+                    context.getAppId(),
+                    context.getClusterId(),
+                    context.getRequest().getCredentials().getUserId());
         }
     }
 }

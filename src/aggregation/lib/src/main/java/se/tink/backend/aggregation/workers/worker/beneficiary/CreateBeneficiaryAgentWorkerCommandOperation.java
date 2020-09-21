@@ -105,8 +105,8 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(
-                new LockAgentWorkerCommand(
-                        context, metricsName, interProcessSemaphoreMutexFactory));
+                new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
+                        .withLoginEvent(loginAgentEventProducer));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
