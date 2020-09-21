@@ -771,7 +771,7 @@ Strict-Transport-Security: max-age=31536000
 Connection: Keep-Alive
 X-Bk-Engine: off
 
-[{"beneficiaire":"","idMouvement":"22197759219","libelleMouvement":"EVI Compte joint","libelle1ODC":"C1825980","libelle2ODC":"Virement de M Elie Hosansky","dateOperation":1597788000000,"referenceMouvement":"7933767","montant":{"devise":"978","valeur":-100.00},"soldeEvolutif":{"devise":"","valeur":null},"familleOperation":{"code":"01","label":"Virements émis","type":"familleOperation"},"codeOperation":{"code":"523","label":"Evi occas cyber","type":"codeOperation","sensOperation":"D"},"dateComptable":1597788000000,"dateValeur":1597788000000,"typeOperation":{"code":"2","label":"Virement externe émis","type":"codeOperation"},"statutMouvement":{"code":"001","label":"Comptabilisée","type":"statutOperation"},"isOperationDuJour":true}]
+[{"beneficiaire":"","idMouvement":"22197759219","libelleMouvement":"EVI Compte joint","libelle1ODC":"C1825980","libelle2ODC":"Virement de XXX","dateOperation":1597788000000,"referenceMouvement":"7933767","montant":{"devise":"978","valeur":-100.00},"soldeEvolutif":{"devise":"","valeur":null},"familleOperation":{"code":"01","label":"Virements émis","type":"familleOperation"},"codeOperation":{"code":"523","label":"Evi occas cyber","type":"codeOperation","sensOperation":"D"},"dateComptable":1597788000000,"dateValeur":1597788000000,"typeOperation":{"code":"2","label":"Virement externe émis","type":"codeOperation"},"statutMouvement":{"code":"001","label":"Comptabilisée","type":"statutOperation"},"isOperationDuJour":true}]
 
 REQUEST 19
 GET https://www.ibps.rivesparis.banquepopulaire.fr/mapi/1.1/comptes/002-000-CPT12345678901/operations?pageKey=MDhEMjcgIEIgICAgICAwNDE3MDAwMDAyMDIxOUM1OTI5NzcyMjE%3D&statutMouvement=000
@@ -834,7 +834,7 @@ Strict-Transport-Security: max-age=31536000
 Connection: Keep-Alive
 X-Bk-Engine: off
 
-[{"beneficiaire":"","idMouvement":"22900845369","libelleMouvement":"VIR NAME","libelle1ODC":"","libelle2ODC":"","dateOperation":1597010400000,"referenceMouvement":"2219775","montant":{"devise":"978","valeur":46.00},"soldeEvolutif":{"devise":"","valeur":null},"familleOperation":{"code":"02","label":"Virements reçus","type":"familleOperation"},"codeOperation":{"code":"080","label":"Virement","type":"codeOperation","sensOperation":"C"},"dateComptable":1597010400000,"dateValeur":1597010400000,"typeOperation":{"code":" ","label":"Autre","type":"codeOperation"},"statutMouvement":{"code":"001","label":"Comptabilisée","type":"statutOperation"},"isOperationDuJour":false}]
+[{"beneficiaire":"","idMouvement":"22900845369","libelleMouvement":"VIR NAME","libelle1ODC":"","libelle2ODC":"","dateOperation":1597010400000,"referenceMouvement":"2219775","montant":{"devise":"978","valeur":46.00},"soldeEvolutif":{"devise":"","valeur":null},"familleOperation":{"code":"03","label":"Prélèvement émis","type":"familleOperation"},"codeOperation":{"code":"080","label":"Virement","type":"codeOperation","sensOperation":"C"},"dateComptable":1597010400000,"dateValeur":1597010400000,"typeOperation":{"code":" ","label":"Autre","type":"codeOperation"},"statutMouvement":{"code":"001","label":"Comptabilisée","type":"statutOperation"},"isOperationDuJour":false}]
 
 REQUEST 22
 GET https://www.rs-ex-ath-groupe.banquepopulaire.fr/bapi/transfer/v2/transferCreditors

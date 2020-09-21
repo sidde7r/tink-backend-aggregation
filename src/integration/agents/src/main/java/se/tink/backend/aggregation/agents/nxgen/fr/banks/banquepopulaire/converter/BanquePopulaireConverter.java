@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.BanquePopulaireConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.apiclient.dto.account.AccountDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.apiclient.dto.common.BalanceDto;
@@ -68,6 +71,7 @@ public class BanquePopulaireConverter {
                                 .toLocalDate())
                 .setAmount(convertBalanceDtoToTinkAmount(transactionDto.getBalance()))
                 .setPending(isPending(transactionDto))
+                .setType(getTransactionType(transactionDto))
                 .build();
     }
 
@@ -111,5 +115,27 @@ public class BanquePopulaireConverter {
         return ExactCurrencyAmount.of(
                 AgentParsingUtils.parseAmount(balanceDto.getAmount()),
                 BanquePopulaireConstants.Currency.toTinkCurrency(balanceDto.getCurrency()));
+    }
+
+    private static TransactionTypes getTransactionType(TransactionDto transactionDto) {
+        if (Objects.isNull(transactionDto.getFamilleOperation())
+                || StringUtils.isBlank(transactionDto.getFamilleOperation().getCode())) {
+            return TransactionTypes.DEFAULT;
+        }
+
+        switch (transactionDto.getFamilleOperation().getCode()) {
+            case "01":
+            case "02":
+                return TransactionTypes.TRANSFER;
+            case "03":
+            case "14":
+                return TransactionTypes.PAYMENT;
+            case "06":
+                return TransactionTypes.WITHDRAWAL;
+            case "07":
+                return TransactionTypes.CREDIT_CARD;
+            default:
+                return TransactionTypes.DEFAULT;
+        }
     }
 }
