@@ -71,6 +71,9 @@ public class HandelsbankenSEConstants {
 
     public static class Accounts {
         public static final String ACCOUNT_TYPE_NAME_LABEL = "kontoform";
+        public static final String ACCOUNT_NUMBER_LABEL = "kontonummer";
+        public static final String IBAN_LABEL = "iban";
+        public static final String BANKGIRO_NUMBER_LABEL = "bankgironummer";
 
         public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
                 TransactionalAccountTypeMapper.builder()
