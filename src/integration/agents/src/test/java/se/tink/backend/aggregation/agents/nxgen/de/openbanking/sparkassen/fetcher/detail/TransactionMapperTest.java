@@ -50,8 +50,7 @@ public class TransactionMapperTest {
         assertThat(transaction).isNotNull();
         assertThat(transaction.isPending()).isFalse();
         assertThat(transaction.getExactAmount()).isEqualTo(ExactCurrencyAmount.of(2112.40, "EUR"));
-        assertThat(transaction.getDescription())
-                .isEqualTo("Whoever Watson UNSTRUCTUREDDESCRIPTION001");
+        assertThat(transaction.getDescription()).isEqualTo("Whoever Watson");
         assertThat(transaction.getDate()).hasYear(2019);
         assertThat(transaction.getDate()).hasMonth(11);
         assertThat(transaction.getDate()).hasDayOfMonth(11);
@@ -69,8 +68,7 @@ public class TransactionMapperTest {
         assertThat(transaction).isNotNull();
         assertThat(transaction.isPending()).isFalse();
         assertThat(transaction.getExactAmount()).isEqualTo(ExactCurrencyAmount.of(-123.00, "EUR"));
-        assertThat(transaction.getDescription())
-                .isEqualTo("CREDITOR002 UNSTRUCTUREDDESCRIPTION002");
+        assertThat(transaction.getDescription()).isEqualTo("CREDITOR002");
         assertThat(transaction.getDate()).hasYear(2019);
         assertThat(transaction.getDate()).hasMonth(11);
         assertThat(transaction.getDate()).hasDayOfMonth(12);

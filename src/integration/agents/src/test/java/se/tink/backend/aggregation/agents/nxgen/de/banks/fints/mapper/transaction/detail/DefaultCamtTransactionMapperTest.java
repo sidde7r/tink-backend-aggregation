@@ -17,12 +17,9 @@ public class DefaultCamtTransactionMapperTest {
     private static final Map<String, ExactCurrencyAmount> EXPECTED_DATA = new HashMap<>();
 
     static {
-        EXPECTED_DATA.put(
-                "Whoever Watson UNSTRUCTUREDDESCRIPTION001", ExactCurrencyAmount.of(2112.4, "EUR"));
-        EXPECTED_DATA.put(
-                "CREDITOR002 UNSTRUCTUREDDESCRIPTION002", ExactCurrencyAmount.of(-123.0, "EUR"));
-        EXPECTED_DATA.put(
-                "CREDITOR003 UNSTRUCTUREDDESCRIPTION003", ExactCurrencyAmount.of(-223.14, "EUR"));
+        EXPECTED_DATA.put("Whoever Watson", ExactCurrencyAmount.of(2112.4, "EUR"));
+        EXPECTED_DATA.put("CREDITOR002", ExactCurrencyAmount.of(-123.0, "EUR"));
+        EXPECTED_DATA.put("CREDITOR003", ExactCurrencyAmount.of(-223.14, "EUR"));
         EXPECTED_DATA.put("UNSTRUCTUREDDESCRIPTION004", ExactCurrencyAmount.of(-223.14, "EUR"));
     }
 
