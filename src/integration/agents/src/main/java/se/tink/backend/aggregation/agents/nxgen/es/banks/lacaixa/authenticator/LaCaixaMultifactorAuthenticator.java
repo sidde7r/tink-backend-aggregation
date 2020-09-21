@@ -94,7 +94,8 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
         return request.isCreate();
     }
 
-    private void login(String username, String password) throws LoginException {
+    private AuthenticationStepResponse login(String username, String password)
+            throws LoginException {
         // Requests a session ID from the server in the form of a cookie.
         // Also gets seed for password hashing.
         SessionResponse sessionResponse = apiClient.initializeSession();
@@ -106,6 +107,7 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
 
         // Construct login request from username and hashed password
         apiClient.login(new LoginRequest(username, pin));
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private AuthenticationStepResponse initiateEnrolment() {

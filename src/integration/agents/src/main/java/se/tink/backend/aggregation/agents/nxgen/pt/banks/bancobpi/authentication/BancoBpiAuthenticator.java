@@ -89,13 +89,14 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
         }
     }
 
-    private void processLogin(final String username, final String password)
+    private AuthenticationStepResponse processLogin(final String username, final String password)
             throws AuthenticationException {
         authContext.setDeviceUUID(UUID.randomUUID().toString());
         LoginRequest request = new LoginRequest(authContext, username, password);
         LoginResponse response = callLoginRequest(request);
         handleResponse(response, LoginError.CREDENTIALS_VERIFICATION_ERROR);
         authContext.setSessionCSRFToken(response.getCsrfToken());
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private AuthenticationStepResponse processAccessPinSetup(final String accessPin)

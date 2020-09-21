@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchAccou
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchCreditCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -57,7 +58,8 @@ public class MontepioApiClient {
                 .header(HeaderKeys.MGM_VERSION, HeaderValues.MGM_VERSION);
     }
 
-    public void loginStep0(String username, String password) throws LoginException {
+    public AuthenticationStepResponse loginStep0(String username, String password)
+            throws LoginException {
         String maskedPassword = PasswordEncryptionUtil.encryptPassword(username, password);
         AuthenticationRequest request = new AuthenticationRequest(username, maskedPassword);
         AuthenticationResponse response =
@@ -65,6 +67,7 @@ public class MontepioApiClient {
         if (response.isWrongCredentials()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     public void loginStep1() {

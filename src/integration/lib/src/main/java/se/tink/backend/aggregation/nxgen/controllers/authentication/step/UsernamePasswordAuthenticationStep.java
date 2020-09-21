@@ -11,7 +11,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 public class UsernamePasswordAuthenticationStep extends AbstractAuthenticationStep {
 
     public interface CallbackProcessor {
-        void process(final String username, final String password) throws AuthenticationException;
+        AuthenticationStepResponse process(final String username, final String password)
+                throws AuthenticationException;
     }
 
     private final CallbackProcessor processor;
@@ -33,7 +34,6 @@ public class UsernamePasswordAuthenticationStep extends AbstractAuthenticationSt
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-        processor.process(username, password);
-        return AuthenticationStepResponse.executeNextStep();
+        return processor.process(username, password);
     }
 }
