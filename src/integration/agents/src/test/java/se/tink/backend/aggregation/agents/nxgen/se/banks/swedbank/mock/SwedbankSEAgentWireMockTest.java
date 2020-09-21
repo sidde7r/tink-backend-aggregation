@@ -31,14 +31,13 @@ public class SwedbankSEAgentWireMockTest {
         final String wireMockFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/swedbank-bankid-all-accounts.aap";
         final String contractFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/agent-contract.json";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/agent-contract-all-accounts.json";
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.builder(MarketCode.SE, "swedbank-bankid", wireMockFilePath)
                         .withConfigurationFile(configuration)
-                        .dumpContentForContractFile()
                         .build();
 
         final AgentContractEntity expected =
