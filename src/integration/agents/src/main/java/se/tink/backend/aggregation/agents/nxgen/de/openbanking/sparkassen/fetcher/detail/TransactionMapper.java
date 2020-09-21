@@ -87,11 +87,11 @@ public class TransactionMapper {
         if (beneficiary == null
                 || beneficiary.isEmpty()
                 || beneficiary.toLowerCase().contains("paypal")) {
-            // PayPayl gets special treatment for now here in agent code, which isn't ideal.
+            // PayPal gets special treatment for now here in agent code, which isn't ideal.
             // ITE-1413 explains it a bit
             return purpose;
         } else {
-            return beneficiary + " " + purpose;
+            return beneficiary;
         }
     }
 }
