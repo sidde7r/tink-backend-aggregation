@@ -53,6 +53,11 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean isResourceNotFound() {
+        return ErrorCodes.RESOURCE_NOT_FOUND.equalsIgnoreCase(error);
+    }
+
+    @JsonIgnore
     public boolean isInvalidRefreshToken() {
         return ErrorCodes.INVALID_GRANT.equalsIgnoreCase(error);
     }
