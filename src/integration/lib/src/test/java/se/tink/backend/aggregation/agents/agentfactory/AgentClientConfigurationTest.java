@@ -47,8 +47,8 @@ public class AgentClientConfigurationTest {
         Throwable rootCause = getRootCause(e);
         if (rootCause instanceof IllegalArgumentException) {
             return errorMessagePrefix
-                    + " due to IllegalArgumentException exception. \nPlease ensure the followings: \n"
-                    + "1) There is a subclass of ClientConfiguration class under the packages of the agent or the superclass of the agent\n"
+                    + " due to IllegalArgumentException exception. \nPlease ensure: \n"
+                    + "There is a subclass of ClientConfiguration class under the packages of the agent or the superclass of the agent\n"
                     + getStackTrace(e);
         } else {
             return errorMessagePrefix + "\n" + getStackTrace(e);
@@ -56,7 +56,7 @@ public class AgentClientConfigurationTest {
     }
 
     // This method returns one provider for each agent
-    // Only open banking agent is mandatory required a client configuration
+    // Only open banking provider is mandatory required a client configuration
     private Set<Provider> getProvidersForClientConfigurationTest(
             Set<Provider> providerConfigurations) {
         return providerConfigurations.stream()
@@ -66,9 +66,6 @@ public class AgentClientConfigurationTest {
                                 ProviderStatuses.ENABLED.equals(provider.getStatus())
                                         || ProviderStatuses.OBSOLETE.equals(provider.getStatus()))
                 .filter(provider -> ProviderDto.ProviderTypes.TEST != provider.getType())
-                // ThingsToDo: remove the filter of DE market after market team has added
-                // client configuration implementation for all DE agents
-                .filter(provider -> !"DE".equals(provider.getMarket()))
                 .collect(groupingBy(Provider::getClassName))
                 .entrySet()
                 .stream()
