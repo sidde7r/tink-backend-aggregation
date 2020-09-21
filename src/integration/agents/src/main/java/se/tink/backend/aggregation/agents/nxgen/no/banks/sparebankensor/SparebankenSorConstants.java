@@ -4,6 +4,8 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class SparebankenSorConstants {
     public static final DeviceProfile DEVICE_PROFILE = DeviceProfileConfiguration.IOS_STABLE;
@@ -120,5 +122,22 @@ public class SparebankenSorConstants {
     public static class ErrorText {
         public static final String BANKID_BLOCKED =
                 "Det har dessverre oppstått en feil. Ditt mobilabonnement kan ha blitt endret eller din BankID på mobil kan være sperret.  Aktiver BankID på mobil på nytt i din nettbank dersom feilen vedvarer.";
+    }
+
+    public enum UserMessage implements LocalizableEnum {
+        ACTIVATION_CODE(new LocalizableKey("Activation code")),
+        ACTIVATION_CODE_NOT_VALID(
+                new LocalizableKey("The activation code you entered is not valid."));
+
+        private LocalizableKey msg;
+
+        UserMessage(LocalizableKey msg) {
+            this.msg = msg;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return msg;
+        }
     }
 }

@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator;
 
 import com.google.api.client.http.HttpStatusCodes;
-import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -37,11 +36,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.i18n.Catalog;
 
+@RequiredArgsConstructor
+@Slf4j
 public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticatorNO {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String ACTIVATION_CODE_FIELD_KEY = "activationCode";
     private static final int ACTIVATION_CODE_LENGTH = 8;
@@ -49,26 +47,11 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
     private final SparebankenSorApiClient apiClient;
     private final EncapClient encapClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final Catalog catalog;
     private final SessionStorage sessionStorage;
     private final String mobilenumber;
+
     private String username;
     private int pollWaitCounter;
-
-    public SparebankenSorMultiFactorAuthenticator(
-            SparebankenSorApiClient apiClient,
-            EncapClient encapClient,
-            SupplementalInformationHelper supplementalInformationHelper,
-            Catalog catalog,
-            SessionStorage sessionStorage,
-            String mobilenumber) {
-        this.apiClient = apiClient;
-        this.encapClient = encapClient;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.catalog = catalog;
-        this.sessionStorage = sessionStorage;
-        this.mobilenumber = mobilenumber;
-    }
 
     @Override
     public String init(String nationalId, String dob, String mobilenumber)
@@ -122,7 +105,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                 throw LoginError.DEFAULT_MESSAGE.exception(errorElement.text());
             }
         }
-        logger.warn(String.format("Potential unknown login error %s", errorElement.toString()));
+        log.warn(String.format("Potential unknown login error %s", errorElement.toString()));
     }
 
     @Override
@@ -144,14 +127,14 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                 if (pollWaitCounter > 15) {
                     return BankIdStatus.TIMEOUT;
                 } else {
-                    logger.info(
+                    log.info(
                             String.format(
                                     "%s: Received error status when polling bankId",
                                     SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
                     return BankIdStatus.FAILED_UNKNOWN;
                 }
             default:
-                logger.info(
+                log.info(
                         String.format(
                                 "%s: Unknown poll status: %s. Number of polls: %s",
                                 SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString(),
@@ -212,14 +195,17 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
 
     private Field getActivationCodeField() {
         return Field.builder()
-                .description(catalog.getString("Activation code"))
+                .description(SparebankenSorConstants.UserMessage.ACTIVATION_CODE.getKey().get())
                 .name(ACTIVATION_CODE_FIELD_KEY)
                 .numeric(true)
                 .minLength(ACTIVATION_CODE_LENGTH)
                 .maxLength(ACTIVATION_CODE_LENGTH)
                 .hint(StringUtils.repeat("N", ACTIVATION_CODE_LENGTH))
                 .pattern(String.format("([0-9]{%d})", ACTIVATION_CODE_LENGTH))
-                .patternError("The activation code you entered is not valid")
+                .patternError(
+                        SparebankenSorConstants.UserMessage.ACTIVATION_CODE_NOT_VALID
+                                .getKey()
+                                .get())
                 .build();
     }
 }
