@@ -103,11 +103,7 @@ public class FinTsTransactionFetcherTest {
     }
 
     static {
-        EXPECTED_DATA.put(
-                "To own account IBAN: DE13100100100554481127 BIC: AAAAAAAA111",
-                Pair.of(ExactCurrencyAmount.of(-1.0, "EUR"), "20200302"));
-        EXPECTED_DATA.put(
-                "To own account IBAN: DE13100100100554481127 BIC: PBNKDEFF123",
-                Pair.of(ExactCurrencyAmount.of(-1.7, "EUR"), "20200130"));
+        EXPECTED_DATA.put("Jan Gillaaa", Pair.of(ExactCurrencyAmount.of(-1.0, "EUR"), "20200302"));
+        EXPECTED_DATA.put("Jan Gillaaa", Pair.of(ExactCurrencyAmount.of(-1.7, "EUR"), "20200130"));
     }
 }

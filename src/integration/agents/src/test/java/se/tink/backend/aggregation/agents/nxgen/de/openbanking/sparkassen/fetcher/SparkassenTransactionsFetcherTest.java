@@ -52,7 +52,7 @@ public class SparkassenTransactionsFetcherTest {
     }
 
     @Test
-    public void shouldReturnThreeTransactions() {
+    public void shouldReturnFourTransactions() {
         // given
         when(apiClient.fetchTransactions(eq(TEST_CONSENT_ID), eq(ACCOUNT_ID), any(LocalDate.class)))
                 .thenReturn(FetcherTestData.getTransactionsResponse());
@@ -62,7 +62,7 @@ public class SparkassenTransactionsFetcherTest {
                 transactionsFetcher.fetchTransactionsFor(account);
 
         // then
-        assertThat(transactions).hasSize(3);
+        assertThat(transactions).hasSize(4);
     }
 
     @Test
