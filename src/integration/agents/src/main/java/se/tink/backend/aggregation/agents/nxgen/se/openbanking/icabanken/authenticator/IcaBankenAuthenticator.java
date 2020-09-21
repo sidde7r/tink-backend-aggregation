@@ -135,10 +135,6 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
 
         verifyValidCustomerStatusOrThrow();
 
-        if (refreshToken.equals(response.getRefreshToken())) {
-            logger.info("Received same refresh token from bank");
-        }
-
         return response.toOauthToken();
     }
 
