@@ -56,9 +56,11 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
 
     @Override
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
-        exceptionResolver.throwIf(
-                transfer.getAmount().getValue() < 1,
-                HandelsbankenSEConstants.Executor.ExceptionMessages.TRANSFER_AMOUNT_TOO_SMALL);
+        if (transfer.getAmount().getValue() < 1) {
+            exceptionResolver.cancelTransfer(
+                    HandelsbankenSEConstants.Executor.ExceptionMessages.TRANSFER_AMOUNT_TOO_SMALL,
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
+        }
 
         sessionStorage
                 .applicationEntryPoint()
@@ -102,9 +104,10 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
                 .findSourceAccount(transfer)
                 .orElseThrow(
                         () ->
-                                exceptionResolver.asException(
+                                exceptionResolver.cancelTransfer(
                                         HandelsbankenSEConstants.Executor.ExceptionMessages
-                                                .SOURCE_ACCOUNT_NOT_FOUND));
+                                                .SOURCE_ACCOUNT_NOT_FOUND,
+                                        InternalStatus.INVALID_SOURCE_ACCOUNT));
     }
 
     private Optional<AmountableDestination> getDestinationAccount(
