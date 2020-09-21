@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.NordeaBankIdStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.BankIdAutostartResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.FetchCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.InitBankIdAutostartRequest;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
@@ -117,8 +118,15 @@ public class NordeaBankIdAutostartAuthenticator
                     .fetchAccessToken(bankIdAutostartResponse.getCode(), codeVerifier)
                     .storeTokens(sessionStorage);
         } catch (HttpResponseException e) {
-            return BankIdStatus.NO_CLIENT;
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+
+            if (errorResponse.isResourceNotFound()) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
+
+            throw e;
         }
+
         return BankIdStatus.DONE;
     }
 

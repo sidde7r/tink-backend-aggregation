@@ -493,6 +493,7 @@ public class NordeaSEConstants {
         public static final String UNABLE_TO_LOAD_CUSTOMER = "ERROR_OSIA_UNABLE_TO_LOAD_CUSTOMER";
         public static final String INVALID_TOKEN = "invalid_token";
         public static final String INVALID_GRANT = "invalid_grant";
+        public static final String RESOURCE_NOT_FOUND = "resource_not_found";
         public static final String AUTHENTICATION_COLLISION = "authentication_collision";
         public static final String AUTHENTICATION_FAILED = "authentication_failed";
         public static final String UNABLE_TO_FETCH_ACCOUNTS = "Could not retrieve accounts.";
