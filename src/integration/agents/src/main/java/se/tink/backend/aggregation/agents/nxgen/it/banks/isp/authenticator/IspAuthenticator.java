@@ -67,16 +67,15 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
     private void initAutoAuthenticationSteps() {
         autoAuthenticationSteps =
                 Collections.singletonList(
-                        new AutomaticAuthenticationStep(
+                        new UsernamePasswordAuthenticationStep(
                                 this::autoAuthenticate, AUTO_AUTHENTICATE_STEP_NAME));
     }
 
-    private AuthenticationStepResponse autoAuthenticate() {
+    private AuthenticationStepResponse autoAuthenticate(String username, String password) {
         String rememberMeCode = persistentStorage.get(StorageKeys.REMEMBER_ME_TOKEN);
         apiClient.autoAuthenticate(getOrGenerateDeviceId(), rememberMeCode);
 
-        String username = persistentStorage.get(StorageKeys.USERNAME);
-        String totp = generateTotp(persistentStorage.get(StorageKeys.USER_PIN));
+        String totp = generateTotp(password, username);
         CheckPinAutoAuthResponse response = apiClient.checkPinAuto(totp, username);
         sessionStorage.put(StorageKeys.ACCESS_TOKEN, response.getPayload().getAccessToken());
 
@@ -132,9 +131,6 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-        // Unfortunately for auto authentication we need username and password :(
-        persistentStorage.put(StorageKeys.USERNAME, username);
-        persistentStorage.put(StorageKeys.USER_PIN, password);
         try {
             CheckPinResponse checkPinResponse = apiClient.checkPin(username, password);
             sessionStorage.put(
@@ -186,10 +182,9 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
         return AuthenticationStepResponse.executeNextStep();
     }
 
-    private String generateTotp(String value) {
+    private String generateTotp(String value, String username) {
         String mask = persistentStorage.get(StorageKeys.TOTP_MASK);
         int digits = Integer.parseInt(persistentStorage.get(StorageKeys.TOTP_DIGITS));
-        String username = persistentStorage.get(StorageKeys.USERNAME);
         String deviceId = getOrGenerateDeviceId();
         LocalDateTime now = LocalDateTime.now();
         CheckTimeResponse response = apiClient.checkTime(username, deviceId, LocalDateTime.now());
@@ -203,7 +198,7 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
         String transactionId = sessionStorage.get(StorageKeys.TRANSACTION_ID);
         String deviceId = getOrGenerateDeviceId();
         ConfirmDeviceResponse confirmDeviceResponse =
-                apiClient.confirmDevice(deviceId, generateTotp(password), transactionId);
+                apiClient.confirmDevice(deviceId, generateTotp(password, username), transactionId);
         sessionStorage.put(
                 StorageKeys.ACCESS_TOKEN, confirmDeviceResponse.getPayload().getAccessToken());
         persistentStorage.put(

@@ -85,8 +85,6 @@ public class IspConstants {
         public static final String TOTP_MASK = "totp_mask";
         public static final String TOTP_DIGITS = "totp_digits";
         public static final String DEVICE_ID = "device_id";
-        public static final String USERNAME = "username";
-        public static final String USER_PIN = "user_pin";
         public static final String IS_AUTO_AUTH_POSSIBLE = "isAutoAuthPossible";
         public static final String REMEMBER_ME_TOKEN = "remember_me_token";
     }
