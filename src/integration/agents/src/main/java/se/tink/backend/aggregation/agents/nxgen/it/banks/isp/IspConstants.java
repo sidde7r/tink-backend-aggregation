@@ -14,10 +14,15 @@ public class IspConstants {
                 "/ib/content/api/sec/recuperasmartmobilestep3new";
         public static final String CHECK_TIME = "/ib/content/api/sec/checktime";
         public static final String CONFIRM_DEVICE = "/ib/content/api/sec/confermadevicemobile";
+        public static final String AUTO_AUTHENTICATE =
+                "/ib/content/api/app/sec/richiestalistatransazioni";
         public static final String FETCH_ACCOUNTS_AND_IDENTITIES =
                 "/ib/content/api/app/globalposition/getGlobalPositionMobile";
         public static final String FETCH_TRANSACTIONS =
                 "/ib/content/api/app/listaoperazioni/getListaOperazioni";
+        public static final String CHECK_RECORDER_DEVICE =
+                "/ib/content/api/sec/v2/login/checkricordamimobile";
+        public static final String CHECK_AUTO_AUTH_PIN = "/ib/content/api/sec/v1/login/checkotp";
     }
 
     public static class Crypto {
@@ -80,5 +85,9 @@ public class IspConstants {
         public static final String TOTP_MASK = "totp_mask";
         public static final String TOTP_DIGITS = "totp_digits";
         public static final String DEVICE_ID = "device_id";
+        public static final String USERNAME = "username";
+        public static final String USER_PIN = "user_pin";
+        public static final String IS_AUTO_AUTH_POSSIBLE = "isAutoAuthPossible";
+        public static final String REMEMBER_ME_TOKEN = "remember_me_token";
     }
 }

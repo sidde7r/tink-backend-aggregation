@@ -7,14 +7,19 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.apiclient.IspApiClient;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckPinAutoAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckPinResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckRecordedDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckTimeResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.ConfirmDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.RegisterDevice3Response;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -29,12 +34,14 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@Slf4j
 public class IspAuthenticator extends StatelessProgressiveAuthenticator {
 
     private static final String REGISTER_DEVICE_STEP_NAME = "registerDevice";
     private static final String REGISTER_DEVICE_3_STEP_NAME = "registerDevice3";
     private static final String CONFIRM_DEVICE_STEP_NAME = "confirmDevice";
     private static final String CHECK_PIN_STEP_NAME = "checkPin";
+    private static final String AUTO_AUTHENTICATE_STEP_NAME = "authoAuthenticate";
     private static final String LOGIN_ERROR = "LOGIN_ERROR";
 
     private final IspApiClient apiClient;
@@ -42,6 +49,7 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private List<AuthenticationStep> manualAuthenticationSteps;
+    private List<AuthenticationStep> autoAuthenticationSteps;
 
     public IspAuthenticator(
             final IspApiClient apiClient,
@@ -53,15 +61,59 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
         this.sessionStorage = requireNonNull(sessionStorage);
         this.persistentStorage = requireNonNull(persistentStorage);
         initManualAuthenticationSteps();
+        initAutoAuthenticationSteps();
+    }
+
+    private void initAutoAuthenticationSteps() {
+        autoAuthenticationSteps =
+                Collections.singletonList(
+                        new AutomaticAuthenticationStep(
+                                this::autoAuthenticate, AUTO_AUTHENTICATE_STEP_NAME));
+    }
+
+    private AuthenticationStepResponse autoAuthenticate() {
+        String rememberMeCode = persistentStorage.get(StorageKeys.REMEMBER_ME_TOKEN);
+        apiClient.autoAuthenticate(getOrGenerateDeviceId(), rememberMeCode);
+
+        String username = persistentStorage.get(StorageKeys.USERNAME);
+        String totp = generateTotp(persistentStorage.get(StorageKeys.USER_PIN));
+        CheckPinAutoAuthResponse response = apiClient.checkPinAuto(totp, username);
+        sessionStorage.put(StorageKeys.ACCESS_TOKEN, response.getPayload().getAccessToken());
+
+        return AuthenticationStepResponse.authenticationSucceeded();
+    }
+
+    private boolean checkRecordedDevice() {
+        String rememberMeCode = persistentStorage.get(StorageKeys.REMEMBER_ME_TOKEN);
+        if (rememberMeCode == null) {
+            return false;
+        }
+
+        CheckRecordedDeviceResponse response =
+                apiClient.checkRecordedDevice(getOrGenerateDeviceId(), rememberMeCode);
+        sessionStorage.put(StorageKeys.IS_AUTO_AUTH_POSSIBLE, response.isOk());
+
+        if (response.isOk()) {
+            sessionStorage.put(StorageKeys.ACCESS_TOKEN, response.getPayload().getAccessToken());
+        }
+        return response.isOk();
     }
 
     @Override
     public List<AuthenticationStep> authenticationSteps() {
+        if (canAutoAuthenticate()) {
+            return autoAuthenticationSteps;
+        }
         return manualAuthenticationSteps;
     }
 
-    private void initManualAuthenticationSteps() {
+    private boolean canAutoAuthenticate() {
+        return sessionStorage
+                .get(StorageKeys.IS_AUTO_AUTH_POSSIBLE, Boolean.class)
+                .orElseGet(this::checkRecordedDevice);
+    }
 
+    private void initManualAuthenticationSteps() {
         manualAuthenticationSteps =
                 ImmutableList.of(
                         new UsernamePasswordAuthenticationStep(
@@ -80,6 +132,9 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
+        // Unfortunately for auto authentication we need username and password :(
+        persistentStorage.put(StorageKeys.USERNAME, username);
+        persistentStorage.put(StorageKeys.USER_PIN, password);
         try {
             CheckPinResponse checkPinResponse = apiClient.checkPin(username, password);
             sessionStorage.put(
@@ -117,36 +172,47 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
 
     AuthenticationStepResponse registerDevice3(String username, String password) {
         RegisterDevice3Response registerDevice3Response =
-                apiClient.registerDevice3(getDeviceId(), password);
+                apiClient.registerDevice3(getOrGenerateDeviceId(), password);
         String seedXml = registerDevice3Response.getPayload().getSeed();
         if (seedXml == null) {
             throw new IllegalStateException("OTP seed null");
         }
         TotpSeedXmlHelper.validateTotpType(seedXml);
-        sessionStorage.put(StorageKeys.TOTP_MASK, TotpSeedXmlHelper.getTotpMask(seedXml));
-        sessionStorage.put(StorageKeys.TOTP_DIGITS, TotpSeedXmlHelper.getTotpDigits(seedXml));
+        persistentStorage.put(StorageKeys.TOTP_MASK, TotpSeedXmlHelper.getTotpMask(seedXml));
+        persistentStorage.put(StorageKeys.TOTP_DIGITS, TotpSeedXmlHelper.getTotpDigits(seedXml));
         sessionStorage.put(
                 StorageKeys.TRANSACTION_ID,
                 registerDevice3Response.getPayload().getTransactionId());
         return AuthenticationStepResponse.executeNextStep();
     }
 
-    AuthenticationStepResponse confirmDevice(String username, String password) {
-        int digits = Integer.parseInt(sessionStorage.get(StorageKeys.TOTP_DIGITS));
-        String mask = sessionStorage.get(StorageKeys.TOTP_MASK);
-        String transactionId = sessionStorage.get(StorageKeys.TRANSACTION_ID);
-        String deviceId = getDeviceId();
+    private String generateTotp(String value) {
+        String mask = persistentStorage.get(StorageKeys.TOTP_MASK);
+        int digits = Integer.parseInt(persistentStorage.get(StorageKeys.TOTP_DIGITS));
+        String username = persistentStorage.get(StorageKeys.USERNAME);
+        String deviceId = getOrGenerateDeviceId();
         LocalDateTime now = LocalDateTime.now();
         CheckTimeResponse response = apiClient.checkTime(username, deviceId, LocalDateTime.now());
         long currentTime =
                 now.toEpochSecond(ZoneOffset.UTC)
                         - Long.parseLong(response.getPayload().getDifferenceInSeconds());
-        String totp = TotpCalculator.calculateTOTP(digits, mask, password, currentTime);
-        apiClient.confirmDevice(deviceId, totp, transactionId);
+        return TotpCalculator.calculateTOTP(digits, mask, value, currentTime);
+    }
+
+    AuthenticationStepResponse confirmDevice(String username, String password) {
+        String transactionId = sessionStorage.get(StorageKeys.TRANSACTION_ID);
+        String deviceId = getOrGenerateDeviceId();
+        ConfirmDeviceResponse confirmDeviceResponse =
+                apiClient.confirmDevice(deviceId, generateTotp(password), transactionId);
+        sessionStorage.put(
+                StorageKeys.ACCESS_TOKEN, confirmDeviceResponse.getPayload().getAccessToken());
+        persistentStorage.put(
+                StorageKeys.REMEMBER_ME_TOKEN,
+                confirmDeviceResponse.getPayload().getRememberMeCode());
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 
-    String getDeviceId() {
+    String getOrGenerateDeviceId() {
         String deviceId = persistentStorage.get(StorageKeys.DEVICE_ID);
         if (deviceId == null) {
             deviceId = UUID.randomUUID().toString().toUpperCase();
@@ -157,6 +223,6 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
-        return true;
+        return !canAutoAuthenticate();
     }
 }
