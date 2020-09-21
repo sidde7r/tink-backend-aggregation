@@ -571,7 +571,8 @@ public class SwedbankDefaultApiClient {
                 fetchProfile(profileEntity.getLinks().getNextOrThrow());
         bankProfileHandler.setMenuItems(menuItems);
         EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
-        PaymentBaseinfoResponse paymentBaseinfoResponse = fetchPaymentBaseinfo();
+        PaymentBaseinfoResponse paymentBaseinfoResponse = getPaymentBaseInfoIfNotBusiness();
+
         // create and add profile
         BankProfile bankProfile =
                 new BankProfile(
@@ -579,6 +580,24 @@ public class SwedbankDefaultApiClient {
         bankProfileHandler.addBankProfile(bankProfile);
         // profile is already activated
         bankProfileHandler.setActiveBankProfile(bankProfile);
+    }
+
+    /**
+     * Half temporary fix to handle that some business users don't have any payment related menu
+     * items. Fetching of payment base info is only relevant for PIS, which is not implemented for
+     * business. To be consistent we won't fetch payment base info for any business users.
+     *
+     * <p>Bank profile setup is very messy, we need to go over the fetching of engagement overview
+     * and payment base info as we store it on the bank profiles but don't use any of the stored
+     * data except for in BaseTransferExecutor. The private vs business setup if also getting
+     * increasingly complex (see TC-3614).
+     */
+    private PaymentBaseinfoResponse getPaymentBaseInfoIfNotBusiness() {
+        if (Strings.isNullOrEmpty(organizationNumber)) {
+            return fetchPaymentBaseinfo();
+        }
+
+        return null;
     }
 
     private BankProfileHandler getBankProfileHandler() {
