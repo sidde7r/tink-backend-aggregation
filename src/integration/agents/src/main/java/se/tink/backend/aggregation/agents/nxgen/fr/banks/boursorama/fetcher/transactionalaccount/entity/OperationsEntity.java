@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.fetcher.tra
 
 import java.time.LocalDate;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -15,10 +17,12 @@ public class OperationsEntity {
     private List<LabelsEntity> labels;
 
     public Transaction toTinkTransaction() {
+        final String description = getDescription();
         return Transaction.builder()
-                .setDescription(getDescription())
+                .setDescription(description)
                 .setDate(getPerformedDate())
                 .setAmount(getTinkAmount())
+                .setType(getType(description))
                 .build();
     }
 
@@ -40,5 +44,29 @@ public class OperationsEntity {
                 .map(LabelsEntity::getBody)
                 .findFirst()
                 .orElse(null);
+    }
+
+    private static TransactionTypes getType(String description) {
+        if (StringUtils.isBlank(description)) {
+            return TransactionTypes.DEFAULT;
+        }
+
+        if (description.startsWith("VIR")) {
+            return TransactionTypes.TRANSFER;
+        }
+
+        if (description.startsWith("PRLV")) {
+            return TransactionTypes.PAYMENT;
+        }
+
+        if (description.startsWith("Relev")) {
+            return TransactionTypes.CREDIT_CARD;
+        }
+
+        if (description.startsWith("RETRAIT")) {
+            return TransactionTypes.WITHDRAWAL;
+        }
+
+        return TransactionTypes.DEFAULT;
     }
 }
