@@ -9,6 +9,7 @@ public class DemobankConstants {
         public static final String ACCOUNTS = "/api/accounts";
         public static final String TRANSACTIONS = "/api/account/{accountId}/transactions";
         public static final String HOLDERS = "/api/account/{accountId}/holders";
+        public static final String USER = "/api/user";
 
         // App to app URLs
         public static final String A2A_INIT_URL = "/api/auth/ticket";
