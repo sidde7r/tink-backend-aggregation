@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditag
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -38,6 +40,26 @@ public class OperationEntity {
                 .setDate(parsedDate)
                 .setDescription(label)
                 .setRawDetails(this)
+                .setType(getTransactionType())
                 .build();
+    }
+
+    private TransactionTypes getTransactionType() {
+        if (StringUtils.isBlank(paymentMode)) {
+            return TransactionTypes.DEFAULT;
+        }
+
+        switch (paymentMode) {
+            case "Prélèvement":
+                return TransactionTypes.PAYMENT;
+            case "Carte":
+                return TransactionTypes.CREDIT_CARD;
+            case "Virement":
+                return TransactionTypes.TRANSFER;
+            case "Retrait":
+                return TransactionTypes.WITHDRAWAL;
+            default:
+                return TransactionTypes.DEFAULT;
+        }
     }
 }
