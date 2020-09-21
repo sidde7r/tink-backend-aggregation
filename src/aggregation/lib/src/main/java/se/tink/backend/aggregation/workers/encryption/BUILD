@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/encryption/versions",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/wrappers",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
@@ -27,7 +28,6 @@ java_library(
         "//src/libraries/metrics:prometheus",
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
-        "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",
@@ -36,5 +36,6 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@com_google_protobuf//:protobuf_java",
         "@tink_backend//src/credentials-revamp/common/models/proto:java_proto",
+        "@tink_backend//src/libraries/serialization_utils",
     ],
 )

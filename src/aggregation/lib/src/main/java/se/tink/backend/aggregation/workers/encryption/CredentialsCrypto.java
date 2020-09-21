@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
+import se.tink.backend.aggregation.workers.encryption.versions.CredentialsCryptoV1;
+import se.tink.backend.aggregation.workers.encryption.versions.CredentialsCryptoV2;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;
@@ -87,7 +89,15 @@ public class CredentialsCrypto {
                             byte[] key = cryptoWrapper.getCryptoKeyByKeyId(v1.getKeyId());
 
                             try {
-                                CredentialsCryptoV1.decryptCredential(key, credentials, v1);
+                                CredentialsCryptoV1.DecryptedDataV1 result =
+                                        CredentialsCryptoV1.decryptV1(key, v1);
+
+                                // be aware of side-effect here! this is same credentials object as
+                                // on the Request
+                                credentials.addSerializedFields(result.getDecryptedFields());
+                                credentials.setSensitivePayloadSerialized(
+                                        result.getDecryptedPayload());
+
                                 cryptoMetrics(CREDENTIALS_DECRYPT, v1, true);
                             } catch (Exception e) {
                                 logger.error(
@@ -108,8 +118,14 @@ public class CredentialsCrypto {
                                     cryptoWrapper.getCryptoKeyByKeyId(v2.getPayload().getKeyId());
 
                             try {
-                                CredentialsCryptoV2.decryptCredential(
-                                        fieldsKey, payloadKey, credentials, v2);
+                                CredentialsCryptoV2.DecryptedDataV2 result =
+                                        CredentialsCryptoV2.decryptV2(fieldsKey, payloadKey, v2);
+                                // be aware of side-effect here! this is same credentials object as
+                                // on the Request
+                                credentials.addSerializedFields(result.getDecryptedFields());
+                                credentials.setSensitivePayloadSerialized(
+                                        result.getDecryptedPayload());
+
                                 cryptoMetrics(CREDENTIALS_DECRYPT, v2, true);
                             } catch (Exception e) {
                                 logger.error(
@@ -146,8 +162,11 @@ public class CredentialsCrypto {
 
         // Encrypt with most recent version, currently: V2
         EncryptedPayloadHead encryptedCredentials =
-                CredentialsCryptoV2.encryptCredential(
-                        clusterKeyId, clusterKey, sensitiveInformationCredentials);
+                CredentialsCryptoV2.encryptV2(
+                        clusterKeyId,
+                        clusterKey,
+                        sensitiveInformationCredentials.getFieldsSerialized(),
+                        sensitiveInformationCredentials.getSensitivePayloadSerialized());
 
         String serializedEncryptedCredentials =
                 SerializationUtils.serializeToString(encryptedCredentials);
