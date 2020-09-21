@@ -75,11 +75,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
-    public void setIdentityData(IdentityDataEntity identityData) {
-        this.identityData = identityData;
-    }
-
-    @Override
     public IdentityDataEntity getIdentityData() {
         return identityData;
     }
@@ -100,11 +95,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
-    public void setHolderName(String holderName) {
-        this.holderName = holderName;
-    }
-
-    @Override
     public String getIntentId(AccountPermissionResponse accountPermissionResponse) {
         AccountPermissionResponseV31 accountPermissionResponseV31 =
                 (AccountPermissionResponseV31) accountPermissionResponse;
@@ -112,6 +102,7 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType() {
         return (Class<T>) AccountPermissionResponseV31.class;
     }

@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants.ACCOUNT_PERMISSIONS;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints.IDENTITY_DATA_ENDPOINT_PARTY;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.MONZO_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TINK_UKOPENBANKING_ORGID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.UKOB_TAN;
@@ -38,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.JWTSignatureHeaders.HEADERS;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.JWTSignatureHeaders.PAYLOAD;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.FinancialOrganisationIdFilter;
@@ -123,20 +121,28 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public Optional<IdentityDataV31Entity> fetchV31Party() {
-        return createAisRequest(aisConfig.getApiBaseURL().concat(IDENTITY_DATA_ENDPOINT_PARTY))
+        return createAisRequest(
+                        aisConfig
+                                .getApiBaseURL()
+                                .concat(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY.getPath()))
                 .get(PartyV31Response.class)
                 .getData();
     }
 
     public Optional<IdentityDataV31Entity> fetchV31Party(String accountId) {
-        String path = String.format(IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY, accountId);
+        String path =
+                String.format(
+                        PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY.getPath(), accountId);
         return createAisRequest(aisConfig.getApiBaseURL().concat(path))
                 .get(PartyV31Response.class)
                 .getData();
     }
 
     public List<IdentityDataV31Entity> fetchV31Parties(String accountId) {
-        String path = String.format(IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES, accountId);
+        String path =
+                String.format(
+                        PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES.getPath(),
+                        accountId);
         return createAisRequest(aisConfig.getApiBaseURL().concat(path))
                 .get(PartiesV31Response.class)
                 .getData()
@@ -267,10 +273,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         jwtHeaders.put(HEADERS.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
         jwtHeaders.put(
                 HEADERS.ISS,
-                new StringBuilder(TINK_UKOPENBANKING_ORGID)
-                        .append("/")
-                        .append(softwareStatement.getSoftwareId())
-                        .toString());
+                String.format(
+                        "%s/%s", TINK_UKOPENBANKING_ORGID, softwareStatement.getSoftwareId()));
         jwtHeaders.put(HEADERS.TAN, UKOB_TAN);
         jwtHeaders.put(
                 HEADERS.CRIT, Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
@@ -285,10 +289,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         jwtHeaders.put(HEADERS.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
         jwtHeaders.put(
                 HEADERS.ISS,
-                new StringBuilder(TINK_UKOPENBANKING_ORGID)
-                        .append("/")
-                        .append(softwareStatement.getSoftwareId())
-                        .toString());
+                String.format(
+                        "%s/%s", TINK_UKOPENBANKING_ORGID, softwareStatement.getSoftwareId()));
         jwtHeaders.put(HEADERS.TAN, UKOB_TAN);
         jwtHeaders.put(HEADERS.CRIT, Arrays.asList(HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
 

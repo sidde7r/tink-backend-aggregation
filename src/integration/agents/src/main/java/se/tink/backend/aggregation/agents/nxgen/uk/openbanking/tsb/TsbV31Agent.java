@@ -34,7 +34,7 @@ public class TsbV31Agent extends UkOpenBankingBaseAgent {
 
     static {
         aisConfig =
-                new UKOpenBankingAis.Builder()
+                UKOpenBankingAis.builder()
                         .withOrganisationId("0015800001ZEZ3hAAH")
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.WELL_KNOWN_URL)

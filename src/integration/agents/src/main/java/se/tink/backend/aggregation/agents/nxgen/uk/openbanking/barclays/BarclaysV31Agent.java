@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
@@ -31,15 +31,11 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
 
     static {
         aisConfig =
-                new UKOpenBankingAis.Builder()
+                UKOpenBankingAis.builder()
                         .withOrganisationId(BarclaysConstants.ORGANISATION_ID)
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.PERSONAL_WELL_KNOWN_URL)
-                        .withIdentityDataURL(
-                                PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
-                        .withAdditionalPermission(
-                                PartyEndpoints.partyEndpointsPermissionMap.get(
-                                        PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES))
+                        .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
                         .build();
     }
 
