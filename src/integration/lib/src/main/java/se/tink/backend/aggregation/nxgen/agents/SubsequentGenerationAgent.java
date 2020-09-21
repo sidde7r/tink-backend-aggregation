@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.nxgen.agents;
 import java.security.Security;
 import java.util.Optional;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.CreateBeneficiaryControllerable;
@@ -47,14 +45,15 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    private static final Logger log = LoggerFactory.getLogger(SubsequentGenerationAgent.class);
+    private static final String DEFAULT_USER_IP = "127.0.0.1";
+
     protected final Catalog catalog;
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected final SessionStorage sessionStorage;
     protected final Credentials credentials;
     protected final Provider provider;
-    protected final String originatingUserIp;
+    protected final String userIp;
     protected final TransactionPaginationHelper transactionPaginationHelper;
     protected final UpdateController updateController;
     protected final MetricRefreshController metricRefreshController;
@@ -79,7 +78,6 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                 .addSensitiveValuesSetObservable(sessionStorage.getSensitiveValuesObservable());
         this.credentials = request.getCredentials();
         this.provider = request.getProvider();
-        this.originatingUserIp = request.getOriginatingUserIp();
         this.updateController = new UpdateController(provider, request.getUser());
 
         this.client = componentProvider.getTinkHttpClient();
@@ -100,6 +98,19 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         this.strongAuthenticationState =
                 new StrongAuthenticationState(
                         request.getAppUriId(), componentProvider.getRandomValueGenerator());
+
+        this.userIp = getOriginatingUserIpOrDefault();
+    }
+
+    // This method, and the `userIp` field in general, is meant to help clear up some repeating ifs
+    // from agents
+    // Agents should utilize originalUserIp from CredentialRequest as a value of OpenBanking API
+    // header PSU-Ip-Address, but it is possible that it would come as null, even in case of manual
+    // refresh. In such case, we replace it with default to not do so in each agent.
+    // This helper `userIp` field is meant to be used by agents that agree to use a default value in
+    // case of more "true" value missing.
+    private String getOriginatingUserIpOrDefault() {
+        return Optional.ofNullable(request.getOriginatingUserIp()).orElse(DEFAULT_USER_IP);
     }
 
     protected EidasIdentity getEidasIdentity() {
