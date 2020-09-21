@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.utils.BnpParibasFormatUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -44,6 +46,7 @@ public class TransactionEntity {
                 .setDescription(getFormattedDescription())
                 .setDate(transactionDate)
                 .setAmount(amount.getTinkAmount())
+                .setType(retrieveTransactionType())
                 .build();
     }
 
@@ -123,5 +126,25 @@ public class TransactionEntity {
 
     public void setTally(int tally) {
         this.tally = tally;
+    }
+
+    private TransactionTypes retrieveTransactionType() {
+        if (Objects.isNull(transactionType)) {
+            return TransactionTypes.DEFAULT;
+        }
+
+        switch (transactionType.getGroupCode()) {
+            case 4:
+            case 5:
+                return TransactionTypes.TRANSFER;
+            case 6:
+                return TransactionTypes.PAYMENT;
+            case 7:
+                return TransactionTypes.CREDIT_CARD;
+            case 11:
+                return TransactionTypes.WITHDRAWAL;
+            default:
+                return TransactionTypes.DEFAULT;
+        }
     }
 }
