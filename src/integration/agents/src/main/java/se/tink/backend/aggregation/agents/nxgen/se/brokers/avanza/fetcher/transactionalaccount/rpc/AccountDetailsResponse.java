@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.Currencies;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.CurrencyAccountEntity;
@@ -28,6 +30,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountDetailsResponse {
+    @JsonIgnore
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountDetailsResponse.class);
+
     private List<CurrencyAccountEntity> currencyAccounts;
     private String accountId;
     private String accountType;
@@ -337,7 +342,10 @@ public class AccountDetailsResponse {
     private ExactCurrencyAmount getLoanBalance() {
         ExactCurrencyAmount result = getBalance();
         if (result.getExactValue().signum() != -1) {
+            LOGGER.info("Loan account has positive balance");
             result = result.negate();
+        } else {
+            LOGGER.info("Loan account has negative balance");
         }
         return result;
     }
