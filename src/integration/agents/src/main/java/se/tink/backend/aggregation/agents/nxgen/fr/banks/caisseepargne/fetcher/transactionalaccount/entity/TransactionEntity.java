@@ -4,6 +4,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants.ResponseValues;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -43,6 +45,7 @@ public class TransactionEntity {
                 Transaction.builder()
                         .setDate(LocalDateTime.parse(date).toLocalDate())
                         .setAmount(getExactCurrencyAmount())
+                        .setType(getTransactionTypes())
                         .setDescription(description);
 
         return builder.build();
@@ -53,5 +56,29 @@ public class TransactionEntity {
             return ExactCurrencyAmount.of(BigDecimal.valueOf(unscaledAmount, 2), currency);
         }
         return ExactCurrencyAmount.of(BigDecimal.valueOf(-unscaledAmount, 2), currency);
+    }
+
+    private TransactionTypes getTransactionTypes() {
+        if (StringUtils.isBlank(description)) {
+            return TransactionTypes.DEFAULT;
+        }
+
+        if (description.startsWith("VIR")) {
+            return TransactionTypes.TRANSFER;
+        }
+
+        if (description.startsWith("PRLV")) {
+            return TransactionTypes.PAYMENT;
+        }
+
+        if (description.startsWith("CB")) {
+            return TransactionTypes.CREDIT_CARD;
+        }
+
+        if (description.startsWith("RETRAIT")) {
+            return TransactionTypes.WITHDRAWAL;
+        }
+
+        return TransactionTypes.DEFAULT;
     }
 }
