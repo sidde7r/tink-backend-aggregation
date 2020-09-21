@@ -11,8 +11,11 @@ import javax.xml.bind.Unmarshaller;
 import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.CreditDebitCode;
 import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.Document;
 import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.EntryStatus2Code;
+import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.EntryTransaction2;
 import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.ObjectFactory;
+import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.PartyIdentification32;
 import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.ReportEntry2;
+import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.TransactionParty2;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -60,12 +63,7 @@ public class DefaultCamtTransactionMapper implements TransactionMapper {
         return Transaction.builder()
                 .setPending(!isBooked(reportEntry))
                 .setAmount(isDebit(reportEntry) ? amount.negate() : amount)
-                .setDescription(
-                        reportEntry.getNtryDtls().stream()
-                                .flatMap(x -> x.getTxDtls().stream())
-                                .flatMap(x -> x.getRmtInf().getUstrd().stream())
-                                .findFirst()
-                                .orElse(null))
+                .setDescription(getDescription(reportEntry))
                 .setDate(LocalDate.parse(reportEntry.getValDt().getDt().toString()))
                 .build();
     }
@@ -76,5 +74,46 @@ public class DefaultCamtTransactionMapper implements TransactionMapper {
 
     private boolean isDebit(ReportEntry2 reportEntry) {
         return CreditDebitCode.DBIT.equals(reportEntry.getCdtDbtInd());
+    }
+
+    private String getDescription(ReportEntry2 reportEntry) {
+        String beneficiary = getBeneficiary(reportEntry);
+
+        String purpose =
+                reportEntry.getNtryDtls().stream()
+                        .flatMap(x -> x.getTxDtls().stream())
+                        .flatMap(x -> x.getRmtInf().getUstrd().stream())
+                        .findFirst()
+                        .orElse(null);
+
+        if (beneficiary == null
+                || beneficiary.isEmpty()
+                || beneficiary.toLowerCase().contains("paypal")) {
+            // PayPayl gets special treatment for now here in agent code, which isn't ideal.
+            // ITE-1413 explains it a bit
+            return purpose;
+        } else {
+            return beneficiary + " " + purpose;
+        }
+    }
+
+    private String getBeneficiary(ReportEntry2 reportEntry) {
+        String creditorName =
+                reportEntry.getNtryDtls().stream()
+                        .flatMap(x -> x.getTxDtls().stream())
+                        .map(EntryTransaction2::getRltdPties)
+                        .map(TransactionParty2::getCdtr)
+                        .map(PartyIdentification32::getNm)
+                        .findFirst()
+                        .orElse(null);
+        String debtorName =
+                reportEntry.getNtryDtls().stream()
+                        .flatMap(x -> x.getTxDtls().stream())
+                        .map(EntryTransaction2::getRltdPties)
+                        .map(TransactionParty2::getDbtr)
+                        .map(PartyIdentification32::getNm)
+                        .findFirst()
+                        .orElse(null);
+        return isDebit(reportEntry) ? creditorName : debtorName;
     }
 }

@@ -25,7 +25,7 @@ public class TransactionMapperTest {
         assertThat(fetchTransactionsResponse.getBkToCstmrAcctRpt()).isNotNull();
         assertThat(fetchTransactionsResponse.getBkToCstmrAcctRpt().getRpt()).hasSize(1);
         assertThat(fetchTransactionsResponse.getBkToCstmrAcctRpt().getRpt().get(0).getEntries())
-                .hasSize(3);
+                .hasSize(4);
     }
 
     @Test
@@ -50,7 +50,8 @@ public class TransactionMapperTest {
         assertThat(transaction).isNotNull();
         assertThat(transaction.isPending()).isFalse();
         assertThat(transaction.getExactAmount()).isEqualTo(ExactCurrencyAmount.of(2112.40, "EUR"));
-        assertThat(transaction.getDescription()).isEqualTo("UNSTRUCTUREDDESCRIPTION001");
+        assertThat(transaction.getDescription())
+                .isEqualTo("Whoever Watson UNSTRUCTUREDDESCRIPTION001");
         assertThat(transaction.getDate()).hasYear(2019);
         assertThat(transaction.getDate()).hasMonth(11);
         assertThat(transaction.getDate()).hasDayOfMonth(11);
@@ -68,7 +69,26 @@ public class TransactionMapperTest {
         assertThat(transaction).isNotNull();
         assertThat(transaction.isPending()).isFalse();
         assertThat(transaction.getExactAmount()).isEqualTo(ExactCurrencyAmount.of(-123.00, "EUR"));
-        assertThat(transaction.getDescription()).isEqualTo("UNSTRUCTUREDDESCRIPTION002");
+        assertThat(transaction.getDescription())
+                .isEqualTo("CREDITOR002 UNSTRUCTUREDDESCRIPTION002");
+        assertThat(transaction.getDate()).hasYear(2019);
+        assertThat(transaction.getDate()).hasMonth(11);
+        assertThat(transaction.getDate()).hasDayOfMonth(12);
+    }
+
+    @Test
+    public void shouldTransformToTinkTransactionCorrectlyWithPayPalBeneficiary() {
+        // given
+        EntryEntity entryEntity = getExampleEntryEntity(3);
+
+        // when
+        Transaction transaction = (Transaction) TransactionMapper.toTinkTransaction(entryEntity);
+
+        // then
+        assertThat(transaction).isNotNull();
+        assertThat(transaction.isPending()).isFalse();
+        assertThat(transaction.getExactAmount()).isEqualTo(ExactCurrencyAmount.of(-223.14, "EUR"));
+        assertThat(transaction.getDescription()).isEqualTo("UNSTRUCTUREDDESCRIPTION004");
         assertThat(transaction.getDate()).hasYear(2019);
         assertThat(transaction.getDate()).hasMonth(11);
         assertThat(transaction.getDate()).hasDayOfMonth(12);
@@ -83,5 +103,16 @@ public class TransactionMapperTest {
                         .get(0)
                         .getEntries();
         return positive ? entries.get(0) : entries.get(1);
+    }
+
+    private EntryEntity getExampleEntryEntity(int index) {
+        List<EntryEntity> entries =
+                TransactionMapper.tryParseXmlResponse(FetcherTestData.getTransactionsResponse())
+                        .get()
+                        .getBkToCstmrAcctRpt()
+                        .getRpt()
+                        .get(0)
+                        .getEntries();
+        return entries.get(index);
     }
 }
