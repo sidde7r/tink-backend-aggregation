@@ -77,7 +77,7 @@
       "payload":{},
       "pending":false,
       "timestamp":0,
-      "type":"DEFAULT",
+      "type":"TRANSFER",
       "upcoming":false
     },
     {
@@ -89,7 +89,7 @@
       "payload":{},
       "pending":false,
       "timestamp":0,
-      "type":"DEFAULT",
+      "type":"PAYMENT",
       "upcoming":false
     },
     {
@@ -101,7 +101,7 @@
       "payload":{},
       "pending":false,
       "timestamp":0,
-      "type":"DEFAULT",
+      "type":"TRANSFER",
       "upcoming":false
     },
     {
@@ -113,7 +113,7 @@
       "payload":{},
       "pending":false,
       "timestamp":0,
-      "type":"DEFAULT",
+      "type":"CREDIT_CARD",
       "upcoming":false
     }
   ],
