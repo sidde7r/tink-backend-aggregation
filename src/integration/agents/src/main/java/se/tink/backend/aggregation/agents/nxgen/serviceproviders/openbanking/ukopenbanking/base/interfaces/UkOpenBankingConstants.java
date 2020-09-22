@@ -1,42 +1,59 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces;
 
-import com.google.common.collect.ImmutableMap;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public abstract class UkOpenBankingConstants {
+public interface UkOpenBankingConstants {
 
-    protected UkOpenBankingConstants() {
-        throw new AssertionError();
-    }
-
-    public static class HttpHeaders {
+    class HttpHeaders {
         public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
         public static final String X_JWS_SIGNATURE = "x-jws-signature";
     }
 
-    public static class PartyEndpoints {
-        public static final String IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES =
-                "/accounts/%s/parties";
-        public static final String IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY = "/accounts/%s/party";
-        public static final String IDENTITY_DATA_ENDPOINT_PARTY = "/party";
-        public static ImmutableMap<String, String> partyEndpointsPermissionMap =
-                ImmutableMap.<String, String>builder()
-                        .put(
-                                IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY,
-                                UkOpenBankingAisAuthenticatorConstants
-                                        .ACCOUNT_PERMISSION_READ_PARTY)
-                        .put(
-                                IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES,
-                                UkOpenBankingAisAuthenticatorConstants
-                                        .ACCOUNT_PERMISSION_READ_PARTY)
-                        .put(
-                                IDENTITY_DATA_ENDPOINT_PARTY,
-                                UkOpenBankingAisAuthenticatorConstants
-                                        .ACCOUNT_PERMISSION_READ_PARTY_PSU)
-                        .build();
+    enum PartyEndpoint {
+        IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES(
+                "/accounts/%s/parties", PartyPermission.ACCOUNT_PERMISSION_READ_PARTY),
+        IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY(
+                "/accounts/%s/party", PartyPermission.ACCOUNT_PERMISSION_READ_PARTY),
+        IDENTITY_DATA_ENDPOINT_PARTY("/party", PartyPermission.ACCOUNT_PERMISSION_READ_PARTY_PSU);
+
+        private final String value;
+
+        private final PartyPermission[] permissions;
+
+        PartyEndpoint(String value, PartyPermission... partyPermissions) {
+            this.value = value;
+            this.permissions = partyPermissions;
+        }
+
+        public String getPath() {
+            return this.value;
+        }
+
+        public Set<String> getPermissions() {
+            return Stream.of(permissions)
+                    .map(PartyPermission::getPermissionValue)
+                    .collect(Collectors.toSet());
+        }
+
+        public enum PartyPermission {
+            ACCOUNT_PERMISSION_READ_PARTY("ReadParty"),
+            ACCOUNT_PERMISSION_READ_PARTY_PSU("ReadPartyPSU");
+
+            private final String permissionValue;
+
+            PartyPermission(String permissionValue) {
+                this.permissionValue = permissionValue;
+            }
+
+            public String getPermissionValue() {
+                return permissionValue;
+            }
+        }
     }
 
-    public static class ApiServices {
+    class ApiServices {
         public static final String ACCOUNT_BULK_REQUEST = "/accounts";
         public static final String ACCOUNT_BALANCE_REQUEST = "/accounts/%s/balances";
         public static final String ACCOUNT_TRANSACTIONS_REQUEST = "/accounts/%s/transactions";
@@ -72,7 +89,7 @@ public abstract class UkOpenBankingConstants {
         }
     }
 
-    public static class JWTSignatureHeaders {
+    class JWTSignatureHeaders {
         public static class HEADERS {
             public static final String IAT = "http://openbanking.org.uk/iat";
             public static final String ISS = "http://openbanking.org.uk/iss";

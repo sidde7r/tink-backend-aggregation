@@ -38,11 +38,7 @@ public interface UkOpenBankingAisConfig {
 
     Set<String> getAdditionalPermissions();
 
-    void setIdentityData(IdentityDataEntity identityData);
-
     IdentityDataEntity getIdentityData();
-
-    void setHolderName(String holderName);
 
     String getHolderName();
 

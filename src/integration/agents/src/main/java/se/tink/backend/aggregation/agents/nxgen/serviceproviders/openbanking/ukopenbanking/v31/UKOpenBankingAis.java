@@ -6,66 +6,38 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST;
 
 import com.google.common.base.Preconditions;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
-import lombok.Getter;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.authenticator.rpc.AccountPermissionResponseV31;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-@Getter
 public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     private final URL apiBaseURL;
     private final URL wellKnownURL;
     private final URL appToAppURL;
-    private final URL identityDataURL;
-    private final boolean partyEndpointEnabled;
-    private final boolean accountPartyEndpointEnabled;
-    private final boolean accountPartiesEndpointEnabled;
-
-    private final Set<String> additionalPermissions;
-    private IdentityDataEntity identityData;
-    private String holderName;
-    private AccountOwnershipType allowedAccountOwnershipType;
+    private final Set<PartyEndpoint> partyEndpoints;
+    private final IdentityDataEntity identityData;
+    private final String holderName;
+    private final AccountOwnershipType allowedAccountOwnershipType;
     private final String organisationId;
 
-    private UKOpenBankingAis(
-            URL apiBaseURL,
-            URL wellKnownURL,
-            URL identityDataURL,
-            URL appToAppURL,
-            boolean partyEndpointEnabled,
-            boolean accountPartyEndpointEnabled,
-            boolean accountPartiesEndpointEnabled,
-            Set<String> additionalPermissions,
-            AccountOwnershipType allowedAccountOwnershipType,
-            String organisationId) {
-        this.apiBaseURL = apiBaseURL;
-        this.wellKnownURL = wellKnownURL;
-        this.identityDataURL = identityDataURL;
-        this.appToAppURL = appToAppURL;
-        this.partyEndpointEnabled = partyEndpointEnabled;
-        this.accountPartyEndpointEnabled = accountPartyEndpointEnabled;
-        this.accountPartiesEndpointEnabled = accountPartiesEndpointEnabled;
-        this.additionalPermissions = additionalPermissions;
-        this.allowedAccountOwnershipType = allowedAccountOwnershipType;
-        this.organisationId = organisationId;
-    }
-
-    @Override
-    public void setIdentityData(IdentityDataEntity identityData) {
-        this.identityData = identityData;
-    }
-
-    @Override
-    public void setHolderName(String holderName) {
-        this.holderName = holderName;
+    private UKOpenBankingAis(Builder builder) {
+        this.apiBaseURL = builder.apiBaseURL;
+        this.wellKnownURL = builder.wellKnownURL;
+        this.appToAppURL = builder.appToAppURL;
+        this.partyEndpoints = builder.partyEndpoints;
+        this.identityData = builder.identityData;
+        this.holderName = builder.holderName;
+        this.allowedAccountOwnershipType = builder.allowedAccountOwnershipType;
+        this.organisationId = builder.organisationId;
     }
 
     @Override
@@ -76,6 +48,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType() {
         return (Class<T>) AccountPermissionResponseV31.class;
     }
@@ -106,6 +79,53 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     }
 
     @Override
+    public URL getApiBaseURL() {
+        return this.apiBaseURL;
+    }
+
+    @Override
+    public URL getWellKnownURL() {
+        return this.wellKnownURL;
+    }
+
+    @Override
+    public boolean isPartyEndpointEnabled() {
+        return partyEndpoints.contains(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY);
+    }
+
+    @Override
+    public boolean isAccountPartiesEndpointEnabled() {
+        return partyEndpoints.contains(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES);
+    }
+
+    @Override
+    public boolean isAccountPartyEndpointEnabled() {
+        return partyEndpoints.contains(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY);
+    }
+
+    @Override
+    public URL getAppToAppURL() {
+        return this.appToAppURL;
+    }
+
+    @Override
+    public Set<String> getAdditionalPermissions() {
+        return this.partyEndpoints.stream()
+                .flatMap(partyEndpoint -> partyEndpoint.getPermissions().stream())
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public IdentityDataEntity getIdentityData() {
+        return this.identityData;
+    }
+
+    @Override
+    public String getHolderName() {
+        return this.holderName;
+    }
+
+    @Override
     public String getInitialTransactionsPaginationKey(String accountId) {
         return String.format(ACCOUNT_TRANSACTIONS_REQUEST, accountId);
     }
@@ -115,30 +135,26 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         return allowedAccountOwnershipType;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String getOrganisationId() {
         return organisationId;
     }
 
-    // TODO replace with lombok builder
     public static final class Builder {
-
+        private final Set<PartyEndpoint> partyEndpoints = new HashSet<>();
         private URL apiBaseURL;
         private URL wellKnownURL;
-        private URL identityDataURL;
         private URL appToAppURL;
-        private Set<String> additionalPermissions;
-        private boolean partyEndpointEnabled;
-        private boolean accountPartyEndpointEnabled;
-        private boolean accountPartiesEndpointEnabled;
         private AccountOwnershipType allowedAccountOwnershipType = AccountOwnershipType.PERSONAL;
         private String organisationId;
+        private IdentityDataEntity identityData;
+        private String holderName;
 
-        public Builder() {}
-
-        public static Builder builder() {
-            return new Builder();
-        }
+        private Builder() {}
 
         public Builder withApiBaseURL(final String apiBaseURL) {
             this.apiBaseURL = new URL(apiBaseURL);
@@ -150,32 +166,15 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
             return this;
         }
 
-        public Builder withIdentityDataURL(final String identityDataURL) {
-            this.identityDataURL = new URL(identityDataURL);
-            // TODO replace this builder method with URL with 3 seperate boolean methods to enable
-            // each endpoints
-            if (identityDataURL.equals(PartyEndpoints.IDENTITY_DATA_ENDPOINT_PARTY)) {
-                partyEndpointEnabled = true;
-            } else if (identityDataURL.equals(
-                    PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)) {
-                accountPartyEndpointEnabled = true;
-            } else if (identityDataURL.equals(
-                    PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)) {
-                accountPartiesEndpointEnabled = true;
-            }
-            return this;
-        }
-
         public Builder withAppToAppURL(final String appToAppURL) {
             this.appToAppURL = new URL(appToAppURL);
             return this;
         }
 
-        public Builder withAdditionalPermission(final String additionalPermission) {
-            if (Objects.isNull(this.additionalPermissions)) {
-                this.additionalPermissions = new HashSet<>();
+        public Builder withPartyEndpoints(final PartyEndpoint... partyEndpoints) {
+            if (partyEndpoints != null) {
+                this.partyEndpoints.addAll(Arrays.asList(partyEndpoints));
             }
-            this.additionalPermissions.add(additionalPermission);
             return this;
         }
 
@@ -190,21 +189,20 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
             return this;
         }
 
+        public Builder withHolderName(final String holderName) {
+            this.holderName = holderName;
+            return this;
+        }
+
+        public Builder withIdentityData(final IdentityDataEntity identityData) {
+            this.identityData = identityData;
+            return this;
+        }
+
         public UKOpenBankingAis build() {
             Preconditions.checkNotNull(apiBaseURL);
             Preconditions.checkNotNull(organisationId);
-
-            return new UKOpenBankingAis(
-                    apiBaseURL,
-                    wellKnownURL,
-                    identityDataURL,
-                    appToAppURL,
-                    partyEndpointEnabled,
-                    accountPartyEndpointEnabled,
-                    accountPartiesEndpointEnabled,
-                    additionalPermissions,
-                    allowedAccountOwnershipType,
-                    organisationId);
+            return new UKOpenBankingAis(this);
         }
     }
 }

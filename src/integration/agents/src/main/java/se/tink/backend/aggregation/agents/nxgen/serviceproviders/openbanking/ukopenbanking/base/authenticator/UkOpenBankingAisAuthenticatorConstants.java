@@ -27,9 +27,6 @@ public abstract class UkOpenBankingAisAuthenticatorConstants {
                             "ReadTransactionsDetail")
                     .build();
 
-    public static final String ACCOUNT_PERMISSION_READ_PARTY = "ReadParty";
-    public static final String ACCOUNT_PERMISSION_READ_PARTY_PSU = "ReadPartyPSU";
-
     public static class Params {
         public static final String REQUEST = "request";
         public static final String MAX_AGE = "max_age";

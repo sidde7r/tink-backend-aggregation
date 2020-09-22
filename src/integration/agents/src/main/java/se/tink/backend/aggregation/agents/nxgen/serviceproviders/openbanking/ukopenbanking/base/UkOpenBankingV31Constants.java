@@ -10,7 +10,7 @@ import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
-public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
+public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
 
     public static final GenericTypeMapper<String, AccountIdentifier.Type>
             PAYMENT_SCHEME_TYPE_MAPPER =

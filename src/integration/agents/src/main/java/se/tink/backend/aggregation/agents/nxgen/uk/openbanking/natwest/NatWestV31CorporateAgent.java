@@ -31,7 +31,7 @@ public class NatWestV31CorporateAgent extends UkOpenBankingBaseAgent {
 
     static {
         aisConfig =
-                new UKOpenBankingAis.Builder()
+                UKOpenBankingAis.builder()
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.CORPORATE_WELL_KNOWN_URL)
                         .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)

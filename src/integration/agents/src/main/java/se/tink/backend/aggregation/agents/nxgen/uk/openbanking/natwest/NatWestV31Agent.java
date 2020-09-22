@@ -38,7 +38,7 @@ public class NatWestV31Agent extends UkOpenBankingBaseAgent {
 
     static {
         aisConfig =
-                new UKOpenBankingAis.Builder()
+                UKOpenBankingAis.builder()
                         .withOrganisationId("0015800000jfwxXAAQ")
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.PERSONAL_WELL_KNOWN_URL)
