@@ -55,7 +55,7 @@ public class Xs2aDevelopersApiClient {
         this.configuration = configuration;
     }
 
-    private RequestBuilder createRequest(URL url) {
+    protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON);
