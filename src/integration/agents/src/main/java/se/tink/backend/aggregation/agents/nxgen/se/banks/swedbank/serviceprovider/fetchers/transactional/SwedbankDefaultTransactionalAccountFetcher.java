@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -128,9 +129,17 @@ public class SwedbankDefaultTransactionalAccountFetcher
                         .orElseThrow(() -> new IllegalStateException("No bank profile specified"));
         apiClient.selectProfile(bankProfile);
 
-        PaymentsConfirmedResponse paymentsConfirmedResponse = apiClient.paymentsConfirmed();
+        Optional<PaymentsConfirmedResponse> paymentsConfirmedResponse =
+                apiClient.paymentsConfirmed();
 
-        return paymentsConfirmedResponse.toTinkUpcomingTransactions(account.getAccountNumber());
+        if (paymentsConfirmedResponse.isPresent()) {
+            return paymentsConfirmedResponse
+                    .get()
+                    .toTinkUpcomingTransactions(account.getAccountNumber());
+        }
+
+        log.info("Fetching of upcoming payments is not possible for this user.");
+        return Collections.emptyList();
     }
 
     @Override
