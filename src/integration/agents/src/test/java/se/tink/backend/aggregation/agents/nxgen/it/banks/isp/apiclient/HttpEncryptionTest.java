@@ -2,9 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.it.banks.isp.apiclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.security.Security;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Test;
 
 public class HttpEncryptionTest {
+
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     // the below is real data recorded from integration-proxy, request without secret data was
     // chosen

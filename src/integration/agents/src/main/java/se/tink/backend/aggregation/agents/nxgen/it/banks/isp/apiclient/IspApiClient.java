@@ -6,15 +6,24 @@ import java.util.Objects;
 import java.util.UUID;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.IspConstants;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.IspConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.IspConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.IspConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.entity.AutoAuthenticateRequestPayload;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.entity.CheckPinAutoRequestPayload;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.entity.CheckPinRequestPayload;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.entity.CheckRecordedDeviceRequestPayload;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.entity.ConfirmDeviceRequestPayload;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.entity.RegisterDevice2RequestPayload;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.entity.RegisterDevice3RequestPayload;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.entity.RegisterDeviceRequestPayload;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.AutoAuthenticateRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckPinAutoAuthRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckPinAutoAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckPinRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckPinResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckRecordedDeviceRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckRecordedDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckTimeRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.CheckTimeResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.rpc.ConfirmDeviceRequest;
@@ -29,6 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.entity.Tran
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.AccountsAndIdentitiesResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.fetcher.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -135,6 +145,22 @@ public class IspApiClient {
                 .post(ConfirmDeviceResponse.class, request);
     }
 
+    public CheckRecordedDeviceResponse checkRecordedDevice(String deviceId, String rememberMeCode) {
+        CheckRecordedDeviceRequest request =
+                new CheckRecordedDeviceRequest(
+                        new CheckRecordedDeviceRequestPayload(deviceId, rememberMeCode));
+        return baseAuthenticatedRequest(IspConstants.Endpoints.CHECK_RECORDER_DEVICE, true)
+                .post(CheckRecordedDeviceResponse.class, request);
+    }
+
+    public BaseResponse autoAuthenticate(String deviceId, String rememberMeCode) {
+        AutoAuthenticateRequest request =
+                new AutoAuthenticateRequest(
+                        new AutoAuthenticateRequestPayload(deviceId, rememberMeCode));
+        return baseAuthenticatedRequest(IspConstants.Endpoints.AUTO_AUTHENTICATE, true)
+                .post(BaseResponse.class, request);
+    }
+
     public AccountsAndIdentitiesResponse fetchAccountsAndIdentities() {
         return baseAuthenticatedRequest(IspConstants.Endpoints.FETCH_ACCOUNTS_AND_IDENTITIES, false)
                 .post(AccountsAndIdentitiesResponse.class, EMPTY_PAYLOAD_JSON);
@@ -145,5 +171,12 @@ public class IspApiClient {
                 new TransactionsRequest(new TransactionsRequestPayload(accountId, to, page));
         return baseAuthenticatedRequest(IspConstants.Endpoints.FETCH_TRANSACTIONS, false)
                 .post(TransactionsResponse.class, transactionsRequest);
+    }
+
+    public CheckPinAutoAuthResponse checkPinAuto(String totp, String username) {
+        CheckPinAutoAuthRequest requestBody =
+                new CheckPinAutoAuthRequest(new CheckPinAutoRequestPayload(username, totp));
+        return baseAuthenticatedRequest(Endpoints.CHECK_AUTO_AUTH_PIN, true)
+                .post(CheckPinAutoAuthResponse.class, requestBody);
     }
 }
