@@ -2,12 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
-import java.util.List;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
-import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.apiclient.BanquePopulaireApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.BanquePopulaireAuthenticator;
@@ -122,11 +119,6 @@ public class BanquePopulaireAgent extends BpceGroupBaseAgent {
     public FetchIdentityDataResponse fetchIdentityData() {
         return new FetchIdentityDataResponse(
                 this.banquePopulaireIdentityFetcher.fetchIdentityData());
-    }
-
-    @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        return this.transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
     private void storeBankId() {

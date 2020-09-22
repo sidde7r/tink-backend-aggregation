@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne;
 import com.google.inject.Inject;
 import java.util.Optional;
 import lombok.Getter;
+import se.tink.backend.aggregation.agents.CreateBeneficiariesCapabilityExecutor;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.CaisseEpargneAuthenticator;
@@ -28,7 +29,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 
 @AgentDependencyModules(modules = ImageRecognizerHelperModule.class)
-public class CaisseEpargneAgent extends BpceGroupBaseAgent {
+public class CaisseEpargneAgent extends BpceGroupBaseAgent
+        implements CreateBeneficiariesCapabilityExecutor {
 
     @Getter private final CaisseEpargneApiClient apiClient;
 
