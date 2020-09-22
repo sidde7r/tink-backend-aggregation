@@ -18,12 +18,13 @@ public class SwedbankSeHttpFilter extends Filter {
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
-        HttpResponse resp = nextFilter(httpRequest);
 
         httpRequest.getHeaders().add(HttpHeaders.USER_AGENT, HeaderValues.APPS_VERSION);
         httpRequest.getHeaders().add(HeaderKeys.X_CLIENT, HeaderValues.APPS_VERSION);
         httpRequest.getHeaders().add(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1);
         httpRequest.getHeaders().add(HeaderKeys.ADRUM, HeaderValues.ADRUM);
+
+        HttpResponse resp = nextFilter(httpRequest);
         // Don't handle http exceptions when fetching transactions. Since Swedbank frequently
         // returns 500 when fetching transactions we've added logic to return whatever we got
         // in the transaction fetcher.
