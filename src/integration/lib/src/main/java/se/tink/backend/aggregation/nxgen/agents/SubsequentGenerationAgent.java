@@ -102,13 +102,9 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         this.userIp = getOriginatingUserIpOrDefault();
     }
 
-    // This method, and the `userIp` field in general, is meant to help clear up some repeating ifs
-    // from agents
-    // Agents should utilize originalUserIp from CredentialRequest as a value of OpenBanking API
-    // header PSU-Ip-Address, but it is possible that it would come as null, even in case of manual
-    // refresh. In such case, we replace it with default to not do so in each agent.
     // This helper `userIp` field is meant to be used by agents that agree to use a default value in
-    // case of more "true" value missing.
+    // case of more "true" value of originatingUserIp missing. It can happen in rare cases, even for
+    // manual refreshes.
     private String getOriginatingUserIpOrDefault() {
         return Optional.ofNullable(request.getOriginatingUserIp()).orElse(DEFAULT_USER_IP);
     }
