@@ -1,0 +1,809 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "515 215 793-8",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "unscaledValue" : -6124960,
+      "exactValue" : -612496.0,
+      "doubleValue" : -612496.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "880395152157938",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "BOLÅN",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : -612496.0
+  }, {
+    "accountNumber" : "5435 60** **** 0419",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 3138267,
+      "exactValue" : 31382.67,
+      "doubleValue" : 31382.67
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : -361733,
+      "exactValue" : -3617.33,
+      "doubleValue" : -3617.33
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "5435600419",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Betal- och kreditkort Mastercard",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Wiremock User",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Wiremock User",
+        "role" : null
+      } ]
+    },
+    "flags" : "[]",
+    "availableCredit" : 31382.67,
+    "balance" : -3617.33
+  }, {
+    "accountNumber" : "8327-9,904 316 121-6",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 6726769,
+      "exactValue" : 67267.69,
+      "doubleValue" : 67267.69
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "832799043161216",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Pensionssparande",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://832799043161216\"]",
+    "closed" : false,
+    "holderName" : "Wiremock User",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Wiremock User",
+        "role" : null
+      } ]
+    },
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 67267.69
+  }, {
+    "accountNumber" : "515 215 792-0",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "unscaledValue" : -6124960,
+      "exactValue" : -612496.0,
+      "doubleValue" : -612496.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "880395152157920",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "BOLÅN",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : -612496.0
+  }, {
+    "accountNumber" : "515 215 795-3",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "unscaledValue" : -6075920,
+      "exactValue" : -607592.0,
+      "doubleValue" : -607592.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "880395152157953",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "BOLÅN",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : -607592.0
+  }, {
+    "accountNumber" : "8327-9,974 896 605-9",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 2326592,
+      "exactValue" : 23265.92,
+      "doubleValue" : 23265.92
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "832799748966059",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Privatkonto",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://832799748966059\"]",
+    "closed" : false,
+    "holderName" : "Wiremock User",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Wiremock User",
+        "role" : null
+      } ]
+    },
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 23265.92
+  }, {
+    "accountNumber" : "8327-9,904 316 110-9",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 1,
+      "unscaledValue" : 0,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "832799043161109",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Depåkonto 1",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://832799043161109\"]",
+    "closed" : false,
+    "holderName" : "Wiremock User",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Wiremock User",
+        "role" : null
+      } ]
+    },
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 0.0
+  }, {
+    "accountNumber" : "8327-9,974 896 768-5",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 16484053,
+      "exactValue" : 164840.53,
+      "doubleValue" : 164840.53
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "832799748967685",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "e-sparkonto",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://832799748967685\"]",
+    "closed" : false,
+    "holderName" : "Wiremock User",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Wiremock User",
+        "role" : null
+      } ]
+    },
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 164840.53
+  } ],
+  "transactions" : [ {
+    "amount" : -8.89,
+    "date" : 1583492400000,
+    "description" : "RÄNTA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 4000.0,
+    "date" : 1583233200000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -29.0,
+    "date" : 1582974000000,
+    "description" : "APPLE.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -5.0,
+    "date" : 1582801200000,
+    "description" : "BETALA P",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -38.0,
+    "date" : 1580986800000,
+    "description" : "BETALA P",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -23.77,
+    "date" : 1580554800000,
+    "description" : "APPLE.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 9.0,
+    "date" : 1579863600000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -7490.0,
+    "date" : 1579863600000,
+    "description" : "Klarna *mediamarkt se",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -13.67,
+    "date" : 1579345200000,
+    "description" : "BETALA P",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -9.0,
+    "date" : 1579258800000,
+    "description" : "APPLE.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 9.0,
+    "date" : 1577098800000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -9.0,
+    "date" : 1576580400000,
+    "description" : "APPLE.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 1181.15,
+    "date" : 1574334000000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -9.0,
+    "date" : 1573988400000,
+    "description" : "APPLE.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -752.98,
+    "date" : 1572260400000,
+    "description" : "HIPAYWALLET.COM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 1235.91,
+    "date" : 1571652000000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -9.0,
+    "date" : 1571306400000,
+    "description" : "ITUNES.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -404.87,
+    "date" : 1571306400000,
+    "description" : "AMZN Mktp DE*MO0QB7XH4",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -14.3,
+    "date" : 1570874400000,
+    "description" : "BETALA P",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -531.8,
+    "date" : 1570442400000,
+    "description" : "AMZN Mktp DE*MO76S7ZI4",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -695.11,
+    "date" : 1569578400000,
+    "description" : "HIPAYWALLET.COM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 2686.48,
+    "date" : 1569232800000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -9.0,
+    "date" : 1568714400000,
+    "description" : "ITUNES.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -282.43,
+    "date" : 1566640800000,
+    "description" : "AUSSIEBUM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 1775.22,
+    "date" : 1566208800000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -689.84,
+    "date" : 1566208800000,
+    "description" : "AMZN Mktp DE*MH9GT3YM4",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -215.69,
+    "date" : 1566208800000,
+    "description" : "AMZN Mktp DE*MH2F82YN4",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -7.67,
+    "date" : 1566036000000,
+    "description" : "BETALA P",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -9.0,
+    "date" : 1566036000000,
+    "description" : "ITUNES.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -1481.85,
+    "date" : 1565690400000,
+    "description" : "M.S.L.",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -59.8,
+    "date" : 1564826400000,
+    "description" : "BETALA P",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -383.03,
+    "date" : 1564048800000,
+    "description" : "AMZN Mktp DE*MH6D330U4",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : 4017.11,
+    "date" : 1564048800000,
+    "description" : "INBETALNING BANKGIRO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -164.41,
+    "date" : 1563962400000,
+    "description" : "AMZN Mktp DE*MH7KA2EV4",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -9.0,
+    "date" : 1563357600000,
+    "description" : "ITUNES.COM/BILL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -20.8,
+    "date" : 1563271200000,
+    "description" : "BETALA P",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -4.83,
+    "date" : 1563271200000,
+    "description" : "BETALA P",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -1133.35,
+    "date" : 1562580000000,
+    "description" : "M.S.L.",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -1358.0,
+    "date" : 1562061600000,
+    "description" : "easyJetEXF22L7",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -2354.98,
+    "date" : 1562061600000,
+    "description" : "HOTELSCOM160502884949",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "SUB_ACCOUNT" : "5435 60** **** 0419"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "CREDIT_CARD",
+    "upcoming" : false
+  }, {
+    "amount" : -500.0,
+    "date" : 1585562400000,
+    "description" : "e-sparkonto",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -3096.0,
+    "date" : 1583492400000,
+    "description" : "SKYDDAT BELOPP",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1583492400000,
+    "description" : "SKYDDAT BELOPP",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  } ]
+}

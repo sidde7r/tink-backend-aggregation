@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.filter;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import javax.ws.rs.core.HttpHeaders;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.HeaderValues;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -17,6 +20,10 @@ public class SwedbankSeHttpFilter extends Filter {
             throws HttpClientException, HttpResponseException {
         HttpResponse resp = nextFilter(httpRequest);
 
+        httpRequest.getHeaders().add(HttpHeaders.USER_AGENT, HeaderValues.APPS_VERSION);
+        httpRequest.getHeaders().add(HeaderKeys.X_CLIENT, HeaderValues.APPS_VERSION);
+        httpRequest.getHeaders().add(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1);
+        httpRequest.getHeaders().add(HeaderKeys.ADRUM, HeaderValues.ADRUM);
         // Don't handle http exceptions when fetching transactions. Since Swedbank frequently
         // returns 500 when fetching transactions we've added logic to return whatever we got
         // in the transaction fetcher.
