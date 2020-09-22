@@ -112,6 +112,8 @@ public class RevolutConstants {
     public static class TransactionTypes {
         public static final String CARD_PAYMENT = "CARD_PAYMENT";
         public static final String TOP_UP = "TOPUP";
+        public static final String ATM = "ATM";
+        public static final String TRANSFER = "TRANSFER";
     }
 
     public static class TransactionState {
