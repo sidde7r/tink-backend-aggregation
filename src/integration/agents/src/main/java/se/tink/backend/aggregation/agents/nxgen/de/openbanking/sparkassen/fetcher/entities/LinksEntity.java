@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LinksEntity {
     private Href balances;
-    private Href transactions;
 
     public Href getBalances() {
         return balances;

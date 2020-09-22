@@ -1,14 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.IBAN_INVALID;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.PSU_CREDENTIALS_INVALID;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -18,8 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.AccountsEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.IbanAccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.PsuDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentRequest;
@@ -39,12 +34,10 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class SparkassenApiClient {
 
     private final TinkHttpClient client;
-    private final Credentials credentials;
     private final String bankCode;
 
-    public SparkassenApiClient(TinkHttpClient client, Credentials credentials, String bankCode) {
+    public SparkassenApiClient(TinkHttpClient client, String bankCode) {
         this.client = client;
-        this.credentials = credentials;
         this.bankCode = bankCode;
     }
 
@@ -62,31 +55,18 @@ public class SparkassenApiClient {
         return createRequest(url).header(HeaderKeys.CONSENT_ID, consentId);
     }
 
-    public ConsentResponse createConsent(List<String> ibans) throws LoginException {
-        List<AccountsEntity> accountsEntities =
-                ibans.stream()
-                        .map(String::trim)
-                        .map(AccountsEntity::new)
-                        .collect(Collectors.toList());
-
+    public ConsentResponse createConsent() throws LoginException {
         ConsentRequest getConsentRequest =
                 new ConsentRequest(
-                        new IbanAccessEntity(accountsEntities, accountsEntities, accountsEntities),
+                        new AccessEntity(),
                         true,
                         LocalDate.now().plusDays(90).toString(),
                         FormValues.FREQUENCY_PER_DAY,
                         false);
 
-        try {
-            return createRequest(Urls.GET_CONSENT)
-                    .header(HeaderKeys.TPP_REDIRECT_PREFERRED, false)
-                    .post(ConsentResponse.class, getConsentRequest);
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getBody(String.class).contains(IBAN_INVALID)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-            throw e;
-        }
+        return createRequest(Urls.GET_CONSENT)
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, false)
+                .post(ConsentResponse.class, getConsentRequest);
     }
 
     public AuthenticationMethodResponse initializeAuthorization(

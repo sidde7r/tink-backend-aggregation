@@ -194,21 +194,6 @@ public class SparkassenAuthenticatorTest {
     }
 
     @Test
-    public void shouldThrowLoginExceptionWhenCreateConsentCallFails() throws LoginException {
-        // given
-        whenCreateConsentThrowAuthenticationException(LOGIN_EXCEPTION);
-
-        // when
-        Throwable throwable = catchThrowable(() -> authenticator.authenticate(OK_CREDENTIALS));
-
-        // then
-        assertThat(throwable).isEqualTo(LOGIN_EXCEPTION);
-        verifyCreateConsentCalled();
-        verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationHelper);
-    }
-
-    @Test
     public void shouldThrowIllegalStateExceptionWhenCreateConsentResponseMissingCrucialData()
             throws LoginException {
         // given
@@ -505,21 +490,16 @@ public class SparkassenAuthenticatorTest {
 
     private void whenCreateConsentReturn(ConsentResponse createConsentResult)
             throws LoginException {
-        when(apiClient.createConsent(any())).thenReturn(createConsentResult);
+        when(apiClient.createConsent()).thenReturn(createConsentResult);
     }
 
     private void whenCreateConsentThrow(HttpResponseException httpResponseException)
             throws LoginException {
-        when(apiClient.createConsent(any())).thenThrow(httpResponseException);
-    }
-
-    private void whenCreateConsentThrowAuthenticationException(LoginException loginException)
-            throws LoginException {
-        when(apiClient.createConsent(any())).thenThrow(loginException);
+        when(apiClient.createConsent()).thenThrow(httpResponseException);
     }
 
     private void verifyCreateConsentCalled() throws LoginException {
-        verify(apiClient).createConsent(any());
+        verify(apiClient).createConsent();
     }
 
     private void whenInitializeAuthorizationReturn(
