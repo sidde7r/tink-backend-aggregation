@@ -7,6 +7,7 @@ public class OpenIdConstants {
     public static final String TINK_UKOPENBANKING_ORGID = "00158000016i44IAAQ";
     public static final String UKOB_TAN = "openbanking.org.uk";
     public static final String MONZO_ORG_ID = "001580000103U9RAAU";
+    public static final String DANSKEBANK_ORG_ID = "0015800000jf7AeAAI";
 
     public static class Scopes {
         public static final String OPEN_ID = "openid";
