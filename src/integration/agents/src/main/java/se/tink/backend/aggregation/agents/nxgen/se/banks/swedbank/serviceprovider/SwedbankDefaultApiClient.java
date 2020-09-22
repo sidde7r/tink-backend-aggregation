@@ -589,7 +589,7 @@ public class SwedbankDefaultApiClient {
      *
      * <p>Bank profile setup is very messy, we need to go over the fetching of engagement overview
      * and payment base info as we store it on the bank profiles but don't use any of the stored
-     * data except for in BaseTransferExecutor. The private vs business setup if also getting
+     * data except for in BaseTransferExecutor. The private vs business setup is also getting
      * increasingly complex (see TC-3614).
      */
     private PaymentBaseinfoResponse getPaymentBaseInfoIfNotBusiness() {
