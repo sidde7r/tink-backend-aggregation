@@ -23,7 +23,6 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
-        "//src/libraries/date",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_inject_guice",
         "//third_party:org_mockito_mockito_core",
