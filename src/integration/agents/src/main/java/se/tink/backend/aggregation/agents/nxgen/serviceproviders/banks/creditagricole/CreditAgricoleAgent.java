@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.aggregation.agents.CreateBeneficiariesCapabilityExecutor;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -23,7 +24,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class CreditAgricoleAgent extends SubsequentProgressiveGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                CreateBeneficiariesCapabilityExecutor {
 
     private final CreditAgricoleApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;

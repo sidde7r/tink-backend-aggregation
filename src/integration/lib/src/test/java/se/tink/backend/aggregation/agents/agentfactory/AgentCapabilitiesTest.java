@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
+import se.tink.backend.aggregation.agents.CreateBeneficiariesCapabilityExecutor;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -105,6 +106,9 @@ public class AgentCapabilitiesTest {
         }
         if (RefreshBeneficiariesExecutor.class.isAssignableFrom(agentClass)) {
             givenCapabilities.add("LIST_BENEFICIARIES");
+        }
+        if (CreateBeneficiariesCapabilityExecutor.class.isAssignableFrom(agentClass)) {
+            givenCapabilities.add("CREATE_BENEFICIARIES");
         }
         if (RefreshLoanAccountsExecutor.class.isAssignableFrom(agentClass)) {
             boolean relatedGivenCapability = false;
