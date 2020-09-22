@@ -397,10 +397,17 @@ public class SwedbankDefaultApiClient {
         return makeRequest(linkEntity, ConfirmTransferResponse.class, false);
     }
 
-    public PaymentsConfirmedResponse paymentsConfirmed() {
-        return makeMenuItemRequest(
-                SwedbankBaseConstants.MenuItemKey.PAYMENTS_CONFIRMED,
-                PaymentsConfirmedResponse.class);
+    public Optional<PaymentsConfirmedResponse> paymentsConfirmed() {
+        Map<String, MenuItemLinkEntity> menuItems = bankProfileHandler.getMenuItems();
+
+        if (!menuItems.containsKey(SwedbankBaseConstants.MenuItemKey.PAYMENTS_CONFIRMED.getKey())) {
+            return Optional.empty();
+        }
+
+        return Optional.of(
+                makeMenuItemRequest(
+                        SwedbankBaseConstants.MenuItemKey.PAYMENTS_CONFIRMED,
+                        PaymentsConfirmedResponse.class));
     }
 
     public HttpResponse deleteTransfer(LinkEntity linkEntity) {
