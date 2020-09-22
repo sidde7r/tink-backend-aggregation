@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 // Temporarily renaming this to V2. V1 will be removed once the Nordea DK update is finished
@@ -56,22 +57,31 @@ public class NemIdIFrameController {
     private final Sleeper sleeper;
     private final NemIdParametersFetcher nemIdParametersFetcher;
     private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
 
     public NemIdIFrameController(
             final NemIdParametersFetcher nemIdParametersFetcher,
-            final SupplementalRequester supplementalRequester) {
-        this(new WebdriverHelper(), new Sleeper(), nemIdParametersFetcher, supplementalRequester);
+            final SupplementalRequester supplementalRequester,
+            final Catalog catalog) {
+        this(
+                new WebdriverHelper(),
+                new Sleeper(),
+                nemIdParametersFetcher,
+                supplementalRequester,
+                catalog);
     }
 
     NemIdIFrameController(
             final WebdriverHelper webdriverHelper,
             final Sleeper sleeper,
             final NemIdParametersFetcher nemIdParametersFetcher,
-            final SupplementalRequester supplementalRequester) {
+            final SupplementalRequester supplementalRequester,
+            final Catalog catalog) {
         this.webdriverHelper = webdriverHelper;
         this.sleeper = sleeper;
         this.nemIdParametersFetcher = nemIdParametersFetcher;
         this.supplementalRequester = supplementalRequester;
+        this.catalog = catalog;
     }
 
     public String doLoginWith(Credentials credentials) throws AuthenticationException {
@@ -263,8 +273,9 @@ public class NemIdIFrameController {
                 Field.builder()
                         .immutable(true)
                         .description(
-                                NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP.getKey().get())
-                        .value(NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP.getKey().get())
+                                catalog.getString(
+                                        NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP))
+                        .value(catalog.getString(NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP))
                         .name("name")
                         .build();
 

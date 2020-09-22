@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.retrypolicy.RetryCallback;
 import se.tink.libraries.retrypolicy.RetryExecutor;
 import se.tink.libraries.retrypolicy.RetryPolicy;
@@ -36,18 +37,21 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
     private final SupplementalRequester supplementalRequester;
     private final RetryExecutor retryExecutor = new RetryExecutor();
     private final String deviceId;
+    private final Catalog catalog;
 
     CombinedNemIdAuthenticationStep(
             BecApiClient apiClient,
             SupplementalRequester supplementalRequester,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
-            String deviceId) {
+            String deviceId,
+            Catalog catalog) {
         this.apiClient = apiClient;
         this.supplementalRequester = supplementalRequester;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.deviceId = deviceId;
+        this.catalog = catalog;
 
         retryExecutor.setRetryPolicy(
                 new RetryPolicy(POLL_NEMID_MAX_ATTEMPTS, NemIdPollTimeoutException.class));
@@ -69,8 +73,9 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
                 Field.builder()
                         .immutable(true)
                         .description(
-                                NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP.getKey().get())
-                        .value(NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP.getKey().get())
+                                catalog.getString(
+                                        NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP))
+                        .value(catalog.getString(NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP))
                         .name("name")
                         .build();
 
