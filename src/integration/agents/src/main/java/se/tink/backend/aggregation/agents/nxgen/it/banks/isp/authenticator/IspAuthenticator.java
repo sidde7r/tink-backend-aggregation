@@ -10,7 +10,6 @@ import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -34,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-@Slf4j
 public class IspAuthenticator extends StatelessProgressiveAuthenticator {
 
     private static final String REGISTER_DEVICE_STEP_NAME = "registerDevice";
@@ -71,6 +69,34 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
                                 this::autoAuthenticate, AUTO_AUTHENTICATE_STEP_NAME));
     }
 
+    private void initManualAuthenticationSteps() {
+        manualAuthenticationSteps =
+                ImmutableList.of(
+                        new UsernamePasswordAuthenticationStep(
+                                this::processUsernamePassword, CHECK_PIN_STEP_NAME),
+                        new AutomaticAuthenticationStep(
+                                this::registerDevice, REGISTER_DEVICE_STEP_NAME),
+                        new OtpStep(this::processOtp, supplementalInformationFormer),
+                        new UsernamePasswordAuthenticationStep(
+                                this::registerDevice3, REGISTER_DEVICE_3_STEP_NAME),
+                        new UsernamePasswordAuthenticationStep(
+                                this::confirmDevice, CONFIRM_DEVICE_STEP_NAME));
+    }
+
+    @Override
+    public List<AuthenticationStep> authenticationSteps() {
+        if (canAutoAuthenticate()) {
+            return autoAuthenticationSteps;
+        }
+        return manualAuthenticationSteps;
+    }
+
+    private boolean canAutoAuthenticate() {
+        return sessionStorage
+                .get(StorageKeys.IS_AUTO_AUTH_POSSIBLE, Boolean.class)
+                .orElseGet(this::checkRecordedDevice);
+    }
+
     private AuthenticationStepResponse autoAuthenticate(String username, String password) {
         String rememberMeCode = persistentStorage.get(StorageKeys.REMEMBER_ME_TOKEN);
         apiClient.autoAuthenticate(getOrGenerateDeviceId(), rememberMeCode);
@@ -96,34 +122,6 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
             sessionStorage.put(StorageKeys.ACCESS_TOKEN, response.getPayload().getAccessToken());
         }
         return response.isOk();
-    }
-
-    @Override
-    public List<AuthenticationStep> authenticationSteps() {
-        if (canAutoAuthenticate()) {
-            return autoAuthenticationSteps;
-        }
-        return manualAuthenticationSteps;
-    }
-
-    private boolean canAutoAuthenticate() {
-        return sessionStorage
-                .get(StorageKeys.IS_AUTO_AUTH_POSSIBLE, Boolean.class)
-                .orElseGet(this::checkRecordedDevice);
-    }
-
-    private void initManualAuthenticationSteps() {
-        manualAuthenticationSteps =
-                ImmutableList.of(
-                        new UsernamePasswordAuthenticationStep(
-                                this::processUsernamePassword, CHECK_PIN_STEP_NAME),
-                        new AutomaticAuthenticationStep(
-                                this::registerDevice, REGISTER_DEVICE_STEP_NAME),
-                        new OtpStep(this::processOtp, supplementalInformationFormer),
-                        new UsernamePasswordAuthenticationStep(
-                                this::registerDevice3, REGISTER_DEVICE_3_STEP_NAME),
-                        new UsernamePasswordAuthenticationStep(
-                                this::confirmDevice, CONFIRM_DEVICE_STEP_NAME));
     }
 
     private AuthenticationStepResponse processUsernamePassword(String username, String password)

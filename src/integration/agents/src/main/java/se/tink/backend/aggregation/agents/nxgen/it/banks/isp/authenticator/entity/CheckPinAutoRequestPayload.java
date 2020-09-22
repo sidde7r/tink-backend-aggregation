@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.isp.authenticator.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.IspConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
-@RequiredArgsConstructor
 @JsonObject
 public class CheckPinAutoRequestPayload {
     private String abi = "01025";
