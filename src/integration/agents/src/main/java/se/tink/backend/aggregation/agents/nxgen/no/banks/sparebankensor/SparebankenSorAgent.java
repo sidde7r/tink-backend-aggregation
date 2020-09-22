@@ -91,7 +91,6 @@ public class SparebankenSorAgent extends NextGenerationAgent
                         apiClient,
                         encapClient,
                         supplementalInformationHelper,
-                        catalog,
                         sessionStorage,
                         credentials.getField(Field.Key.MOBILENUMBER));
 
