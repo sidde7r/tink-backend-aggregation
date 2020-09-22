@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 public class CreateBeneficiaryResponse {
     private CreateBeneficiary beneficiary;

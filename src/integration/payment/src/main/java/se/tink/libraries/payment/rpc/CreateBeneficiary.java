@@ -1,11 +1,11 @@
 package se.tink.libraries.payment.rpc;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 
-@Getter
 @Builder
+@Data
 public class CreateBeneficiary {
     private final String ownerAccountNumber;
     private final Beneficiary beneficiary;

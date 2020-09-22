@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama;
 
 import com.google.inject.Inject;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -8,6 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.authenticator.BoursoramaAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.AddBeneficiaryExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.fetcher.identity.BoursoramaIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.fetcher.transactionalaccount.BoursoramaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.fetcher.transactionalaccount.BoursoramaTransactionalAccountTransactionFetcher;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -87,5 +90,15 @@ public class BoursoramaAgent extends NextGenerationAgent
     @Override
     public SessionHandler constructSessionHandler() {
         return new BoursoramaSessionHandler(apiClient);
+    }
+
+    @Override
+    public Optional<CreateBeneficiaryController> constructCreateBeneficiaryController() {
+        return Optional.of(
+                new CreateBeneficiaryController(
+                        new AddBeneficiaryExecutor(
+                                this.apiClient,
+                                this.sessionStorage,
+                                this.supplementalInformationHelper)));
     }
 }

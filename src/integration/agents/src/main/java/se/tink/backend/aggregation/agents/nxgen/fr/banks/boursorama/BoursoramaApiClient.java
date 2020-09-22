@@ -12,6 +12,13 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.authenticator.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.AckMessageRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.CheckBeneficiaryRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.CheckBeneficiaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.CheckOtpRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.ConfirmBeneficiaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.PrepareBeneficiaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.executor.rpc.StartOtpResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.fetcher.identity.rpc.IdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.session.rpc.LogoutResponse;
@@ -24,6 +31,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BoursoramaApiClient {
+    private static final String BENEFICIARY_ID = "beneficiaryId";
+    private static final String OTP_NUMBER = "otpNumber";
     private final TinkHttpClient client;
     private final BoursoramaPersistentStorage boursoramaPersistentStorage;
     private final SessionStorage sessionStorage;
@@ -103,39 +112,23 @@ public class BoursoramaApiClient {
     }
 
     public ListAccountsResponse getAccounts() {
-        String loggedInBearerToken =
-                sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
-        return client.request(createUserHashUrl(BoursoramaConstants.UserUrls.LIST_ACCOUNTS))
-                .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
-                .header(
-                        BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
-                        boursoramaPersistentStorage.getUdid())
+        return prepareAuthenticatedRequest(
+                        createUserHashUrl(BoursoramaConstants.UserUrls.LIST_ACCOUNTS))
                 .get(ListAccountsResponse.class);
     }
 
     public IdentityResponse getIdentityData() {
-        String loggedInBearerToken =
-                sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
-        return client.request(createUserHashUrl(BoursoramaConstants.UserUrls.IDENTITY_DATA))
-                .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
-                .header(
-                        BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
-                        boursoramaPersistentStorage.getUdid())
+        return prepareAuthenticatedRequest(
+                        createUserHashUrl(BoursoramaConstants.UserUrls.IDENTITY_DATA))
                 .get(IdentityResponse.class);
     }
 
     public TransactionsResponse getTransactions(String accountKey, String continuationToken) {
-        String loggedInBearerToken =
-                sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
         RequestBuilder requestBuilder =
-                client.request(
-                                createUserHashUrl(
-                                        BoursoramaConstants.UserUrls.LIST_TRANSACTIONS_FROM_ACCOUNT
-                                                + accountKey))
-                        .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
-                        .header(
-                                BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
-                                boursoramaPersistentStorage.getUdid());
+                prepareAuthenticatedRequest(
+                        createUserHashUrl(
+                                        BoursoramaConstants.UserUrls.LIST_TRANSACTIONS_FROM_ACCOUNT)
+                                .parameter("accountKey", accountKey));
         if (StringUtils.isNotEmpty(continuationToken)) {
             requestBuilder.queryParam(
                     BoursoramaConstants.Transaction.CONTINUATION_TOKEN_QUERY_KEY,
@@ -146,14 +139,8 @@ public class BoursoramaApiClient {
     }
 
     public void logout() {
-        String loggedInBearerToken =
-                sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
         LogoutResponse logoutResponse =
-                client.request(createUserHashUrl(BoursoramaConstants.UserUrls.LOGOUT))
-                        .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
-                        .header(
-                                BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
-                                boursoramaPersistentStorage.getUdid())
+                prepareAuthenticatedRequest(createUserHashUrl(BoursoramaConstants.UserUrls.LOGOUT))
                         .post(LogoutResponse.class);
 
         if (!logoutResponse.isSuccess()) {
@@ -167,14 +154,8 @@ public class BoursoramaApiClient {
             return false;
         }
 
-        String loggedInBearerToken =
-                sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
         try {
-            client.request(createUserHashUrl(BoursoramaConstants.UserUrls.KEEP_ALIVE))
-                    .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
-                    .header(
-                            BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
-                            boursoramaPersistentStorage.getUdid())
+            prepareAuthenticatedRequest(createUserHashUrl(BoursoramaConstants.UserUrls.KEEP_ALIVE))
                     .post(HttpResponse.class);
         } catch (HttpResponseException hre) {
             // 401: {"code":401,"message":"JWT Token not found"}
@@ -186,6 +167,83 @@ public class BoursoramaApiClient {
 
     private URL createUserHashUrl(String urlBase) {
         String userHash = boursoramaPersistentStorage.getUserHash();
-        return new URL(String.format(urlBase, userHash));
+        return new URL(urlBase).parameter("userHash", userHash);
+    }
+
+    public PrepareBeneficiaryResponse prepareBeneficiary() {
+        return prepareAuthenticatedRequest(
+                        createUserHashUrl(BoursoramaConstants.UserUrls.PREPARE_BENEFICIARY))
+                .get(PrepareBeneficiaryResponse.class);
+    }
+
+    private RequestBuilder prepareAuthenticatedRequest(URL url) {
+        String loggedInBearerToken =
+                sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
+        return client.request(url)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .header(BoursoramaConstants.Auth.AUTHORIZATION_HEADER, loggedInBearerToken)
+                .header(
+                        BoursoramaConstants.Auth.X_SESSION_ID_HEADER,
+                        boursoramaPersistentStorage.getUdid());
+    }
+
+    public CheckBeneficiaryResponse checkBeneficiary(
+            String beneficiaryId,
+            String nickname,
+            String firstName,
+            String surname,
+            String iban,
+            String bankName) {
+
+        CheckBeneficiaryRequest checkBeneficiaryRequest =
+                new CheckBeneficiaryRequest(nickname, firstName, surname, iban, bankName);
+
+        return prepareAuthenticatedRequest(
+                        createUserHashUrl(BoursoramaConstants.UserUrls.CHECK_BENEFICIARY)
+                                .parameter(BENEFICIARY_ID, beneficiaryId))
+                .post(CheckBeneficiaryResponse.class, checkBeneficiaryRequest);
+    }
+
+    public ConfirmBeneficiaryResponse confirmBeneficiary(String beneficiaryId) {
+        return prepareAuthenticatedRequest(
+                        createUserHashUrl(BoursoramaConstants.UserUrls.CONFIRM_BENEFICIARY)
+                                .parameter(BENEFICIARY_ID, beneficiaryId))
+                .post(ConfirmBeneficiaryResponse.class, "{}");
+    }
+
+    public StartOtpResponse startSms(String otpNumber) {
+        return prepareAuthenticatedRequest(
+                        createUserHashUrl(BoursoramaConstants.UserUrls.START_SMS)
+                                .parameter(OTP_NUMBER, otpNumber))
+                .post(StartOtpResponse.class, "{}");
+    }
+
+    public StartOtpResponse startEmail(String otpNumber) {
+        return prepareAuthenticatedRequest(
+                        createUserHashUrl(BoursoramaConstants.UserUrls.START_EMAIL)
+                                .parameter(OTP_NUMBER, otpNumber))
+                .post(StartOtpResponse.class, "{}");
+    }
+
+    public void checkSms(String otpNumber, String token) {
+        CheckOtpRequest request = new CheckOtpRequest(token);
+        prepareAuthenticatedRequest(
+                        createUserHashUrl(BoursoramaConstants.UserUrls.CHECK_SMS)
+                                .parameter(OTP_NUMBER, otpNumber))
+                .post(String.class, request);
+    }
+
+    public void checkEmail(String otpNumber, String token) {
+        CheckOtpRequest request = new CheckOtpRequest(token);
+        prepareAuthenticatedRequest(
+                        createUserHashUrl(BoursoramaConstants.UserUrls.CHECK_EMAIL)
+                                .parameter(OTP_NUMBER, otpNumber))
+                .post(String.class, request);
+    }
+
+    public void ackMessage(String messageId) {
+        AckMessageRequest request = new AckMessageRequest(messageId);
+        prepareAuthenticatedRequest(createUserHashUrl(BoursoramaConstants.UserUrls.ACK_MESSAGE))
+                .post(request);
     }
 }

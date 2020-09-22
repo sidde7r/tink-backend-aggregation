@@ -7,6 +7,9 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.payment.rpc.Beneficiary;
+import se.tink.libraries.payment.rpc.CreateBeneficiary;
 
 public class BoursoramaAgentTest {
     private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
@@ -33,7 +36,34 @@ public class BoursoramaAgentTest {
                         Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
                 .addCredentialField(
                         Field.Key.PASSWORD, manager.get(UsernamePasswordArgumentEnum.PASSWORD))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .expectLoggedIn(false)
                 .build()
                 .testRefresh();
+    }
+
+    @Test
+    public void testCreateBeneficiary() throws Exception {
+        final String newBeneficiaryIban = "dummyIban";
+        final String newBeneficiaryName = "dummyName";
+        builder()
+                .addCredentialField(
+                        Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD, manager.get(UsernamePasswordArgumentEnum.PASSWORD))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .expectLoggedIn(false)
+                .build()
+                .testCreateBeneficiary(
+                        CreateBeneficiary.builder()
+                                .beneficiary(
+                                        Beneficiary.builder()
+                                                .name(newBeneficiaryName)
+                                                .accountNumber(newBeneficiaryIban)
+                                                .accountNumberType(AccountIdentifier.Type.IBAN)
+                                                .build())
+                                .build());
     }
 }
