@@ -1,9 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+
+@JsonObject
 public class Xs2aDevelopersProviderConfiguration {
-    private String baseUrl;
+
+    @JsonIgnore private String baseUrl;
+
+    @Secret
+    @JsonSchemaTitle("PSD ID")
+    @JsonSchemaExamples("PSDSE-FINA-12345")
+    @JsonSchemaDescription("PSD2 TPP number")
     private String clientId;
-    private String redirectUrl;
+
+    @AgentConfigParam private String redirectUrl;
 
     public Xs2aDevelopersProviderConfiguration(
             String clientId, String baseUrl, String redirectUrl) {
