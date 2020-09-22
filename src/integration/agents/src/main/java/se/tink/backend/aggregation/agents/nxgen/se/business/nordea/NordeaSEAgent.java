@@ -87,7 +87,7 @@ public class NordeaSEAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new NordeaSESessionHandler(sessionStorage);
+        return new NordeaSESessionHandler(apiClient);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
