@@ -18,7 +18,7 @@ public class UserEntity {
     @JsonProperty("ssn")
     public String ssn;
 
-    @JsonProperty public LocalDate dateOfBirth;
+    @JsonProperty public String dateOfBirth;
 
     public String getName() {
         return name;
@@ -29,6 +29,6 @@ public class UserEntity {
     }
 
     public LocalDate getDateOfBirth() {
-        return dateOfBirth;
+        return LocalDate.parse(dateOfBirth);
     }
 }
