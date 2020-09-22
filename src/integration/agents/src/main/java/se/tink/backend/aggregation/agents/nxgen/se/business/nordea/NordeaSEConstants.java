@@ -65,7 +65,6 @@ public class NordeaSEConstants {
         public static final String SSN = "ssn";
         public static final String TOKEN_AUTH_METHOD = "auth_type";
         public static final String SENSITIVE_PAYLOAD_PASSWORD = "password";
-        public static final String SECURITY_TOKEN = "security_token";
         public static final String HOLDER_NAME = "holder_name";
     }
 
@@ -144,7 +143,6 @@ public class NordeaSEConstants {
         private Headers() {}
 
         public static final String REQUEST_ID = "x-Request-Id";
-        public static final String SECURITY_TOKEN = "x-Security-Token";
         public static final String REFERER = "Referer";
     }
 

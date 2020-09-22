@@ -1,21 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.se.business.nordea;
 
+import io.vavr.control.Option;
 import java.util.Date;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.FormParams;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.HeaderParams;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.QueryParams;
-import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.BankIdAutostartResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.FetchCodeRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.FetchTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.FetchTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.InitBankIdAutostartRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.rpc.InitBankIdResponse;
@@ -40,6 +40,20 @@ public class NordeaSEApiClient {
     public NordeaSEApiClient(TinkHttpClient httpClient, SessionStorage sessionStorage) {
         this.httpClient = httpClient;
         this.sessionStorage = sessionStorage;
+    }
+
+    public void keepAlive() throws SessionException {
+        try {
+            Option.of(getRefreshToken())
+                    .peek(this::refreshAccessToken)
+                    .getOrElseThrow(SessionError.SESSION_EXPIRED::exception);
+        } catch (HttpResponseException hre) {
+            ErrorResponse error = ErrorResponse.of(hre);
+            if (error.isInvalidRefreshToken()) {
+                throw SessionError.SESSION_EXPIRED.exception(hre);
+            }
+            throw hre;
+        }
     }
 
     public BankIdAutostartResponse initBankIdAutostart(
@@ -207,25 +221,6 @@ public class NordeaSEApiClient {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.WILDCARD_TYPE)
                 .post(InitBankIdResponse.class, initiBankIdRequest);
-    }
-
-    public ResultBankIdResponse resultBankId(String reference) {
-        return httpClient
-                .request(Urls.POLL_BANKID + reference)
-                .headers(NordeaSEConstants.NORDEA_CUSTOM_HEADERS)
-                .header(Headers.SECURITY_TOKEN, sessionStorage.get(StorageKeys.SECURITY_TOKEN))
-                .accept(MediaType.WILDCARD_TYPE)
-                .get(ResultBankIdResponse.class);
-    }
-
-    public FetchTokenResponse fetchToken(FetchTokenRequest fetchTokenRequest) {
-        return httpClient
-                .request(Urls.FETCH_TOKEN)
-                .headers(NordeaSEConstants.NORDEA_CUSTOM_HEADERS)
-                .header(Headers.SECURITY_TOKEN, sessionStorage.get(StorageKeys.SECURITY_TOKEN))
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.WILDCARD_TYPE)
-                .post(FetchTokenResponse.class, fetchTokenRequest);
     }
 
     public FetchAccountResponse fetchAccount() {
