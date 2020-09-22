@@ -34,7 +34,7 @@ public final class SparkassenAgent extends NextGenerationAgent
 
         sparkassenPersistentStorage = new SparkassenPersistentStorage(persistentStorage);
         String bankCode = request.getProvider().getPayload();
-        apiClient = new SparkassenApiClient(client, credentials, bankCode);
+        apiClient = new SparkassenApiClient(client, bankCode);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());

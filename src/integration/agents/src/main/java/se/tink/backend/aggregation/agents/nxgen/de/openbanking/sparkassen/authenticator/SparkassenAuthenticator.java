@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authe
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -86,7 +85,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
             throws AuthenticationException, AuthorizationException {
         validateInput(credentials);
 
-        ConsentResponse consentResponse = initializeProcess(getIbansList(credentials));
+        ConsentResponse consentResponse = initializeProcess();
 
         AuthenticationMethodResponse initAuthorizationResponse =
                 initializeAuthorizationOfConsent(
@@ -111,7 +110,6 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
                         credentials.getType()));
         validateCredentialPresent(credentials, Field.Key.USERNAME);
         validateCredentialPresent(credentials, Field.Key.PASSWORD);
-        validateCredentialPresent(credentials, Field.Key.IBAN);
     }
 
     private void validateCredentialPresent(Credentials credentials, Field.Key key)
@@ -121,12 +119,8 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         }
     }
 
-    private List<String> getIbansList(Credentials credentials) {
-        return Arrays.asList(credentials.getField(Field.Key.IBAN).split(","));
-    }
-
-    private ConsentResponse initializeProcess(List<String> ibans) throws LoginException {
-        ConsentResponse consentResponse = apiClient.createConsent(ibans);
+    private ConsentResponse initializeProcess() throws LoginException {
+        ConsentResponse consentResponse = apiClient.createConsent();
         persistentStorage.saveConsentId(consentResponse.getConsentId());
         return consentResponse;
     }

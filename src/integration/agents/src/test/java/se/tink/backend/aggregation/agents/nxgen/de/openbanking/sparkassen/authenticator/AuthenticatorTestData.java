@@ -32,7 +32,6 @@ class AuthenticatorTestData {
         OK_CREDENTIALS.setType(CredentialsTypes.PASSWORD);
         OK_CREDENTIALS.setField(Field.Key.USERNAME, OK_USERNAME);
         OK_CREDENTIALS.setField(Field.Key.PASSWORD, OK_PASSWORD);
-        OK_CREDENTIALS.setField(Field.Key.IBAN, "1234,5678");
         SUPPLEMENTAL_RESPONSE_OK.put("otpValue", TEST_OTP);
         SUPPLEMENTAL_RESPONSE_OK.put("chosenScaMethod", "1");
     }
