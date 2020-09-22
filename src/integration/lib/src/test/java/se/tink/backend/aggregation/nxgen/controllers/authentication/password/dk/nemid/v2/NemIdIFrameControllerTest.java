@@ -28,6 +28,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.libraries.i18n.Catalog;
 
 public class NemIdIFrameControllerTest {
 
@@ -100,7 +101,11 @@ public class NemIdIFrameControllerTest {
 
         controller =
                 new NemIdIFrameController(
-                        webdriverHelper, sleeper, authenticator, supplementalRequester);
+                        webdriverHelper,
+                        sleeper,
+                        authenticator,
+                        supplementalRequester,
+                        Catalog.getCatalog("en"));
 
         initializeWebElements();
 

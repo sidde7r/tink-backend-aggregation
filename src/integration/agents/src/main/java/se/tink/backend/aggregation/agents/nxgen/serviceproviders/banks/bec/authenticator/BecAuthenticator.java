@@ -52,7 +52,8 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
                         supplementalRequester,
                         sessionStorage,
                         persistentStorage,
-                        getDeviceId()),
+                        getDeviceId(),
+                        catalog),
                 new KeyCardAuthenticationStep(sessionStorage, apiClient, getDeviceId()),
                 new SingleSupplementalFieldAuthenticationStep(
                         SingleSupplementalFieldAuthenticationStep.class.getName(),

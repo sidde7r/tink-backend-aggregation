@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.i18n.Catalog;
 
 public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticator
         implements NemIdParametersFetcher {
@@ -57,11 +58,12 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             final NordeaDkApiClient bankClient,
             final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
-            final SupplementalRequester supplementalRequester) {
+            final SupplementalRequester supplementalRequester,
+            final Catalog catalog) {
         this.bankClient = Objects.requireNonNull(bankClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
-        this.iFrameController = new NemIdIFrameController(this, supplementalRequester);
+        this.iFrameController = new NemIdIFrameController(this, supplementalRequester, catalog);
     }
 
     public void authenticate(final Credentials credentials) throws AuthenticationException {
