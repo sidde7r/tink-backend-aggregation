@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.util.Set;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public interface UkOpenBankingAisConfig {
@@ -37,10 +36,6 @@ public interface UkOpenBankingAisConfig {
     URL getAppToAppURL();
 
     Set<String> getAdditionalPermissions();
-
-    IdentityDataEntity getIdentityData();
-
-    String getHolderName();
 
     AccountOwnershipType getAllowedAccountOwnershipType();
 

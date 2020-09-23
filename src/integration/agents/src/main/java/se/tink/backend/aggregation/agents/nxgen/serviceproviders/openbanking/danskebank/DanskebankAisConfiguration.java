@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.authenticator.rpc.AccountPermissionResponseV31;
@@ -22,8 +21,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     private final URL appToAppURL;
     private final Set<String> additionalPermissions;
     private final String market;
-    private IdentityDataEntity identityData;
-    private String holderName;
     private boolean partyEndpointEnabled;
 
     private DanskebankAisConfiguration(
@@ -72,16 +69,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
 
     public Set<String> getAdditionalPermissions() {
         return additionalPermissions;
-    }
-
-    @Override
-    public IdentityDataEntity getIdentityData() {
-        return identityData;
-    }
-
-    @Override
-    public String getHolderName() {
-        return holderName;
     }
 
     @Override

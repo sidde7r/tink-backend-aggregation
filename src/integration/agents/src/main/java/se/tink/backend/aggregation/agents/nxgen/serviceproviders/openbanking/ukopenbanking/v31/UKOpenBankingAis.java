@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.authenticator.rpc.AccountPermissionResponseV31;
@@ -24,8 +23,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     private final URL wellKnownURL;
     private final URL appToAppURL;
     private final Set<PartyEndpoint> partyEndpoints;
-    private final IdentityDataEntity identityData;
-    private final String holderName;
     private final AccountOwnershipType allowedAccountOwnershipType;
     private final String organisationId;
 
@@ -34,8 +31,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         this.wellKnownURL = builder.wellKnownURL;
         this.appToAppURL = builder.appToAppURL;
         this.partyEndpoints = builder.partyEndpoints;
-        this.identityData = builder.identityData;
-        this.holderName = builder.holderName;
         this.allowedAccountOwnershipType = builder.allowedAccountOwnershipType;
         this.organisationId = builder.organisationId;
     }
@@ -116,16 +111,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     }
 
     @Override
-    public IdentityDataEntity getIdentityData() {
-        return this.identityData;
-    }
-
-    @Override
-    public String getHolderName() {
-        return this.holderName;
-    }
-
-    @Override
     public String getInitialTransactionsPaginationKey(String accountId) {
         return String.format(ACCOUNT_TRANSACTIONS_REQUEST, accountId);
     }
@@ -151,8 +136,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         private URL appToAppURL;
         private AccountOwnershipType allowedAccountOwnershipType = AccountOwnershipType.PERSONAL;
         private String organisationId;
-        private IdentityDataEntity identityData;
-        private String holderName;
 
         private Builder() {}
 
@@ -186,16 +169,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
 
         public Builder withOrganisationId(final String organisationId) {
             this.organisationId = organisationId;
-            return this;
-        }
-
-        public Builder withHolderName(final String holderName) {
-            this.holderName = holderName;
-            return this;
-        }
-
-        public Builder withIdentityData(final IdentityDataEntity identityData) {
-            this.identityData = identityData;
             return this;
         }
 

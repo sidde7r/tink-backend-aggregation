@@ -29,6 +29,7 @@ public class MonzoV31BusinessAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UKOpenBankingAis.builder()
+                        .withOrganisationId(MonzoConstants.ORGANISATION_ID)
                         .withApiBaseURL(Urls.AIS_API_URL)
                         .withWellKnownURL(Urls.WELL_KNOWN_URL)
                         .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
