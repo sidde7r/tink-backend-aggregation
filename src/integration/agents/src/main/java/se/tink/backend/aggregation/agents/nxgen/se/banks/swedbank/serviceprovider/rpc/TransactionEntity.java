@@ -32,7 +32,7 @@ public class TransactionEntity extends AbstractTransactionEntity {
     private AmountEntity accountingBalance;
 
     public Optional<Transaction> toTinkTransaction() {
-        if (this.date == null || this.text == null) {
+        if (this.date == null || getTransactionDescription() == null) {
             return Optional.empty();
         }
 
@@ -49,13 +49,21 @@ public class TransactionEntity extends AbstractTransactionEntity {
                         .setPayload(
                                 TransactionPayloadTypes.DETAILS,
                                 SerializationUtils.serializeToString(getTransactionDetails()))
-                        .setDescription(SwedbankBaseConstants.Description.clean(this.text));
+                        .setDescription(
+                                SwedbankBaseConstants.Description.clean(
+                                        getTransactionDescription()));
 
-        if (SwedbankBaseConstants.Description.PENDING_TRANSACTIONS.contains(this.text)) {
+        if (SwedbankBaseConstants.Description.PENDING_TRANSACTIONS.contains(
+                getTransactionDescription())) {
             transactionBuilder.setPending(true);
         }
 
         return Optional.of(transactionBuilder.build());
+    }
+
+    @JsonIgnore
+    private String getTransactionDescription() {
+        return this.text != null ? this.text : this.description;
     }
 
     @JsonIgnore
@@ -75,7 +83,7 @@ public class TransactionEntity extends AbstractTransactionEntity {
                         : "";
         key += getAmount();
         key += getCurrency();
-        key += getText();
+        key += getTransactionDescription();
 
         return key;
     }
