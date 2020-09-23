@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.assertj.core.util.Strings;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -79,6 +80,7 @@ public class TransactionEntity {
                 .setDate(parseTransactionDate())
                 .setPending(valueDate == null)
                 .setDescription(getFormattedDescription())
+                .setType(getTransactionTypes())
                 .build();
     }
 
@@ -208,5 +210,27 @@ public class TransactionEntity {
 
     public void setTransactionAmount(String transactionAmount) {
         this.transactionAmount = transactionAmount;
+    }
+
+    private TransactionTypes getTransactionTypes() {
+        final String description = getTransactionDescription();
+
+        if (description.startsWith("PRLV")) {
+            return TransactionTypes.PAYMENT;
+        }
+
+        if (description.contains("RETRAIT")) {
+            return TransactionTypes.WITHDRAWAL;
+        }
+
+        if (description.startsWith("VIREMENT")) {
+            return TransactionTypes.TRANSFER;
+        }
+
+        if (description.startsWith("CB")) {
+            return TransactionTypes.CREDIT_CARD;
+        }
+
+        return TransactionTypes.DEFAULT;
     }
 }
