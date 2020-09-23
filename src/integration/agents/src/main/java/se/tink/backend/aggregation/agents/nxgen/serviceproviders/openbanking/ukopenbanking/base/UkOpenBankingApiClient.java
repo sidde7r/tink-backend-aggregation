@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants.ACCOUNT_PERMISSIONS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.DANSKEBANK_ORG_ID;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.HSBC_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.MONZO_ORG_ID;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.NATIONWIDE_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TINK_UKOPENBANKING_ORGID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.UKOB_TAN;
 
@@ -260,7 +262,9 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         // remove this check once this wavier times out
         // Monzo organization ID check
         if (MONZO_ORG_ID.equals(aisConfig.getOrganisationId())
-                || DANSKEBANK_ORG_ID.equals(aisConfig.getOrganisationId())) {
+                || DANSKEBANK_ORG_ID.equals(aisConfig.getOrganisationId())
+                || HSBC_ORG_ID.equals(aisConfig.getOrganisationId())
+                || NATIONWIDE_ORG_ID.equals(aisConfig.getOrganisationId())) {
             return createPs256SignatureWithoutB64Header(payloadClaims);
         } else {
             return createPs256SignatureWithB64Header(payloadClaims);
