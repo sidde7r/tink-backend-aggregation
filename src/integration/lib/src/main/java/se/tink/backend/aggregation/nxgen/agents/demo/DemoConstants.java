@@ -38,10 +38,7 @@ public class DemoConstants {
     }
 
     static class MarketCodes {
-        static final List<Integer> UK_SORT_CODES =
-                Arrays.asList(
-                        90128, 70436, 236972, 230580, 40004, 40075, 40026, 87199, 608371, 401276,
-                        231470, 202678, 83210, 774926, 110001, 166300, 609104, 606004);
+        static final List<Integer> UK_SORT_CODES = Arrays.asList(118353);
     }
 
     public static class MarketRegex {

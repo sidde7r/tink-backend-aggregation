@@ -84,7 +84,7 @@ public class RedirectAuthenticationDemoAgentConstants {
     }
 
     public static class StaticAccountUK {
-        public static final String ACCOUNT_ID = "23147071417779";
+        public static final String ACCOUNT_ID = "11835371417779";
         public static final String ACCOUNT_NAME = "Checking Account tink low balance";
         public static final double BALANCE = 50;
         public static final double AVAILABLE_BALANCE = -10;
