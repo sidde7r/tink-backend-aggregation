@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest;
 
 final class NatWestConstants {
 
+    static final String ORGANISATION_ID = "0015800000jfwxXAAQ";
+
     class Urls {
 
         class V31 {
