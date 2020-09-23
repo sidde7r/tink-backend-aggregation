@@ -1,10 +1,10 @@
 podCpuRequest: "2500m"
 podCpuLimit: "2500m"
-podMemoryRequest: "8Gi"
-podMemoryLimit: "8Gi"
-heapSize: "4G"
+podMemoryRequest: "10Gi"
+podMemoryLimit: "10Gi"
+heapSize: "6G"
 replicas: 20
-maxReplicas: 20
+maxReplicas: 30
 targetAverageCpuValue: "1750m"
 initialDelaySeconds: "300"
 
