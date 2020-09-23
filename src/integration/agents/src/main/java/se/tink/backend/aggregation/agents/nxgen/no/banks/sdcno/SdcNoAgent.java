@@ -47,7 +47,8 @@ public class SdcNoAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SdcNoBankIdSSAuthenticator(configuration, client, supplementalRequester);
+        return new SdcNoBankIdSSAuthenticator(
+                configuration, client, supplementalRequester, catalog);
     }
 
     @Override

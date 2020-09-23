@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
 public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
@@ -23,7 +24,8 @@ public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
             NordeaNoStorage storage,
             RandomValueGenerator randomValueGenerator,
             CredentialsRequest request,
-            SupplementalRequester supplementalRequester) {
+            SupplementalRequester supplementalRequester,
+            Catalog catalog) {
         this.storage = storage;
 
         mySteps =
@@ -32,7 +34,8 @@ public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
                                 authenticationClient,
                                 storage,
                                 randomValueGenerator,
-                                supplementalRequester),
+                                supplementalRequester,
+                                catalog),
                         new VerifySessionStep(authenticationClient, storage, randomValueGenerator));
 
         if (ForceAuthentication.shouldForceAuthentication(request)) {

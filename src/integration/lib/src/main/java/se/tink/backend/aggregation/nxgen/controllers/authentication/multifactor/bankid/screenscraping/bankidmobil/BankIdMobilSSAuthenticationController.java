@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
@@ -32,6 +33,7 @@ public class BankIdMobilSSAuthenticationController {
     private final WebDriver driver;
     private final MobilInitializer bankIdMobilInitializer;
     private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
 
     public void doLogin(Credentials credentials) throws AuthenticationException {
 
@@ -75,7 +77,7 @@ public class BankIdMobilSSAuthenticationController {
         Field field =
                 Field.builder()
                         .immutable(true)
-                        .description(VALIDATE_REFERENCE_NUMBER.get())
+                        .description(catalog.getString(VALIDATE_REFERENCE_NUMBER))
                         .value(getReferenceNumber())
                         .name("reference_number")
                         .build();

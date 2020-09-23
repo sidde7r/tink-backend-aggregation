@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.i18n.Catalog;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -49,6 +50,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SessionStorage sessionStorage;
     private final String mobilenumber;
+    private final Catalog catalog;
 
     private String username;
     private int pollWaitCounter;
@@ -195,7 +197,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
 
     private Field getActivationCodeField() {
         return Field.builder()
-                .description(SparebankenSorConstants.UserMessage.ACTIVATION_CODE.getKey().get())
+                .description(catalog.getString(SparebankenSorConstants.UserMessage.ACTIVATION_CODE))
                 .name(ACTIVATION_CODE_FIELD_KEY)
                 .numeric(true)
                 .minLength(ACTIVATION_CODE_LENGTH)
@@ -203,9 +205,8 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                 .hint(StringUtils.repeat("N", ACTIVATION_CODE_LENGTH))
                 .pattern(String.format("([0-9]{%d})", ACTIVATION_CODE_LENGTH))
                 .patternError(
-                        SparebankenSorConstants.UserMessage.ACTIVATION_CODE_NOT_VALID
-                                .getKey()
-                                .get())
+                        catalog.getString(
+                                SparebankenSorConstants.UserMessage.ACTIVATION_CODE_NOT_VALID))
                 .build();
     }
 }

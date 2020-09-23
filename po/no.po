@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-09-21 12:49+0000\n"
-"PO-Revision-Date: 2020-09-21 12:49+0000\n"
+"POT-Creation-Date: 2020-09-23 14:00+0000\n"
+"PO-Revision-Date: 2020-09-23 14:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: no\n"
@@ -10,6 +10,106 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "The activation code you entered is not valid."
+msgstr "Aktiveringskoden du har oppgitt er ugyldig."
+
+msgid ""
+"You need to activate your personal code for telephone and mobile services on "
+"the internet bank."
+msgstr ""
+"Du må aktivere din personlige kode for telefon- og mobiltjenester i "
+"nettbanken."
+
+msgid ""
+"You need to activate your mobile app credentials and generate a 4-digit pin "
+"code via the Handelsbanken app."
+msgstr ""
+"Du må bruke Handelsbanken-appen til å genererer en firesifret pin-kode."
+
+msgid ""
+"The activation could not be completed. It is not possible to activate more "
+"than ten apps."
+msgstr ""
+"Aktiveringen kan ikke fullføres. Det er ikke mulig å aktivere mer enn ti "
+"apper."
+
+msgid ""
+"Too many incorrect tries. The card has been locked for 60 minutes for "
+"signing with the card reader without a cord. Contact Handelsbanken technical "
+"support for more information."
+msgstr ""
+"Advarsel: grunnet gjentatte feil ved innlogging har kortet blitt sperret for "
+"bruk med trådløs kortleser. Kontakt Handelsbankens teknisk støtte for mer "
+"informasjon."
+
+msgid ""
+"The card you are using is blocked. Please contact Handelsbanken technical "
+"support or visit your local bank office to order a new login card."
+msgstr ""
+"Kortet du bruker, er blokkert. Ta kontakt med Handelsbankens tekniske støtte "
+"eller besøk ditt lokale bankkontor for å bestille et nytt innloggingskort."
+
+msgid ""
+"Handelsbanken is no longer active for the specified user. This could be due "
+"to that the Handelsbanken app for this device has not been active in 90 "
+"days. To login again you need to activate the app again."
+msgstr ""
+"Handelsbanken er ikke lenger aktiv for brukeren. Det kan skyldes at "
+"Handelsbanken-appen for denne enheten ikke har vært aktiv på 90 dager. For å "
+"logge inn igjen må du aktivere appen på nytt."
+
+msgid "Authentication timed out."
+msgstr "Autentiseringen ble tidsavbrutt."
+
+msgid "You cancelled the BankID process. Please try again."
+msgstr "Du avbrøt BankID prosessen. Vennligst prøv på nytt."
+
+msgid ""
+"For safety reasons you have been logged out. Please login again to continue."
+msgstr ""
+"Av sikkerhetsmessige årsaker har du blitt logget ut. Vennligst logg inn på "
+"nytt for å fortsette."
+
+msgid "You have not entered a valid code. Please try again"
+msgstr "Du har ikke angitt en gyldig kode. Prøv på nytt"
+
+msgid "You are not authorized to use this service."
+msgstr "Du er ikke autorisert til å bruke denne tjenesten."
+
+msgid ""
+"Could not login to your bank. The access could be blocked. Please activate "
+"it in your bank app or contact your bank."
+msgstr ""
+"Kunne ikke logge inn på banken din. Tilgangen kan være blokkert. Aktiver den "
+"i bankappen din eller kontakt banken din."
+
+msgid "You don't have any commitments in the selected bank."
+msgstr "Du har ingen forpliktelser i den valgte banken."
+
+msgid ""
+"The authentication needed to login to your bank is not supported at the "
+"moment. If possible please try another option."
+msgstr ""
+"Autentiseringsmetoden for å logge inn i din bank er ikke støtte for "
+"øyeblikket. Hvis mulig, vennligst prøv en annen metode."
+
+msgid "Incorrect login credentials. Please try again."
+msgstr "Feil påloggingsinformasjon oppgitt. Prøv på nytt."
+
+msgid "Your credentials could not be verified. Please try again."
+msgstr "Din legitimasjon ble ikke bekreftet. Vennligst prøv på nytt."
+
+msgid ""
+"Please ensure that you have entered the correct mobile number and date of "
+"birth. Also make sure that you have activated bankID on mobile in your "
+"internet bank."
+msgstr ""
+"Vennligst kontroller at du har oppgitt riktig mobilnummer og fødselsdato. "
+"Kontroller også at du har aktivert BankID på mobil i banken din."
+
+msgid "There is an error with your mobile operator. Please try again later."
+msgstr "Det er en feil hos din mobiloperatør. Vennligst prøv på nytt senere."
 
 msgid ""
 "You use your card reader and personal code the same way as you would in the "
@@ -19,8 +119,73 @@ msgstr ""
 "mobilapp."
 
 msgid ""
+"Incorrect login credentials. You have one more attempt before your account "
+"will be locked."
+msgstr ""
+"Feil påloggingsinformasjon. Du har et forsøk igjen før kontoen din låses."
+
+msgid "Code app authentication timed out."
+msgstr "Autentisering via kodeapp tidsavbrutt."
+
+msgid "Code app authentication was rejected by user."
+msgstr "Autentisering via kodeapp ble avvist av bruker."
+
+msgid "You do not have access to mobile banking. Please contact your bank."
+msgstr "Du har ikke tilgang til mobilbank. Ta kontakt med banken din."
+
+msgid "The bank service is offline; please try again later."
+msgstr ""
+"Banktjenesten opplever tekniske problemer, vennligst prøv igjen senere."
+
+msgid "The bank service has temporarily failed; please try again later."
+msgstr ""
+"Banktjenesten er midlertidig overbelastet eller under vedlikehold. Prøv "
+"igjen senere."
+
+msgid ""
+"To continue using this app you must answer some questions from your bank. "
+"Please log in with your bank's app or website."
+msgstr ""
+"For å fortsette å bruke denne appen må du svare på noen spørsmål fra banken "
+"din. Vennligst logg inn med bankens app eller nettside."
+
+msgid "The consent is invalid. "
+msgstr "Samtykket er ugyldig. "
+
+msgid "Your session has been terminated by the bank."
+msgstr "Økten din har blitt avsluttet av banken."
+
+msgid "Please ensure that you have entered the correct mobile number"
+msgstr "Vennligst kontroller at du har oppgitt riktig mobilnummer."
+
+msgid ""
+"Your existing credentials have been invalidated, Please delete this "
+"credentials and create a new one."
+msgstr ""
+"Din eksisterende legitimasjon er ugyldiggjort. Vennligst slett denne og "
+"opprett ny."
+
+msgid "Something went wrong during login process."
+msgstr "Noe gikk galt under innloggingsprosessen."
+
+msgid "There aren't any Authentication methods available."
+msgstr "Det finnes er ingen autentiseringsmetoder tilgjengelig."
+
+msgid "Activation code is incorrect. Please try again."
+msgstr "Aktiveringskoden er feil. Prøv på nytt."
+
+msgid "Activation timed out. Please try again."
+msgstr "Aktiveringen ble tidsavavsavmt. Prøv på nytt."
+
+msgid ""
 "Continue by clicking update when you have verified the reference and signed "
 "with Mobile BankID."
 msgstr ""
 "Fortsett ved å klikke på oppdater når du har bekreftet referansen og signert "
 "med BankID på mobil."
+
+msgid "Authentication was cancelled. Please try again."
+msgstr "Autentiseringen ble avbrutt. Prøv på nytt."
+
+msgid "Authentication error."
+msgstr "Autentiseringsfeil."
