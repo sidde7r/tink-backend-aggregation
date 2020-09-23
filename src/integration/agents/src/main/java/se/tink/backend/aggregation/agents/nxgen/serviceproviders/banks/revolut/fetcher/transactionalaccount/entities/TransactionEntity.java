@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.
 
 import java.util.Date;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -70,6 +72,7 @@ public class TransactionEntity {
                 .setAmount(ExactCurrencyAmount.of(getAmount(), currency.toUpperCase()))
                 .setDate(new Date(startedDate))
                 .setDescription(description)
+                .setType(getTransactionType())
                 .build();
     }
 
@@ -102,5 +105,23 @@ public class TransactionEntity {
 
     public boolean hasCurrency(String currency) {
         return currency.equalsIgnoreCase(this.currency);
+    }
+
+    private TransactionTypes getTransactionType() {
+        if (StringUtils.isBlank(type)) {
+            return TransactionTypes.DEFAULT;
+        }
+
+        switch (type) {
+            case RevolutConstants.TransactionTypes.CARD_PAYMENT:
+                return TransactionTypes.CREDIT_CARD;
+            case RevolutConstants.TransactionTypes.TOP_UP:
+            case RevolutConstants.TransactionTypes.TRANSFER:
+                return TransactionTypes.TRANSFER;
+            case RevolutConstants.TransactionTypes.ATM:
+                return TransactionTypes.WITHDRAWAL;
+            default:
+                return TransactionTypes.DEFAULT;
+        }
     }
 }
