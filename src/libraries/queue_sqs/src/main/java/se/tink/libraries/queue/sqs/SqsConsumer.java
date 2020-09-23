@@ -82,6 +82,7 @@ public class SqsConsumer implements QueueConsumer {
             consume(sqsMessage.getBody());
             sqsQueue.consumed();
         } catch (RejectedExecutionException e) {
+            log.warn("Failed to consume message of SQS. Requeuing it.", e);
             producer.requeue(sqsMessage.getBody());
             sqsQueue.requeued();
         }
