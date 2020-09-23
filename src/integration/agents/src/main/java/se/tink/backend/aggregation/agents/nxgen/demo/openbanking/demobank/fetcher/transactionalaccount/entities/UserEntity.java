@@ -29,6 +29,6 @@ public class UserEntity {
     }
 
     public LocalDate getDateOfBirth() {
-        return LocalDate.parse(dateOfBirth);
+        return dateOfBirth != null ? LocalDate.parse(dateOfBirth) : null;
     }
 }
