@@ -773,6 +773,734 @@
     "type" : "CREDIT_CARD",
     "upcoming" : false
   }, {
+    "amount" : 500.0,
+    "date" : 1582974000000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1580382000000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 10000.0,
+    "date" : 1579086000000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1577703600000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1575111600000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 15000.0,
+    "date" : 1572778800000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1572433200000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1569837600000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1567159200000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 15000.0,
+    "date" : 1566986400000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1564480800000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 10000.0,
+    "date" : 1564135200000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 10000.0,
+    "date" : 1562666400000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1561888800000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 3000.0,
+    "date" : 1560420000000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 10000.0,
+    "date" : 1560333600000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 10000.0,
+    "date" : 1559642400000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1559210400000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1556618400000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1553943600000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -5000.0,
+    "date" : 1552388400000,
+    "description" : "persienner",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"persienner\",\"ownReference\":\"persienner\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1551351600000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -20000.0,
+    "date" : 1550746800000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -61000.0,
+    "date" : 1550746800000,
+    "description" : "Slutbetalninglgh",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 20000.0,
+    "date" : 1550401200000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -220000.0,
+    "date" : 1549364400000,
+    "description" : "nya lägenhet",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"nya lägenhet\",\"ownReference\":\"nya lägenhet\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1548846000000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 10000.0,
+    "date" : 1547550000000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 12000.0,
+    "date" : 1546513200000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1546167600000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1543575600000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1540897200000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1538301600000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 15000.0,
+    "date" : 1538215200000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 15000.0,
+    "date" : 1537437600000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1535623200000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1532944800000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -50000.0,
+    "date" : 1531735200000,
+    "description" : "bostad",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"bostad\",\"ownReference\":\"bostad\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 29000.0,
+    "date" : 1531389600000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1530352800000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 20000.0,
+    "date" : 1528797600000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 5000.0,
+    "date" : 1528365600000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1527674400000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 5000.0,
+    "date" : 1526464800000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1525082400000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1522404000000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 12000.0,
+    "date" : 1521284400000,
+    "description" : "Övf via internet 832799748966059",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 500.0,
+    "date" : 1519815600000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -37.5,
+    "date" : 1366106400000,
+    "description" : "Övf via internet 832799748967685",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748967685\",\"ownReference\":\"832799748967685\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -20000.0,
+    "date" : 1366106400000,
+    "description" : "Övf via internet 832799748967685",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"832799748967685\",\"ownReference\":\"832799748967685\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 20000.0,
+    "date" : 1346234400000,
+    "description" : "SWEDBANK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"SWEDBANK\",\"ownReference\":\"SWEDBANK\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 0.03,
+    "date" : 1262257200000,
+    "description" : "Sparränta",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0000000000000000\",\"ownReference\":\"0000000000000000\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 1.0,
+    "date" : 1230721200000,
+    "description" : "Sparränta",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0000000000000000\",\"ownReference\":\"0000000000000000\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 36.47,
+    "date" : 1199098800000,
+    "description" : "Sparränta",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0000000000000000\",\"ownReference\":\"0000000000000000\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -22330.0,
+    "date" : 1187344800000,
+    "description" : "Emissionslikvid",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"91805258973\",\"ownReference\":\"91805258973\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 22330.0,
+    "date" : 1184839200000,
+    "description" : "Egen överföring",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748967685\",\"ownReference\":\"0832799748967685\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
     "amount" : -500.0,
     "date" : 1585562400000,
     "description" : "e-sparkonto",
@@ -780,6 +1508,630 @@
     "originalAmount" : 0.0,
     "payload" : { },
     "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -179.92,
+    "date" : 1583492400000,
+    "description" : "COOP HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"COOP HÖGDALEN\",\"ownReference\":\"COOP HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1583492400000,
+    "description" : "TASTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -29.0,
+    "date" : 1583406000000,
+    "description" : "HOGDALENS MATBUT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"HOGDALENS MATBUT\",\"ownReference\":\"HOGDALENS MATBUT\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -157.85,
+    "date" : 1583406000000,
+    "description" : "MATDAX HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -81.1,
+    "date" : 1583233200000,
+    "description" : "COOP HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"COOP HÖGDALEN\",\"ownReference\":\"COOP HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -105.0,
+    "date" : 1583233200000,
+    "description" : "RESTAURANG RAZMO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"RESTAURANG RAZMO\",\"ownReference\":\"RESTAURANG RAZMO\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -30.0,
+    "date" : 1583146800000,
+    "description" : "APCOA PARKING",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"APCOA PARKING\",\"ownReference\":\"APCOA PARKING\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -195.0,
+    "date" : 1583146800000,
+    "description" : "B BEIRUT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"B BEIRUT\",\"ownReference\":\"B BEIRUT\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1583146800000,
+    "description" : "B BEIRUT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"B BEIRUT\",\"ownReference\":\"B BEIRUT\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -189.5,
+    "date" : 1583146800000,
+    "description" : "RUSTA BARKARBY 2",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"RUSTA BARKARBY 2\",\"ownReference\":\"RUSTA BARKARBY 2\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -4000.0,
+    "date" : 1583146800000,
+    "description" : "FÖRENINGSSPARBAN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"FÖRENINGSSPARBAN\",\"ownReference\":\"FÖRENINGSSPARBAN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 1.0,
+    "date" : 1583146800000,
+    "description" : "Swish mottagen +46735841126",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"+46735841126\",\"ownReference\":\"+46735841126\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -64.91,
+    "date" : 1583146800000,
+    "description" : "COOP H@GDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"COOP H@GDALEN\",\"ownReference\":\"COOP H@GDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -609.0,
+    "date" : 1583146800000,
+    "description" : "CIRCLE K BANDHAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"CIRCLE K BANDHAG\",\"ownReference\":\"CIRCLE K BANDHAG\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 5.37,
+    "date" : 1583060400000,
+    "description" : "Swish retur EASYPARK AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"EASYPARK AB\",\"ownReference\":\"EASYPARK AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -114.9,
+    "date" : 1583060400000,
+    "description" : "MATDAX HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -14.35,
+    "date" : 1583060400000,
+    "description" : "CIRCLE K BANDHAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"CIRCLE K BANDHAG\",\"ownReference\":\"CIRCLE K BANDHAG\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 5.37,
+    "date" : 1583060400000,
+    "description" : "Swish retur EASYPARK AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"EASYPARK AB\",\"ownReference\":\"EASYPARK AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -5.37,
+    "date" : 1583060400000,
+    "description" : "Swish Easypark AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"Easypark AB\",\"ownReference\":\"Easypark AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -5.37,
+    "date" : 1583060400000,
+    "description" : "Swish Easypark AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"Easypark AB\",\"ownReference\":\"Easypark AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -350.0,
+    "date" : 1582974000000,
+    "description" : "Swish skickad +46735841126",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"+46735841126\",\"ownReference\":\"+46735841126\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -500.0,
+    "date" : 1582974000000,
+    "description" : "Överföring 0832799748967685",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748967685\",\"ownReference\":\"0832799748967685\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -65.3,
+    "date" : 1582887600000,
+    "description" : "LIDL 275 / STHLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"LIDL 275 / STHLM\",\"ownReference\":\"LIDL 275 / STHLM\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -282.6,
+    "date" : 1582887600000,
+    "description" : "RUSTA KUNGENS KU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"RUSTA KUNGENS KU\",\"ownReference\":\"RUSTA KUNGENS KU\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -2796.0,
+    "date" : 1582887600000,
+    "description" : "TOYOTA KRED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TOYOTA KRED\",\"ownReference\":\"TOYOTA KRED\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -643.0,
+    "date" : 1582887600000,
+    "description" : "FOLKSAM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"FOLKSAM\",\"ownReference\":\"FOLKSAM\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -299.0,
+    "date" : 1582887600000,
+    "description" : "HI3G",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"HI3G\",\"ownReference\":\"HI3G\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -110.0,
+    "date" : 1582887600000,
+    "description" : "LÄRARNAS A K",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"LÄRARNAS A K\",\"ownReference\":\"LÄRARNAS A K\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -456.0,
+    "date" : 1582887600000,
+    "description" : "Pong Mall",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"Pong Mall\",\"ownReference\":\"Pong Mall\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -399.7,
+    "date" : 1582887600000,
+    "description" : "CLAS OHLSON",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"CLAS OHLSON\",\"ownReference\":\"CLAS OHLSON\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -89.0,
+    "date" : 1582887600000,
+    "description" : "ENSKEDEPARKENS B",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"ENSKEDEPARKENS B\",\"ownReference\":\"ENSKEDEPARKENS B\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -329.0,
+    "date" : 1582801200000,
+    "description" : "bil",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"bil\",\"ownReference\":\"bil\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -1998.0,
+    "date" : 1582801200000,
+    "description" : "Överföring lån 0000005152157938",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0000005152157938\",\"ownReference\":\"0000005152157938\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -1998.0,
+    "date" : 1582801200000,
+    "description" : "Överföring lån 0000005152157920",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0000005152157920\",\"ownReference\":\"0000005152157920\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -1982.0,
+    "date" : 1582801200000,
+    "description" : "Överföring lån 0000005152157953",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0000005152157953\",\"ownReference\":\"0000005152157953\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -207.91,
+    "date" : 1582714800000,
+    "description" : "MATDAX HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -149.91,
+    "date" : 1582714800000,
+    "description" : "CLAS OHLSON",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"CLAS OHLSON\",\"ownReference\":\"CLAS OHLSON\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -3521.0,
+    "date" : 1582714800000,
+    "description" : "hyra",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"hyra\",\"ownReference\":\"hyra\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -39.0,
+    "date" : 1582714800000,
+    "description" : "PRIS NYCKELKUND",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"PRIS NYCKELKUND\",\"ownReference\":\"PRIS NYCKELKUND\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 30608.0,
+    "date" : 1582714800000,
+    "description" : "LÖN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"LÖN\",\"ownReference\":\"LÖN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -200.9,
+    "date" : 1582628400000,
+    "description" : "CLAS OHLSON",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"CLAS OHLSON\",\"ownReference\":\"CLAS OHLSON\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -300.0,
+    "date" : 1582542000000,
+    "description" : "KEBABKHAN KURDIS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"KEBABKHAN KURDIS\",\"ownReference\":\"KEBABKHAN KURDIS\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -78.4,
+    "date" : 1582542000000,
+    "description" : "COOP HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"COOP HÖGDALEN\",\"ownReference\":\"COOP HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -231.02,
+    "date" : 1582542000000,
+    "description" : "LIDL 295 / ENSKE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"LIDL 295 / ENSKE\",\"ownReference\":\"LIDL 295 / ENSKE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -358.08,
+    "date" : 1582542000000,
+    "description" : "ST1 $RSTA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"ST1 $RSTA\",\"ownReference\":\"ST1 $RSTA\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -116.0,
+    "date" : 1582455600000,
+    "description" : "ENSKEDEPARKENS B",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"ENSKEDEPARKENS B\",\"ownReference\":\"ENSKEDEPARKENS B\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1582369200000,
+    "description" : "TASTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -941.5,
+    "date" : 1582369200000,
+    "description" : "APOTEK HJARTAT S",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"APOTEK HJARTAT S\",\"ownReference\":\"APOTEK HJARTAT S\"}"
+    },
+    "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false
@@ -802,6 +2154,630 @@
     "originalAmount" : 0.0,
     "payload" : { },
     "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1582282800000,
+    "description" : "TASTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -176.56,
+    "date" : 1582282800000,
+    "description" : "MATDAX HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -61.09,
+    "date" : 1582196400000,
+    "description" : "COOP HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"COOP HÖGDALEN\",\"ownReference\":\"COOP HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -138.59,
+    "date" : 1582110000000,
+    "description" : "COOP HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"COOP HÖGDALEN\",\"ownReference\":\"COOP HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -149.0,
+    "date" : 1581937200000,
+    "description" : "B BEIRUT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"B BEIRUT\",\"ownReference\":\"B BEIRUT\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -65.0,
+    "date" : 1581937200000,
+    "description" : "HOGDALENS MATBUT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"HOGDALENS MATBUT\",\"ownReference\":\"HOGDALENS MATBUT\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 1.0,
+    "date" : 1581850800000,
+    "description" : "Swish retur EASYPARK AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"EASYPARK AB\",\"ownReference\":\"EASYPARK AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -1.0,
+    "date" : 1581850800000,
+    "description" : "Swish Easypark AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"Easypark AB\",\"ownReference\":\"Easypark AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -146.8,
+    "date" : 1581850800000,
+    "description" : "MATDAX HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 11.2,
+    "date" : 1581850800000,
+    "description" : "Swish retur EASYPARK AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"EASYPARK AB\",\"ownReference\":\"EASYPARK AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : 1.0,
+    "date" : 1581850800000,
+    "description" : "Swish retur EASYPARK AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"EASYPARK AB\",\"ownReference\":\"EASYPARK AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -1.0,
+    "date" : 1581850800000,
+    "description" : "Swish Easypark AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"Easypark AB\",\"ownReference\":\"Easypark AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -11.2,
+    "date" : 1581850800000,
+    "description" : "Swish Easypark AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"Easypark AB\",\"ownReference\":\"Easypark AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -86.0,
+    "date" : 1581764400000,
+    "description" : "HOGDALENS MATBUT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"HOGDALENS MATBUT\",\"ownReference\":\"HOGDALENS MATBUT\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1581678000000,
+    "description" : "TASTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -930.0,
+    "date" : 1581591600000,
+    "description" : "PRESSBYRÅN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"PRESSBYRÅN\",\"ownReference\":\"PRESSBYRÅN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -500.0,
+    "date" : 1581505200000,
+    "description" : "TABBOULI KUNGSHO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TABBOULI KUNGSHO\",\"ownReference\":\"TABBOULI KUNGSHO\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -60.0,
+    "date" : 1581505200000,
+    "description" : "Swish skickad +46730382391",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"+46730382391\",\"ownReference\":\"+46730382391\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -60.0,
+    "date" : 1581505200000,
+    "description" : "Swish skickad +46707758918",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"+46707758918\",\"ownReference\":\"+46707758918\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -129.7,
+    "date" : 1581418800000,
+    "description" : "COOP HOGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"COOP HOGDALEN\",\"ownReference\":\"COOP HOGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1581418800000,
+    "description" : "FORMAGGIO PIZZER",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"FORMAGGIO PIZZER\",\"ownReference\":\"FORMAGGIO PIZZER\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -350.0,
+    "date" : 1581332400000,
+    "description" : "MEM&ZIN AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"MEM&ZIN AB\",\"ownReference\":\"MEM&ZIN AB\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -187.0,
+    "date" : 1581332400000,
+    "description" : "HOGDALENS MATBUT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"HOGDALENS MATBUT\",\"ownReference\":\"HOGDALENS MATBUT\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -109.3,
+    "date" : 1581332400000,
+    "description" : "LIDL 295 / ENSKE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"LIDL 295 / ENSKE\",\"ownReference\":\"LIDL 295 / ENSKE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -3000.0,
+    "date" : 1581246000000,
+    "description" : "Swish skickad +46739247978",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"+46739247978\",\"ownReference\":\"+46739247978\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1581159600000,
+    "description" : "TASTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1581073200000,
+    "description" : "TASTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -105.0,
+    "date" : 1580986800000,
+    "description" : "RESTAURANG RAZMO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"RESTAURANG RAZMO\",\"ownReference\":\"RESTAURANG RAZMO\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1580814000000,
+    "description" : "TASTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -326.7,
+    "date" : 1580727600000,
+    "description" : "LIDL 295 / ENSKE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"LIDL 295 / ENSKE\",\"ownReference\":\"LIDL 295 / ENSKE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -115.0,
+    "date" : 1580727600000,
+    "description" : "THAI HOUSE WOK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"THAI HOUSE WOK\",\"ownReference\":\"THAI HOUSE WOK\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -277.8,
+    "date" : 1580727600000,
+    "description" : "APOTEK HJARTAT M",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"APOTEK HJARTAT M\",\"ownReference\":\"APOTEK HJARTAT M\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -128.91,
+    "date" : 1580554800000,
+    "description" : "COOP HOGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"COOP HOGDALEN\",\"ownReference\":\"COOP HOGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -74.0,
+    "date" : 1580468400000,
+    "description" : "HOGDALENS MATBUT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"HOGDALENS MATBUT\",\"ownReference\":\"HOGDALENS MATBUT\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -655.0,
+    "date" : 1580468400000,
+    "description" : "FOLKSAM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"FOLKSAM\",\"ownReference\":\"FOLKSAM\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1580468400000,
+    "description" : "TASTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -126.9,
+    "date" : 1580468400000,
+    "description" : "MATDAX HÖGDALEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -199.0,
+    "date" : 1580468400000,
+    "description" : "PHONEHERO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"PHONEHERO\",\"ownReference\":\"PHONEHERO\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -55.0,
+    "date" : 1580382000000,
+    "description" : "7-ELEVEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"7-ELEVEN\",\"ownReference\":\"7-ELEVEN\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -499.0,
+    "date" : 1580382000000,
+    "description" : "3BUTIKEN SKRAPA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"3BUTIKEN SKRAPA\",\"ownReference\":\"3BUTIKEN SKRAPA\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -2793.0,
+    "date" : 1580382000000,
+    "description" : "TOYOTA KRED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TOYOTA KRED\",\"ownReference\":\"TOYOTA KRED\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -500.0,
+    "date" : 1580382000000,
+    "description" : "Överföring 0832799748967685",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"0832799748967685\",\"ownReference\":\"0832799748967685\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -700.0,
+    "date" : 1580295600000,
+    "description" : "Swish skickad +46709991817",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"+46709991817\",\"ownReference\":\"+46709991817\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1580295600000,
+    "description" : "TASTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -3521.0,
+    "date" : 1580295600000,
+    "description" : "hyra",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"hyra\",\"ownReference\":\"hyra\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -299.0,
+    "date" : 1580209200000,
+    "description" : "HI3G",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"HI3G\",\"ownReference\":\"HI3G\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -110.0,
+    "date" : 1580209200000,
+    "description" : "LÄRARNAS A K",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"LÄRARNAS A K\",\"ownReference\":\"LÄRARNAS A K\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false
+  }, {
+    "amount" : -95.0,
+    "date" : 1580209200000,
+    "description" : "TASTE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
+    },
+    "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false
