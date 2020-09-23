@@ -21,7 +21,7 @@ public class ConsentRequest {
     private int frequencyPerDay = 4;
 
     @JsonProperty("CombinedServiceIndicator")
-    private boolean combinedServiceIndicator = true;
+    private boolean combinedServiceIndicator = false;
 
     public ConsentRequest(String validUntil) {
         this.validUntil = validUntil;
