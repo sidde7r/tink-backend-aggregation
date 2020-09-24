@@ -127,6 +127,10 @@ data:
         - oxford-preprod
         - oxford-production
 
+    {{- if eq "staging" .Values.Environment }}
+    stagingEnvironment: true
+    {{- end }}
+
     {{- if eq "local" .Values.Cluster }}
     developmentMode: true
 

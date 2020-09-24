@@ -10,6 +10,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/cluster/jersey",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules/agentcapabilities",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/models/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/queue",

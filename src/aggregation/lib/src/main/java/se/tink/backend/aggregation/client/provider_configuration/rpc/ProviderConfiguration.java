@@ -334,27 +334,6 @@ public class ProviderConfiguration {
                 SerializationUtils.serializeToString(supplementalFields);
     }
 
-    /**
-     * Used on providers to indicate different tasks it can handle in terms of agents, since it's
-     * not possible now in main to know if an agent implements an interface e.g. TransferExecutor.
-     */
-    public enum Capability {
-        TRANSFERS, // backwards compatibility
-        EINVOICES,
-        @Deprecated
-        MORTGAGE_AGGREGATION, // backwards compatibility
-        CHECKING_ACCOUNTS,
-        SAVINGS_ACCOUNTS,
-        CREDIT_CARDS,
-        LOANS,
-        INVESTMENTS,
-        PAYMENTS,
-        IDENTITY_DATA,
-        LIST_BENEFICIARIES,
-        CREATE_BENEFICIARIES,
-        CREATE_BENEFICIARIES_IN_PAYMENT
-    }
-
     @JsonProperty("refreshschedule")
     public void setRefreshSchedule(ProviderRefreshSchedule refreshSchedule) {
         this.refreshScheduleSerialized = SerializationUtils.serializeToString(refreshSchedule);

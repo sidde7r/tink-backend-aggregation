@@ -4,7 +4,7 @@ package se.tink.backend.aggregation.agents;
  * Interface for executing refreshes of checking accounts. Agent which supports Checking Accounts
  * shall implement this.
  */
-public interface RefreshCheckingAccountsExecutor {
+public interface RefreshCheckingAccountsExecutor extends CapabilityExecutor {
 
     /**
      * Fetch the checking accounts.

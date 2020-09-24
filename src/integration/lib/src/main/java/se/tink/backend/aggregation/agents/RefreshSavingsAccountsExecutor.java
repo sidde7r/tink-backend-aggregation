@@ -4,7 +4,7 @@ package se.tink.backend.aggregation.agents;
  * Interface for executing refreshes of savings accounts. Agent which supports Savings Accounts
  * shall implement this.
  */
-public interface RefreshSavingsAccountsExecutor {
+public interface RefreshSavingsAccountsExecutor extends CapabilityExecutor {
 
     /**
      * Fetch the savings accounts.

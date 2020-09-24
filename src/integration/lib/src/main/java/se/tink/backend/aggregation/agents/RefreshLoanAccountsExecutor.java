@@ -4,7 +4,7 @@ package se.tink.backend.aggregation.agents;
  * Interface for executing refreshes of loan accounts. Agent which supports Loan Accounts shall
  * implement this.
  */
-public interface RefreshLoanAccountsExecutor {
+public interface RefreshLoanAccountsExecutor extends CapabilityExecutor {
 
     /**
      * Fetch the loan accounts.
