@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetc
 
 import com.google.common.base.Strings;
 import java.util.Date;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -173,6 +175,27 @@ public class TransactionEntity {
                 .setDate(new Date(visibleTS))
                 .setDescription(getDescription())
                 .setPending(isPending())
+                .setType(getTransactionTypes())
                 .build();
+    }
+
+    private TransactionTypes getTransactionTypes() {
+        if (StringUtils.isBlank(type)) {
+            return TransactionTypes.DEFAULT;
+        }
+
+        switch (type) {
+            case "PT":
+                return StringUtils.equals(category, "micro-v2-atm")
+                        ? TransactionTypes.WITHDRAWAL
+                        : TransactionTypes.CREDIT_CARD;
+            case "CT":
+            case "DT":
+                return TransactionTypes.TRANSFER;
+            case "DD":
+                return TransactionTypes.PAYMENT;
+            default:
+                return TransactionTypes.DEFAULT;
+        }
     }
 }
