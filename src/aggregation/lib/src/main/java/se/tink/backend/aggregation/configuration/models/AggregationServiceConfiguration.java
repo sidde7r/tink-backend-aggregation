@@ -22,6 +22,8 @@ public class AggregationServiceConfiguration extends Configuration {
 
     @JsonProperty private DatabaseConfiguration database = new DatabaseConfiguration();
 
+    @JsonProperty private boolean stagingEnvironment = false;
+
     @JsonProperty private boolean developmentMode = false;
 
     @JsonProperty private boolean decoupledMode = false;
@@ -89,6 +91,10 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public boolean isDevelopmentMode() {
         return developmentMode;
+    }
+
+    public boolean isStagingEnvironment() {
+        return stagingEnvironment;
     }
 
     public PrometheusConfiguration getPrometheus() {
