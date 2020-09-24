@@ -197,9 +197,16 @@ load(
 )
 
 container_pull(
-    name = "openjdk_jdk8",
+    name = "openjdk_jre8",
     registry = "gcr.io",
     repository = "tink-containers/openjdk-8-jre",
+    tag = "8",
+)
+
+container_pull(
+    name = "openjdk_jdk8",
+    registry = "gcr.io",
+    repository = "tink-containers/openjdk-8-jdk",
     tag = "8",
 )
 
