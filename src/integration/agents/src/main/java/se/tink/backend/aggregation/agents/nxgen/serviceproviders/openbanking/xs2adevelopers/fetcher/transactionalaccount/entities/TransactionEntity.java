@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Objects;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -25,28 +26,34 @@ public class TransactionEntity {
 
     @JsonIgnore
     public Transaction toBookedTinkTransaction() {
-        return Transaction.builder()
-                .setDate(bookingDate)
-                .setPending(false)
-                .setDescription(getDescription())
-                .setAmount(transactionAmount.toTinkAmount())
-                .build();
+        return toTinkTransaction(false);
     }
 
     @JsonIgnore
     public Transaction toPendingTinkTransaction() {
+        return toTinkTransaction(true);
+    }
+
+    private Transaction toTinkTransaction(boolean pending) {
         return Transaction.builder()
                 .setDate(bookingDate)
-                .setPending(true)
+                .setPending(pending)
                 .setDescription(getDescription())
                 .setAmount(transactionAmount.toTinkAmount())
                 .build();
     }
 
     private String getDescription() {
-        return Stream.of(debtorName, creditorName, remittanceInformationUnstructured, purposeCode)
-                .filter(Objects::nonNull)
+        return Stream.of(
+                        (isExpense() ? creditorName : debtorName),
+                        remittanceInformationUnstructured,
+                        purposeCode)
+                .filter(StringUtils::isNotBlank)
                 .findFirst()
                 .orElse("");
+    }
+
+    private boolean isExpense() {
+        return transactionAmount.toTinkAmount().getExactValue().compareTo(BigDecimal.ZERO) < 0;
     }
 }
