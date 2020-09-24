@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -49,11 +50,24 @@ public class PurchaseHistoryGenerator {
     private Transaction generateTransaction(
             GeneratePurchaseBase base, LocalDate dateCursor, String currency) {
         double finalPrice = randomisePurchase(base, currency);
+
+        return generateTransaction(
+                finalPrice, base.getCompany(), dateCursor, currency, TransactionTypes.TRANSFER);
+    }
+
+    private Transaction generateTransaction(
+            double finalPrice,
+            String description,
+            LocalDate dateCursor,
+            String currency,
+            TransactionTypes transactionType) {
+
         return Transaction.builder()
                 .setPending(false)
-                .setDescription(base.getCompany())
+                .setDescription(description)
                 .setAmount(ExactCurrencyAmount.of(finalPrice, currency))
                 .setDate(dateCursor)
+                .setType(transactionType)
                 .build();
     }
 
@@ -68,6 +82,17 @@ public class PurchaseHistoryGenerator {
         }
 
         return transactions;
+    }
+
+    private Transaction generateSingleTransaction(
+            String amount,
+            String description,
+            LocalDate dateCursor,
+            String currency,
+            TransactionTypes transactionType) {
+
+        return generateTransaction(
+                Double.parseDouble(amount), description, dateCursor, currency, transactionType);
     }
 
     public PaginatorResponse generateTransactions(Date from, Date to, String currency) {
@@ -92,6 +117,16 @@ public class PurchaseHistoryGenerator {
         transactions.addAll(addMontlyRecurringCost(from, to, "Spotify", -9.99));
         transactions.addAll(addMontlyRecurringCost(from, to, "Gym Membership", -45.99));
 
+        // Adding transactions with different types
+        transactions.add(
+                generateSingleTransaction(
+                        "-50", "Withdrawal", end, currency, TransactionTypes.WITHDRAWAL));
+        transactions.add(
+                generateSingleTransaction("-5", "Fee", end, currency, TransactionTypes.DEFAULT));
+        transactions.add(
+                generateSingleTransaction(
+                        "-25.60", "Card operation", end, currency, TransactionTypes.CREDIT_CARD));
+
         return PaginatorResponseImpl.create(transactions, false);
     }
 
@@ -114,6 +149,7 @@ public class PurchaseHistoryGenerator {
                                                                         .getCurrencyCode()))
                                                 .setPending(false)
                                                 .setDescription("monthly savings")
+                                                .setType(TransactionTypes.TRANSFER)
                                                 .setDate(
                                                         DateUtils.addMonths(
                                                                 DateUtils.getToday(), -1))
@@ -125,6 +161,7 @@ public class PurchaseHistoryGenerator {
 
     private List<Transaction> addMontlyRecurringCost(
             Date from, Date to, String name, double amount) {
+        TransactionTypes type = (amount < 0) ? TransactionTypes.PAYMENT : TransactionTypes.TRANSFER;
         String currency = "EUR";
         int numberOfMonths = (int) DateUtils.getNumberOfMonthsBetween(from, to);
         List<Transaction> transactions =
@@ -135,6 +172,7 @@ public class PurchaseHistoryGenerator {
                                                 .setAmount(ExactCurrencyAmount.of(amount, currency))
                                                 .setPending(false)
                                                 .setDescription(name)
+                                                .setType(type)
                                                 .setDate(
                                                         DateUtils.addMonths(
                                                                 DateUtils.getToday(), -i))
