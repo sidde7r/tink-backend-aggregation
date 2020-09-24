@@ -26,24 +26,24 @@ public class AccountEntity {
     private boolean isInLimitGroup;
     private boolean isSavingGoalAccountProduct;
     private boolean isBreadcrumbAccountProduct;
-    private boolean isLoanAccount;
+    protected boolean isLoanAccount;
     private String invIdOwner;
     private String mandateAccMk;
     private boolean showAvailable;
     private boolean accessToCredit;
     private boolean accessToDebit;
     private boolean accessToQuery;
-    private String currency;
-    private String cardType;
-    private String accountType;
-    private String accountName;
-    private String accountProduct;
+    protected String currency;
+    protected String cardType;
+    protected String accountType;
+    protected String accountName;
+    protected String accountProduct;
     private String accountRegNoExt;
-    private String accountNoExt;
-    private String accountNoInt;
-    private String languageCode;
+    protected String accountNoExt;
+    protected String accountNoInt;
+    protected String languageCode;
     private double balanceAvailable;
-    private double balance;
+    protected double balance;
 
     public LoanAccount toLoanAccount(DanskeBankConfiguration configuration) {
         return LoanAccount.builder(accountNoInt, ExactCurrencyAmount.of(balance, currency))
@@ -117,14 +117,14 @@ public class AccountEntity {
                 .build();
     }
 
-    private AccountSourceInfo createAccountSourceInfo() {
+    protected AccountSourceInfo createAccountSourceInfo() {
         return AccountSourceInfo.builder()
                 .bankProductCode(accountProduct)
                 .bankAccountType(accountType)
                 .build();
     }
 
-    private ExactCurrencyAmount calculateAvailableCredit() {
+    protected ExactCurrencyAmount calculateAvailableCredit() {
         return ExactCurrencyAmount.of(Math.max(balanceAvailable - balance, 0.0), currency);
     }
 }

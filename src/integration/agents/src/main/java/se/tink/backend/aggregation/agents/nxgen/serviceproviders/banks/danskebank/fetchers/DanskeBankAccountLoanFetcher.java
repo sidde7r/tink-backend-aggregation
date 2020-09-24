@@ -36,7 +36,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        ListAccountsResponse listAccounts =
+        ListAccountsResponse<AccountEntity> listAccounts =
                 apiClient.listAccounts(ListAccountsRequest.createFromLanguageCode(languageCode));
 
         // log any loan account of unknown product type
@@ -49,7 +49,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
                 .collect(Collectors.toList());
     }
 
-    private void logUnknownLoanAccountTypes(ListAccountsResponse listAccounts) {
+    private void logUnknownLoanAccountTypes(ListAccountsResponse<AccountEntity> listAccounts) {
         listAccounts.getAccounts().stream()
                 .filter(AccountEntity::isLoanAccount)
                 .filter(

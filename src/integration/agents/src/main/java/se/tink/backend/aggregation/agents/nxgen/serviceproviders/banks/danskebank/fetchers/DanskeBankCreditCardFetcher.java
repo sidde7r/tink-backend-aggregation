@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class DanskeBankCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
+public class DanskeBankCreditCardFetcher<T extends AccountEntity>
+        implements AccountFetcher<CreditCardAccount> {
 
     private final DanskeBankApiClient apiClient;
     private final String languageCode;
@@ -25,7 +27,7 @@ public class DanskeBankCreditCardFetcher implements AccountFetcher<CreditCardAcc
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        ListAccountsResponse listAccountsResponse =
+        ListAccountsResponse<T> listAccountsResponse =
                 this.apiClient.listAccounts(
                         ListAccountsRequest.createFromLanguageCode(this.languageCode));
 

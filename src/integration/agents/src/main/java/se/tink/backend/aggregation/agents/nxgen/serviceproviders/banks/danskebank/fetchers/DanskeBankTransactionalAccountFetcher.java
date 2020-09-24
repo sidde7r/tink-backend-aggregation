@@ -16,7 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
+public class DanskeBankTransactionalAccountFetcher<T extends AccountEntity>
+        implements AccountFetcher<TransactionalAccount> {
 
     private static final Logger log =
             LoggerFactory.getLogger(DanskeBankTransactionalAccountFetcher.class);
@@ -34,7 +35,7 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        ListAccountsResponse listAccounts =
+        ListAccountsResponse<T> listAccounts =
                 apiClient.listAccounts(ListAccountsRequest.createFromLanguageCode(languageCode));
 
         return ImmutableList.<TransactionalAccount>builder()
@@ -47,7 +48,7 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
     }
 
     private List<TransactionalAccount> logAndGetTransactionalAccountsOfUnknownType(
-            ListAccountsResponse listAccounts) {
+            ListAccountsResponse<T> listAccounts) {
         return listAccounts.getAccounts().stream()
                 .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(accountEntity -> !accountEntity.isLoanAccount())

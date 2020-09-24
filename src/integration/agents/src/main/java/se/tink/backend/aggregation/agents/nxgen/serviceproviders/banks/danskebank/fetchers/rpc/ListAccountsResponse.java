@@ -12,11 +12,11 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
-public class ListAccountsResponse extends AbstractBankIdResponse {
+public class ListAccountsResponse<T extends AccountEntity> extends AbstractBankIdResponse {
 
     private String lastUpdated;
     private String languageCode;
-    private List<AccountEntity> accounts;
+    private List<T> accounts;
 
     public String getLastUpdated() {
         return this.lastUpdated;
@@ -26,7 +26,7 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
         return this.languageCode;
     }
 
-    public List<AccountEntity> getAccounts() {
+    public List<T> getAccounts() {
         return this.accounts != null ? this.accounts : Collections.emptyList();
     }
 
@@ -65,11 +65,9 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
 
     public boolean isOwnAccount(String identifier) {
         return accounts.stream()
-                .filter(
+                .anyMatch(
                         accountEntity ->
-                                accountEntity.getAccountNoExt().equalsIgnoreCase(identifier))
-                .findFirst()
-                .isPresent();
+                                accountEntity.getAccountNoExt().equalsIgnoreCase(identifier));
     }
 
     public AccountEntity findAccount(String identifier) {
@@ -78,6 +76,6 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
                         accountEntity ->
                                 accountEntity.getAccountNoExt().equalsIgnoreCase(identifier))
                 .findFirst()
-                .get();
+                .orElse(null);
     }
 }
