@@ -147,7 +147,7 @@ git_repository(
     name = "tink_backend",
     commit = "28697c7825eb3513634ad2b9ee9f7541a225ec7f",
     remote = "git@github.com:tink-ab/tink-backend.git",
-    shallow_since = "1600732800 +0000",
+    shallow_since = "1595000000 +0000",
 )
 
 # To be used only by //src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework
@@ -155,7 +155,7 @@ git_repository(
     name = "tink_backend_for_agents_framework",
     commit = "28697c7825eb3513634ad2b9ee9f7541a225ec7f",
     remote = "git@github.com:tink-ab/tink-backend.git",
-    shallow_since = "1600732800 +0000",
+    shallow_since = "1595000000 +0000",
 )
 
 # Docker dependencies
