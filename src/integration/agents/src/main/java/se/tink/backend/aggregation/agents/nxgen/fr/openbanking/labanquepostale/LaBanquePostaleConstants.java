@@ -52,4 +52,9 @@ public final class LaBanquePostaleConstants {
     public static class QueryValues {
         static final String SCORE = "aisp";
     }
+
+    public static class CreditDebitIndicators {
+        public static final String CREDIT = "CRDT";
+        public static final String DEBIT = "DBIT";
+    }
 }
