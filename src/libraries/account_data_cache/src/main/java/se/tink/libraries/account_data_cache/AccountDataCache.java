@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 public class AccountDataCache {
     private final Map<String, AccountData> accountDataByBankAccountId;
     private final List<Predicate<Account>> accountFilters;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountDataCache.class);
 
     public AccountDataCache() {
         this.accountDataByBankAccountId = new HashMap<>();
@@ -26,6 +29,7 @@ public class AccountDataCache {
     }
 
     public void clear() {
+        LOGGER.info("cache clear");
         this.accountDataByBankAccountId.clear();
         this.accountFilters.clear();
     }
@@ -48,11 +52,14 @@ public class AccountDataCache {
 
     public void cacheAccount(Account account) {
         String bankAccountId = account.getBankId();
+        LOGGER.info(
+                "cacheAccount: original size before cache {}", accountDataByBankAccountId.size());
         if (accountDataByBankAccountId.containsKey(bankAccountId)) {
             return;
         }
 
         accountDataByBankAccountId.put(bankAccountId, new AccountData(account));
+        LOGGER.info("cacheAccount: size after cache {}", accountDataByBankAccountId.size());
     }
 
     public void cacheAccountFeatures(String bankAccountId, AccountFeatures accountFeatures) {
@@ -79,6 +86,8 @@ public class AccountDataCache {
     // It is therefore extremely important that general access of AccountData is done through this
     // filtered method.
     private Stream<AccountData> getFilteredAccountDataStream() {
+        LOGGER.info(
+                "getFilteredAccountDataStream: cache size {}", accountDataByBankAccountId.size());
         return accountDataByBankAccountId.values().stream()
                 .filter(
                         accountData ->
