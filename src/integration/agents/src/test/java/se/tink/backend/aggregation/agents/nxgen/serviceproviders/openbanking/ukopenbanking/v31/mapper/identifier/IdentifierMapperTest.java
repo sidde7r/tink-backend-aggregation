@@ -19,6 +19,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountIdentifierEntity;
@@ -46,7 +47,9 @@ public class IdentifierMapperTest {
         when(valueExtractor.pickByValuePriority(anyList(), any(), argument.capture()))
                 .thenReturn(Optional.of(sortCodeIdentifier));
         AccountIdentifierEntity returnedId =
-                identifierMapper.getTransactionalAccountPrimaryIdentifier(mock(List.class));
+                identifierMapper.getTransactionalAccountPrimaryIdentifier(
+                        mock(List.class),
+                        UkOpenBankingApiDefinitions.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
 
         // then
         ImmutableList<ExternalAccountIdentification4Code> expectedIdPriority =
@@ -65,7 +68,9 @@ public class IdentifierMapperTest {
                 catchThrowable(
                         () ->
                                 identifierMapper.getTransactionalAccountPrimaryIdentifier(
-                                        mock(List.class)));
+                                        mock(List.class),
+                                        UkOpenBankingApiDefinitions
+                                                .ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS));
 
         // then
         assertThat(throwable).isInstanceOf(NoSuchElementException.class);
