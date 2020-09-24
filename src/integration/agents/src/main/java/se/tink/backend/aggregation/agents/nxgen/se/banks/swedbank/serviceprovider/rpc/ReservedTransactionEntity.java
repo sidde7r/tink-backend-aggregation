@@ -12,7 +12,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class ReservedTransactionEntity extends AbstractTransactionEntity {
 
     public Optional<Transaction> toTinkTransaction() {
-        if (this.date == null || this.description == null) {
+        if (this.date == null || getTransactionDescription() == null) {
             return Optional.empty();
         }
 
@@ -26,7 +26,9 @@ public class ReservedTransactionEntity extends AbstractTransactionEntity {
                 Transaction.builder()
                         .setAmount(ExactCurrencyAmount.of(parsedAmount, currency))
                         .setDate(this.date)
-                        .setDescription(SwedbankBaseConstants.Description.clean(this.description))
+                        .setDescription(
+                                SwedbankBaseConstants.Description.clean(
+                                        getTransactionDescription()))
                         .setPending(true)
                         .build());
     }

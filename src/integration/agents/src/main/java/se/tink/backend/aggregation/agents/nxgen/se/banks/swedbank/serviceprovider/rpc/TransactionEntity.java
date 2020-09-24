@@ -20,7 +20,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @JsonObject
 public class TransactionEntity extends AbstractTransactionEntity {
     private String id;
-    private String text;
     private String expenseControlIncluded;
     private LabelingsEntity labelings;
     private CategorizationsEntity categorizations;
@@ -59,11 +58,6 @@ public class TransactionEntity extends AbstractTransactionEntity {
         }
 
         return Optional.of(transactionBuilder.build());
-    }
-
-    @JsonIgnore
-    private String getTransactionDescription() {
-        return this.text != null ? this.text : this.description;
     }
 
     @JsonIgnore
