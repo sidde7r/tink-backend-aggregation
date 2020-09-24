@@ -9,11 +9,11 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.authenticator.NordeaNoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.executor.payment.NordeaNoPaymentExecutorSelector;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.fetcher.transactionalaccount.NordeaNoGetTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.fetcher.transactionalaccount.NordeaNoTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.BaseGetTransactionResponse;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -82,9 +82,9 @@ public final class NordeaNoAgent extends NordeaBaseAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        NordeaBaseTransactionalAccountFetcher<BaseGetTransactionResponse> accountFetcher =
+        NordeaBaseTransactionalAccountFetcher<NordeaNoGetTransactionResponse> accountFetcher =
                 new NordeaNoTransactionalAccountFetcher<>(
-                        apiClient, BaseGetTransactionResponse.class);
+                        apiClient, NordeaNoGetTransactionResponse.class);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

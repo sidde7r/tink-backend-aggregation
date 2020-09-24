@@ -16,8 +16,8 @@ java_library(
         "//src/integration/payment:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/pair",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
+        "//third_party:org_apache_commons_commons_lang3",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
     ],
 )

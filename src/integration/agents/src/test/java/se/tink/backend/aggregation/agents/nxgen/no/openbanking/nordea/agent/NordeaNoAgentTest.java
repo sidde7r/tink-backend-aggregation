@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea;
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.agent;
 
 import org.junit.Before;
 import org.junit.Test;
