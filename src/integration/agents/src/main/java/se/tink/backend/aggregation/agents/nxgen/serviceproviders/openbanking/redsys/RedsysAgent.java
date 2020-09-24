@@ -54,7 +54,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
         apiClient =
                 new RedsysApiClient(
                         client, sessionStorage, persistentStorage, this, this.getEidasIdentity());
-        apiClient.setPsuIpAddress(Strings.emptyToNull(originatingUserIp));
+        apiClient.setPsuIpAddress(Strings.emptyToNull(request.getOriginatingUserIp()));
 
         consentStorage = new RedsysConsentStorage(persistentStorage);
         consentController =
