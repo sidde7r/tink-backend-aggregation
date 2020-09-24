@@ -238,4 +238,23 @@ public class Provider implements Cloneable {
 
         return provider;
     }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (!(obj instanceof Provider)) {
+            return false;
+        }
+
+        Provider objProvider = (Provider) obj;
+        return objProvider.getName().equals(this.getName());
+    }
 }
