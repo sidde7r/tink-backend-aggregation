@@ -86,7 +86,10 @@ public class RateLimitedExecutorService implements Managed {
                                                         "provider_type",
                                                         provider.getType().name().toLowerCase())
                                                 .add("provider", provider.getName());
-
+                                logger.info(
+                                        "Provider {} has hash-code {}",
+                                        provider.getName(),
+                                        provider.hashCode());
                                 return new RateLimitedExecutorProxy(
                                         () ->
                                                 RateLimitedExecutorProxy.RateLimiters.from(
