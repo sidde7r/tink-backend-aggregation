@@ -21,7 +21,7 @@ public class TransactionEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setPending(!isBooked())
-                .setAmount(transactionAmount.toAmount())
+                .setAmount(transactionAmount.toAmount(creditDebitIndicator))
                 .setDate(bookingDate)
                 .setDescription(remittanceInformation.get(0))
                 .build();
