@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.ing;
 
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.login.LoginProcess;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.RegistrationProcess;
@@ -15,7 +16,8 @@ import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistry;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IngAgent extends SubsequentGenerationAgent<IngAuthenticator>
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class IngAgent extends SubsequentGenerationAgent<IngAuthenticator>
         implements ProgressiveAuthAgent {
 
     private RegistrationProcess registrationProcess;

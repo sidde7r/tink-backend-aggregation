@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta;
 
 import com.google.inject.Inject;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
@@ -8,7 +9,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-public class BancoPostaAgent extends SubsequentProgressiveGenerationAgent {
+@AgentCapabilities
+public final class BancoPostaAgent extends SubsequentProgressiveGenerationAgent {
 
     private final BancoPostaApiClient apiClient;
     private final BancoPostaStorage storage;

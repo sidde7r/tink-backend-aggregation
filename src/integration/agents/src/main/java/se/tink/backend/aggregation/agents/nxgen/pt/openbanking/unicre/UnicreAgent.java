@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.unicre;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsProgressiveBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.creditcards.SibsCreditCardFetcher;
@@ -13,7 +16,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class UnicreAgent extends SibsProgressiveBaseAgent
+@AgentCapabilities({CREDIT_CARDS})
+public final class UnicreAgent extends SibsProgressiveBaseAgent
         implements RefreshCreditCardAccountsExecutor {
 
     private final CreditCardRefreshController creditCardRefreshController;

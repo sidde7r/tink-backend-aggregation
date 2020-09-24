@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -38,7 +41,8 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class VolksbankAgent
+@AgentCapabilities({CHECKING_ACCOUNTS})
+public final class VolksbankAgent
         extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,

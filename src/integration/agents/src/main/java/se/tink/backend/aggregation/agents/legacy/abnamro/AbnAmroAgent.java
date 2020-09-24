@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.abnamro;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -42,6 +44,7 @@ import se.tink.backend.aggregation.agents.abnamro.client.rpc.enrollment.Initiate
 import se.tink.backend.aggregation.agents.abnamro.converters.AccountConverter;
 import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroUtils;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -55,7 +58,8 @@ import se.tink.libraries.phonenumbers.utils.PhoneNumberUtils;
 import se.tink.libraries.user.rpc.User;
 
 /** This is the new AbnAmroAgent that will be used for Grip 3.0. It also includes ICS. */
-public class AbnAmroAgent extends AbstractAgent
+@AgentCapabilities({CREDIT_CARDS})
+public final class AbnAmroAgent extends AbstractAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor {

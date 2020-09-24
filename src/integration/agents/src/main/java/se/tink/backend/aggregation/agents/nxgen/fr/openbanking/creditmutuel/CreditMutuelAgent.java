@@ -1,6 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditmutuel;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LIST_BENEFICIARIES;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
+
 import com.google.inject.Inject;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicAgent;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -8,7 +14,8 @@ import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA25
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-public class CreditMutuelAgent extends CmcicAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, TRANSFERS, LIST_BENEFICIARIES})
+public final class CreditMutuelAgent extends CmcicAgent {
 
     @Inject
     public CreditMutuelAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {

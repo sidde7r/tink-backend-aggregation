@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +13,7 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.NordeaSePaymentExecutorSelector;
@@ -37,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.account.AccountIdentifier.Type;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS})
 public final class NordeaSeAgent extends NordeaBaseAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshTransferDestinationExecutor,

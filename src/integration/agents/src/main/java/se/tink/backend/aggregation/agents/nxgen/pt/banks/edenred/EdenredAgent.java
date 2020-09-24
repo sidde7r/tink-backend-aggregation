@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.authenticator.EdenredAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.fetcher.EdenredAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.fetcher.EdenredTransactionsFetcher;
@@ -18,7 +21,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class EdenredAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
+@AgentCapabilities({CHECKING_ACCOUNTS})
+public final class EdenredAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor {
 
     private final EdenredStorage edenredStorage;
 

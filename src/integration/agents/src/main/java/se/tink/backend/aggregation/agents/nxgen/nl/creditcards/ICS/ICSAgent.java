@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
@@ -29,7 +32,9 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAccountsExecutor {
+@AgentCapabilities({CREDIT_CARDS})
+public final class ICSAgent extends NextGenerationAgent
+        implements RefreshCreditCardAccountsExecutor {
 
     private final ICSApiClient apiClient;
     private final String redirectUri;

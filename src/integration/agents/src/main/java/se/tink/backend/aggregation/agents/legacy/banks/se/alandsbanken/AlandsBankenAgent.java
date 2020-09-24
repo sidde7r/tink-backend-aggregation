@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.banks.se.alandsbanken;
 
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.banks.crosskey.CrossKeyAgent;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class AlandsBankenAgent extends CrossKeyAgent {
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class AlandsBankenAgent extends CrossKeyAgent {
 
     public AlandsBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {

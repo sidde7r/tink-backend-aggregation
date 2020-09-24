@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+
 import java.security.cert.CertificateException;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.NorwegianAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.NorwegianApiClient;
@@ -28,7 +31,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class NorwegianAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
+@AgentCapabilities({CHECKING_ACCOUNTS})
+public final class NorwegianAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor {
 
     private final AgentConfiguration<NorwegianConfiguration> agentConfiguration;
     private final NorwegianApiClient apiClient;

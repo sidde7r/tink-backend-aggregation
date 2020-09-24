@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
+
 import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -10,6 +13,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.TransactionFetching;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticationController;
@@ -41,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternal
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
+@AgentCapabilities({SAVINGS_ACCOUNTS, TRANSFERS})
 public final class SbabAgent extends NextGenerationAgent
         implements RefreshSavingsAccountsExecutor, RefreshTransferDestinationExecutor {
 

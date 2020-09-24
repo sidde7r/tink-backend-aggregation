@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.authenticator.CitiBanaMexAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.fetcher.transactional.CitiBanaMexTransactionFetcher;
@@ -22,7 +23,8 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class CitiBanaMexAgent extends NextGenerationAgent
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class CitiBanaMexAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final CitiBanaMexApiClient apiClient;

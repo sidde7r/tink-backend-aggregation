@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.demo.empty;
 
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -8,7 +9,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class EmptyAgent extends NextGenerationAgent {
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class EmptyAgent extends NextGenerationAgent {
     public EmptyAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);

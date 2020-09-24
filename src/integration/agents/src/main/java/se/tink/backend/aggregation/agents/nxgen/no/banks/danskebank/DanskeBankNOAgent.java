@@ -1,5 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator.DanskeBankNOBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
@@ -12,7 +20,15 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.selenium.WebDriverHelper;
 
-public class DanskeBankNOAgent extends DanskeBankAgent {
+@AgentCapabilities({
+    CHECKING_ACCOUNTS,
+    SAVINGS_ACCOUNTS,
+    CREDIT_CARDS,
+    INVESTMENTS,
+    LOANS,
+    MORTGAGE_AGGREGATION
+})
+public final class DanskeBankNOAgent extends DanskeBankAgent {
     public DanskeBankNOAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new DanskeBankNOConfiguration());

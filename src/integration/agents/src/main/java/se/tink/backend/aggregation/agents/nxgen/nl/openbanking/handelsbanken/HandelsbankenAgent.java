@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken.executor.payment.HandelsbankenPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@AgentCapabilities(generateFromImplementedExecutors = true)
 public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
 
     private static final int MAX_FETCH_PERIOD_MONTHS = 13;

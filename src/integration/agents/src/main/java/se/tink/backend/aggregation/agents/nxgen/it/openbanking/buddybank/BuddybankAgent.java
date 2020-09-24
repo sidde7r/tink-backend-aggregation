@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+
 import com.google.inject.Inject;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.BuddybankPaymentController;
@@ -13,7 +17,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
-public class BuddybankAgent extends UnicreditBaseAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
+public final class BuddybankAgent extends UnicreditBaseAgent {
 
     private static final UnicreditProviderConfiguration PROVIDER_CONFIG =
             new UnicreditProviderConfiguration("ALL", "https://api.buddybank.it");

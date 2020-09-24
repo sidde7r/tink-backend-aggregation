@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.fraud;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -23,6 +25,7 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.bankid.CredentialsSignicatBankIdAuthenticationHandler;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -59,7 +62,8 @@ import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.user.rpc.User;
 
 @SuppressWarnings("unused")
-public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
+@AgentCapabilities({IDENTITY_DATA})
+public final class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
     private static final String LOGIN_NAME_TEST = "TINKTESTIN";
     private static final String PASSWORD_TEST = "c7RCi13Q";

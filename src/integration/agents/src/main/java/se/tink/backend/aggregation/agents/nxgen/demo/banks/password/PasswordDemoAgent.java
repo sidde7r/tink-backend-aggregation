@@ -1,5 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.password;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
+
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,6 +20,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -35,7 +45,17 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
-public class PasswordDemoAgent extends NextGenerationDemoAgent
+@AgentCapabilities({
+    CHECKING_ACCOUNTS,
+    LOANS,
+    CREDIT_CARDS,
+    SAVINGS_ACCOUNTS,
+    IDENTITY_DATA,
+    TRANSFERS,
+    INVESTMENTS,
+    MORTGAGE_AGGREGATION
+})
+public final class PasswordDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {
     private final String username;
     private final String provider;

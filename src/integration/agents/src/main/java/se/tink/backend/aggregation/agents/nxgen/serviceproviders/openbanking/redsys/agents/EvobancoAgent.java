@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.agents;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+
 import java.time.LocalDate;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgent;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class EvobancoAgent extends RedsysAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS})
+public final class EvobancoAgent extends RedsysAgent {
 
     public EvobancoAgent(
             CredentialsRequest request,

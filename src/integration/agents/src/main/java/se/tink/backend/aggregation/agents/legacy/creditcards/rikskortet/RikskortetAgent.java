@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.creditcards.rikskortet;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.util.List;
@@ -12,6 +14,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.rikskortet.soap.AccountDetails;
 import se.tink.backend.aggregation.agents.creditcards.rikskortet.soap.ArrayOfTransactionDetails;
@@ -29,7 +32,8 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
+@AgentCapabilities({CREDIT_CARDS})
+public final class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     private static final File WSDL_FILE = new File("data/agents/rikskortet.wsdl");
     private boolean hasRefreshed = false;
     SOAPUserAgentHandler userAgentHandler;

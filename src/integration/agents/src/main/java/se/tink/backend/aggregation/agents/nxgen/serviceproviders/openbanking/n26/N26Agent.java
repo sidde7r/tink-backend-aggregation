@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
+
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +12,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.N26AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.fetcher.N26TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.fetcher.N26TransferDestinationFetcher;
@@ -27,7 +31,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-public class N26Agent extends NextGenerationAgent
+@AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
+public final class N26Agent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshTransferDestinationExecutor {
 
     private final N26Storage storage;

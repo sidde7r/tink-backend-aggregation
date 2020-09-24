@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.ActivityEntity;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.BillingInfoDetailsEntity;
@@ -35,7 +36,9 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedRefreshExecutor {
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class AmericanExpressV3Agent extends AbstractAgent
+        implements DeprecatedRefreshExecutor {
 
     private final AmericanExpressV3ApiClient apiClient;
 

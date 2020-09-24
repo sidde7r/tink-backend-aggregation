@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.omasp;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+
 import com.google.inject.Inject;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.omasp.OmaspConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkAgent;
@@ -10,7 +14,8 @@ import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA25
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-public class OmaspAgent extends SamlinkAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
+public final class OmaspAgent extends SamlinkAgent {
 
     @Inject
     public OmaspAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {

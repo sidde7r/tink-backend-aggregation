@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+
 import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
 import se.tink.backend.agents.rpc.Field;
@@ -12,6 +18,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.AvanzaBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.AvanzaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.loan.AvanzaLoanFetcher;
@@ -34,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableB
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 
+@AgentCapabilities({SAVINGS_ACCOUNTS, INVESTMENTS, IDENTITY_DATA, LOANS, MORTGAGE_AGGREGATION})
 public final class AvanzaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,

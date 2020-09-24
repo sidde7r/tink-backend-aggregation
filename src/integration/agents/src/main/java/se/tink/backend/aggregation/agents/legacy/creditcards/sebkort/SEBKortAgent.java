@@ -19,6 +19,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.CollectBankIdResponse;
@@ -44,7 +45,8 @@ import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
-public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     @SuppressWarnings("serial")
     private static class RetryableError extends Exception {
         public RetryableError(String msg) {

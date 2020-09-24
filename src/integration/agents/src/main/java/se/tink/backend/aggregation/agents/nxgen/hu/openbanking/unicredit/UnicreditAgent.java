@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit;
 
 import com.google.inject.Inject;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.UnicreditAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.UnicreditAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
@@ -11,7 +12,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 
-public class UnicreditAgent extends UnicreditBaseAgent {
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class UnicreditAgent extends UnicreditBaseAgent {
 
     private static final UnicreditProviderConfiguration PROVIDER_CONFIG =
             new UnicreditProviderConfiguration("NOT_YET_DEVELOPED", "NOT_YET_DEVELOPED");
