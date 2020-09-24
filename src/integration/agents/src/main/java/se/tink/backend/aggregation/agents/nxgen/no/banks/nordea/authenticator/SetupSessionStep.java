@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -32,6 +33,7 @@ public class SetupSessionStep implements AuthenticationStep {
     private final NordeaNoStorage storage;
     private final RandomValueGenerator randomValueGenerator;
     private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -98,7 +100,7 @@ public class SetupSessionStep implements AuthenticationStep {
     private Field getBankIdPhraseVerificationField(String referenceNumber) {
         return Field.builder()
                 .immutable(true)
-                .description(VALIDATE_REFERENCE_CODE_MSG.get())
+                .description(catalog.getString(VALIDATE_REFERENCE_CODE_MSG))
                 .value(referenceNumber)
                 .name("name")
                 .build();

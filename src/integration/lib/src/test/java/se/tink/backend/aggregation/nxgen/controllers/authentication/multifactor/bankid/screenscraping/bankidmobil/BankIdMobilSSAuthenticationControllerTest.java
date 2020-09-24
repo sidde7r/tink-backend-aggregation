@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 
@@ -42,7 +43,11 @@ public class BankIdMobilSSAuthenticationControllerTest {
         SupplementalRequester supplementalRequester = mock(SupplementalRequester.class);
         objUnderTest =
                 new BankIdMobilSSAuthenticationController(
-                        webDriverHelper, driver, mobilInitializer, supplementalRequester);
+                        webDriverHelper,
+                        driver,
+                        mobilInitializer,
+                        supplementalRequester,
+                        Catalog.getCatalog("en"));
         dummyElement = mock(WebElement.class);
         credentials = mock(Credentials.class);
         inOrder = Mockito.inOrder(webDriverHelper, driver, mobilInitializer);

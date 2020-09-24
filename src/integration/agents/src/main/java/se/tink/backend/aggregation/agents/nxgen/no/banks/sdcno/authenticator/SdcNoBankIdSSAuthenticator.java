@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.BankIdMobilSSAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.selenium.WebDriverHelper;
 
 public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthenticator {
@@ -28,17 +29,20 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
     private final WebDriverHelper webDriverHelper;
     private final PostAuthDriverProcessor postAuthDriverProcessor;
     private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
 
     public SdcNoBankIdSSAuthenticator(
             SdcNoConfiguration configuration,
             TinkHttpClient tinkHttpClient,
-            SupplementalRequester supplementalRequester) {
+            SupplementalRequester supplementalRequester,
+            Catalog catalog) {
         this.webDriverHelper = new WebDriverHelper();
         this.driver = webDriverHelper.constructPhantomJsWebDriver(WebScrapingConstants.USER_AGENT);
         this.configuration = configuration;
         this.postAuthDriverProcessor =
                 new PostAuthDriverProcessor(driver, webDriverHelper, tinkHttpClient, configuration);
         this.supplementalRequester = supplementalRequester;
+        this.catalog = catalog;
     }
 
     @Override
@@ -56,7 +60,7 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
 
         BankIdMobilSSAuthenticationController controller =
                 new BankIdMobilSSAuthenticationController(
-                        webDriverHelper, driver, mobilInitializer, supplementalRequester);
+                        webDriverHelper, driver, mobilInitializer, supplementalRequester, catalog);
 
         driver.get(configuration.getLoginUrl());
 
