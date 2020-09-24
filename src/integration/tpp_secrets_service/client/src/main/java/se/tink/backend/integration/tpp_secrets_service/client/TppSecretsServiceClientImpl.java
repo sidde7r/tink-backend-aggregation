@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
-import io.grpc.netty.NettyChannelBuilder;
 import io.netty.handler.ssl.SslContext;
 import java.security.Security;
 import java.util.Optional;
@@ -143,13 +142,7 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
                 try {
                     if (tppSecretsServiceConfiguration != null && sslContext != null) {
 
-                        ManagedChannel newChannel =
-                                NettyChannelBuilder.forAddress(
-                                                tppSecretsServiceConfiguration.getHost(),
-                                                tppSecretsServiceConfiguration.getPort())
-                                        .useTransportSecurity()
-                                        .sslContext(sslContext)
-                                        .build();
+                        ManagedChannel newChannel = buildChannel();
                         newChannel.notifyWhenStateChanged(
                                 this.channel.getState(false), this::reconnectIfNecessary);
                         this.channel = newChannel;
