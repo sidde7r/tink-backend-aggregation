@@ -121,10 +121,9 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-
         return Optional.of(
                 new UnicreditPaymentController(
-                        new UnicreditPaymentExecutor(apiClient),
+                        new UnicreditPaymentExecutor(apiClient, sessionStorage),
                         supplementalInformationHelper,
                         persistentStorage,
                         strongAuthenticationState));

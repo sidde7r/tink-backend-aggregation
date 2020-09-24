@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class UnicreditBaseApiClient {
@@ -54,6 +55,7 @@ public class UnicreditBaseApiClient {
 
     private final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
     private String redirectUrl;
     private final Credentials credentials;
     protected UnicreditProviderConfiguration providerConfiguration;
@@ -63,11 +65,13 @@ public class UnicreditBaseApiClient {
     public UnicreditBaseApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             Credentials credentials,
             boolean manualRequest,
             UnicreditProviderConfiguration providerConfiguration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
         this.credentials = credentials;
         this.manualRequest = manualRequest;
         this.providerConfiguration = providerConfiguration;
@@ -245,6 +249,9 @@ public class UnicreditBaseApiClient {
     }
 
     public CreatePaymentResponse createSepaPayment(CreatePaymentRequest request) {
+        String psuIpAddress =
+                Optional.ofNullable(sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS))
+                        .orElse(HeaderValues.PSU_IP_ADDRESS);
 
         CreatePaymentResponse createPaymentResponse =
                 createRequest(
@@ -256,7 +263,7 @@ public class UnicreditBaseApiClient {
                                                 UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS
                                                         .toString()))
                         .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                        .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)
                         .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
@@ -275,6 +282,9 @@ public class UnicreditBaseApiClient {
     }
 
     public FetchPaymentResponse fetchPayment(String paymentId) {
+        String psuIpAddress =
+                Optional.ofNullable(sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS))
+                        .orElse(HeaderValues.PSU_IP_ADDRESS);
 
         return createRequest(
                         new URL(providerConfiguration.getBaseUrl() + Endpoints.FETCH_PAYMENT)
@@ -283,7 +293,7 @@ public class UnicreditBaseApiClient {
                                         UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
                                 .parameter(PathParameters.PAYMENT_ID, paymentId))
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)
                 .get(FetchPaymentResponse.class);
     }
 }

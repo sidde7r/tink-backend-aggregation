@@ -26,7 +26,7 @@ public class RBSAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .doLogout(false)
-                .setFinancialInstitutionId("rbs")
+                .setFinancialInstitutionId("ed47ff3492924bf5855df4d780cdffdc")
                 .setAppId("tink");
     }
 

@@ -7,11 +7,13 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentRequest;
@@ -28,22 +30,26 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
+@AllArgsConstructor
 public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+
     private static final Logger logger = LoggerFactory.getLogger(UnicreditPaymentExecutor.class);
+
     private final UnicreditBaseApiClient apiClient;
 
-    public UnicreditPaymentExecutor(UnicreditBaseApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
+    private final SessionStorage sessionStorage;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        sessionStorage.put(HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
+
         PaymentType type =
                 UnicreditConstants.PAYMENT_TYPE_MAPPER
                         .translate(paymentRequest.getPayment().getCreditorAndDebtorAccountType())

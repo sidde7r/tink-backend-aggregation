@@ -100,19 +100,19 @@ public class DefaultCamtTransactionMapper implements TransactionMapper {
     private String getBeneficiary(ReportEntry2 reportEntry) {
         String creditorName =
                 reportEntry.getNtryDtls().stream()
-                        .flatMap(x -> x.getTxDtls().stream())
+                        .findFirst()
+                        .flatMap(x -> x.getTxDtls().stream().findFirst())
                         .map(EntryTransaction2::getRltdPties)
                         .map(TransactionParty2::getCdtr)
                         .map(PartyIdentification32::getNm)
-                        .findFirst()
                         .orElse(null);
         String debtorName =
                 reportEntry.getNtryDtls().stream()
-                        .flatMap(x -> x.getTxDtls().stream())
+                        .findFirst()
+                        .flatMap(x -> x.getTxDtls().stream().findFirst())
                         .map(EntryTransaction2::getRltdPties)
                         .map(TransactionParty2::getDbtr)
                         .map(PartyIdentification32::getNm)
-                        .findFirst()
                         .orElse(null);
         return isDebit(reportEntry) ? creditorName : debtorName;
     }
