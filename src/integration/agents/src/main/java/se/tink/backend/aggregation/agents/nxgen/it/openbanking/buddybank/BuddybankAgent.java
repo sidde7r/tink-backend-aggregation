@@ -26,7 +26,12 @@ public class BuddybankAgent extends UnicreditBaseAgent {
     @Override
     protected UnicreditBaseApiClient getApiClient(boolean manualRequest) {
         return new BuddybankApiClient(
-                client, persistentStorage, credentials, manualRequest, PROVIDER_CONFIG);
+                client,
+                persistentStorage,
+                sessionStorage,
+                credentials,
+                manualRequest,
+                PROVIDER_CONFIG);
     }
 
     @Override
@@ -39,10 +44,9 @@ public class BuddybankAgent extends UnicreditBaseAgent {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-
         return Optional.of(
                 new BuddybankPaymentController(
-                        new UnicreditPaymentExecutor(apiClient),
+                        new UnicreditPaymentExecutor(apiClient, sessionStorage),
                         (BuddybankApiClient) apiClient,
                         persistentStorage));
     }

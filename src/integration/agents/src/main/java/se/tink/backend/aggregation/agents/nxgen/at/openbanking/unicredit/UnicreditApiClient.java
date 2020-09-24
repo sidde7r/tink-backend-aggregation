@@ -8,17 +8,25 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class UnicreditApiClient extends UnicreditBaseApiClient {
 
-    public UnicreditApiClient(
+    UnicreditApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             Credentials credentials,
             boolean manualRequest,
             UnicreditProviderConfiguration providerConfiguration) {
-        super(client, persistentStorage, credentials, manualRequest, providerConfiguration);
+        super(
+                client,
+                persistentStorage,
+                sessionStorage,
+                credentials,
+                manualRequest,
+                providerConfiguration);
     }
 
     @Override

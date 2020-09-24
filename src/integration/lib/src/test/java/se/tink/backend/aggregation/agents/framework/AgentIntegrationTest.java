@@ -536,7 +536,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             log.info("Executing bank transfer.");
 
             PaymentResponse createPaymentResponse =
-                    paymentController.create(new PaymentRequest(paymentList.get(0)));
+                    paymentController.create(
+                            new PaymentRequest(paymentList.get(0), originatingUserIp));
 
             PaymentMultiStepResponse signPaymentMultiStepResponse =
                     paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
