@@ -19,8 +19,6 @@ import io.dropwizard.setup.Environment;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -94,11 +92,7 @@ public class AgentInitialisor {
 
             Injector injector = Guice.createInjector(getGuiceModulesToUse());
             agentFactory = injector.getInstance(AgentFactory.class);
-        } catch (IOException
-                | ConfigurationException
-                | IllegalAccessException
-                | NoSuchMethodException
-                | InvocationTargetException e) {
+        } catch (IOException | ConfigurationException e) {
             throw new RuntimeException(e);
         }
     }
@@ -172,18 +166,11 @@ public class AgentInitialisor {
         return new ManualAuthenticateRequest(user, provider, credentials, true);
     }
 
-    private Set<Module> getGuiceModulesToUse()
-            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        final Method buildForProductionMethod =
-                AggregationModuleFactory.class.getDeclaredMethod(
-                        "baseBuilder", AggregationServiceConfiguration.class, Environment.class);
-
-        buildForProductionMethod.setAccessible(true);
+    private Set<Module> getGuiceModulesToUse() {
 
         final ImmutableList.Builder<Module> modulesList =
-                (ImmutableList.Builder<Module>)
-                        buildForProductionMethod.invoke(
-                                null, aggregationServiceConfiguration, ENVIRONMENT);
+                AggregationModuleFactory.productionBuilder(
+                        aggregationServiceConfiguration, ENVIRONMENT);
 
         Set<Module> modules = modulesList.build().stream().collect(Collectors.toSet());
 

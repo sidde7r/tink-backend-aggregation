@@ -42,7 +42,7 @@ public class AggregationModuleFactory {
         }
     }
 
-    private static ImmutableList.Builder<Module> productionBuilder(
+    public static ImmutableList.Builder<Module> productionBuilder(
             AggregationServiceConfiguration configuration, Environment environment) {
         return baseBuilder(configuration, environment)
                 .add(new AggregationCommonModule())
