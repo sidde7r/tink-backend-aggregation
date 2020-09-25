@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 @JsonObject
 public class ListAccountsResponse extends AbstractBankIdResponse {
@@ -38,10 +37,7 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
                 .filter(
                         DanskeBankPredicates.knownCheckingAccountProducts(
                                 knownCheckingAccountProducts))
-                .map(
-                        accountEntity ->
-                                accountEntity.toTransactionalAccount(
-                                        TransactionalAccountType.CHECKING))
+                .map(AccountEntity::toCheckingAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
@@ -54,7 +50,7 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
                 .filter(
                         DanskeBankPredicates.knownSavingsAccountProducts(
                                 knownSavingsAccountProducts))
-                .map(account -> account.toTransactionalAccount(TransactionalAccountType.SAVINGS))
+                .map(AccountEntity::toSavingAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

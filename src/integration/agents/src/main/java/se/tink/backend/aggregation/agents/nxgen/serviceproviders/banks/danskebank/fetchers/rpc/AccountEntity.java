@@ -91,7 +91,15 @@ public class AccountEntity {
                 .build();
     }
 
-    public Optional<TransactionalAccount> toTransactionalAccount(TransactionalAccountType type) {
+    public Optional<TransactionalAccount> toCheckingAccount() {
+        return toTransactionalAccount(TransactionalAccountType.CHECKING);
+    }
+
+    public Optional<TransactionalAccount> toSavingAccount() {
+        return toTransactionalAccount(TransactionalAccountType.SAVINGS);
+    }
+
+    private Optional<TransactionalAccount> toTransactionalAccount(TransactionalAccountType type) {
         return TransactionalAccount.nxBuilder()
                 .withType(type)
                 .withPaymentAccountFlag()
