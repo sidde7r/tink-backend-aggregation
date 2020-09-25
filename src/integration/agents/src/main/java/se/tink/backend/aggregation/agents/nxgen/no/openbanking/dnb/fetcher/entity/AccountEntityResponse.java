@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.entity;
 
+import java.util.Arrays;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.BalanceTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.Balance;
@@ -17,6 +17,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntityResponse {
+    private static final String[] SAVING_ACCOUNT_PRODUCT_NAMES = {
+        "SPAREKONTO", "SAVING", "SUPERSPAR", "PLASSERINGSKONTO"
+    };
+
     private String bban;
     private String name;
     private String currency;
@@ -55,10 +59,12 @@ public class AccountEntityResponse {
     }
 
     private TransactionalAccountType getAccountType() {
-        return name.toLowerCase().contains(AccountTypes.SAVINGS_NO.toLowerCase())
-                        || name.toLowerCase().contains(AccountTypes.SAVINGS_EN.toLowerCase())
-                ? TransactionalAccountType.SAVINGS
-                : TransactionalAccountType.CHECKING;
+        boolean isSavings =
+                Arrays.stream(SAVING_ACCOUNT_PRODUCT_NAMES)
+                        .map(String::toLowerCase)
+                        .anyMatch(x -> name.toLowerCase().contains(x));
+
+        return isSavings ? TransactionalAccountType.SAVINGS : TransactionalAccountType.CHECKING;
     }
 
     private boolean isUsableBalanceType(final Balance balance) {

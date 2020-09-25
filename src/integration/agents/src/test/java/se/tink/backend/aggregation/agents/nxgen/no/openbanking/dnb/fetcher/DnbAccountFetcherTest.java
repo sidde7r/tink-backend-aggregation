@@ -26,7 +26,7 @@ public class DnbAccountFetcherTest {
 
         Collection<TransactionalAccount> accounts = fetcher.fetchAccounts();
 
-        assertEquals(4, accounts.size());
+        assertEquals(5, accounts.size());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class DnbAccountFetcherTest {
                                         transactionalAccount.getType().equals(AccountTypes.SAVINGS))
                         .count();
 
-        assertEquals(3, savingsAccountCount);
+        assertEquals(4, savingsAccountCount);
     }
 
     @BeforeClass

@@ -56,11 +56,6 @@ public final class DnbConstants {
         public static final String EXPECTED = "expected";
     }
 
-    public static class AccountTypes {
-        public static final String SAVINGS_NO = "SPAREKONTO";
-        public static final String SAVINGS_EN = "SAVING";
-    }
-
     public static class QueryKeys {
         public static final String STATE = "state";
         public static final String BOOKING_STATUS = "bookingStatus";
