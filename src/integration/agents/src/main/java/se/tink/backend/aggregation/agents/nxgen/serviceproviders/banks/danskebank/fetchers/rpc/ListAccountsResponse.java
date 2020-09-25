@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
@@ -37,17 +38,21 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
                         DanskeBankPredicates.knownCheckingAccountProducts(
                                 knownCheckingAccountProducts))
                 .map(AccountEntity::toCheckingAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
     public List<TransactionalAccount> toTinkSavingsAccounts(
-            List<String> knownSavingsAccountProducts, DanskeBankConfiguration configuration) {
+            List<String> knownSavingsAccountProducts) {
         return this.accounts.stream()
                 .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(
                         DanskeBankPredicates.knownSavingsAccountProducts(
                                 knownSavingsAccountProducts))
-                .map(account -> account.toSavingsAccount(configuration))
+                .map(AccountEntity::toSavingAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +42,7 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                 .addAll(
                         listAccounts.toTinkCheckingAccounts(
                                 configuration.getCheckingAccountTypes()))
-                .addAll(
-                        listAccounts.toTinkSavingsAccounts(
-                                configuration.getSavingsAccountTypes(), configuration))
+                .addAll(listAccounts.toTinkSavingsAccounts(configuration.getSavingsAccountTypes()))
                 .build();
     }
 
@@ -67,6 +66,8 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                                         accountEntity.getAccountNoInt(),
                                         accountEntity.getAccountProduct()))
                 .map(AccountEntity::toCheckingAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }
