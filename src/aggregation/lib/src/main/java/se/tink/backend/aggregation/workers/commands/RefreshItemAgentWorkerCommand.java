@@ -145,8 +145,10 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
                 Agent agent = context.getAgent();
                 if (agent instanceof DeprecatedRefreshExecutor) {
+                    log.info("DeprecatedRefreshExecutor refresh");
                     ((DeprecatedRefreshExecutor) agent).refresh();
                 } else {
+                    log.info("RefreshExecutorUtils executeSegregatedRefresher");
                     RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
                 }
 
