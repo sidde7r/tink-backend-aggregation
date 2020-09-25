@@ -16,4 +16,8 @@ public class AccessEntity {
     public AccessEntity(String allPsd2) {
         this.allPsd2 = allPsd2;
     }
+
+    public AccessEntity(List<AccessInfoEntity> accounts) {
+        this.accounts = accounts;
+    }
 }

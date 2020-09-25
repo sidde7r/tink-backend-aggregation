@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.vdk;
 
+import static se.tink.backend.agents.rpc.Field.Key.IBAN;
+
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 
 public class VdkAgentTest {
 
@@ -25,7 +26,7 @@ public class VdkAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("be", "be-vdk-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
+                        .addCredentialField(IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
