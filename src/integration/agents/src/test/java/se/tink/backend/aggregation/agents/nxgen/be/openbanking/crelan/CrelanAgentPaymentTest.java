@@ -10,8 +10,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -20,18 +18,13 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class CrelanAgentPaymentTest {
     private final ArgumentManager<Arg> creditorDebtorManager = new ArgumentManager<>(Arg.values());
-    private final ArgumentManager<IbanArgumentEnum> ibanManager =
-            new ArgumentManager<>(IbanArgumentEnum.values());
 
     @Test
     public void testPayments() throws Exception {
         creditorDebtorManager.before();
-        ibanManager.before();
 
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("be", "be-crelan-ob")
-                        .addCredentialField(
-                                CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("crelan")
                         .setAppId("tink")
