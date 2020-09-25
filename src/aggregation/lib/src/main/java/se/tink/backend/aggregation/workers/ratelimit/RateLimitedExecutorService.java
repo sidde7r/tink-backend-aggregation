@@ -11,6 +11,7 @@ import io.dropwizard.lifecycle.Managed;
 import java.lang.invoke.MethodHandles;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import org.assertj.core.util.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
@@ -113,6 +114,11 @@ public class RateLimitedExecutorService implements Managed {
         final RateLimitedExecutorProxy executorProxy =
                 rateLimitedRefreshInformationRequestExecutorByProvider.get(provider);
         executorProxy.execute(namedRunnable);
+    }
+
+    @VisibleForTesting
+    long getCacheSize() {
+        return rateLimitedRefreshInformationRequestExecutorByProvider.size();
     }
 
     @Override
