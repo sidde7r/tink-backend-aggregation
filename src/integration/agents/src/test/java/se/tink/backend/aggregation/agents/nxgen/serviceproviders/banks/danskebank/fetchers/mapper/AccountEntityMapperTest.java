@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -12,21 +12,24 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Loan.Type;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class AccountEntityTest {
+public class AccountEntityMapperTest {
 
     private static final String ACCOUNT_NO_EXT = "123234345";
     private static final String ACCOUNT_NO_INT = "567678789";
 
     private AccountEntity accountEntity;
+    private AccountEntityMapper accountEntityMapper;
 
     @Before
     public void setUp() {
+        accountEntityMapper = new AccountEntityMapper();
         accountEntity =
                 SerializationUtils.deserializeFromString(
                         "{\n"
@@ -54,7 +57,7 @@ public class AccountEntityTest {
                 danskeBankConfiguration(accountProductToTypeMapping);
 
         // when
-        LoanAccount result = accountEntity.toLoanAccount(configuration);
+        LoanAccount result = accountEntityMapper.toLoanAccount(configuration, accountEntity);
 
         // then
         assertThat(result.getDetails().getType()).isEqualTo(LoanDetails.Type.MORTGAGE);
@@ -72,7 +75,7 @@ public class AccountEntityTest {
         DanskeBankConfiguration configuration = danskeBankConfiguration();
 
         // when
-        LoanAccount result = accountEntity.toLoanAccount(configuration);
+        LoanAccount result = accountEntityMapper.toLoanAccount(configuration, accountEntity);
 
         // then
         assertThat(result.getDetails().getType()).isEqualTo(LoanDetails.Type.DERIVE_FROM_NAME);

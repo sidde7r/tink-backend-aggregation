@@ -1,23 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
-import java.util.Optional;
-import lombok.Getter;
-import se.tink.backend.aggregation.agents.models.Loan.Type;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.backend.aggregation.source_info.AccountSourceInfo;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-@Getter
 public class AccountEntity {
 
     private String showCategory;
@@ -26,105 +11,118 @@ public class AccountEntity {
     private boolean isInLimitGroup;
     private boolean isSavingGoalAccountProduct;
     private boolean isBreadcrumbAccountProduct;
-    protected boolean isLoanAccount;
+    private boolean isLoanAccount;
     private String invIdOwner;
     private String mandateAccMk;
     private boolean showAvailable;
     private boolean accessToCredit;
     private boolean accessToDebit;
     private boolean accessToQuery;
-    protected String currency;
-    protected String cardType;
-    protected String accountType;
-    protected String accountName;
-    protected String accountProduct;
+    private String currency;
+    private String cardType;
+    private String accountType;
+    private String accountName;
+    private String accountProduct;
     private String accountRegNoExt;
-    protected String accountNoExt;
-    protected String accountNoInt;
-    protected String languageCode;
+    private String accountNoExt;
+    private String accountNoInt;
+    private String languageCode;
     private double balanceAvailable;
-    protected double balance;
+    private double balance;
 
-    public LoanAccount toLoanAccount(DanskeBankConfiguration configuration) {
-        return LoanAccount.builder(accountNoInt, ExactCurrencyAmount.of(balance, currency))
-                .setAccountNumber(accountNoExt)
-                .setName(accountName)
-                .setBankIdentifier(accountNoInt)
-                .canExecuteExternalTransfer(
-                        configuration.canExecuteExternalTransfer(accountProduct))
-                .canReceiveExternalTransfer(
-                        configuration.canReceiveExternalTransfer(accountProduct))
-                .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
-                .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
-                .sourceInfo(createAccountSourceInfo())
-                .setDetails(
-                        isMortgage(configuration)
-                                ? LoanDetails.builder(LoanDetails.Type.MORTGAGE)
-                                        .setLoanNumber(accountNoExt)
-                                        .build()
-                                : null)
-                .build();
+    public String getShowCategory() {
+        return showCategory;
     }
 
-    private boolean isMortgage(final DanskeBankConfiguration configuration) {
-        return configuration
-                .getLoanAccountTypes()
-                .getOrDefault(accountProduct, Type.OTHER)
-                .equals(Type.MORTGAGE);
+    public int getSortValue() {
+        return sortValue;
     }
 
-    public CreditCardAccount toCreditCardAccount(DanskeBankConfiguration configuration) {
-        return CreditCardAccount.builder(
-                        accountNoInt,
-                        ExactCurrencyAmount.of(balance, currency),
-                        calculateAvailableCredit())
-                .setAccountNumber(accountNoExt)
-                .setName(accountName)
-                .setBankIdentifier(accountNoInt)
-                .canExecuteExternalTransfer(
-                        configuration.canExecuteExternalTransfer(accountProduct))
-                .canReceiveExternalTransfer(
-                        configuration.canReceiveExternalTransfer(accountProduct))
-                .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
-                .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
-                .sourceInfo(createAccountSourceInfo())
-                .build();
+    public boolean isFixedTermDeposit() {
+        return isFixedTermDeposit;
     }
 
-    public Optional<TransactionalAccount> toCheckingAccount() {
-        return toTransactionalAccount(TransactionalAccountType.CHECKING);
+    public boolean isInLimitGroup() {
+        return isInLimitGroup;
     }
 
-    public Optional<TransactionalAccount> toSavingAccount() {
-        return toTransactionalAccount(TransactionalAccountType.SAVINGS);
+    public boolean isSavingGoalAccountProduct() {
+        return isSavingGoalAccountProduct;
     }
 
-    private Optional<TransactionalAccount> toTransactionalAccount(TransactionalAccountType type) {
-        return TransactionalAccount.nxBuilder()
-                .withType(type)
-                .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(balance, currency)))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(accountNoInt)
-                                .withAccountNumber(accountNoExt)
-                                .withAccountName(accountName)
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.SE, accountNoExt))
-                                .build())
-                .setApiIdentifier(accountNoInt)
-                .build();
+    public boolean isBreadcrumbAccountProduct() {
+        return isBreadcrumbAccountProduct;
     }
 
-    protected AccountSourceInfo createAccountSourceInfo() {
-        return AccountSourceInfo.builder()
-                .bankProductCode(accountProduct)
-                .bankAccountType(accountType)
-                .build();
+    public boolean isLoanAccount() {
+        return isLoanAccount;
     }
 
-    protected ExactCurrencyAmount calculateAvailableCredit() {
-        return ExactCurrencyAmount.of(Math.max(balanceAvailable - balance, 0.0), currency);
+    public String getInvIdOwner() {
+        return invIdOwner;
+    }
+
+    public String getMandateAccMk() {
+        return mandateAccMk;
+    }
+
+    public boolean isShowAvailable() {
+        return showAvailable;
+    }
+
+    public boolean isAccessToCredit() {
+        return accessToCredit;
+    }
+
+    public boolean isAccessToDebit() {
+        return accessToDebit;
+    }
+
+    public boolean isAccessToQuery() {
+        return accessToQuery;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getCardType() {
+        return cardType;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public String getAccountProduct() {
+        return accountProduct;
+    }
+
+    public String getAccountRegNoExt() {
+        return accountRegNoExt;
+    }
+
+    public String getAccountNoExt() {
+        return accountNoExt;
+    }
+
+    public String getAccountNoInt() {
+        return accountNoInt;
+    }
+
+    public String getLanguageCode() {
+        return languageCode;
+    }
+
+    public double getBalanceAvailable() {
+        return balanceAvailable;
+    }
+
+    public double getBalance() {
+        return balance;
     }
 }

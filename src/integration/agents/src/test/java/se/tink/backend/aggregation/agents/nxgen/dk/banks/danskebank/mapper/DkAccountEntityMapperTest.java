@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank.rpc;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -11,31 +11,36 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.models.Loan.Type;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class DkAccountEntityTest {
+public class DkAccountEntityMapperTest {
 
     private static final String ACCOUNT_NO_EXT = "123234345";
     private static final String ACCOUNT_NO_INT = "567678789";
     private static final String BANK_IDENTIFIER = "bankIdentifier";
     private static final String ZERO = "0";
 
-    private DkAccountEntity accountEntity;
+    private DkAccountEntityMapper dkAccountEntityMapper;
+    private AccountEntity accountEntity;
 
     @Before
     public void setUp() {
+        dkAccountEntityMapper = new DkAccountEntityMapper();
         accountEntity = getAccountEntity(ACCOUNT_NO_EXT, ACCOUNT_NO_INT);
     }
 
     @Test
     public void toCheckingAccountWhenAccountNumberLengthIsShorterThanMinLength() {
         // given & when
-        TransactionalAccount result = accountEntity.toCheckingAccount();
+        TransactionalAccount result =
+                dkAccountEntityMapper.toCheckingAccount(accountEntity).orElse(null);
 
         // then
+        assert result != null;
         assertThat(result.getAccountNumber()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER))
                 .isEqualTo(ZERO + ACCOUNT_NO_INT);
@@ -50,9 +55,11 @@ public class DkAccountEntityTest {
         accountEntity = getAccountEntity(tenDigitAccountNoExt, tenDigitAccountNoInt);
 
         // when
-        TransactionalAccount result = accountEntity.toCheckingAccount();
+        TransactionalAccount result =
+                dkAccountEntityMapper.toCheckingAccount(accountEntity).orElse(null);
 
         // then
+        assert result != null;
         assertThat(result.getAccountNumber()).isEqualTo(tenDigitAccountNoExt);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER)).isEqualTo(tenDigitAccountNoInt);
         assertThat(result.getApiIdentifier()).isEqualTo(tenDigitAccountNoInt);
@@ -64,9 +71,11 @@ public class DkAccountEntityTest {
         DanskeBankConfiguration configuration = getDanskeBankConfiguration();
 
         // given
-        TransactionalAccount result = accountEntity.toSavingsAccount(configuration);
+        TransactionalAccount result =
+                dkAccountEntityMapper.toSavingsAccount(configuration, accountEntity).orElse(null);
 
         // then
+        assert result != null;
         assertThat(result.getAccountNumber()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER))
                 .isEqualTo(ZERO + ACCOUNT_NO_INT);
@@ -82,9 +91,11 @@ public class DkAccountEntityTest {
         accountEntity = getAccountEntity(tenDigitAccountNoExt, tenDigitAccountNoInt);
 
         // when
-        TransactionalAccount result = accountEntity.toSavingsAccount(configuration);
+        TransactionalAccount result =
+                dkAccountEntityMapper.toSavingsAccount(configuration, accountEntity).orElse(null);
 
         // then
+        assert result != null;
         assertThat(result.getAccountNumber()).isEqualTo(tenDigitAccountNoExt);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER)).isEqualTo(tenDigitAccountNoInt);
         assertThat(result.getApiIdentifier()).isEqualTo(tenDigitAccountNoInt);
@@ -96,7 +107,8 @@ public class DkAccountEntityTest {
         DanskeBankConfiguration configuration = getDanskeBankConfiguration();
 
         // when
-        CreditCardAccount result = accountEntity.toCreditCardAccount(configuration);
+        CreditCardAccount result =
+                dkAccountEntityMapper.toCreditCardAccount(configuration, accountEntity);
 
         // then
         assertThat(result.getAccountNumber()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
@@ -114,7 +126,8 @@ public class DkAccountEntityTest {
         accountEntity = getAccountEntity(tenDigitAccountNoExt, tenDigitAccountNoInt);
 
         // when
-        CreditCardAccount result = accountEntity.toCreditCardAccount(configuration);
+        CreditCardAccount result =
+                dkAccountEntityMapper.toCreditCardAccount(configuration, accountEntity);
 
         // then
         assertThat(result.getAccountNumber()).isEqualTo(tenDigitAccountNoExt);
@@ -140,7 +153,7 @@ public class DkAccountEntityTest {
         return danskeBankConfiguration;
     }
 
-    private DkAccountEntity getAccountEntity(String accountExtNo, String accountIntNo) {
+    private AccountEntity getAccountEntity(String accountExtNo, String accountIntNo) {
         return SerializationUtils.deserializeFromString(
                 "{\n"
                         + "    \"currency\": \"PLN\",\n"
@@ -154,6 +167,6 @@ public class DkAccountEntityTest {
                         + "\",\n"
                         + "    \"balance\": -1234.45\n"
                         + "}",
-                DkAccountEntity.class);
+                AccountEntity.class);
     }
 }

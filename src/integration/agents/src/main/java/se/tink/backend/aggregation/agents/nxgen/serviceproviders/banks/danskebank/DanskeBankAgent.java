@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankMultiTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.DanskeBankInvestmentFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.filters.DanskeBankHttpFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -70,7 +71,10 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                         this.metricRefreshController,
                         this.updateController,
                         new DanskeBankAccountLoanFetcher(
-                                this.credentials, this.apiClient, this.configuration),
+                                this.credentials,
+                                this.apiClient,
+                                this.configuration,
+                                new AccountEntityMapper()),
                         createTransactionFetcherController());
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
@@ -112,7 +116,8 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new DanskeBankTransactionalAccountFetcher<>(this.apiClient, this.configuration),
+                new DanskeBankTransactionalAccountFetcher(
+                        this.apiClient, this.configuration, new AccountEntityMapper()),
                 createTransactionFetcherController());
     }
 
@@ -130,8 +135,8 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         return new CreditCardRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new DanskeBankCreditCardFetcher<>(
-                        this.apiClient, this.configuration.getLanguageCode(), this.configuration),
+                new DanskeBankCreditCardFetcher(
+                        this.apiClient, this.configuration, new AccountEntityMapper()),
                 createTransactionFetcherController());
     }
 
