@@ -83,10 +83,6 @@ public class IcaBankenLoanParsingHelper {
     public ExactCurrencyAmount getCurrentBalance() {
         Double currentDebt = getCurrentDebt();
 
-        if (currentDebt == null) {
-            return null;
-        }
-
         return ExactCurrencyAmount.inSEK(-1.0 * currentDebt);
     }
 
@@ -101,14 +97,10 @@ public class IcaBankenLoanParsingHelper {
                 initialDebt - AgentParsingUtils.parseAmountTrimCurrency(presentDebt));
     }
 
-    public Double getCurrentDebt() {
+    private Double getCurrentDebt() {
         String currentDebt = loanDetailsMap.get(IcaBankenConstants.LoanDetailsKeys.CURRENT_DEBT);
 
-        if (!Strings.isNullOrEmpty(currentDebt)) {
-            return AgentParsingUtils.parseAmountTrimCurrency(currentDebt);
-        }
-
-        return null;
+        return AgentParsingUtils.parseAmountTrimCurrency(currentDebt);
     }
 
     private Double getInitialDebt() {
