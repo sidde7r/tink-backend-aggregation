@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.other;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
+
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -15,6 +17,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -29,7 +32,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientExcept
 import se.tink.backend.aggregation.nxgen.http.readers.CharacterEncodedMessageBodyReader;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
+@AgentCapabilities({LOANS})
+public final class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
     private static final String CONNECT_TIMEOUT = "connect timed out";
     private static final String READ_TIMEOUT = "read timed out";

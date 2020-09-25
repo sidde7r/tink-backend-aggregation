@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.agentcapabilities;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +27,33 @@ public class AgentCapabilitiesServiceTest {
     private static final String EXPECTED_AGENT_CAPABILITIES_FILE_PATH =
             "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json";
 
+    private static final Set<String>
+            AGENTS_THAT_DO_NOT_EXISTS_BUT_ARE_LISTED_IN_AGENT_CAPABILITIES_JSON_FILE =
+                    newHashSet(
+                            "nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisAgent",
+                            "nxgen.se.openbanking.volvofinans.VolvoFinansAgent",
+                            "nxgen.it.openbanking.bancoposta.BancoPostaAgent",
+                            "banks.fi.op.OsuuspankkiAgent",
+                            "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent",
+                            "banks.sdc.v7.SDCV7Agent",
+                            "banks.fi.alandsbanken.AlandsBankenAgent",
+                            "banks.ie.aib.AibAgent",
+                            "banks.ICABankenAgent",
+                            "banks.ro.bcr.BCRAgent",
+                            "banks.pl.pko.PkoBankPolskiAgent",
+                            "nxgen.demo.banks.multisupplemental.MultiSupplementalAgent",
+                            "banks.swedbank.SwedbankAPIAgent",
+                            "nxgen.uk.openbanking.modelo.ModeloAgent",
+                            "nxgen.uk.openbanking.tide.TideBusinessAgent",
+                            "banks.dk.bankdata.BankDataAgent",
+                            "banks.pl.mbank.MBankAgent",
+                            "banks.swedbank.SwedbankAgent",
+                            "banks.handelsbanken.v6.HandelsbankenV6Agent",
+                            "banks.gr.nationalbank.NationalBankAgent",
+                            "banks.citibank.v11.CitibankV11Agent",
+                            "banks.sk.slovenskasporitelna.SlovenskaSporitelnaAgent");
+
+    private Map<String, Set<String>> expectedCapabilitiesMap;
     private Map<String, Set<Capability>> capabilities;
 
     private Function<Entry<String, List<String>>, Set<String>> convertFromListToSet =
@@ -33,6 +61,9 @@ public class AgentCapabilitiesServiceTest {
 
     @Before
     public void init() {
+        expectedCapabilitiesMap =
+                readExpectedAgentCapabilities(EXPECTED_AGENT_CAPABILITIES_FILE_PATH);
+
         capabilities = new AgentCapabilitiesService().getAgentsCapabilities();
         removeTestAgents();
     }
@@ -44,15 +75,19 @@ public class AgentCapabilitiesServiceTest {
 
     @Test
     public void shouldComputeCapabilitiesExactlyAsInAgentCapabilitiesJsonFile() {
-        Map<String, Set<String>> expectedCapabilitiesMap =
-                readExpectedAgentCapabilities(EXPECTED_AGENT_CAPABILITIES_FILE_PATH);
-        capabilities.forEach(
-                (agentName, computedCapabilities) -> {
+        expectedCapabilitiesMap.forEach(
+                (agentName, expectedCapabilities) -> {
                     try {
-                        Set<String> expectedCapabilities = expectedCapabilitiesMap.get(agentName);
+                        if (!capabilities.containsKey(agentName)) {
+                            throw new AssertionError(
+                                    "agent: " + agentName + " doesnt exist in the source code");
+                        }
 
-                        assertThat(getCapabilitiesAsSet(computedCapabilities))
-                                .as("for agent %s capabilities", agentName)
+                        Set<String> computedCapabilities = getCapabilitiesAsSet(agentName);
+                        assertThat(computedCapabilities)
+                                .as(
+                                        "for agent %s\n expected capabilities are %s,\n but found: \n%s",
+                                        agentName, expectedCapabilities, computedCapabilities)
                                 .isEqualTo(expectedCapabilities);
                     } catch (AssertionError t) {
                         // get rid of useless stack trace
@@ -62,8 +97,8 @@ public class AgentCapabilitiesServiceTest {
                 });
     }
 
-    private Set<String> getCapabilitiesAsSet(Set<Capability> capabilities) {
-        return capabilities.stream().map(Enum::name).collect(Collectors.toSet());
+    private Set<String> getCapabilitiesAsSet(String agentName) {
+        return capabilities.get(agentName).stream().map(Enum::name).collect(Collectors.toSet());
     }
 
     private Map<String, Set<String>> readExpectedAgentCapabilities(String filePath) {
@@ -71,6 +106,8 @@ public class AgentCapabilitiesServiceTest {
             byte[] agentCapabilitiesFileData = Files.readAllBytes(Paths.get(filePath));
             Map<String, List<String>> capabilitiesMap =
                     new ObjectMapper().readValue(new String(agentCapabilitiesFileData), Map.class);
+            AGENTS_THAT_DO_NOT_EXISTS_BUT_ARE_LISTED_IN_AGENT_CAPABILITIES_JSON_FILE.forEach(
+                    capabilitiesMap::remove);
             return capabilitiesMap.entrySet().stream()
                     .collect(Collectors.toMap(Entry::getKey, convertFromListToSet));
         } catch (IOException e) {

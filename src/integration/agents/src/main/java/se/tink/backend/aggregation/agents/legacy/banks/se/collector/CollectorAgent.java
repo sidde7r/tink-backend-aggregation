@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.banks.se.collector.configuration.CollectorConfiguration;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.CollectAuthenticationResponse;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.ErrorResponse;
@@ -49,7 +50,8 @@ import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-public class CollectorAgent extends AbstractAgent
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class CollectorAgent extends AbstractAgent
         implements RefreshSavingsAccountsExecutor,
                 RefreshTransferDestinationExecutor,
                 TransferExecutor {

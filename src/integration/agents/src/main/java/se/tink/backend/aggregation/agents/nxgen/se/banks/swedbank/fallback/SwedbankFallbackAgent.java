@@ -1,8 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.PAYMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
+
 import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Locale;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.configuration.SwedbankFallbackConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.configuration.SwedbankPsd2Configuration;
@@ -15,7 +23,15 @@ import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA25
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-public class SwedbankFallbackAgent extends SwedbankAbstractAgent {
+@AgentCapabilities({
+    CHECKING_ACCOUNTS,
+    PAYMENTS,
+    CREDIT_CARDS,
+    SAVINGS_ACCOUNTS,
+    IDENTITY_DATA,
+    TRANSFERS
+})
+public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
 
     @Inject
     protected SwedbankFallbackAgent(

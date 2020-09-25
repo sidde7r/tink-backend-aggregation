@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+
 import com.google.inject.Inject;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
@@ -10,7 +13,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 
-public class DeutscheBankBEAgent extends DeutscheBankAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS})
+public final class DeutscheBankBEAgent extends DeutscheBankAgent {
     private static final DeutscheMarketConfiguration DEUTSCHE_DE_CONFIGURATION =
             new DeutscheMarketConfiguration("https://xs2a.db.com/ais/BE/DB", "BE_ONLB_DB");
 

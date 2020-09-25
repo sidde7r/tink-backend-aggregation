@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.creditcards.ikano;
 
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -10,7 +11,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 // This agent is not used by customers. But it's referenced by our provider configuration
 // and old credentials are referencing this provider.
 // It is left as an empty shell until all credentials that use this agent are removed.
-public class IkanoCardAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class IkanoCardAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
     public IkanoCardAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {

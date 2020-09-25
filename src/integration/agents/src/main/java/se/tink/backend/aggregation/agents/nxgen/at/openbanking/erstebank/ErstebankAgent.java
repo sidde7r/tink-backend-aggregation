@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank;
 
 import com.google.inject.Inject;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.authenticator.ErstebankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.configuration.ErstebankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.ErstebankPaymentExecutor;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
+@AgentCapabilities(generateFromImplementedExecutors = true)
 public final class ErstebankAgent
         extends BerlinGroupAgent<ErstebankApiClient, ErstebankConfiguration> {
 

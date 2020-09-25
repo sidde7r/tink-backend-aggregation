@@ -1,5 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.PAYMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
+
 import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Locale;
@@ -11,6 +21,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.einvoice.SwedbankDefaultEinvoiceFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.SwedbankDefaultInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.transactional.SwedbankSETransactionalAccountFetcher;
@@ -26,6 +37,17 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
+@AgentCapabilities({
+    CHECKING_ACCOUNTS,
+    LOANS,
+    PAYMENTS,
+    CREDIT_CARDS,
+    SAVINGS_ACCOUNTS,
+    IDENTITY_DATA,
+    TRANSFERS,
+    INVESTMENTS,
+    MORTGAGE_AGGREGATION
+})
 public class SwedbankSEAgent extends SwedbankAbstractAgent
         implements RefreshLoanAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,

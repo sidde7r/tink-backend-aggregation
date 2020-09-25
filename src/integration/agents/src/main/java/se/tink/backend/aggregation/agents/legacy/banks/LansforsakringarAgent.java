@@ -1,6 +1,14 @@
 package se.tink.backend.aggregation.agents.banks;
 
-import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.PAYMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_TRANSACTIONS;
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_ACCOUNTS;
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_TRANSACTIONS;
@@ -60,6 +68,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LFUtils;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LansforsakringarBaseApiClient;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LansforsakringarDateUtil;
@@ -162,9 +171,20 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
+@AgentCapabilities({
+    CHECKING_ACCOUNTS,
+    LOANS,
+    PAYMENTS,
+    CREDIT_CARDS,
+    SAVINGS_ACCOUNTS,
+    IDENTITY_DATA,
+    TRANSFERS,
+    INVESTMENTS,
+    MORTGAGE_AGGREGATION
+})
 @AgentDependencyModulesForProductionMode(modules = LegacyAgentProductionStrategyModule.class)
 @AgentDependencyModulesForDecoupledMode(modules = LegacyAgentWiremockStrategyModule.class)
-public class LansforsakringarAgent extends AbstractAgent
+public final class LansforsakringarAgent extends AbstractAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
@@ -1324,7 +1344,8 @@ public class LansforsakringarAgent extends AbstractAgent
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
-        return this.refreshTransactionalAccounts(CHECKING_ACCOUNTS);
+        return this.refreshTransactionalAccounts(
+                se.tink.libraries.credentials.service.RefreshableItem.CHECKING_ACCOUNTS);
     }
 
     @Override

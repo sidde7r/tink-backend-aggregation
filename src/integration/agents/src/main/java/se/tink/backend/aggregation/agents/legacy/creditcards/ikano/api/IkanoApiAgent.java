@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiConstants.Error;
@@ -29,7 +30,8 @@ import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class IkanoApiAgent extends AbstractAgent
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class IkanoApiAgent extends AbstractAgent
         implements RefreshCreditCardAccountsExecutor, RefreshIdentityDataExecutor {
     private final IkanoApiClient apiClient;
     private final Credentials credentials;

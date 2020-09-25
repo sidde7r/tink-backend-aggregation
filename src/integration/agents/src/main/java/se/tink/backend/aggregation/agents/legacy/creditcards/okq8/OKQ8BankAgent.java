@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.creditcards.okq8;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -15,6 +17,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.okq8.model.LoginFailedResponse;
 import se.tink.backend.aggregation.agents.creditcards.okq8.model.LoginRequest;
@@ -30,7 +33,8 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
+@AgentCapabilities({CREDIT_CARDS})
+public final class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     private final ApacheHttpClient4 client;
     private Credentials credentials;
 

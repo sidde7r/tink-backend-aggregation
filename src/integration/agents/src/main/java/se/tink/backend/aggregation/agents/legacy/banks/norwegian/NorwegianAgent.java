@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardEntity;
@@ -78,7 +79,8 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
  * person at Norwegian so the only Tink account that will be created right now is a credit-card
  * account. No support for Loans.
  */
-public class NorwegianAgent extends AbstractAgent
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class NorwegianAgent extends AbstractAgent
         implements RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshIdentityDataExecutor {

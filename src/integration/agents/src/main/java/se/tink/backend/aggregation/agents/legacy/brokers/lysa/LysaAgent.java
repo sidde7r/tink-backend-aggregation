@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.brokers.lysa.model.AccountEntity;
 import se.tink.backend.aggregation.agents.brokers.lysa.model.DetailsEntity;
 import se.tink.backend.aggregation.agents.brokers.lysa.model.TransactionEntity;
@@ -28,7 +29,8 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class LysaAgent extends AbstractAgent implements RefreshInvestmentAccountsExecutor {
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class LysaAgent extends AbstractAgent implements RefreshInvestmentAccountsExecutor {
     private static final int MAX_ATTEMPTS = 60;
 
     private final LysaClient client;

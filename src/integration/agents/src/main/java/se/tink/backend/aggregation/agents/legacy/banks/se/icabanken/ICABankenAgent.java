@@ -1,5 +1,14 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.PAYMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.MoreObjects;
@@ -40,6 +49,7 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.banks.icabanken.IcaBankenAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AccountsResponse;
@@ -127,7 +137,17 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
-public class ICABankenAgent extends AbstractAgent
+@AgentCapabilities({
+    CHECKING_ACCOUNTS,
+    LOANS,
+    PAYMENTS,
+    CREDIT_CARDS,
+    SAVINGS_ACCOUNTS,
+    TRANSFERS,
+    INVESTMENTS,
+    MORTGAGE_AGGREGATION
+})
+public final class ICABankenAgent extends AbstractAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,

@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.SupremeCardApiConstants.TimeoutConfig;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model.AccountInfoEntity;
@@ -56,7 +57,8 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class SupremeCardAgent extends AbstractAgent
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class SupremeCardAgent extends AbstractAgent
         implements RefreshCreditCardAccountsExecutor, RefreshIdentityDataExecutor {
     private static final int MAX_ATTEMPTS = 65;
     private final Credentials credentials;

@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -9,6 +13,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.NordnetBankIdAutoStartAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.NordnetPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.investment.NordnetInvestmentFetcher;
@@ -27,7 +32,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class NordnetAgent extends NextGenerationAgent
+@AgentCapabilities({SAVINGS_ACCOUNTS, INVESTMENTS, IDENTITY_DATA})
+public final class NordnetAgent extends NextGenerationAgent
         implements RefreshInvestmentAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,

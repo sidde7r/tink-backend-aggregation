@@ -1,10 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREATE_BENEFICIARIES;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+
 import com.google.inject.Inject;
 import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.CreateBeneficiariesCapabilityExecutor;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.CaisseEpargneAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.configuration.CaisseEpargneConfiguration;
@@ -29,7 +35,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 
 @AgentDependencyModules(modules = ImageRecognizerHelperModule.class)
-public class CaisseEpargneAgent extends BpceGroupBaseAgent
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, CREATE_BENEFICIARIES})
+public final class CaisseEpargneAgent extends BpceGroupBaseAgent
         implements CreateBeneficiariesCapabilityExecutor {
 
     @Getter private final CaisseEpargneApiClient apiClient;

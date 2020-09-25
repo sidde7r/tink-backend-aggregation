@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.Headers;
 import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.InstrumentTypes;
 import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.Payloads;
@@ -84,7 +85,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 /** Latest verified version: iOS v2.12.0 */
-public class AvanzaV2Agent extends AbstractAgent
+@AgentCapabilities
+public final class AvanzaV2Agent extends AbstractAgent
         implements RefreshInvestmentAccountsExecutor, RefreshIdentityDataExecutor, PersistentLogin {
     private String authenticationToken;
     private Client client;

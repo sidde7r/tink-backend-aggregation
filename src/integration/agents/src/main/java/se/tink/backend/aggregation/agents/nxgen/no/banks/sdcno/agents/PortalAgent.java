@@ -1,8 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.agents;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoAgent;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditcard.CreditCardFetcher;
@@ -11,7 +16,8 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class PortalAgent extends SdcNoAgent implements RefreshCreditCardAccountsExecutor {
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
+public final class PortalAgent extends SdcNoAgent implements RefreshCreditCardAccountsExecutor {
 
     private final CreditCardRefreshController creditCardRefreshController;
 

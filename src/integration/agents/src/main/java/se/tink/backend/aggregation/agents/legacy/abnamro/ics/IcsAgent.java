@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.abnamro.ics.mappers.AccountMapper;
 import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.ics.retry.RetryerBuilder;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroIcsCredentials;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -54,7 +55,8 @@ import se.tink.libraries.user.rpc.User;
  * accounts from this endpoint so these are stored as a payload field on the credentials. New
  * accounts cannot be added. - This agent can and should only be used by ABN AMRO.
  */
-public class IcsAgent extends AbstractAgent implements RefreshCreditCardAccountsExecutor {
+@AgentCapabilities(generateFromImplementedExecutors = true)
+public final class IcsAgent extends AbstractAgent implements RefreshCreditCardAccountsExecutor {
 
     private final Credentials credentials;
     private final MetricRegistry metricRegistry;
