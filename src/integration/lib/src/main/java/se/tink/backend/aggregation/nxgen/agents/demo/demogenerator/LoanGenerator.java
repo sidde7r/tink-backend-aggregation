@@ -91,9 +91,4 @@ public class LoanGenerator {
 
         return loanAccounts;
     }
-
-    // TODO Add more details
-    private static LoanDetails buildLoanDetails(LoanDetails.Type type) {
-        return LoanDetails.builder(type).build();
-    }
 }
