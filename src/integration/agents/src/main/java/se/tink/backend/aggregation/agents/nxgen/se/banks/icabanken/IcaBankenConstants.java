@@ -123,6 +123,7 @@ public class IcaBankenConstants {
     public static final class LoanDetailsKeys {
         public static final String INTEREST_RATE = "aktuell räntesats";
         public static final String LOAN_NAME = "lån";
+        public static final String CURRENT_DEBT = "aktuell skuld";
         public static final String INITIAL_DEBT = "ursprunglig skuld";
         public static final String INITIAL_DATE = "utbetalningsdag";
         public static final String APPLICANTS = "låntagare";
