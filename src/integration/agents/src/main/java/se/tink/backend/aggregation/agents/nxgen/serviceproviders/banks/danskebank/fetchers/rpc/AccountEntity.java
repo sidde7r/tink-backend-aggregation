@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.Loan.Type;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,6 +17,7 @@ import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
 public class AccountEntity {
 
     private String showCategory;
@@ -42,102 +44,6 @@ public class AccountEntity {
     private String languageCode;
     private double balanceAvailable;
     private double balance;
-
-    public String getShowCategory() {
-        return showCategory;
-    }
-
-    public int getSortValue() {
-        return sortValue;
-    }
-
-    public boolean isFixedTermDeposit() {
-        return isFixedTermDeposit;
-    }
-
-    public boolean isInLimitGroup() {
-        return isInLimitGroup;
-    }
-
-    public boolean isSavingGoalAccountProduct() {
-        return isSavingGoalAccountProduct;
-    }
-
-    public boolean isBreadcrumbAccountProduct() {
-        return isBreadcrumbAccountProduct;
-    }
-
-    public boolean isLoanAccount() {
-        return isLoanAccount;
-    }
-
-    public String getInvIdOwner() {
-        return invIdOwner;
-    }
-
-    public String getMandateAccMk() {
-        return mandateAccMk;
-    }
-
-    public boolean isShowAvailable() {
-        return showAvailable;
-    }
-
-    public boolean isAccessToCredit() {
-        return accessToCredit;
-    }
-
-    public boolean isAccessToDebit() {
-        return accessToDebit;
-    }
-
-    public boolean isAccessToQuery() {
-        return accessToQuery;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getCardType() {
-        return cardType;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public String getAccountProduct() {
-        return accountProduct;
-    }
-
-    public String getAccountRegNoExt() {
-        return accountRegNoExt;
-    }
-
-    public String getAccountNoExt() {
-        return accountNoExt;
-    }
-
-    public String getAccountNoInt() {
-        return accountNoInt;
-    }
-
-    public String getLanguageCode() {
-        return languageCode;
-    }
-
-    public double getBalanceAvailable() {
-        return balanceAvailable;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
 
     public LoanAccount toLoanAccount(DanskeBankConfiguration configuration) {
         return LoanAccount.builder(accountNoInt, ExactCurrencyAmount.of(balance, currency))
