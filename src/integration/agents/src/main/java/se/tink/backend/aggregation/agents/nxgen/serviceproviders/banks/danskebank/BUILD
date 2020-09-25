@@ -32,6 +32,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/models",
+        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//src/libraries/serialization",
