@@ -8,6 +8,10 @@ import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
 
@@ -21,39 +25,70 @@ public class LoanGenerator {
             return loanAccounts;
         }
 
+        // Mortgage type loan
         loanAccounts.add(
-                LoanAccount.builder(
-                                accountDefinition.getMortgageId(),
-                                ExactCurrencyAmount.of(
-                                        DemoConstants.getSekToCurrencyConverter(
-                                                currency, accountDefinition.getMortgageBalance()),
-                                        currency))
-                        .setAccountNumber(accountDefinition.getMortgageId())
-                        .setName(catalog.getString(accountDefinition.getMortgageLoanName()))
-                        .setBankIdentifier(accountDefinition.getMortgageId())
-                        .setInterestRate(accountDefinition.getMortgageInterestName())
-                        .setDetails(buildLoanDetails(LoanDetails.Type.MORTGAGE))
+                LoanAccount.nxBuilder()
+                        .withLoanDetails(
+                                LoanModule.builder()
+                                        .withType(LoanDetails.Type.MORTGAGE)
+                                        .withBalance(
+                                                ExactCurrencyAmount.of(
+                                                        DemoConstants.getSekToCurrencyConverter(
+                                                                currency,
+                                                                accountDefinition
+                                                                        .getMortgageBalance()),
+                                                        currency))
+                                        .withInterestRate(
+                                                accountDefinition.getMortgageInterestName())
+                                        .setInitialDate(accountDefinition.getInitialDate())
+                                        .build())
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(accountDefinition.getMortgageId())
+                                        .withAccountNumber(accountDefinition.getMortgageId())
+                                        .withAccountName(accountDefinition.getMortgageLoanName())
+                                        .addIdentifier(
+                                                AccountIdentifier.create(
+                                                        Type.IBAN,
+                                                        accountDefinition.getMortgageId()))
+                                        .setProductName(
+                                                catalog.getString(
+                                                        accountDefinition.getMortgageLoanName()))
+                                        .build())
+                        .setBankIdentifier(accountDefinition.getBlancoId())
                         .build());
 
+        // Blanco type loam
         loanAccounts.add(
-                LoanAccount.builder(
-                                accountDefinition.getBlancoId(),
-                                ExactCurrencyAmount.of(
-                                        DemoConstants.getSekToCurrencyConverter(
-                                                currency, accountDefinition.getBlancoBalance()),
-                                        currency))
-                        .setAccountNumber(accountDefinition.getBlancoId())
-                        .setName(catalog.getString(accountDefinition.getBlancoLoanName()))
+                LoanAccount.nxBuilder()
+                        .withLoanDetails(
+                                LoanModule.builder()
+                                        .withType(LoanDetails.Type.BLANCO)
+                                        .withBalance(
+                                                ExactCurrencyAmount.of(
+                                                        DemoConstants.getSekToCurrencyConverter(
+                                                                currency,
+                                                                accountDefinition
+                                                                        .getBlancoBalance()),
+                                                        currency))
+                                        .withInterestRate(accountDefinition.getBlancoInterestName())
+                                        .setInitialDate(accountDefinition.getInitialDate())
+                                        .build())
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(accountDefinition.getBlancoId())
+                                        .withAccountNumber(accountDefinition.getBlancoId())
+                                        .withAccountName(accountDefinition.getBlancoLoanName())
+                                        .addIdentifier(
+                                                AccountIdentifier.create(
+                                                        Type.IBAN, accountDefinition.getBlancoId()))
+                                        .setProductName(
+                                                catalog.getString(
+                                                        accountDefinition.getMortgageLoanName()))
+                                        .build())
                         .setBankIdentifier(accountDefinition.getBlancoId())
-                        .setInterestRate(accountDefinition.getBlancoInterestName())
-                        .setDetails(buildLoanDetails(LoanDetails.Type.BLANCO))
                         .build());
 
         return loanAccounts;
-    }
-
-    // TODO Add more details
-    private static LoanDetails buildLoanDetails(LoanDetails.Type type) {
-        return LoanDetails.builder(type).build();
     }
 }

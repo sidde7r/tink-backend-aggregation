@@ -156,6 +156,11 @@ public final class PasswordDemoAgent extends NextGenerationDemoAgent {
             public double getBlancoBalance() {
                 return -5D;
             }
+
+            @Override
+            public LocalDate getInitialDate() {
+                return null;
+            }
         };
     }
 

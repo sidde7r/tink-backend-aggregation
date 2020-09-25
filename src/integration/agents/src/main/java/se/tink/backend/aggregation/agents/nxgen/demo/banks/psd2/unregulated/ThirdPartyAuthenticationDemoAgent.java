@@ -188,6 +188,11 @@ public final class ThirdPartyAuthenticationDemoAgent extends NextGenerationDemoA
             public double getBlancoBalance() {
                 return -50000D;
             }
+
+            @Override
+            public LocalDate getInitialDate() {
+                return null;
+            }
         };
     }
 

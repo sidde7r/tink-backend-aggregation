@@ -143,6 +143,11 @@ public final class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
             public double getBlancoBalance() {
                 return -50000D;
             }
+
+            @Override
+            public LocalDate getInitialDate() {
+                return null;
+            }
         };
     }
 

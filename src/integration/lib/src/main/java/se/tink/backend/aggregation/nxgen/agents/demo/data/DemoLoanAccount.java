@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.data;
 
+import java.time.LocalDate;
+
 public interface DemoLoanAccount {
     String getMortgageId();
 
@@ -16,4 +18,6 @@ public interface DemoLoanAccount {
     double getMortgageBalance();
 
     double getBlancoBalance();
+
+    LocalDate getInitialDate();
 }

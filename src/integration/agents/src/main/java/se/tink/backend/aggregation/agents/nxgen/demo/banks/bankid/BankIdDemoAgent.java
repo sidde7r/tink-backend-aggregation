@@ -115,6 +115,12 @@ public final class BankIdDemoAgent extends NextGenerationDemoAgent
     @Override
     public DemoLoanAccount getDemoLoanAccounts() {
         return new DemoLoanAccount() {
+
+            @Override
+            public LocalDate getInitialDate() {
+                return null;
+            }
+
             @Override
             public String getMortgageId() {
                 return "9999-333333333333";

@@ -344,6 +344,11 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
             public double getBlancoBalance() {
                 return LoanAccount.BLANCOBALANCE;
             }
+
+            @Override
+            public LocalDate getInitialDate() {
+                return null;
+            }
         };
     }
 
