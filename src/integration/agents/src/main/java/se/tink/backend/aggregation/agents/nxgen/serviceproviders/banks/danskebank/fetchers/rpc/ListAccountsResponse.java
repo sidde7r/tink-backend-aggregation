@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 @JsonObject
 public class ListAccountsResponse extends AbstractBankIdResponse {
@@ -36,18 +38,25 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
                 .filter(
                         DanskeBankPredicates.knownCheckingAccountProducts(
                                 knownCheckingAccountProducts))
-                .map(AccountEntity::toCheckingAccount)
+                .map(
+                        accountEntity ->
+                                accountEntity.toTransactionalAccount(
+                                        TransactionalAccountType.CHECKING))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
     public List<TransactionalAccount> toTinkSavingsAccounts(
-            List<String> knownSavingsAccountProducts, DanskeBankConfiguration configuration) {
+            List<String> knownSavingsAccountProducts) {
         return this.accounts.stream()
                 .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(
                         DanskeBankPredicates.knownSavingsAccountProducts(
                                 knownSavingsAccountProducts))
-                .map(account -> account.toSavingsAccount(configuration))
+                .map(account -> account.toTransactionalAccount(TransactionalAccountType.SAVINGS))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

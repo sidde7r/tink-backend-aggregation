@@ -3,17 +3,18 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
@@ -41,9 +42,7 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                 .addAll(
                         listAccounts.toTinkCheckingAccounts(
                                 configuration.getCheckingAccountTypes()))
-                .addAll(
-                        listAccounts.toTinkSavingsAccounts(
-                                configuration.getSavingsAccountTypes(), configuration))
+                .addAll(listAccounts.toTinkSavingsAccounts(configuration.getSavingsAccountTypes()))
                 .build();
     }
 
@@ -66,7 +65,12 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                                         "Account: apiIdentifier = {}, accountProduct = {}",
                                         accountEntity.getAccountNoInt(),
                                         accountEntity.getAccountProduct()))
-                .map(AccountEntity::toCheckingAccount)
+                .map(
+                        accountEntity ->
+                                accountEntity.toTransactionalAccount(
+                                        TransactionalAccountType.CHECKING))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }
