@@ -97,10 +97,12 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case SAVING_ACCOUNTS:
-                    context.cacheAccounts(
+                    List<Account> savingAccounts =
                             ((RefreshSavingsAccountsExecutor) agent)
                                     .fetchSavingsAccounts()
-                                    .getAccounts());
+                                    .getAccounts();
+                    log.info("size of savingAccounts: {}", savingAccounts.size());
+                    context.cacheAccounts(savingAccounts);
                     break;
                 case SAVING_TRANSACTIONS:
                     for (Map.Entry<Account, List<Transaction>> accountTransactions :
@@ -113,10 +115,12 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case CREDITCARD_ACCOUNTS:
-                    context.cacheAccounts(
+                    List<Account> creditcarddAccounts =
                             ((RefreshCreditCardAccountsExecutor) agent)
                                     .fetchCreditCardAccounts()
-                                    .getAccounts());
+                                    .getAccounts();
+                    log.info("size of creditcarddAccounts: {}", creditcarddAccounts.size());
+                    context.cacheAccounts(creditcarddAccounts);
                     break;
                 case CREDITCARD_TRANSACTIONS:
                     for (Map.Entry<Account, List<Transaction>> accountTransactions :
@@ -129,11 +133,11 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case LOAN_ACCOUNTS:
+                    Map<Account, AccountFeatures> loanAccounts =
+                            ((RefreshLoanAccountsExecutor) agent).fetchLoanAccounts().getAccounts();
+                    log.info("size of loanAccounts: {}", loanAccounts.size());
                     for (Map.Entry<Account, AccountFeatures> loanAccount :
-                            ((RefreshLoanAccountsExecutor) agent)
-                                    .fetchLoanAccounts()
-                                    .getAccounts()
-                                    .entrySet()) {
+                            loanAccounts.entrySet()) {
                         context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
                     }
                     break;
@@ -148,12 +152,14 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case INVESTMENT_ACCOUNTS:
-                    for (Map.Entry<Account, AccountFeatures> loanAccount :
+                    Map<Account, AccountFeatures> investmentAccounts =
                             ((RefreshInvestmentAccountsExecutor) agent)
                                     .fetchInvestmentAccounts()
-                                    .getAccounts()
-                                    .entrySet()) {
-                        context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
+                                    .getAccounts();
+                    log.info("size of investmentAccounts: {}", investmentAccounts.size());
+                    for (Map.Entry<Account, AccountFeatures> investAccount :
+                            investmentAccounts.entrySet()) {
+                        context.cacheAccount(investAccount.getKey(), investAccount.getValue());
                     }
                     break;
                 case INVESTMENT_TRANSACTIONS:
@@ -189,6 +195,7 @@ public final class RefreshExecutorUtils {
                 ((RefreshCheckingAccountsExecutor) agent).fetchCheckingAccounts().getAccounts();
 
         logIfFetchedExtraAccounts(agent, checkingAccounts);
+        log.info("size of checkingAccounts: {}", checkingAccounts.size());
 
         context.cacheAccounts(checkingAccounts);
     }
