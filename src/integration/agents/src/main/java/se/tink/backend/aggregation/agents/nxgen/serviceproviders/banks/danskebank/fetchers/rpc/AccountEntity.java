@@ -1,18 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan.Type;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
-import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -185,41 +185,6 @@ public class AccountEntity {
                 .build();
     }
 
-    public TransactionalAccount toCheckingAccount() {
-        return CheckingAccount.builder(
-                        AccountTypes.CHECKING,
-                        accountNoInt,
-                        ExactCurrencyAmount.of(balance, currency))
-                .setExactAvailableCredit(calculateAvailableCredit())
-                .setAccountNumber(accountNoExt)
-                .setName(accountName)
-                .setBankIdentifier(accountNoInt)
-                // checking accounts are having by default the following 4 capabilities
-                // but you can confirm that easily the same way as done for other account types
-                .canExecuteExternalTransfer(AccountCapabilities.Answer.YES)
-                .canReceiveExternalTransfer(AccountCapabilities.Answer.YES)
-                .canPlaceFunds(AccountCapabilities.Answer.YES)
-                .canWithdrawCash(AccountCapabilities.Answer.YES)
-                .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                .sourceInfo(createAccountSourceInfo())
-                .build();
-    }
-
-    TransactionalAccount toSavingsAccount(DanskeBankConfiguration configuration) {
-        return SavingsAccount.builder(
-                        AccountTypes.SAVINGS,
-                        accountNoInt,
-                        ExactCurrencyAmount.of(balance, currency))
-                .setAccountNumber(accountNoExt)
-                .setName(accountName)
-                .setBankIdentifier(accountNoInt)
-                .canExecuteExternalTransfer(
-                        configuration.canExecuteExternalTransfer(accountProduct))
-                .canReceiveExternalTransfer(
-                        configuration.canReceiveExternalTransfer(accountProduct))
-                .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
-                .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
-                .sourceInfo(createAccountSourceInfo())
     public Optional<TransactionalAccount> toTransactionalAccount(TransactionalAccountType type) {
         return TransactionalAccount.nxBuilder()
                 .withType(type)
