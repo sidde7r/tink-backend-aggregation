@@ -27,24 +27,19 @@ public class AggregationModuleFactory {
 
     private static ImmutableList<Module> buildForDecoupledMode(
             AggregationServiceConfiguration configuration, Environment environment) {
-        return baseBuilder(configuration, environment)
+        return baseBuilder(environment)
                 .add(new AggregationDecoupledModule(configuration, environment))
                 .build();
     }
 
-    private static ImmutableList.Builder<Module> baseBuilder(
-            AggregationServiceConfiguration configuration, Environment environment) {
-        if (configuration.isDecoupledMode() || configuration.isStagingEnvironment()) {
-            return new ImmutableList.Builder<Module>()
-                    .add(new AgentCapabilitiesModule(environment.jersey()));
-        } else {
-            return new ImmutableList.Builder<>();
-        }
+    private static ImmutableList.Builder<Module> baseBuilder(Environment environment) {
+        return new ImmutableList.Builder<Module>()
+                .add(new AgentCapabilitiesModule(environment.jersey()));
     }
 
     public static ImmutableList.Builder<Module> productionBuilder(
             AggregationServiceConfiguration configuration, Environment environment) {
-        return baseBuilder(configuration, environment)
+        return baseBuilder(environment)
                 .add(new AggregationCommonModule())
                 .add(new CoordinationModule())
                 .add(new AgentFactoryModule())
