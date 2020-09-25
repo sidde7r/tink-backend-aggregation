@@ -52,15 +52,13 @@ public final class FinecoBankAgent extends NextGenerationAgent
 
         super.setConfiguration(agentsServiceConfiguration);
 
-        String psuIpAddress = request.getOriginatingUserIp();
-        boolean requestManual = request.isManual();
         this.apiClient =
                 new FinecoBankApiClient(
                         client,
                         persistentStorage,
                         this.agentConfiguration,
-                        requestManual,
-                        psuIpAddress);
+                        request.isManual(),
+                        userIp);
 
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();

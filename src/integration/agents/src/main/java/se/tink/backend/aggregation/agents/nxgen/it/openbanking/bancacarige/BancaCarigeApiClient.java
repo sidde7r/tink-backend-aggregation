@@ -35,7 +35,7 @@ public class BancaCarigeApiClient extends CbiGlobeApiClient {
     @Override
     public String createRedirectUrl(String state, ConsentType consentType) {
         // '?' and '&' need to be encoded
-        return getRedirectUrl()
+        return redirectUrl
                 + CbiGlobeUtils.encodeValue(
                         "?"
                                 + QueryKeys.STATE

@@ -53,7 +53,7 @@ public class CbiGlobeApiClient {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private CbiGlobeConfiguration configuration;
-    private String redirectUrl;
+    protected String redirectUrl;
     private boolean requestManual;
     protected TemporaryStorage temporaryStorage;
     protected InstrumentType instrumentType;
@@ -81,11 +81,6 @@ public class CbiGlobeApiClient {
 
     protected CbiGlobeConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    protected String getRedirectUrl() {
-        return Optional.ofNullable(redirectUrl)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
@@ -156,15 +151,15 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createConsentRequest(String state, ConsentType consentType) {
-        String redirectUrl = createRedirectUrl(state, consentType);
+        String fullRedirectUrl = createRedirectUrl(state, consentType);
         return createRequestInSession(Urls.CONSENTS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+                .header(HeaderKeys.TPP_REDIRECT_URI, fullRedirectUrl)
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, fullRedirectUrl);
     }
 
     public String createRedirectUrl(String state, ConsentType consentType) {
-        return new URL(getRedirectUrl())
+        return new URL(redirectUrl)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.CODE, consentType.getCode())
                 .get();
@@ -277,12 +272,12 @@ public class CbiGlobeApiClient {
                         .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(getRedirectUrl())
+                                new URL(redirectUrl)
                                         .queryParam(
                                                 QueryKeys.STATE,
                                                 sessionStorage.get(QueryKeys.STATE))
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE));
-        return addPsuIpAddressHeaderIfPossible(requestBuilder)
+        return addPsuIpAddressHeaderIfNeeded(requestBuilder)
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
@@ -292,7 +287,7 @@ public class CbiGlobeApiClient {
                         .header(
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode());
-        return addPsuIpAddressHeaderIfPossible(requestBuilder).get(CreatePaymentResponse.class);
+        return addPsuIpAddressHeaderIfNeeded(requestBuilder).get(CreatePaymentResponse.class);
     }
 
     public CreatePaymentResponse getPaymentStatus(String uniqueId) {
@@ -313,10 +308,10 @@ public class CbiGlobeApiClient {
         return getAccountsResponse;
     }
 
-    protected RequestBuilder addPsuIpAddressHeaderIfPossible(RequestBuilder requestBuilder) {
-        if (psuIpAddress != null && requestManual) {
-            return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
-        } else return requestBuilder;
+    protected RequestBuilder addPsuIpAddressHeaderIfNeeded(RequestBuilder requestBuilder) {
+        return requestManual
+                ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)
+                : requestBuilder;
     }
 
     public void invalidateToken() {
