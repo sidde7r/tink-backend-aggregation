@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.Headers;
@@ -123,13 +123,12 @@ public class SdcNoApiClient {
     }
 
     private List<CardEntity> mapToCardEntities(String creditCards) {
-        CardEntity[] cardEntities =
-                SerializationUtils.deserializeFromString(creditCards, CardEntity[].class);
-        if (ArrayUtils.isNotEmpty(cardEntities)) {
-            return Arrays.asList(cardEntities);
+        if (!StringUtils.isBlank(creditCards)) {
+            return Arrays.asList(
+                    SerializationUtils.deserializeFromString(creditCards, CardEntity[].class));
+        } else {
+            return Collections.emptyList();
         }
-        log.info("No credit cards found");
-        return Collections.emptyList();
     }
 
     public CreditCardTransactionsEntity fetchCreditCardTransactions(String apiIdentifier) {
