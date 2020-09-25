@@ -166,6 +166,11 @@ public final class MultiSupplementalDemoAgent extends NextGenerationDemoAgent
             public double getBlancoBalance() {
                 return -5D;
             }
+
+            @Override
+            public LocalDate getInitialDate() {
+                return null;
+            }
         };
     }
 

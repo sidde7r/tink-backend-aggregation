@@ -143,6 +143,11 @@ public final class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
             }
 
             @Override
+            public LocalDate getInitialDate() {
+                return null;
+            }
+
+            @Override
             public double getMortgageInterestName() {
                 return 0.53;
             }
