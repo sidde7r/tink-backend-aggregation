@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
 import java.util.Objects;
 import lombok.Data;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
@@ -37,6 +40,7 @@ public class TransactionEntity {
                 .setDate(getDate())
                 .setPending(status == TransactionStatusEntity.PDNG)
                 .setDescription(String.join(" ", remittanceInformation.getUnstructured()))
+                .setType(getTransactionTypes())
                 .build();
     }
 
@@ -47,5 +51,36 @@ public class TransactionEntity {
 
     private LocalDate getDate() {
         return Objects.nonNull(bookingDate) ? bookingDate : transactionDate;
+    }
+
+    private TransactionTypes getTransactionTypes() {
+        if (Objects.isNull(remittanceInformation)
+                || CollectionUtils.isEmpty(remittanceInformation.getUnstructured())) {
+            return TransactionTypes.DEFAULT;
+        }
+
+        final String description = remittanceInformation.getUnstructured().get(0).trim();
+
+        if (StringUtils.isBlank(description)) {
+            return TransactionTypes.DEFAULT;
+        }
+
+        if (description.startsWith("PRLV")) {
+            return TransactionTypes.PAYMENT;
+        }
+
+        if (description.startsWith("VIR")) {
+            return TransactionTypes.TRANSFER;
+        }
+
+        if (description.startsWith("RETRAIT")) {
+            return TransactionTypes.WITHDRAWAL;
+        }
+
+        if (description.contains("PAIEMENT")) {
+            return TransactionTypes.CREDIT_CARD;
+        }
+
+        return TransactionTypes.DEFAULT;
     }
 }
