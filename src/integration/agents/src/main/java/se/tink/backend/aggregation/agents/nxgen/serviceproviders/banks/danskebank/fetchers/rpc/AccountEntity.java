@@ -220,6 +220,19 @@ public class AccountEntity {
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
                 .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
                 .sourceInfo(createAccountSourceInfo())
+    public Optional<TransactionalAccount> toTransactionalAccount(TransactionalAccountType type) {
+        return TransactionalAccount.nxBuilder()
+                .withType(type)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(balance, currency)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountNoInt)
+                                .withAccountNumber(accountNoExt)
+                                .withAccountName(accountName)
+                                .addIdentifier(new BbanIdentifier(accountNoExt))
+                                .build())
+                .setApiIdentifier(accountNoInt)
                 .build();
     }
 
