@@ -57,12 +57,11 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
     @Override
     public BankIdStatus collect(InitBankIdResponse initBankId)
             throws AuthenticationException, AuthorizationException {
-        if (!Strings.isNullOrEmpty(initBankId.getCode())) {
+        if (!Strings.isNullOrEmpty(initBankId.getCode())
+                && BankIdAuthentication.CANCELLED.equalsIgnoreCase(initBankId.getCode())) {
             // if a bankid signature is running at the time we initiate ours the bank/bankid will
             // cancel both of them.
-            if (BankIdAuthentication.CANCELLED.equalsIgnoreCase(initBankId.getCode())) {
-                return BankIdStatus.CANCELLED;
-            }
+            return BankIdStatus.CANCELLED;
         }
 
         AuthenticateResponse authenticate = client.authenticate(initBankId);
@@ -91,6 +90,9 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
                     return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
                 }
                 break;
+            default:
+                LOG.info("Unknown bankID status: {}", bankIdStatus);
+                return BankIdStatus.FAILED_UNKNOWN;
         }
         return bankIdStatus;
     }
