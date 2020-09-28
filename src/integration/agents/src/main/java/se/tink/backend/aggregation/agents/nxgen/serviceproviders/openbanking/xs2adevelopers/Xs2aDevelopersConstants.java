@@ -145,8 +145,4 @@ public final class Xs2aDevelopersConstants {
         public static final int DEFAULT_AMOUNT_TO_FETCH = 15;
         public static final int DEFAULT_CONSECUTIVE_EMPTY_PAGES_LIMIT = 4;
     }
-
-    public static class CredentialKeys {
-        public static final String IBAN = "iban";
-    }
 }

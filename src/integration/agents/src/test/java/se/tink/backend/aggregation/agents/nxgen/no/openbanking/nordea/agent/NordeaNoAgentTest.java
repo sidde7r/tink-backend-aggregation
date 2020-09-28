@@ -1,11 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea;
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.agent;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
 public class NordeaNoAgentTest {
 
     private AgentIntegrationTest.Builder builder;

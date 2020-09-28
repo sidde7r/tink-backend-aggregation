@@ -10,7 +10,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -19,7 +18,6 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class AxaAgentPaymentTest {
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
-    private AgentIntegrationTest.Builder builder;
 
     @Test
     public void testPayments() throws Exception {
@@ -27,7 +25,6 @@ public class AxaAgentPaymentTest {
 
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("be", "be-axa-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("axa")
                         .setAppId("tink")

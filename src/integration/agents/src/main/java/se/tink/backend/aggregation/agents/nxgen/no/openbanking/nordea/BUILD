@@ -9,6 +9,7 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/annotation",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/module",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
@@ -18,6 +19,7 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//third_party:com_google_inject_guice",
+        "//third_party:org_apache_commons_commons_lang3",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
     ],
 )

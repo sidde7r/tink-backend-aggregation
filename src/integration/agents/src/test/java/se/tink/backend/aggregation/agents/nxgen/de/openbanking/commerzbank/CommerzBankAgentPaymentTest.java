@@ -11,9 +11,6 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -21,17 +18,11 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class CommerzBankAgentPaymentTest {
-    private final ArgumentManager<IbanArgumentEnum> manager =
-            new ArgumentManager<>(IbanArgumentEnum.values());
-    private AgentIntegrationTest.Builder builder;
 
     @Test
     public void testPayments() throws Exception {
-        manager.before();
-
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("de", "de-commerzbank-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
