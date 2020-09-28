@@ -13,9 +13,11 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEConstants.BankIdAuthentication;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEConstants.DeviceAuthentication;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.AuthenticateResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.AuthorizeMandateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
@@ -68,13 +70,12 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
         BankIdStatus bankIdStatus = authenticate.toBankIdStatus();
         switch (bankIdStatus) {
             case DONE:
-                AuthorizeResponse authorize = client.authorize(authenticate);
-                validateOrganizationNumber(authorize);
+                AuthorizeResponse authorizeResponse = finishAuthorization(authenticate);
 
                 ApplicationEntryPointResponse applicationEntryPoint =
-                        client.applicationEntryPoint(authorize);
+                        client.applicationEntryPoint(authorizeResponse);
 
-                persistentStorage.persist(authorize);
+                persistentStorage.persist(authorizeResponse);
                 sessionStorage.persist(applicationEntryPoint);
                 break;
             case WAITING:
@@ -97,18 +98,47 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
         return bankIdStatus;
     }
 
-    private void validateOrganizationNumber(AuthorizeResponse authorize)
-            throws AuthorizationException {
-        if (authorize.getMandates().isEmpty()) {
+    private AuthorizeResponse finishAuthorization(AuthenticateResponse authenticate) {
+        AuthorizeResponse authorizeResponse = client.authorize(authenticate);
+
+        if (authorizeResponse.getMandates().isEmpty()) {
             throw LoginError.NOT_CUSTOMER.exception();
         }
 
-        if (authorize.getMandates().size() > 1) {
-            LOG.error("Expected 1 mandate, got {}", authorize.getMandates().size());
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        // Selection and authorization of mandate is required when user has multiple mandates
+        if (HandelsbankenSEConstants.DeviceAuthentication.SELECTION_REQUIRED.equalsIgnoreCase(
+                authorizeResponse.getResult())) {
+            return authorizeMandate(authorizeResponse);
         }
 
-        final Mandate mandate = authorize.getMandates().get(0);
+        validateOrganizationNumber(authorizeResponse);
+        return authorizeResponse;
+    }
+
+    private AuthorizeResponse authorizeMandate(AuthorizeResponse authorizeResponse) {
+        // Temp logging to verify assumption about authorization flow. Will remove once confirmed.
+        LOG.info("User with multiple businesses");
+
+        Mandate mandateToAuthorize =
+                authorizeResponse.getMandates().stream()
+                        .filter(
+                                mandate ->
+                                        credentials
+                                                .getField(Key.CORPORATE_ID)
+                                                .equalsIgnoreCase(mandate.getCustomerNumber()))
+                        .findAny()
+                        .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
+
+        AuthorizeMandateRequest authorizeMandateRequest =
+                new AuthorizeMandateRequest()
+                        .setAgreementNumbers(mandateToAuthorize.getAgreementNumber());
+
+        return client.authorizeMandate(authorizeResponse, authorizeMandateRequest);
+    }
+
+    private void validateOrganizationNumber(AuthorizeResponse authorizeResponse)
+            throws AuthorizationException {
+        final Mandate mandate = authorizeResponse.getMandates().get(0);
         if (!mandate.getCustomerNumber().equalsIgnoreCase(credentials.getField(Key.CORPORATE_ID))) {
             LOG.error("Organization number mismatch");
             throw LoginError.INCORRECT_CREDENTIALS.exception();

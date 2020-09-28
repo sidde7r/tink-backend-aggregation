@@ -49,6 +49,7 @@ public class HandelsbankenConstants {
             APPROVAL("approval"),
             AUTHENTICATE("authenticate"),
             AUTHORIZE("authorize"),
+            AUTHORIZE_MANDATE("authorizeMandate"),
             BANKID_LOGIN("bankid-login_2_0"),
             CARD_TRANSACTIONS("card-transactions"),
             CARD_MORE_TRANSACTIONS("card-more-transactions"),

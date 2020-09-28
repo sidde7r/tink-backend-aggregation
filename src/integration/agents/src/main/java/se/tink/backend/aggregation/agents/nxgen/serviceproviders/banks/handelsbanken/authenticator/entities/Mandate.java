@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class Mandate {
 
@@ -14,14 +16,6 @@ public class Mandate {
 
     @JsonProperty("agreementNmbr")
     private String agreementNumber;
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public String getCustomerNumber() {
-        return customerNumber;
-    }
 
     // equals() provided so we can use distinct() on Mandates
     @Override
