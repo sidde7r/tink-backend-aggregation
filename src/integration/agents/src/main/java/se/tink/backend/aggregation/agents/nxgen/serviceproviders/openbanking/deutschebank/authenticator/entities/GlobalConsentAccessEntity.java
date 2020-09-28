@@ -3,12 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class IbanEntity {
-
-    private final String iban;
-
-    public IbanEntity(final String iban) {
-
-        this.iban = iban;
-    }
+public class GlobalConsentAccessEntity implements AccessEntity {
+    private String allPsd2 = "allAccounts";
 }

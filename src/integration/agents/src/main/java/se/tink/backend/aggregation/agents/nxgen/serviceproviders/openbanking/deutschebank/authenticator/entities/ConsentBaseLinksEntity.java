@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ConsentBaseLinksEntity {
+public class ConsentBaseLinksEntity implements AccessEntity {
     private Href scaRedirect;
     private Href status;
     private Href scaStatus;

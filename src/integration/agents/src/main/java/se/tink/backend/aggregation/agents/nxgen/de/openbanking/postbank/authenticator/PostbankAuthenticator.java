@@ -17,18 +17,15 @@ public final class PostbankAuthenticator implements AutoAuthenticator {
 
     private final PostbankApiClient postbankApiClient;
     private final PersistentStorage persistentStorage;
-    private final String iban;
 
-    public PostbankAuthenticator(
-            PostbankApiClient apiClient, PersistentStorage persistentStorage, String iban) {
+    public PostbankAuthenticator(PostbankApiClient apiClient, PersistentStorage persistentStorage) {
         this.postbankApiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.iban = iban;
     }
 
     public AuthorisationResponse init(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        ConsentResponse consentsResponse = postbankApiClient.getConsents(iban, username);
+        ConsentResponse consentsResponse = postbankApiClient.getConsents(username);
         persistentStorage.put(StorageKeys.CONSENT_ID, consentsResponse.getConsentId());
 
         return postbankApiClient.startAuthorisation(

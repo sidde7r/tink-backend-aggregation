@@ -5,14 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 
 public class DeutscheBankDEAgentTest {
 
-    private final ArgumentManager<IbanArgumentEnum> ibanManager =
-            new ArgumentManager<>(IbanArgumentEnum.values());
     private final ArgumentManager<UsernameArgumentEnum> usernameManager =
             new ArgumentManager<>(UsernameArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
@@ -24,12 +21,9 @@ public class DeutscheBankDEAgentTest {
 
     @Before
     public void setup() {
-        ibanManager.before();
         usernameManager.before();
         builder =
                 new AgentIntegrationTest.Builder("de", "de-deutschebank-ob")
-                        .addCredentialField(
-                                CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
                         .addCredentialField(
                                 CredentialKeys.USERNAME,
                                 usernameManager.get(UsernameArgumentEnum.USERNAME))

@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities.GlobalConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
@@ -57,8 +58,14 @@ public class DeutscheBankApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, uuid);
     }
 
-    public ConsentBaseResponse getConsent(String state, String iban, String psuId) {
-        ConsentBaseRequest consentBaseRequest = new ConsentBaseRequest(iban);
+    public ConsentBaseResponse getConsent(String state, String psuId) {
+        ConsentBaseRequest consentBaseRequest =
+                new ConsentBaseRequest(new GlobalConsentAccessEntity());
+        return getConsent(consentBaseRequest, state, psuId);
+    }
+
+    protected ConsentBaseResponse getConsent(
+            ConsentBaseRequest consentBaseRequest, String state, String psuId) {
         return client.request(new URL(marketConfiguration.getBaseUrl().concat(Urls.CONSENT)))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())

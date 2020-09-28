@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenti
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.PostbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -34,10 +33,7 @@ public final class PostbankAgent extends DeutscheBankAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         final PostbankAuthenticator postbankAuthenticator =
-                new PostbankAuthenticator(
-                        (PostbankApiClient) apiClient,
-                        persistentStorage,
-                        credentials.getField(CredentialKeys.IBAN));
+                new PostbankAuthenticator((PostbankApiClient) apiClient, persistentStorage);
 
         PostbankAuthenticationController postbankAuthenticationController =
                 new PostbankAuthenticationController(

@@ -86,7 +86,6 @@ public final class DeutscheBankConstants {
     }
 
     public static class CredentialKeys {
-        public static final String IBAN = "iban";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
     }
