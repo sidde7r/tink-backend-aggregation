@@ -26,7 +26,7 @@ public class PurchaseHistoryGenerator {
     private final List<GeneratePurchaseBase> generatePurchaseBase;
     private final Random randomGenerator;
     private final DemoFileHandler demoFileHandler;
-    private static final int AVEREAGE_PURCHASES_PER_DAY = 3;
+    private static final int AVEREAGE_PURCHASES_PER_DAY = 1;
 
     // TODO: Should be persisted between refreshes. Store on disk is not an alternative
     public PurchaseHistoryGenerator(String basePath) {
@@ -74,8 +74,8 @@ public class PurchaseHistoryGenerator {
     private Collection<Transaction> generateOneDayOfTransactions(
             LocalDate dateCursor, String currency) {
         List<Transaction> transactions = new ArrayList<>();
-        // Between one and 4 purchases per day.
-        for (int i = 0; i < randomGenerator.nextInt(3) + 1; i++) {
+        // Between one and 2 purchases per day.
+        for (int i = 0; i < randomGenerator.nextInt(1) + 1; i++) {
             GeneratePurchaseBase base =
                     generatePurchaseBase.get(randomGenerator.nextInt(generatePurchaseBase.size()));
             transactions.add(generateTransaction(base, dateCursor, currency));
