@@ -312,6 +312,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/novobancoacores",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/santander",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/unicre",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/universo",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ro/banks/raiffeisen",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/alandsbanken",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/collector",
