@@ -28,6 +28,7 @@ public class HandelsbankenSEConstants {
         public static String APP_ID = "oFrZfGc1/M0yN4jZVSqZnpprq4N0rqnRgtPMT7onHxQ=";
         public static final String AUTH_TP = "1";
         public static final String VALID_SIGNATURE_RESULT = "AUTHENTICATED";
+        public static final String SELECTION_REQUIRED = "SELECTION_REQUIRED";
         public static final String DEVICE_ID = "same";
     }
 

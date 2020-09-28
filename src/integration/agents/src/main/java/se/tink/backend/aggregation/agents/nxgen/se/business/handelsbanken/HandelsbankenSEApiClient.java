@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken;
 
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.AuthenticateResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.AuthorizeMandateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
@@ -35,6 +36,12 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     public AuthorizeResponse authorize(AuthenticateResponse authenticate) {
         return createPostRequest(authenticate.toAuthorize()).post(AuthorizeResponse.class);
+    }
+
+    public AuthorizeResponse authorizeMandate(
+            AuthorizeResponse authorizeResponse, AuthorizeMandateRequest authorizeMandateRequest) {
+        return createPostRequest(authorizeResponse.toAuthorizeMandate())
+                .post(AuthorizeResponse.class, authorizeMandateRequest);
     }
 
     @Override
