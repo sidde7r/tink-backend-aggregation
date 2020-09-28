@@ -29,7 +29,6 @@ public class AccountDataCache {
     }
 
     public void clear() {
-        LOGGER.info("cache clear");
         this.accountDataByBankAccountId.clear();
         this.accountFilters.clear();
     }
@@ -52,14 +51,11 @@ public class AccountDataCache {
 
     public void cacheAccount(Account account) {
         String bankAccountId = account.getBankId();
-        LOGGER.info(
-                "cacheAccount: original size before cache {}", accountDataByBankAccountId.size());
         if (accountDataByBankAccountId.containsKey(bankAccountId)) {
             return;
         }
 
         accountDataByBankAccountId.put(bankAccountId, new AccountData(account));
-        LOGGER.info("cacheAccount: size after cache {}", accountDataByBankAccountId.size());
     }
 
     public void cacheAccountFeatures(String bankAccountId, AccountFeatures accountFeatures) {
