@@ -36,7 +36,7 @@ public final class PostbankAgent extends DeutscheBankAgent {
         final PostbankAuthenticator postbankAuthenticator =
                 new PostbankAuthenticator(
                         (PostbankApiClient) apiClient,
-                        sessionStorage,
+                        persistentStorage,
                         credentials.getField(CredentialKeys.IBAN));
 
         PostbankAuthenticationController postbankAuthenticationController =
