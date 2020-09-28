@@ -70,6 +70,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         Catalog catalog = context.getCatalog();
 
         Transfer transfer = transferRequest.getTransfer();
+        log.info(
+                "TransferId={},  OriginatingUserIp={}",
+                transfer.getId(),
+                transfer.getOriginatingUserIp());
         SignableOperation signableOperation = transferRequest.getSignableOperation();
 
         if (transfer.isDestinationMessageGenerated()) {
