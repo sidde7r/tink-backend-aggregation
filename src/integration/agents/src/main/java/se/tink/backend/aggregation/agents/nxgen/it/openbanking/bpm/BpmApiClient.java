@@ -33,11 +33,11 @@ public class BpmApiClient extends CbiGlobeApiClient {
 
     @Override
     protected RequestBuilder createAccountsRequestWithConsent() {
-        return addPsuIpAddressHeaderIfPossible(super.createAccountsRequestWithConsent());
+        return addPsuIpAddressHeaderIfNeeded(super.createAccountsRequestWithConsent());
     }
 
     @Override
     protected RequestBuilder createRequestWithConsent(URL url) {
-        return addPsuIpAddressHeaderIfPossible(super.createRequestWithConsent(url));
+        return addPsuIpAddressHeaderIfNeeded(super.createRequestWithConsent(url));
     }
 }

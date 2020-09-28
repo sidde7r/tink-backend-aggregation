@@ -61,7 +61,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         authenticator = getAuthenticator();
 
         applyFilters(this.client);
-        this.psuIpAddress = request.getOriginatingUserIp();
+        this.psuIpAddress = userIp;
     }
 
     protected CbiGlobeProviderConfiguration getProviderConfiguration() {
