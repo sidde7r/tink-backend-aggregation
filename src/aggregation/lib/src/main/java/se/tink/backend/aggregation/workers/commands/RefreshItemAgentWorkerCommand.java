@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
-import se.tink.backend.aggregation.workers.metrics.RefreshMetricNameFactory;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
@@ -311,7 +310,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         MetricId.MetricLabels typeName =
                 new MetricId.MetricLabels()
                         .add("class", RefreshItemAgentWorkerCommand.class.getSimpleName())
-                        .add("item", RefreshMetricNameFactory.createCleanName(item))
                         .add("command", type.getMetricName());
 
         return Lists.newArrayList(typeName);
