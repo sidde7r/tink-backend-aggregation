@@ -3,16 +3,20 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loan
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.util.Maps;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.IcaBankenLoanParsingHelper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
 public class LoanEntity {
@@ -20,15 +24,14 @@ public class LoanEntity {
 
     private String loanName;
     private double initialDebt;
-    private double interestRate;
     private long initialDate;
     private String applicants;
 
     @JsonProperty("InterestRatesDetails")
-    private List<Map<String, String>> interestRatesDetails;
+    private List<InterestRateMapEntity> interestRatesDetails;
 
     @JsonProperty("LoanDetails")
-    private List<Map<String, String>> loanDetails;
+    private List<InterestRateMapEntity> loanDetails;
 
     @JsonProperty("LoanNumber")
     private String loanNumber;
@@ -41,23 +44,22 @@ public class LoanEntity {
 
     @JsonIgnore private Map<String, String> transformedLoanDetails;
 
-    public String getLoanNumber() {
-        return loanNumber;
+    private Double parseInterestRate(InterestRateMapEntity interestRatesDetails) {
+        return Double.parseDouble(interestRatesDetails.getValue().split(",")[0].replace(",", "."));
     }
 
-    public String getType() {
-        return type;
+    public Double getInterestRate() {
+        if (interestRatesDetails.isEmpty()) {
+            log.info("interestRatesDetails has no elements: {}", interestRatesDetails);
+        }
+        return interestRatesDetails.stream()
+                .filter(i -> LocalDate.now().toString().compareTo(i.getKey()) > 0)
+                .map(this::parseInterestRate)
+                .findAny()
+                .orElseThrow(IllegalStateException::new);
     }
 
-    public String getPresentDebt() {
-        return presentDebt;
-    }
-
-    public List<Map<String, String>> getLoanDetails() {
-        return loanDetails;
-    }
-
-    public void setLoanDetails(List<Map<String, String>> loanDetails) {
+    public void setLoanDetails(List<InterestRateMapEntity> loanDetails) {
         this.loanDetails = loanDetails;
         this.transformedLoanDetails = buildLoanDetailsMap();
     }
@@ -66,10 +68,8 @@ public class LoanEntity {
     private Map<String, String> buildLoanDetailsMap() {
         Map<String, String> map = Maps.newHashMap();
 
-        for (Map<String, String> keyValuePair : loanDetails) {
-            map.put(
-                    keyValuePair.get(IcaBankenConstants.IdTags.KEY_TAG).toLowerCase().trim(),
-                    keyValuePair.get(IcaBankenConstants.IdTags.VALUE_TAG));
+        for (InterestRateMapEntity keyValuePair : loanDetails) {
+            map.put(keyValuePair.getKey().toLowerCase().trim(), keyValuePair.getValue());
         }
 
         return map;
@@ -80,26 +80,39 @@ public class LoanEntity {
         IcaBankenLoanParsingHelper loanParsingHelper =
                 new IcaBankenLoanParsingHelper(transformedLoanDetails);
 
-        return LoanAccount.builder(loanNumber, loanParsingHelper.getBalance(presentDebt))
-                .setAccountNumber(loanNumber)
-                .setName(loanName)
-                .setHolderName(loanParsingHelper.getLoanHolderName())
-                .setBankIdentifier(loanNumber)
-                .setInterestRate(interestRate)
-                .setDetails(buildLoanDetails(loanParsingHelper))
+        return LoanAccount.nxBuilder()
+                .withLoanDetails(buildLoanDetails(loanParsingHelper))
+                .withId(getIdModule(loanParsingHelper))
                 .build();
     }
 
     @JsonIgnore
-    private LoanDetails buildLoanDetails(IcaBankenLoanParsingHelper loanParsingHelper) {
+    private LoanModule buildLoanDetails(IcaBankenLoanParsingHelper loanParsingHelper) {
         logLoanType();
 
-        return LoanDetails.builder(LoanDetails.Type.BLANCO)
-                .setApplicants(loanParsingHelper.getApplicantsList())
+        return LoanModule.builder()
+                .withType(LoanDetails.Type.BLANCO)
+                .withBalance(loanParsingHelper.getCurrentBalance())
+                .withInterestRate(getInterestRate())
                 .setAmortized(loanParsingHelper.getAmortized(presentDebt))
+                .setApplicants(loanParsingHelper.getApplicantsList())
                 .setInitialBalance(loanParsingHelper.getInitialBalance())
-                .setInitialDate(loanParsingHelper.getInitialDate())
+                .setInitialDate(
+                        loanParsingHelper
+                                .getInitialDate()
+                                .toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate())
                 .setCoApplicant(loanParsingHelper.hasCoApplicant())
+                .build();
+    }
+
+    private IdModule getIdModule(IcaBankenLoanParsingHelper loanParsingHelper) {
+        return IdModule.builder()
+                .withUniqueIdentifier(loanNumber)
+                .withAccountNumber(loanNumber)
+                .withAccountName(loanParsingHelper.getLoanName())
+                .addIdentifier(new SwedishIdentifier(loanNumber))
                 .build();
     }
 

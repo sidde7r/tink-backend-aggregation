@@ -80,6 +80,12 @@ public class IcaBankenLoanParsingHelper {
         return ExactCurrencyAmount.inSEK(-1.0 * initialDebt);
     }
 
+    public ExactCurrencyAmount getCurrentBalance() {
+        Double currentDebt = getCurrentDebt();
+
+        return ExactCurrencyAmount.inSEK(-1.0 * currentDebt);
+    }
+
     public ExactCurrencyAmount getAmortized(String presentDebt) {
         Double initialDebt = getInitialDebt();
 
@@ -89,6 +95,12 @@ public class IcaBankenLoanParsingHelper {
 
         return ExactCurrencyAmount.inSEK(
                 initialDebt - AgentParsingUtils.parseAmountTrimCurrency(presentDebt));
+    }
+
+    private Double getCurrentDebt() {
+        String currentDebt = loanDetailsMap.get(IcaBankenConstants.LoanDetailsKeys.CURRENT_DEBT);
+
+        return AgentParsingUtils.parseAmountTrimCurrency(currentDebt);
     }
 
     private Double getInitialDebt() {
