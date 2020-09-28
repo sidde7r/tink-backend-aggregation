@@ -46,7 +46,7 @@ public final class TescoV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId("0015800001041RXAAY")
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
+                        .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)
                         .build();
     }
 
