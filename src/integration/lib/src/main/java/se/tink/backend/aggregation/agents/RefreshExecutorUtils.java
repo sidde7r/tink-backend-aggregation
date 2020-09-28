@@ -115,12 +115,12 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case CREDITCARD_ACCOUNTS:
-                    List<Account> creditcarddAccounts =
+                    List<Account> creditCardAccounts =
                             ((RefreshCreditCardAccountsExecutor) agent)
                                     .fetchCreditCardAccounts()
                                     .getAccounts();
-                    log.info("size of creditcarddAccounts: {}", creditcarddAccounts.size());
-                    context.cacheAccounts(creditcarddAccounts);
+                    log.info("size of creditCardAccounts: {}", creditCardAccounts.size());
+                    context.cacheAccounts(creditCardAccounts);
                     break;
                 case CREDITCARD_TRANSACTIONS:
                     for (Map.Entry<Account, List<Transaction>> accountTransactions :
