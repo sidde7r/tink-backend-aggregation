@@ -176,7 +176,7 @@ spec:
           Investigate immediately.
         summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , pt-market-alert
 
     - alert: BankServerUnavailableForRefreshPT_NG
       expr: |
@@ -195,4 +195,4 @@ spec:
           Investigate immediately.
         summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , pt-market-alert
