@@ -65,8 +65,8 @@ public class BankIdIframeSSAuthenticationControllerTest {
     private void initializeWebElements() {
         // authentication list button
         selectAuthenticationButton = mock(WebElement.class);
-        given(webDriverHelper.getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH))
-                .willReturn(selectAuthenticationButton);
+        given(webDriverHelper.waitForElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH))
+                .willReturn(Optional.ofNullable(selectAuthenticationButton));
 
         // bank id mobil
         buttonbankId = mock(WebElement.class);
@@ -100,7 +100,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
         inOrder.verify(iframeInitializer).initializeBankIdAuthentication();
 
         // List authentication methods
-        inOrder.verify(webDriverHelper).getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
+        inOrder.verify(webDriverHelper).waitForElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
         inOrder.verify(webDriverHelper).clickButton(selectAuthenticationButton);
 
         // Choose Bank Id Mobil
@@ -167,6 +167,6 @@ public class BankIdIframeSSAuthenticationControllerTest {
         controller.doLogin("PASSWORD-EXAMPLE");
 
         // then
-        verify(webDriverHelper, times(1)).getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
+        verify(webDriverHelper, times(1)).waitForElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
     }
 }
