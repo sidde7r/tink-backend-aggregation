@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.SparebankenVestAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.SparebankenVestOneTimeActivationCodeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.SparebankenVestCreditCardAccountFetcher;
@@ -24,8 +23,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.SparebankenVestTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.session.SparebankenVestSessionHandler;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -41,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS})
 public final class SparebankenVestAgent extends NextGenerationAgent
@@ -56,19 +54,16 @@ public final class SparebankenVestAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public SparebankenVestAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    public SparebankenVestAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
         configureHttpClient(client);
         this.apiClient = new SparebankenVestApiClient(client);
         this.encapClient =
                 new EncapClient(
-                        context,
-                        request,
-                        signatureKeyPair,
                         persistentStorage,
                         new SparebankenVestEncapConfiguration(),
-                        DeviceProfileConfiguration.IOS_STABLE);
+                        DeviceProfileConfiguration.IOS_STABLE,
+                        client);
 
         this.investmentRefreshController =
                 new InvestmentRefreshController(

@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.HandelsbankenNOAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.HandelsbankenNOMultiFactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.HandelsbankenNOInvestmentFetcher;
@@ -22,8 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenNOTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.filters.HandelsbankenNORetryFilter;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
@@ -35,7 +34,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LOANS, MORTGAGE_AGGREGATION})
 public final class HandelsbankenNOAgent extends NextGenerationAgent
@@ -44,24 +42,21 @@ public final class HandelsbankenNOAgent extends NextGenerationAgent
                 RefreshLoanAccountsExecutor {
 
     private final HandelsbankenNOApiClient apiClient;
-    private EncapClient encapClient;
+    private final EncapClient encapClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
 
-    public HandelsbankenNOAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    public HandelsbankenNOAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
         configureHttpClient(client);
         apiClient = new HandelsbankenNOApiClient(client, sessionStorage);
         encapClient =
                 new EncapClient(
-                        context,
-                        request,
-                        signatureKeyPair,
                         persistentStorage,
                         new HandelsbankenNOEncapConfiguration(),
-                        HandelsbankenNOConstants.DEVICE_PROFILE);
+                        HandelsbankenNOConstants.DEVICE_PROFILE,
+                        client);
 
         investmentRefreshController =
                 new InvestmentRefreshController(

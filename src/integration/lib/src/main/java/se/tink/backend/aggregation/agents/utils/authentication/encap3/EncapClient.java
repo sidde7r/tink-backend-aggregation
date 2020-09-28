@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 
 import javax.annotation.Nullable;
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Urls;
@@ -15,42 +14,23 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.Regist
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.SamlResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapMessageUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapSoapUtils;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
-import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @Slf4j
 public class EncapClient {
-    private final TinkHttpClient httpClient;
     private final EncapStorage storage;
     private final EncapSoapUtils soapUtils;
     private final EncapMessageUtils messageUtils;
 
     public EncapClient(
-            CompositeAgentContext context,
-            CredentialsRequest request,
-            SignatureKeyPair signatureKeyPair,
             PersistentStorage persistentStorage,
             EncapConfiguration configuration,
-            DeviceProfile deviceProfile) {
-
-        this.httpClient =
-                NextGenTinkHttpClient.builder(
-                                context.getLogMasker(),
-                                LogMaskerImpl.shouldLog(request.getProvider()))
-                        .setAggregatorInfo(context.getAggregatorInfo())
-                        .setMetricRegistry(context.getMetricRegistry())
-                        .setLogOutputStream(context.getLogOutputStream())
-                        .setSignatureKeyPair(signatureKeyPair)
-                        .setProvider(request.getProvider())
-                        .build();
-
+            DeviceProfile deviceProfile,
+            TinkHttpClient httpClient) {
         // Encap does not like our signature header :(
-        this.httpClient.disableSignatureRequestHeader();
+        httpClient.disableSignatureRequestHeader();
 
         this.storage = new EncapStorage(persistentStorage);
         this.soapUtils = new EncapSoapUtils(configuration, storage);

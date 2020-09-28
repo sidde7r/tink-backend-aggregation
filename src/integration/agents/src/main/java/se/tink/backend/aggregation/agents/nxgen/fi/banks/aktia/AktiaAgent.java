@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.ent
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.AktiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -48,25 +47,19 @@ public final class AktiaAgent extends NextGenerationAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    @Inject
-    public AktiaAgent(
-            final AgentComponentProvider componentProvider,
-            AgentsServiceConfiguration agentsServiceConfiguration,
-            SignatureKeyPair signatureKeyPair) {
-        super(componentProvider);
-        configureHttpClient(client, agentsServiceConfiguration);
+    public AktiaAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
+        configureHttpClient(client);
 
         this.apiClient = new AktiaApiClient(client);
         this.instanceStorage = new Storage();
 
         this.encapClient =
                 new EncapClient(
-                        componentProvider.getContext(),
-                        request,
-                        signatureKeyPair,
                         persistentStorage,
                         new AktiaEncapConfiguration(),
-                        AktiaConstants.DEVICE_PROFILE);
+                        AktiaConstants.DEVICE_PROFILE,
+                        client);
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();

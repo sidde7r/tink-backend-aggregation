@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -14,7 +15,6 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.SparebankenSorAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.SparebankenSorMultiFactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginRequest;
@@ -26,8 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.filters.AddRefererFilter;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
@@ -36,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshCon
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /**
  * WIP! This provider is dependant on us being able to trigger supplemental information twice, which
@@ -60,20 +59,18 @@ public final class SparebankenSorAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public SparebankenSorAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public SparebankenSorAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
         configureHttpClient(client);
         apiClient = new SparebankenSorApiClient(client, sessionStorage);
 
         this.encapClient =
                 new EncapClient(
-                        context,
-                        request,
-                        signatureKeyPair,
                         persistentStorage,
                         new SparebankenSorEncapConfiguration(),
-                        SparebankenSorConstants.DEVICE_PROFILE);
+                        SparebankenSorConstants.DEVICE_PROFILE,
+                        client);
 
         SparebankenSorLoanFetcher loanFetcher = new SparebankenSorLoanFetcher(apiClient);
         loanRefreshController =
