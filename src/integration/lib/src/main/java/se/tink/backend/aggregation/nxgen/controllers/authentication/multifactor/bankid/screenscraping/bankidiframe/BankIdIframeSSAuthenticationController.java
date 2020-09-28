@@ -65,7 +65,9 @@ public class BankIdIframeSSAuthenticationController {
 
     private void getListAuthenticationMethods(WebDriver driver) {
         WebElement selectAuthenticationButton =
-                webDriverHelper.getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
+                webDriverHelper
+                        .waitForElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH)
+                        .orElseThrow(LoginError.NO_AVAILABLE_SCA_METHODS::exception);
         webDriverHelper.clickButton(selectAuthenticationButton);
     }
 
