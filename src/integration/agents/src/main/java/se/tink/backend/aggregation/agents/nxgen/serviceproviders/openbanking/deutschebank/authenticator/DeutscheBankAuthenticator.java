@@ -14,17 +14,12 @@ public class DeutscheBankAuthenticator {
 
     private final DeutscheBankApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final String iban;
     private final String psuId;
 
     public DeutscheBankAuthenticator(
-            DeutscheBankApiClient apiClient,
-            PersistentStorage persistentStorage,
-            String iban,
-            String psuId) {
+            DeutscheBankApiClient apiClient, PersistentStorage persistentStorage, String psuId) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.iban = iban;
         this.psuId = psuId;
     }
 
@@ -33,7 +28,7 @@ public class DeutscheBankAuthenticator {
     }
 
     public URL authenticate(String state) {
-        ConsentBaseResponse consent = apiClient.getConsent(state, iban, psuId);
+        ConsentBaseResponse consent = apiClient.getConsent(state, psuId);
         persistentStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
         return new URL(consent.getLinks().getScaRedirect().getHref());
     }

@@ -25,7 +25,7 @@ public class DeutscheBankAuthenticatorTest {
         deutscheBankApiClient = mock(DeutscheBankApiClient.class);
         PersistentStorage persistentStorage = mock(PersistentStorage.class);
         deutscheBankAuthenticator =
-                new DeutscheBankAuthenticator(deutscheBankApiClient, persistentStorage, "", "");
+                new DeutscheBankAuthenticator(deutscheBankApiClient, persistentStorage, "");
     }
 
     @Test

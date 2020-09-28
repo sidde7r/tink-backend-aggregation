@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public final class DeutscheBankDEAgent extends DeutscheBankAgent {
 
     private static final DeutscheMarketConfiguration DEUTSCHE_DE_CONFIGURATION =
-            new DeutscheMarketConfiguration("https://xs2a.db.com/ais/DE/PFB", "DE_ONLB_DB");
+            new DeutscheMarketConfiguration("https://xs2a.db.com/ais/DE/DB", "DE_ONLB_DB");
 
     @Inject
     public DeutscheBankDEAgent(AgentComponentProvider componentProvider) {
@@ -41,7 +41,6 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent {
                         new DeutscheBankAuthenticator(
                                 apiClient,
                                 persistentStorage,
-                                credentials.getField(DeutscheBankConstants.CredentialKeys.IBAN),
                                 credentials.getField(
                                         DeutscheBankConstants.CredentialKeys.USERNAME)),
                         strongAuthenticationState);

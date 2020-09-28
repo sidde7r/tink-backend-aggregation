@@ -50,7 +50,7 @@ public class PostbankApiClientTest {
                         SerializationUtils.deserializeFromString(
                                 CONSENT_BAD_REQUEST_JSON, ErrorResponse.class));
         // when
-        Throwable throwable = catchThrowable(() -> apiClient.getConsents("asdf", "asdf"));
+        Throwable throwable = catchThrowable(() -> apiClient.getConsents("asdf"));
 
         // then
         assertThat(throwable)
@@ -71,7 +71,7 @@ public class PostbankApiClientTest {
                         SerializationUtils.deserializeFromString(
                                 DIFFERENT_JSON, ErrorResponse.class));
         // when
-        Throwable throwable = catchThrowable(() -> apiClient.getConsents("asdf", "asdf"));
+        Throwable throwable = catchThrowable(() -> apiClient.getConsents("asdf"));
 
         // then
         assertThat(throwable).isEqualTo(httpResponseException);

@@ -51,7 +51,6 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
                         new DeutscheBankAuthenticator(
                                 apiClient,
                                 persistentStorage,
-                                credentials.getField(CredentialKeys.IBAN),
                                 credentials.getField(CredentialKeys.USERNAME)),
                         strongAuthenticationState);
 

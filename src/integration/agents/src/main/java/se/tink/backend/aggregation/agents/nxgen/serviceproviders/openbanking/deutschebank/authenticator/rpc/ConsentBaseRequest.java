@@ -18,10 +18,10 @@ public class ConsentBaseRequest {
     private final int frequencyPerDay;
     private final boolean combinedServiceIndicator;
 
-    public ConsentBaseRequest(String iban) {
+    public ConsentBaseRequest(AccessEntity accessEntity) {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MONTH, 11);
-        this.access = new AccessEntity(iban);
+        this.access = accessEntity;
         this.recurringIndicator = true;
         this.validUntil = now.getTime();
         this.frequencyPerDay = 4;

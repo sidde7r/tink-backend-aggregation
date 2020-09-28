@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class Xs2aDevelopersTransactionalAccountTransactionDateFromFetcher
         implements KeyWithInitiDateFromFetcher<TransactionalAccount, String> {
 
-    private static final int DEFAULT_MAX_DAYS_BACK = 90;
+    private static final int DEFAULT_MAX_DAYS_BACK = 1000;
     private final Xs2aDevelopersApiClient apiClient;
     private final Xs2aDevelopersAuthenticator authenticator;
     private final int daysBack;

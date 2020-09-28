@@ -25,7 +25,6 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
 
     private final DeutscheBankApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final String iban;
     private final String psuId;
     private final StrongAuthenticationState strongAuthenticationState;
     private final DeutscheBankRedirectHandler deutscheBankRedirectHandler;
@@ -33,13 +32,11 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
     public DeutscheBankMultifactorAuthenticator(
             DeutscheBankApiClient apiClient,
             PersistentStorage persistentStorage,
-            String iban,
             String psuId,
             StrongAuthenticationState strongAuthenticationState,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.iban = iban;
         this.psuId = psuId;
         this.strongAuthenticationState = strongAuthenticationState;
         this.deutscheBankRedirectHandler =
@@ -50,7 +47,7 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         ConsentBaseResponse consent =
-                apiClient.getConsent(strongAuthenticationState.getState(), iban, psuId);
+                apiClient.getConsent(strongAuthenticationState.getState(), psuId);
         persistentStorage.put(DeutscheBankConstants.StorageKeys.CONSENT_ID, consent.getConsentId());
         deutscheBankRedirectHandler.handleRedirect();
         poll();
