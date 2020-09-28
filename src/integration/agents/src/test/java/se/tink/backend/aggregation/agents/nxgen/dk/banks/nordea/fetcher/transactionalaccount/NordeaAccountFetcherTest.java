@@ -1,17 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.ACCOUNT_1_API_ID;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.ACCOUNT_API_ID_WITH_TRANSACTIONS_WITHOUT_DATE;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.ACCOUNT_WITH_CREDIT_API_ID;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkTestUtils;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -20,6 +35,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaAccountFetcherTest {
 
@@ -129,6 +146,49 @@ public class NordeaAccountFetcherTest {
         assertThat(transactions).hasSize(3);
     }
 
+    @Test
+    public void shouldFetchTransactionsUsingDate() {
+        // given
+        Calendar calendar = Calendar.getInstance();
+        Date dateTo = calendar.getTime();
+        calendar.add(Calendar.MONTH, -3);
+        Date dateFrom = calendar.getTime();
+
+        TransactionalAccount accountWithTransactionsWithoutDate = getTransactionalAccount();
+        NordeaDkApiClient client =
+                mockTransactionsForAccountQueriedByDate(
+                        mock(NordeaDkApiClient.class),
+                        accountWithTransactionsWithoutDate.getApiIdentifier(),
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom),
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo));
+        fetcher = new NordeaAccountFetcher(client);
+
+        // when
+        PaginatorResponse paginatorResponse =
+                fetcher.getTransactionsFor(accountWithTransactionsWithoutDate, dateFrom, dateTo);
+
+        // then
+        assertThat(paginatorResponse.getTinkTransactions().size()).isEqualTo(2);
+        verify(client)
+                .getAccountTransactions(
+                        anyString(),
+                        anyString(),
+                        isNull(),
+                        eq(ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom)),
+                        eq(ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo)));
+    }
+
+    private NordeaDkApiClient mockTransactionsForAccountQueriedByDate(
+            NordeaDkApiClient client, String accountId, String dateFrom, String dateTo) {
+        when(client.getAccountTransactions(
+                        eq(accountId), any(), isNull(), eq(dateFrom), eq(dateTo)))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                new File(NordeaTestData.ACCOUNT_TRANSACTIONS),
+                                TransactionsResponse.class));
+        return client;
+    }
+
     private TransactionalAccount getTransactionalAccount() {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
@@ -141,6 +201,7 @@ public class NordeaAccountFetcherTest {
                                 .withAccountName("")
                                 .addIdentifier(AccountIdentifier.create(Type.IBAN, ""))
                                 .build())
+                .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, "PRODUCT_CODE")
                 .setApiIdentifier(ACCOUNT_API_ID_WITH_TRANSACTIONS_WITHOUT_DATE)
                 .build()
                 .orElseThrow(IllegalStateException::new);

@@ -17,6 +17,8 @@ public class NordeaTestData {
     static final String TRANSACTIONS_WITHOUT_DATE =
             TEST_DATA_PATH + "transactions_without_date.json";
 
+    public static final String ACCOUNT_TRANSACTIONS = TEST_DATA_PATH + "account_transactions.json";
+
     public static final String CREDIT_CARD_ID_WITH_TRANSACTIONS_WITHOUT_DATE =
             "CREDIT_CARD_ID_WITH_PENDING_TRANSACTIONS_WITHOUT_DATE";
     static final String CREDIT_CARD_TRANSACTIONS_WITHOUT_DATE =
@@ -29,7 +31,7 @@ public class NordeaTestData {
     static final String FETCH_CREDIT_CARDS_DETAILS_FILE_PATH =
             TEST_DATA_PATH + "credit_card_details.json";
     static final String FETCH_ACCOUNT_TRANSACTIONS_FILE_PATH =
-            TEST_DATA_PATH + "account_transactions.json";
+            TEST_DATA_PATH + "account_transactions_with_continuation.json";
     static final String FETCH_ACCOUNT_TRANSACTIONS_CONTINUATION_FILE_PATH =
             TEST_DATA_PATH + "account_transactions_continuation.json";
 
