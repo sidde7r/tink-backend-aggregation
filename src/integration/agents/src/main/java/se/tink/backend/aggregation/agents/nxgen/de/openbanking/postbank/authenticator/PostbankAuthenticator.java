@@ -11,25 +11,25 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenti
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public final class PostbankAuthenticator implements AutoAuthenticator {
 
     private final PostbankApiClient postbankApiClient;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final String iban;
 
     public PostbankAuthenticator(
-            PostbankApiClient apiClient, SessionStorage sessionStorage, String iban) {
+            PostbankApiClient apiClient, PersistentStorage persistentStorage, String iban) {
         this.postbankApiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.iban = iban;
     }
 
     public AuthorisationResponse init(String username, String password)
             throws AuthenticationException, AuthorizationException {
         ConsentResponse consentsResponse = postbankApiClient.getConsents(iban, username);
-        sessionStorage.put(StorageKeys.CONSENT_ID, consentsResponse.getConsentId());
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentsResponse.getConsentId());
 
         return postbankApiClient.startAuthorisation(
                 new URL(
