@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public class TokenRequestPost extends TokenBaseRequest {
 
-    private final String codeVerifier;
     private final String clientSecret;
 
     public TokenRequestPost(
@@ -13,14 +12,12 @@ public class TokenRequestPost extends TokenBaseRequest {
             final String code,
             final String redirectUri,
             final String clientId,
-            final String clientSecret,
-            final String codeVerifier) {
+            final String clientSecret) {
         this.grantType = grantType;
         this.code = code;
         this.redirectUri = redirectUri;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.codeVerifier = codeVerifier;
     }
 
     public String toData() {
@@ -30,7 +27,6 @@ public class TokenRequestPost extends TokenBaseRequest {
                 .put(FormKeys.REDIRECT_URI, redirectUri)
                 .put(FormKeys.CLIENT_ID, clientId)
                 .put(FormKeys.CLIENT_SECRET, clientSecret)
-                .put(FormKeys.CODE_VERIFIER, codeVerifier)
                 .build()
                 .serialize();
     }

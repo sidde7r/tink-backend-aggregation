@@ -8,11 +8,15 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.configu
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.ErstebankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.fetcher.transactionalaccount.ErstebankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class ErstebankAgent
@@ -44,7 +48,12 @@ public final class ErstebankAgent
                 systemUpdater,
                 persistentStorage,
                 supplementalInformationHelper,
-                new ErstebankAuthenticator(apiClient, sessionStorage),
+                new ErstebankAuthenticator(
+                        apiClient,
+                        persistentStorage,
+                        credentials,
+                        supplementalInformationHelper,
+                        supplementalInformationFormer),
                 credentials,
                 strongAuthenticationState);
     }
@@ -63,5 +72,21 @@ public final class ErstebankAgent
     public Optional<PaymentController> constructPaymentController() {
         ErstebankPaymentExecutor executor = new ErstebankPaymentExecutor(apiClient);
         return Optional.of(new PaymentController(executor, executor));
+    }
+
+    @Override
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        final BerlinGroupAccountFetcher berlinGroupAccountFetcher =
+                new BerlinGroupAccountFetcher(apiClient);
+        final ErstebankTransactionFetcher erstebankTransactionFetcher =
+                new ErstebankTransactionFetcher(apiClient);
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                berlinGroupAccountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(erstebankTransactionFetcher)));
     }
 }
