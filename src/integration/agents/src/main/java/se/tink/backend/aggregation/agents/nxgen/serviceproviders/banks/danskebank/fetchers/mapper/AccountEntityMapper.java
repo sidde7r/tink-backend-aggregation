@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.agents.rpc.AccountTypes;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
@@ -12,14 +12,19 @@ import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabi
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@RequiredArgsConstructor
 public class AccountEntityMapper {
+
+    private final String marketCode;
 
     public List<TransactionalAccount> toTinkCheckingAccounts(
             List<String> knownCheckingAccountProducts, List<AccountEntity> accounts) {
@@ -109,51 +114,66 @@ public class AccountEntityMapper {
     }
 
     public Optional<TransactionalAccount> toCheckingAccount(AccountEntity accountEntity) {
-        return Optional.of(
-                CheckingAccount.builder(
-                                AccountTypes.CHECKING,
-                                accountEntity.getAccountNoInt(),
-                                ExactCurrencyAmount.of(
-                                        accountEntity.getBalance(), accountEntity.getCurrency()))
-                        .setExactAvailableCredit(calculateAvailableCredit(accountEntity))
-                        .setAccountNumber(accountEntity.getAccountNoExt())
-                        .setName(accountEntity.getAccountName())
-                        .setBankIdentifier(accountEntity.getAccountNoInt())
-                        // checking accounts are having by default the following 4 capabilities
-                        // but you can confirm that easily the same way as done for other account
-                        // types
-                        .canExecuteExternalTransfer(AccountCapabilities.Answer.YES)
-                        .canReceiveExternalTransfer(AccountCapabilities.Answer.YES)
-                        .canPlaceFunds(AccountCapabilities.Answer.YES)
-                        .canWithdrawCash(AccountCapabilities.Answer.YES)
-                        .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                        .sourceInfo(createAccountSourceInfo(accountEntity))
-                        .build());
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
+                .withBalance(
+                        BalanceModule.builder()
+                                .withBalance(
+                                        ExactCurrencyAmount.of(
+                                                accountEntity.getBalance(),
+                                                accountEntity.getCurrency()))
+                                .setAvailableCredit(calculateAvailableCredit(accountEntity))
+                                .build())
+                .withId(buildIdModule(accountEntity))
+                .setBankIdentifier(accountEntity.getAccountNoInt())
+                .setApiIdentifier(accountEntity.getAccountNoInt())
+                .canExecuteExternalTransfer(AccountCapabilities.Answer.YES)
+                .canReceiveExternalTransfer(AccountCapabilities.Answer.YES)
+                .canPlaceFunds(AccountCapabilities.Answer.YES)
+                .canWithdrawCash(AccountCapabilities.Answer.YES)
+                .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
+                .sourceInfo(createAccountSourceInfo(accountEntity))
+                .build();
+    }
+
+    private IdModule buildIdModule(AccountEntity accountEntity) {
+        return IdModule.builder()
+                .withUniqueIdentifier(accountEntity.getAccountNoInt())
+                .withAccountNumber(accountEntity.getAccountNoExt())
+                .withAccountName(accountEntity.getAccountName())
+                .addIdentifier(
+                        AccountIdentifier.create(
+                                getAccountIdentifierType(marketCode),
+                                accountEntity.getAccountNoInt()))
+                .build();
+    }
+
+    private AccountIdentifier.Type getAccountIdentifierType(String marketCode) {
+        return Optional.ofNullable(AccountIdentifier.Type.fromScheme(marketCode.toLowerCase()))
+                .orElse(AccountIdentifier.Type.COUNTRY_SPECIFIC);
     }
 
     protected Optional<TransactionalAccount> toSavingsAccount(
             DanskeBankConfiguration configuration, AccountEntity accountEntity) {
-        return Optional.of(
-                SavingsAccount.builder(
-                                AccountTypes.SAVINGS,
-                                accountEntity.getAccountNoInt(),
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.SAVINGS)
+                .withPaymentAccountFlag()
+                .withBalance(
+                        BalanceModule.of(
                                 ExactCurrencyAmount.of(
-                                        accountEntity.getBalance(), accountEntity.getCurrency()))
-                        .setAccountNumber(accountEntity.getAccountNoExt())
-                        .setName(accountEntity.getAccountName())
-                        .setBankIdentifier(accountEntity.getAccountNoInt())
-                        .canExecuteExternalTransfer(
-                                configuration.canExecuteExternalTransfer(
-                                        accountEntity.getAccountProduct()))
-                        .canReceiveExternalTransfer(
-                                configuration.canReceiveExternalTransfer(
-                                        accountEntity.getAccountProduct()))
-                        .canPlaceFunds(
-                                configuration.canPlaceFunds(accountEntity.getAccountProduct()))
-                        .canWithdrawCash(
-                                configuration.canWithdrawCash(accountEntity.getAccountProduct()))
-                        .sourceInfo(createAccountSourceInfo(accountEntity))
-                        .build());
+                                        accountEntity.getBalance(), accountEntity.getCurrency())))
+                .withId(buildIdModule(accountEntity))
+                .setBankIdentifier(accountEntity.getAccountNoInt())
+                .setApiIdentifier(accountEntity.getAccountNoInt())
+                .canExecuteExternalTransfer(
+                        configuration.canExecuteExternalTransfer(accountEntity.getAccountProduct()))
+                .canReceiveExternalTransfer(
+                        configuration.canReceiveExternalTransfer(accountEntity.getAccountProduct()))
+                .canPlaceFunds(configuration.canPlaceFunds(accountEntity.getAccountProduct()))
+                .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
+                .sourceInfo(createAccountSourceInfo(accountEntity))
+                .build();
     }
 
     protected AccountSourceInfo createAccountSourceInfo(AccountEntity accountEntity) {

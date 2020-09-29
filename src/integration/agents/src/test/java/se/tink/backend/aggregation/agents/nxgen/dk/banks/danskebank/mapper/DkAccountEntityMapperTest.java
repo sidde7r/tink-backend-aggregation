@@ -41,7 +41,7 @@ public class DkAccountEntityMapperTest {
 
         // then
         assert result != null;
-        assertThat(result.getAccountNumber()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
+        assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_NO_EXT);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER))
                 .isEqualTo(ZERO + ACCOUNT_NO_INT);
         assertThat(result.getApiIdentifier()).isEqualTo(ZERO + ACCOUNT_NO_INT);
@@ -76,7 +76,7 @@ public class DkAccountEntityMapperTest {
 
         // then
         assert result != null;
-        assertThat(result.getAccountNumber()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
+        assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_NO_EXT);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER))
                 .isEqualTo(ZERO + ACCOUNT_NO_INT);
         assertThat(result.getApiIdentifier()).isEqualTo(ZERO + ACCOUNT_NO_INT);
@@ -111,7 +111,7 @@ public class DkAccountEntityMapperTest {
                 dkAccountEntityMapper.toCreditCardAccount(configuration, accountEntity);
 
         // then
-        assertThat(result.getAccountNumber()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
+        assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_NO_EXT);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER))
                 .isEqualTo(ZERO + ACCOUNT_NO_INT);
         assertThat(result.getApiIdentifier()).isEqualTo(ZERO + ACCOUNT_NO_INT);

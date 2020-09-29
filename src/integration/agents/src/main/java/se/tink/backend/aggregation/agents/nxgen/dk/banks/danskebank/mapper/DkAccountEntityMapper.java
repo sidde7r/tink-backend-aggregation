@@ -13,24 +13,28 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.enums.MarketCode;
 
 public class DkAccountEntityMapper extends AccountEntityMapper {
 
     private static final int ACCOUNT_NO_MIN_LENGTH = 10;
 
+    public DkAccountEntityMapper() {
+        super(MarketCode.DK.name());
+    }
+
     @Override
     public CreditCardAccount toCreditCardAccount(
             DanskeBankConfiguration configuration, AccountEntity accountEntity) {
         return CreditCardAccount.builder(
-                        getAccountNumberWithZerosIfIsTooShort(accountEntity.getAccountNoInt()),
+                        getAccountNumberWithZerosIfIsTooShort(accountEntity.getAccountNoExt()),
                         ExactCurrencyAmount.of(
                                 accountEntity.getBalance(), accountEntity.getCurrency()),
                         calculateAvailableCredit(accountEntity))
-                .setAccountNumber(
-                        getAccountNumberWithZerosIfIsTooShort(accountEntity.getAccountNoExt()))
+                .setAccountNumber(accountEntity.getAccountNoExt())
                 .setName(accountEntity.getAccountName())
                 .setBankIdentifier(
                         getAccountNumberWithZerosIfIsTooShort(accountEntity.getAccountNoInt()))
@@ -48,7 +52,7 @@ public class DkAccountEntityMapper extends AccountEntityMapper {
     public Optional<TransactionalAccount> toCheckingAccount(AccountEntity accountEntity) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
-                .withInferredAccountFlags()
+                .withPaymentAccountFlag()
                 .withBalance(
                         BalanceModule.builder()
                                 .withBalance(
@@ -74,14 +78,14 @@ public class DkAccountEntityMapper extends AccountEntityMapper {
     private IdModule buildIdModule(AccountEntity accountEntity) {
         return IdModule.builder()
                 .withUniqueIdentifier(
-                        getAccountNumberWithZerosIfIsTooShort(accountEntity.getAccountNoInt()))
-                .withAccountNumber(
                         getAccountNumberWithZerosIfIsTooShort(accountEntity.getAccountNoExt()))
+                .withAccountNumber(accountEntity.getAccountNoExt())
                 .withAccountName(accountEntity.getAccountName())
                 .addIdentifier(
-                        new DanishIdentifier(
+                        AccountIdentifier.create(
+                                AccountIdentifier.Type.DK,
                                 getAccountNumberWithZerosIfIsTooShort(
-                                        accountEntity.getAccountNoInt())))
+                                        accountEntity.getAccountNoExt())))
                 .build();
     }
 
@@ -90,7 +94,7 @@ public class DkAccountEntityMapper extends AccountEntityMapper {
             DanskeBankConfiguration configuration, AccountEntity accountEntity) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
-                .withInferredAccountFlags()
+                .withPaymentAccountFlag()
                 .withBalance(
                         of(
                                 ExactCurrencyAmount.of(

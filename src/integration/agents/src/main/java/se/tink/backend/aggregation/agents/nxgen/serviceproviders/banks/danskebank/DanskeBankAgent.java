@@ -74,7 +74,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                                 this.credentials,
                                 this.apiClient,
                                 this.configuration,
-                                new AccountEntityMapper()),
+                                new AccountEntityMapper(configuration.getMarketCode())),
                         createTransactionFetcherController());
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
@@ -117,7 +117,9 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                 this.metricRefreshController,
                 this.updateController,
                 new DanskeBankTransactionalAccountFetcher(
-                        this.apiClient, this.configuration, new AccountEntityMapper()),
+                        this.apiClient,
+                        this.configuration,
+                        new AccountEntityMapper(configuration.getMarketCode())),
                 createTransactionFetcherController());
     }
 
@@ -136,7 +138,9 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                 this.metricRefreshController,
                 this.updateController,
                 new DanskeBankCreditCardFetcher(
-                        this.apiClient, this.configuration, new AccountEntityMapper()),
+                        this.apiClient,
+                        this.configuration,
+                        new AccountEntityMapper(configuration.getMarketCode())),
                 createTransactionFetcherController());
     }
 

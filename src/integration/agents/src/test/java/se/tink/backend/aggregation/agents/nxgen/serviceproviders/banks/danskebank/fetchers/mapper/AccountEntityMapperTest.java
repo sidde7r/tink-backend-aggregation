@@ -29,7 +29,7 @@ public class AccountEntityMapperTest {
 
     @Before
     public void setUp() {
-        accountEntityMapper = new AccountEntityMapper();
+        accountEntityMapper = new AccountEntityMapper("SE");
         accountEntity =
                 SerializationUtils.deserializeFromString(
                         "{\n"
