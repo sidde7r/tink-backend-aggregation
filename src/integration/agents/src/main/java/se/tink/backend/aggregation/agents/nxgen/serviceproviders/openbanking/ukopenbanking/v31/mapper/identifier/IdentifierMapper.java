@@ -1,11 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER;
-
-import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,10 +15,6 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @RequiredArgsConstructor
 public class IdentifierMapper {
 
-    private static final List<ExternalAccountIdentification4Code>
-            ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS =
-                    ImmutableList.of(SORT_CODE_ACCOUNT_NUMBER, IBAN, BBAN, SAVINGS_ROLL_NUMBER);
-
     private static final GenericTypeMapper<Type, ExternalAccountIdentification4Code> typeMapper =
             GenericTypeMapper.<Type, ExternalAccountIdentification4Code>genericBuilder()
                     .put(
@@ -38,7 +28,7 @@ public class IdentifierMapper {
                     .put(Type.PAYMENT_CARD_NUMBER, ExternalAccountIdentification4Code.PAN)
                     .build();
 
-    private final PrioritizedValueExtractor valueExtractor;
+    protected final PrioritizedValueExtractor valueExtractor;
 
     public AccountIdentifier mapIdentifier(AccountIdentifierEntity id) {
         Type type =
@@ -53,20 +43,20 @@ public class IdentifierMapper {
     }
 
     public AccountIdentifierEntity getTransactionalAccountPrimaryIdentifier(
-            Collection<AccountIdentifierEntity> identifiers) {
+            Collection<AccountIdentifierEntity> identifiers,
+            List<ExternalAccountIdentification4Code> allowedAccountIdentifiers) {
 
         return valueExtractor
                 .pickByValuePriority(
                         identifiers,
                         AccountIdentifierEntity::getIdentifierType,
-                        ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS)
+                        allowedAccountIdentifiers)
                 .orElseThrow(
                         () ->
                                 new NoSuchElementException(
                                         "Could not extract account identifier. No available identifier with type of: "
                                                 + StringUtils.join(
-                                                        ',',
-                                                        ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS)));
+                                                        allowedAccountIdentifiers, ", ")));
     }
 
     public AccountIdentifierEntity getCreditCardIdentifier(

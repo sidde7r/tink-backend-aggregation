@@ -4,19 +4,28 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-class DanskeBankOpenBankingV31Ais extends UkOpenBankingV31Ais {
+public class DanskeBankOpenBankingV31Ais extends UkOpenBankingV31Ais {
 
-    DanskeBankOpenBankingV31Ais(
+    public DanskeBankOpenBankingV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             PersistentStorage persistentStorage,
-            LocalDateTimeSource localDateTimeSource) {
-        super(ukOpenBankingAisConfig, persistentStorage, localDateTimeSource);
+            LocalDateTimeSource localDateTimeSource,
+            CreditCardAccountMapper creditCardAccountMapper,
+            TransactionalAccountMapper transactionalAccountMapper) {
+        super(
+                ukOpenBankingAisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                creditCardAccountMapper,
+                transactionalAccountMapper);
     }
 
     @Override

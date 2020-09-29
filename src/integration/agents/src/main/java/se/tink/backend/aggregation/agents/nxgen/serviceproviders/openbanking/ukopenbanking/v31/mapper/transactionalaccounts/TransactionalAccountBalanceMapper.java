@@ -50,7 +50,7 @@ public class TransactionalAccountBalanceMapper {
 
     private final PrioritizedValueExtractor valueExtractor;
 
-    ExactCurrencyAmount getAccountBalance(Collection<AccountBalanceEntity> balances) {
+    public ExactCurrencyAmount getAccountBalance(Collection<AccountBalanceEntity> balances) {
         return valueExtractor
                 .pickByValuePriority(
                         balances,
