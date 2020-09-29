@@ -9,6 +9,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
@@ -23,15 +24,18 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
     private final DanskeBankApiClient apiClient;
     private final DanskeBankConfiguration configuration;
     private final String languageCode;
+    private final AccountEntityMapper accountEntityMapper;
 
     public DanskeBankAccountLoanFetcher(
             Credentials credentials,
             DanskeBankApiClient apiClient,
-            DanskeBankConfiguration configuration) {
+            DanskeBankConfiguration configuration,
+            AccountEntityMapper accountEntityMapper) {
         this.credentials = credentials;
         this.apiClient = apiClient;
         this.configuration = configuration;
         this.languageCode = configuration.getLanguageCode();
+        this.accountEntityMapper = accountEntityMapper;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
 
         return listAccounts.getAccounts().stream()
                 .filter(AccountEntity::isLoanAccount)
-                .map(account -> account.toLoanAccount(configuration))
+                .map(account -> accountEntityMapper.toLoanAccount(configuration, account))
                 .distinct()
                 .collect(Collectors.toList());
     }

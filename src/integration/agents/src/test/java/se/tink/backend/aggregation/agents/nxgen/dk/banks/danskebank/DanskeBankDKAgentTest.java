@@ -23,7 +23,6 @@ public class DanskeBankDKAgentTest {
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("dk", "dk-danskebank-servicecode")
-                .setFinancialInstitutionId("dsjdnjn")
                 .addCredentialField(
                         Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
                 .addCredentialField(
