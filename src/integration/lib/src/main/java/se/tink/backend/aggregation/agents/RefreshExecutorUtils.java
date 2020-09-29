@@ -101,7 +101,7 @@ public final class RefreshExecutorUtils {
                             ((RefreshSavingsAccountsExecutor) agent)
                                     .fetchSavingsAccounts()
                                     .getAccounts();
-                    log.info("size of savingAccounts: {}", savingAccounts.size());
+                    logIfFetchedEmptyAccounts(savingAccounts.isEmpty());
                     context.cacheAccounts(savingAccounts);
                     break;
                 case SAVING_TRANSACTIONS:
@@ -119,7 +119,7 @@ public final class RefreshExecutorUtils {
                             ((RefreshCreditCardAccountsExecutor) agent)
                                     .fetchCreditCardAccounts()
                                     .getAccounts();
-                    log.info("size of creditCardAccounts: {}", creditCardAccounts.size());
+                    logIfFetchedEmptyAccounts(creditCardAccounts.isEmpty());
                     context.cacheAccounts(creditCardAccounts);
                     break;
                 case CREDITCARD_TRANSACTIONS:
@@ -135,7 +135,8 @@ public final class RefreshExecutorUtils {
                 case LOAN_ACCOUNTS:
                     Map<Account, AccountFeatures> loanAccounts =
                             ((RefreshLoanAccountsExecutor) agent).fetchLoanAccounts().getAccounts();
-                    log.info("size of loanAccounts: {}", loanAccounts.size());
+
+                    logIfFetchedEmptyAccounts(loanAccounts.isEmpty());
                     for (Map.Entry<Account, AccountFeatures> loanAccount :
                             loanAccounts.entrySet()) {
                         context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
@@ -156,7 +157,7 @@ public final class RefreshExecutorUtils {
                             ((RefreshInvestmentAccountsExecutor) agent)
                                     .fetchInvestmentAccounts()
                                     .getAccounts();
-                    log.info("size of investmentAccounts: {}", investmentAccounts.size());
+                    logIfFetchedEmptyAccounts(investmentAccounts.isEmpty());
                     for (Map.Entry<Account, AccountFeatures> investAccount :
                             investmentAccounts.entrySet()) {
                         context.cacheAccount(investAccount.getKey(), investAccount.getValue());
@@ -190,17 +191,26 @@ public final class RefreshExecutorUtils {
         }
     }
 
+    private static void logIfFetchedEmptyAccounts(boolean isEmpty) {
+        if (isEmpty) {
+            log.warn("empty accounts returned");
+        }
+    }
+
     private static void cacheCheckingAccounts(Agent agent, AgentContext context) {
         List<Account> checkingAccounts =
                 ((RefreshCheckingAccountsExecutor) agent).fetchCheckingAccounts().getAccounts();
 
-        logIfFetchedExtraAccounts(agent, checkingAccounts);
-        log.info("size of checkingAccounts: {}", checkingAccounts.size());
+        logIfFetchedEmptyOrExtraAccounts(agent, checkingAccounts);
 
         context.cacheAccounts(checkingAccounts);
     }
 
-    private static void logIfFetchedExtraAccounts(Agent agent, List<Account> accounts) {
+    private static void logIfFetchedEmptyOrExtraAccounts(Agent agent, List<Account> accounts) {
+
+        if (accounts.isEmpty()) {
+            log.warn("empty accounts returned");
+        }
 
         List<AccountTypes> accountTypesExceptCheckingAccounts =
                 accounts.stream()
