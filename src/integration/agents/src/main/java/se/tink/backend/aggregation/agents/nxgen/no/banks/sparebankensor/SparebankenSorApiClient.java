@@ -18,9 +18,9 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenti
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.SecondLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.SendSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.VerifyCustomerResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.loan.rpc.SoTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.rpc.AccountListResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.rpc.CreditCardListResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.rpc.TransactionListResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -137,6 +137,12 @@ public class SparebankenSorApiClient {
         return getRequestWithCommonHeaders(Url.SEND_SMS).post(HttpResponse.class, sendSmsRequest);
     }
 
+    public String fetchDetails(String detailsPath) {
+        URL url = new URL(SparebankenSorConstants.Url.BASE_PATH + detailsPath);
+
+        return getRequestWithCommonHeaders(url).get(String.class);
+    }
+
     public List<AccountEntity> fetchAccounts() {
 
         if (accountList != null && !accountList.isEmpty()) {
@@ -165,40 +171,9 @@ public class SparebankenSorApiClient {
         return getRequestWithCommonHeaders(url).get(TransactionListResponse.class);
     }
 
-    // just logging response
-    public String fetchCreditCards() {
-        return getRequestWithCommonHeaders(Url.FETCH_CREDIT_CARDS).get(String.class);
-    }
-
-    // For loan fetching
-    public SoTokenResponse fetchSoToken(URL url) {
-        return client.request(url)
-                .header(SparebankenSorConstants.Headers.NAME_ORIGIN, Url.HOST)
-                .header(
-                        SparebankenSorConstants.Headers.NAME_CLIENTNAME,
-                        SparebankenSorConstants.Headers.VALUE_CLIENTNAME)
-                .header(SparebankenSorConstants.Headers.NAME_REQUESTID, generateRequestId())
-                .accept(MediaType.WILDCARD)
-                .header(
-                        SparebankenSorConstants.Headers.NAME_ACCESSTOKEN,
-                        sessionStorage.get(SparebankenSorConstants.Storage.ACCESS_TOKEN))
-                .post(SoTokenResponse.class);
-    }
-
-    // For loan fetching
-    public void transigoLogon(URL transigoLogonUrl) {
-        client.request(transigoLogonUrl).accept(MediaType.WILDCARD).get(HttpResponse.class);
-    }
-
-    // Just logging response
-    public String transigoAccounts(URL url) {
-        return client.request(url).accept(MediaType.WILDCARD).get(String.class);
-    }
-
-    public String fetchLoanDetails(String detailsPath) {
-        URL url = new URL(SparebankenSorConstants.Url.BASE_PATH + detailsPath);
-
-        return getRequestWithCommonHeaders(url).get(String.class);
+    public CreditCardListResponse fetchCreditCards() {
+        return getRequestWithCommonHeaders(Url.FETCH_CREDIT_CARDS)
+                .get(CreditCardListResponse.class);
     }
 
     private RequestBuilder getRequestWithCommonHeaders(URL url) {
