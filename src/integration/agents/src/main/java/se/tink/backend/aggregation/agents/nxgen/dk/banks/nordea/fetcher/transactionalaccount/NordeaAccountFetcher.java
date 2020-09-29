@@ -13,18 +13,15 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transact
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class NordeaAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-                TransactionFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
 
     private final NordeaDkApiClient bankClient;
@@ -41,29 +38,6 @@ public class NordeaAccountFetcher
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        List<AggregationTransaction> result = new LinkedList<>();
-        TransactionsResponse transactionsResponse;
-
-        String continuationKey = null;
-        do {
-            transactionsResponse =
-                    bankClient.getAccountTransactions(
-                            account.getApiIdentifier(),
-                            account.getFromTemporaryStorage(
-                                    NordeaDkConstants.StorageKeys.PRODUCT_CODE),
-                            continuationKey);
-            result.addAll(
-                    transactionsResponse.getTransactions().stream()
-                            .map(TransactionEntity::toTinkTransaction)
-                            .collect(Collectors.toList()));
-            continuationKey = transactionsResponse.getContinuationKey();
-        } while (continuationKey != null);
-
-        return result;
     }
 
     public PaginatorResponse getTransactionsFor(
