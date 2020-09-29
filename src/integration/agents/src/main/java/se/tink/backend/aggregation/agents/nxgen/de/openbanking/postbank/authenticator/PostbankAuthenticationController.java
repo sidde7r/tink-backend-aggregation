@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -143,12 +142,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                 .description(catalog.getString("Verification code"))
                 .helpText(otpType)
                 .name(OTP_VALUE_FIELD_KEY)
-                .numeric(true)
-                .minLength(otpValueLength)
-                .maxLength(otpValueLength)
-                .hint(StringUtils.repeat("N", otpValueLength))
-                .pattern(String.format("([0-9]{%d})", otpValueLength))
-                .patternError("The code you entered is not valid")
+                .minLength(1)
                 .build();
     }
 
