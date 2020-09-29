@@ -31,7 +31,6 @@ public final class DnbConstants {
     }
 
     public static class StorageKeys {
-        public static final String CONSENT_OBJECT = "consentObject";
         public static final String CONSENT_ID = "consentId";
         public static final String STATE = "state";
     }
@@ -42,10 +41,6 @@ public final class DnbConstants {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-Uri";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
-    }
-
-    public static class HeaderValues {
-        public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class CredentialsKeys {
