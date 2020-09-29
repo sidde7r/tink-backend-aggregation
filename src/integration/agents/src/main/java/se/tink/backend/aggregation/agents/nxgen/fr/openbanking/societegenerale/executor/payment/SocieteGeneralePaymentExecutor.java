@@ -46,14 +46,11 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -67,25 +64,12 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
     private static final Logger logger =
             LoggerFactory.getLogger(SocieteGeneralePaymentExecutor.class);
 
-    private static final GenericTypeMapper<
-                    PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
-            accountIdentifiersToPaymentTypeMapper =
-                    GenericTypeMapper
-                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
-                                    genericBuilder()
-                            .put(
-                                    PaymentType.SEPA,
-                                    new Pair<>(
-                                            AccountIdentifier.Type.IBAN,
-                                            AccountIdentifier.Type.IBAN))
-                            .build();
-
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         apiClient.fetchPisAccessToken();
         sessionStorage.put(
                 SocieteGeneraleConstants.QueryKeys.STATE, strongAuthenticationState.getState());
-        PaymentType type = getPaymentType(paymentRequest);
+        PaymentType type = PaymentType.SEPA;
         CreatePaymentRequest request = buildPaymentRequest(paymentRequest);
         CreatePaymentResponse paymentResponse = apiClient.createPayment(request);
         String authorizeUrl =
@@ -266,19 +250,6 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
     private void waitForSupplementalInformation() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES);
-    }
-
-    protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
-        Pair<AccountIdentifier.Type, AccountIdentifier.Type> accountIdentifiersKey =
-                paymentRequest.getPayment().getCreditorAndDebtorAccountType();
-
-        return accountIdentifiersToPaymentTypeMapper
-                .translate(accountIdentifiersKey)
-                .orElseThrow(
-                        () ->
-                                new NotImplementedException(
-                                        "No PaymentType found for your AccountIdentifiers pair "
-                                                + accountIdentifiersKey));
     }
 
     private URL createRedirectUrl() {
