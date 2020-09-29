@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-09-23 14:00+0000\n"
-"PO-Revision-Date: 2020-09-23 14:00+0000\n"
+"POT-Creation-Date: 2020-09-29 07:48+0000\n"
+"PO-Revision-Date: 2020-09-29 07:48+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: no\n"
@@ -13,6 +13,54 @@ msgstr ""
 
 msgid "The activation code you entered is not valid."
 msgstr "Aktiveringskoden du har oppgitt er ugyldig."
+
+msgid "You need to activate your BankID in the Handelsbanken app."
+msgstr "Du må aktivere BankID i Handelsbanken-appen."
+
+msgid "Error Code: C161. "
+msgstr "Feilmelding C161. "
+
+msgid "Error Code C176. "
+msgstr "Feilmelding C176. "
+
+msgid "Error Code C30F. "
+msgstr "Feilmelding C30F. "
+
+msgid ""
+"Error Code C307. Your BankID is blocked due to incorrect PINLog in to the "
+"internet bank in another way and reset BankID on mobile."
+msgstr ""
+"Feilmelding C307. Din BankID er blokkert på grunn av feil PIN. Logg inn i "
+"nettbanken på en annen måte og tilbakestill BankID på mobil."
+
+msgid "Error Code C202. "
+msgstr "Feilmelding C202. "
+
+msgid ""
+"Error Code C131. This error indicates that your mobile operator has trouble "
+"or a process is running on your phone number. Restart your phone and try "
+"again in 5 minutes."
+msgstr ""
+"Feilmelding C131. Denne feilen angir at mobiloperatøren har problemer eller "
+"at en prosess kjører på telefonnummeret ditt. Start telefonen på nytt, og "
+"prøv på nytt om 5 minutter."
+
+msgid ""
+"Error code C308. There was a timeout due to slow response time. This can "
+"happen if there are weak or unstable signals or if the mobile operator is "
+"having trouble. Please try again in 5 minutes."
+msgstr ""
+"Feilmelding C308. Det var et tidsavbrudd på grunn av lav responstid. Dette "
+"kan skje hvis det er ustabile signaler eller hvis mobiloperatøren har "
+"problemer. Prøv igjen om 5 minutter."
+
+msgid ""
+"Error code C302. This error occurs when you have switched mobile networks, "
+"for example, if you have just been abroad. Restart your phone and try again."
+msgstr ""
+"Feilmelding C302. Denne feilen oppstår når du har byttet mobilnett, for "
+"eksempel hvis du nettopp har vært i utlandet. Start telefonen på nytt, og "
+"prøv på nytt."
 
 msgid ""
 "You need to activate your personal code for telephone and mobile services on "
@@ -62,6 +110,9 @@ msgstr ""
 msgid "Authentication timed out."
 msgstr "Autentiseringen ble tidsavbrutt."
 
+msgid "You have another BankID session in progress. Please try again."
+msgstr "Du har en annen pågående BankID-økt. Prøv på nytt."
+
 msgid "You cancelled the BankID process. Please try again."
 msgstr "Du avbrøt BankID prosessen. Vennligst prøv på nytt."
 
@@ -73,6 +124,9 @@ msgstr ""
 
 msgid "You have not entered a valid code. Please try again"
 msgstr "Du har ikke angitt en gyldig kode. Prøv på nytt"
+
+msgid "Something went wrong with the BankId authentication."
+msgstr "Noe gikk galt med BankId-autentiseringen."
 
 msgid "You are not authorized to use this service."
 msgstr "Du er ikke autorisert til å bruke denne tjenesten."
@@ -112,6 +166,30 @@ msgid "There is an error with your mobile operator. Please try again later."
 msgstr "Det er en feil hos din mobiloperatør. Vennligst prøv på nytt senere."
 
 msgid ""
+"Another BankId authentication was initiated while authenticating. Please try "
+"again."
+msgstr "Du har en annen pågående BankID-økt. Prøv på nytt."
+
+msgid ""
+"Your BankID is blocked. Log in to the internet bank and reset/reorder BankID "
+"on mobile."
+msgstr ""
+"Din BankID er blokkert. Logg inn på nettbanken og tilbakestill BankID på "
+"mobil."
+
+msgid "Something went wrong with the BankId authentication"
+msgstr "Noe gikk galt med BankId-autentiseringen"
+
+msgid ""
+"The mobile operator you use may have blocked BankID on mobile. To resolve "
+"this, log in to the internet bank using another authentication method and "
+"reorder BankID on mobile."
+msgstr ""
+"Mobiloperatøren du bruker kan ha blokkert BankID på mobil. Løs dette ved å "
+"logge inn i din nettbank ved hjelp av en annen godkjenningsmetode og "
+"tilbakestill BankID på mobil."
+
+msgid ""
 "You use your card reader and personal code the same way as you would in the "
 "bank's mobile app."
 msgstr ""
@@ -149,6 +227,14 @@ msgstr ""
 "For å fortsette å bruke denne appen må du svare på noen spørsmål fra banken "
 "din. Vennligst logg inn med bankens app eller nettside."
 
+msgid ""
+"Your BankID was not issued by the bank you are trying to authenticate with. "
+"This is not allowed by the bank. Please contact the bank to resolve this "
+"issue."
+msgstr ""
+"Din BankID ble ikke utstedt av banken du prøver å autentisere med. Dette er "
+"ikke tillatt av denne banken. Kontakt banken for å løse dette problemet."
+
 msgid "The consent is invalid. "
 msgstr "Samtykket er ugyldig. "
 
@@ -170,6 +256,11 @@ msgstr "Noe gikk galt under innloggingsprosessen."
 
 msgid "There aren't any Authentication methods available."
 msgstr "Det finnes er ingen autentiseringsmetoder tilgjengelig."
+
+msgid ""
+"Please check if given reference code matches with presented one for Bank ID"
+msgstr ""
+"Vennligst sjekk om gitt referansekode samsvarer med den presentert i BankID"
 
 msgid "Activation code is incorrect. Please try again."
 msgstr "Aktiveringskoden er feil. Prøv på nytt."
