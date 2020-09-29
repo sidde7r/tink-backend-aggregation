@@ -145,7 +145,7 @@ public class AccountEntityMapper {
                 .addIdentifier(
                         AccountIdentifier.create(
                                 getAccountIdentifierType(marketCode),
-                                accountEntity.getAccountNoInt()))
+                                accountEntity.getAccountNoExt()))
                 .build();
     }
 
