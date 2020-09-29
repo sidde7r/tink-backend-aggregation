@@ -1,61 +1,42 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.lloyds;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
-
 import com.google.inject.Inject;
-import java.util.Optional;
-import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.lloyds.LloydsConstants.Urls.V31;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.lloyds.authenticator.LloydsAuthenticator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingLocalKeySignerModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, TRANSFERS})
-public final class LloydsV31Agent extends UkOpenBankingBaseAgent {
+public class LloydsV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final UkOpenBankingPisConfig pisConfig;
-    private final LocalDateTimeSource localDateTimeSource;
-    private final RandomValueGenerator randomValueGenerator;
 
     static {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(LloydsConstants.ORGANISATION_ID)
                         .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_PERSONAL_URL)
-                        .withAppToAppURL(V31.APP_TO_APP_AUTH_URL)
+                        .withWellKnownURL(V31.WELL_KNOWN_BUSINESS_URL)
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
                         .build();
     }
 
     @Inject
-    public LloydsV31Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
+    public LloydsV31BusinessAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(componentProvider, jwtSigner, aisConfig, false);
-        pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
-        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     @Override
@@ -67,21 +48,5 @@ public final class LloydsV31Agent extends UkOpenBankingBaseAgent {
     protected Authenticator constructAuthenticator() {
         LloydsAuthenticator authenticator = new LloydsAuthenticator(apiClient);
         return createOpenIdFlowWithAuthenticator(authenticator, aisConfig.getAppToAppURL());
-    }
-
-    @Override
-    public Optional<PaymentController> constructPaymentController() {
-        UKOpenbankingV31Executor paymentExecutor =
-                new UKOpenbankingV31Executor(
-                        pisConfig,
-                        softwareStatement,
-                        providerConfiguration,
-                        apiClient,
-                        supplementalInformationHelper,
-                        credentials,
-                        strongAuthenticationState,
-                        randomValueGenerator,
-                        aisConfig.getAppToAppURL());
-        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }
