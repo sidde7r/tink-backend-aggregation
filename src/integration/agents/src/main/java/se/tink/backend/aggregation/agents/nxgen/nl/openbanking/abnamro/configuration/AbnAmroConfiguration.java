@@ -24,7 +24,4 @@ public class AbnAmroConfiguration implements ClientConfiguration {
     @JsonSchemaInject(strings = {@JsonSchemaString(path = "pattern", value = "^[A-Za-z0-9]{32}$")})
     @Secret
     private String apiKey;
-
-    // Used internally to differentiate between ABNAMRO and TINK
-    private String certificateId;
 }
