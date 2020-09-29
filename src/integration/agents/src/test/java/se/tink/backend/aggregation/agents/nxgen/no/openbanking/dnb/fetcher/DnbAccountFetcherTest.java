@@ -1,23 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.AccountTestData;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DnbAccountFetcherTest {
-
+    private static final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/dnb/resources";
     private static DnbApiClient apiClient;
 
     @Test
@@ -26,22 +30,22 @@ public class DnbAccountFetcherTest {
 
         Collection<TransactionalAccount> accounts = fetcher.fetchAccounts();
 
-        assertEquals(5, accounts.size());
+        assertThat(accounts).hasSize(5);
     }
 
     @Test
-    public void shouldReturnThreeSavingsAccounts() {
+    public void shouldReturnProperNumberOfSavingsAccounts() {
         DnbAccountFetcher fetcher = new DnbAccountFetcher(apiClient);
 
         Collection<TransactionalAccount> accounts = fetcher.fetchAccounts();
-        long savingsAccountCount =
+        List<TransactionalAccount> savingAccounts =
                 accounts.stream()
                         .filter(
                                 transactionalAccount ->
                                         transactionalAccount.getType().equals(AccountTypes.SAVINGS))
-                        .count();
+                        .collect(Collectors.toList());
 
-        assertEquals(4, savingsAccountCount);
+        assertThat(savingAccounts).hasSize(4);
     }
 
     @BeforeClass
@@ -57,14 +61,20 @@ public class DnbAccountFetcherTest {
     private static HttpResponse getMockedAccountsResponse() {
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponse.getBody(AccountsResponse.class))
-                .thenReturn(AccountTestData.getAccountsResponse());
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "accounts.json").toFile(),
+                                AccountsResponse.class));
         return httpResponse;
     }
 
     private static HttpResponse getMockedBalancesResponse() {
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponse.getBody(BalancesResponse.class))
-                .thenReturn(AccountTestData.getBalancesResponse());
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "balances.json").toFile(),
+                                BalancesResponse.class));
         return httpResponse;
     }
 }

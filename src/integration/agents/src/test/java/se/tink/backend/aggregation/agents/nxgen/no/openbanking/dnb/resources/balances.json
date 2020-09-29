@@ -1,0 +1,29 @@
+{
+  "account": {
+    "bban": "12045357110",
+    "currency": "NOK"
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "amount": "63257.00",
+        "currency": "NOK"
+      },
+      "balanceType": "openingBooked"
+    },
+    {
+      "balanceAmount": {
+        "amount": "63257.00",
+        "currency": "NOK"
+      },
+      "balanceType": "authorised"
+    },
+    {
+      "balanceAmount": {
+        "amount": "63257.00",
+        "currency": "NOK"
+      },
+      "balanceType": "expected"
+    }
+  ]
+}

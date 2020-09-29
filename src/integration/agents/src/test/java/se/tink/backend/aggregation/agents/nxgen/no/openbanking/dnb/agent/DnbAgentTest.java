@@ -24,7 +24,7 @@ public class DnbAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("no", "no-dnb-ob")
                         .addCredentialField("PSU-ID", manager.get(PsuIdArgumentEnum.PSU_ID))
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("dnb")
