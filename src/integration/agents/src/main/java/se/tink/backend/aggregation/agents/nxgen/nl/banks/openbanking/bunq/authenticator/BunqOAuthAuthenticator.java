@@ -73,8 +73,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
                     agentConfiguration.getPsd2InstallationKeyPair());
             persistentStorage.put(
                     BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN,
-                    SerializationUtils.deserializeFromString(
-                            agentConfiguration.getPsd2ClientAuthToken(), TokenEntity.class));
+                    agentConfiguration.getPsd2ClientAuthToken());
             updateClientAuthToken(BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN);
         }
 
