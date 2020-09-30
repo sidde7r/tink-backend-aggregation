@@ -47,12 +47,17 @@ public class KnabApiClient {
     private final Credentials credentials;
     private KnabConfiguration configuration;
     private String redirectUrl;
+    private String psuIpAddress;
 
     public KnabApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            Credentials credentials,
+            String psuIpAddress) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
+        this.psuIpAddress = psuIpAddress;
     }
 
     public KnabConfiguration getConfiguration() {
@@ -68,7 +73,7 @@ public class KnabApiClient {
         return client.request(url)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .header(HeaderKeys.DATE, getDate())
-                .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
     }
