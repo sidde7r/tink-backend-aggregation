@@ -12,7 +12,7 @@ final class HalifaxConstants {
             public static final String APP_TO_APP_AUTH_URL =
                     "https://authorise-api.halifax-online.co.uk/prod01/lbg/hfx/personal/oidc-api/v1.1/authorize";
             public static final String WELL_KNOWN_URL =
-                    "https://authorise-api.halifax-online.co.uk/prod01/channel/hfx/.well-known/openid-configuration";
+                    "https://authorise-api.halifax-online.co.uk/prod01/channel/hfx/personal/.well-known/openid-configuration";
         }
     }
 }
