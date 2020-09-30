@@ -10,7 +10,6 @@ public class RabobankConstants {
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
     public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
-    public static final String BASE_URL = "https://api.rabobank.nl/openapi";
 
     public static class ErrorMessages {
         public static final String BOOKING_STATUS_INVALID =
