@@ -61,8 +61,8 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         Credentials credentials = request.getCredentials();
-        displayPrompt(credentials);
         sendNemIdRequest(credentials);
+        displayPrompt(credentials);
         pollNemId();
         finalizeAuth(credentials);
         return AuthenticationStepResponse.authenticationSucceeded();
@@ -72,10 +72,11 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
         Field field =
                 Field.builder()
                         .immutable(true)
-                        .description(
+                        .description("")
+                        .value(
                                 catalog.getString(
-                                        NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP))
-                        .value(catalog.getString(NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP))
+                                        NemIdCodeAppConstants.UserMessage
+                                                .OPEN_NEM_ID_APP_AND_CLICK_BUTTON))
                         .name("name")
                         .build();
 
@@ -83,7 +84,7 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
                 SerializationUtils.serializeToString(Collections.singletonList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, true);
     }
 
     private void sendNemIdRequest(final Credentials credentials) throws NemIdException {

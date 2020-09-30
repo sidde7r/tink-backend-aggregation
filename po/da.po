@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-09-29 07:48+0000\n"
-"PO-Revision-Date: 2020-09-29 07:48+0000\n"
+"POT-Creation-Date: 2020-09-30 10:05+0000\n"
+"PO-Revision-Date: 2020-09-30 10:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: da\n"
@@ -10,9 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "Please open the NemId app and confirm login"
-msgstr "Venligst åben NemID app’en og bekræft dit login"
 
 msgid ""
 "You need to activate your personal code for telephone and mobile services on "
@@ -59,6 +56,27 @@ msgstr ""
 "tekniske support eller besøg din lokale bank filial for at bestille et nyt "
 "nøgle-kort."
 
+msgid "Wrong challenge response input - Will retry login."
+msgstr "Forkert svar. Forsøger at logge ind igen."
+
+msgid "Authentication timed out."
+msgstr "Godkendelsen er udløbet."
+
+msgid "Another client is already trying to sign in."
+msgstr "En anden kunde er allerede ved at forsøge at logge ind."
+
+msgid ""
+"For safety reasons you have been logged out. Please login again to continue."
+msgstr ""
+"Af sikkerhedsmæssige årsager er du blevet logget ud. Venligst log in igen "
+"for at fortsætte."
+
+msgid "You have not entered a valid code. Please try again"
+msgstr "Du har ikke indtastet en korrekt kode. Forsøg venligst igen"
+
+msgid "You are not authorized to use this service."
+msgstr "Du har ikke adgang til at bruge denne service."
+
 msgid ""
 "Could not login to your bank. The access could be blocked. Please activate "
 "it in your bank app or contact your bank."
@@ -66,8 +84,29 @@ msgstr ""
 "Kunne ikke logge ind til din bank. Adgangen kunne være blokeret. Aktiver "
 "venligst din adgang i din mobilbank eller kontakt din bank."
 
+msgid "You don't have any commitments in the selected bank."
+msgstr "Du lader ikke til at være kunde i den pågældende bank."
+
+msgid ""
+"The authentication needed to login to your bank is not supported at the "
+"moment. If possible please try another option."
+msgstr ""
+"Godkendelsen til at logge ind til din bank er ikke supporteret i øjeblikket. "
+"Hvis muligt forsøg en anden mulighed."
+
 msgid "Incorrect login credentials. Please try again."
 msgstr "Ukorrekte login detaljer. Prøv venligst igen."
+
+msgid "Incorrect challenge response. Please try again."
+msgstr "Ukorrekt svar. Forsøg venligst igen."
+
+msgid "Your credentials could not be verified. Please try again."
+msgstr "Dine login detaljer kunne i verificeres. Forsøg venligst igen."
+
+msgid "There is an error with your mobile operator. Please try again later."
+msgstr ""
+"Der er en fejl med din tele-operatør. Forsøg venligst igen på et senere "
+"tidspunkt."
 
 msgid ""
 "You use your card reader and personal code the same way as you would in the "
@@ -76,9 +115,78 @@ msgstr ""
 "Du bruger din kortlæser og personlige kode på samme måde som du ville i "
 "bankens mobilapp."
 
+msgid ""
+"Incorrect login credentials. You have one more attempt before your account "
+"will be locked."
+msgstr ""
+"Ukorrekte login detaljer. Du har et mere forsøg, før din konto vil blive "
+"blokeret."
+
+msgid "Code app authentication timed out."
+msgstr "Godkendelse af kode app'en er udløbet."
+
+msgid "Code app authentication was rejected by user."
+msgstr "Godkendelse af kode app'en er afvist af bruger."
+
 msgid "You do not have access to mobile banking. Please contact your bank."
 msgstr "Do har ikke adgang til mobilbank. Kontakt venligst din bank."
+
+msgid "The bank service is offline; please try again later."
+msgstr "Bankens tjeneste er ude af drift; forsøg venligst igen senere."
+
+msgid "The bank service has temporarily failed; please try again later."
+msgstr "Bankens tjeneste har en midlertidig fejl; forsøg venligst igen senere."
+
+msgid ""
+"To continue using this app you must answer some questions from your bank. "
+"Please log in with your bank's app or website."
+msgstr ""
+"For fortsat at bruge denne app må du besvare nogle spørgsmål fra din bank. "
+"Venligst log ind med din banks app eller hjemmeside."
+
+msgid "The consent is invalid. "
+msgstr "Samtykket er ugyldigt. "
+
+msgid "Your session has been terminated by the bank."
+msgstr "Din session er blevet afsluttet af banken."
+
+msgid "Please ensure that you have entered the correct mobile number"
+msgstr "Sørg venligst for, at du har indtasted korrekt mobilnummer"
+
+msgid ""
+"Your existing credentials have been invalidated, Please delete this "
+"credentials and create a new one."
+msgstr ""
+"Dine eksisterende login-detaljer er ugyldiggjorte. Slet disse "
+"legitimationsoplysninger og opret nye."
+
+msgid "Something went wrong during login process."
+msgstr "Noget gik galt i under login processen."
+
+msgid "There aren't any Authentication methods available."
+msgstr "Der er ikke nogen godkendelsesmetoder tilgængelige."
+
+msgid "Activation code is incorrect. Please try again."
+msgstr "Aktiveringskoden er ukorrekt. Forsøg venligst igen."
+
+msgid "Activation timed out. Please try again."
+msgstr "Aktiveringen er udløbet. Forsøg venligst igen."
+
+msgid "Authentication was cancelled. Please try again."
+msgstr "Godkendelsen blev afbrudt. Forsørg venligst igen."
+
+msgid "Authentication error."
+msgstr "Godkendelses-fejl."
 
 #, java-format
 msgid "Please enter code {0} from key card number {1}"
 msgstr "Indtast venligst din nøgle {0} fra dit nøglekort nummer {1}"
+
+msgid "Please open the NemId app and confirm login"
+msgstr "Venligst åben NemID app’en og bekræft dit login"
+
+msgid ""
+"Please open the NemId app and confirm login. Then click the \"Submit\" button"
+msgstr ""
+"Venligst åben NemID app’en og bekræft dit login. Klik derefter på knappen "
+"\"Send\""

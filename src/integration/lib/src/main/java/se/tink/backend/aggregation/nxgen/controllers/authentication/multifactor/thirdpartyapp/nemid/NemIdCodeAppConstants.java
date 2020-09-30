@@ -28,7 +28,9 @@ public final class NemIdCodeAppConstants {
     }
 
     public enum UserMessage implements LocalizableEnum {
-        OPEN_NEM_ID_APP("Please open the NemId app and confirm login");
+        OPEN_NEM_ID_APP("Please open the NemId app and confirm login"),
+        OPEN_NEM_ID_APP_AND_CLICK_BUTTON(
+                "Please open the NemId app and confirm login. Then click the \"Submit\" button");
 
         private final LocalizableKey message;
 
