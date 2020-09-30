@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -25,7 +24,7 @@ public class TransactionEntity {
     private String transactionDate;
     private String interestDate;
 
-    public AggregationTransaction toTinkTransaction() {
+    public Transaction toTinkTransaction() {
         Transaction.Builder builder =
                 Transaction.builder()
                         .setAmount(getAmount())

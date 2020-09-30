@@ -28,6 +28,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
@@ -69,7 +71,12 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         NordeaAccountFetcher fetcher = new NordeaAccountFetcher(nordeaClient);
         return new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, fetcher, fetcher);
+                metricRefreshController,
+                updateController,
+                fetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(fetcher)));
     }
 
     private LoanRefreshController constructLoanRefreshController() {

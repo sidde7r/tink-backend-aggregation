@@ -1,35 +1,34 @@
 {
-  "continuation_key": "LEG_EjcqIJ8Abe9-bsc61MMA-UMCB7stdmeb2qPfCQVuitc=:rO0ABXNyAD9jb20ubm9yZGVhLmRiZi5kay5hY2NvdW50LmludGVncmF0aW9uLmNvcHlib29rcy5Db250aW51YXRpb25LZXlgVTENuzwM0gIAAUwAD2NvbnRpbnVhdGlvbmtleXQAEkxqYXZhL2xhbmcvU3RyaW5nO3hwdAA3UDAwMDAwMDAzNkc2ODk3NjQ3MDdHwIDAgMCAwIDAgMCAwIDAgDAwMDAwMDAwMDAwNTYyOTU0RA==",
   "result": [
     {
-      "amount": -1164.05,
-      "balance_after": 91844.66,
+      "amount": -1000.00,
+      "balance_after": 56295.44,
       "booked": true,
-      "booking_date": "2020-03-05",
+      "booking_date": "2019-07-22",
       "currency": "DKK",
-      "description": "Bgs Lunar Way",
+      "description": "Bgs Forbrug",
       "has_details": true,
-      "interest_date": "2020-03-05",
-      "reconciliation_id": "UDY4OTc2NDcwNzcyMDIwMDMwNTAwMDAwMDA1NjY",
+      "interest_date": "2019-07-20",
+      "reconciliation_id": "UDY4OTc2NDcwNzcyMDE5MDcyMjAwMDAwMDAzNjY",
       "reconciliation_status": "not_done",
-      "title": "Lunar Way",
-      "transaction_date": "2020-03-05",
-      "transaction_id": "FUVn231qH9MK06D_Kg7mxID_YTJFQUHkmCWxcxo8-OE.a2V5PTgxNjY4MDIzMTYgMjAyMDAzMDUmZHM9QkdTJmluY29taW5nPWZhbHNl"
+      "title": "Forbrug",
+      "transaction_date": "2019-07-22",
+      "transaction_id": "flRyYmE-CZ60YOY9AKzeHUHb37ZYIsU8unRhLUQvpI4.a2V5PTU5MTY3MjU5NzMgMjAxOTA3MjImZHM9QkdTJmluY29taW5nPWZhbHNl"
     },
     {
-      "amount": 6100.00,
-      "balance_after": 93008.71,
+      "amount": 60.00,
+      "balance_after": 57295.44,
       "booked": true,
-      "booking_date": "2020-03-05",
+      "booking_date": "2019-07-22",
       "currency": "DKK",
-      "description": "Bgs From Nordea Pay",
+      "description": "MobilePay: Pernille",
       "has_details": true,
-      "interest_date": "2020-03-05",
-      "reconciliation_id": "UDY4OTc2NDcwNzcyMDIwMDMwNTAwMDAwMDA1NjU",
+      "interest_date": "2019-07-21",
+      "reconciliation_id": "UDY4OTc2NDcwNzcyMDE5MDcyMjAwMDAwMDAzNjU",
       "reconciliation_status": "not_done",
-      "title": "From Nordea Pay",
-      "transaction_date": "2020-03-05",
-      "transaction_id": "_sA7vL0hbV2lql6ZNsSTc3hBOqL_IyQQ-iDV76ypO28.a2V5PTAzOTI0NTA2NDIwMDY1Njg5NzY0NzA3NzA1MDMyMDIwJmRzPUFEVklTJmluY29taW5nPXRydWU"
+      "title": "MobilePay: Pernille",
+      "transaction_date": "2019-07-22",
+      "transaction_id": "Q-EMsXJ6B0n99CVh108_6ZqkT2hLNn3IxkN7KtRQM4M.a2V5PTE5MTYyMjMyNTE5MjAzNjg5NzY0NzA3NzIyMDcyMDE5JmRzPUFEVklTJmluY29taW5nPXRydWU"
     }
   ],
   "sub_system_errors": []

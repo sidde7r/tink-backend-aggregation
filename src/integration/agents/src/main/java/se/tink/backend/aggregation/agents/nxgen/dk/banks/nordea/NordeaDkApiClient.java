@@ -2,8 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HeaderValues.TEXT_HTML;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.FormValues;
@@ -217,6 +222,28 @@ public class NordeaDkApiClient {
         if (continuationKey != null) {
             request.queryParam("continuation_key", continuationKey);
         }
+        return request.get(TransactionsResponse.class);
+    }
+
+    public TransactionsResponse getAccountTransactions(
+            String accountId,
+            String productCode,
+            String continuationKey,
+            String dateFrom,
+            String dateTo) {
+        String url = String.format(URLs.FETCH_ACCOUNT_TRANSACTIONS_FORMAT, accountId);
+
+        Map<String, String> queryParams =
+                Stream.of(
+                                new SimpleEntry<>("product_code", productCode),
+                                new SimpleEntry<>("continuation_key", continuationKey),
+                                new SimpleEntry<>("start_date", dateFrom),
+                                new SimpleEntry<>("end_date", dateTo))
+                        .filter(entry -> StringUtils.isNotEmpty(entry.getValue()))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        RequestBuilder request = baseAuthorizedRequest(url).queryParams(queryParams);
+
         return request.get(TransactionsResponse.class);
     }
 
