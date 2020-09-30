@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.CredentialsKeys;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.QueryValues;
@@ -46,19 +45,27 @@ public class DnbApiClient {
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
     private final String redirectUrl;
+    private final String userIp;
+    private final boolean isManual;
 
     public DnbApiClient(
             final TinkHttpClient client,
             final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
             final Credentials credentials,
-            String redirectUrl) {
+            final String redirectUrl,
+            final String userIp,
+            final boolean isManual) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
         this.redirectUrl = redirectUrl;
+        this.userIp = userIp;
+        this.isManual = isManual;
     }
+
+    // Auth methods
 
     public URL getAuthorizeUrl(final String state) {
         sessionStorage.put(StorageKeys.STATE, state);
@@ -66,6 +73,32 @@ public class DnbApiClient {
         persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
         return new URL(consentResponse.getScaRedirectLink()).queryParam(QueryKeys.STATE, state);
     }
+
+    private ConsentResponse createConsent() {
+        ConsentRequest consentsRequest = new ConsentRequest();
+        return createRequestWithRedirectAndState(
+                        new URL(DnbConstants.BASE_URL.concat(Urls.CONSENTS)))
+                .post(ConsentResponse.class, consentsRequest);
+    }
+
+    private RequestBuilder createRequestWithRedirectAndState(final URL url) {
+        final URL tppRedirectUrl =
+                new URL(redirectUrl)
+                        .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE));
+
+        return createRequestWithoutRedirectHeader(url)
+                .header(HeaderKeys.TPP_REDIRECT_URI, decodeUrl(tppRedirectUrl));
+    }
+
+    private String decodeUrl(final URL url) {
+        try {
+            return URLDecoder.decode(url.toString(), StandardCharsets.UTF_8.toString());
+        } catch (final UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(ErrorMessages.URL_ENCODING_ERROR);
+        }
+    }
+
+    // Fetcher related methods
 
     public HttpResponse fetchAccounts() {
         return createRequest(new URL(DnbConstants.BASE_URL.concat(Urls.ACCOUNTS)))
@@ -129,12 +162,13 @@ public class DnbApiClient {
         }
     }
 
+    // Payment related methods
+
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, DnbPaymentType dnbPaymentType) {
         return createRequest(
                         new URL(DnbConstants.BASE_URL.concat(Urls.PAYMENTS))
                                 .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString()))
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
@@ -143,26 +177,10 @@ public class DnbApiClient {
                         new URL(DnbConstants.BASE_URL.concat(Urls.GET_PAYMENT))
                                 .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString())
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .get(GetPaymentResponse.class);
     }
 
-    private RequestBuilder createRequestWithRedirectAndState(final URL url) {
-        final URL tppRedirectUrl =
-                new URL(redirectUrl)
-                        .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE));
-
-        return createRequestWithoutRedirectHeader(url)
-                .header(HeaderKeys.TPP_REDIRECT_URI, decodeUrl(tppRedirectUrl));
-    }
-
-    private String decodeUrl(final URL url) {
-        try {
-            return URLDecoder.decode(url.toString(), StandardCharsets.UTF_8.toString());
-        } catch (final UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(ErrorMessages.URL_ENCODING_ERROR);
-        }
-    }
+    // Common methods
 
     private RequestBuilder createRequest(final URL url) {
         return createRequestWithoutRedirectHeader(url)
@@ -172,13 +190,17 @@ public class DnbApiClient {
     private RequestBuilder createRequestWithoutRedirectHeader(final URL url) {
         final String requestId = UUID.randomUUID().toString();
 
-        return client.request(url)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(
-                        DnbConstants.HeaderKeys.PSU_ID,
-                        credentials.getField(CredentialsKeys.PSU_ID));
+        RequestBuilder requestBuilder =
+                client.request(url)
+                        .type(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.X_REQUEST_ID, requestId)
+                        .header(HeaderKeys.PSU_ID, credentials.getField(CredentialsKeys.PSU_ID));
+
+        if (isManual) {
+            requestBuilder = requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp);
+        }
+        return requestBuilder;
     }
 
     public boolean isConsentValid() {
@@ -193,13 +215,6 @@ public class DnbApiClient {
                         new URL(DnbConstants.BASE_URL.concat(Urls.CONSENT_STATUS))
                                 .parameter(IdTags.CONSENT_ID, consentId))
                 .get(ConsentStatusResponse.class);
-    }
-
-    private ConsentResponse createConsent() {
-        ConsentRequest consentsRequest = new ConsentRequest();
-        return createRequestWithRedirectAndState(
-                        new URL(DnbConstants.BASE_URL.concat(Urls.CONSENTS)))
-                .post(ConsentResponse.class, consentsRequest);
     }
 
     private String getConsentId() {
