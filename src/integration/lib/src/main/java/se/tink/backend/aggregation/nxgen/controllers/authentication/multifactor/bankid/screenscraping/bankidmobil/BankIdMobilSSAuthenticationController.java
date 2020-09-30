@@ -57,6 +57,9 @@ public class BankIdMobilSSAuthenticationController {
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                     "User did not accept bank id");
         }
+
+        // ITE-1457, remove after investigation
+        log.info("User is supposed to be authenticated. Page source: {}", driver.getPageSource());
     }
 
     private boolean isUserAuthenticated(Credentials credentials) {
