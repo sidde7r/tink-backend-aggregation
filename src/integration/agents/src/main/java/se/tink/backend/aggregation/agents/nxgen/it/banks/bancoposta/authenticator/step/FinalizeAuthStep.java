@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaCo
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SimpleRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.Token;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.AuthorizationTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.CheckRegisterAppResponse;
@@ -51,14 +53,17 @@ public class FinalizeAuthStep implements AuthenticationStep {
 
         String signature = authorizeTransaction(challengeResponse);
 
-        String basicToken = requestAccessToken(signature, challengeResponse.getTransactionId());
-        storage.saveToPersistentStorage(Storage.ACCESS_BASIC_TOKEN, basicToken);
+        Token basicToken = requestAccessToken(signature, challengeResponse.getTransactionId());
+        storage.saveToPersistentStorage(Storage.ACCESS_BASIC_TOKEN, basicToken.getToken());
 
         String dataToken = apiClient.performJwtAuthorization();
         storage.saveToPersistentStorage(Storage.ACCESS_DATA_TOKEN, dataToken);
 
         storage.saveToPersistentStorage(Storage.MANUAL_AUTH_FINISH_FLAG, true);
         storage.removeDataUsedOnlyForManualAuth();
+
+        apiClient.verifyOnboarding(new SimpleRequest());
+
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 
@@ -87,7 +92,7 @@ public class FinalizeAuthStep implements AuthenticationStep {
         return apiClient.checkRegisterApp(jwe);
     }
 
-    private String requestAccessToken(String signature, String transactionId) {
+    private Token requestAccessToken(String signature, String transactionId) {
         String jwe = jweManager.genAccessTokenJWE(signature, transactionId);
         Form form = buildForm(jwe);
         return apiClient.performSecondOpenIdAz(form.serialize());
