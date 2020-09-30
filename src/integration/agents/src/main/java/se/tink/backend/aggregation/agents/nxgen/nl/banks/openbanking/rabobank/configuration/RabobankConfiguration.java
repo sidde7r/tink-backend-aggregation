@@ -10,12 +10,13 @@ import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
+import se.tink.backend.aggregation.configuration.agents.UUIDConfiguration;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 @Getter
 public final class RabobankConfiguration implements ClientConfiguration {
-    @JsonProperty @Secret @ClientIdConfiguration private String clientId;
+    @JsonProperty @Secret @ClientIdConfiguration @UUIDConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
     @JsonIgnore
