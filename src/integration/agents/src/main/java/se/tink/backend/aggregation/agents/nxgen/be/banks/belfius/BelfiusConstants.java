@@ -40,14 +40,14 @@ public class BelfiusConstants {
     public static final class Url {
         private static final String BASE = "https://m.belfius.be/";
 
-        static final URL GEPA_RENDERING_URL =
+        public static final URL GEPA_RENDERING_URL =
                 new URL(
                         BASE
                                 + "F2CRenderingMobile/GEPARendering/machineIdentifier={"
                                 + UrlParameter.MACHINE_IDENTIFIER
                                 + "}");
 
-        static final URL GEPA_SERVICE_URL =
+        public static final URL GEPA_SERVICE_URL =
                 new URL(
                         BASE
                                 + "F2CRenderingMobile/GEPAService/machineIdentifier={"
