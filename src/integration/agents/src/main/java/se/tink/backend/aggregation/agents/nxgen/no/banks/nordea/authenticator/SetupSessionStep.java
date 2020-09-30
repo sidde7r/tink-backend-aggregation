@@ -94,7 +94,7 @@ public class SetupSessionStep implements AuthenticationStep {
                 SerializationUtils.serializeToString(Collections.singletonList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, true);
     }
 
     private Field getBankIdPhraseVerificationField(String referenceNumber) {
