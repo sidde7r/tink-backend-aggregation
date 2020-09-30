@@ -20,7 +20,6 @@ public final class RabobankConfiguration implements ClientConfiguration {
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @JsonProperty @Secret private String clientSSLKeyPassword;
     @JsonProperty @Secret private String clientSSLP12;
-    private String certificateId;
 
     public String getClientId() {
         return clientId;
@@ -54,9 +53,5 @@ public final class RabobankConfiguration implements ClientConfiguration {
 
     public RabobankUrlFactory getUrls() {
         return new RabobankUrlFactory(new URL(baseUrl));
-    }
-
-    public String getCertificateId() {
-        return certificateId;
     }
 }
