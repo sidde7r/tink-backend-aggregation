@@ -45,7 +45,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
         return client.request(url)
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .type(MediaType.APPLICATION_JSON);
     }
 
@@ -59,7 +59,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
         return client.request(url)
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
+                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage());
     }
 
     protected RequestBuilder getPaymentRequestBuilder(final URL url) {
@@ -68,7 +68,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress());
     }
 
@@ -108,5 +108,9 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
 
     public void setTokenToSession(final OAuth2Token token, final String storageKey) {
         persistentStorage.put(storageKey, token);
+    }
+
+    protected String getConsentIdFromStorage() {
+        return persistentStorage.get(StorageKeys.CONSENT_ID);
     }
 }

@@ -1,13 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigration;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigrator;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authentication.KbcOauth2AuthenticationConfig;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authentication.KbcStorageMigrator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.fetcher.KbcTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
@@ -15,8 +21,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 
+import java.net.URI;
+
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+
 @AgentCapabilities({CHECKING_ACCOUNTS})
-public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfiguration> {
+public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfiguration>
+        implements AgentPlatformAuthenticator, AgentPlatformStorageMigration {
+
+    private ObjectMapperFactory objectMapperFactory;
 
     @Inject
     public KbcAgent(AgentComponentProvider componentProvider) {
@@ -24,6 +37,7 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
 
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.objectMapperFactory = new ObjectMapperFactory();
     }
 
     @Override
@@ -67,5 +81,25 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(transactionFetcher)));
+    }
+
+    @Override
+    public AgentAuthenticationProcess getAuthenticationProcess() {
+        final KbcConfiguration agentConfiguration =
+                getConfiguration().getProviderSpecificConfiguration();
+        final URI redirectUrl = URI.create(getConfiguration().getRedirectUrl());
+        final AgentPlatformHttpClient httpClient = new AgentPlatformHttpClient(client);
+
+        return new KbcOauth2AuthenticationConfig(
+                        agentConfiguration,
+                        redirectUrl,
+                        httpClient,
+                        objectMapperFactory.getInstance())
+                .authenticationProcess();
+    }
+
+    @Override
+    public AgentPlatformStorageMigrator getMigrator() {
+        return new KbcStorageMigrator(objectMapperFactory.getInstance());
     }
 }
