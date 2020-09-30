@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_AVAILABLE;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.FORWARD_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.INTERIM_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.INTERIM_BOOKED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.PREVIOUSLY_CLOSED_BOOKED;
@@ -25,7 +26,11 @@ public class DefaultCreditCardBalanceMapper implements CreditCardBalanceMapper {
 
     private static final List<AccountBalanceType> PREFERRED_BALANCE_TYPES =
             ImmutableList.of(
-                    INTERIM_BOOKED, PREVIOUSLY_CLOSED_BOOKED, INTERIM_AVAILABLE, CLOSING_AVAILABLE);
+                    INTERIM_BOOKED,
+                    PREVIOUSLY_CLOSED_BOOKED,
+                    INTERIM_AVAILABLE,
+                    CLOSING_AVAILABLE,
+                    FORWARD_AVAILABLE);
 
     private static final List<ExternalLimitType> PREFERRED_AVAILABLE_CREDIT_LINES =
             ImmutableList.of(
