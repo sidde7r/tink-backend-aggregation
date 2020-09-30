@@ -25,8 +25,9 @@ public class NextGenerationDemoTransactionFetcher
                 TransactionPaginator<TransactionalAccount> {
     private static final String BASE_PATH = DemoConstants.BASE_PATH;
     private final List<Account> accounts;
-    private static final int YEARS_BACK_TO_FETCH = -3;
-    private static final int CERTAIN_DATE_OFFSET_DAYS = 29;
+    private static final int MONTHS_BACK_TO_FETCH = -1;
+    private static final int CERTAIN_DATE_OFFSET_DAYS = 10;
+    private static final int MAX_NUMBER_OF_DAILY_TRANSACTIONS = 500;
     private final PurchaseHistoryGenerator purchaseHistoryGenerator;
     private final String currency;
     private final Catalog catalog;
@@ -63,7 +64,8 @@ public class NextGenerationDemoTransactionFetcher
             return purchaseHistoryGenerator.generateTransactions(
                     getRefreshStartDate(account.getAccountNumber()),
                     DateUtils.getToday(),
-                    account.getExactBalance().getCurrencyCode());
+                    account.getExactBalance().getCurrencyCode(),
+                    MAX_NUMBER_OF_DAILY_TRANSACTIONS);
         }
 
         if (account.getType() == AccountTypes.SAVINGS) {
@@ -86,6 +88,6 @@ public class NextGenerationDemoTransactionFetcher
         return (previouslyRefreshedAccount.isPresent())
                 ? DateUtils.addDays(
                         previouslyRefreshedAccount.get().getCertainDate(), CERTAIN_DATE_OFFSET_DAYS)
-                : DateUtils.addYears(DateUtils.getToday(), YEARS_BACK_TO_FETCH);
+                : DateUtils.addMonths(DateUtils.getToday(), MONTHS_BACK_TO_FETCH);
     }
 }
