@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import com.google.common.base.Strings;
-import java.util.Arrays;
+import java.lang.invoke.MethodHandles;
 import java.util.Objects;
 import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -14,6 +16,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class OpenIdAuthenticatedHttpFilter extends Filter {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final OAuth2Token accessToken;
     private final RandomValueGenerator randomValueGenerator;
 
@@ -34,22 +38,17 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
                 headers.keySet().stream()
                         .filter(
                                 key ->
-                                        key.toLowerCase()
-                                                .equals(
-                                                        OpenIdConstants.HttpHeaders
-                                                                .X_FAPI_INTERACTION_ID
-                                                                .toLowerCase()))
-                        .map(key -> headers.getFirst(key))
+                                        key.equalsIgnoreCase(
+                                                OpenIdConstants.HttpHeaders.X_FAPI_INTERACTION_ID))
+                        .map(headers::getFirst)
                         .findFirst();
 
         if (!receivedInteractionId.isPresent()
                 || Strings.isNullOrEmpty(receivedInteractionId.get())) {
             return false;
         }
-
-        // Some banks have a bug where they send our interaction Id twice, comma-separated.
-        return Arrays.stream(receivedInteractionId.get().split(","))
-                .anyMatch(interactionId::equals);
+        logger.info("interaction id {} from response header", receivedInteractionId.get());
+        return receivedInteractionId.get().contains(interactionId);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
             throws HttpClientException, HttpResponseException {
 
         String interactionId = randomValueGenerator.getUUID().toString();
-
+        logger.info("assigning interaction id {} with header", interactionId);
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
         headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
         // Setting these 2 headers is optional according to the OpenID and OpenBanking specs.
@@ -73,11 +72,9 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
         HttpResponse httpResponse = nextFilter(httpRequest);
 
         // Only validate for non-error responses.
-        if (httpResponse.getStatus() < 400) {
-            if (!verifyInteractionId(interactionId, httpResponse)) {
-                throw new HttpResponseException(
-                        "X_FAPI_INTERACTION_ID does not match.", httpRequest, httpResponse);
-            }
+        if (httpResponse.getStatus() < 400 && !verifyInteractionId(interactionId, httpResponse)) {
+            throw new HttpResponseException(
+                    "X_FAPI_INTERACTION_ID does not match.", httpRequest, httpResponse);
         }
 
         return httpResponse;
