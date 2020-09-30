@@ -16,11 +16,6 @@ public class PersistentStorage extends Storage implements SensitiveValuesStorage
             ReplaySubject.<Collection<String>>create().toSerialized();
 
     @Override
-    public void clear() {
-        // do not allow to clear the storage
-    }
-
-    @Override
     public String put(String key, String value) {
         return put(key, value, true);
     }
@@ -65,5 +60,9 @@ public class PersistentStorage extends Storage implements SensitiveValuesStorage
         String oldValue = this.get(key);
         this.put(OLD_VALUE_PREFIX + key, oldValue);
         this.put(key, newValue);
+    }
+
+    public Optional<String> getOptional(String key) {
+        return Optional.ofNullable(get(key));
     }
 }
