@@ -85,7 +85,6 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                 Map<String, String> supplementalInformation =
                         supplementalInformationHelper.askSupplementalInformation(
                                 getOtpField(
-                                        initValues.getChallengeDataEntity().getOtpMaxLength(),
                                         initValues
                                                 .getChosenScaMethodEntity()
                                                 .getAuthenticationType()));
@@ -137,7 +136,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                 .build();
     }
 
-    private Field getOtpField(int otpValueLength, String otpType) {
+    private Field getOtpField(String otpType) {
         return Field.builder()
                 .description(catalog.getString("Verification code"))
                 .helpText(otpType)
