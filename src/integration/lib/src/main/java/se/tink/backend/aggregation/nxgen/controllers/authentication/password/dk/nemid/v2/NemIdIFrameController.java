@@ -107,11 +107,10 @@ public class NemIdIFrameController {
 
             credentials.setStatusPayload(catalog.getString(UserMessage.VALID_CREDS));
 
-            displayPrompt(credentials);
-
             final long askForNemIdStartTime = System.currentTimeMillis();
             // credentials are valid let's ask for 2nd factor
             pollNemidApp(driver);
+            displayPrompt(credentials);
 
             // wait some time for user's 2nd factor and token
             waitForNemidToken(driver);
@@ -280,8 +279,8 @@ public class NemIdIFrameController {
         Field field =
                 Field.builder()
                         .immutable(true)
-                        .description(catalog.getString(UserMessage.OPEN_NEM_ID_APP))
-                        .value(catalog.getString(UserMessage.OPEN_NEM_ID_APP))
+                        .description("")
+                        .value(catalog.getString(UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON))
                         .name("name")
                         .build();
 
@@ -289,6 +288,6 @@ public class NemIdIFrameController {
                 SerializationUtils.serializeToString(Collections.singletonList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, true);
     }
 }
