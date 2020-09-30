@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Base64;
 import lombok.Getter;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
@@ -16,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @JsonObject
 @Getter
 public final class RabobankConfiguration implements ClientConfiguration {
-    @JsonProperty @Secret private String baseUrl;
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @JsonProperty @Secret private String clientSSLKeyPassword;
@@ -41,6 +41,6 @@ public final class RabobankConfiguration implements ClientConfiguration {
     }
 
     public RabobankUrlFactory getUrls() {
-        return new RabobankUrlFactory(new URL(baseUrl));
+        return new RabobankUrlFactory(new URL(RabobankConstants.BASE_URL));
     }
 }
