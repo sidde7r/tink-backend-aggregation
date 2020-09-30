@@ -55,21 +55,23 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
                 .getPayment(paymentRequest.getPayment().getUniqueId())
                 .toTinkPaymentResponse(paymentRequest.getPayment().getType());
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
-            throws PaymentException {
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         return new PaymentListResponse(paymentResponses);
     }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         sessionStorage.put(FabricConstants.QueryKeys.STATE, strongAuthenticationState.getState());
+        sessionStorage.put(
+                FabricConstants.HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
+
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);

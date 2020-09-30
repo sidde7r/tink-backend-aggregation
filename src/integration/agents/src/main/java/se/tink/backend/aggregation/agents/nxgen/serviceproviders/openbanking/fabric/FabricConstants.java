@@ -95,10 +95,12 @@ public class FabricConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String TPP_REDIRECT_PREFERED = "TPP-Redirect-Preferred";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class HeaderValues {
         public static final String TPP_REDIRECT_PREFERED = "true";
+        public static final String DUMMY_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class Consent {
