@@ -22,8 +22,9 @@ public class NextGenerationDemoCreditCardFetcher
 
     private static final String BASE_PATH = DemoConstants.BASE_PATH;
     private final List<Account> accounts;
-    private static final int YEARS_BACK_TO_FETCH = -3;
-    private static final int CERTAIN_DATE_OFFSET_DAYS = 29;
+    private static final int MONTHS_BACK_TO_FETCH = -12;
+    private static final int CERTAIN_DATE_OFFSET_DAYS = 10;
+    private static final int MAX_NUMBER_OF_DAILY_TRANSACTIONS = 500;
     private final PurchaseHistoryGenerator purchaseHistoryGenerator;
     private final Catalog catalog;
     private final List<DemoCreditCardAccount> creditCardAccountDefinition;
@@ -55,7 +56,8 @@ public class NextGenerationDemoCreditCardFetcher
         return purchaseHistoryGenerator.generateTransactions(
                 getRefreshStartDate(account.getAccountNumber()),
                 DateUtils.getToday(),
-                account.getExactBalance().getCurrencyCode());
+                account.getExactBalance().getCurrencyCode(),
+                MAX_NUMBER_OF_DAILY_TRANSACTIONS);
     }
 
     private Date getRefreshStartDate(String accountId) {
@@ -72,6 +74,6 @@ public class NextGenerationDemoCreditCardFetcher
                         account ->
                                 DateUtils.addDays(
                                         account.getCertainDate(), CERTAIN_DATE_OFFSET_DAYS))
-                .orElseGet(() -> DateUtils.addYears(DateUtils.getToday(), YEARS_BACK_TO_FETCH));
+                .orElseGet(() -> DateUtils.addMonths(DateUtils.getToday(), MONTHS_BACK_TO_FETCH));
     }
 }

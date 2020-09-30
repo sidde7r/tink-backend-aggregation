@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.exception.UnsupportedCurrencyException;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -23,15 +22,10 @@ public class CreditCardTransactionEntity {
     private String currency;
     private String title;
     private String transactionDate;
-    private String transactionId;
 
     public Transaction toTinkTransaction() {
         Transaction.Builder builder =
-                Transaction.builder()
-                        .setPending(!booked)
-                        .setAmount(amount())
-                        .setDescription(title)
-                        .setPayload(TransactionPayloadTypes.EXTERNAL_ID, transactionId);
+                Transaction.builder().setPending(!booked).setAmount(amount()).setDescription(title);
         dateFromTransaction().ifPresent(builder::setDate);
         return builder.build();
     }
