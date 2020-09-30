@@ -73,8 +73,6 @@ public final class RabobankAgent
 
         final RabobankConfiguration rabobankConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
-        final String password = rabobankConfiguration.getClientSSLKeyPassword();
-        final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
         final String qsealPem;
         try {
             qsealPem =
@@ -84,7 +82,7 @@ public final class RabobankAgent
             throw new IllegalStateException("Invalid qsealc detected");
         }
 
-        client.setSslClientCertificate(p12, password);
+        client.setEidasProxy(agentsConfiguration.getEidasProxy());
         EidasIdentity eidasIdentity =
                 new EidasIdentity(context.getClusterId(), context.getAppId(), RabobankAgent.class);
 
