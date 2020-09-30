@@ -35,6 +35,7 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
         "@aggregation//:joda_time_joda_time",
     ],
 )
