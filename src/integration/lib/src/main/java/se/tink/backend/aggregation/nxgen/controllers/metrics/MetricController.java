@@ -22,6 +22,7 @@ public abstract class MetricController {
                 new MetricId.MetricLabels()
                         .add("provider_type", provider.getMetricTypeName())
                         .add("market", provider.getMarket())
+                        .add("className", provider.getClassName())
                         .add("manual", String.valueOf(isManual))
                         .add("credential", credentials.getMetricTypeName())
                         .add("request_type", requestType.name());

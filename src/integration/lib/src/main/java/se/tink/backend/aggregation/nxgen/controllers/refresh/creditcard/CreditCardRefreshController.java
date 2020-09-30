@@ -23,14 +23,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.pair.Pair;
 
 public final class CreditCardRefreshController
         implements AccountRefresher, TransactionRefresher, RefreshCreditCardAccountsExecutor {
-    private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE =
-            new MetricId.MetricLabels().add(AccountRefresher.METRIC_ACCOUNT_TYPE, "credit_card");
-
     private final MetricRefreshController metricRefreshController;
     private final UpdateController updateController;
     private final AccountFetcher<CreditCardAccount> accountFetcher;
@@ -64,8 +60,7 @@ public final class CreditCardRefreshController
     public Map<Account, AccountFeatures> fetchAccounts() {
         MetricRefreshAction action =
                 metricRefreshController.buildAction(
-                        AccountRefresher.METRIC_ID.label(METRIC_ACCOUNT_TYPE),
-                        AccountRefresher.METRIC_COUNTER_BUCKETS);
+                        AccountRefresher.METRIC_ID, AccountRefresher.METRIC_COUNTER_BUCKETS);
 
         try {
             action.start();
@@ -97,7 +92,7 @@ public final class CreditCardRefreshController
     public Map<Account, List<Transaction>> fetchTransactions() {
         MetricRefreshAction action =
                 metricRefreshController.buildAction(
-                        TransactionRefresher.METRIC_ID.label(METRIC_ACCOUNT_TYPE),
+                        TransactionRefresher.METRIC_ID,
                         TransactionRefresher.METRIC_COUNTER_BUCKETS);
 
         try {

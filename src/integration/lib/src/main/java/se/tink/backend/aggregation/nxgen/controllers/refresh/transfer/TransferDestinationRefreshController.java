@@ -18,9 +18,7 @@ import se.tink.libraries.metrics.core.MetricId;
 
 public final class TransferDestinationRefreshController
         implements Refresher, RefreshTransferDestinationExecutor {
-    private static final MetricId METRIC_ID =
-            Refresher.REFRESHER_METRIC_ID.label(
-                    Refresher.METRIC_ITEM_TYPE, "transfer_destinations");
+    private static final MetricId METRIC_ID = Refresher.REFRESHER_METRIC_ID;
     private static final List<Number> COUNTER_METRIC_BUCKETS =
             ImmutableList.<Number>builder()
                     .add(0)
