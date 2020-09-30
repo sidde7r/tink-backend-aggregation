@@ -1236,17 +1236,6 @@ maven_install(
 )
 
 maven_install(
-    name = "standalone_agent_test_deps",
-    artifacts = [
-        "org.springframework:spring-test:5.2.1.RELEASE",
-        "org.mockito:mockito-core:2.10.0",
-        "junit:junit:4.12",
-    ],
-    fetch_sources = True,
-    repositories = MAVEN_REPOS,
-)
-
-maven_install(
     name = "selenium",
     artifacts = [
         "com.codeborne:phantomjsdriver:1.4.4",

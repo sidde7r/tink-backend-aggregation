@@ -1698,15 +1698,3 @@ java_library(
         "@lombok//:org_projectlombok_lombok",
     ],
 )
-
-java_library(
-    name = "standalone_agent_test_libs",
-    licenses = ["notice"],
-    visibility = ["//visibility:public"],
-    exports = [
-        "//third_party:standalone_agent_libs",
-        "@standalone_agent_deps//:org_springframework_spring_test",
-        "@standalone_agent_test_deps//:junit_junit",
-        "@standalone_agent_test_deps//:org_mockito_mockito_core",
-    ],
-)
