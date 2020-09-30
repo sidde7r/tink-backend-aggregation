@@ -54,7 +54,7 @@ public class FinalizeAuthStep implements AuthenticationStep {
         String signature = authorizeTransaction(challengeResponse);
 
         Token basicToken = requestAccessToken(signature, challengeResponse.getTransactionId());
-        storage.saveToPersistentStorage(Storage.ACCESS_BASIC_TOKEN, basicToken.getToken());
+        storage.saveToPersistentStorage(Storage.ACCESS_BASIC_TOKEN, basicToken.getAccessToken());
 
         String dataToken = apiClient.performJwtAuthorization();
         storage.saveToPersistentStorage(Storage.ACCESS_DATA_TOKEN, dataToken);

@@ -37,12 +37,12 @@ public class TransactionEntity {
         boolean isPending = this.bookedDate == null;
         Date date = isPending ? this.bookedDate : this.valueDate;
 
-        BigDecimal amount =
+        BigDecimal calculatedAmount =
                 new BigDecimal(this.amountSymbol + this.amount).divide(new BigDecimal("100"));
 
         return Transaction.builder()
                 .setDate(date)
-                .setAmount(ExactCurrencyAmount.of(amount, currency))
+                .setAmount(ExactCurrencyAmount.of(calculatedAmount, currency))
                 .setDescription(shortDescription)
                 .setPayload(TransactionPayloadTypes.DETAILS, longDescription)
                 .setPending(isPending)

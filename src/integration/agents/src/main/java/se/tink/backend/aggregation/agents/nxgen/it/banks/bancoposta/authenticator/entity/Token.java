@@ -8,5 +8,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 public class Token {
     @JsonProperty("access_token")
-    private String token;
+    private String accessToken;
 }
