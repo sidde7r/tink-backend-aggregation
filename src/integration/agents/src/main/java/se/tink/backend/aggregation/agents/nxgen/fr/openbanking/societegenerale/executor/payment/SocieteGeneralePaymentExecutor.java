@@ -52,6 +52,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 @RequiredArgsConstructor
@@ -209,7 +210,11 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                 .withPaymentTypeInformation(
                         new PaymentTypeInformationEntity(
                                 SocieteGeneraleConstants.PaymentTypeInformation.SERVICE_LEVEL))
-                .withDebtorAccount(new DebtorAccountEntity(payment.getDebtor().getAccountNumber()))
+                .withDebtorAccount(
+                        new DebtorAccountEntity(
+                                Optional.ofNullable(payment.getDebtor())
+                                        .map(Debtor::getAccountNumber)
+                                        .orElse(null)))
                 .withBeneficiary(beneficiary)
                 .withChargeBearer(SocieteGeneraleConstants.FormValues.CHARGE_BEARER_SLEV)
                 .withRequestedExecutionDate(getExecutionDate(payment.getExecutionDate()))
