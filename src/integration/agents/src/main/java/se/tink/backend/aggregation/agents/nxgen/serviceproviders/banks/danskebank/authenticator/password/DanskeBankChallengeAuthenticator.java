@@ -53,7 +53,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -191,9 +191,9 @@ public class DanskeBankChallengeAuthenticator
         DanskeBankNemIdCodeAppAuthenticator codeAppAuthenticator =
                 new DanskeBankNemIdCodeAppAuthenticator(
                         apiClient, client, preferredDevice, username, bindChallengeResponseBody);
-        ThirdPartyAppAuthenticationController<String> nemIdAuthenticationController =
-                new ThirdPartyAppAuthenticationController<>(
-                        codeAppAuthenticator, supplementalInformationHelper);
+        NemIdCodeAppAuthenticationController nemIdAuthenticationController =
+                new NemIdCodeAppAuthenticationController(
+                        codeAppAuthenticator, supplementalInformationHelper, catalog);
 
         try {
             // Credentials are not needed for this implementation

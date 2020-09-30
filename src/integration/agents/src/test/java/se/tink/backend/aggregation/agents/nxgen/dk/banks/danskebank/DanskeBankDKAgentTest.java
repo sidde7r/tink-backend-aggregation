@@ -28,7 +28,7 @@ public class DanskeBankDKAgentTest {
                 .addCredentialField(
                         Field.Key.PASSWORD, manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true)
+                .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
                 .build()
                 .testRefresh();

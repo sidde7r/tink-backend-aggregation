@@ -97,31 +97,7 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        /*
-         * NemID app switching documentation:
-         * https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NMAS%20app%20switch.pdf
-         */
-
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-
-        ThirdPartyAppAuthenticationPayload.Android androidPayload =
-                new ThirdPartyAppAuthenticationPayload.Android();
-        androidPayload.setIntent("android-app://dk.e_nettet.mobilekey.everyone");
-        androidPayload.setPackageName("dk.e_nettet.mobilekey.everyone");
-        payload.setAndroid(androidPayload);
-
-        ThirdPartyAppAuthenticationPayload.Ios iOsPayload =
-                new ThirdPartyAppAuthenticationPayload.Ios();
-        iOsPayload.setAppStoreUrl("https://apps.apple.com/dk/app/nemid-codeapp/id1300533299");
-        // TODO this is the app scheme, but it shouldn't be used to open the app, according to the
-        // docs
-        iOsPayload.setAppScheme("nemid-codeapp");
-        // TODO check real Tink app scheme
-        // TODO on a later moment, return URL needs to be configurable and customized per client
-        iOsPayload.setDeepLinkUrl("https://codeapp.e-nettet.dk?return=tink://");
-        payload.setIos(iOsPayload);
-
-        return payload;
+        return null;
     }
 
     @Override

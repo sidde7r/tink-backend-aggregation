@@ -20,10 +20,10 @@ import se.tink.libraries.i18n.LocalizableKey;
 public class ThirdPartyAppAuthenticationController<T>
         implements TypedAuthenticator, AuthenticationControllerType {
 
-    private final ThirdPartyAppAuthenticator<T> authenticator;
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    protected final ThirdPartyAppAuthenticator<T> authenticator;
+    protected final SupplementalInformationHelper supplementalInformationHelper;
     private final int maxPollAttempts;
-    private ThirdPartyAppResponse<T> response;
+    protected ThirdPartyAppResponse<T> response;
 
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
     private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);
@@ -63,7 +63,7 @@ public class ThirdPartyAppAuthenticationController<T>
         return error.exception(authenticatorMessage.orElse(error.userMessage()));
     }
 
-    private boolean handleStatus(ThirdPartyAppStatus status)
+    protected boolean handleStatus(ThirdPartyAppStatus status)
             throws AuthenticationException, AuthorizationException {
         if (status == null) {
             throw new IllegalStateException(String.format("Status missing"));
@@ -103,7 +103,7 @@ public class ThirdPartyAppAuthenticationController<T>
         return response;
     }
 
-    private ThirdPartyAppResponse<T> poll(ThirdPartyAppResponse<T> response)
+    protected ThirdPartyAppResponse<T> poll(ThirdPartyAppResponse<T> response)
             throws AuthenticationException, AuthorizationException {
 
         for (int i = 0; i < maxPollAttempts; i++) {
