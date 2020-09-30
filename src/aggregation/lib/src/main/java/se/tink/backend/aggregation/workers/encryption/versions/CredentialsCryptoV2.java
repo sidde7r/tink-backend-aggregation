@@ -80,11 +80,12 @@ public class CredentialsCryptoV2 {
             result.decryptedFields = decryptedFields;
         }
 
-        String decryptedPayload = decryptPayload(payloadKey, encryptedPayloadV2);
-        if (!Strings.isNullOrEmpty(decryptedPayload)) {
-            result.decryptedPayload = decryptedPayload;
+        if (payloadKey != null && encryptedPayloadV2.getPayload() != null) {
+            String decryptedPayload = decryptPayload(payloadKey, encryptedPayloadV2);
+            if (!Strings.isNullOrEmpty(decryptedPayload)) {
+                result.decryptedPayload = decryptedPayload;
+            }
         }
-
         return result;
     }
 

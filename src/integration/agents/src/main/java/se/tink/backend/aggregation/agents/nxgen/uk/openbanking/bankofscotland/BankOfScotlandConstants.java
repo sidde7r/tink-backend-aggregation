@@ -13,7 +13,7 @@ final class BankOfScotlandConstants {
             public static final String APP_TO_APP_AUTH_URL =
                     "https://authorise-api.bankofscotland.co.uk/prod01/lbg/bos/personal/oidc-api/v1.1/authorize";
             public static final String WELL_KNOWN_URL =
-                    "https://authorise-api.bankofscotland.co.uk/prod01/channel/bos/.well-known/openid-configuration";
+                    "https://authorise-api.bankofscotland.co.uk/prod01/channel/bos/personal/.well-known/openid-configuration";
         }
     }
 }

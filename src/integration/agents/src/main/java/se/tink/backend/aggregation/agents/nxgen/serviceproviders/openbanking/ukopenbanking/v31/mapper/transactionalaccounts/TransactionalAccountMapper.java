@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountIdentifierEntity;
@@ -28,7 +29,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @RequiredArgsConstructor
 @Slf4j
 public class TransactionalAccountMapper implements AccountMapper<TransactionalAccount> {
-
     private final TransactionalAccountBalanceMapper balanceMapper;
     private final IdentifierMapper identifierMapper;
 
@@ -45,13 +45,33 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
         List<AccountIdentifierEntity> accountIdentifiers = account.getIdentifiers();
 
         AccountIdentifierEntity primaryIdentifier =
-                identifierMapper.getTransactionalAccountPrimaryIdentifier(accountIdentifiers);
+                identifierMapper.getTransactionalAccountPrimaryIdentifier(
+                        accountIdentifiers,
+                        UkOpenBankingApiDefinitions.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
         String accountNumber = primaryIdentifier.getIdentification();
         String uniqueIdentifier =
                 isRevolutAccount(account)
                         ? account.getAccountId()
                         : accountNumber; // todo get rid of revolut specific logic
 
+        return buildTransactionalAccount(
+                account,
+                balances,
+                parties,
+                accountIdentifiers,
+                primaryIdentifier,
+                accountNumber,
+                uniqueIdentifier);
+    }
+
+    protected Optional<TransactionalAccount> buildTransactionalAccount(
+            AccountEntity account,
+            Collection<AccountBalanceEntity> balances,
+            Collection<IdentityDataV31Entity> parties,
+            List<AccountIdentifierEntity> accountIdentifiers,
+            AccountIdentifierEntity primaryIdentifier,
+            String accountNumber,
+            String uniqueIdentifier) {
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
                         .withType(mapType(account))

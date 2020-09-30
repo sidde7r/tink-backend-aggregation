@@ -18,12 +18,8 @@ import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfigurati
 
 @JsonObject
 public class ICSConfiguration implements ClientConfiguration {
-
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @JsonProperty @Secret private String clientSSLCertificate;
-    @JsonProperty @Secret private String rootCACertificate;
-    @JsonProperty @Secret private String rootCAPassword;
 
     @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(ICSConfiguration.class);
@@ -38,24 +34,8 @@ public class ICSConfiguration implements ClientConfiguration {
         return clientSecret;
     }
 
-    public String getClientSSLCertificate() {
-        return clientSSLCertificate;
-    }
-
-    public String getRootCACertificate() {
-        return rootCACertificate;
-    }
-
-    public String getRootCAPassword() {
-        return rootCAPassword;
-    }
-
     public boolean isValid() {
-        if (!Strings.isNullOrEmpty(clientId)
-                && !Strings.isNullOrEmpty(clientSecret)
-                && !Strings.isNullOrEmpty(clientSSLCertificate)
-                && !Strings.isNullOrEmpty(rootCACertificate)
-                && !Strings.isNullOrEmpty(rootCAPassword)) {
+        if (!Strings.isNullOrEmpty(clientId) && !Strings.isNullOrEmpty(clientSecret)) {
             return true;
         } else {
             List<String> list = new ArrayList<>();
@@ -66,18 +46,6 @@ public class ICSConfiguration implements ClientConfiguration {
 
             if (Strings.isNullOrEmpty(clientSecret)) {
                 list.add("clientSecret");
-            }
-
-            if (Strings.isNullOrEmpty(clientSSLCertificate)) {
-                list.add("clientSSLCertificate");
-            }
-
-            if (Strings.isNullOrEmpty(rootCACertificate)) {
-                list.add("rootCACertificate");
-            }
-
-            if (Strings.isNullOrEmpty(rootCAPassword)) {
-                list.add("rootCAPassword");
             }
 
             logger.error(

@@ -115,7 +115,10 @@ public class CredentialsCrypto {
                             byte[] fieldsKey =
                                     cryptoWrapper.getCryptoKeyByKeyId(v2.getFields().getKeyId());
                             byte[] payloadKey =
-                                    cryptoWrapper.getCryptoKeyByKeyId(v2.getPayload().getKeyId());
+                                    v2.getPayload() == null
+                                            ? null
+                                            : cryptoWrapper.getCryptoKeyByKeyId(
+                                                    v2.getPayload().getKeyId());
 
                             try {
                                 CredentialsCryptoV2.DecryptedDataV2 result =

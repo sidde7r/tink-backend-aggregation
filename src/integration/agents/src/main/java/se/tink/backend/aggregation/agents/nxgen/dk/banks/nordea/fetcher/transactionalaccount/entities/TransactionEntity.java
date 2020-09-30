@@ -6,9 +6,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -21,17 +19,15 @@ public class TransactionEntity {
     private String bookingDate;
     private String currency;
     private String description;
-    private String reconciliationId;
     private String transactionDate;
     private String interestDate;
 
-    public AggregationTransaction toTinkTransaction() {
+    public Transaction toTinkTransaction() {
         Transaction.Builder builder =
                 Transaction.builder()
                         .setAmount(getAmount())
                         .setDescription(description)
-                        .setPending(!booked)
-                        .setPayload(TransactionPayloadTypes.EXTERNAL_ID, reconciliationId);
+                        .setPending(!booked);
         dateFromTransaction().ifPresent(builder::setDate);
         return builder.build();
     }

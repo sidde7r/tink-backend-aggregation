@@ -14,7 +14,7 @@ final class LloydsConstants {
             public static final String APP_TO_APP_AUTH_URL =
                     "https://authorise-api.lloydsbank.co.uk/prod01/lbg/lyds/personal/oidc-api/v1.1/authorize";
             public static final String WELL_KNOWN_PERSONAL_URL =
-                    "https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/.well-known/openid-configuration";
+                    "https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/personal/.well-known/openid-configuration";
             public static final String WELL_KNOWN_BUSINESS_URL =
                     "https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/business/.well-known/openid-configuration";
             public static final String WELL_KNOWN_CORPORATE_URL =

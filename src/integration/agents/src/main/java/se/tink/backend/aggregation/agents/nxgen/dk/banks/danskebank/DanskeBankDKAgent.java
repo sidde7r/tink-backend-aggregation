@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank.mapper.DkAccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
@@ -135,7 +136,8 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new DanskeBankTransactionalAccountFetcher(this.apiClient, this.configuration),
+                new DanskeBankTransactionalAccountFetcher(
+                        this.apiClient, this.configuration, new DkAccountEntityMapper()),
                 createTransactionFetcherController());
     }
 
@@ -154,7 +156,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 this.metricRefreshController,
                 this.updateController,
                 new DanskeBankCreditCardFetcher(
-                        this.apiClient, this.configuration.getLanguageCode(), this.configuration),
+                        this.apiClient, this.configuration, new DkAccountEntityMapper()),
                 createTransactionFetcherController());
     }
 

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -26,5 +27,5 @@ public class AccountEntity {
     private String description;
 
     @JsonProperty("Account")
-    private List<AccountIdentifierEntity> identifiers;
+    private List<AccountIdentifierEntity> identifiers = new ArrayList<>();
 }

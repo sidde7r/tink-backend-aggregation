@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -12,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditca
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.investment.rpc.CustodyAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaDkTestUtils {
@@ -25,22 +22,7 @@ public class NordeaDkTestUtils {
                         SerializationUtils.deserializeFromString(
                                 new File(NordeaTestData.FETCH_ACCOUNTS_FILE_PATH),
                                 AccountsResponse.class));
-        when(client.getAccountTransactions(
-                        contains(NordeaTestData.ACCOUNT_1_API_ID), contains("UNGOPS"), isNull()))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                new File(NordeaTestData.FETCH_ACCOUNT_TRANSACTIONS_FILE_PATH),
-                                TransactionsResponse.class));
-        when(client.getAccountTransactions(
-                        contains(NordeaTestData.ACCOUNT_1_API_ID),
-                        contains("UNGOPS"),
-                        contains(NordeaTestData.TRANSACTIONS_CONTINUATION_KEY)))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                new File(
-                                        NordeaTestData
-                                                .FETCH_ACCOUNT_TRANSACTIONS_CONTINUATION_FILE_PATH),
-                                TransactionsResponse.class));
+
         when(client.fetchCreditCards())
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
@@ -69,25 +51,12 @@ public class NordeaDkTestUtils {
                                 new File(NordeaTestData.FETCH_INVESTMENT_ACCOUNTS_FILE_PATH),
                                 CustodyAccountsResponse.class));
 
-        mockTransactionsForAccount(
-                client,
-                NordeaTestData.ACCOUNT_API_ID_WITH_TRANSACTIONS_WITHOUT_DATE,
-                NordeaTestData.TRANSACTIONS_WITHOUT_DATE);
-
         mockTransactionsForCreditCard(
                 client,
                 NordeaTestData.CREDIT_CARD_ID_WITH_TRANSACTIONS_WITHOUT_DATE,
                 NordeaTestData.CREDIT_CARD_TRANSACTIONS_WITHOUT_DATE);
 
         return client;
-    }
-
-    private static void mockTransactionsForAccount(
-            NordeaDkApiClient client, String accountId, String filePath) {
-        when(client.getAccountTransactions(contains(accountId), any(), isNull()))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                new File(filePath), TransactionsResponse.class));
     }
 
     private static void mockTransactionsForCreditCard(

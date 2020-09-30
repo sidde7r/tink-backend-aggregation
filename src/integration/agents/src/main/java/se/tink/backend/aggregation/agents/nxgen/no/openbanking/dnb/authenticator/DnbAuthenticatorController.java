@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -45,12 +46,21 @@ public class DnbAuthenticatorController
 
     @Override
     public ThirdPartyAppResponse<String> collect(final String reference) {
-        this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(),
-                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                TimeUnit.MINUTES);
+        Optional<Map<String, String>> supplementalInfo =
+                this.supplementalInformationHelper.waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(),
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES);
 
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+        ThirdPartyAppStatus result;
+        if (!supplementalInfo.isPresent()) {
+            result = ThirdPartyAppStatus.TIMED_OUT;
+        } else if (authenticator.isConsentValid()) {
+            result = ThirdPartyAppStatus.DONE;
+        } else {
+            result = ThirdPartyAppStatus.AUTHENTICATION_ERROR;
+        }
+        return ThirdPartyAppResponseImpl.create(result);
     }
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {

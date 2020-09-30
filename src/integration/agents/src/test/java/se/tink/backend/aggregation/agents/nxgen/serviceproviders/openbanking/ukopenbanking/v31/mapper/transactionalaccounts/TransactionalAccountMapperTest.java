@@ -44,7 +44,7 @@ public class TransactionalAccountMapperTest {
         when(balanceMapper.getAccountBalance(anyCollection()))
                 .thenReturn(ExactCurrencyAmount.of(12345d, "EUR"));
         when(identifierMapper.mapIdentifier(any())).thenCallRealMethod();
-        when(identifierMapper.getTransactionalAccountPrimaryIdentifier(anyList()))
+        when(identifierMapper.getTransactionalAccountPrimaryIdentifier(anyList(), anyList()))
                 .thenReturn(sortCodeIdentifier());
     }
 
@@ -96,7 +96,7 @@ public class TransactionalAccountMapperTest {
         AccountIdentifierEntity expectedIdentifier = ibanIdentifier();
 
         // when
-        when(identifierMapper.getTransactionalAccountPrimaryIdentifier(anyList()))
+        when(identifierMapper.getTransactionalAccountPrimaryIdentifier(anyList(), anyList()))
                 .thenReturn(expectedIdentifier);
         TransactionalAccount mappingResult =
                 mapper.map(currentAccount(), Collections.emptyList(), Collections.emptyList())

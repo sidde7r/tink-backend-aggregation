@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 @RequiredArgsConstructor
 public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount> {
 
-    private final CreditCardBalanceMapper balanceMapper;
+    protected final CreditCardBalanceMapper balanceMapper;
     private final IdentifierMapper identifierMapper;
 
     @Override
@@ -64,7 +64,7 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
         return Optional.of(builder.build());
     }
 
-    private String pickDisplayName(
+    protected String pickDisplayName(
             AccountEntity account, AccountIdentifierEntity cardPrimaryAccountNumber) {
         return ObjectUtils.firstNonNull(
                 account.getNickname(),
@@ -72,7 +72,7 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
                 cardPrimaryAccountNumber.getIdentification());
     }
 
-    private Collection<String> collectHolders(
+    protected Collection<String> collectHolders(
             AccountIdentifierEntity primaryIdentifier, Collection<IdentityDataV31Entity> parties) {
         return Stream.ofAll(parties)
                 .map(IdentityDataV31Entity::getName)

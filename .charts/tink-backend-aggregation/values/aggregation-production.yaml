@@ -198,6 +198,8 @@ clients:
     aggregatorIdentifier: "Ica Spara"
   it-bnp-bnl-testing:
     aggregatorIdentifier: "BNL Gruppo BNP Paribas"
+  it-bnp-bnl-staging:
+    aggregatorIdentifier: "BNL Gruppo BNP Paribas"
   it-poste-testing:
     aggregatorIdentifier: "Poste Italiane"
   kbc-production:

@@ -39,7 +39,8 @@ public final class KnabAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        this.apiClient = new KnabApiClient(client, persistentStorage, credentials);
+        this.apiClient =
+                new KnabApiClient(client, persistentStorage, request.getCredentials(), userIp);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

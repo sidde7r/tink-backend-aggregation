@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -23,26 +23,33 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
 
     private final DanskeBankApiClient apiClient;
     private final DanskeBankConfiguration configuration;
-    private final String languageCode;
+    private final AccountEntityMapper accountEntityMapper;
 
     public DanskeBankTransactionalAccountFetcher(
-            DanskeBankApiClient apiClient, DanskeBankConfiguration configuration) {
+            DanskeBankApiClient apiClient,
+            DanskeBankConfiguration configuration,
+            AccountEntityMapper accountEntityMapper) {
         this.apiClient = apiClient;
         this.configuration = configuration;
-        this.languageCode = configuration.getLanguageCode();
+        this.accountEntityMapper = accountEntityMapper;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         ListAccountsResponse listAccounts =
-                apiClient.listAccounts(ListAccountsRequest.createFromLanguageCode(languageCode));
+                apiClient.listAccounts(
+                        ListAccountsRequest.createFromLanguageCode(
+                                configuration.getLanguageCode()));
 
         return ImmutableList.<TransactionalAccount>builder()
                 .addAll(logAndGetTransactionalAccountsOfUnknownType(listAccounts))
                 .addAll(
-                        listAccounts.toTinkCheckingAccounts(
-                                configuration.getCheckingAccountTypes()))
-                .addAll(listAccounts.toTinkSavingsAccounts(configuration.getSavingsAccountTypes()))
+                        accountEntityMapper.toTinkCheckingAccounts(
+                                configuration.getCheckingAccountTypes(),
+                                listAccounts.getAccounts()))
+                .addAll(
+                        accountEntityMapper.toTinkSavingsAccounts(
+                                configuration, listAccounts.getAccounts()))
                 .build();
     }
 
@@ -65,7 +72,7 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                                         "Account: apiIdentifier = {}, accountProduct = {}",
                                         accountEntity.getAccountNoInt(),
                                         accountEntity.getAccountProduct()))
-                .map(AccountEntity::toCheckingAccount)
+                .map(accountEntityMapper::toCheckingAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

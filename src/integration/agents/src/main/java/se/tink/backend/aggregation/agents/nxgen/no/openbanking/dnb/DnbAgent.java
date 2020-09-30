@@ -55,7 +55,13 @@ public final class DnbAgent extends NextGenerationAgent
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         apiClient =
                 new DnbApiClient(
-                        client, sessionStorage, persistentStorage, credentials, getRedirectUrl());
+                        client,
+                        sessionStorage,
+                        persistentStorage,
+                        credentials,
+                        getRedirectUrl(),
+                        userIp,
+                        request.isManual());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCardAccountRefreshController();
     }
