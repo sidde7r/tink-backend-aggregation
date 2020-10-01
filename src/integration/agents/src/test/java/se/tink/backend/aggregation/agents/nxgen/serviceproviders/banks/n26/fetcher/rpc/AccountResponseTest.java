@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import org.assertj.core.api.Condition;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -50,15 +49,10 @@ public class AccountResponseTest {
     }
 
     private <T extends Account> void assertIdentifiers(T account) {
-        Condition<AccountIdentifier> condition =
-                new Condition<>(
-                        accountIdentifier ->
-                                accountIdentifier.getIdentifier().equals("DE95100110016601026293"),
-                        "Account identifier contain correct IBAN.");
         List<AccountIdentifier> accountIdentifiers = account.getIdentifiers();
         assertThat(accountIdentifiers.size()).isEqualTo(1);
         assertThat(accountIdentifiers.get(0)).isInstanceOf(IbanIdentifier.class);
-        assertThat(accountIdentifiers.get(0)).is(condition);
+        assertThat(accountIdentifiers.get(0).getIdentifier()).isEqualTo("DE95100110016601026293");
     }
 
     private <T extends Account> void assertUniqueIdentifier(T account) {
