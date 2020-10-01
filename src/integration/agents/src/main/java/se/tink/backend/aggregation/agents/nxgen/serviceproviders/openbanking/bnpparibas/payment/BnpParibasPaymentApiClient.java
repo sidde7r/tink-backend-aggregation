@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasBankConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentApiClient;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.PispTokenRequest;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -31,8 +33,9 @@ public class BnpParibasPaymentApiClient implements FrOpenBankingPaymentApiClient
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final BnpParibasConfiguration configuration;
+    private final AgentConfiguration<BnpParibasConfiguration> configuration;
     private final BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider;
+    private final BnpParibasBankConfig bankConfig;
 
     @Override
     public void fetchToken() {
@@ -54,9 +57,11 @@ public class BnpParibasPaymentApiClient implements FrOpenBankingPaymentApiClient
     }
 
     private TokenResponse getToken() {
-        PispTokenRequest request = new PispTokenRequest(configuration.getClientId());
+        PispTokenRequest request =
+                new PispTokenRequest(
+                        configuration.getProviderSpecificConfiguration().getClientId());
 
-        return client.request(new URL(configuration.getTokenUrl()))
+        return client.request(new URL(bankConfig.getTokenUrl()))
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(
                         BnpParibasBaseConstants.HeaderKeys.AUTHORIZATION,
@@ -68,7 +73,9 @@ public class BnpParibasPaymentApiClient implements FrOpenBankingPaymentApiClient
     }
 
     private String getAuthorizationString() {
-        return configuration.getClientId() + ":" + configuration.getClientSecret();
+        return configuration.getProviderSpecificConfiguration().getClientId()
+                + ":"
+                + configuration.getProviderSpecificConfiguration().getClientSecret();
     }
 
     @Override
@@ -89,7 +96,7 @@ public class BnpParibasPaymentApiClient implements FrOpenBankingPaymentApiClient
     }
 
     private URL createUrl(String path) {
-        return new URL(configuration.getBaseUrl() + path);
+        return new URL(bankConfig.getBaseUrl() + path);
     }
 
     private RequestBuilder createRequest(URL url) {

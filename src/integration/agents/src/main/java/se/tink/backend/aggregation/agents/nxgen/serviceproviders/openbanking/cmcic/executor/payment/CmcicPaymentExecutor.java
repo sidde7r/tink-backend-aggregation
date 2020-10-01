@@ -84,7 +84,6 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
 
     private CmcicApiClient apiClient;
     private SessionStorage sessionStorage;
-    private CmcicConfiguration configuration;
     private String redirectUrl;
     private List<PaymentResponse> paymentResponses;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -99,7 +98,6 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.strongAuthenticationState = strongAuthenticationState;

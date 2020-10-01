@@ -3,7 +3,7 @@ POST https://api-dsp2.boursorama.com/services/api/v1.7/_public_/authentication/o
 Content-Type: application/json
 X-Aggregator : Tink Testing
 
-{"grantType":"authorization_code","authorizationCode":"DUMMY_AUTH_CODE","clientId":"DUMMY_CLIENT_ID"}
+{"grantType":"authorization_code","authorizationCode":"DUMMY_AUTH_CODE","clientId":"PSDSE-FINA-44059"}
 
 RESPONSE 1
 200

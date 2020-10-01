@@ -13,9 +13,6 @@ public class BnpParibasConfiguration implements ClientConfiguration {
     @Secret @ClientIdConfiguration private String clientId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @Secret private String keyId;
-    @Secret private String authorizeUrl;
-    @Secret private String tokenUrl;
-    @Secret private String baseUrl;
 
     public String getClientId() {
         return clientId;
@@ -27,17 +24,5 @@ public class BnpParibasConfiguration implements ClientConfiguration {
 
     public String getKeyId() {
         return keyId;
-    }
-
-    public String getTokenUrl() {
-        return tokenUrl;
-    }
-
-    public String getAuthorizeUrl() {
-        return authorizeUrl;
-    }
-
-    public String getBaseUrl() {
-        return baseUrl;
     }
 }

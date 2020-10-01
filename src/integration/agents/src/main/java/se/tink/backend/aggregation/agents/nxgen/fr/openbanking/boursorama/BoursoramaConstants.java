@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama;
 
 import java.time.ZoneId;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BoursoramaConstants {
 
@@ -10,27 +11,35 @@ public class BoursoramaConstants {
     public static final ZoneId ZONE_ID = ZoneId.of("CET");
 
     public static class Urls {
+        private static final String BASE_URL = "https://api-dsp2.boursorama.com";
+        public static final URL CONSUME_AUTH_CODE =
+                new URL(
+                        BASE_URL
+                                + "/services/api/v1.7/_public_/authentication/oauth/consumeauthorizationcode");
+        public static final URL REFRESH_TOKEN =
+                new URL(BASE_URL + "/services/api/v1.7/_public_/authentication/oauth/refreshtoken");
 
-        public static final String CONSUME_AUTH_CODE =
-                "/services/api/v1.7/_public_/authentication/oauth/consumeauthorizationcode";
-        public static final String REFRESH_TOKEN =
-                "/services/api/v1.7/_public_/authentication/oauth/refreshtoken";
+        public static final URL IDENTITY_TEMPLATE =
+                new URL(BASE_URL + "/services/api/v1.7/_user_/_{userHash}_/dsp2/users/identity");
+        public static final URL ACCOUNTS_TEMPLATE =
+                new URL(BASE_URL + "/services/api/v1.7/_user_/_{userHash}_/dsp2/accounts");
+        public static final URL BALANCES_TEMPLATE =
+                new URL(
+                        BASE_URL
+                                + "/services/api/v1.7/_user_/_{userHash}_/dsp2/accounts/balances/{resourceId}");
+        public static final URL TRANSACTIONS_TEMPLATE =
+                new URL(
+                        BASE_URL
+                                + "/services/api/v1.7/_user_/_{userHash}_/dsp2/accounts/transactions/{resourceId}");
 
-        public static final String IDENTITY_TEMPLATE =
-                "/services/api/v1.7/_user_/_%s_/dsp2/users/identity";
-        public static final String ACCOUNTS_TEMPLATE =
-                "/services/api/v1.7/_user_/_%s_/dsp2/accounts";
-        public static final String BALANCES_TEMPLATE =
-                "/services/api/v1.7/_user_/_%s_/dsp2/accounts/balances/";
-        public static final String TRANSACTIONS_TEMPLATE =
-                "/services/api/v1.7/_user_/_%s_/dsp2/accounts/transactions/";
+        public static final URL TRUSTED_BENEFICIARIES_TEMPLATE =
+                new URL(
+                        BASE_URL
+                                + "/services/api/v1.7/_user_/_{userHash}_/dsp2/trusted-beneficiaries");
 
-        public static final String TRUSTED_BENEFICIARIES_TEMPLATE =
-                "/services/api/v1.7/_user_/_%s_/dsp2/trusted-beneficiaries";
-
-        public static final String CREATE_PAYMENT =
-                "/services/api/v1.7/_public_/dsp2/payment-requests";
-        public static final String GET_PAYMENT =
-                "/services/api/v1.7/_public_/dsp2/payment-requests/{paymentId}";
+        public static final URL CREATE_PAYMENT =
+                new URL(BASE_URL + "/services/api/v1.7/_public_/dsp2/payment-requests");
+        public static final URL GET_PAYMENT =
+                new URL(BASE_URL + "/services/api/v1.7/_public_/dsp2/payment-requests/{paymentId}");
     }
 }

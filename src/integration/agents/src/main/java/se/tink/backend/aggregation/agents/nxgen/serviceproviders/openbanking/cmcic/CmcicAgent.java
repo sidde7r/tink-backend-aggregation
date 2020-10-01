@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.CmcicAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicIdentityDataFetcher;
@@ -50,12 +51,17 @@ public abstract class CmcicAgent extends NextGenerationAgent
     private final AgentConfiguration<CmcicConfiguration> agentConfiguration;
     private final CmcicIdentityDataFetcher cmcicIdentityDataFetcher;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final CmcicAgentConfig agentConfig;
 
-    public CmcicAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+    public CmcicAgent(
+            AgentComponentProvider componentProvider,
+            QsealcSigner qsealcSigner,
+            CmcicAgentConfig agentConfig) {
         super(componentProvider);
 
         this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
+        this.agentConfig = agentConfig;
 
         final CmcicSignatureProvider signatureProvider = new CmcicSignatureProvider(qsealcSigner);
         final CmcicDigestProvider digestProvider = new CmcicDigestProvider();
@@ -69,7 +75,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         this.agentConfiguration.getProviderSpecificConfiguration(),
                         digestProvider,
                         signatureProvider,
-                        codeChallengeProvider);
+                        codeChallengeProvider,
+                        this.agentConfig);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(this.apiClient);

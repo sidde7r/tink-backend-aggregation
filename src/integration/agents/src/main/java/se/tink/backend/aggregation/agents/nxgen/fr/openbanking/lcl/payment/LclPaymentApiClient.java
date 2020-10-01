@@ -5,6 +5,8 @@ import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclAgent;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclHeaderValueProvider;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.TokenResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.PispTokenRequest;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -68,10 +71,11 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
         sessionStorage.put(TOKEN, token);
     }
 
+    @SneakyThrows
     private TokenResponseDto getToken() {
         PispTokenRequest request =
                 new PispTokenRequest(
-                        configuration.getProviderSpecificConfiguration().getClientId());
+                        CertificateUtils.getOrganizationIdentifier(configuration.getQwac()));
 
         return client.request(createUrl(TOKEN_PATH))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
@@ -103,6 +107,7 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
         return httpResponse.getBody(CreatePaymentResponse.class);
     }
 
+    @SneakyThrows
     @Override
     public String findPaymentId(String authorizationUrl) {
         URL url = new URL(authorizationUrl);
@@ -111,7 +116,7 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
                 PAYMENT_AUTHORIZATION_URL,
                 url.queryParam(
                                 "client_id",
-                                configuration.getProviderSpecificConfiguration().getClientId())
+                                CertificateUtils.getOrganizationIdentifier(configuration.getQwac()))
                         .queryParam("redirect_uri", sessionStorage.get(REDIRECT_URL_LOCAL_KEY))
                         .toString());
         return sessionStorage.get(PAYMENT_ID_LOCAL_KEY);
@@ -150,7 +155,7 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
     }
 
     private URL createUrl(String path) {
-        return new URL(configuration.getProviderSpecificConfiguration().getBaseUrl() + path);
+        return new URL(LclAgent.BASE_URL + path);
     }
 
     private RequestBuilder createRequestAndSetHeaders(URL url, Object body) {

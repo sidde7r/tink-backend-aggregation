@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.OAuth2ThirdPartyAppRequestParamsProvider;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -12,13 +14,14 @@ public class LclThirdPartyAppRequestParamsProvider
 
     private final AgentConfiguration<LclConfiguration> agentConfiguration;
 
+    @SneakyThrows
     @Override
     public URL getAuthorizeUrl(String state) {
-        final LclConfiguration lclConfiguration =
-                agentConfiguration.getProviderSpecificConfiguration();
-        return new URL(lclConfiguration.getAuthorizeUrl())
+        return new URL("https://psu.lcl.fr/authorize")
                 .queryParam("response_type", "code")
-                .queryParam("client_id", lclConfiguration.getClientId())
+                .queryParam(
+                        "client_id",
+                        CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac()))
                 .queryParam("redirect_uri", agentConfiguration.getRedirectUrl())
                 .queryParam("scope", "aisp")
                 .queryParam("state", state);

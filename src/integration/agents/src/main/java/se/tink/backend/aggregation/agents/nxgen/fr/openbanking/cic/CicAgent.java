@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -18,6 +19,12 @@ public final class CicAgent extends CmcicAgent {
 
     @Inject
     public CicAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
-        super(componentProvider, qsealcSigner);
+        super(
+                componentProvider,
+                qsealcSigner,
+                new CmcicAgentConfig(
+                        "https://oauth2-apiii.e-i.com",
+                        "/cic/",
+                        "https://www.cic.fr/oauth2/fr/banque/oauth2_authorization.aspx"));
     }
 }

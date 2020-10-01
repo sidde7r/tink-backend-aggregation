@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import lombok.SneakyThrows;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transac
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.converter.BpceGroupTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
@@ -61,6 +63,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
     private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
+    @SneakyThrows
     public BpceGroupAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
@@ -68,6 +71,10 @@ public final class BpceGroupAgent extends NextGenerationAgent
                 getAgentConfiguration();
         final BpceGroupConfiguration bpceGroupConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
+        bpceGroupConfiguration.setClientId(
+                CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc()));
+        bpceGroupConfiguration.setServerUrl(
+                componentProvider.getCredentialsRequest().getProvider().getPayload());
         final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator =
                 createSignatureHeaderGenerator(qsealcSigner, bpceGroupConfiguration);
         final String redirectUrl = agentConfiguration.getRedirectUrl();

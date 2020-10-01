@@ -4,7 +4,7 @@ Content-Type: application/x-www-form-urlencoded
 User-Agent : Tink (+https://www.tink.se/; noc@tink.se)
 X-Aggregator : Tink Testing
 
-client_id=DUMMY_CLIENT_ID&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&grant_type=authorization_code&code=DUMMY_AUTH_CODE
+client_id=PSDSE-FINA-44059&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&grant_type=authorization_code&code=DUMMY_AUTH_CODE
 
 RESPONSE 1
 200
