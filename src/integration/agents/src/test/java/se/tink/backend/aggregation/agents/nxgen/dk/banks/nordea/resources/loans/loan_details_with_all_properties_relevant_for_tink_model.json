@@ -1,0 +1,31 @@
+{
+    "loan_id": "ID123",
+    "loan_formatted_id": "FORMATTED ID123",
+    "product_code": "FRBLÅN",
+    "currency": "DKK",
+    "group": "mortgage",
+    "interest": {
+        "rate": 10.2500,
+        "interest_change_date": "2021-01-01"
+    },
+    "amount": {
+        "balance": -81469.41,
+        "granted": 2049000.0,
+        "paid": 495117.49
+    },
+    "owners": [
+        {
+            "name": "owner 1"
+        },
+        {
+            "name": "owner 2"
+        },
+        {
+            "name": ""
+        }
+    ],
+    "nickname": "account nickname",
+    "financed_object": {
+        "name": "financed object name"
+    }
+}
