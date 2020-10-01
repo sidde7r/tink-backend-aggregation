@@ -176,13 +176,10 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     }
 
     public PaymentType getPaymentType(Payment payment) {
-        return payment.getCreditor().getAccountIdentifierType().equals(Type.BBAN)
-                        || (payment.getCreditor().getAccountIdentifierType().equals(Type.IBAN)
-                                && payment.getCreditor()
-                                        .getAccountNumber()
-                                        .startsWith(SebConstants.MARKET))
-                ? PaymentType.DOMESTIC
-                : PaymentType.SEPA;
+        return payment.getCreditor().getAccountIdentifierType().equals(Type.IBAN)
+                        && !payment.getCreditor().getAccountNumber().startsWith(SebConstants.MARKET)
+                ? PaymentType.SEPA
+                : PaymentType.DOMESTIC;
     }
 
     public PaymentProduct getPaymentProduct(PaymentType paymentType, Type creditorAccountType) {
