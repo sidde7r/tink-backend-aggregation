@@ -116,9 +116,6 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
     }
 
     private AuthorizeResponse authorizeMandate(AuthorizeResponse authorizeResponse) {
-        // Temp logging to verify assumption about authorization flow. Will remove once confirmed.
-        LOG.info("User with multiple businesses");
-
         Mandate mandateToAuthorize =
                 authorizeResponse.getMandates().stream()
                         .filter(

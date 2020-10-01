@@ -129,8 +129,8 @@ public class ICSApiClient {
 
     public AccountSetupResponse setupAccount(OAuth2Token token) {
         final Date fromDate = ICSUtils.getFromDate();
-        final Date toDate = ICSUtils.getToDate();
-        final Date expirationDate = ICSUtils.getExpirationDate();
+        final Date toDate = ICSUtils.getToAndExpiredDate();
+        final Date expirationDate = ICSUtils.getToAndExpiredDate();
 
         final AccountSetupRequest request =
                 new AccountSetupRequest()
