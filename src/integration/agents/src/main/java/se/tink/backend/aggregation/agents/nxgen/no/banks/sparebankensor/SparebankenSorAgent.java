@@ -66,7 +66,7 @@ public final class SparebankenSorAgent extends NextGenerationAgent
         apiClient = new SparebankenSorApiClient(client, sessionStorage);
 
         this.encapClient =
-                new EncapClient(
+                agentComponentProvider.getEncapClient(
                         persistentStorage,
                         new SparebankenSorEncapConfiguration(),
                         SparebankenSorConstants.DEVICE_PROFILE,

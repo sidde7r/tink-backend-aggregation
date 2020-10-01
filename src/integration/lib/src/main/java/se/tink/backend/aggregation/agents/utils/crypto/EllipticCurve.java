@@ -15,6 +15,7 @@ import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.KeyAgreement;
 import org.bouncycastle.asn1.x9.X9IntegerConverter;
@@ -87,6 +88,15 @@ public class EllipticCurve {
         try {
             KeyFactory factory = KeyFactory.getInstance("ECDSA", "BC");
             return factory.generatePublic(new X509EncodedKeySpec(pubKeyBytes));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchProviderException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    public static PrivateKey convertPEMtoPrivateKey(byte[] privateKeyBytes) {
+        try {
+            KeyFactory factory = KeyFactory.getInstance("ECDSA", "BC");
+            return factory.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchProviderException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }

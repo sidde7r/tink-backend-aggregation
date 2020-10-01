@@ -59,7 +59,7 @@ public final class SparebankenVestAgent extends NextGenerationAgent
         configureHttpClient(client);
         this.apiClient = new SparebankenVestApiClient(client);
         this.encapClient =
-                new EncapClient(
+                agentComponentProvider.getEncapClient(
                         persistentStorage,
                         new SparebankenVestEncapConfiguration(),
                         DeviceProfileConfiguration.IOS_STABLE,

@@ -1,0 +1,1154 @@
+REQUEST 1
+GET https://nettbank.sor.no/smbmobile/2811/appversion_ios.json
+Accept: */*
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Date: Wed, 23 Sep 2020 05:56:04 GMT
+Last-Modified: Thu, 17 Sep 2020 07:11:28 GMT
+Accept-Ranges: bytes
+Vary: Accept-Encoding,User-Agent
+Cache-Control: no-cache, no-store, private, must-revalidate, max-age=0
+Pragma: no-cache
+Expires: 0
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Set-Cookie:	JSESSIONID=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1; path=/; secure; HttpOnly
+Strict-Transport-Security: max-age=31536000;
+
+{
+
+  "minimumOsForAppUpdate": "10.0.0",
+
+  "minimum": "1.46.0",
+
+  "upgradeDate": "2019-08-28",
+
+  "appUrl": "https://apps.apple.com/no/app/sparebanken-s%C3%B8r-mobilbank/id1230457332",
+
+  "osVersion": {
+
+    "minimum": "10.0.0",
+
+    "updateDate": "2018-09-27",
+
+    "reminderDays": 3,
+
+    "timesWithoutDismissAction": 3,
+
+    "recommendedMessage": {
+
+      "nb_NO": {
+
+        "title": "Oppdatering anbefales",
+
+        "message": "Av sikkerhetsmessige grunner støtter vi bare %@ og nyere etter %@. For å kunne laste ned nye versjoner av appen, som gir tilgang til forbedringer og ny funksjonalitet, må du oppdatere iOS, eventuelt bytte til en mobil som støtter et nyere operativsytem.",
+
+        "cancelAction": "Ok"
+
+      },
+
+      "en_US": {
+
+        "title": "Update recommended",
+
+        "message": "For security reasons we will only support %@ and newer after %@. To keep the app updated, you must update iOS or change to a phone that support a newer operating system",
+
+        "cancelAction": "Ok"
+
+      }
+
+    },
+
+    "requiredMessage": {
+
+      "nb_NO": {
+
+        "title": "Oppdater iOS",
+
+        "message": "Av sikkerhetsmessige grunner støtter vi nå bare %@ og nyere. For å kunne laste ned nye versjoner av appen, som gir tilgang til forbedringer og ny funksjonalitet, må du oppdatere iOS, eventuelt bytte til en mobil som støtter et nyere operativsytem.",
+
+        "cancelAction": "Ok",
+
+        "dismissAction": "Ikke vis igjen"
+
+      },
+
+      "en_US": {
+
+        "title": "Update iOS",
+
+        "message": "For security reasons we will only support %@ and newer. To keep the app updated, you must update iOS or change to a phone that support a newer operating system",
+
+        "cancelAction": "Ok",
+
+        "dismissAction": "Don't show again"
+
+      }
+
+    }
+
+  }
+
+}
+
+
+
+REQUEST 2
+GET https://nettbank.sor.no/secesb/rest/era/era/public/customers/01059344907/mobile?number=+4745916225&orgid=2811
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Date: Wed, 23 Sep 2020 05:56:04 GMT
+Cache-Control: no-cache, no-store
+Expires: Mon, 01 Jan 2001 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 14
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Set-Cookie: ***
+Set-Cookie:	JSESSIONID=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1; path=/; secure; HttpOnly
+Strict-Transport-Security: max-age=31536000;
+
+{"valid":true}
+
+REQUEST 3
+GET https://nettbank.sor.no/authenticate/login/bankidmobile?configKey=smbmactivate2811&userId=01059344907&phoneNumber=45916225
+Accept: */*
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Wed, 23 Sep 2020 05:56:05 GMT
+Cache-Control: no-store
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: text/html;charset=UTF-8
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+<!DOCTYPE html>
+
+<html><head id="j_idt41">
+
+	<title>
+
+	</title>
+
+		<link rel="shortcut icon" href="/authenticate/css/internal/bankid_default/favicon.ico" />
+
+		<link rel="stylesheet" type="text/css" href="/authenticate/css/internal/bidm.css" />
+
+		<script type="text/javascript" src="/authenticate/scripts/bidm/bidm.js?v=1"></script>
+
+
+
+	<meta name="viewport" content="width=device-width" />
+
+	<meta name="format-detection" content="telephone=no" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
+
+
+	<script type="text/javascript" src="/authenticate/scripts/edited-fields.js"></script><script type="text/javascript" src="/authenticate/login/javax.faces.resource/jsf.js;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1?ln=javax.faces"></script></head><body onload="">
+
+
+
+		<div class="bidm_app" data-page-type="login">
+
+			<div class="bidm_live_region" aria-live="assertive" aria-atomic="true" role="log" aria-relevant="additions"></div>
+
+			<div class="bidm_wrapper">
+
+				<div class="bidm_frame">
+
+					<div class="bidm_wrapper-inner">
+
+						<header class="bidm_header">
+
+						<div class="bidm_table">
+
+							<div class="bidm_left">
+
+								<div class="bidm_logo-wrapper">
+
+									<img class="bidm_logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTEiIGhlaWdodD0iMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmJhbmtpZC1tb2JpbF9sb2dvPC90aXRsZT48ZyBmaWxsPSJub25lIj48cmVjdCBmaWxsPSIjRjhGOEY4IiB4PSI1MSIgeT0iMjUiIHdpZHRoPSI0MCIgaGVpZ2h0PSIzIi8+PGcgZmlsbD0iIzU1NSI+PHBhdGggZD0iTTYuNDI4IDE2aC00Ljg1NmMtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjl2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDNjLS4wMDEuMjkzLS4yNTYuNTI5LS41NzIuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNMjIuNDI5IDE2aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjl2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDNjMCAuMjkzLS4yNTYuNTI5LS41NzEuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNMTQuNDMgOGgtNC44NTljLS4zMTUgMC0uNTctLjIzNi0uNTctLjUyOHYtLjk0M2MwLS4yOTIuMjU2LS41MjkuNTctLjUyOWg0Ljg1OWMuMzE1IDAgLjU3LjIzNy41Ny41Mjl2Ljk0MmMwIC4yOTItLjI1NS41MjktLjU3LjUyOSIgaWQ9IlNoYXBlIi8+PHBhdGggZD0iTTIyLjQyOSA4aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjh2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDJjMCAuMjkyLS4yNTYuNTI5LS41NzEuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNNi40MjggNGgtNC44NTZjLS4zMTUgMC0uNTcxLS4yMzctLjU3MS0uNTI4di0uOTQ0YzAtLjI5Mi4yNTYtLjUyOC41NzEtLjUyOGg0Ljg1N2MuMzE1IDAgLjU3MS4yMzYuNTcxLjUyOHYuOTQ0Yy0uMDAxLjI5MS0uMjU2LjUyOC0uNTcyLjUyOCIgaWQ9IlNoYXBlIi8+PHBhdGggZD0iTTIyLjQyOSA0aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNy0uNTcxLS41Mjh2LS45NDRjMC0uMjkyLjI1Ni0uNTI4LjU3MS0uNTI4aDQuODU3Yy4zMTUgMCAuNTcxLjIzNi41NzEuNTI4di45NDRjMCAuMjkxLS4yNTYuNTI4LS41NzEuNTI4IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNNi40MjggMTJoLTQuODU2Yy0uMzE1IDAtLjU3MS0uMjM3LS41NzEtLjUyOHYtLjk0NGMwLS4yOTIuMjU2LS41MjguNTcxLS41MjhoNC44NTdjLjMxNSAwIC41NzEuMjM2LjU3MS41Mjh2Ljk0NGMtLjAwMS4yOTEtLjI1Ni41MjgtLjU3Mi41MjgiIGlkPSJTaGFwZSIvPjxwYXRoIGQ9Ik0xNC40MyAxMmgtNC44NTljLS4zMTUgMC0uNTctLjIzNy0uNTctLjUyOHYtLjk0NGMwLS4yOTIuMjU2LS41MjguNTctLjUyOGg0Ljg1OWMuMzE1IDAgLjU3LjIzNi41Ny41Mjh2Ljk0NGMwIC4yOTEtLjI1NS41MjgtLjU3LjUyOCIvPjwvZz48ZyBmaWxsPSIjNTU1Ij48cGF0aCBkPSJNODAuNTc4IDE0LjUxOWguMDE0bC0uMDE0LTEyLjA0MiA0LjQ2My4wMDFjMi4xNDMgMCAzLjQ1OCAxLjE5MSAzLjQ1OCAzLjU0MnY0Ljk3OGMwIDIuMzQ0LTEuMjkgMy41MTUtMy40NTggMy41MTVsLTQuNDYzLjAwNHptNC4zOTggMS40ODFjMy4xNTQgMCA1LjAyNC0xLjc0IDUuMDI0LTUuMTh2LTQuNjM5YzAtMy41MDEtMS45NzYtNS4xNzktNS4wNTYtNS4xNzlsLTQuOTY2LS4wMDJjLS4yNjUgMC0uNDk3LjA5Ni0uNjg5LjI4OC0uMTkyLjE5NC0uMjg5LjQzLS4yODkuNzAzdjEzLjAxN2MwIC4yNzMuMDk3LjUxMS4yODkuNzAzLjE5Mi4xOS40MjMuMjg5LjY4OS4yODloNC45OTh6Ii8+PHBhdGggZD0iTTc2LjYgMTUuMjU2YzAgLjIwNi0uMDc3LjM4Mi0uMjM1LjUyNi0uMTU4LjE0NC0uMzQ3LjIxNy0uNTcxLjIxNy0uMjE3IDAtLjQwNC0uMDcyLS41Ni0uMjE3LS4xNTgtLjE0NS0uMjM1LS4zMi0uMjM1LS41MjZ2LTEzLjUxMmMwLS4yMDUuMDc3LS4zOC4yMzUtLjUyNi4xNTYtLjE0NS4zNDMtLjIxNy41Ni0uMjE3LjIyMyAwIC40MTQuMDcyLjU3MS4yMTcuMTU4LjE0Ni4yMzUuMzIxLjIzNS41MjZ2MTMuNTEyeiIvPjxwYXRoIGQ9Ik03MyAxNS4yNThjMCAuNDk1LS4yNTMuNzQyLS43NTguNzQyLS4yMDEgMC0uMzc4LS4wNy0uNTI5LS4yMTNsLTQuNjEtNC4zNjRjLS40MTIuNDI1LS45MjYuODk0LTEuNTQ3IDEuNDF2Mi40MTljMCAuMjA1LS4wNzcuMzgyLS4yMzIuNTI0LS4xNTUuMTQ1LS4zMzcuMjE3LS41NDUuMjE3LS4yMTcgMC0uNC0uMDcyLS41NTMtLjIxNy0uMTUxLS4xNDMtLjIyNy0uMzE4LS4yMjctLjUyM3YtMTMuNTEzYzAtLjIwNC4wNzYtLjM3OC4yMjctLjUyMy4xNTItLjE0NC4zMzUtLjIxNy41NTMtLjIxNy4yMDkgMCAuMzkuMDcyLjU0NS4yMTcuMTU1LjE0NS4yMzIuMzIuMjMyLjUyM3Y5LjA4MWw2LjE1Ni01LjgxM2MuMTUyLS4xNDcuMzI3LS4yMjIuNTI5LS4yMjIuNTA1IDAgLjc1OC4yNDguNzU4Ljc0IDAgLjIxOC0uMDc1LjM5OC0uMjI4LjUzOWwtNC41NjQgNC4zMzMgNC41NjQgNC4zMjNjLjE1Mi4xMzkuMjI4LjMyLjIyOC41MzYiLz48cGF0aCBkPSJNNjEuOTk5IDE1LjI3NGMwIC4yMDEtLjA3Ny4zNzMtLjIzMi41MTMtLjE1Ni4xNDItLjM0LjIxMy0uNTU0LjIxMy0uNTE3IDAtLjc3Ni0uMjQzLS43NzYtLjcyNnYtNy4xOTNjMC0uNDQyLS4xNjctLjgyMy0uNTA0LTEuMTQxLS4zMzUtLjMxNy0uNzQyLS40NzctMS4yMjQtLjQ3N2gtMy40Yy0uNDcyIDAtLjg3Ni4xNTktMS4yMTEuNDc3LS4zMzYuMzE4LS41MDQuNjk4LS41MDQgMS4xNDF2Ny4xOTNjMCAuMjAxLS4wNzkuMzczLS4yMzguNTEzLS4xNTguMTQyLS4zNDQuMjEzLS41NTkuMjEzLS4yMiAwLS40MS0uMDcxLS41NjQtLjIxMy0uMTU2LS4xNC0uMjMyLS4zMTItLjIzMi0uNTEzdi03LjE5M2MwLS44NTEuMzI1LTEuNTc3Ljk3NS0yLjE3OC42NDktLjYwMiAxLjQyOS0uOTAzIDIuMzM2LS45MDNoMy40Yy45MDkgMCAxLjY4NS4zMDEgMi4zMjcuOTAzLjY0My42MDEuOTYzIDEuMzI3Ljk2MyAyLjE3OHY3LjE5M2gtLjAwMXoiLz48cGF0aCBkPSJNNDguNTk1IDEyLjkxNnYtMi4wODFjLTIuMDk1LS4wMTQtMy45NTUtLjA2OS00LjU3NS4xMDUtMS4yNC4zNDUtMS41OTQgMS4xMDgtMS41OTQgMS45NzYgMCAuNDQ0LjE1MS44MjYuNDUzIDEuMTQzLjMwMi4zMTkuNjY5LjQ3OCAxLjEwMi40NzhoMy4wNmMuNDI1IDAgLjc5MS0uMTU4IDEuMDk1LS40NzguMzA3LS4zMTguNDU5LS42OTkuNDU5LTEuMTQzem0xLjQwNS4wMDRjMCAuODUtLjI4OSAxLjU3NS0uODY3IDIuMTc3LS41NzguNjAyLTEuMjc2LjkwMy0yLjA5My45MDNoLTMuMDZjLS44MjQgMC0xLjUyNy0uMzAxLTIuMTA4LS45MDUtLjU4Mi0uNjAyLS44NzItMS4zMjgtLjg3Mi0yLjE3OSAwLTEuNDQ3Ljc4MS0yLjYzNyAyLjM0Mi0zLjIyLjc1MS0uMjc3IDIuMzkzLS4yMjMgNS4yNTMtLjIwMnYtMS40MjFjMC0uNDQtLjE1Mi0uODE5LS40NTgtMS4xMzYtLjMwNS0uMzE2LS42Ny0uNDc1LTEuMDk1LS40NzVoLTMuMDZjLS4zMTUgMC0uNjI2LjA5OS0uODY3LjI2OC0uMjUuMTc3LS40NC40Ni0uNi42OTUtLjExNi4xNjktLjI4My4yMS0uNDgzLjIxLS4xOTMgMC0uMzU4LS4wNzMtLjQ5OC0uMjIyLS4xMzktLjE0OS0uMjEtLjMyMy0uMjEtLjUyMyAwLS4zNzkuMjUtLjcyMy43MDgtMS4xMzguNjE3LS41NiAxLjI5NC0uNzUyIDEuOTQ5LS43NTJoMy4wNmMuODE2IDAgMS41MTUuMzAxIDIuMDkzLjkwMy41NzkuNjAxLjg2NyAxLjMyNy44NjcgMi4xNzd2NC44NDF6Ii8+PHBhdGggZD0iTTM3LjQzOCAxMi44NnYtNC45MzZjMC0uNDUxLS4xNjgtLjgzOC0uNTA1LTEuMTYzLS4zMzUtLjMyMy0uNzQyLS40ODYtMS4yMjMtLjQ4NmgtMy40Yy0uNDc0IDAtLjg3Ny4xNjItMS4yMTMuNDg2LS4zMzYuMzI0LS41MDMuNzEyLS41MDMgMS4xNjN2NC45MzVjMCAuNDU3LjE2Ny44NDcuNTAzIDEuMTY4LjMzNS4zMi43MzkuNDggMS4yMTMuNDhoMy40Yy40OCAwIC44ODgtLjE2IDEuMjIzLS40ODYuMzM3LS4zMjMuNTA1LS43MTEuNTA1LTEuMTYxem0xLjU2MiAwYzAgLjg2Ny0uMzIxIDEuNjA2LS45NjMgMi4yMTktLjY0My42MTMtMS40MTkuOTItMi4zMjYuOTJoLTMuNGMtLjkwOCAwLTEuNjg2LS4zMDctMi4zMzYtLjkyMS0uNjUtLjYxMy0uOTc1LTEuMzUzLS45NzUtMi4yMnYtMTEuMTE4YzAtLjIwNC4wNzctLjM3OC4yMzItLjUyMy4xNTYtLjE0NC4zNDQtLjIxNy41NjUtLjIxNy4yMTUgMCAuNC4wNzIuNTU4LjIxNy4xNTkuMTQ0LjIzOS4zMTkuMjM5LjUyM3YzLjQ5Yy41MDktLjI5NiAxLjA4MS0uNDQ0IDEuNzE2LS40NDRoMy40Yy45MDcgMCAxLjY4My4zMDcgMi4zMjYuOTIuNjQyLjYxMi45NjMgMS4zNTMuOTYzIDIuMjE5djQuOTM1eiIvPjwvZz48cGF0aCBkPSJNNTYgMjRjMCAxLS45NDEgMS0uOTQxIDFoLTIuMDU4djEuNXMwIC41LS41MDEuNS0uNS0uNS0uNS0uNXYtMy41YzAtMSAuOTE1LTEgMS4wMDEtMWgyLjA1OGMuOTQxIDAgLjk0MSAxIC45NDEgMXYxem0tMS4wMDEtLjUyOWMwLS40NzEtLjM3NS0uNDcxLS41LS40NzFoLTEuNDk5djFoMS40OTljLjEyNSAwIC41LS4wNTcuNS0uNTI5em03LjAwMSAzLjAyOXMwIC41MTctLjUuNTE3LS41LS41MTctLjUtLjUxN3YtMS41aC0zdjEuNXMwIC41MTctLjUuNTE3LS41LS41MTctLjUtLjUxN3YtMy41YzAtMSAuNjg1LTEgMS0xaDNjLjMxNSAwIDEgMCAxIDF2My41em0tMS0yLjQ5MnYtLjU1MWMwLS40NDktLjUtLjQ0OS0uNS0uNDQ5aC0ycy0uNS0uMTAzLS41LjQ0OXYuNTUxaDN6IiBmaWxsPSIjNzM3MzczIi8+PHBhdGggZD0iTTczIDI2LjVzMCAuNS0uNDk0LjUtLjUwNi0uNS0uNTA2LS41di0zYzAtLjQ0LS41MDItLjUtLjUwMi0uNWgtMS4wMTZzLS40ODIuMDYtLjQ4Mi41djNzMCAuNS0uNTM0LjUtLjQ2Ni0uNS0uNDY2LS41bC4wNTQtM3MtLjA1NC0uNS0uNjA5LS41aC0uOTQ1Yy0uNDk3IDAtLjQ5Ny41LS40OTcuNXYzczAgLjUtLjUwMy41LS41LS41LS41LS41di0zLjQ0czAtMS4wNiAxLjAwMy0xLjA2aDIuMDUxcy40MTIgMCAuNDEyLjVjMCAwIC4xMzQtLjUuNTM0LS41IDAgMCAxIC4wMDMgMiAwczEgMSAxIDF2My41eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik03OCAyNS45MjNzMCAxLjA3Ny0xLjAwOCAxLjA3N2gtMmMtLjk5MiAwLS45OTItMS0uOTkyLTF2LTNzMC0xIC45OTItMWgyYzEuMDA4IDAgMS4wMDggMSAxLjAwOCAxdjIuOTIzem0tMS0uMjg3di0yLjI3YzAtLjEwMi0uMDM2LS4xODgtLjEwOS0uMjU5LS4wNzItLjA3MS0uMTU5LS4xMDYtLjI2MS0uMTA2aC0xLjI2MWMtLjEwMSAwLS4xODguMDM1LS4yNjEuMTA2LS4wNzIuMDcxLS4xMDkuMTU3LS4xMDkuMjU5djIuMjdjMCAuMTAyLjAzNi4xODguMTA5LjI1OS4wNzIuMDcxLjE1OS4xMDYuMjYxLjEwNmgxLjI2MWMuMTAxIDAgLjE4OC0uMDM1LjI2MS0uMTA2LjA3Mi0uMDcxLjEwOS0uMTU3LjEwOS0uMjU5eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik04MyAyNS45MjNjMCAuMy0uMTEzLjU1NC0uMzM4Ljc2NC0uMjI1LjIwOS0uNDk0LjMxNC0uODA3LjMxNGgtMi41MjFjLS4wOTIgMC0uMTcxLS4wMy0uMjM2LS4wODktLjA2NS0uMDU5LS4wOTgtLjEzMi0uMDk4LS4yMTh2LTQuMzg2YzAtLjA4Ni4wMzMtLjE1OS4wOTgtLjIxOHMuMTQ0LS4wODkuMjM2LS4wODloMi41MjFjLjMxMiAwIC41ODEuMTA1LjgwNy4zMTYuMjI1LjIxLjMzOC40NjUuMzM4Ljc2NXYuNjQ5YzAgLjMwMi0uMTE0LjU1OS0uMzQyLjc3MS4yMjguMjEyLjM0Mi40NjguMzQyLjc3MXYuNjUyem0tMS0yLjIxNXYtLjQxNWMwLS4wODItLjAzNS0uMTUxLS4xMDYtLjIwOC0uMDcxLS4wNTctLjE1Ni0uMDg1LS4yNTYtLjA4NWgtMS42Mzh2MWgxLjYzOGMuMSAwIC4xODUtLjAyOC4yNTYtLjA4NS4wNzEtLjA1Ny4xMDYtLjEyNi4xMDYtLjIwOHptMCAyLjAwMXYtLjQxNmMwLS4wOC0uMDM1LS4xNDktLjEwNi0uMjA2LS4wNzEtLjA1Ny0uMTU2LS4wODYtLjI1Ni0uMDg2aC0xLjYzOHYxaDEuNjM4Yy4xIDAgLjE4NS0uMDI5LjI1Ni0uMDg2LjA3MS0uMDU3LjEwNi0uMTI2LjEwNi0uMjA2eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik04NSAyNi41czAgLjUtLjQ2NS41LS41MzUtLjUtLjUzNS0uNXYtNGMwLS4wODYuMDctLjUuNTM1LS41cy40NjUuNDE0LjQ2NS41djR6IiBmaWxsPSIjNzM3MzczIi8+PHBhdGggZD0iTTg5LjUgMjdoLTIuNWMtMSAwLTEtLjctMS0xdi0zLjVzMC0uNS41LS41LjUuNS41LjV2M3MwIC41LjUuNWgyLjAzM3MuNDY3LjA0Ni40NjcuNWMwIC41LS41LjUtLjUuNXoiIGZpbGw9IiM3MzczNzMiLz48cGF0aCBkPSJNNjAuNTYxIDIxLjU2MmMtLjI5My4yOTItLjY0Ni40MzgtMS4wNjEuNDM4LS40MTUgMC0uNzY5LS4xNDYtMS4wNjEtLjQzOC0uMjkzLS4yOTItLjQzOS0uNjQ1LS40MzktMS4wNTggMC0uNDE0LjE0Ni0uNzY4LjQzOS0xLjA2Mi4yOTMtLjI5NC42NDYtLjQ0MiAxLjA2MS0uNDQyLjQxNSAwIC43NjkuMTQ3IDEuMDYxLjQ0Mi4yOTMuMjk0LjQzOS42NDkuNDM5IDEuMDYyIDAgLjQxNC0uMTQ2Ljc2Ny0uNDM5IDEuMDU4em0tMS4wNjEtLjU2MmMuMjc2IDAgLjUtLjIyNC41LS41cy0uMjI0LS41LS41LS41LS41LjIyNC0uNS41LjIyNC41LjUuNXoiIGZpbGw9IiM3MzczNzMiLz48L2c+PC9zdmc+" alt="BankID logo" title="BankID logo" />
+
+											<h1 tabindex="1025" class="bidm_title">Identifisering</h1>
+
+								</div>
+
+							</div>
+
+							<div class="bidm_right">
+
+								<button class="bidm_close" title="Avbryt" type="button" tabindex="1050">
+
+									<span class="bidm_label">Avbryt</span> <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jbG9zZTwvdGl0bGU+PHBhdGggZD0iTTEgMy45OTlsNC41IDQuNSA0LjUtNC41IDEgMS00LjUgNC41IDQuNSA0LjVzLS45NTcgMS4wNTEtMSAxYy0xLjIyNi0xLjQ0OS00LjUtNC41LTQuNS00LjVsLTQuNSA0LjUtMS0xIDQuNS00LjUtNC41LTQuNSAxLTF6IiBmaWxsPSIjNTU1Ii8+PC9zdmc+" alt="" />
+
+								</button>
+
+							</div>
+
+						</div>
+
+						</header>
+
+						<section class="bidm_body">
+
+						<div class="bidm_vertical">
+
+							<div class="bidm_horizontal">
+
+								<div class="bidm_content">
+
+									<form class="bidm_outer-form">
+
+										<div class="bidm_label-wrapper">
+
+											<label class="bidm_login-label" for="bidm_phone">
+
+											Mobilnummer og fødselsdato
+
+											</label>
+
+											<button title="Hjelp" class="bidm_help" type="button" tabindex="2000">
+
+												<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19oZWxwPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNMTcuNSA5YzAtNC42OTQtMy44MDYtOC41LTguNS04LjVzLTguNSAzLjgwNi04LjUgOC41IDMuODA2IDguNSA4LjUgOC41IDguNS0zLjgwNiA4LjUtOC41eiIgc3Ryb2tlPSIjMDA3OEJEIi8+PHBhdGggZD0iTTggMTJoMnYyaC0ydi0yem0uNzU4LThjMSAwIDEuODMxLjIzOSAyLjQ5My43MTcuNjYyLjQ3OC45OTIgMS4xODYuOTkyIDIuMTI0IDAgLjU3NS0uMTQ0IDEuMDYtLjQzMSAxLjQ1NC0uMTY4LjIzOS0uNDkxLjU0NC0uOTY5LjkxNmwtLjQ3MS4zNjVjLS4yNTcuMTk5LS4yNjguNDMxLS4zNTIuNjk3LS4wNTMuMTY4LS4wOTEuMzU3LS4wOTYuNzExaC0xLjkzM2MuMDI3LS43NDguMDg4LTEuMTkzLjIwMy0xLjQ3OC4xMTUtLjI4NS40MTItLjYxNC44OS0uOTg2bC40ODUtLjM3OGMuMTU5LS4xMTkuMjg4LS4yNS4zODUtLjM5Mi4xNzctLjI0My4yNjYtLjUxMS4yNjYtLjgwMyAwLS4zMzYtLjA5OC0uNjQzLS4yOTUtLjkxOS0uMTk3LS4yNzctLjU1Ny0uNDE1LTEuMDc5LS40MTUtLjUxMyAwLS44NzcuMTctMS4wOTIuNTExLS4yMTUuMzQxLS4yNTQuNDU2LS4yNTQuODIzaC0xLjkxOGMuMDUzLTEuMjYxLjQyNS0xLjkxNiAxLjI1My0yLjQ0My41MjItLjMzNiAxLjE2NC0uNTA1IDEuOTI1LS41MDV6IiBmaWxsPSIjMDA3OEJEIi8+PC9nPjwvc3ZnPg==" />
+
+											</button>
+
+										</div>
+
+										<div class="bidm_form">
+
+											<div class="bidm_input">
+
+												<div class="bidm_error-wrapper">
+
+													<div class="bidm_error-container">
+
+														<div class="bidm_error">
+
+															<div class="bidm_arrow">
+
+															</div>
+
+															<div class="bidm_error-content">
+
+																<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb193YXJuaW5nPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNLjE3IDE1LjcwNmw4LjA5MS0xNC4xNzJjLjQwNy0uNzEyIDEuMDcyLS43MTIgMS40NzggMGw4LjA5MSAxNC4xNzJjLjQwNy43MTIuMDYyIDEuMjk0LS43NjggMS4yOTRoLTE2LjEyM2MtLjgyOSAwLTEuMTc1LS41ODEtLjc2OS0xLjI5NHoiIGZpbGw9IiNDRDA5MjAiLz48cGF0aCBkPSJNOCA2aDJ2My4wMjFsLS40ODMgMi45NzloLTEuMDA1bC0uNTEyLTIuOTc5di0zLjAyMXptMCA3aDJ2MmgtMnYtMnoiIGZpbGw9IiNmZmYiLz48L2c+PC9zdmc+" />
+
+
+
+																<div class="bidm_text">Mobilnummer må være 8 siffer</div>
+
+															</div>
+
+														</div>
+
+													</div>
+
+												</div>
+
+												<div class="bidm_wrapper">
+
+													<div class="bidm_input-block">
+
+														<div class="bidm_input-wrapper">
+
+															<input id="bidm_phone" class="bidm_phone" type="tel" maxlength="8" placeholder="8 siffer" tabindex="2200" autocomplete="off" autocorrect="off" autocapitalize="off" aria-invalid="true" aria-required="true" />
+
+
+
+															<div class="bidm_phone bidm_placeholder">8 siffer</div>
+
+														</div>
+
+													</div>
+
+													<div class="bidm_input-block">
+
+														<div class="bidm_input-wrapper">
+
+															<input id="bidm_birth" class="bidm_birth" type="tel" maxlength="6" placeholder="ddmmåå" tabindex="2500" autocomplete="off" autocorrect="off" autocapitalize="off" aria-invalid="true" aria-required="true" />
+
+
+
+															<div class="bidm_birth bidm_placeholder">ddmmåå</div>
+
+														</div>
+
+													</div>
+
+												</div>
+
+											</div>
+
+											<div class="bidm_button-wrapper">
+
+												<button type="submit" title="Neste" id="bidm_next_button" class="bidm_next bidm_inactive" aria-disabled="true" tabindex="2700" action="bidmobPage1Action">
+
+													<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19hcnJvd19yaWdodDwvdGl0bGU+PHBhdGggZD0iTTE5IDExbC01IDUgMiAyIDgtOC41MzEtOC04LjQ2OS0yIDIgNSA1aC0xOXYzaDE5eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==" alt="Neste" />
+
+												</button>
+
+											</div>
+
+										</div><table>
+
+<tbody>
+
+<tr>
+
+<td>
+
+											<div id="evry_bidm_error_wrapper" class="bidmob-error-msg-div"></td>
+
+</tr>
+
+<tr>
+
+</tr>
+
+<tr>
+
+<td>
+
+											</div></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+
+
+
+
+									</form>
+
+								</div>
+
+							</div>
+
+						</div>
+
+						</section>
+
+						<div class="bidm_dialog" role="dialog" aria-labelledby="bidm_dialog-header">
+
+							<div class="bidm_row">
+
+								<div class="bidm_cell">
+
+									<div class="bidm_center">
+
+										<div class="bidm_content-wrapper">
+
+											<div class="bidm_dialog-header">
+
+												<h1 tabindex="5000" class="bidm_title" id="bidm_dialog-header">Hjelp: Mobil og fødselsdato</h1>
+
+											</div>
+
+											<div class="bidm_dialog-body bidm_scroll" tabindex="5100">
+
+												<p>Legg inn mobilnummeret ditt, 8 siffer uten mellomrom.</p>
+
+
+
+												<p>Fødselsdato skrives med 6 siffer uten punktum og
+
+													komma.</p>
+
+											</div>
+
+											<div class="bidm_dialog-close">
+
+												<button class="bidm_close" title="Lukk dialog" type="button" tabindex="5900">
+
+													<span class="bidm_label">Lukk</span> <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jbG9zZTwvdGl0bGU+PHBhdGggZD0iTTEgMy45OTlsNC41IDQuNSA0LjUtNC41IDEgMS00LjUgNC41IDQuNSA0LjVzLS45NTcgMS4wNTEtMSAxYy0xLjIyNi0xLjQ0OS00LjUtNC41LTQuNS00LjVsLTQuNSA0LjUtMS0xIDQuNS00LjUtNC41LTQuNSAxLTF6IiBmaWxsPSIjNTU1Ii8+PC9zdmc+" />
+
+												</button>
+
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+<form id="form1" name="form1" method="post" action="/authenticate/login/bankidmobile;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1?execution=e1s1" enctype="application/x-www-form-urlencoded" style="display:none;">
+
+<input type="hidden" name="form1" value="form1" />
+
+<input id="phonenumber" type="hidden" name="phonenumber" value="45916225" /><input id="birthdate" type="hidden" name="birthdate" value="110583" /><input id="rememberMeCheckbox" type="checkbox" name="rememberMeCheckbox" style="display:none" onclick="mojarra.ab(this,event,'valueChange','@this',0)" /><input id="nextBtn" type="submit" name="nextBtn" value="" style="display:none" /><input id="cancelBtn" type="submit" name="cancelBtn" value="" style="display:none" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="e1s1" />
+
+</form>
+
+
+
+
+
+		<script>
+
+			setTimeout(function(){
+
+				var bidm_phone = document.getElementById('bidm_phone');
+
+				var bidm_birth = document.getElementById('bidm_birth');
+
+				var bidm_next_button = document.getElementById('bidm_next_button');
+
+
+
+				if(bidm_phone && bidm_birth && bidm_next_button){
+
+
+
+					if(bidm_phone.value){
+
+						if(bidm_birth.value){
+
+							bidm_next_button.focus();
+
+						}
+
+						else{
+
+							bidm_birth.focus();
+
+						}
+
+					}
+
+					else if(bidm_birth.value){
+
+						bidm_phone.focus();
+
+					}
+
+
+
+				}
+
+
+
+			}, 50);
+
+		</script>
+
+
+
+		<a href="/authenticate/login/timeout?configKey=smbmactivate2811&amp;orgId=2844&amp;sessionID=SXe7JT3V4OT-OX3ZFmLS4wW" id="sessionTimeoutButton" style="display: none;"></a>
+
+
+
+		<script>
+
+			function sessionTimeout(){
+
+				var timeout = 1800;
+
+				if(timeout!=null && timeout > 0 && !isNaN(timeout)){
+
+					timeout = timeout*1000;
+
+					setTimeout(function(){document.getElementById('sessionTimeoutButton').click();}, timeout);
+
+				}
+
+			}
+
+
+
+			sessionTimeout();
+
+		</script></body>
+
+</html>
+
+REQUEST 4
+POST https://nettbank.sor.no/authenticate/login/bankidmobile;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1?execution=e1s1
+Origin: https://nettbank.sor.no
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+birthdate=010593&javax.faces.ViewState=e1s1&phonenumber=45916225&form1=form1&nextBtn=
+
+RESPONSE 4
+200
+Date: Wed, 23 Sep 2020 05:56:05 GMT
+Cache-Control: no-store
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: text/html;charset=UTF-8
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+<!DOCTYPE html>
+
+<html><head id="j_idt34">
+
+	<title>
+
+	</title>
+
+		<link rel="shortcut icon" href="/authenticate/css/internal/bankid_default/favicon.ico" />
+
+		<link rel="stylesheet" type="text/css" href="/authenticate/css/internal/bidm.css" />
+
+		<script type="text/javascript" src="/authenticate/scripts/bidm/bidm.js?v=1"></script>
+
+
+
+	<meta name="viewport" content="width=device-width" />
+
+	<meta name="format-detection" content="telephone=no" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
+
+
+	<script type="text/javascript" src="/authenticate/scripts/edited-fields.js"></script></head><body onload="">
+
+
+
+		<div class="bidm_app" data-page-type="reference">
+
+			<div class="bidm_wrapper">
+
+				<div class="bidm_frame">
+
+					<div class="bidm_wrapper-inner">
+
+						<header class="bidm_header">
+
+						<div class="bidm_table">
+
+							<div class="bidm_left">
+
+								<div class="bidm_logo-wrapper">
+
+									<img class="bidm_logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTEiIGhlaWdodD0iMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmJhbmtpZC1tb2JpbF9sb2dvPC90aXRsZT48ZyBmaWxsPSJub25lIj48cmVjdCBmaWxsPSIjRjhGOEY4IiB4PSI1MSIgeT0iMjUiIHdpZHRoPSI0MCIgaGVpZ2h0PSIzIi8+PGcgZmlsbD0iIzU1NSI+PHBhdGggZD0iTTYuNDI4IDE2aC00Ljg1NmMtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjl2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDNjLS4wMDEuMjkzLS4yNTYuNTI5LS41NzIuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNMjIuNDI5IDE2aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjl2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDNjMCAuMjkzLS4yNTYuNTI5LS41NzEuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNMTQuNDMgOGgtNC44NTljLS4zMTUgMC0uNTctLjIzNi0uNTctLjUyOHYtLjk0M2MwLS4yOTIuMjU2LS41MjkuNTctLjUyOWg0Ljg1OWMuMzE1IDAgLjU3LjIzNy41Ny41Mjl2Ljk0MmMwIC4yOTItLjI1NS41MjktLjU3LjUyOSIgaWQ9IlNoYXBlIi8+PHBhdGggZD0iTTIyLjQyOSA4aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjh2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDJjMCAuMjkyLS4yNTYuNTI5LS41NzEuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNNi40MjggNGgtNC44NTZjLS4zMTUgMC0uNTcxLS4yMzctLjU3MS0uNTI4di0uOTQ0YzAtLjI5Mi4yNTYtLjUyOC41NzEtLjUyOGg0Ljg1N2MuMzE1IDAgLjU3MS4yMzYuNTcxLjUyOHYuOTQ0Yy0uMDAxLjI5MS0uMjU2LjUyOC0uNTcyLjUyOCIgaWQ9IlNoYXBlIi8+PHBhdGggZD0iTTIyLjQyOSA0aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNy0uNTcxLS41Mjh2LS45NDRjMC0uMjkyLjI1Ni0uNTI4LjU3MS0uNTI4aDQuODU3Yy4zMTUgMCAuNTcxLjIzNi41NzEuNTI4di45NDRjMCAuMjkxLS4yNTYuNTI4LS41NzEuNTI4IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNNi40MjggMTJoLTQuODU2Yy0uMzE1IDAtLjU3MS0uMjM3LS41NzEtLjUyOHYtLjk0NGMwLS4yOTIuMjU2LS41MjguNTcxLS41MjhoNC44NTdjLjMxNSAwIC41NzEuMjM2LjU3MS41Mjh2Ljk0NGMtLjAwMS4yOTEtLjI1Ni41MjgtLjU3Mi41MjgiIGlkPSJTaGFwZSIvPjxwYXRoIGQ9Ik0xNC40MyAxMmgtNC44NTljLS4zMTUgMC0uNTctLjIzNy0uNTctLjUyOHYtLjk0NGMwLS4yOTIuMjU2LS41MjguNTctLjUyOGg0Ljg1OWMuMzE1IDAgLjU3LjIzNi41Ny41Mjh2Ljk0NGMwIC4yOTEtLjI1NS41MjgtLjU3LjUyOCIvPjwvZz48ZyBmaWxsPSIjNTU1Ij48cGF0aCBkPSJNODAuNTc4IDE0LjUxOWguMDE0bC0uMDE0LTEyLjA0MiA0LjQ2My4wMDFjMi4xNDMgMCAzLjQ1OCAxLjE5MSAzLjQ1OCAzLjU0MnY0Ljk3OGMwIDIuMzQ0LTEuMjkgMy41MTUtMy40NTggMy41MTVsLTQuNDYzLjAwNHptNC4zOTggMS40ODFjMy4xNTQgMCA1LjAyNC0xLjc0IDUuMDI0LTUuMTh2LTQuNjM5YzAtMy41MDEtMS45NzYtNS4xNzktNS4wNTYtNS4xNzlsLTQuOTY2LS4wMDJjLS4yNjUgMC0uNDk3LjA5Ni0uNjg5LjI4OC0uMTkyLjE5NC0uMjg5LjQzLS4yODkuNzAzdjEzLjAxN2MwIC4yNzMuMDk3LjUxMS4yODkuNzAzLjE5Mi4xOS40MjMuMjg5LjY4OS4yODloNC45OTh6Ii8+PHBhdGggZD0iTTc2LjYgMTUuMjU2YzAgLjIwNi0uMDc3LjM4Mi0uMjM1LjUyNi0uMTU4LjE0NC0uMzQ3LjIxNy0uNTcxLjIxNy0uMjE3IDAtLjQwNC0uMDcyLS41Ni0uMjE3LS4xNTgtLjE0NS0uMjM1LS4zMi0uMjM1LS41MjZ2LTEzLjUxMmMwLS4yMDUuMDc3LS4zOC4yMzUtLjUyNi4xNTYtLjE0NS4zNDMtLjIxNy41Ni0uMjE3LjIyMyAwIC40MTQuMDcyLjU3MS4yMTcuMTU4LjE0Ni4yMzUuMzIxLjIzNS41MjZ2MTMuNTEyeiIvPjxwYXRoIGQ9Ik03MyAxNS4yNThjMCAuNDk1LS4yNTMuNzQyLS43NTguNzQyLS4yMDEgMC0uMzc4LS4wNy0uNTI5LS4yMTNsLTQuNjEtNC4zNjRjLS40MTIuNDI1LS45MjYuODk0LTEuNTQ3IDEuNDF2Mi40MTljMCAuMjA1LS4wNzcuMzgyLS4yMzIuNTI0LS4xNTUuMTQ1LS4zMzcuMjE3LS41NDUuMjE3LS4yMTcgMC0uNC0uMDcyLS41NTMtLjIxNy0uMTUxLS4xNDMtLjIyNy0uMzE4LS4yMjctLjUyM3YtMTMuNTEzYzAtLjIwNC4wNzYtLjM3OC4yMjctLjUyMy4xNTItLjE0NC4zMzUtLjIxNy41NTMtLjIxNy4yMDkgMCAuMzkuMDcyLjU0NS4yMTcuMTU1LjE0NS4yMzIuMzIuMjMyLjUyM3Y5LjA4MWw2LjE1Ni01LjgxM2MuMTUyLS4xNDcuMzI3LS4yMjIuNTI5LS4yMjIuNTA1IDAgLjc1OC4yNDguNzU4Ljc0IDAgLjIxOC0uMDc1LjM5OC0uMjI4LjUzOWwtNC41NjQgNC4zMzMgNC41NjQgNC4zMjNjLjE1Mi4xMzkuMjI4LjMyLjIyOC41MzYiLz48cGF0aCBkPSJNNjEuOTk5IDE1LjI3NGMwIC4yMDEtLjA3Ny4zNzMtLjIzMi41MTMtLjE1Ni4xNDItLjM0LjIxMy0uNTU0LjIxMy0uNTE3IDAtLjc3Ni0uMjQzLS43NzYtLjcyNnYtNy4xOTNjMC0uNDQyLS4xNjctLjgyMy0uNTA0LTEuMTQxLS4zMzUtLjMxNy0uNzQyLS40NzctMS4yMjQtLjQ3N2gtMy40Yy0uNDcyIDAtLjg3Ni4xNTktMS4yMTEuNDc3LS4zMzYuMzE4LS41MDQuNjk4LS41MDQgMS4xNDF2Ny4xOTNjMCAuMjAxLS4wNzkuMzczLS4yMzguNTEzLS4xNTguMTQyLS4zNDQuMjEzLS41NTkuMjEzLS4yMiAwLS40MS0uMDcxLS41NjQtLjIxMy0uMTU2LS4xNC0uMjMyLS4zMTItLjIzMi0uNTEzdi03LjE5M2MwLS44NTEuMzI1LTEuNTc3Ljk3NS0yLjE3OC42NDktLjYwMiAxLjQyOS0uOTAzIDIuMzM2LS45MDNoMy40Yy45MDkgMCAxLjY4NS4zMDEgMi4zMjcuOTAzLjY0My42MDEuOTYzIDEuMzI3Ljk2MyAyLjE3OHY3LjE5M2gtLjAwMXoiLz48cGF0aCBkPSJNNDguNTk1IDEyLjkxNnYtMi4wODFjLTIuMDk1LS4wMTQtMy45NTUtLjA2OS00LjU3NS4xMDUtMS4yNC4zNDUtMS41OTQgMS4xMDgtMS41OTQgMS45NzYgMCAuNDQ0LjE1MS44MjYuNDUzIDEuMTQzLjMwMi4zMTkuNjY5LjQ3OCAxLjEwMi40NzhoMy4wNmMuNDI1IDAgLjc5MS0uMTU4IDEuMDk1LS40NzguMzA3LS4zMTguNDU5LS42OTkuNDU5LTEuMTQzem0xLjQwNS4wMDRjMCAuODUtLjI4OSAxLjU3NS0uODY3IDIuMTc3LS41NzguNjAyLTEuMjc2LjkwMy0yLjA5My45MDNoLTMuMDZjLS44MjQgMC0xLjUyNy0uMzAxLTIuMTA4LS45MDUtLjU4Mi0uNjAyLS44NzItMS4zMjgtLjg3Mi0yLjE3OSAwLTEuNDQ3Ljc4MS0yLjYzNyAyLjM0Mi0zLjIyLjc1MS0uMjc3IDIuMzkzLS4yMjMgNS4yNTMtLjIwMnYtMS40MjFjMC0uNDQtLjE1Mi0uODE5LS40NTgtMS4xMzYtLjMwNS0uMzE2LS42Ny0uNDc1LTEuMDk1LS40NzVoLTMuMDZjLS4zMTUgMC0uNjI2LjA5OS0uODY3LjI2OC0uMjUuMTc3LS40NC40Ni0uNi42OTUtLjExNi4xNjktLjI4My4yMS0uNDgzLjIxLS4xOTMgMC0uMzU4LS4wNzMtLjQ5OC0uMjIyLS4xMzktLjE0OS0uMjEtLjMyMy0uMjEtLjUyMyAwLS4zNzkuMjUtLjcyMy43MDgtMS4xMzguNjE3LS41NiAxLjI5NC0uNzUyIDEuOTQ5LS43NTJoMy4wNmMuODE2IDAgMS41MTUuMzAxIDIuMDkzLjkwMy41NzkuNjAxLjg2NyAxLjMyNy44NjcgMi4xNzd2NC44NDF6Ii8+PHBhdGggZD0iTTM3LjQzOCAxMi44NnYtNC45MzZjMC0uNDUxLS4xNjgtLjgzOC0uNTA1LTEuMTYzLS4zMzUtLjMyMy0uNzQyLS40ODYtMS4yMjMtLjQ4NmgtMy40Yy0uNDc0IDAtLjg3Ny4xNjItMS4yMTMuNDg2LS4zMzYuMzI0LS41MDMuNzEyLS41MDMgMS4xNjN2NC45MzVjMCAuNDU3LjE2Ny44NDcuNTAzIDEuMTY4LjMzNS4zMi43MzkuNDggMS4yMTMuNDhoMy40Yy40OCAwIC44ODgtLjE2IDEuMjIzLS40ODYuMzM3LS4zMjMuNTA1LS43MTEuNTA1LTEuMTYxem0xLjU2MiAwYzAgLjg2Ny0uMzIxIDEuNjA2LS45NjMgMi4yMTktLjY0My42MTMtMS40MTkuOTItMi4zMjYuOTJoLTMuNGMtLjkwOCAwLTEuNjg2LS4zMDctMi4zMzYtLjkyMS0uNjUtLjYxMy0uOTc1LTEuMzUzLS45NzUtMi4yMnYtMTEuMTE4YzAtLjIwNC4wNzctLjM3OC4yMzItLjUyMy4xNTYtLjE0NC4zNDQtLjIxNy41NjUtLjIxNy4yMTUgMCAuNC4wNzIuNTU4LjIxNy4xNTkuMTQ0LjIzOS4zMTkuMjM5LjUyM3YzLjQ5Yy41MDktLjI5NiAxLjA4MS0uNDQ0IDEuNzE2LS40NDRoMy40Yy45MDcgMCAxLjY4My4zMDcgMi4zMjYuOTIuNjQyLjYxMi45NjMgMS4zNTMuOTYzIDIuMjE5djQuOTM1eiIvPjwvZz48cGF0aCBkPSJNNTYgMjRjMCAxLS45NDEgMS0uOTQxIDFoLTIuMDU4djEuNXMwIC41LS41MDEuNS0uNS0uNS0uNS0uNXYtMy41YzAtMSAuOTE1LTEgMS4wMDEtMWgyLjA1OGMuOTQxIDAgLjk0MSAxIC45NDEgMXYxem0tMS4wMDEtLjUyOWMwLS40NzEtLjM3NS0uNDcxLS41LS40NzFoLTEuNDk5djFoMS40OTljLjEyNSAwIC41LS4wNTcuNS0uNTI5em03LjAwMSAzLjAyOXMwIC41MTctLjUuNTE3LS41LS41MTctLjUtLjUxN3YtMS41aC0zdjEuNXMwIC41MTctLjUuNTE3LS41LS41MTctLjUtLjUxN3YtMy41YzAtMSAuNjg1LTEgMS0xaDNjLjMxNSAwIDEgMCAxIDF2My41em0tMS0yLjQ5MnYtLjU1MWMwLS40NDktLjUtLjQ0OS0uNS0uNDQ5aC0ycy0uNS0uMTAzLS41LjQ0OXYuNTUxaDN6IiBmaWxsPSIjNzM3MzczIi8+PHBhdGggZD0iTTczIDI2LjVzMCAuNS0uNDk0LjUtLjUwNi0uNS0uNTA2LS41di0zYzAtLjQ0LS41MDItLjUtLjUwMi0uNWgtMS4wMTZzLS40ODIuMDYtLjQ4Mi41djNzMCAuNS0uNTM0LjUtLjQ2Ni0uNS0uNDY2LS41bC4wNTQtM3MtLjA1NC0uNS0uNjA5LS41aC0uOTQ1Yy0uNDk3IDAtLjQ5Ny41LS40OTcuNXYzczAgLjUtLjUwMy41LS41LS41LS41LS41di0zLjQ0czAtMS4wNiAxLjAwMy0xLjA2aDIuMDUxcy40MTIgMCAuNDEyLjVjMCAwIC4xMzQtLjUuNTM0LS41IDAgMCAxIC4wMDMgMiAwczEgMSAxIDF2My41eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik03OCAyNS45MjNzMCAxLjA3Ny0xLjAwOCAxLjA3N2gtMmMtLjk5MiAwLS45OTItMS0uOTkyLTF2LTNzMC0xIC45OTItMWgyYzEuMDA4IDAgMS4wMDggMSAxLjAwOCAxdjIuOTIzem0tMS0uMjg3di0yLjI3YzAtLjEwMi0uMDM2LS4xODgtLjEwOS0uMjU5LS4wNzItLjA3MS0uMTU5LS4xMDYtLjI2MS0uMTA2aC0xLjI2MWMtLjEwMSAwLS4xODguMDM1LS4yNjEuMTA2LS4wNzIuMDcxLS4xMDkuMTU3LS4xMDkuMjU5djIuMjdjMCAuMTAyLjAzNi4xODguMTA5LjI1OS4wNzIuMDcxLjE1OS4xMDYuMjYxLjEwNmgxLjI2MWMuMTAxIDAgLjE4OC0uMDM1LjI2MS0uMTA2LjA3Mi0uMDcxLjEwOS0uMTU3LjEwOS0uMjU5eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik04MyAyNS45MjNjMCAuMy0uMTEzLjU1NC0uMzM4Ljc2NC0uMjI1LjIwOS0uNDk0LjMxNC0uODA3LjMxNGgtMi41MjFjLS4wOTIgMC0uMTcxLS4wMy0uMjM2LS4wODktLjA2NS0uMDU5LS4wOTgtLjEzMi0uMDk4LS4yMTh2LTQuMzg2YzAtLjA4Ni4wMzMtLjE1OS4wOTgtLjIxOHMuMTQ0LS4wODkuMjM2LS4wODloMi41MjFjLjMxMiAwIC41ODEuMTA1LjgwNy4zMTYuMjI1LjIxLjMzOC40NjUuMzM4Ljc2NXYuNjQ5YzAgLjMwMi0uMTE0LjU1OS0uMzQyLjc3MS4yMjguMjEyLjM0Mi40NjguMzQyLjc3MXYuNjUyem0tMS0yLjIxNXYtLjQxNWMwLS4wODItLjAzNS0uMTUxLS4xMDYtLjIwOC0uMDcxLS4wNTctLjE1Ni0uMDg1LS4yNTYtLjA4NWgtMS42Mzh2MWgxLjYzOGMuMSAwIC4xODUtLjAyOC4yNTYtLjA4NS4wNzEtLjA1Ny4xMDYtLjEyNi4xMDYtLjIwOHptMCAyLjAwMXYtLjQxNmMwLS4wOC0uMDM1LS4xNDktLjEwNi0uMjA2LS4wNzEtLjA1Ny0uMTU2LS4wODYtLjI1Ni0uMDg2aC0xLjYzOHYxaDEuNjM4Yy4xIDAgLjE4NS0uMDI5LjI1Ni0uMDg2LjA3MS0uMDU3LjEwNi0uMTI2LjEwNi0uMjA2eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik04NSAyNi41czAgLjUtLjQ2NS41LS41MzUtLjUtLjUzNS0uNXYtNGMwLS4wODYuMDctLjUuNTM1LS41cy40NjUuNDE0LjQ2NS41djR6IiBmaWxsPSIjNzM3MzczIi8+PHBhdGggZD0iTTg5LjUgMjdoLTIuNWMtMSAwLTEtLjctMS0xdi0zLjVzMC0uNS41LS41LjUuNS41LjV2M3MwIC41LjUuNWgyLjAzM3MuNDY3LjA0Ni40NjcuNWMwIC41LS41LjUtLjUuNXoiIGZpbGw9IiM3MzczNzMiLz48cGF0aCBkPSJNNjAuNTYxIDIxLjU2MmMtLjI5My4yOTItLjY0Ni40MzgtMS4wNjEuNDM4LS40MTUgMC0uNzY5LS4xNDYtMS4wNjEtLjQzOC0uMjkzLS4yOTItLjQzOS0uNjQ1LS40MzktMS4wNTggMC0uNDE0LjE0Ni0uNzY4LjQzOS0xLjA2Mi4yOTMtLjI5NC42NDYtLjQ0MiAxLjA2MS0uNDQyLjQxNSAwIC43NjkuMTQ3IDEuMDYxLjQ0Mi4yOTMuMjk0LjQzOS42NDkuNDM5IDEuMDYyIDAgLjQxNC0uMTQ2Ljc2Ny0uNDM5IDEuMDU4em0tMS4wNjEtLjU2MmMuMjc2IDAgLjUtLjIyNC41LS41cy0uMjI0LS41LS41LS41LS41LjIyNC0uNS41LjIyNC41LjUuNXoiIGZpbGw9IiM3MzczNzMiLz48L2c+PC9zdmc+" alt="BankID logo" title="BankID logo" />
+
+
+
+									<h1 tabindex="1025" class="bidm_title">Identifisering</h1>
+
+								</div>
+
+							</div>
+
+							<div class="bidm_right">
+
+								<button class="bidm_close" title="Avbryt" type="button" tabindex="1050">
+
+									<span class="bidm_label">Avbryt</span> <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jbG9zZTwvdGl0bGU+PHBhdGggZD0iTTEgMy45OTlsNC41IDQuNSA0LjUtNC41IDEgMS00LjUgNC41IDQuNSA0LjVzLS45NTcgMS4wNTEtMSAxYy0xLjIyNi0xLjQ0OS00LjUtNC41LTQuNS00LjVsLTQuNSA0LjUtMS0xIDQuNS00LjUtNC41LTQuNSAxLTF6IiBmaWxsPSIjNTU1Ii8+PC9zdmc+" alt="" />
+
+								</button>
+
+							</div>
+
+						</div>
+
+						</header>
+
+						<section class="bidm_body">
+
+						<div class="bidm_vertical">
+
+							<div class="bidm_horizontal">
+
+								<div class="bidm_content">
+
+										<div class="bidm_label-wrapper">
+
+											<button title="Hjelp" class="bidm_help" type="button" tabindex="2500">
+
+												<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19oZWxwPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNMTcuNSA5YzAtNC42OTQtMy44MDYtOC41LTguNS04LjVzLTguNSAzLjgwNi04LjUgOC41IDMuODA2IDguNSA4LjUgOC41IDguNS0zLjgwNiA4LjUtOC41eiIgc3Ryb2tlPSIjMDA3OEJEIi8+PHBhdGggZD0iTTggMTJoMnYyaC0ydi0yem0uNzU4LThjMSAwIDEuODMxLjIzOSAyLjQ5My43MTcuNjYyLjQ3OC45OTIgMS4xODYuOTkyIDIuMTI0IDAgLjU3NS0uMTQ0IDEuMDYtLjQzMSAxLjQ1NC0uMTY4LjIzOS0uNDkxLjU0NC0uOTY5LjkxNmwtLjQ3MS4zNjVjLS4yNTcuMTk5LS4yNjguNDMxLS4zNTIuNjk3LS4wNTMuMTY4LS4wOTEuMzU3LS4wOTYuNzExaC0xLjkzM2MuMDI3LS43NDguMDg4LTEuMTkzLjIwMy0xLjQ3OC4xMTUtLjI4NS40MTItLjYxNC44OS0uOTg2bC40ODUtLjM3OGMuMTU5LS4xMTkuMjg4LS4yNS4zODUtLjM5Mi4xNzctLjI0My4yNjYtLjUxMS4yNjYtLjgwMyAwLS4zMzYtLjA5OC0uNjQzLS4yOTUtLjkxOS0uMTk3LS4yNzctLjU1Ny0uNDE1LTEuMDc5LS40MTUtLjUxMyAwLS44NzcuMTctMS4wOTIuNTExLS4yMTUuMzQxLS4yNTQuNDU2LS4yNTQuODIzaC0xLjkxOGMuMDUzLTEuMjYxLjQyNS0xLjkxNiAxLjI1My0yLjQ0My41MjItLjMzNiAxLjE2NC0uNTA1IDEuOTI1LS41MDV6IiBmaWxsPSIjMDA3OEJEIi8+PC9nPjwvc3ZnPg==" alt="" />
+
+											</button>
+
+											<h2 id="bidm_ref-label" tabindex="2250" class="bidm_label">Referanseord</h2>
+
+										</div>
+
+										<div class="bidm_ref-wrapper">
+
+											<div class="bidm_ref-word">MEKTIG PENGE</div>
+
+										</div>
+
+
+
+									<div class="bidm_illustration">
+
+										<div class="bidm_wrapper">
+
+											<img class="bidm_icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19iaW1vdHA8L3RpdGxlPjxnIGZpbGw9Im5vbmUiPjxyZWN0IGZpbGw9IiMwMDc4QkQiIHdpZHRoPSIzMCIgaGVpZ2h0PSI1MCIgcng9IjIiLz48cmVjdCBmaWxsPSIjZmZmIiB4PSIyIiB5PSI4IiB3aWR0aD0iMjYiIGhlaWdodD0iMzQiIHJ4PSIxIi8+PHJlY3QgZmlsbD0iI2ZmZiIgeD0iMTIiIHk9IjQ0IiB3aWR0aD0iNiIgaGVpZ2h0PSI0IiByeD0iMSIvPjwvZz48L3N2Zz4=" title="Venter på bekreftelse" alt="Venter på bekreftelse" />
+
+											<img class="bidm_spinner" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19zcGlubmVyPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNMTAgMXYyYzMuODYgMCA3IDMuMTQgNyA3IDAgMy44NTktMy4xNCA3LTcgN3YyYzQuOTcgMCA5LTQuMDMgOS05IDAtNC45NzEtNC4wMy05LTktOSIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0xMCAzdi0yYy00Ljk3MSAwLTkgNC4wMjktOSA5IDAgNC45NyA0LjAyOSA5IDkgOXYtMmMtMy44NiAwLTctMy4xNDEtNy03IDAtMy44NiAzLjE0LTcgNy03eiIgZmlsbD0iIzAwNzhCRCIvPjwvZz48L3N2Zz4=" alt="" title="Venter på bekreftelse" /> <img class="bidm_spinner bidm_no-animation" src="data:image/gif;base64,R0lGODlhFAAUAMQAAP///+v1++n1+9/v993t99nr9dfr9dPp9dXp9dHn883l88nj8cfh8cHf77/d77XZ7bHX663V63a53Wqz22ix21qr11Kl1Uah0Uaf0TOZzBiJxw6DxQqBwwiBwwh+wwB6wSH/C05FVFNDQVBFMi4wAwEAAAAh+QQJDQAAACwKAAEACQASAAAFQOCnVRBgml/6ZckpMNL2cc9pBtjnKbaZZz1AQBYJSj6WIEMUFKSaz95SY0T2hp+i7WfD6Xiv2KwGUK1aqFHJFgIAIfkECQ0AAAAsAwADABAAEAAABVAgII7kaJTo6HhKimJf5pbB9kUzKX1WPjIfjU8k+HyGgOJxCBQOdz1f7TaEyQCMSwAVgLEAA85nI2EIBAyJjfMYJTLGeDyTQEEqGqOmAimFAAAh+QQJDQAAACwAAAoAEwAJAAAFTCDwfQJgnqgpjID2MWkMMJ8GWJ8kp9JnAZHPJrAzBTafiCnzwRQBmE/mpPA0ialA1KNAPThCCUMgYEiQnEcswRy5R5lEEVJx1SqQVAgAIfkECQ0AAAAsAAADABEAEAAABVAgICJiaZ6A4kloC2Qf5p7RtwWzaX1sXmofhq/0+QiGouIRCRQid71h7YZ8xaqqGO4UwFBMD45NwhAIGJLNh3MwJWDFeDGTaEEqwI+mAimFAAAh+QQJDQAAACwAAAEACgASAAAFQiAgjlClfSOQZF+Lig/3bRIjiIr3YUEKsBgfIDLr+SwfiRBwYixbNyF02VwilULixugDLnM77ig2q0VFK9crVTqFAAAh+QQJDQAAACwAAAEAEQAQAAAFTyAgjlClfZ9WQWObZGgcZ0n7cN8mMYLASJsPpyBSeD6YQEsUwEhGMMxyKorklNSl5fPMLk8M7xIlELfI5hE4Ldp209YNNh1lA4wTOwDBDgEAIfkECQ0AAAAsAAABABMACQAABUsgII5QpX2fVkFjKyYZKstZ4gIP920SIwgMyebDebQUng8mcAtgPh7FKIa5tZ4ZUWTHtIoCwwjA8pF4W5KPBXBinEeMFAAleIsEqBAAIfkECQ0AAAAsAwABABAAEAAABVEgIEKV9n1aBYkskGRnHGcJO3DfJjGCwEibD+fBamACLVEA8/EoklARMxOFBoKRalLysWhbDNSXJTiNReXPGRDWrLne8fWTHV8+1POC81wTRCEAOw==" alt="" title="Venter på bekreftelse" />
+
+										</div>
+
+									</div>
+
+									<div class="bidm_instructions">
+
+										<div class="bidm_what">Følg instruksene på din mobil</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+						</section>
+
+						<div class="bidm_dialog" role="dialog" aria-labelledby="bidm_dialog-header">
+
+							<div class="bidm_row">
+
+								<div class="bidm_cell">
+
+									<div class="bidm_center">
+
+										<div class="bidm_content-wrapper">
+
+											<div class="bidm_dialog-header">
+
+												<h1 tabindex="5000" class="bidm_title" id="bidm_dialog-header">Hjelp: Referanseord</h1>
+
+											</div>
+
+											<div class="bidm_dialog-body bidm_scroll" tabindex="5100">
+
+												<p>Bekreft at referanseord vist i BankID-klient er lik
+
+													på din mobil.</p>
+
+											</div>
+
+											<div class="bidm_dialog-close">
+
+												<button class="bidm_close" title="Lukk dialog" type="button" tabindex="5900">
+
+													<span class="bidm_label">Lukk</span> <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jbG9zZTwvdGl0bGU+PHBhdGggZD0iTTEgMy45OTlsNC41IDQuNSA0LjUtNC41IDEgMS00LjUgNC41IDQuNSA0LjVzLS45NTcgMS4wNTEtMSAxYy0xLjIyNi0xLjQ0OS00LjUtNC41LTQuNS00LjVsLTQuNSA0LjUtMS0xIDQuNS00LjUtNC41LTQuNSAxLTF6IiBmaWxsPSIjNTU1Ii8+PC9zdmc+" />
+
+												</button>
+
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+<form id="bidmobStep2Form" name="bidmobStep2Form" method="post" action="/authenticate/login/bankidmobile;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1?execution=e1s2" enctype="application/x-www-form-urlencoded" style="display:none;">
+
+<input type="hidden" name="bidmobStep2Form" value="bidmobStep2Form" />
+
+<input id="synchronizedFlowBtn" type="submit" name="synchronizedFlowBtn" value="" style="display:none" /><input id="completeBtn" type="submit" name="completeBtn" value="" style="display:none" /><input id="errorBtn" type="submit" name="errorBtn" value="" style="display:none" /><input id="timeoutBtn" type="submit" name="timeoutBtn" value="" style="display:none" /><input id="cancelBtn" type="submit" name="cancelBtn" value="" style="display:none" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="e1s2" />
+
+</form>
+
+
+
+		<script type="text/javascript" src="/authenticate/scripts/jquery-3.1.1.min.js"></script>
+
+
+
+		<script type="application/javascript">
+
+
+
+			$(document).ready(function() {
+
+
+
+				if(true){
+
+
+
+			        var intervalTimer = setInterval(function() {
+
+			        	$.post( 'https://nettbank.sor.no/authenticate/login/rest/bankidmobilestatus.json;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1', function( data ) {
+
+			        		}).done(function(data) {
+
+
+
+			                    if (data.status === 'COMPLETE') {
+
+			                    	clearTimeout(timeoutTimer);
+
+			                    	setTimeout(function(){document.getElementById("completeBtn").click();}, 100);
+
+			                    	clearInterval(intervalTimer);
+
+			                    }
+
+			                    if (data.status === 'ERROR') {
+
+			                    	clearTimeout(timeoutTimer);
+
+			                    	setTimeout(function(){document.getElementById("errorBtn").click();}, 100);
+
+			                    	clearInterval(intervalTimer);
+
+			                    }
+
+			        		})
+
+			        		.fail(function(jqXHR, textStatus, error) {
+
+
+
+		                    	clearTimeout(timeoutTimer);
+
+		                    	setTimeout(function(){document.getElementById("errorBtn").click();}, 100);
+
+		                    	clearInterval(intervalTimer);
+
+			     			});
+
+			        }, 1000);
+
+
+
+			        var timeoutTimer = setTimeout(function() {
+
+
+
+			        	clearInterval(intervalTimer);
+
+			        	setTimeout(function(){document.getElementById("timeoutBtn").click();}, 100);
+
+			        }, 95000);
+
+				}
+
+
+
+				else{
+
+					setTimeout(function(){document.getElementById("synchronizedFlowBtn").click();}, 100);
+
+				}
+
+		    });
+
+
+
+		</script>
+
+
+
+        <a href="/authenticate/login/timeout?configKey=smbmactivate2811&amp;orgId=2844&amp;sessionID=Sr1MwA-g9v1Q5_QZwCLsQgf" id="sessionTimeoutButton" style="display: none;"></a>
+
+
+		<script>
+
+			function sessionTimeout(){
+
+				var timeout = 1800;
+
+				if(timeout!=null && timeout > 0 && !isNaN(timeout)){
+
+					timeout = timeout*1000;
+
+					setTimeout(function(){document.getElementById('sessionTimeoutButton').click();}, timeout);
+
+				}
+
+			}
+
+
+
+			sessionTimeout();
+
+		</script></body>
+
+</html>
+
+REQUEST 5
+POST https://nettbank.sor.no/authenticate/login/rest/bankidmobilestatus.json;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1
+Accept: */*
+Origin: https://nettbank.sor.no
+X-Requested-With: XMLHttpRequest
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Wed, 23 Sep 2020 05:56:29 GMT
+Content-Length: 21
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+{"status":"COMPLETE"}
+
+REQUEST 6
+POST https://nettbank.sor.no/authenticate/login/bankidmobile;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1?execution=e1s2
+Origin: https://nettbank.sor.no
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+javax.faces.ViewState=e1s2&bidmobStep2Form=bidmobStep2Form&completeBtn=
+
+RESPONSE 6
+200
+Date: Wed, 23 Sep 2020 05:56:30 GMT
+Cache-Control: no-store
+invalidate_session: ***
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: text/html;charset=UTF-8
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+<!DOCTYPE html>
+
+<html><head id="j_idt2">
+
+	<title>
+
+	</title>
+
+
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
+	<meta name="format-detection" content="telephone=no" />
+
+		<link rel="shortcut icon" href="/hb-doc/cssnb/loginService/smbmactivate2811/images/favicon.ico" />
+
+
+
+	<link rel="stylesheet" type="text/css" href="/authenticate/css/internal/site.css" />
+
+
+
+	<link rel="stylesheet" type="text/css" href="/hb-doc/cssnb/loginService/smbmactivate2811/loginservice.css" />
+
+			<link rel="stylesheet" type="text/css" href="/hb-doc/cssnb/loginService/smbmactivate2811/loginservice.css" /></head><body onload="performRedirect()">
+
+
+
+	<div class="redirect-main">
+
+		<div class="redirect-spinner">
+
+			<div class="ui-align-center redirect-spinner-div">
+
+			    <div class="ui-loader ui-loader-bouncers">
+
+			        <div class="ui-spinner-bouncer1"></div>
+
+			        <div class="ui-spinner-bouncer2"></div>
+
+			        <div class="ui-spinner-bouncer3"></div>
+
+			    </div>
+
+			    <br />Vennligst vent
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+
+		<script type="text/javascript">
+
+			function performRedirect(){
+
+				document.location.href = 'nativeapp://authenticate/complete?so=03111013011500553b6jdP3wSjw8Cawm3ekMGWo60iKUJ17qig/zI6DbhkvEJnX2cH7EkaopvixQSxe4Yc7XSYR5CCkaXbyV5H5feBoIpSgJfDYtVW4UlotibDBriqKQOXD2EKZgR1iepRsiVv2w0JyauTKmejEy0AEjTho60iKUJ17qig/zI6DbhkvGOtIilCde6ooP8yOg24ZLxvVmCPT+hSeuu3PPAmkIda2LpkDb+6UgfCL8s9yA5ZIXF0ENArt30kpc/pOoKtdQzlRBoCahkDKNYF+u/8V4x+vwFhKci5kvsYZVu7MbRdXY6Bsm7AKVRRT2fs9POJLlkve4fEVIVzhiHSu0smvM1pAUGZaB4V3OsjUobDHlfoFM=xLG7FyrJG3KL7cyJ5OjwA4cI7LGcPhoNUhKTgBP0ktWohOGEWvoxxbqxy/SR5VK4+HKhwqVgUebMEElpmcMCGeO9mulAdttnz0Sw9eE56qYxijq3jr3FNEftVRcRD5T0120to0RByNvYS5c6RJ/7mqf6RBfpM/mHQiSQ6up9LsA=&locale=nb_NO_2844';
+
+			}
+
+		</script></body>
+
+</html>
+
+REQUEST 7
+POST https://nettbank.sor.no/secesb/rest/esb/v1/login
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-Aggregator: Tink Testing
+
+{"credentials":{"token":"03111013011500553b6jdP3wSjw8Cawm3ekMGWo60iKUJ17qig/zI6DbhkvEJnX2cH7EkaopvixQSxe4Yc7XSYR5CCkaXbyV5H5feBoIpSgJfDYtVW4UlotibDBriqKQOXD2EKZgR1iepRsiVv2w0JyauTKmejEy0AEjTho60iKUJ17qig/zI6DbhkvGOtIilCde6ooP8yOg24ZLxvVmCPT+hSeuu3PPAmkIda2LpkDb+6UgfCL8s9yA5ZIXF0ENArt30kpc/pOoKtdQzlRBoCahkDKNYF+u/8V4x+vwFhKci5kvsYZVu7MbRdXY6Bsm7AKVRRT2fs9POJLlkve4fEVIVzhiHSu0smvM1pAUGZaB4V3OsjUobDHlfoFM=xLG7FyrJG3KL7cyJ5OjwA4cI7LGcPhoNUhKTgBP0ktWohOGEWvoxxbqxy/SR5VK4+HKhwqVgUebMEElpmcMCGeO9mulAdttnz0Sw9eE56qYxijq3jr3FNEftVRcRD5T0120to0RByNvYS5c6RJ/7mqf6RBfpM/mHQiSQ6up9LsA=","tokenType":"EvrySO"},"tokenProtocolVersions":["ATP-1.0"]}
+
+RESPONSE 7
+200
+Date: Wed, 23 Sep 2020 05:56:30 GMT
+Cache-Control: no-cache,no-store
+Content-Length: 397
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Set-Cookie:	JSESSIONID=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1; path=/; secure; HttpOnly
+Set-Cookie: ***
+Strict-Transport-Security: max-age=31536000;
+
+{"protocolVersion":"ATP-1.0","accessToken":"eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJyaDcyd05ZcjllUDRLeVZkY2JhWnFVclM4SzBna1ZudmRSNE5idUxacjZvIiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjIxOTg5NjI5MSwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYyMTk4OTYyOTEsIlNlc3Npb25JRCI6IjY1MDAwY2U4LTYzYzctNDRhMC04ZjY4LTE5MTA3ZDJiYTdlNyJ9.","sessionId":"5000ce8-63c7-44a0-8f68-19107d2ba7e7"}
+
+REQUEST 8
+POST https://nettbank.sor.no/secesb/rest/era/login
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-EVRY-CLIENT-ACCESSTOKEN: eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJyaDcyd05ZcjllUDRLeVZkY2JhWnFVclM4SzBna1ZudmRSNE5idUxacjZvIiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjIxOTg5NjI5MSwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYyMTk4OTYyOTEsIlNlc3Npb25JRCI6IjY1MDAwY2U4LTYzYzctNDRhMC04ZjY4LTE5MTA3ZDJiYTdlNyJ9.
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+Date: Wed, 23 Sep 2020 05:56:30 GMT
+X-EVRY-ESB-ACCESSTOKEN: eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJ6RmJqaXdVUGpkbGxyaWRrSlhidnZvM1NWSFNqQy1XQVFNN3FvZjlVdWI4IiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjE0NzgyNjI2OCwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYxNDc4MjYxODgsIlNlc3Npb25JRCI6IjFhZTNkNTA4LTY4NDMtNDczMS05MDFlLTYzNWMxY2M4ZjU3MyJ9.
+Cache-Control: no-cache, no-store
+Expires: Mon, 01 Jan 2001 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 249
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Set-Cookie:	JSESSIONID=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1; path=/; secure; HttpOnly
+Set-Cookie: ***
+Strict-Transport-Security: max-age=31536000;
+
+{"session":{"loginContext":"private","authLevel":"8","authMethod":"bidmob","bankIdOrgId":"6001"},"customer":{"profitCenter":"7100","segment":"adult","brand":"standard","amlStatus":"ok","state":"real"},"agreement":{"isActive":true,"isUnlocked":true}}
+
+REQUEST 9
+POST https://nettbank.sor.no/secesb/rest/era/sam/sms
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-Aggregator: Tink Testing
+
+{"type":"SAM","mobile":{"number":"+4745916225"},"locale":"en_SE"}
+
+RESPONSE 9
+200
+Date: Wed, 23 Sep 2020 05:56:30 GMT
+X-EVRY-ESB-ACCESSTOKEN: eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJ6RmJqaXdVUGpkbGxyaWRrSlhidnZvM1NWSFNqQy1XQVFNN3FvZjlVdWI4IiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjE0NzgyNjI2OCwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYxNDc4MjYxODgsIlNlc3Npb25JRCI6IjFhZTNkNTA4LTY4NDMtNDczMS05MDFlLTYzNWMxY2M4ZjU3MyJ9.
+Cache-Control: no-cache, no-store
+Expires: Mon, 01 Jan 2001 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 0
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+REQUEST 10
+POST https://nettbank.edb.com/secesb/rest/sam-ws/SECSMobileAuthenticationService_V3_0
+X-EVRY-CLIENT-CLIENTNAME: sam-client
+X-EVRY-CLIENT-REQUESTID: E6703874
+User-Agent: SAM iOS
+Content-Type: application/json
+Accept: */*
+Accept-Language: en-US
+X-Aggregator: Tink Testing
+
+{"keyId":"secesb","iv":"hlXer31K4ywd4+DQqIiFQzkZ8TSB7rhmLIXjTzH2Brw=","payload":"qn6eC7wj3OErqVCfSH94cnCYN9Ekt8b0tKSZ2ii8/GWNQDUgthUnwZYLZH/XSX6ryM2UvxfW6jkKcJUlngmX4rwhBf37tB4aIdn340uQ1arjACqwVhKyCwxPxlAe7IJze/j6I90NIkIZeEe4gACwE/R27+tak3aZhzcOnbgJQtWqP3FW5b1FsLG3l2uBkylD+cSg9NOHErjd/B5xY6tp6Fi3klPysbwkuzCvQd1uOy4DCvQHghU44m4Y6YE/S7uhAmHDt4eM5cCceyuNylguzI+fo7wv8Ezkjb2x1Df1WSFgcsKwikhqqxpZ/WCw2clIB9UTUDg5MkPMZ5jZpJ+ae6Qk78WAN2uLcZNPjK6ncaS2tKDlTCnbaeWieTld09wK9tw1/o674s3588q2zOw7fC1uYwT0Mv830tzVq5Uz34DsE14Gs5f/N/AL8RPLduf2FGB9iCxOsQYu+3BqbaEg0LsIIdDLqHah/SYYiYBBW7ookd3Yt8+qlVa+Vr3MrBs1vkrzRDD2XlXL5UNvO8sJpcMALUKu3VhECokK3GcFaLt5rIWicxDF2yf13oyBgVz7xC9UV/gnJoKocvKrQAnaFQu4ZuMT42H3cQrMa+kGdyf0ATosuOC0BJR3tdBWE6FlsYgVIZcZjS9gVv0qWhmQOsOsSgoZuF6i43Qyv0nwjgciQQdv0AD3DJlt/YhKsQzSCtmsCm+9ZQo6wkOrowz5DsibuN5PMSlawPMv5KhHx5ho8/gyd1ySQHqh8yA2Q3lG5J8b2cEw+GsxJO5GRG9oGRG/jAv9NarCNl1c3ksdKlKFpt+sm3DLXZFmlAJwm9PrayWpXHNH8Bywc5Kidd4AML8UtmzsXrhb/iAfcv0pgNPlb1wJoLEYHnNsOh7BNT9Fi/RyX7+DuuL6oGheV8vr/ljSwyCXsoEw/NrrVFVKpzZ8rGKt5x9V9llzxpNLvzpI8KTt5A0IhTma8T0CEUaZ78nGkNODSZfmPrR/RdFIjHLl7kZvA95N0vkQNT44r7FDKDP3VVCola80nqfwl/cca3JnrYN+uGgwQPTIr0nlsIj1axV/IZExQV8PJ3Ao/+ySsG3/LuR0TKwKxYMp7Qgd0OMO3vqRphoDXjyY0WatZpH1KpPwMxPkNWnNJ+AlT6dXZ20PeNxJckui3Q+Y6wNXB/gwCRfda99iQ6mK1gdQNlTQUqrbMjIj3TfiNDeG86ifeHOCRn98iqUDLpDtt60eEdISTQU8Dg2OUsqVuJ85/aX9cOlMVj7wqkBVDZc3P6b2FnlN5yDR+ekP1ijBTGkALnNvQXQqx/UWX2zVQt94kWJesP4MfpNYrWl7DRx/dpYFeAefe0CuGuiow8JNk+cjxnitcP4wNWYGgqdphFs7QHf17wG7fLpbJd+yX5JEwP95EjkbCU3ghXqY4/MrIwCeQFZjH6XBd7tYlmd96smfLpUK6PNftYf43/+NB4HMCoo3n7vCbJdZvmeWqa6QMppRDZxyNnxlhkrcoFN0HYifAChl4hJZfB6/NwVRhFD+yXYYTqe0J3NfPCHIbFoJKpQx9Y1rV7vvAFTbkvY8387dZDjpcVnFAVEpJo6y0lDoOhqCyiQNlMaI+7OG/MAOTaYJqQ==","headers":"uUZrx1fLPPmNN0tU8zV+D8+xPb5OsaL7evhysNW6zUbJi8LCREPZzNaW6yDH8HBSJqLcD7QNOxKCSxNocSxZHjzAdwATopkM/y8LV4dOl313/wNNIffccg7HjvhM7mSP","mac":"sKqLC+mSymW9/xU9NzGfyw8hOboiEgeG0dp8cP181Xg=","emk":"MpzhEJHH7lUOZ3eb89a9jdJ5v6R9rFhwyXae3k/KMulmvzLhd69u6C/9tA0alK8CQf6FrTxPM6jSjjm5NASqmezcmsbRyAnsstaR+9dnx6fN33t1QM6TPoHErSFnfKjSdwWG1cEELi9RJR4ckP1yw4U75eu410a/oqpBSZaT7rBv75kihI/oudJSlRcxeBDcOEIgp24UbshYFkQD+r4fiBTnq6JJ3tCF3IXDZQQsZxyigvePpo2Bg680bj1ypgBFOfOzmBo9K4IbDxpAUWPEKhcJq4HZ+9ZqhJ/jDtp/ueC/ZFG/vlC9k0Hl0m0umR3/OMMq8Nulb4WF+Z2hE4npBQ=="}
+
+RESPONSE 10
+200
+Date: Wed, 23 Sep 2020 05:57:15 GMT
+Content-Length: 1908
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Cache-Control: no-cache="set-cookie, set-cookie2"
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Set-Cookie:	JSESSIONID=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1; path=/; secure; HttpOnly
+Set-Cookie: ***
+Strict-Transport-Security: max-age=31536000;
+
+{"keyId":"secesb","iv":"hlXer31K4ywd4+DQqIiFQzkZ8TSB7rhmLIXjTzH2Brw=","payload":"qn6eC7wj3OErqVCfSH94cnCYN9Ekt8b0tKSZ2ii8/GWNQDUgthUnwZYLZH/XSX6ryM2UvxfW6jkKcJUlngmX4rwhBf37tB4aIdn340uQ1arjACqwVhKyCwxPxlAe7IJze/j6I90NIkIZeEe4gACwE/R27+tak3aZhzcOnbgJQtWqP3FW5b1FsLG3l2uBkylD+cSg9NOHErjd/B5xY6tp6Fi3klPysbwkuzCvQd1uOy4DCvQHghU44m4Y6YE/S7uhAmHDt4eM5cCceyuNylguzI+fo7wv8Ezkjb2x1Df1WSFgcsKwikhqqxpZ/WCw2clIB9UTUDg5MkPMZ5jZpJ+ae6Qk78WAN2uLcZNPjK6ncaS2tKDlTCnbaeWieTld09wK9tw1/o674s3588q2zOw7fC1uYwT0Mv830tzVq5Uz34DsE14Gs5f/N/AL8RPLduf2FGB9iCxOsQYu+3BqbaEg0LsIIdDLqHah/SYYiYBBW7ookd3Yt8+qlVa+Vr3MrBs1vkrzRDD2XlXL5UNvO8sJpcMALUKu3VhECokK3GcFaLt5rIWicxDF2yf13oyBgVz7xC9UV/gnJoKocvKrQAnaFQu4ZuMT42H3cQrMa+kGdyf0ATosuOC0BJR3tdBWE6FlsYgVIZcZjS9gVv0qWhmQOsOsSgoZuF6i43Qyv0nwjgciQQdv0AD3DJlt/YhKsQzSCtmsCm+9ZQo6wkOrowz5DsibuN5PMSlawPMv5KhHx5ho8/gyd1ySQHqh8yA2Q3lG5J8b2cEw+GsxJO5GRG9oGRG/jAv9NarCNl1c3ksdKlKFpt+sm3DLXZFmlAJwm9PrayWpXHNH8Bywc5Kidd4AML8UtmzsXrhb/iAfcv0pgNPlb1wJoLEYHnNsOh7BNT9Fi/RyX7+DuuL6oGheV8vr/ljSwyCXsoEw/NrrVFVKpzZ8rGKt5x9V9llzxpNLvzpI8KTt5A0IhTma8T0CEUaZ78nGkNODSZfmPrR/RdFIjHLl7kZvA95N0vkQNT44r7FDKDP3VVCola80nqfwl/cca3JnrYN+uGgwQPTIr0nlsIj1axV/IZExQV8PJ3Ao/+ySsG3/LuR0TKwKxYMp7Qgd0OMO3vqRphoDXjyY0WatZpH1KpPwMxPkNWnNJ+AlT6dXZ20PeNxJckui3Q+Y6wNXB/gwCRfda99iQ6mK1gdQNlTQUqrbMjIj3TfiNDeG86ifeHOCRn98iqUDLpDtt60eEdISTQU8Dg2OUsqVuJ85/aX9cOlMVj7wqkBVDZc3P6b2FnlN5yDR+ekP1ijBTGkALnNvQXQqx/UWX2zVQt94kWJesP4MfpNYrWl7DRx/dpYFeAefe0CuGuiow8JNk+cjxnitcP4wNWYGgqdphFs7QHf17wG7fLpbJd+yX5JEwP95EjkbCU3ghXqY4/MrIwCeQFZjH6XBd7tYlmd96smfLpUK6PNftYf43/+NB4HMCoo3n7vCbJdZvmeWqa6QMppRDZxyNnxlhkrcoFN0HYifAChl4hJZfB6/NwVRhFD+yXYYTqe0J3NfPCHIbFoJKpQx9Y1rV7vvAFTbkvY8387dZDjpcVnFAVEpJo6y0lDoOhqCyiQNlMaI+7OG/MAOTaYJqQ==","headers":"uUZrx1fLPPmNN0tU8zV+D8+xPb5OsaL7evhysNW6zUbJi8LCREPZzNaW6yDH8HBSJqLcD7QNOxKCSxNocSxZHjzAdwATopkM/y8LV4dOl313/wNNIffccg7HjvhM7mSP","mac":"sKqLC+mSymW9/xU9NzGfyw8hOboiEgeG0dp8cP181Xg=","emk":"MpzhEJHH7lUOZ3eb89a9jdJ5v6R9rFhwyXae3k/KMulmvzLhd69u6C/9tA0alK8CQf6FrTxPM6jSjjm5NASqmezcmsbRyAnsstaR+9dnx6fN33t1QM6TPoHErSFnfKjSdwWG1cEELi9RJR4ckP1yw4U75eu410a/oqpBSZaT7rBv75kihI/oudJSlRcxeBDcOEIgp24UbshYFkQD+r4fiBTnq6JJ3tCF3IXDZQQsZxyigvePpo2Bg680bj1ypgBFOfOzmBo9K4IbDxpAUWPEKhcJq4HZ+9ZqhJ/jDtp/ueC/ZFG/vlC9k0Hl0m0umR3/OMMq8Nulb4WF+Z2hE4npBQ=="}
+
+REQUEST 11
+POST https://nettbank.edb.com/secesb/rest/sam-ws/SECSMobileActivationService_V2_0
+X-EVRY-CLIENT-CLIENTNAME: sam-client
+X-EVRY-CLIENT-REQUESTID: 7580E4EB
+User-Agent: SAM iOS
+Content-Type: application/json
+Accept: */*
+Accept-Language: en-US
+X-Aggregator: Tink Testing
+
+{"keyId":"secesb","iv":"40p2H3q1gK8oEUx1ynVFfDKb3bvwjfGrCZDo/lPuMxw=","payload":"CTal2uuMz9FefVGIkDjtvxBSUtYz0CQDzuE5mLqSXTNkVDQzAY/tx7N5SXUOgSDAKhqf/0ZBkMUJaL34/WLC26ltYCpYShaOoS3AR8bNEPKGLnaF2EKrcbde3xJmDAMYM4rx5aYq3my81mJaCB+Z95oQoO4eSnz4roDMFmMRL15QV9pJJJeC7+yWIhpeesVejkYR606J70dNHHC7DmX4BFkB75vtWtbsBe7UUS3ziU8wDqpFkcabUw3/ZUofCGDhTMh+UsM6y2j/GyxGGR8au/hN24aLBuRusWdH21p1wy5en+T0HMYUm5T3fJgXUa1HZVwKAYgn1+Rt+IIUMuqpk/LfAIvuU70Iju9F3Y7ClAxBYhzP/649mtwvjyN51tVDjo2Loxh8GfbDxW5pQ362ILd+fv/TOsz10XN2rpLDUfooyyrohQNDgljRS8fCCz6k0CBkbxG0RB5ro3BiA0KsCh4ijrkAPoR8gLH24BEi0Fza+4d0t0vKw8vSfNLkZXKW20A3qFk+A0qIRR4yT0584LTmFOXDYmh/vAfPH6dEu8EKE2wgsmiPTx8/cBSbku79r5NjREuxZ6Ww01XEHTG/V8H0OX7PO44whqifw3Y7Y5YXT6PiUeJ6P+niw6jmhkLh0CfASOh9EJQFcyGEXGKYiOhhL9FTKpVNVWpjNO+k9TKaf182Z77xaC4VtmxlsGGCWeFVOwOqpcaHFJRm8qUZ6kSWzz2eWEuRqA85ZUEHVWUCT4OPN5jlnOKLc8uztneGRoZjQTk+LL9FHqo9PXgYz0uqGNFdojF4GfPCoX6cEjWsXqfuzilyftPWXBNXeWOKqemZfdIzoujGcjpSUSiPj8RHhB1VM45cWqEpj8N6HhOmLvqiC5U1v7pIr6VTxEMG7eX7IExJJFlOgcvBKkD88/9LjQkybjVChcuSSXKNecQjVhzhQw6Fy0dFVYvP7IsoCalKgWuVlh0c6PURPJRbknKOQKKq/wDyWve2CRxMxyZC6nRbA7GSJUqt9OvdeyIKqL5oYFCKSf100e17IM3/Nl37JXCrMDIbLXNwBK+dYd4zDVfY2gX1ke70uHcOQ51JQQz0XaGOwGqXEGPHsbX7MoPhc8JmyYqY+isB6WOJpRIM5iAHDUtTn0rYLmXMgAWx9lq3PR7hSOoEDkAah00iKwlNDktNWZsGemB6yGafj0z+NDYGP2vIWVZeXuoF98qDd+Nd5t2LwQo0KoaAO0iuCLmHnp3Wbb6P5ucE43PG+PnNbfyv1uxnsmsFs4iHYQ0y0xbGrezyMUu2lU74E85arA2ter0UlwyK7b8cDb6WSWwkCM72SvRRRMuRaVKTnLIsSXmjfZUDE9R/vQCbqhhWAkO6ECVl2/PI7fe2XWxm3w8VE0e/0pgLgtGITmzaku0ZB45G9yQbDGscue1/ehVa9dFdbBo1WxOk8JwlPvnNLKKh+LnWrS1vzNgmpBUuGJbhIq/BkVasdyVBvDRVG9r27tQQ+dx/kQ3J1XEzyYl0qynNEXYRnUVv+fv0TEGeJokgWTKCyHXrFfmgxEakN//Z4S0lvMFHvlSPdhW2pyP+a1o=","headers":"uz+amjB7JBAj9d6EYW1JR+M0PyD3VHVw27m5ZHn9J01Vn0T+PIKjp4Hwljw5Cfw4jxk+SwYmPhpxSRMb0egcGSXF+L4YMDX4BnXpHyYS4MLDnkSXT19ihu4beyUcYa+8","mac":"RXuuQN49B5nK3gPZ5L/ZNZccihiPespkmYytTVEUOWE=","emk":"GtGqQvidag0Pgk6Rj0no1dI0UcK7kQSPafCD69t+4mITNrjFpNqPsBDeQnwY9luGKoRj15L4qydyQYRacvZVUU+g+t783d0YNfbRUV188kfrVj6nvB7jQSFjsDwVr3v2NPizqjY6T8NmimZVxcPI2y2SaJb4C+qWItpOhLUP3+Ys2kYPBDyx2cyQje5f2yaugbyNUlYTNuTNizZVV14/bHdUn0wlk4FaXqmWd4zSjJOCRQjI0i2kG9/XWFcsN+TPS/ywaOfXPBGiPewM34cUDR7i9AS9snulIr/jLy5jlxmeu3r3Com2Rvz0BL8U1W/V+WtooJ0oihQ7XF5FpzGYyA=="}
+
+RESPONSE 11
+200
+Date: Wed, 23 Sep 2020 05:57:15 GMT
+Content-Length: 1972
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+{"iv":"E58Rn0dL61xvUIddf2xr8dcaoqVABG1Z5rPJgCMtyA8=","mac":"c7cZv9IWoOzWmvOablClEkpNHNdGhEqsePWprgo//uk=","headers":"tINe9YYcNsXsZmN+A/v9XE6W+ho5P7qJZ0VXtE5C80Rj95CMYW9htkuOANMS9RrkVj37hKf+VedzWzqE7A0pIuvC7IJeQKAj2f3XFOf6foGEZb5i9Z16FG04oJebXXxVoPE6TQ2HiCensqc/Gs9avkrAVgtForAjPACzt9CrDNfILPBojnF70JdtEQWDzECU8kCPP3jX01zNwEdXJS680dY8aOEM8lUgg3MHX/TH1SM0yRGc60iXyPCAp27UqJvQcNOfASbnJnXEK21XLg1/z5VoYQr0Z5yTXJu3NIcUx4VcYA4gXhZ8X+Uo0PAYvgP/Q+rhT6YBTLcgd6fipA9xgQ==","payload":"q5jMtcW+2GvhEiuC3RNqTMp/Id+YfYy15ojJUoZcWecaDmjt/b7LLiVhrux7cFvai1vXNygLrCSRqeNPN2TSPIxGt9AtkXTj3jYcZxvMePXx39Io+De0dBnry36VwOY7eBCkHn7dIgG+Y5CzlgWmyAnTKwen6JcuLaX00Lvrd6KQ318E7OTg2jHKFWzaUGPimNal/ikh/IqX9TbGD+JNx5aPNDNkpuYjt1z7ZkPvyONaGsgVbg6FMkPP4vLSBSTowalE2yUzE3YXocsfs4ogC/ycpcPfvKuUoYuvJRugkmYuNl6GvXUC41ArE1Ud1voViO1C+Ch9XKLKOlKEgE3SIGASmrzhV1BmZE8xmA7JWwknPQdJR4b7MDOrQ1aWqgqmn88S3uV+K2UtpotRK/QB5CUz1gUco437+oVITOzsVaxgFjR375JvAunGCkopdaB1zZ328bTr+gZmwvbITjRmTJpSloslTf7MhN8rlyTxiZ/lHYw41UFwzMutI6f4eDl1eL2Mv1IWLDytjomVaPEgxjLIyoOj6oW64R8k1aYuDJJy3JJd78VXh4Mjb+f7cIQ41FmWrcQlUZ/WtBmS/bTViDv9qXiw5o3pJSW8YHYmSb664zBugGgtTjboy/kTxPXUrhocwhkgPK/+jDTv+ACPbBFlEI4OgFom43r4sGfzYPaOPbZApVgDRYxNyrXE5ftJvFdCsniokbgF66WRK5EanfLuTFodHS8+JuHJnVStg0Eb70huDIKJGZ8Ao2kFQ6dHLCZ0Emg2lsH0DNRqIMb5Xso9h1yKMMcz3Skr450PdTURTTqhpnw4QMqT9LV4F0JDamn3Zsn1DfxbYMVlklhANw8F2+RkejHLpZA2PM+yDW8N4SnW9dMQAxmf6wyR4FysoXmCHrgfKtpCYGj2dJRBjKrwt1lYX/6eSHKchPFOAKh7fQoO+sykOf7GhajmTF5a7SeL50F0qpsErMBscqC53aRdI4frdESt6jS8sIf7pTdljSFfSq+l3II46yyiCqoLG+TwoSKLe5V5s5mVfYpYhh/rtZ6pgp4OGLTk5cmszdZ/EJN8q7i+u7TK1dsrZ9TxI6FBdzXbQ7QgaDxt24NyTr/Kv2gF6S7zGjaz/Pb6wDgoJdTgEUHj5fSK/++Lk6wwMSarUaraRkxyRhMGiNkNbnIBlI7jcryRs32ssvbt1DpvdWXxKfJYVZ3IfmgqLYA0mMV8SLoe+jIPUC3GIxlFzyAy8+rLD/mPllMtZueDdKW/vX93scZ980iPPenZuY0TK5h2eVn/J5/tvGbcxhjs093xnb/j90ONh6vX8qBa00lWmukptuohdkKeP0GJWY81Tr/Z/y2JA7uu+Me/npesPwTNuYn4xf8yxQaBgT12YNgV/mMQdDNZ0gauLr0g/tZveyLIHDMZdpDd+0sZRqYcZ2w4uGK1tA0Y6Z9S689u0Gbys+ae/wUuUqd7ZEsixrt1s2P4+f/EtxmPnQjpoTzCWA=="}
+
+REQUEST 12
+POST https://bf-esb-internet.edb.com/samob/platform-smartdevice/client
+Accept: */*
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+EMK=AgE%2BTFak3D9CPPATlkdzWJuoRnMGVUh%2FI1s63RGMorDJmnZ5fdCxsE6j%2FonFXF4GejRSQ6c%2Bs22K96zWLSym4qb8JsRMcypSjlq%2F9A%2BtRaKJ951COkdc%2FZ%2FMLAbEKVK%2BSi7T&MPV=MQ%3D%3D&PKH=mfHdGJnijG2ScYKOr%2BZ%2FArY3zeNobUj8hFwCr3wIMv8%3D&EMD=yOneSIvSw6cLfZELEKd42VEywuI2ma3qExILS0jKCOdJiRoWnpyJbvuX8y5cdAOXHWZpgvUqhfDfozUXdI6SbNIXH6nd21jkyz%2FHJua3rIILjA93li1TYJGrwtnBGojnOwkO6zVRKg1t%2BjIKP1BiGdI57AwQY%2BMndxLOvZVHvgun3q%2F5flOY%2F%2Fk2FlIuFjtIrD2N%2FTGGqdljat7CWNUsQlkOfWdXU%2F7oi8tF1X7s5eJdX%2FIRwv%2BDTEkQ1cYS5TE9uZ7j8VhkYSqUxSccCbWYADxHFX5mR2dCIbdS2%2Fe2duloN3cpUZFTo6jW6%2Bp6buIrjFpLM04rltrRqIKfw%2BFGKqfkWLZAYHJngrhBbHioRWOBrKRLi1m0ZrTen2X%2FJjAhmF2YSxoEC6zVmK%2BC%2BpiMqVQ738fffj5Cc%2Bi3pwKytEA3r7ZBgLQeOZNw%2FGoEoUgtpuRK%2FGs4v2Dom2pG3Sh8zcKD%2BHHcXB%2BdjPz8vghvX9p7pgrsBBn%2FbkphGG7u9zFjky%2FGC4ZYfJ4iUW3X5kgG6pDB%2FeI7uYeqbxT4en3rkf5kYmXfN8EW8pcTLCgUHcu1LslfRF8Wg44mQ1VLDbV3Sar1XkrXNBS3HcENt0k58Y4KRqJ2E8qCZfJM57hHYxDEHV1n3LP2RAAVjUZN4PIeB6QRUjzTvN6cI48MY2fT0C0%3D&MAC=QX9Wipr1Mc5omkmKiwAh%2BoJf6vBx0O4RsACfe6c55sU%3D
+
+RESPONSE 12
+200
+Date: Wed, 23 Sep 2020 05:57:16 GMT
+Content-Type: text/plain;charset=utf-8
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Strict-Transport-Security: max-age=31536000;
+
+EMD=ifzxQ4%2BkhRJw6KQ4WBKacpOw40m8t%2ByD1DpkkgWkrR%2BD03Zs4Dhv808vqbMGri8Ix%2F4v74ZlY4FCHhUPHo2%2BrJWOoFLq3gDr4dGCGrAF4CWPwqN5ym9GCT4TPYIxfPx6O%2Fh35D8QqAaY6%2FgPBUMKKnU5LAAGrfgwQE1jYkg1w7JCxPFSd5y5ksdkb%2BSA61qJJnhWwvGzVEykg%2BHRnqja8TRvgdrePcn7mTLwaHIQBBtVYbEQ1%2BR2CCm3kFSfvpgX2GzyvZuRIaZb%2BMFbPK9dayxzC%2BqNpbedTvTSS628w2QiefdcOVBstTUrnOMvOT%2Foijyn3v3qdh4Hg06ZMKKWd4EFeUMpeGeTi%2BGgq0KQDg7I5ACv3ONOI2iOm0KJN6NgvzUZVpYLO8tbfELUGhGL1sSz9hcjlN3RAK%2F5nL9NZD%2FskLEDSJ7oUpKiqdANJg%2BIftHFco9GH9%2Bq4y6eaLWKOgSXtnLGql0Oij4AgzmcikX1u6krng9pynmHjyzTrXiMgRNAZpwy5%2ByrhYJbyqcRo62VlxMKgfv1IopGUwyhrJqSpwu7qdLQSQe0XfWGPt6XVeUQ2oJxsFQIdrFQMAG0iaWmjOi0zRICsh5vIldqVRzNyqgNgL1iVfuJtHEomzKr0ZQwGFuDO3Qj2OVNEMN3gMuIfsvs6cHiYrl7lNOeii5tm3v06ryP15w%2BWiUfofdOC4HoVOsSPZIVgjT%2BmMrltvix%2FaH7mY7fhrfec%2BXtExyMP1m%2BMXXirTcGpW9sr3YiBJTbfQifpjOtB4nifrKpbQFvos8IhDmO2pj8QOVAUs3Wa%2BWOB6AcABz0o2WkbyjNoDkdL7a4PJmnwJKjmxE2bMRJYSamCMoBnNB0NBbYD%2B9GYMc7YSMPK4y9I7cOIzF%2B5TdxOC%2B3Ae%2BYHwj1tCy5Bgfi4iVujRTFIfZzUoKGlhrhSbqRWxjF8vCoP2XhL5XqdmMyXRaNB3NRC9aH67J7kgtuKanaX5x0Pn65OYBINlM%3D&MAC=Ab25P07YyPtyuIXqCXg1dDp50wlvvNF4%2B5OUH3DgUnI%3D
+
+REQUEST 13
+POST https://bf-esb-internet.edb.com/samob/platform-smartdevice/client
+Accept: */*
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+EMK=AgHmjH%2B6sdt5Die5AR6GpSWc3HiAci83ZqZL%2B3uMBUV7wnYocSnat3%2Bdcw8j61Iyo7fWSJwQm3uUqAMKWvQ4U1T3yat7OnwkTOl7IWyyQoTGyWfcPvneNrbKbYgrjmG5o9QR&MPV=MQ%3D%3D&PKH=mfHdGJnijG2ScYKOr%2BZ%2FArY3zeNobUj8hFwCr3wIMv8%3D&EMD=t7ki0AWPToumWWO787WsUJsrKFtIPMg%2FvX17OOsTxx6VXKRuHwa5HyqV9hhLFBDi4ruGOPAJOcB7hOIFGCBw32RZ%2FYm28GK36b0OLbNk48U1FDcnAbzqTd0OFFbx9yNgIpkx6AXfYVnrHIsqmuCLu3gqcoxiE9pPB7PHqxR%2BLByX8nbsL2cpK8umXeWxwq4OouaLZ62Wx4gGp9Xa8ul0kb4%2FWKa0xbhyT4kkqWCQ2u114df%2BJ%2BdG8%2BaXRcxqTSH6pOSkz5JoparDoTaD0dBIMW6qKnpmUeriENzCYrhAeODBiHz4cnWSySCFDFwkxjzgo7fxJ79XjOQBxSJr8szUqtlT8a6u9mB0CtxGsnTtDoM1Cf1tTMsn3zQL3ZKzVAySQb5CIAGd%2Frru%2Fj1uoBVuLYM3Kf2SCJElUMzvtir6r%2FTBAYLr5eKK%2F58%2BGIto8f6kpSr2fvdu4HJH5ja%2FgUbQxAyGCfPOxodAeY%2FYOlTq7BKdf%2BoYA6nsKmTpUtkyqVsfNK9QZ3yvw9sZ2y6tXDrXUmWeOfX18M8t6wNjP4O8fRw1BGM8BmlZSjo2JR5ABruA%2FuHWZb6Y0Q9CEid%2FxZKZhjhJGF%2B0ZTzR5hIg8FO4KeqiVtUjsXnYkYscuPyyuJcuYYzlxqO2HoqkCUahCCSEXT0Rw9nMNCatmmUpm1KILOsw8Is41dg31TFJNKP41s5XbMQfb1Uj9N34ycxb0XFnAlEuNkSq4PbFLn3Ho3tDo%2F8Jlm1O%2BFFxxsvP%2F7joayIg5yTkJwoYkHthzJnGRF%2BOHIGIYbOPVLmBU4w%2FhYNdmGuDEw%2BVp%2F%2BO%2FfAk1XEqnL2wkX33Dpo9bqyCJlpujDvJ9lh2uFbakuzL86rrt4vNEVRVqt%2FAQhh8RukrWwORHH6gMJ%2FLooIKeFK9hzrZtQUqFRLgY5aZE%2BosV9TA%2BmMvR0rK1UevdJIZbmLTsGRBRNe3gi3l%2BguJR8pCLVFFSO7%2FH3JJakJt6CtFveZ2%2Bu8bYmzd%2FS1JEO3YqgmygfCDzScEg8WeraXOO5IcEydRe5fHb44d1xcL8Y9OMSUQ8Ma%2Bhc1%2BOMgZnM6bUKOaQD9TmWVhlCAmnbpmXSKbeCrh5UnxjZW3T2EcDt9L97PxfXSgQkPoeerbdMIeH9lOSpVeDFK%2F3qAlE37DIAKL6YLitw5UqpN9n3FWKlOj9bEunC2HMtEx8c7y9c%2F4I3X6jv4se%2BVkFn2JasgEgimmnwq%2F4AivhlfzFhiiiGHNTrcgKHJ6hOnewZbPAWWK8AZmNYDei75BRjH0GDsjYHyWGFu5nCoxiqFyWe4bA%2B7A4yDyFceHU%2FE%3D&MAC=Q%2BO49GWeTAAR5fMvK1fRQFSEqCwOHJmZHcJW%2Ff7dP6w%3D
+
+RESPONSE 13
+200
+Date: Wed, 23 Sep 2020 05:57:16 GMT
+Content-Type: text/plain;charset=utf-8
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Strict-Transport-Security: max-age=31536000;
+
+EMD=3L6mcGkKlrO2kzJ1o4KuqvPCBNTGi%2BtsHfeFR14DoL5QPACCjDKIAejuPO%2Fqt7ZKeOnVd4ZSvJdzp%2B7qMF5ko8V04S86J%2F3SYe%2FTaRW6oPCjfFFZUuC6k47G93XIig6%2FYKsdp%2F6BqWao%2BBync4kvXLiV0Ow%2FUkt01tIrJ1UwU8etwc0RaesfK22DqSlUuGpCtrjoGoX2eXCYi0mMcnXZIs8X0%2BNPbEbFfm2qErlUdzhc4SuZ2nwQAEiLj%2FYMAn8MNZX0P7Cg02uncso9YsmwcJsqpviccSlURK9HeSwVoUGCC5dj%2BprGoVlpgdS6r967abvNeBR5I25KEes%2BvMJMgYlq4bNpfEzks3GiNBTCvsGtyXe9mGqnKrFL4mjXlaUBqQ2qPaTGbfgAV3Uk8fATbelVpnk9X6ECJfT0D%2BUXbAGqnQSTtFDszjTCxVwNOmx5klCpkxehRebFKyAIFq5Sih%2FEC5fzGE0je8UlLpLhWDljhI1xwP%2FMg%2FQYaw%2FqEdyUmLP0lqgCHRy40skmS3khXPr4jT6tYp%2FssV1pTt7aZi514osw1SkK6qJT%2BeUvM3WAGwRu6KDssZTCyRulhwR%2B88xtMPWqnpIrfemvHA%2F0c2o4zzzyaK23lLTkpuoLmElOMboFAvngXhx5HEGGLSXUR%2BmRcPq09VFfuA23MRj8QsWZjKxiMyKzEavyPNabEEkJRkYUqFJOBjtHB5oHjoM1IsN0K%2BSPT5R6qzsoixPhMmIkwogjewtgeMsTTF67Q31DXNrRd%2FhV8%2BGA7%2FLlnCsnnBCK43qpQD3StBYTsJ1ILggsKUjyzeJGK4AlbNoKbbaNJqtOU6AdCzMNbkLv1UB9lPqxlJFNc%2BKGow7SzQ2IbqQLxGvVkTGV0LqeOszLnHMSAT7linkzqKPLM7DaHNa49HLEyah1ZTbOpp5qEr3lsJAFQbgYt9KvcKcjKqT%2FzCdiZGEwo4yqsS6k39e4xeGtzKaZP4fl16gzCDMGEreLqsaTgOLo5cWuNg7daZyDhkvLsf92Iob%2FPEqZ2RStVdxca6GNfEZ1gdzgsxYGxxyfc1sGcFOWoTmgYXkKBtLMs2KWUPaJyHxYtcswbGNd1L8kaybFIviVfENHWeXP0Wr%2F%2BorEoafU0Z%2B96C0DW9oVN6HVvx3%2B9Mz3YGCRGzfkiIw0EmzcCaiEIZM%2F6ZSVyeqnBdhVeuzm5FUUQhCzgdqw29SmXdtVyngcQ9mk7MRNy8ZyE9rmCB9%2FS6sjNhb8F2%2BXdcUuNtW3cDwOMIYSfaVCkG7yDIFzTlgA0jsxNN3Mpxow%2BxW4xDJ%2FTrYu7a1Meqd5WLwj%2BLlgjo8jfWvCPZBzTyOQIE%2Bv1Nv1a7Gs2N6GbuXIwZJGqw69%2FTMSV6gRkUSmb8K%2F9203pekpu%2Bp06YICy030EqukE1%2FEY5c%2FkTpBBrvyGKggPuCclKi%2Fhr9HpNUtuDrXQZSq6JkKNaq1TjrM%2FPJ%2Fb1%2F9oNKqWFT1UQt6WRfnufKNsA5zdYzbb%2FAYbY37MNa5IZWvGqBeCjBhri5sW1gQvUvGSV6fIfSEWig%2FotAen%2FKV7HNMhBFMk5XAG5l38Y68sHD9wW9FNhy%2FeaplP4%2BEHJ9gqI6xV4MIprZCXTBAJWEZdCdPhf%2Fq2UMzS9scjg%2F9SZyidXlzjvZ4jtC%2FttisPh3HEw9Jp3uTQkghf%2F161OCCJRAn5O2HIC%2BE8VM3njLKt8fcDmX3NzrMZ264DdpkadKO1W12wN0jvJUDaeoAFO4yufYBpd1GdyBUt4H97GRcMCsiglEd4jgInA6csy0qJDQ5uwLDVvzcYJYnob3NxDBBeDYNoMiNEREVNyEq4rvisuwGxTDxikXCg0PZIJ%2Fc%2B9BFJCrtg7YJUzjVQG%2FoxmCKLCT%2BrRpBmf7V7TTJAh2nB3Fj2mRBgP2KClCulYTkKzT1bVXN%2BETolIpRFtYjO9EUyc8Buo836d6W5zgesoymxqkk3SCeYXCL6dVY2JK0Q%2FnRhe9HJtdFccRgpQq0q1wVS93lF5E5c4x69OAvsGaGUfXYiXIW92cFUBuPleOzKMN%2Bk6891E%2BhsRREEJfFe5xARfnvoIs6qmcs%2Bzoyr%2FwN%2B6puggM8%2Fux7gRU9t7p29tRYXHPormoqiG2M7I5xWmVheb8%2FWMdfPzp2gW9gzvRnMTu1dizvbNO5m3SwOALnyG3DmP11fCRGGX6Qhcktp%2Fd3Nu1vFdkT735axw8vkYm%2F8mHWEN8%2BnzAp7Q8QQg7cegL5fIwrPboovJCWjRkB5nafF%2Fni2aRwistikon8ZcapAMXToztbFCPo5HCRBsr%2BTplOGo%2FkadrwwAZf8znSZie%2BL%2FSEzpqoOQIbd2WfxrIMi5qSO9y%2BAESAvCWBR63YJkHKy%2BjoNXPNQTQPnsFN09XzOBBhLyoxJlA5YFU1iPZVdrbRhaxRcm5BqFnX3z%2Bqp9L9xNfJ4zytPp1o5O0XND5%2FB85TsvSQL5czzMti%2BtbMnkoNw%2FIN%2BrwNgNTUB%2FwYM5piNxOipMBWK28dJJWdvMJ%2Fe961PH0phrgkuLFu4h6C8yhBF7fB9flFP%2BWAtSUv5pMrcO%2FrJ7e4j9lU52usJdXcQa18dmhQtvniBEaU3oOkBuA500g79qKfxCdRD5GxBx%2F3Iiklbe4eu%2FSqT39pv9KGEvDQ%2ByOm2XrafC3YhCYY61ueka5kgNcH%2Fgeyj65vTzKkQKZsAFFk6bsOqlHcn1%2BfHrWcGRgQIkfRE2FAXC8Zdf3UrTHmQaXTzi0POXxN5iiRWckj2ffW17mhntZEkilCwobSTvw1chAcwdfKpZRfgiFEnEPdVa15fOlgsBphKbgmOFUnss9BWHLT7XMpor7lImEPGDUaXDswGM8I8tdTZaoAY2BOZcAEjo3I%2F7Ytzl57g6Sei7nSx7NJX3qNzQdYKaQsUwaWnkfzhibFGwthE3y5WIwUI%2FTvpEPoPf60SKWjSs%2FoOZERjTydcGTcpBFqsT0gdSu6mMOpEJhgH4Y8Pmykts7YB7Vem02gY7SiTmxdXOfpqOJqkaaf%2F32P4N5gmCIDJJED6OQD%2B%2Bw3YcHGUOGbT6QX2UUBc5Uz8wI2IcC62Odq4FkUV9rjPYUD%2B8HHw%2FUI8i37%2BOrYnTOiAGphtQSfN3HuLHFw7XItzqZjxlEgoLF4afEyHBe%2FJC8Ns9ysM%2FNtnnj6TQuajgUYGlt2HBpdchmU2cl47nLbIA5n1ODuQRcNe4JnVKAH57L8HezfjsQpSJwerexHFGKp2xvO6b%2BZG31jtyJhWtCXNW5nTgh7e3nhkA2sgApfJ6%2FbYaRasqQ6hA3P7jKFKH1S%2FkhAVuePxVn%2BdwNyK3SiFz3UUPOnTgU8DT80kYzm2xfJbFacrMeOloAeL2oXPj9xfP1lC%2Fx1b6hl0S3rINcOa9NiipTvSA9vpAkL3SmjdeZ%2Be%2Ftryj4lpAReIvYDBqhmoHN9scEqk42TEBj5MvFaP4mh71zQzDYFEusLlHao%2FYKyyt9STyAuvSvWjFzeJRtnfJ7L8P463jFiqciGGBRPeUKh6dqyHo3n43I7NM%2FqmG0zsDEsljKG7RUKBCg3LiEMDHP7Jg9ZWcOElQNpsWcmJs%2BI3sV2F39Q%2B6Jy%2FPXkdUokDGsiY5Fm3iUHRC6yd7p8yPsWbdJ2ZvLTeOwctC%2FgIgdwrePQdxMnD4qt6obBkZXvLEGMOJkzxb3jNQrMcURG9Gffnr8NQNNX2J7e6NOtgm5WowJGnxzDDNXFiKWyr%2FhKWAbljAoaICz%2BtAnz0PcIN3ybny0TcuidBwM%2FExajmdGkFIlMkTK1y0B7F2dFQ8xzBPJuYXvGuY0SeiGnmKsyVKgTDSMXbuCtFi6m9N9N5dFSyr8vofYJAbexTpkazPl8YM70yzljuqjV3EoKMoq884%2FB0HmHeykapAQH5F7NLqUMZCuuFZ9v6%2FxOnxzUhuWCqwyvQigw7j1MkgK9JR11YxLwBbs5psUob68doE%2BfALoI0ukQjOer3jirxZexLuFtzcawPdXOrz8kVNncwDQGNi2VSd35X7vlMLFOYmXQY8H4vFPXFd9sVu3xTS3vHivjmZuc4MuZrWuV%2BTKi72VJ7U4PHDCqEvU8JOkVQ4FVjRMpAKw6ksxlhMwE853dxIw432sSdfa1jr85XYONFWNcAqSR%2BdyDqpVsvMkZ4fQK743AcumP4Up%2FeSZJz%2FebV7YJacIg350xNvfA30FEqNQGEA5gHZ0wdN%2BzXfNHNAkZtwktbsyO3InsgIxQTLAroQ4xpGYGOIj%2B3A7TFAF2EuSN%2Bh6VVlrhkRYyWsdInaFgeFfUnlYAgAH%2BWT9Rj9xXpPYJNFmJmUPa%2B%2FasEYpP6dgf1LkyBMH16xKv5ruRx1yVegjP0pc%2BCz3%2F%2B%2BOotjqS4nFFvZRtgiNCd4JCsuRy4NRsL2G8lmdCtQkS6qUq4t8KTmyNsHxq%2BYg1DsjL3wZQIA6W0HW7sXz%2BQYgIImndyTs8qSzCfGxCIGrGi5ZwmHB7NS4n6oJ4hQIG6oXE2YQsvcB2Kk%2FKrRbmdYIfKw4KRm257Y0hRM8dBKZOM6FWUXct6oGC2IP1e8UYWVjzYYNm1w9p3IdWsK103YiZqYyG5PmJ8IC3BvW1cWDUK6ABr0G38hV1Y2O6qntH%2FcxA7mlf7%2F08yOKhELw1gJLREtUkjoVEnV9tjQg5B4DFMWBoAkCaRMNTZ9hORrpi2wYtLeS4oiCj1D7LZ391w0hl8yzQTlwgLLK3WJtDZu504nE3oTYqsG%2F4P1tKoL792wFe8N9r3h00fIXGyRRW7IRlsKem0ro%2FyvGT%2Fm1OUHXqa328jGNLrFQTB%2FEB4q7J3tXgtYU8tVnGEIlN5VHmYhrUAib6iSRpNKUXGNCFwDgdaKx0uZaeLAPvdIs776UdyjkysLLMY%2BUN5CHyP5rBMysSpN7ASvkqm0F8YxWFicHk6aFhxrqNgrQZEMWc26L2WyudOuV%2FxFoniVu0kyjkAWC41tE4%2FoW9XgezpLyMbuiMn78u%2BytTd0EiSjqO8h7IAtWcMPxv3VICaoyTzohCRlSHWaDQMzzXh%2F9Zo3sdqt9YtrYtHbAj4yvil5WPd%2FoCEAQVy5tzrQiAJBE78MvE1SXRlFYd3FxrDX0NWDOQNGMBCED9EUASapzTspOo31LVmAApg18V5bVqHQsIVtvohGpGoRv4W7jr4TO%2FuYyoXU6gnGOvKlGw6DHw0om4qxF1I7qaxl3kYuR%2BYXnO87NWZpkcslA%2FSojDy4slHY%2BNDNjKTcAmXfZQMJX7MnpPVyDEgklW0%2FUEvBaVxere2ydEz%2FNXNJXlgvAOccXDqlkUjqR3zC9NyFr%2FATzUbsCJmynjxWVbSfRyiz%2BKhNgBc6MKIAXukWbbsEF6rVh2qC9HMufNqAnH4ZseIqIC9azCZvHcHzjGxR1pDmxHvKN8W7L6FzTt%2Fp%2B%2Fj4bDadOxHdYef7ORO2vhD2muOyqJrMSInAPzdIRQgJnrBckb9khBWNp%2B3NP11HWFWIelZ04x%2Bv1OotngtENZuo9BUdY1DvPHz5tB6MdhjVjphu9sY38JUuc4zB%2BVlR%2Bfv%2FvtNv1RCBzCnaHm%2BnvP2poaQjtLVlrP4LMEJso%2Bt5YVE%2BHfk2Jc4Ppyiyz0H007lRU3idx7avk2JS1qN%2FNq7UkYOe0Cn7Qk1Vwk4VKJQGY%2BTxSO2wQclpHj1xYKXZrmC9BvgnfPaUpDMb0o8up3oQtZkGgNyXOwhUm1ZSk9s24DlgXh2zxv%2Fu9bZYArFLvJW2bd880i2eR2GkUyh8xZVgcM4QYlO6b%2FbzFwWgC5erON9KUt9d9OJehU966Esb%2BuaIDnHE2Y5SDiiYBZaDTC9QsKGF9xJHG1kIv%2FtFvMygZ7nJVYzzMd4ss1pxSJ47MB5%2F2k2fyTNTQIfGes6XW1z5fD3JDzYTVyG9OO1DLOPitLPL3oRu4EF8KogFpRx81hD1CrrB%2Bfurr%2FOfqyEE%2Bc80jpFPRogG%2BxFjd1rJ8H3cCDx4Txw%2BB2e6M4lqtgQ2WUC1UWBHI4j2mIeatmR7yxpknX%2FleoVk3i3xNJERHkvGqvI24c01RHJHonrF5gPAzZ5APdJSqRSuXhRXgaKayKTFv%2FqhpmuG95nCQv5wMpMbNwWyK3b2OH6ZDCdAUz7ANyIx%2BECdgglplR4PLctetziaUZfQoa%2BXsqCY3XAsr3GEspa6DY7BGX9hmi7X8P58S8LWoKV50xoh85oue229HvwEy0Yhz%2BOSXxCCLEEyAWDGImdmhLoIKHDB3WqifHUrCsVVftGwxDsYA7eXN3iV2d2E2Ha9sNPkME1TbE6aW2U1Oqn5Q0r4rFBmcBVYaRrBEwlaclGFvzQ16HdTbDVLgvBJO1ZaQb2MC7%2BxUhAwHcVBHHBmVQNu%2F9r1l8x0v58kR0i73KUZDbizg3A3LrmGxSaIZ5r8kLfAUSEwl2vVEC%2FMpyPS7tK0Zc6QKFRjUp8NiYDSmAj1SJAOEg4%2FR0cS1lfnDLHi83WY%2Bvsd21SWy%2FdVlFPCPLrWzb6D5a6yl%2FM2ToGY3tifVfy4hNYvd2QBa07FSzzRATIUJzD%2FkY4r1bXK8X71POn9trNeOyPiO4x1USHFIJcHps6RRaMcA7HEq0%2BiyUSAxR1oHIxvopmfFLW7DnIJy%2Fv5Hu3%2F2i5jLkGYXS%2FEmNkV00QqJsodZIHCLJCWyk97XegL%2FJmV5thHvTaibWLpjP8EWMmy83PHYeW7dn7K0GLmdpAUMyvucJ5rVdKO7fRfnQf0oJbJa4R0gyZgcI2vAU0rISf5sDg3SOtunOXyE6DQpZGHftNS5s%2BIDywkwxy6Hk9QI%2F%2BzdpwyjUtt3WbBxBpu2KsAOn%2Ffyacz6gdpMxa4hepeKr%2BmUDk11Ubg%2F4dCpnSHS%2BLIE7RI3%2BFceX%2FZWmDj7YUvGJPwf1JDzZ%2B73wTYbtKwNOB0lgEQCvKsBHUfi3wAupboT4bxTs20PRCFt9dS1bAcuT5BKy6JKXuIuOT03iBGz9e8I93gqIH0lNfYXgpsq0PZ0DLdd4LJQDhXtnEewlejI75mFXHWyzzws3fZl5wpxQ1Mpsbr1FWIA0CiZYECb29dAGeGJjCKgbZx1IdueXsC63VmkXAjcyAzNclZ7%2F%2BJoPOkZwDvFaIT%2BjyoBrxlLQ3NxRWedmZgtg4M%2FiMJ75kd4hhG28PLtI7JMB4ezdWMhvCfFYiSE38Z%2BfP2QhbTjtMnWjXr9Iq0GG4Dy2kNZqlebBAVviPYfxPoyAGFB6Ldia8GeGVj%2F%2Fg5bmALwxsndoH0DOfEQA9bOarHg5Oyh15Eun3kW949CSRvfjPCnB5DZ5dFzdIHDkjaXbhzfV330NdRDXTm%2BxdFJpNwlwAQb%2Foptnm%2F0BUmZ8oQxwht3sLzrrsYzsRXkEDn%2B2Rq5jfIXDNv4L5FoJkYDpuya0vkAtlLinRgwPL1du7Bj%2Fo002NH79v%2FHkrpQTIcjGPK1LVpQ%2BOLoefg%2FSqjGnIQ9zD%2BWDR%2BQSkrEO8If%2BH1573%2BTwy%2BSJO%2FjuRFbZiuSIrEmWC0CMjkt%2BCzSzALB2mUeYTLxv13mVNVGH%2F%2B77mTsX57Pj54mUrolJn47GNPM2a06J%2FMcfsVLV1HsKJgKhvFtxpinm9pxUdYpywHPFbqro%2BGk%2FG0QhUHsXgY9xkrKqWeE8lRwx7uHBwaAQmmZe0VGyB5og2yq6aYpZzZkdTMMlqrsf4nPajLQm%2Bqzmy%2F5j9i%2F7Ej59Oyt25jHWP0tHNJL1wwcKN0a%2FR6rrdZsFgN9CQxMUKlDL9G26gbDnfhWyDRAblC2sea6dLHY2x%2FNYTx21e%2BqwOamrY0bt1VmF7jAgvXzGq3xz4YQ4ARF7Pwj0qzXhB%2Bzy8sa3krTjXDXTO%2BaTBrZhidB%2FUZAIwO8b4CP1Oq2slabU25mmkCr9WkgUqzyZtTfxH8aARisYHfyopIP0EXKvKspTNJI5dyGaC%2BS6Pro2lMdkt1zBghiFIm60k0beQSFLuOZPgIdoJZDfhedmHkPt4kF9DEEXBs90rsct%2FG1iUH%2BU6vSeAPUhO93Rn%2BBO%2BfgtmMwOL%2B%2FKpdsAlOMLdqu7vPA%2FevvkWyJHnlfJSLcp3mV1klhy%2BoQ5BDGlw7r2BQZH1WnrWozREpRBufU9bBRMRPFyRb33WdZJr2UgY0gcyl%2BtTNDVk1lu4iOCCImgeAfsr6b3mk2nSbnK0xFr3wqkGbcQt%2FbJBPjwMJItRo0JP9eMJqfmqVZtoVpCX7KgCDcT0pGGRxSljTC%2B5597ykQurLXRIvKo2suvIqfJCw11yYRD5oyxPsLM5Jd6BHAYd%2FaOV6rdQFwrPYvM%2FPWS%2BqIWxA%2BS4LWqbDRu27GgYSM%2BY07lFmvvJxe%2FFRLdUq%2FPkk5HsqNB%2BFUnxcr69kfvGPouaNgbwK4qaRUhPEaJ8pbsGjqRg61%2Bc27Seoz3dhWjVr7uZdUbtAWDjzkte%2FGY8LjiMxcVnyKEnbIfdcWHqlZibSUlUKQlYeJ%2BlvgU7RGquljbbgrO%2BVeoScR585%2BgxxFSqaZeg8KELhkktn81oTxTpaltoN2TtyTqdy0nFF0INHVHVpC%2FfFN8XLppGzRHEoU74SwcpolxBeBfDH7jGDp%2FHAhr8yigd9RdJVBhMnyY3QcCz%2F3okx7ZpsbdwJe9iJV1Ui99iXzBeRY4655H%2FmXk2Y3rY1ZqAB8nIC9kKEqqPommXfKN6svdx1UrGEoF%2B5T51KsWZKwBwpViE4PyAjTZCIMMtjanjTkpxLNXswVBBgvY64iO2CCrX8YkgtdIt6b%2Fp%2FLnfK7QfRmv2d2hpeD7QCUS4MS0r4pZ0uTRl6lSFEHRaMju2y5jy9RaQCLxq4yGCt4QhwBTJ9RYn715IIFro2l86cRz3jUsvqh%2BhSCjCJ9SMVv2QdpkzRTr6w0fr9C5Yi7JOh8QEctBB829zk%2FSCIr8zkNUXaLTPYdz4pV6TwasEGnP1FnPlFaqRrozc2eYAWmnVcx7P6SLVpHvu6PoUfXkUT0Qv2xezPQo%2FEe2l2sM5ceqIx0xbIKff4CVLSFOJFYbkGBJorr9%2BJawUpfQ5CWqlG45br2l%2B9pI4L0iAf6Yl%2Bed02XcaWA5iypnVP%2BUaRaJtCWqBEifxZzzcHvVxRkkDCBD5LspDlCMKhw3q2CL0ix50KbcGvmwisHlJuetgDKuxqePp27oKYDxgFwaRVp44pffcrtme%2BkcABD0yUXhXoZSVPCBHv3e7hXS2trHNS%2B9xvX3OI8Nktw6YwHFbKuMR2X7u9loJPIprxIJmp2aT24VCvDDt2kfoP%2Fkjp6s8qY2tfdYeicZQBrthqPY6YYsHGuy6k82Gv%2FX5li4iwdHJpS0j%2B2lk7SVXBFx4QYBThCeS2Kw6m7niQngrOyX1F2wWq1dt%2BUUSsoTAUuWwXI1sQQu2zLjMK3Tn9vmkYxo6yN8GeCha%2FgKi%2Bo%2FKQGFL89JADyM29YdKLX3v7%2B2HE3nsS80iefqnUEOe6tN2xlsHbm0HLV00V%2BAEmgITxOnK8kwzRtc9xcJw5zBOTvhC%2FKJtvumYRpGB7hMig0XixcMNRG4zpuAAh0wJQsZV1knmoYTyQfD8vdfLqVMhM030YWIftkau%2FzZnTSTj6VXyl4hozISaj8uovFN%2Bc5CTe0wKlbdkRGWhJ8k5bg5I%2FWuBhyK4JXIZHLb46sQ103P9VJcsKLv0GVb0np0nJ1OwJw%2BF%2FSIgTU4T5DRzlPhSjUwMmJ3nYp7bGct7Ktgay0jV4sUtunwgX7lAiYMzDTZumwvStlVJBbWTqkPxU4FKezn4ObYZEyB9eIPkdWOtB0WJPGzpsLzY7ALpfdDlVa5vvH2dnb6hxTdbXGUGg3Ks8VhKWrCcWbFY%2BNKgrW9DA6Uyn8TdPCDz9GwaRb5p2f1kgCP2jH58CHkTK8UuoFnJf9Acd2TPPB4ARiGqbmKDjrSAFYND%2BMMMRjjxM9llrijpkmOhgUwDi907DLnElm4dTlEpIchCzyPUqbYk%2FV32fx3BLgzd0xOmEU0Np84I9yUuqWtqvxZOB2CDwVF9WER2JOd4v2x6EJCsChGo6xTNFgBe4NYSHDgm0G06z3bxBbluW2lwFspiBAQ7%2BTjRioiE3sE%2BobCF6nri42skBMPTnSQh9gw4xCvNvj49iaJTBu5l2ABlo09ArHNK95JOgVSmsIORLerpfH4L6mueXy0MT5KEQVAt1NVacUUlAoANHDZUlS%2BEDFluZNLEvW6YvdNr1%2FSPo0M%2Fa6%2B95lh%2BbjFXLNq%2BoLXODWEvU7bN0S1WnrkDA%2BjXCwva7nw%2BOLsqlwJRlRcJnMxrihlCJDdyJduGoljRtIdfvRXkeQ%2FqYkZAtB0jcgzv7YDZ42Kos9YvG6e4HfczMJJxgMXRDoJqwIbqr%2FcSzZhihT9qgGzQ3p5PhahNAZB9lGw0y74vqIAemphaUqJ8KTSc3m4MgQzujdKmZIJEmyAcYk7Jh5FcXUVP%2BUPIJ6aoIJUKrH9sXC1qFVbqYt0oWOCyijY6wFG6JI1984dIQIZwzDswyj3Wl4DpjG8%2Bu14hGG9NeO16i1r2dZ86DkyGontIKiHZlJbw2dfqEJzjKOMHvI0KzXkO6%2B0udC3b4aNdl2fdB%2BngA%2BE9HuUy4YlTaoK0KwFNQzK1hCebexq9Fbo5TkuOoRS0YQFVXNYGun82MUtzmGxL9NiEQLZWMXWPIuC9QlK9FG5b7eghI8LBkqNEzjbi52lqEQUJ56uO2nooRGWwTJQtm5ewk1IHhWIxSX4tVWK3SbGIIF%2Fq1sc1IHTI%2BbAKlRKbB%2Fjsl2J6Z%2FMhZFIq4D6oxMg2AQAOzwmh9rnMUSdnRlPEUVzOLV8nWlOnGPGmNPwXzcjxwxQliVEWJUvYz48GRkRE0%2BzXwB7Oq1d4XBHajwKCHZoa1UakYf77EtR7F5uPR9vJyBi4hBvYBXpFo63lWJFrDT%2BQsTQhSlbwCORxr0RK7hWTSBovjZUaokn2C1SV8yCA2RwtmWoqnYlaAoichYel%2Fl%2F%2FgnCL0k6BYodceSmmF8ssU%2FXGRj%2BRe1B4id8NXxkGGVdkjkwkJdGW7fZgCz9PGhShayo6ofJX6LDDZ9ZtsHHOa5zSdGz6edPVU6rbV%2BlcMxSMAP6BTf6Amw2ARlNVpTaRWV9H84gq3DXtW%2FFqVj9hZeaTKf60hSJEKqQWuBSM1TvHIof%2BCbo2bif1t7rMEMt0Sszyl%2FuU5Qo2rDcCPacIDGC0B06%2BqTyMnqPlL4JxfTktoMVGgSWmimPai8MFOqYAWitLxEMtbR7GPpD612R3PH9yi%2BziY9NPFDn6f5dF4RBOwzrsvlFyo6qJlrmV6ouZkUfTkQJzPz6g3G%2B4ehZezXlCZdGqhEfn28GZyaxvDKtBahZNYmh20tg24KhZnbrKrPrk9hPloZFKjOMCYt96r%2FstB351lhh4ioWVokYNzMoafHGoXsfEEXcsfiGnPdaJpcbH0ffBF787MXRFYTbhmvd2inlB7sfbNrf3YAqMDMcoVl8uujEBC2GfguCb6gI3%2F5id5NgFgzdRnxS5lA6YzQPiIpCyQBZ1LQ5ixrFPR0jq6M7Nm0%2Bi4f8J6LX%2BD6q4Yk3pG6ihwrfrAS%2FbK6qj4xIPnu06uuvrec2YjRP%2FAkb3hNY7ZyMUkT9vqmGHJ9VaU8ES65qeSFZ0aFkabwP7FlH4BN2lsonPvTbg8Simgz00DSUmoO6cvK1Wa8TMuqPRGZsQILxko5TdiSDnq6ShIpLS%2BGmd0Rk%2FKbZ3RngDOXFOXzhLmn0oCslOfnZ0XGCXgQMK3K5FNWXVt35Stq2nlCHYGkKJKzuM3JNbQmgtN2DKYLDU7x4kqjE02ZyoArM5RHuHW%2B3HqzNt2otkW88sOFdA3py0fWlbOOCt30s58MHa3yQOOOWEwD%2FnNuZYpUphk0o2g7nByVDU2ruTQ5uuwEW59Va7dQUpzA3EPw4NgZ4LrWAEdd6I60KlWjJDYr5i6equ5vPGuO5YgjWaRyl9CgDFT1lUK%2Fh8hym%2FZG6FeriG7PpA7LQ3VvQAWfYlJ1ri2zVAdtW%2B3MGCC%2Fp0vlLk73ApwGW4FtfWXYiCi2AOn7dM1Ygg6SecFXv5QLNed346ydvsxmH%2Fs2p%2BJgu9xvUgFZhdB%2FVtGynWykzIBDxEyZjYkeV6nsrSOvavIZoJd4OavUGHl1ZeH4O5DyrazrIyA%2Blslu7GB3u7g04932j1d8T6JPDMn9ObEiM7db%2F3%2FvR%2B0qHyTO1BdBhKZtMxIJorCw%2F0evrs0zwvu9VBzh%2BBB6w%2BAPvz5FiAquGF7Uj%2FAhADw%2FZ2XqxNrGR%2BcErQ%2B5GQxf91aNM2NjcFGGu2hXphbAR92ZhLXy70x2hf0TT6yFsx%2FYTV5Af614E73%2Fi2n82ovfAhzdLOVER9FkCzyogneejrdyZ10bCpBJSjiQ4xTvtckIbYZ2YFZs6kKu0XQA15fI2IYci9UoxbwCPDJeKWiEPmUSVOrFUKBrmDWRw%2BsmqYJMe59hOri3CM%2FzegQqtG%2BlhQRQs02lxDl8YzUHSn2fdDSziHVlbQKrewvB0al7rrb3fWggVRWNEnsXbsMsnQB0hJCRybxnXp3%2F8QW9P9933qd6t9fcwulzC8Y8sd%2F1%2ForSeGNA4L3J8RFk6QtN%2Fi%2BiYmQBbOoigDL95%2FbX%2Fb4ovthT3y9EC3Ep3RpEX9u3%2BBdKyRc4qjYqqA2GDSOPhVW4s%2BHAwVL7xtGYwPeqRI2tWmKqSWZrjpPfi2Bv7qm3chIs96x%2Fc01Q7bmPx%2FwY9T9yM5Durw7w8IkWLtc7oFpq1C%2FWcRFX08C1mAcs4ubNdfvYwUDN9yUqzThDX12SoJdw6hUT6aDYKTlnd2jiNaf5QMCVIYpYQZHqwWgqfw5rU2JSwdukhmI8WCF8K5DQIOyVWgE4YpEkzdCwTx7pILH%2BfxhA7RdXYhg0Vho1JNegFhVt%2Bu0tQEJ9pHoGLz5ynDiv%2B%2FDRg5WNGkJBbaoHSrszwry5faaWyZ0LF0B2%2BOZ5U9zo1Q35mXAuFUXs2G3p131%2F1aDhHWYDm%2F7pejg7C37hqnJzZEvvRkGVYVXDhQsz9fgbFFzauCJd4YSaiSm%2FFIDxbaDRByLBgP2gbZDvj%2FoaZPc5ivNaRDfDQBV5bpTdkrcOhe5XFrKVCsO3IHjivrHdiYXCP%2FDk%2FyR4C36vd99wnsqQUW18Cj65%2Bi4aEdPkoILqwrqs5bMngs1RpVPWZN8iFmIrk06CPUE2YhlCQuH7If5De72vlJUvRk%2BQV%2Bv%2FT1NEJ9OJFq6s7TCE5PHJFa03jKYgdiH%2BBwHzKG2gnOX%2B7MujdCeg7IqFOJnmzRvyazVyz9%2BGb2z5W0SmKrzYECgFC0T3uINMpC%2BWy6Dx%2Bb7eNEOxgCYRG8aKIjqHfK8%2FEpzyxy0e1wgu%2FGkM0l0Lwh7bwqJ0xzRW8lwJi13VEvfsGAXDVL2COO2VHszZ9g%2F3gD8N1LFuef48TvDJVNcwJhJaC93CeswKgOXpuN1BBLphHdtMLVo6OK6Jl4cXqlmOsXaS3atnpDMSKIP6obvyD9tSi%2Fy3%2BIeFAMwOBpjbOHXoOYeXtl4RnEDBq5lXT%2B8qA5S8wSkcND3oMvIOilnb2xgO39%2FtPtozIfG4siUlw2M%2F9V3lyvhiAIkphxicbg%2Fh%2F3btg5zuoXHyMmUNeZuYSthAu%2FN5DDM7GoN78N2eGYJKVp34wZIpetmpbcbhq1D29ifOY8etBi8IhZtEafXYPUk4BK%2B%2FaWz0Lbk7y%2BSO7HGcP7YPFqEeuGbOScJqqLAd1oCVf9GmUiizxFHc0Y%2BBlr2ARMKoyRs4dJ4cTXx9EDhQgC5u29%2FIW3iiQsPOxT%2BNsFqzSgcYiQmlvnBcmwbZZj%2BqHsJiG%2BPq1yegdmOug%2F%2BWbhhFupPLXYo6VKv7nwjKG828LAjw4MD17bBMTRIABQ%2Ff4NN%2FcV%2FdwmumzvNzQih3ya%2BrNXAUKpx9Tw7RXSp1hvmoZ3i7B4WMSHlVmKtZATw2jgsAYOl5%2BCUZjcUtJaMrcRj%2BkWD05Ue03AP5D9z%2BvWl96bxqwYvuTrqpkTJ%2BdfnaSSAIH%2BBY5ScpBMwjsIpQr9J8IbXCShjvzf1NgzFBAGOUYmcUwPIgbOZ%2BBqOLwXI9QGBnivGV5VoLcO2buB%2Bn%2B3Pocj%2FWr8P7qVEUv1AxfOBWFVQCySizD7h4i7YRyfsOMx1WAH%2FXHsmvxYHUDro9Gc8wXymVX4CkdZY6v10%2Fes6f4okYf1Bp6RL3Iw1qD9Cs4Kz6YlLhYl3uuwvgQZ31qCxnPQggeYKUI7egyjcIoio1Qkgj%2FBPYILE6ub18F4cG6BLeTQ4b%2F60FDNWdIoy75QyFTaHDujAcgemORomCXCDj9ewBpGF7axIq3NmFQw%2BZs4RWc5W15rMiO3uvuvHq0t%2FLS2E74Q3%2BUqSLLXkPf1XX5OqJB6nnGjJBvIVdhsKkASmFHSSPi6L7fKoRkl9T5d9BThWBM56fI2iKoOno8vKfYQKjQLFaS4LyUcLa9CeptQeobIGJz8OKdQqgcdAaWx7P17caxzLEYuKMWZ80X776rofXTrL7PoCXkoOkTeN6GajiO4aCj3UZDR2kYXfFu34zokdLnchpZvaYiLcloO0b94DJOKmSQAltrjHzrqEQWiTQvD6BrIb6ewoDmCymlBPp1hy7Ca0zHbfesENkVRl2ElxZmAtgzpGZZg7aiXmd4KhgoM2q0KUUncWp3ohhQXvDdiz7IpdjPOVGs2013tHiRSapUz4CI%2FzvlIJQp6QFgy%2Bab8wI1wO6CFfrZivjEXyF%2Bmrnvbwq7pyCruqS9eWUtdGnFI3rA8%2B0SxkLfEeKQPytVPKs1Jsev2Q9b2Oh%2BVLtLLjnKPrqFOMnD%2BDcALirF1U%2B1cygvLNBO6r7TIyzJrNfpCaezYNo63H4Pm08dyMkpR3D4it9h4Cno2TnoQUbMqiUysElSxMcAux3ngZ%2FMPEvR%2B%2Fb8QL9dy0fcQJ5E%2BgQZTuxaBORHVrMxlytMbZC2I0iqErZ%2Fok8rRvkWTWhOMlSG3jaF76mA%2FR7TGvVndTqKsdFsZxoZZG%2FvB%2FTmMrR6%2BJ1YFqlWCt6dFEOQkyRZVP97cy2VDhIDxuqfXZMFGgki5ktClUxI7kcFSYhb2GMkGqtn%2BfsMYnIWCFluyLVjlSgHZQx8DmAiirloZgpNXYpgUHbK74fGYZGucrs5MHiT50elisDztZr10Qw359EXp9dP8J3wKkE8n%2FVqeno0r%2F7ONNisATHMYe9XjHykvtoi714cCSXnoXa1dpcg2wap34h%2FMBBxmuNv93w0GcQyIjdjrJkk0JEUJ%2F3F5tUn6VxRI%2BKaNqbqMgePPGKmq4zrQCMeARcBJ9M%2FrJlTtyh2e8HYKcEaA0v15HaWU9d%2B7JSWe6HbmubcDZQhjnqM9PjdFdsb3H1zsaHzmmgZLu5J3c6bksrNRcXoZ97ILe5hPmfdPX4Norh2nMs8p2QeEd7bzb8LuU4ksdmkSiIGWnd5aLmyeIqFyR%2BO7cT077LSO2a1G4qma2hM4tr90K5kquLmWopn3Aa3ip7jjeJ774mwXs50zXhiT%2BbRZxABHo7J2l2dI5SaXHcQz8BGhBNWtY8zneSifDm2cAHBa4JAoTUrUXnxWZ3xmkG%2Blh929KBYrwgNPllzAO6HgrQKehds1MDJa61TVdU8HjvRrNQPeJoawMY%2B5tqWWCPrl%2Fkx2PEyDtGxPNaVuR2kow9%2FGI21kHFeixpStA45oHi3mpc4N%2B1Dblw60c5TshFza04wyEsKahkYX7ySSUzJ211Afu%2Bt%2FKVVshZfkeN4clT9Li8qfjRskL4GeBc6dpSNro5749g5edt9RqGxfwCLA%2BNYh4sVTmFz4JRPJ5cLsyk5uT2kPmXLp5X%2FlmVS5ZS7pXsJfuCiUc3J88gRq2X%2F%2BWsQjiVYBdiUHJLm9Bpe200q3LWfy5qpPTHZOTLV%2BHJ0SVepY6y90qJ5ByQkQWnPalzZ9LWSA7dpLdBVcujiDwFpQmaREr%2FgSF4QdOpu%2FY%2BbNjkLOJW8iKN5Rk3souJgDiZo%2FJJOdCNoXdiMMwjNufYauSXjWteOItamFanZ1GG0%2BX%2FAGIoGbcmHuQthjM6qxpDrtUhPoFjOrKhXsw70I9PNmANtsbyVVHGCLeq%2FfIbbTBCGz1fx8SMl7QKPTUbWYT%2BhSxBiMFl3y7Dv0BNXL%2B1cFDmFGfUWg%2F3rNAUyXwtQYLD5mlU9uKJn3GPcByeLbMq93l7ugSXF7fd77AAQ2nO3%2BNSo7baeOraKayDEl2UOt1EdBZW6mzBOzjlFciG8k3fk3NObZDdlQht%2BCj8n054eExs%2Bq7diy%2BgFHvxhA3WM4tVe4Pam%2F9x3WVUbDiDdd35IQqC5LSXoSQJm%2F3K%2FexSWYn875eiK4hPT8a12ijvWmsNsGslAcYHR4wwh7uvmumc65wgAg16%2FYQOl9gTwfY23tezYOQkl5nfs963jRWdyEjtPmVSr187msjNawxOhyCYHmzbOZZ9Vlt9yjiyWucQeQWDzIPTGBdaD166E26NPOJ9pMZTcp0lB55c4fGuXxd6QFalBL12zzwhcqDfFzLaHWhHwPhHSi5JPp3x6wEqKaZ83PSh5bKiSORpH9VRmsSKju8fOr1SXKJcsylfIEaTk5qhHnyAG0gjrELAVc1InzDg5heuIxvx%2FIoCE0%2BWo87uVjAiVvOkbPJs4V%2F9VFLW4ON6el9OKZETZvUEG5wt01OCNV%2BQ%2FwyVYwqL7PMP0WvQn3GezC9wUAB9%2B7be0raTQh6eYVANZtsPPQMvq2mJSbI1EUKm3%2BU5RdTnVGMX%2BgJBLjTrb0gTYhaHdCtqRjaXwn4TUqfR4LJbN7wiVIVsadT9HoPCNEdaJiN5FtcyoKmsQBQ2wfvcZQdSmlnSEy8ZtbFgVCqIQF0h%2BwxffQobHwKZqMDqk7JCuUQSz7gA31pQoaa8cGm79oE8z8%2Fl5YP7Gx1ZdO3CP8%2FUDtPhVoufZwjiuTm7ySt6cavn94pu3huf7ksX%2FW7SSLRYxO3QkHPFcy5GM9F62smue2m0EhruN9RiaaR%2FEQbu%2BMa6D4wPdVBFi998Jdw%2FEsLFtE5D%2F9SfWIwdKn9MjNQ4%3D&MAC=%2BTfmnltL0cRF3FTQOgt1MxfxxMXnaSQS%2ByOspvLjU0Q%3D
+
+REQUEST 14
+POST https://nettbank.edb.com/secesb/rest/sam-ws/SECSMobileActivationService_V2_0
+X-EVRY-CLIENT-CLIENTNAME: sam-client
+X-EVRY-CLIENT-REQUESTID: 83954748
+User-Agent: SAM iOS
+Content-Type: application/json
+Accept: */*
+Accept-Language: en-US
+X-Aggregator: Tink Testing
+
+{"keyId":"secesb","iv":"MDmN/8KKYOY/GMyGbyuhuZ821GDIDrdbYY+uxFPxzvc=","payload":"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","headers":"s3xeTBSo5Ze0oJD3AKHFD4/5zJRqJm6dG6ci9vf72oZTRcspO6BUXp15y2695e7RDPMpZ6pS6ROFoD08S8UsR+H/cZPhRcfDL5bBxG0+L/LEtGx0OTczHMcBZTiS9rSo","mac":"pt/bwVsi0t8isdsCG1IFy0sbnWh0gKtU/y8yv0twGGc=","emk":"ftSwMeOtT83X/1NgRk1z+jNdUm1mbv/DIU0oKzXE0/hbiG6xY6Z11Kdtpb0eGIO6jUY+Fm1owfWaFR16Vp2pU8e7BF7pFf2vhrhea9tSExPT9sshc3DQdZO6NUUwQY4AZd5/35tsbcGd/OXQk+H6w0lYfOcIltH6XkPteuYjZ7xq2XVOEOd7ylv4o6zpKKQ1s0kfrXK98CAOaGdcbf+Kpo5TtajdZkU7jNtxlaRwHZP+CINIcSkw+4seQ0zEyaeJ4/IaAXiDjwf0J+1KmDD3BS06UJNWjpdIXhphNElX69/hkvEqf+Jie6JP03vm+Dl6zzku5YWi97zMuMugoeEjMg=="}
+
+RESPONSE 14
+200
+Date: Wed, 23 Sep 2020 05:57:16 GMT
+Content-Length: 2632
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+{"iv":"M+GMa4IF2rSVmFDrLkwS9oAPrB7gq6GLAQJMhYwPf38=","mac":"nDAvf5DnC+xSzw7ovB2Nd1N09SG1HTcawYuMCnhR2aE=","headers":"52T4BlMKn+nwTdYkkYenSn6TFOW9czlwroTCYMpjF+PzMSA4k3FURIPY7AOlD50GhWezTAcX/UAa5khFJID3fsef0vHFz+NsGq7Nyu5aCyJdMKuGNaYh+8vkFGLzO+cHjBdQNs0A53l/y2iluvm7mjNwrVqEWo22s42R2Izo8ijkqGE9R35LEGs4O22J9sOYMH3FG+HqsBDd9ei1J29i+AGjtmimePYo/ZFZxYJQbX5A8iqCAkW8qYQ91NEUhKBRMugcTL6VNtcq7SXHlSlpBe+Fv3SjQ2Fiq0qQuGPaHyRQHa3GQtXo0kVG0zGNMyNMt6ZgqtGMc8WsPzMYQGu8tA==","payload":"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"}
+
+REQUEST 15
+GET https://nettbank.sor.no/secesb/rest/era/accounts
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-Aggregator: Tink Testing
+
+RESPONSE 15
+200
+Date: Wed, 23 Sep 2020 05:57:17 GMT
+X-EVRY-ESB-ACCESSTOKEN: eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJ6RmJqaXdVUGpkbGxyaWRrSlhidnZvM1NWSFNqQy1XQVFNN3FvZjlVdWI4IiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjE0NzgyNjI2OCwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYxNDc4MjYxODgsIlNlc3Npb25JRCI6IjFhZTNkNTA4LTY4NDMtNDczMS05MDFlLTYzNWMxY2M4ZjU3MyJ9.
+Cache-Control: no-cache, no-store
+Expires: Mon, 01 Jan 2001 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 22991
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+{"list": [{"id": "30002429299", "accountNumber": "30002429299", "bban": "30002429299", "iban": "NO5730002429299", "customerRole": "DISPOSAL", "owner": {"name": "Owner A", "customerNumber": "01059344907"}, "displayName": "Owner A", "accountName": {"accountDescription": "Bedriftskonto"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 10844.940, "accountingBalance": 10844.940, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"detailsclassic": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/detailsclassic", "verbs": ["GET"] }, "immediatefees": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/immediatefees", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/balance", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/payments", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/details", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/transactions", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/interests", "verbs": ["GET"] } } }, {"id": "30003806959", "accountNumber": "30003806959", "bban": "30003806959", "iban": "NO2130003806959", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Ekstra penger - Felles", "accountName": {"alias": "Ekstra penger - Felles", "accountDescription": "Brukskonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 5.630, "accountingBalance": 5.630, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/interests", "verbs": ["GET"] } } }, {"id": "30002743279", "accountNumber": "30002743279", "bban": "30002743279", "iban": "NO0930002743279", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Lån og faste kostnader - Felles", "accountName": {"alias": "Lån og faste kostnader - Felles", "accountDescription": "Brukskonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 127.430, "accountingBalance": 127.430, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/interests", "verbs": ["GET"] } } }, {"id": "30004254445", "accountNumber": "30004254445", "bban": "30004254445", "iban": "NO2530004254445", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Grønt fleksilån knif", "accountName": {"accountDescription": "Grønt fleksilån knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "unknown"}, "accountBalance": {"availableBalance": 16248.430, "accountingBalance": -4033751.570, "creditLine": -4050000.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"detailsclassic": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/detailsclassic", "verbs": ["GET"] }, "immediatefees": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/immediatefees", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/balance", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/payments", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/details", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/transactions", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/interests", "verbs": ["GET"] } } }, {"id": "30008215061", "accountNumber": "30008215061", "bban": "30008215061", "iban": "NO7330008215061", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Lån pant bolig", "accountName": {"accountDescription": "Lån pant bolig"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "loan"}, "accountBalance": {"accountingBalance": -2035652.000 }, "rights": {"accessPermission": true, "paymentFrom": false, "transferFrom": false, "transferTo": false, "createPaymentAgreement": false, "createAutopaymentAgreement": false }, "links": {"linkedservices": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/linkedservices", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/payments", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP", "verbs": ["GET"] }, "loandetails": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/loandetails", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/details", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/transactions", "verbs": ["GET"] } } }, {"id": "30003806916", "accountNumber": "30003806916", "bban": "30003806916", "iban": "NO1830003806916", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Sparekonto - Asfalt", "accountName": {"alias": "Sparekonto - Asfalt", "accountDescription": "Sparekonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 4.420, "accountingBalance": 4.420, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/interests", "verbs": ["GET"] } } }, {"id": "30003804107", "accountNumber": "30003804107", "bban": "30003804107", "iban": "NO0730003804107", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Regninger og variable kost - Felles", "accountName": {"alias": "Regninger og variable kost - Felles", "accountDescription": "Brukskonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 50.480, "accountingBalance": 50.480, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/interests", "verbs": ["GET"] } } }, {"id": "30003804077", "accountNumber": "30003804077", "bban": "30003804077", "iban": "NO4130003804077", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Ole Martin - Bruk", "accountName": {"alias": "Ole Martin - Bruk", "accountDescription": "Brukskonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 172.730, "accountingBalance": 401.730, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/interests", "verbs": ["GET"] } } }, {"id": "30003804085", "accountNumber": "30003804085", "bban": "30003804085", "iban": "NO1930003804085", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Mat - Felles", "accountName": {"alias": "Mat - Felles", "accountDescription": "Brukskonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 9680.210, "accountingBalance": 9680.210, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/interests", "verbs": ["GET"] } } }, {"id": "30003804093", "accountNumber": "30003804093", "bban": "30003804093", "iban": "NO9430003804093", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Reise - Felles", "accountName": {"alias": "Reise - Felles", "accountDescription": "Sparekonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 30.720, "accountingBalance": 30.720, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/interests", "verbs": ["GET"] } } } ] }
+
+REQUEST 16
+GET https://nettbank.sor.no/secesb/rest/era/creditcardaccounts
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-Aggregator: Tink Testing
+
+RESPONSE 16
+200
+Date: Wed, 23 Sep 2020 05:57:18 GMT
+X-EVRY-ESB-ACCESSTOKEN: eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJ6RmJqaXdVUGpkbGxyaWRrSlhidnZvM1NWSFNqQy1XQVFNN3FvZjlVdWI4IiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjE0NzgyNjI2OCwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYxNDc4MjYxODgsIlNlc3Npb25JRCI6IjFhZTNkNTA4LTY4NDMtNDczMS05MDFlLTYzNWMxY2M4ZjU3MyJ9.
+Cache-Control: no-cache, no-store
+Expires: Mon, 01 Jan 2001 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 11
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+{"list":[]}

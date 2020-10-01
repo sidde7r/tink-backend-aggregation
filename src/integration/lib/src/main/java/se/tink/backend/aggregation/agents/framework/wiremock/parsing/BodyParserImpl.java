@@ -84,8 +84,6 @@ public final class BodyParserImpl implements BodyParser {
 
         Preconditions.checkArgument(
                 !Strings.isNullOrEmpty(pair.getName()), "The provided form body is invalid.");
-        Preconditions.checkArgument(
-                !Strings.isNullOrEmpty(pair.getValue()), "The provided form body is invalid.");
 
         try {
             return URLEncoder.encode(pair.getName(), URL_ENCODING)

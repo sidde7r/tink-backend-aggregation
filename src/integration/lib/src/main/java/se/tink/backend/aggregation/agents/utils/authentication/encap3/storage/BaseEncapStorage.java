@@ -1,20 +1,18 @@
-package se.tink.backend.aggregation.agents.utils.authentication.encap3;
+package se.tink.backend.aggregation.agents.utils.authentication.encap3.storage;
 
 import com.google.common.base.Strings;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 // This storage is designed to be compatible with the old encap client.
-public class EncapStorage {
-    private final PersistentStorage persistentStorage;
-    private boolean hasInitiated;
+public abstract class BaseEncapStorage {
+    protected final PersistentStorage persistentStorage;
+    protected boolean hasInitiated;
 
     // Seeded data
     private String deviceHash;
@@ -35,19 +33,19 @@ public class EncapStorage {
     //
     private String hwKey;
 
-    public EncapStorage(PersistentStorage persistentStorage) {
+    public BaseEncapStorage(PersistentStorage persistentStorage) {
         this.persistentStorage = persistentStorage;
         this.hasInitiated = false;
     }
 
-    private String generateRandomBase64Encoded(int randomLength) {
-        return EncodingUtils.encodeAsBase64String(RandomUtils.secureRandom(randomLength));
-    }
+    protected abstract String generateRandomBase64Encoded(int randomLength);
+
+    protected abstract String generateRandomUUID();
 
     public void seedStorage(String username) {
         this.deviceHash = generateRandomBase64Encoded(32);
-        this.deviceUuid = UUID.randomUUID().toString();
-        this.hardwareId = UUID.randomUUID().toString();
+        this.deviceUuid = generateRandomUUID();
+        this.hardwareId = generateRandomUUID();
         this.saltHash = generateRandomBase64Encoded(32);
         this.authenticationKey = generateRandomBase64Encoded(32);
         this.authenticationKeyWithoutPin = generateRandomBase64Encoded(32);

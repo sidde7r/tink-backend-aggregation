@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.encapclient.EncapClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
@@ -321,6 +322,7 @@ public class LoginAgentWorkerCommandTest {
                 Mockito.mock(TinkHttpClientProvider.class),
                 Mockito.mock(SupplementalInformationProvider.class),
                 Mockito.mock(AgentContextProvider.class),
-                Mockito.mock(GeneratedValueProvider.class));
+                Mockito.mock(GeneratedValueProvider.class),
+                Mockito.mock(EncapClientProvider.class));
     }
 }

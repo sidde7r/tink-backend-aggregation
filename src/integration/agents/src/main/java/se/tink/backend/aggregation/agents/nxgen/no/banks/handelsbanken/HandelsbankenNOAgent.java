@@ -51,8 +51,9 @@ public final class HandelsbankenNOAgent extends NextGenerationAgent
         super(agentComponentProvider);
         configureHttpClient(client);
         apiClient = new HandelsbankenNOApiClient(client, sessionStorage);
+
         encapClient =
-                new EncapClient(
+                agentComponentProvider.getEncapClient(
                         persistentStorage,
                         new HandelsbankenNOEncapConfiguration(),
                         HandelsbankenNOConstants.DEVICE_PROFILE,

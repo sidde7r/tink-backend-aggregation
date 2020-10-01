@@ -22,8 +22,10 @@ public class EncapCryptoUtils {
     }
 
     public static String computeEMK(
-            byte[] rand16BytesKey, byte[] rand16BytesIv, byte[] serverPubKeyBytes) {
-        KeyPair ecKeyPair = EllipticCurve.generateKeyPair("sect233k1");
+            KeyPair ecKeyPair,
+            byte[] rand16BytesKey,
+            byte[] rand16BytesIv,
+            byte[] serverPubKeyBytes) {
         PublicKey serverPublicKey = EllipticCurve.convertPEMtoPublicKey(serverPubKeyBytes);
 
         byte[] derivedECKey =

@@ -19,15 +19,15 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConst
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConfiguration;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.DeviceInformation;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Message;
-import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapStorage;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.ActivatedMethodEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.IdentificationEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.RegistrationResultEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.ActivatedMethodsRequest;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.IdentificationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.RegistrationResponse;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.storage.EncapStorage;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.BaseEncapMessageUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapCryptoUtils;
-import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapMessageUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -108,13 +108,15 @@ public class SpankkiEncapClient {
         byte[] iv = RandomUtils.secureRandom(16);
         byte[] pubKeyBytes =
                 EncodingUtils.decodeBase64String(Authentication.B64_ELLIPTIC_CURVE_PUBLIC_KEY);
+        KeyPair ecKeyPair = EllipticCurve.generateKeyPair("sect233k1");
 
         Map<String, String> cryptoRequestParams =
-                EncapMessageUtils.getCryptoRequestParams(key, iv, pubKeyBytes, plainTextMessage);
+                BaseEncapMessageUtils.getCryptoRequestParams(
+                        key, iv, pubKeyBytes, plainTextMessage, ecKeyPair);
 
         String response = apiClient.encap(cryptoRequestParams);
 
-        Map<String, String> responseQueryPairs = EncapMessageUtils.parseResponseQuery(response);
+        Map<String, String> responseQueryPairs = BaseEncapMessageUtils.parseResponseQuery(response);
 
         String decryptedEMD =
                 EncapCryptoUtils.decryptEMDResponse(key, iv, responseQueryPairs.get("EMD"));
@@ -126,7 +128,7 @@ public class SpankkiEncapClient {
             throw new IllegalStateException("MAC authentication failed");
         }
 
-        String decodedResponse = EncapMessageUtils.hexDecodeEmd(decryptedEMD);
+        String decodedResponse = BaseEncapMessageUtils.hexDecodeEmd(decryptedEMD);
         String jsonString = decodedResponse.replaceFirst("^\\)]}'", "");
 
         return SerializationUtils.deserializeFromString(jsonString, responseType);
@@ -141,7 +143,7 @@ public class SpankkiEncapClient {
         populateMetaInformation(queryPairs);
         queryPairs.put(Message.OPERATION_KEY, Message.OPERATION_REGISTER);
 
-        return EncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
+        return BaseEncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
     }
 
     private String buildActivationMessage(RegistrationResultEntity registrationResultEntity) {
@@ -183,7 +185,7 @@ public class SpankkiEncapClient {
         queryPairs.put("signing.b64SigningPubKey", configuration.getClientPrivateKeyString());
         populateHwKeyProvide(queryPairs, registrationResultEntity.getB64OtpChallenge());
 
-        return EncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
+        return BaseEncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
     }
 
     private String buildIdentificationMessage() {
@@ -199,7 +201,7 @@ public class SpankkiEncapClient {
         queryPairs.put("clientSaltCurrentKeyId", storage.getClientSaltKeyId());
         queryPairs.put("enabledRiskParametersUpdated", String.valueOf(new Date().getTime()));
 
-        return EncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
+        return BaseEncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
     }
 
     private String buildAuthenticationMessage(IdentificationEntity identificationEntity) {
@@ -220,7 +222,7 @@ public class SpankkiEncapClient {
         queryPairs.put("clientSaltCurrentKeyId", storage.getClientSaltKeyId());
         populateHwKeySuccess(queryPairs, identificationEntity.getB64OtpChallenge());
 
-        return EncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
+        return BaseEncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
     }
 
     private void populateDeviceInformation(Map<String, String> queryPairs, boolean fullInfo) {

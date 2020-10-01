@@ -47,15 +47,18 @@ public final class AktiaAgent extends NextGenerationAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public AktiaAgent(AgentComponentProvider agentComponentProvider) {
+    @Inject
+    public AktiaAgent(
+            AgentComponentProvider agentComponentProvider,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
         super(agentComponentProvider);
-        configureHttpClient(client);
+        configureHttpClient(client, agentsServiceConfiguration);
 
         this.apiClient = new AktiaApiClient(client);
         this.instanceStorage = new Storage();
 
         this.encapClient =
-                new EncapClient(
+                agentComponentProvider.getEncapClient(
                         persistentStorage,
                         new AktiaEncapConfiguration(),
                         AktiaConstants.DEVICE_PROFILE,

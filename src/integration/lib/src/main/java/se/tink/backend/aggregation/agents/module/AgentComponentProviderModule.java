@@ -5,6 +5,8 @@ import com.google.inject.Scopes;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.encapclient.Encap3ClientProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.encapclient.EncapClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
@@ -28,6 +30,7 @@ public final class AgentComponentProviderModule extends AbstractModule {
         bind(RandomValueGenerator.class).to(RandomValueGeneratorImpl.class);
         bind(LocalDateTimeSource.class).to(ActualLocalDateTimeSource.class);
         bind(GeneratedValueProvider.class).to(GeneratedValueProviderImpl.class);
+        bind(EncapClientProvider.class).to(Encap3ClientProviderImpl.class);
 
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
     }
