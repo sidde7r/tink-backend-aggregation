@@ -119,6 +119,11 @@ public class SparebankApiClient {
                 .get(TransactionResponse.class);
     }
 
+    public TransactionResponse fetchNextTransactions(String path) {
+        return createRequest(new URL(apiConfiguration.getBaseUrl() + path))
+                .get(TransactionResponse.class);
+    }
+
     public CreatePaymentResponse createPayment(
             String paymentProduct, CreatePaymentRequest paymentRequest) {
         final String digest = "SHA-256=" + Hash.sha256Base64(paymentRequest.toData().getBytes());
