@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-30 12:00+0200\n"
+"POT-Creation-Date: 2020-10-01 11:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1491,4 +1491,13 @@ msgstr ""
 
 msgid ""
 "Please open the NemId app and confirm login. Then click the \"Submit\" button"
+msgstr ""
+
+msgid "NemId authentication process initialized"
+msgstr ""
+
+msgid "Verifying credentials"
+msgstr ""
+
+msgid "Credentials are valid"
 msgstr ""
