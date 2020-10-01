@@ -4,7 +4,6 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 
 public class ForceAuthentication {
     private static final Logger logger =
@@ -16,8 +15,8 @@ public class ForceAuthentication {
             // populate credentials request
         }
         boolean shouldForceAuthentication =
-                request instanceof RefreshInformationRequest
-                        && ((RefreshInformationRequest) request).isForceAuthenticate();
+                (request instanceof CredentialsRequest && request.isForceAuthenticate());
+
         logger.info(
                 "[forceAuthenticate] Should force authentication for credentials: {}, {}",
                 request.getCredentials().getId(),
