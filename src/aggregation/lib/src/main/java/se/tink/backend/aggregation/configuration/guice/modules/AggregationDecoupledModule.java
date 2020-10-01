@@ -95,6 +95,8 @@ import se.tink.libraries.event_producer_service_client.grpc.EventProducerService
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientChannelBuilder;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientProvider;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceEndpointConfiguration;
+import se.tink.libraries.events.api.EventSubmitter;
+import se.tink.libraries.events.guice.mock.MockEventSubmitter;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
@@ -291,6 +293,15 @@ public class AggregationDecoupledModule extends AbstractModule {
                                 configuration
                                         .getEndpoints()
                                         .getEventProducerServiceConfiguration()));
+        OptionalBinder.newOptionalBinder(
+                        binder(),
+                        Key.get(Boolean.class, Names.named("overrideDeprecatedEventClient")))
+                .setDefault()
+                .toInstance(false);
+
+        OptionalBinder.newOptionalBinder(binder(), EventSubmitter.class)
+                .setDefault()
+                .toInstance(new MockEventSubmitter());
         OptionalBinder.newOptionalBinder(
                 binder(),
                 Key.get(

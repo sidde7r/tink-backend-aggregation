@@ -75,6 +75,8 @@ java_library(
         "@tink_backend//src/libraries/endpoint_configuration/src/main/java/se/tink/libraries/endpoints/model",
         "@tink_backend//src/libraries/event_producer_service_client",
         "@tink_backend//src/libraries/event_producer_service_client/proto:java_proto",
+        "@tink_backend//src/libraries/events:event_submitter_api",
+        "@tink_backend//src/libraries/events:event_submitter_mock",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/collection",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/prometheus",
