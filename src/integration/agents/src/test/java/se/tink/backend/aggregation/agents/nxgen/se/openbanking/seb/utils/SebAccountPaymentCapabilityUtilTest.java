@@ -239,7 +239,7 @@ public class SebAccountPaymentCapabilityUtilTest {
                                 () ->
                                         new IllegalStateException(
                                                 "Missing expected account with account number 11111111111"));
-        assertThat(checkingAccountPatterns.size()).isEqualTo(3);
+        assertThat(checkingAccountPatterns.size()).isEqualTo(4);
 
         List<TransferDestinationPattern> salaryAccountPatterns =
                 response.getTransferDestinations().entrySet().stream()
@@ -253,7 +253,7 @@ public class SebAccountPaymentCapabilityUtilTest {
                                 () ->
                                         new IllegalStateException(
                                                 "Missing expected account with account number 22222222222"));
-        assertThat(salaryAccountPatterns.size()).isEqualTo(3);
+        assertThat(salaryAccountPatterns.size()).isEqualTo(4);
 
         List<TransferDestinationPattern> savingsAccountPatterns =
                 response.getTransferDestinations().entrySet().stream()
@@ -267,7 +267,7 @@ public class SebAccountPaymentCapabilityUtilTest {
                                 () ->
                                         new IllegalStateException(
                                                 "Missing expected account with account number 33333333333"));
-        assertThat(savingsAccountPatterns.size()).isEqualTo(1);
+        assertThat(savingsAccountPatterns.size()).isEqualTo(2);
 
         List<TransferDestinationPattern> currencyAccountPatterns =
                 response.getTransferDestinations().entrySet().stream()
@@ -281,7 +281,7 @@ public class SebAccountPaymentCapabilityUtilTest {
                                 () ->
                                         new IllegalStateException(
                                                 "Missing expected account with account number 44444444444"));
-        assertThat(currencyAccountPatterns.size()).isEqualTo(1);
+        assertThat(currencyAccountPatterns.size()).isEqualTo(2);
 
         List<TransferDestinationPattern> notariatAccountPatterns =
                 response.getTransferDestinations().entrySet().stream()

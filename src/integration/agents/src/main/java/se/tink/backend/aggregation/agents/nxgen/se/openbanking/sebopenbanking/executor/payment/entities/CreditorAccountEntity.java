@@ -3,89 +3,67 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.e
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import lombok.Builder;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.payment.rpc.Creditor;
 
 @JsonObject
+@Builder
 @JsonInclude(Include.NON_NULL)
 public class CreditorAccountEntity {
-    public static Map<PaymentProduct, Function<String, CreditorAccountEntity>>
-            paymentProductsMapper = new HashMap<>();
-
-    static {
-        paymentProductsMapper.put(
-                PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS,
-                CreditorAccountEntity::ofPgnrRequest);
-
-        paymentProductsMapper.put(
-                PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS,
-                CreditorAccountEntity::ofBgnrRequest);
-
-        paymentProductsMapper.put(
-                PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS,
-                CreditorAccountEntity::ofIbanRequest);
-
-        paymentProductsMapper.put(
-                PaymentProduct.SEPA_CREDIT_TRANSFER, CreditorAccountEntity::ofIbanRequest);
-    }
 
     private String iban;
     private String bgnr;
     private String pgnr;
-
-    public CreditorAccountEntity() {}
-
-    @JsonIgnore
-    private CreditorAccountEntity(String iban, String pgnr, String bgnr) {
-        this.iban = iban;
-        this.pgnr = pgnr;
-        this.bgnr = bgnr;
-    }
-
-    @JsonIgnore
-    private static CreditorAccountEntity ofPgnrRequest(String accountNumber) {
-        return new CreditorAccountEntity(null, accountNumber, null);
-    }
-
-    @JsonIgnore
-    private static CreditorAccountEntity ofIbanRequest(String accountNumber) {
-        return new CreditorAccountEntity(accountNumber, null, null);
-    }
-
-    @JsonIgnore
-    private static CreditorAccountEntity ofBgnrRequest(String accountNumber) {
-        return new CreditorAccountEntity(null, null, accountNumber);
-    }
+    private String bban;
 
     @JsonIgnore
     public Creditor toTinkCreditor(PaymentProduct paymentProduct) {
         switch (paymentProduct) {
             case SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS:
                 return new Creditor(AccountIdentifier.create(Type.SE_PG, pgnr));
-            case SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS:
+            case SWEDISH_DOMESTIC_PRIVATE_BANKGIROS:
                 return new Creditor(AccountIdentifier.create(Type.SE_BG, bgnr));
             default:
-                return new Creditor(new IbanIdentifier(iban));
+                if (paymentProduct == PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS
+                        && bban != null) {
+                    return new Creditor(new SwedishIdentifier(bban));
+                } else {
+                    return new Creditor(new IbanIdentifier(iban));
+                }
         }
     }
 
     @JsonIgnore
     public static CreditorAccountEntity create(String accountNumber, String paymentProduct)
             throws CreditorValidationException {
-
         if (!SebUtils.isValidAccountForProduct(paymentProduct, accountNumber)) {
             throw CreditorValidationException.invalidIbanFormat("", new IllegalArgumentException());
         }
-        return paymentProductsMapper
-                .get(PaymentProduct.fromString(paymentProduct))
-                .apply(accountNumber);
+
+        switch (PaymentProduct.fromString(paymentProduct)) {
+            case SWEDISH_DOMESTIC_PRIVATE_BANKGIROS:
+                return CreditorAccountEntity.builder().bgnr(accountNumber).build();
+            case SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS:
+                return CreditorAccountEntity.builder().pgnr(accountNumber).build();
+            case SEPA_CREDIT_TRANSFER:
+                return CreditorAccountEntity.builder().iban(accountNumber).build();
+            case SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS:
+                if (!accountNumber.startsWith(SebConstants.MARKET)) {
+                    return CreditorAccountEntity.builder().bban(accountNumber).build();
+                } else {
+                    return CreditorAccountEntity.builder().iban(accountNumber).build();
+                }
+            default:
+                throw new IllegalStateException(ErrorMessages.UNKNOWN_PAYMENT_PRODUCT);
+        }
     }
 }
