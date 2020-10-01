@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configur
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInject;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaString;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,7 +18,12 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 public class TriodosConfiguration implements BerlinGroupConfiguration {
 
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
-    @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
+
+    @JsonProperty
+    @SensitiveSecret
+    @ClientSecretsConfiguration
+    @JsonSchemaInject(strings = {@JsonSchemaString(path = "pattern", value = "^[0-9a-zA-Z_-]+$")})
+    private String clientSecret;
 
     @Override
     public String getClientId() {
