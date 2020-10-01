@@ -54,10 +54,12 @@ public class SebAccountPaymentCapabilityUtil {
                 return Arrays.asList(
                         TransferDestinationPattern.createForMultiMatchAll(Type.SE_BG),
                         TransferDestinationPattern.createForMultiMatchAll(Type.SE_PG),
-                        TransferDestinationPattern.createForMultiMatchAll(Type.IBAN));
+                        TransferDestinationPattern.createForMultiMatchAll(Type.IBAN),
+                        TransferDestinationPattern.createForMultiMatchAll(Type.SE));
             case AccountProductTypes.ENKLA_SPARKONTO:
             case AccountProductTypes.VALUTAKONTO:
-                return Collections.singletonList(
+                return Arrays.asList(
+                        TransferDestinationPattern.createForMultiMatchAll(Type.SE),
                         TransferDestinationPattern.createForMultiMatchAll(Type.IBAN));
             case AccountProductTypes.NOTARIATKONTO:
                 return Collections.emptyList();
