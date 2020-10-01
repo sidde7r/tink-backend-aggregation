@@ -174,11 +174,11 @@ public class NemIdIFrameControllerTest {
         inOrder.verify(webdriverHelper).waitForElement(driver, ERROR_MESSAGE);
         inOrder.verify(webdriverHelper).waitForElement(driver, OTP_ICON);
 
-        // display supplemental information about nemid 2fa
-        inOrder.verify(supplementalRequester).requestSupplementalInformation(credentials, false);
-
         // credentials ok, forward request to nemid app
         inOrder.verify(webdriverHelper).clickButton(driver, NEMID_APP_BUTTON);
+
+        // display supplemental information about nemid 2fa
+        inOrder.verify(supplementalRequester).requestSupplementalInformation(credentials, true);
 
         // wait for user interaction with 3rd party nemid app
         inOrder.verify(webdriverHelper).waitForElement(driver, OTP_ICON);

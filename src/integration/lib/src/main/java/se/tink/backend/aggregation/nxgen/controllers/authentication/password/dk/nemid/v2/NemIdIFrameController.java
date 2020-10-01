@@ -107,11 +107,10 @@ public class NemIdIFrameController {
 
             credentials.setStatusPayload(catalog.getString(UserMessage.VALID_CREDS));
 
-            displayPrompt(credentials);
-
             final long askForNemIdStartTime = System.currentTimeMillis();
             // credentials are valid let's ask for 2nd factor
-            pollNemidApp(driver);
+            sendNemIdApprovalNotification(driver);
+            displayPromptToOpenNemIdApp(credentials);
 
             // wait some time for user's 2nd factor and token
             waitForNemidToken(driver);
@@ -265,7 +264,7 @@ public class NemIdIFrameController {
         webdriverHelper.clickButton(driver, SUBMIT_BUTTON);
     }
 
-    private void pollNemidApp(WebDriver driver) {
+    private void sendNemIdApprovalNotification(WebDriver driver) {
         webdriverHelper.clickButton(driver, NEMID_APP_BUTTON);
     }
 
@@ -274,14 +273,15 @@ public class NemIdIFrameController {
         return tokenElement.map(webElement -> Strings.emptyToNull(webElement.getText()));
     }
 
-    private void displayPrompt(Credentials credentials) {
-        credentials.setStatusPayload(catalog.getString(UserMessage.OPEN_NEM_ID_APP));
+    private void displayPromptToOpenNemIdApp(Credentials credentials) {
+        credentials.setStatusPayload(
+                catalog.getString(UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON));
 
         Field field =
                 Field.builder()
                         .immutable(true)
-                        .description(catalog.getString(UserMessage.OPEN_NEM_ID_APP))
-                        .value(catalog.getString(UserMessage.OPEN_NEM_ID_APP))
+                        .description("")
+                        .value(catalog.getString(UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON))
                         .name("name")
                         .build();
 
@@ -289,6 +289,6 @@ public class NemIdIFrameController {
                 SerializationUtils.serializeToString(Collections.singletonList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, true);
     }
 }
