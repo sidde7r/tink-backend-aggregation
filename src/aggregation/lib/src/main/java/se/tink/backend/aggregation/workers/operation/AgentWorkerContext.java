@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
@@ -36,6 +37,7 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
@@ -136,7 +138,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         if (request.getUser() != null) {
             String locale = request.getUser().getProfile().getLocale();
             this.catalog = Catalog.getCatalog(locale);
-            logger.info("Catalog created on Locale: " + locale);
+            logger.info("Catalog created on Locale: {}", locale);
         }
 
         this.setMetricRegistry(metricRegistry);
@@ -159,40 +161,62 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void processTransactions() {
         Credentials credentials = request.getCredentials();
-        if (credentials.getStatus() != CredentialsStatus.UPDATING) {
-            logger.warn(
-                    String.format(
-                            "Status does not warrant transaction processing: %s",
-                            credentials.getStatus()));
+        if (hasStatusDifferentThanUpdating(credentials)) {
             return;
         }
 
-        // If fraud credentials, update the statistics and activities.
         if (credentials.getType() == CredentialsTypes.FRAUD) {
-            se.tink.backend.aggregation.aggregationcontroller.v1.rpc
-                            .GenerateStatisticsAndActivitiesRequest
-                    generateStatisticsReq =
-                            new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
-                                    .GenerateStatisticsAndActivitiesRequest();
-            generateStatisticsReq.setUserId(request.getUser().getId());
-            generateStatisticsReq.setCredentialsId(credentials.getId());
-            generateStatisticsReq.setUserTriggered(request.isCreate());
-            generateStatisticsReq.setMode(StatisticMode.FULL); // To trigger refresh of residences.
-
-            controllerWrapper.generateStatisticsAndActivityAsynchronously(generateStatisticsReq);
+            updateStatisticsAndActivities(credentials);
             return;
         }
 
         List<Transaction> transactionsToProcess = accountDataCache.getTransactionsToBeProcessed();
         if (transactionsToProcess.isEmpty()) {
-            // Don't update transactions if we don't have any.
-            logger.info(
-                    "Skipping transaction processing because we don't have any [UserId:{} CredentialsId:{}]",
-                    credentials.getUserId(),
-                    credentials.getId());
+            logAboutTransactionsEmpty(credentials);
             return;
         }
 
+        List<Transaction> transactionsWithDate =
+                prepareTransactionsForUpdateRequest(credentials, transactionsToProcess);
+
+        if (transactionsToProcess.isEmpty()) {
+            logAboutTransactionsEmpty(credentials);
+            return;
+        }
+
+        UpdateTransactionsRequest updateTransactionsRequest =
+                createUpdateTransactionsRequest(credentials, transactionsWithDate);
+
+        controllerWrapper.updateTransactionsAsynchronously(updateTransactionsRequest);
+
+        isSystemProcessingTransactions = true;
+    }
+
+    private boolean hasStatusDifferentThanUpdating(Credentials credentials) {
+        if (credentials.getStatus() != CredentialsStatus.UPDATING) {
+            logger.warn(
+                    "Status does not warrant transaction processing: {}", credentials.getStatus());
+            return true;
+        }
+        return false;
+    }
+
+    private void updateStatisticsAndActivities(Credentials credentials) {
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                        .GenerateStatisticsAndActivitiesRequest
+                generateStatisticsReq =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                .GenerateStatisticsAndActivitiesRequest();
+        generateStatisticsReq.setUserId(request.getUser().getId());
+        generateStatisticsReq.setCredentialsId(credentials.getId());
+        generateStatisticsReq.setUserTriggered(request.isCreate());
+        generateStatisticsReq.setMode(StatisticMode.FULL); // To trigger refresh of residences.
+
+        controllerWrapper.generateStatisticsAndActivityAsynchronously(generateStatisticsReq);
+    }
+
+    private List<Transaction> prepareTransactionsForUpdateRequest(
+            Credentials credentials, List<Transaction> transactionsToProcess) {
         // Update each transaction with information about the credentials and user as well as
         // additional formatting.
         logger.info(
@@ -200,25 +224,40 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 transactionsToProcess.size(),
                 credentials.getUserId(),
                 credentials.getId());
-        transactionsToProcess.forEach(
-                transaction -> {
-                    transaction.setCredentialsId(credentials.getId());
-                    transaction.setUserId(credentials.getUserId());
-                    if (!Strings.isNullOrEmpty(transaction.getDescription())) {
-                        transaction.setDescription(
-                                transaction.getDescription().replace("<", "").replace(">", ""));
-                    }
-                    if (transaction.getType() == null) {
-                        transaction.setType(TransactionTypes.DEFAULT);
-                    }
-                });
 
-        // Send the request to process the transactions that we've collected in this batch.
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest
-                updateTransactionsRequest =
-                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
-                                .UpdateTransactionsRequest();
-        updateTransactionsRequest.setTransactions(transactionsToProcess);
+        List<Transaction> transactionsWithDate =
+                transactionsToProcess.stream()
+                        .filter(transaction -> transaction.getDate() != null)
+                        .peek(
+                                transaction ->
+                                        enrichTransactionWithCredentials(transaction, credentials))
+                        .collect(Collectors.toList());
+
+        logger.info(
+                "Processing {} transactions after null date filtering. [UserId:{} CredentialsId:{}]",
+                transactionsWithDate.size(),
+                credentials.getUserId(),
+                credentials.getId());
+        return transactionsWithDate;
+    }
+
+    private void enrichTransactionWithCredentials(
+            Transaction transaction, Credentials credentials) {
+        transaction.setCredentialsId(credentials.getId());
+        transaction.setUserId(credentials.getUserId());
+        if (!Strings.isNullOrEmpty(transaction.getDescription())) {
+            transaction.setDescription(
+                    transaction.getDescription().replace("<", "").replace(">", ""));
+        }
+        if (transaction.getType() == null) {
+            transaction.setType(TransactionTypes.DEFAULT);
+        }
+    }
+
+    private UpdateTransactionsRequest createUpdateTransactionsRequest(
+            Credentials credentials, List<Transaction> transactionsWithoutDate) {
+        UpdateTransactionsRequest updateTransactionsRequest = new UpdateTransactionsRequest();
+        updateTransactionsRequest.setTransactions(transactionsWithoutDate);
         updateTransactionsRequest.setUser(credentials.getUserId());
         updateTransactionsRequest.setCredentials(credentials.getId());
         updateTransactionsRequest.setUserTriggered(request.isManual());
@@ -226,17 +265,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateTransactionsRequest.setRequestTypeFromService(getRequest().getType());
         updateTransactionsRequest.setOperationId(request.getOperationId());
         getRefreshId().ifPresent(updateTransactionsRequest::setAggregationId);
+        return updateTransactionsRequest;
+    }
 
-        controllerWrapper.updateTransactionsAsynchronously(updateTransactionsRequest);
-
-        isSystemProcessingTransactions = true;
-
-        // Don't use the queue yet
-        //
-        //        UpdateTransactionsTask task = new UpdateTransactionsTask();
-        //        task.setPayload(updateTransactionsRequest);
-        //
-        //        taskSubmitter.submit(task);
+    private void logAboutTransactionsEmpty(Credentials credentials) {
+        logger.info(
+                "Skipping transaction processing because we don't have any [UserId:{} CredentialsId:{}]",
+                credentials.getUserId(),
+                credentials.getId());
     }
 
     @Override
@@ -254,9 +290,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             lock.removeBarrier();
             lock.setBarrier();
             logger.info(
-                    String.format(
-                            "Supplemental information request of key %s is waiting for %s %s",
-                            key, waitFor, unit));
+                    "Supplemental information request of key {} is waiting for {} {}",
+                    key,
+                    waitFor,
+                    unit);
             logger.info(
                     "[Supplemental Information] Credential Status: {}",
                     Optional.ofNullable(request.getCredentials())
@@ -408,10 +445,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         } catch (UniformInterfaceException e) {
             logger.error(
-                    "Account update request failed, response: "
-                            + (e.getResponse().hasEntity()
-                                    ? e.getResponse().getEntity(String.class)
-                                    : ""));
+                    "Account update request failed, response: {}",
+                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
             throw e;
         }
 
@@ -425,7 +460,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         String tinkAccountId = processedAccount.getId();
         AccountHolder accountHolder = processedAccount.getAccountHolder();
         if (Objects.isNull(accountHolder)) {
-            logger.debug(String.format("tinkAccountId: %s has no account holder", tinkAccountId));
+            logger.debug("tinkAccountId: {} has no account holder", tinkAccountId);
             return null;
         }
         accountHolder.setAccountId(tinkAccountId);
@@ -437,10 +472,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             return controllerWrapper.updateAccountHolder(updateAccountHolderRequest);
         } catch (UniformInterfaceException e) {
             logger.error(
-                    "Account holder update request failed, response: "
-                            + (e.getResponse().hasEntity()
-                                    ? e.getResponse().getEntity(String.class)
-                                    : ""));
+                    "Account holder update request failed, response: {}",
+                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
             throw e;
         }
     }
@@ -476,11 +509,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setRequestType(request.getType());
         updateCredentialsStatusRequest.setOperationId(request.getOperationId());
         logger.info(
-                String.format(
-                        "refreshId: %s - Incoming RequestType is %s, outgoing %s",
-                        refreshId.orElse("null"),
-                        request.getType(),
-                        updateCredentialsStatusRequest.getRequestType()));
+                "refreshId: {} - Incoming RequestType is {}, outgoing {}",
+                refreshId.orElse("null"),
+                request.getType(),
+                updateCredentialsStatusRequest.getRequestType());
 
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
@@ -589,28 +621,26 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         for (Transfer transfer : transfers) {
 
-            // Validation
-
             AccountIdentifier destination = transfer.getDestination();
-            if (destination == null) {
-                logger.warn(
-                        String.format(
-                                "Ignoring transfer because it has missing destination: %s",
-                                transfer));
-                continue;
+            if (destination != null && destination.isValid()) {
+                this.transfers.add(transfer);
+            } else {
+                logInfoAboutInvalidTransferDestination(transfer, destination);
             }
+        }
+    }
 
-            if (!destination.isValid()) {
-                logger.warn(
-                        String.format(
-                                "Ignoring non-valid transfer with identifier '%s'. Transfer: %s",
-                                destination.getIdentifier(), transfer));
-                continue;
-            }
+    private void logInfoAboutInvalidTransferDestination(
+            Transfer transfer, AccountIdentifier destination) {
+        if (destination == null) {
+            logger.warn("Ignoring transfer because it has missing destination: {}", transfer);
+        }
 
-            // Validation passed.
-
-            this.transfers.add(transfer);
+        if (destination != null && !destination.isValid()) {
+            logger.warn(
+                    "Ignoring non-valid transfer with identifier {}. Transfer: {}",
+                    destination.getIdentifier(),
+                    transfer);
         }
     }
 
@@ -662,10 +692,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             logger.info("Identity data is successfully updated");
         } catch (UniformInterfaceException e) {
             logger.error(
-                    "Identity update request failed, response: "
-                            + (e.getResponse().hasEntity()
-                                    ? e.getResponse().getEntity(String.class)
-                                    : ""));
+                    "Identity update request failed, response: {}",
+                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
             throw e;
         }
     }
