@@ -12,6 +12,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.Catalog;
 
+// Controller to be used together with Authenticator extending NemIdCodeAppAuthenticator
+// It is just like ThirdPartyApp, but due to not being able to redirect to NemIdCodeApp properly, it
+// was changed to show a message to user to do app switching manually.
 public class NemIdCodeAppAuthenticationController
         extends ThirdPartyAppAuthenticationController<String> {
 

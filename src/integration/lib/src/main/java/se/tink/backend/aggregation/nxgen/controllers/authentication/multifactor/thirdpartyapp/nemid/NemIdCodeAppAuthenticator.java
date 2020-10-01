@@ -17,6 +17,9 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.libraries.i18n.LocalizableKey;
 
+// Controller to be used together with NemIdCodeAppAuthenticationController
+// The base behaviour of these two classes is just like the classes they extend/implement,
+// but instead of true redirect, we leave the app switching as a manual task.
 public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthenticator<String> {
 
     protected final TinkHttpClient client;
@@ -97,6 +100,8 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
+        // This method is not needed, unless someone uses this authenticator with a different
+        // controller than NemIdCodeAppAuthenticationController
         return null;
     }
 
