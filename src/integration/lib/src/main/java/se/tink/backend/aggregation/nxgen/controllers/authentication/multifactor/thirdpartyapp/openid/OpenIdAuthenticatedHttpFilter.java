@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.HttpHeaders.X_FAPI_FINANCIAL_ID;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.HttpHeaders.X_FAPI_INTERACTION_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.NATIONWIDE_ORG_ID;
 
 import com.google.common.base.Strings;
@@ -56,7 +57,6 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
 
         String interactionId = randomValueGenerator.getUUID().toString();
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
-        String xFapiFinancialId = headers.getFirst(X_FAPI_FINANCIAL_ID).toString();
         headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
         // Setting these 2 headers is optional according to the OpenID and OpenBanking specs.
         // If we set the timestamp then the actually accepted formats don't follow the
@@ -69,14 +69,22 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
         headers.add(OpenIdConstants.HttpHeaders.X_FAPI_INTERACTION_ID, interactionId);
         HttpResponse httpResponse = nextFilter(httpRequest);
 
+        validateInteractionIdOrThrow(httpResponse, httpRequest);
+        return httpResponse;
+    }
+
+    public void validateInteractionIdOrThrow(HttpResponse httpResponse, HttpRequest httpRequest) {
+        MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
+        String xFapiFinancialId = headers.getFirst(X_FAPI_FINANCIAL_ID).toString();
+        String xFapiInteractionId = headers.getFirst(X_FAPI_INTERACTION_ID).toString();
         // Only validate for non-error responses.
         if (httpResponse.getStatus() < 400
+                // Nationwide does not return the same id as we send unlike the other banks
+                // When Nationwide fixes this issue, we could remove this logic
                 && !xFapiFinancialId.equals(NATIONWIDE_ORG_ID)
-                && !isInteractionIdValidInResponse(interactionId, httpResponse)) {
+                && !isInteractionIdValidInResponse(xFapiInteractionId, httpResponse)) {
             throw new HttpResponseException(
                     "X_FAPI_INTERACTION_ID does not match.", httpRequest, httpResponse);
         }
-
-        return httpResponse;
     }
 }
