@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -92,14 +92,20 @@ public class NemIdIFrameController {
             instantiateIFrameWithNemIdForm(driver);
             log.info("NemId iframe is initialized");
 
+            credentials.setStatusPayload(catalog.getString(UserMessage.NEM_ID_PROCESS_INIT));
+
             // provide credentials and submit
             setUserName(driver, credentials.getField(Field.Key.USERNAME));
             setPassword(driver, credentials.getField(Field.Key.PASSWORD));
             clickLogin(driver);
 
+            credentials.setStatusPayload(catalog.getString(UserMessage.VERIFYING_CREDS));
+
             // validate response
             validateCredentials(driver);
             log.info("Provided credentials are valid.");
+
+            credentials.setStatusPayload(catalog.getString(UserMessage.VALID_CREDS));
 
             displayPrompt(credentials);
 
@@ -269,13 +275,13 @@ public class NemIdIFrameController {
     }
 
     private void displayPrompt(Credentials credentials) {
+        credentials.setStatusPayload(catalog.getString(UserMessage.OPEN_NEM_ID_APP));
+
         Field field =
                 Field.builder()
                         .immutable(true)
-                        .description(
-                                catalog.getString(
-                                        NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP))
-                        .value(catalog.getString(NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP))
+                        .description(catalog.getString(UserMessage.OPEN_NEM_ID_APP))
+                        .value(catalog.getString(UserMessage.OPEN_NEM_ID_APP))
                         .name("name")
                         .build();
 
