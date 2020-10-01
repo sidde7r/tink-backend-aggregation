@@ -2,10 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetc
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
@@ -43,27 +41,11 @@ public class AccountResponseTest {
         assertThat(result.getExactBalance().compareTo(ExactCurrencyAmount.inEUR(123.45)))
                 .isEqualTo(0);
         // and identifiers
-        assertIdentifiers(result);
-        // and
-        assertUniqueIdentifier(result);
-    }
-
-    private <T extends Account> void assertIdentifiers(T account) {
-        List<AccountIdentifier> accountIdentifiers = account.getIdentifiers();
+        List<AccountIdentifier> accountIdentifiers = result.getIdentifiers();
         assertThat(accountIdentifiers.size()).isEqualTo(1);
         assertThat(accountIdentifiers.get(0)).isInstanceOf(IbanIdentifier.class);
         assertThat(accountIdentifiers.get(0).getIdentifier()).isEqualTo("DE95100110016601026293");
-    }
-
-    private <T extends Account> void assertUniqueIdentifier(T account) {
-        String uniqueIdentifier = "";
-        try {
-            Field field = Account.class.getDeclaredField("uniqueIdentifier");
-            field.setAccessible(true);
-            uniqueIdentifier = (String) field.get(account);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            // NOP
-        }
-        assertThat(uniqueIdentifier).isEqualTo("DE95100110016601026293");
+        // and
+        assertThat(result.isUniqueIdentifierEqual("DE95100110016601026293")).isTrue();
     }
 }
