@@ -43,7 +43,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfiguration> {
-
+    private final String clientId;
     private final String qSealc;
     private final boolean isManual;
     private final Credentials credentials;
@@ -58,11 +58,15 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
             final QsealcSigner qsealcSigner,
             final String qSealc) {
         super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
-
         this.qSealc = qSealc;
         this.isManual = request.isManual();
         this.credentials = request.getCredentials();
         this.qsealcSigner = qsealcSigner;
+        try {
+            this.clientId = CertificateUtils.getOrganizationIdentifier(qSealc);
+        } catch (CertificateException e) {
+            throw new IllegalStateException("Could not get organization identifier from QsealC", e);
+        }
     }
 
     @Override
@@ -87,7 +91,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         persistentStorage.put(BerlinGroupConstants.StorageKeys.CONSENT_ID, consentId);
         final String authUrl = TriodosConstants.AUTH_BASE_URL + Urls.AUTH;
 
-        return getAuthorizeUrl(authUrl, state, getConfiguration().getClientId(), getRedirectUrl())
+        return getAuthorizeUrl(authUrl, state, clientId, getRedirectUrl())
                 .queryParam(QueryKeys.SCOPE, TriodosConstants.QueryValues.SCOPE + consentId)
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
@@ -137,9 +141,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                         .serialize();
         final TokenBaseResponse token =
                 client.request(TriodosConstants.BASE_URL + Urls.TOKEN)
-                        .addBasicAuth(
-                                getConfiguration().getClientId(),
-                                getConfiguration().getClientSecret())
+                        .addBasicAuth(clientId, getConfiguration().getClientSecret())
                         .body(body)
                         .type(MediaType.APPLICATION_FORM_URLENCODED)
                         .post(TokenBaseResponse.class);
@@ -212,8 +214,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                         .serialize();
 
         return client.request(TriodosConstants.BASE_URL + Urls.TOKEN)
-                .addBasicAuth(
-                        getConfiguration().getClientId(), getConfiguration().getClientSecret())
+                .addBasicAuth(clientId, getConfiguration().getClientSecret())
                 .header(
                         BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
                         TriodosConstants.PSU_IPADDRESS)

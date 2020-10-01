@@ -8,17 +8,12 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaString;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
-import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 @JsonObject
 public class TriodosConfiguration implements BerlinGroupConfiguration {
-
-    @JsonProperty @Secret @ClientIdConfiguration private String clientId;
-
     @JsonProperty
     @SensitiveSecret
     @ClientSecretsConfiguration
@@ -27,11 +22,7 @@ public class TriodosConfiguration implements BerlinGroupConfiguration {
 
     @Override
     public String getClientId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
-
-        return clientId;
+        return null;
     }
 
     @Override
