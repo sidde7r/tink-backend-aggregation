@@ -109,8 +109,8 @@ public class NemIdIFrameController {
 
             final long askForNemIdStartTime = System.currentTimeMillis();
             // credentials are valid let's ask for 2nd factor
-            pollNemidApp(driver);
-            displayPrompt(credentials);
+            sendNemIdApprovalNotification(driver);
+            displayPromptToOpenNemIdApp(credentials);
 
             // wait some time for user's 2nd factor and token
             waitForNemidToken(driver);
@@ -264,7 +264,7 @@ public class NemIdIFrameController {
         webdriverHelper.clickButton(driver, SUBMIT_BUTTON);
     }
 
-    private void pollNemidApp(WebDriver driver) {
+    private void sendNemIdApprovalNotification(WebDriver driver) {
         webdriverHelper.clickButton(driver, NEMID_APP_BUTTON);
     }
 
@@ -273,8 +273,9 @@ public class NemIdIFrameController {
         return tokenElement.map(webElement -> Strings.emptyToNull(webElement.getText()));
     }
 
-    private void displayPrompt(Credentials credentials) {
-        credentials.setStatusPayload(catalog.getString(UserMessage.OPEN_NEM_ID_APP));
+    private void displayPromptToOpenNemIdApp(Credentials credentials) {
+        credentials.setStatusPayload(
+                catalog.getString(UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON));
 
         Field field =
                 Field.builder()
