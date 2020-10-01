@@ -87,14 +87,7 @@ public final class RefreshExecutorUtils {
                     cacheCheckingAccounts(agent, context);
                     break;
                 case CHECKING_TRANSACTIONS:
-                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
-                            ((RefreshCheckingAccountsExecutor) agent)
-                                    .fetchCheckingTransactions()
-                                    .getTransactions()
-                                    .entrySet()) {
-                        context.updateTransactions(
-                                accountTransactions.getKey(), accountTransactions.getValue());
-                    }
+                    fetchCheckingTransactions((RefreshCheckingAccountsExecutor) agent, context);
                     break;
                 case SAVING_ACCOUNTS:
                     List<Account> savingAccounts =
@@ -105,14 +98,7 @@ public final class RefreshExecutorUtils {
                     context.cacheAccounts(savingAccounts);
                     break;
                 case SAVING_TRANSACTIONS:
-                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
-                            ((RefreshSavingsAccountsExecutor) agent)
-                                    .fetchSavingsTransactions()
-                                    .getTransactions()
-                                    .entrySet()) {
-                        context.updateTransactions(
-                                accountTransactions.getKey(), accountTransactions.getValue());
-                    }
+                    fetchSavingTransactions((RefreshSavingsAccountsExecutor) agent, context);
                     break;
                 case CREDITCARD_ACCOUNTS:
                     List<Account> creditCardAccounts =
@@ -123,14 +109,7 @@ public final class RefreshExecutorUtils {
                     context.cacheAccounts(creditCardAccounts);
                     break;
                 case CREDITCARD_TRANSACTIONS:
-                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
-                            ((RefreshCreditCardAccountsExecutor) agent)
-                                    .fetchCreditCardTransactions()
-                                    .getTransactions()
-                                    .entrySet()) {
-                        context.updateTransactions(
-                                accountTransactions.getKey(), accountTransactions.getValue());
-                    }
+                    fetchCreditCardTransactions((RefreshCreditCardAccountsExecutor) agent, context);
                     break;
                 case LOAN_ACCOUNTS:
                     Map<Account, AccountFeatures> loanAccounts =
@@ -143,14 +122,7 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case LOAN_TRANSACTIONS:
-                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
-                            ((RefreshLoanAccountsExecutor) agent)
-                                    .fetchLoanTransactions()
-                                    .getTransactions()
-                                    .entrySet()) {
-                        context.updateTransactions(
-                                accountTransactions.getKey(), accountTransactions.getValue());
-                    }
+                    fetchLoansTransactions((RefreshLoanAccountsExecutor) agent, context);
                     break;
                 case INVESTMENT_ACCOUNTS:
                     Map<Account, AccountFeatures> investmentAccounts =
@@ -164,14 +136,7 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case INVESTMENT_TRANSACTIONS:
-                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
-                            ((RefreshInvestmentAccountsExecutor) agent)
-                                    .fetchInvestmentTransactions()
-                                    .getTransactions()
-                                    .entrySet()) {
-                        context.updateTransactions(
-                                accountTransactions.getKey(), accountTransactions.getValue());
-                    }
+                    fetchInvestmentTransactions((RefreshInvestmentAccountsExecutor) agent, context);
                     break;
                 case IDENTITY_DATA:
                     log.info("Trying to fetch and cache identity data");
@@ -228,6 +193,71 @@ public final class RefreshExecutorUtils {
                             + " But the agent also fetched {} types of accounts",
                     agent.getAgentClass().getName(),
                     accountTypesExceptCheckingAccounts);
+        }
+    }
+
+    private static void fetchCheckingTransactions(
+            RefreshCheckingAccountsExecutor agent, AgentContext context) {
+        try {
+            for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                    agent.fetchCheckingTransactions().getTransactions().entrySet()) {
+                context.updateTransactions(
+                        accountTransactions.getKey(), accountTransactions.getValue());
+            }
+        } catch (RuntimeException e) {
+            log.error("Failed to fetch some checking account transactions.", e);
+        }
+    }
+
+    private static void fetchSavingTransactions(
+            RefreshSavingsAccountsExecutor agent, AgentContext context) {
+        try {
+            for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                    agent.fetchSavingsTransactions().getTransactions().entrySet()) {
+                context.updateTransactions(
+                        accountTransactions.getKey(), accountTransactions.getValue());
+            }
+        } catch (RuntimeException e) {
+            log.error("Failed to fetch some saving account transactions.", e);
+        }
+    }
+
+    private static void fetchLoansTransactions(
+            RefreshLoanAccountsExecutor agent, AgentContext context) {
+        try {
+            for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                    agent.fetchLoanTransactions().getTransactions().entrySet()) {
+                context.updateTransactions(
+                        accountTransactions.getKey(), accountTransactions.getValue());
+            }
+        } catch (RuntimeException e) {
+            log.error("Failed to fetch some checking loan transactions.", e);
+        }
+    }
+
+    private static void fetchCreditCardTransactions(
+            RefreshCreditCardAccountsExecutor agent, AgentContext context) {
+        try {
+            for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                    agent.fetchCreditCardTransactions().getTransactions().entrySet()) {
+                context.updateTransactions(
+                        accountTransactions.getKey(), accountTransactions.getValue());
+            }
+        } catch (RuntimeException e) {
+            log.error("Failed to fetch some credit card account transactions.", e);
+        }
+    }
+
+    private static void fetchInvestmentTransactions(
+            RefreshInvestmentAccountsExecutor agent, AgentContext context) {
+        try {
+            for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                    agent.fetchInvestmentTransactions().getTransactions().entrySet()) {
+                context.updateTransactions(
+                        accountTransactions.getKey(), accountTransactions.getValue());
+            }
+        } catch (RuntimeException e) {
+            log.error("Failed to fetch some investment account transactions.", e);
         }
     }
 }
