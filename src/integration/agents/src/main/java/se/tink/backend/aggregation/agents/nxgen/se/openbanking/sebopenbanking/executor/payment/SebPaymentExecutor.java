@@ -219,7 +219,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     private boolean shouldAddRemittanceInformationStructured(String paymentProduct) {
         if (StringUtils.containsAny(
                 paymentProduct,
-                PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS.getValue(),
+                PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BANKGIROS.getValue(),
                 PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS.getValue())) {
             return true;
         }
@@ -243,7 +243,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     private PaymentProduct getDomesticPaymentProduct(Type creditorAccountType) {
         switch (creditorAccountType) {
             case SE_BG:
-                return PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS;
+                return PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BANKGIROS;
             case SE_PG:
                 return PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS;
             default:

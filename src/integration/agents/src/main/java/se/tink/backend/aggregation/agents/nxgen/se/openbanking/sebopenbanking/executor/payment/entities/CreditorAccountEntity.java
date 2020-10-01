@@ -30,7 +30,7 @@ public class CreditorAccountEntity {
         switch (paymentProduct) {
             case SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS:
                 return new Creditor(AccountIdentifier.create(Type.SE_PG, pgnr));
-            case SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS:
+            case SWEDISH_DOMESTIC_PRIVATE_BANKGIROS:
                 return new Creditor(AccountIdentifier.create(Type.SE_BG, bgnr));
             default:
                 if (paymentProduct == PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS
@@ -50,7 +50,7 @@ public class CreditorAccountEntity {
         }
 
         switch (PaymentProduct.fromString(paymentProduct)) {
-            case SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS:
+            case SWEDISH_DOMESTIC_PRIVATE_BANKGIROS:
                 return CreditorAccountEntity.builder().bgnr(accountNumber).build();
             case SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS:
                 return CreditorAccountEntity.builder().pgnr(accountNumber).build();
