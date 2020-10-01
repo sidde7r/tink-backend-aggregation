@@ -8,8 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
@@ -37,10 +36,9 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
+@Slf4j
 @AllArgsConstructor
 public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
-
-    private static final Logger logger = LoggerFactory.getLogger(UnicreditPaymentExecutor.class);
 
     private final UnicreditBaseApiClient apiClient;
 
@@ -48,6 +46,10 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        log.info(
+                "paymentRequest.getOriginatingUserIp() = {}",
+                paymentRequest.getOriginatingUserIp());
+
         sessionStorage.put(HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
 
         PaymentType type =
@@ -111,7 +113,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                         paymentMultiStepRequest.getPayment().getUniqueId(),
                         paymentMultiStepRequest.getPayment().getType());
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
-        logger.info("Payment id={} sign status={}", payment.getId(), paymentStatus);
+        log.info("Payment id={} sign status={}", payment.getId(), paymentStatus);
 
         if (PaymentStatus.SIGNED.equals(paymentStatus)) {
             paymentMultiStepResponse =

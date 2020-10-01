@@ -5,8 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -46,12 +45,11 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
+@Slf4j
 public class UnicreditBaseApiClient {
 
     private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
             DateTimeFormatter.ofPattern(Formats.DEFAULT_DATE_FORMAT);
-
-    private static Logger logger = LoggerFactory.getLogger(UnicreditBaseApiClient.class);
 
     private final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
@@ -141,12 +139,12 @@ public class UnicreditBaseApiClient {
 
         // This header must be present if the request was initiated by the PSU
         if (manualRequest) {
-            logger.info(
+            log.info(
                     "Request is attended -- adding PSU header for requestId = {}",
                     Psd2Headers.getRequestId());
             requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
         } else {
-            logger.info(
+            log.info(
                     "Request is unattended -- omitting PSU header for requestId = {}",
                     Psd2Headers.getRequestId());
         }
@@ -249,6 +247,10 @@ public class UnicreditBaseApiClient {
     }
 
     public CreatePaymentResponse createSepaPayment(CreatePaymentRequest request) {
+        log.info(
+                "sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS) = {}",
+                sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS));
+
         String psuIpAddress =
                 Optional.ofNullable(sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS))
                         .orElse(HeaderValues.PSU_IP_ADDRESS);
@@ -282,6 +284,10 @@ public class UnicreditBaseApiClient {
     }
 
     public FetchPaymentResponse fetchPayment(String paymentId) {
+        log.info(
+                "sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS) = {}",
+                sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS));
+
         String psuIpAddress =
                 Optional.ofNullable(sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS))
                         .orElse(HeaderValues.PSU_IP_ADDRESS);
