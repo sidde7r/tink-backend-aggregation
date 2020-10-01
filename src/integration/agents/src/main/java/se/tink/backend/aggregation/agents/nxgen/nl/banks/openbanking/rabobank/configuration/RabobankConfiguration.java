@@ -2,10 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.c
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInject;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInt;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.Base64;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -20,25 +24,26 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public final class RabobankConfiguration implements ClientConfiguration {
     @JsonProperty @Secret @ClientIdConfiguration @UUIDConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @JsonProperty @Secret private String clientSSLKeyPassword;
-    @JsonProperty @Secret private String clientSSLP12;
+
+    @JsonProperty
+    @JsonSchemaTitle("TLS key and certificate in PKCS12 format, base64 encoded")
+    @JsonSchemaDescription(
+            "Conversion of key and certificate to the desired format can be done with the following command: '$ openssl pkcs12 -export -inkey tls.key -in tls.crt | base64'")
+    @JsonSchemaExamples("MIIMa [...] UbZfAgIIAA==")
+    @JsonSchemaInject(ints = {@JsonSchemaInt(path = "minLength", value = 1000)})
+    @Secret
+    private String clientSSLP12;
+
+    @JsonProperty
+    @JsonSchemaTitle("Password to the TLS keystore")
+    @JsonSchemaDescription("Password to the PKCS12 TLS key keystore. Empty string if N/A.")
+    @JsonSchemaExamples("ThisIsVeryStrongPassword42!")
+    @SensitiveSecret
+    private String clientSSLKeyPassword;
 
     @JsonIgnore
     public byte[] getClientSSLP12bytes() {
-        final String clientSslP12String = clientSSLP12;
-        return Base64.getDecoder().decode(clientSslP12String);
-    }
-
-    @JsonIgnore
-    public String getClientCert() {
-        return RabobankUtils.getB64EncodedX509Certificate(
-                getClientSSLP12bytes(), getClientSSLKeyPassword());
-    }
-
-    @JsonIgnore
-    public String getClientCertSerial() {
-        return RabobankUtils.getCertificateSerialNumber(
-                getClientSSLP12bytes(), getClientSSLKeyPassword());
+        return Base64.getDecoder().decode(getClientSSLP12());
     }
 
     public RabobankUrlFactory getUrls() {
