@@ -345,7 +345,10 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
 
         AccountIdentificationEntity debtorAccount =
                 new AccountIdentificationEntity(
-                        paymentRequest.getPayment().getDebtor().getAccountNumber(), null);
+                        Optional.ofNullable(paymentRequest.getPayment().getDebtor())
+                                .map(Debtor::getAccountNumber)
+                                .orElse(null),
+                        null);
 
         PartyIdentificationEntity creditor =
                 new PartyIdentificationEntity(
