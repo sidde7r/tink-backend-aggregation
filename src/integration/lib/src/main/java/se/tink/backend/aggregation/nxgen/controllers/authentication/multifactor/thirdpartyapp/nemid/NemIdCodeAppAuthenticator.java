@@ -17,6 +17,9 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.libraries.i18n.LocalizableKey;
 
+// Controller to be used together with NemIdCodeAppAuthenticationController
+// The base behaviour of these two classes is just like the classes they extend/implement,
+// but instead of true redirect, we leave the app switching as a manual task.
 public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthenticator<String> {
 
     protected final TinkHttpClient client;
@@ -97,31 +100,9 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        /*
-         * NemID app switching documentation:
-         * https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NMAS%20app%20switch.pdf
-         */
-
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-
-        ThirdPartyAppAuthenticationPayload.Android androidPayload =
-                new ThirdPartyAppAuthenticationPayload.Android();
-        androidPayload.setIntent("android-app://dk.e_nettet.mobilekey.everyone");
-        androidPayload.setPackageName("dk.e_nettet.mobilekey.everyone");
-        payload.setAndroid(androidPayload);
-
-        ThirdPartyAppAuthenticationPayload.Ios iOsPayload =
-                new ThirdPartyAppAuthenticationPayload.Ios();
-        iOsPayload.setAppStoreUrl("https://apps.apple.com/dk/app/nemid-codeapp/id1300533299");
-        // TODO this is the app scheme, but it shouldn't be used to open the app, according to the
-        // docs
-        iOsPayload.setAppScheme("nemid-codeapp");
-        // TODO check real Tink app scheme
-        // TODO on a later moment, return URL needs to be configurable and customized per client
-        iOsPayload.setDeepLinkUrl("https://codeapp.e-nettet.dk?return=tink://");
-        payload.setIos(iOsPayload);
-
-        return payload;
+        // This method is not needed, unless someone uses this authenticator with a different
+        // controller than NemIdCodeAppAuthenticationController
+        return null;
     }
 
     @Override

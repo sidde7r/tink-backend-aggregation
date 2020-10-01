@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.Jys
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
@@ -37,8 +37,8 @@ public final class JyskeNemidAgent extends JyskeAbstractAgent {
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new ThirdPartyAppAuthenticationController<>(
-                        jyskeNemidAuthenticator, supplementalInformationHelper),
+                new NemIdCodeAppAuthenticationController(
+                        jyskeNemidAuthenticator, supplementalInformationHelper, catalog),
                 jyskeNemidAuthenticator);
     }
 }
