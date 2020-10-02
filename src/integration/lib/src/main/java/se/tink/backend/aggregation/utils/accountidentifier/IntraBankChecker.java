@@ -22,8 +22,15 @@ public class IntraBankChecker {
         boolean isIntraBank = false;
         if (AccountIdentifier.Type.SE.equals(destinationAccount.getType())) {
             Optional<Details> sourceAccountClearingNumber =
-                    ClearingNumber.get(
-                            sourceAccount.to(SwedishIdentifier.class).getClearingNumber());
+                    Type.IBAN.equals(sourceAccount.getType())
+                            ? ClearingNumber.get(
+                                    new SwedishIdentifier(
+                                                    sourceAccount
+                                                            .to(IbanIdentifier.class)
+                                                            .getBban())
+                                            .getClearingNumber())
+                            : ClearingNumber.get(
+                                    sourceAccount.to(SwedishIdentifier.class).getClearingNumber());
 
             Optional<Details> destinationAccountClearingNumber =
                     ClearingNumber.get(
