@@ -70,6 +70,14 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         Catalog catalog = context.getCatalog();
 
         Transfer transfer = transferRequest.getTransfer();
+
+        if (transferRequest.getProvider().getMarket().equalsIgnoreCase("IT")) {
+            log.info(
+                    "TransferId={}, OriginatingUserIp={}",
+                    transfer.getId(),
+                    transfer.getOriginatingUserIp());
+        }
+
         SignableOperation signableOperation = transferRequest.getSignableOperation();
 
         if (transfer.isDestinationMessageGenerated()) {
@@ -390,11 +398,18 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
     private void handlePayment(PaymentController paymentController, TransferRequest transferRequest)
             throws PaymentException {
-        PaymentResponse createPaymentResponse =
-                paymentController.create(
-                        PaymentRequest.of(
-                                transferRequest.getTransfer(),
-                                transferRequest.getProvider().getMarket()));
+        PaymentRequest paymentRequest =
+                PaymentRequest.of(
+                        transferRequest.getTransfer(), transferRequest.getProvider().getMarket());
+
+        if (transferRequest.getProvider().getMarket().equalsIgnoreCase("IT")) {
+            log.info(
+                    "transferRequest.getTransfer().getOriginatingUserIp() = {}, paymentRequest.getOriginatingUserIp() = {}",
+                    transferRequest.getTransfer().getOriginatingUserIp(),
+                    paymentRequest.getOriginatingUserIp());
+        }
+
+        PaymentResponse createPaymentResponse = paymentController.create(paymentRequest);
 
         log.info("Credentials contain - status: {} before first signing", credentials.getStatus());
 
