@@ -46,10 +46,6 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        log.info(
-                "paymentRequest.getOriginatingUserIp() = {}",
-                paymentRequest.getOriginatingUserIp());
-
         sessionStorage.put(HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
 
         PaymentType type =
