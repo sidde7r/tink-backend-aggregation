@@ -13,9 +13,6 @@ public class RefreshInformationRequest extends CredentialsRequest {
     private Set<RefreshableItem> itemsToRefresh;
     private String refreshId;
 
-    @JsonProperty("forceAuthenticate")
-    private boolean forceAuthenticate;
-
     public static Builder builder() {
         return new Builder();
     }
@@ -113,13 +110,5 @@ public class RefreshInformationRequest extends CredentialsRequest {
 
     public void setRefreshId(String refreshId) {
         this.refreshId = refreshId;
-    }
-
-    public boolean isForceAuthenticate() {
-        return forceAuthenticate;
-    }
-
-    public void setForceAuthenticate(boolean forceAuthenticate) {
-        this.forceAuthenticate = forceAuthenticate;
     }
 }
