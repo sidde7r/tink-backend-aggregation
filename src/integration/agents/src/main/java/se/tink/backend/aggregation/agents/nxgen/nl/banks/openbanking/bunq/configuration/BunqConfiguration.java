@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
@@ -93,6 +94,7 @@ public class BunqConfiguration implements ClientConfiguration {
         return psd2InstallationKeyPair;
     }
 
+    @JsonIgnore
     public TokenEntity getPsd2ClientAuthToken() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(psd2ClientAuthToken),
