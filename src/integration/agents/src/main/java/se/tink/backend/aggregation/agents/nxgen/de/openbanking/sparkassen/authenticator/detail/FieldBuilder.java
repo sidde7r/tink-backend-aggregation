@@ -5,7 +5,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -36,12 +35,8 @@ public class FieldBuilder {
                         this.catalog.getString(getOtpDescription(otpType, additionalInformation)))
                 .helpText(otpType)
                 .name(OTP_VALUE_FIELD_KEY)
-                .numeric(true)
-                .minLength(otpValueLength)
+                .minLength(1)
                 .maxLength(otpValueLength)
-                .hint(StringUtils.repeat("N", otpValueLength))
-                .pattern(String.format("([0-9]{%d})", otpValueLength))
-                .patternError("The code you entered is not valid")
                 .build();
     }
 
