@@ -27,6 +27,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.ex
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentSigningRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebDateUtil;
+import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -43,9 +45,12 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -87,14 +92,16 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .withCreditorName(payment.getCreditor().getName())
                         .build();
 
-        if (shouldAddRemittanceInformationStructured(paymentProduct)) {
-            RemittanceInformationStructuredEntity remittanceInformation =
+        RemittanceInformation remittanceInformation =
+                validateAndGetRemittanceInformation(paymentProduct, payment);
+        if (RemittanceInformationType.OCR.equals(remittanceInformation.getType())) {
+            createPaymentRequest.setRemittanceInformationStructured(
                     new RemittanceInformationStructuredEntity()
-                            .createOCRRemittanceInformation(payment.getReference().getValue());
-            createPaymentRequest.setRemittanceInformationStructured(remittanceInformation);
+                            .createOCRRemittanceInformation(remittanceInformation.getValue()));
         } else {
             createPaymentRequest.setRemittanceInformationUnstructured(
-                    getRemittanceInformationUnStructured(payment.getReference().getValue()));
+                    getRemittanceInformationUnStructured(
+                            payment.getRemittanceInformation().getValue()));
         }
 
         CreatePaymentResponse createPaymentResponse =
@@ -223,14 +230,38 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         }
     }
 
-    private boolean shouldAddRemittanceInformationStructured(String paymentProduct) {
-        if (StringUtils.containsAny(
-                paymentProduct,
-                PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BANKGIROS.getValue(),
-                PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS.getValue())) {
-            return true;
+    private RemittanceInformation validateAndGetRemittanceInformation(
+            String paymentProduct, Payment payment) {
+        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
+
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation,
+                null,
+                RemittanceInformationType.UNSTRUCTURED,
+                RemittanceInformationType.OCR);
+
+        if (remittanceInformation.getType() == null
+                && StringUtils.containsAny(
+                        paymentProduct,
+                        PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BANKGIROS.getValue(),
+                        PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS.getValue())) {
+            remittanceInformation.setType(decideRemittanceInformationType(remittanceInformation));
         }
-        return false;
+
+        return remittanceInformation;
+    }
+
+    private RemittanceInformationType decideRemittanceInformationType(
+            RemittanceInformation remittanceInformation) {
+        return isValidSoftOcr(remittanceInformation.getValue())
+                ? RemittanceInformationType.OCR
+                : RemittanceInformationType.UNSTRUCTURED;
+    }
+
+    private boolean isValidSoftOcr(String message) {
+        OcrValidationConfiguration validationConfiguration = OcrValidationConfiguration.softOcr();
+        GiroMessageValidator validator = GiroMessageValidator.create(validationConfiguration);
+        return validator.validate(message).getValidOcr().isPresent();
     }
 
     private String getRemittanceInformationUnStructured(String message) throws PaymentException {
