@@ -43,15 +43,15 @@ public class DemoAccountFactoryTest {
         Assert.assertEquals(AccountTypes.CHECKING, checkingAccount.getType());
         Assert.assertEquals("GBP", checkingAccount.getExactBalance().getCurrencyCode());
         Assert.assertEquals(69.16, checkingAccount.getExactBalance().getDoubleValue(), 0.001);
-        Assert.assertEquals("11835381396957", checkingAccount.getAccountNumber());
+        Assert.assertEquals("21835381396957", checkingAccount.getAccountNumber());
         Assert.assertEquals("Checking Account tink", checkingAccount.getName());
 
-        Assert.assertEquals("11835381396957", checkingAccount.getIdModule().getUniqueId());
+        Assert.assertEquals("21835381396957", checkingAccount.getIdModule().getUniqueId());
 
         Assert.assertEquals(
                 Lists.newArrayList(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.SORT_CODE, "11835381396957", "testAccount")),
+                                AccountIdentifier.Type.SORT_CODE, "21835381396957", "testAccount")),
                 checkingAccount.getIdentifiers());
 
         Assert.assertNotNull(checkingAccount.getExactAvailableBalance());
@@ -66,15 +66,15 @@ public class DemoAccountFactoryTest {
         Assert.assertEquals(AccountTypes.SAVINGS, savingsAccount.getType());
         Assert.assertEquals("GBP", savingsAccount.getExactBalance().getCurrencyCode());
         Assert.assertEquals(4146.07, savingsAccount.getExactBalance().getDoubleValue(), 0.001);
-        Assert.assertEquals("11835361152705", savingsAccount.getAccountNumber());
+        Assert.assertEquals("21835361152705", savingsAccount.getAccountNumber());
         Assert.assertEquals("Savings Account tink", savingsAccount.getName());
 
-        Assert.assertEquals("11835361152705", savingsAccount.getIdModule().getUniqueId());
+        Assert.assertEquals("21835361152705", savingsAccount.getIdModule().getUniqueId());
 
         Assert.assertEquals(
                 Lists.newArrayList(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.SORT_CODE, "11835361152705", "testAccount")),
+                                AccountIdentifier.Type.SORT_CODE, "21835361152705", "testAccount")),
                 savingsAccount.getIdentifiers());
 
         Assert.assertNull(savingsAccount.getExactAvailableBalance());
