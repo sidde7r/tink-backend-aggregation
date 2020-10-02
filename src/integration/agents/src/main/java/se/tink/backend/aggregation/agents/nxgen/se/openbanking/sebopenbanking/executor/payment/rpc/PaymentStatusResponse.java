@@ -65,7 +65,12 @@ public class PaymentStatusResponse {
 
     @JsonIgnore
     private boolean isDueDateTooCloseError() {
-        return tppMessages.contains(ErrorMessages.DATE_TOO_CLOSE_ERROR_MESSAGE);
+        return tppMessages.stream()
+                .filter(
+                        tppMessage ->
+                                tppMessage.contains(ErrorMessages.DATE_TOO_CLOSE_ERROR_MESSAGE))
+                .findFirst()
+                .isPresent();
     }
 
     @JsonIgnore
