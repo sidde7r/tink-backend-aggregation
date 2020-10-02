@@ -22,17 +22,22 @@ public final class ErstebankConstants {
     }
 
     public static class EndPoints {
-        public static final String BASE_URL =
-                "https://webapi.developers.erstegroup.com/api/eba/sandbox/v1";
-        public static final String BASE_AUTH = BASE_URL + "/sandbox-idp";
-        public static final String AUTH = BASE_AUTH + "/auth";
-        public static final String TOKEN = BASE_AUTH + "/token";
-        public static final String ACCOUNTS = BASE_URL + "/psd2-accounts-api/accounts";
+        public static final String AUTH = "https://login.sparkasse.at/sts/oauth/authorize";
+        public static final String TOKEN = "https://login.sparkasse.at/sts/oauth/token";
+
+        public static final String BASIC = "https://openbanking.sparkasse.at/papi-accounts/rest/v1";
+        public static final String ACCOUNTS =
+                "https://openbanking.sparkasse.at/papi-accounts/rest/v1/accounts";
         public static final String SIGN_CONSENT =
-                BASE_URL + "/psd2-consent-api/consents/%s/authorisations";
-        public static final String TRANSACTIONS =
-                BASE_URL + "/psd2-accounts-api/accounts/%s/transactions";
-        public static final String PAYMENTS = BASE_URL + "/psd2-payments-api/payments";
+                "https://openbanking.sparkasse.at/papi-consents/rest/v1/consents/%s/authorisations";
+        public static final String AUTHORIZE_CONSENT =
+                "https://openbanking.sparkasse.at/papi-consents/rest/v1/consents/%s/authorisations/%s";
+        public static final String CONSENT =
+                "https://openbanking.sparkasse.at/papi-consents/rest/v1/consents";
+        public static final String PAYMENTS =
+                "https://openbanking.sparkasse.at/papi-payments/rest/v1/payments";
+
+        public static final String TRANSACTIONS = ACCOUNTS + "/%s/transactions";
         public static final String CREATE_SEPA = PAYMENTS + "/sepa-credit-transfers";
         public static final String CREATE_CROSS_BORDER =
                 PAYMENTS + "/cross-border-credit-transfers";
@@ -42,5 +47,9 @@ public final class ErstebankConstants {
 
     public static class IdTags {
         public static final String PAYMENT_ID = "paymentId";
+    }
+
+    public static class CredentialKeys {
+        public static final String IBAN = "iban";
     }
 }
