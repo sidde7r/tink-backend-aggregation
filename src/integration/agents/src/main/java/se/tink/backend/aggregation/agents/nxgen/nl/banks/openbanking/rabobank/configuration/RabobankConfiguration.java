@@ -6,6 +6,7 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInject;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInt;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaString;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.Base64;
 import lombok.Getter;
@@ -23,7 +24,13 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @Getter
 public final class RabobankConfiguration implements ClientConfiguration {
     @JsonProperty @Secret @ClientIdConfiguration @UUIDConfiguration private String clientId;
-    @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
+
+    @JsonProperty
+    @SensitiveSecret
+    @ClientSecretsConfiguration
+    @JsonSchemaInject(
+            strings = {@JsonSchemaString(path = "pattern", value = "^[0-9a-zA-Z]{30,70}$")})
+    private String clientSecret;
 
     @JsonProperty
     @JsonSchemaTitle("TLS key and certificate in PKCS12 format, base64 encoded")

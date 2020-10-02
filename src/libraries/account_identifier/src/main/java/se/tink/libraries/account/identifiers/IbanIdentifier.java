@@ -139,4 +139,8 @@ public class IbanIdentifier extends AccountIdentifier {
     public String getBankCode() {
         return IbanUtil.getBankCode(iban);
     }
+
+    public String getBban() {
+        return IbanUtil.getBban(iban);
+    }
 }
