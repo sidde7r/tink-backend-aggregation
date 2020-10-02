@@ -17,14 +17,23 @@ public class TransactionEntity {
     @JsonProperty("_links")
     private TransactionalLinksEntity links;
 
-    public Collection<Transaction> toTinkTransactions() {
+    public Collection<Transaction> toTinkTransactions(boolean includePending) {
+
         final Stream<Transaction> bookedTransactionsStream =
                 booked.stream().map(entity -> entity.toTinkTransaction(false));
 
         final Stream<Transaction> pendingTransactionsStream =
                 pending.stream().map(entity -> entity.toTinkTransaction(true));
 
-        return Stream.concat(bookedTransactionsStream, pendingTransactionsStream)
-                .collect(Collectors.toList());
+        if (includePending) {
+            return Stream.concat(bookedTransactionsStream, pendingTransactionsStream)
+                    .collect(Collectors.toList());
+        } else {
+            return bookedTransactionsStream.collect(Collectors.toList());
+        }
+    }
+
+    public TransactionalLinksEntity getLinks() {
+        return links;
     }
 }

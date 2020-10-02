@@ -9,4 +9,8 @@ public class TransactionalLinksEntity {
     public boolean hasNextLink() {
         return next != null && next.hasNextLink();
     }
+
+    public LinkEntity getNext() {
+        return next;
+    }
 }
