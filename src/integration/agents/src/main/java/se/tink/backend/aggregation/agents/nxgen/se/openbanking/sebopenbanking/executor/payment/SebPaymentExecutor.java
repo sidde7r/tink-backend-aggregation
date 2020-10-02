@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.ex
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebDateUtil;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -232,6 +233,12 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     private RemittanceInformation validateAndGetRemittanceInformation(
             String paymentProduct, Payment payment) {
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
+
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation,
+                null,
+                RemittanceInformationType.UNSTRUCTURED,
+                RemittanceInformationType.OCR);
 
         if (remittanceInformation.getType() == null
                 && StringUtils.containsAny(
