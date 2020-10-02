@@ -8,16 +8,12 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInt;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaString;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.LocalKeySigner;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.LocalCertificateTlsConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationOverride;
 
@@ -32,6 +28,8 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     @Secret
     private String signingKey;
 
+    /** @deprecated Delete this after migration to use eIDAS */
+    @Deprecated
     @JsonSchemaTitle("Signing key id as in UKOB Directory")
     @JsonSchemaDescription("Signing key id as in UKOB Directory")
     @JsonSchemaExamples("ZTBCaTMm-taVUpZKsgF-ClEVoMM")
@@ -107,6 +105,8 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
         return signingKey;
     }
 
+    /** @deprecated */
+    @Deprecated
     public String getSigningKeyId() {
         return signingKeyId;
     }
@@ -138,13 +138,5 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     public Optional<TlsConfigurationOverride> getTlsConfigurationOverride() {
         return Optional.of(
                 new LocalCertificateTlsConfiguration(transportKey, transportKeyPassword));
-    }
-
-    @Override
-    public Optional<JwtSigner> getSignerOverride() {
-        return Optional.of(
-                new LocalKeySigner(
-                        signingKeyId,
-                        RSA.getPrivateKeyFromBytes(EncodingUtils.decodeBase64String(signingKey))));
     }
 }

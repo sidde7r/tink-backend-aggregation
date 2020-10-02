@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.LocalKeySigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 
+/** @deprecated Please use @{@link JwksKeySignerProvider} */
+@Deprecated
 public final class LocalKeySignerProvider implements Provider<JwtSigner> {
 
     private final UkOpenBankingConfiguration configuration;

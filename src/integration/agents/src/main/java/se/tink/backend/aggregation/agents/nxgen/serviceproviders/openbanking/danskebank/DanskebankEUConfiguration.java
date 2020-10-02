@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationOverride;
 
 @JsonObject
@@ -66,11 +65,6 @@ public class DanskebankEUConfiguration implements UkOpenBankingClientConfigurati
 
     @Override
     public Optional<TlsConfigurationOverride> getTlsConfigurationOverride() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<JwtSigner> getSignerOverride() {
         return Optional.empty();
     }
 }

@@ -128,7 +128,7 @@ public class AgentInitialisor {
         doReturn(mock(MetricRegistry.class)).when(context).getMetricRegistry();
         doReturn(false).when(context).isTestContext();
         doReturn(false).when(context).isWaitingOnConnectorTransactions();
-        doReturn(mock(AggregatorInfo.class)).when(context).getAggregatorInfo();
+        doReturn(AggregatorInfo.getAggregatorForTesting()).when(context).getAggregatorInfo();
         doReturn(new HashMap<>()).when(context).getTransactionCountByEnabledAccount();
         doReturn(new ByteArrayOutputStream()).when(context).getLogOutputStream();
 
