@@ -247,10 +247,6 @@ public class UnicreditBaseApiClient {
     }
 
     public CreatePaymentResponse createSepaPayment(CreatePaymentRequest request) {
-        log.info(
-                "sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS) = {}",
-                sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS));
-
         String psuIpAddress =
                 Optional.ofNullable(sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS))
                         .orElse(HeaderValues.PSU_IP_ADDRESS);
