@@ -1,0 +1,10 @@
+{
+    "loan_id": "ID 001",
+    "loan_formatted_id": "DK77 1234 1234 1234 12",
+    "interest": {
+        "rate": 4.1
+    },
+    "amount": {
+        "balance": 13000.4
+    }
+}

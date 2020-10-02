@@ -5,6 +5,19 @@ public class NordeaTestData {
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/nordea/resources/";
 
+    public static class LoansTestDataFiles {
+
+        private static final String LOAN_TEST_DATA_DIR = TEST_DATA_PATH + "loans/";
+
+        public static final String
+                LOAN_DETAILS_PROPERTIES_ASSUMED_TO_EXIST_FOR_TINK_MODEL_CONVERSION =
+                        LOAN_TEST_DATA_DIR
+                                + "loan_details_properties_assumed_to_exist_for_tink_model_conversion.json";
+        public static final String LOAN_DETAILS_WITH_ALL_PROPERTIES_RELEVANT_FOR_TINK_MODEL =
+                LOAN_TEST_DATA_DIR
+                        + "loan_details_with_all_properties_relevant_for_tink_model.json";
+    }
+
     public static final String ACCOUNT_1_API_ID = "NAID-DK-DKK-7418529630";
     public static final String ACCOUNT_WITH_CREDIT_API_ID = "NAID-DK-DKK-2551697498";
     public static final String TRANSACTIONS_CONTINUATION_KEY =
