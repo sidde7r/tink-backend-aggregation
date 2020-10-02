@@ -42,6 +42,20 @@ public class InterBankCheckerTest {
     }
 
     @Test
+    public void testIsSwedishMarketIntraBankWithSourceIbanForDifferentCode() {
+        AccountIdentifier sourceAccount = new IbanIdentifier("SE4227442575137172812348");
+        AccountIdentifier destinationAccount = new SwedishIdentifier("52871111111");
+        assertFalse(IntraBankChecker.isSwedishMarketIntraBank(sourceAccount, destinationAccount));
+    }
+
+    @Test
+    public void testIsSwedishMarketIntraBankWithSourceIbanForSameCode() {
+        AccountIdentifier sourceAccount = new IbanIdentifier("SE8654291294413315855553");
+        AccountIdentifier destinationAccount = new SwedishIdentifier("52871111111");
+        assertTrue(IntraBankChecker.isSwedishMarketIntraBank(sourceAccount, destinationAccount));
+    }
+
+    @Test
     public void testIntraBankForIbanWithSameBankCode() {
         Iban sourceIban =
                 new Iban.Builder().countryCode(CountryCode.FR).bankCode("30006").buildRandom();
