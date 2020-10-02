@@ -307,7 +307,13 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                         payment.getBeneficiary().getCreditor().getName()))
                         .withDebtor(
                                 new Debtor(
-                                        new IbanIdentifier(payment.getDebtorAccount().getIban())))
+                                        Optional.ofNullable(payment.getDebtorAccount())
+                                                .map(
+                                                        accountIdentificationEntity ->
+                                                                new IbanIdentifier(
+                                                                        accountIdentificationEntity
+                                                                                .getIban()))
+                                                .orElse(null)))
                         .withExecutionDate(
                                 parseDate(payment.getRequestedExecutionDate()).toLocalDate())
                         .build());
