@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -45,6 +48,9 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SupplementalRequester supplementalRequester;
     private SebApiClient apiClient;
@@ -102,6 +108,8 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+        logger.info("fetching payment");
+
         final Payment payment = paymentRequest.getPayment();
         final String paymentId = payment.getUniqueId();
         final PaymentType paymentType = payment.getType();
@@ -118,6 +126,8 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
+        logger.info("Signing payment");
+
         String nextStep;
         final Payment payment = paymentMultiStepRequest.getPayment();
         final String paymentProduct =
