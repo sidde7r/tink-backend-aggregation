@@ -151,6 +151,7 @@ public final class HandelsbankenBaseConstants {
         public static final String REQUEST_REJECTED = "Request Rejected";
         public static final String REQUEST_REJECTED_MESSAGE =
                 "The requested URL was rejected. Please consult with your administrator.";
+        public static final String NOT_REGISTERED_TO_PLAN = "Not registered to plan";
     }
 
     public static class Status {
