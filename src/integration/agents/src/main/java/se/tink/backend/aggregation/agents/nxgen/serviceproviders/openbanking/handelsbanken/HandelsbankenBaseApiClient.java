@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
@@ -53,6 +55,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class HandelsbankenBaseApiClient {
+
+    private static final Logger logger = LoggerFactory.getLogger(HandelsbankenBaseApiClient.class);
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
@@ -153,8 +157,18 @@ public class HandelsbankenBaseApiClient {
     }
 
     public CreditAccountResponse getCreditAccounts() {
-        return requestRefreshableGet(
-                createRequest(Urls.CARD_ACCOUNTS), CreditAccountResponse.class);
+        try {
+            return requestRefreshableGet(
+                    createRequest(Urls.CARD_ACCOUNTS), CreditAccountResponse.class);
+        } catch (HttpResponseException e) {
+            HandelsbankenErrorResponse errorResponse =
+                    e.getResponse().getBody(HandelsbankenErrorResponse.class);
+            if (errorResponse.hasNotRegisteredToPlanError()) {
+                logger.info("App is not registered to credit cards API.");
+                return new CreditAccountResponse();
+            }
+            throw e;
+        }
     }
 
     public TransactionResponse getCreditTransactions(String accountId, Date dateFrom, Date dateTo) {
