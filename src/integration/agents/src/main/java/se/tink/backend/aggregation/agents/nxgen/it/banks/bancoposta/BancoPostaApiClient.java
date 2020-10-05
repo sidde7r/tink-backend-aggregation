@@ -7,13 +7,14 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.Authentication;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.CheckingAccounts;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.SavingAccounts;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterInitBody;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterInitCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SendOtpRequest;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SimpleRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.Token;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.AccessTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.AuthorizationTransactionResponse;
@@ -22,9 +23,14 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticato
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.RegisterInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.RegistrationWithDigitalCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.VerificationOnboardingResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.common.rpc.SimpleRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.SavingAccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.SavingAccountDetailsTransactionRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.SavingAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.SavingTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.HOTP;
@@ -42,7 +48,7 @@ public class BancoPostaApiClient {
 
     public RegistrationWithDigitalCodeResponse registerWithDigitalCode(
             RegisterCodeRequest requestBody) {
-        return createBaseRequest(Urls.SEND_POSTE_CODE)
+        return createBaseRequest(Authentication.SEND_POSTE_CODE)
                 .header(
                         HeaderValues.XKEY,
                         generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
@@ -55,7 +61,7 @@ public class BancoPostaApiClient {
 
     public InitRegistrationWithDigitalCodeResponse initAccountWithDigitalCode(
             RegisterInitCodeRequest requestBody) {
-        return createBaseRequest(Urls.INIT_CODE_VERIFICATION)
+        return createBaseRequest(Authentication.INIT_CODE_VERIFICATION)
                 .header(
                         HeaderValues.XKEY,
                         generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
@@ -67,7 +73,7 @@ public class BancoPostaApiClient {
     }
 
     public void sendSmsOTPWallet(SendOtpRequest baseRequest) {
-        createBaseRequest(Urls.ELIMINA_WALLET)
+        createBaseRequest(Authentication.ELIMINA_WALLET)
                 .header(
                         HeaderValues.XKEY,
                         generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
@@ -79,7 +85,7 @@ public class BancoPostaApiClient {
     }
 
     public void requestForSmsOtpWallet(SimpleRequest baseRequest) {
-        createBaseRequest(Urls.SEND_OTP)
+        createBaseRequest(Authentication.SEND_OTP)
                 .header(
                         HeaderValues.XKEY,
                         generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
@@ -91,7 +97,7 @@ public class BancoPostaApiClient {
     }
 
     public void initSyncWallet(SimpleRequest baseRequest) {
-        createBaseRequest(Urls.INIT_SYNC_WALLET)
+        createBaseRequest(Authentication.INIT_SYNC_WALLET)
                 .header(
                         HeaderValues.XKEY,
                         generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
@@ -104,7 +110,7 @@ public class BancoPostaApiClient {
 
     public Token performSecondOpenIdAz(String form) {
         HttpResponse response =
-                createBaseRequest(Urls.AUTH_OPENID_AZ)
+                createBaseRequest(Authentication.AUTH_OPENID_AZ)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(HttpResponse.class, form);
 
@@ -117,51 +123,52 @@ public class BancoPostaApiClient {
     }
 
     public AuthorizationTransactionResponse authorizeTransaction(String jwe) {
-        return createBaseRequest(Urls.AUTHORIZE_TRANSACTION)
+        return createBaseRequest(Authentication.AUTHORIZE_TRANSACTION)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .post(AuthorizationTransactionResponse.class, jwe);
     }
 
     public String challenge(String jwe) {
-        return createBaseRequest(Urls.CHALLENGE)
+        return createBaseRequest(Authentication.CHALLENGE)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN)
                 .post(String.class, jwe);
     }
 
     public CheckRegisterAppResponse checkRegisterApp(String jwe) {
-        return createBaseRequest(Urls.CHECK_REGISTER).post(CheckRegisterAppResponse.class, jwe);
+        return createBaseRequest(Authentication.CHECK_REGISTER)
+                .post(CheckRegisterAppResponse.class, jwe);
     }
 
     public Map<String, String> registerApp(String jwe) {
-        return createBaseRequest(Urls.REGISTER_APP).post(Map.class, jwe);
+        return createBaseRequest(Authentication.REGISTER_APP).post(Map.class, jwe);
     }
 
     public void activate(String activationBody) {
-        createBaseRequest(Urls.ACTIVATION)
+        createBaseRequest(Authentication.ACTIVATION)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .header("X-ENC-DEVID", "")
                 .post(RegisterInitResponse.class, activationBody);
     }
 
     public String register(String obj) {
-        return createBaseRequest(Urls.REGISTER).post(String.class, obj);
+        return createBaseRequest(Authentication.REGISTER).post(String.class, obj);
     }
 
     public RegisterInitResponse registerInit(RegisterInitBody registerInitBody) {
-        return createBaseRequest(Urls.REGISTER_INIT)
+        return createBaseRequest(Authentication.REGISTER_INIT)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .post(RegisterInitResponse.class, registerInitBody);
     }
 
     public String performRequestAz(String azBody) {
-        return createBaseRequest(Urls.AUTH_REQ_AZ)
+        return createBaseRequest(Authentication.AUTH_REQ_AZ)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(String.class, azBody);
     }
 
     public AccessTokenResponse performOpenIdAz(Form form) {
         HttpResponse response =
-                createBaseRequest(Urls.AUTH_OPENID_AZ)
+                createBaseRequest(Authentication.AUTH_OPENID_AZ)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(HttpResponse.class, form.serialize());
 
@@ -173,13 +180,13 @@ public class BancoPostaApiClient {
     }
 
     public String performJwtAuthorization() {
-        return createBaseRequest(Urls.AUTH_JWT)
+        return createBaseRequest(Authentication.AUTH_JWT)
                 .header("X-RJWT", "sso:https://www.meniga.com")
                 .post(String.class);
     }
 
     public VerificationOnboardingResponse verifyOnboarding(SimpleRequest body) {
-        return createBaseRequest(Urls.ONBOARDING_VERIFICATION)
+        return createBaseRequest(Authentication.ONBOARDING_VERIFICATION)
                 .header(
                         HeaderValues.XKEY,
                         generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
@@ -202,7 +209,7 @@ public class BancoPostaApiClient {
     }
 
     public AccountsResponse fetchAccounts() {
-        return createBaseRequest(Urls.FETCH_ACCOUNTS)
+        return createBaseRequest(CheckingAccounts.FETCH_ACCOUNTS)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(
                         HttpHeaders.AUTHORIZATION,
@@ -211,7 +218,7 @@ public class BancoPostaApiClient {
     }
 
     public AccountDetailsResponse fetchAccountDetails(AccountDetailsRequest accountDetailsRequest) {
-        return createBaseRequest(Urls.FETCH_ACCOUNT_DETAILS)
+        return createBaseRequest(CheckingAccounts.FETCH_ACCOUNT_DETAILS)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(
                         HeaderValues.XKEY,
@@ -223,7 +230,7 @@ public class BancoPostaApiClient {
     }
 
     public TransactionsResponse fetchTransactions(TransactionsRequest transactionsRequest) {
-        return createBaseRequest(Urls.FETCH_TRANSACTIONS)
+        return createBaseRequest(CheckingAccounts.FETCH_TRANSACTIONS)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(
                         HeaderValues.XKEY,
@@ -232,5 +239,43 @@ public class BancoPostaApiClient {
                         HttpHeaders.AUTHORIZATION,
                         HeaderValues.BEARER + storage.getAccessBasicToken())
                 .post(TransactionsResponse.class, transactionsRequest);
+    }
+
+    public SavingAccountResponse fetchSavingAccounts(SimpleRequest requestBody) {
+        return createBaseRequest(SavingAccounts.FETCH_SAVING_ACCOUNTS)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(
+                        HeaderValues.XKEY,
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        HeaderValues.BEARER + storage.getAccessBasicToken())
+                .post(SavingAccountResponse.class, requestBody);
+    }
+
+    public SavingAccountDetailsResponse fetchSavingAccountDetails(
+            SavingAccountDetailsTransactionRequest request) {
+        return createBaseRequest(SavingAccounts.FETCH_SAVING_ACCOUNTS_DETAILS)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(
+                        HeaderValues.XKEY,
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        HeaderValues.BEARER + storage.getAccessBasicToken())
+                .post(SavingAccountDetailsResponse.class, request);
+    }
+
+    public SavingTransactionResponse fetchSavingTransactions(
+            SavingAccountDetailsTransactionRequest request) {
+        return createBaseRequest(SavingAccounts.FETCH_SAVING_TRANSACTIONS)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(
+                        HeaderValues.XKEY,
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        HeaderValues.BEARER + storage.getAccessBasicToken())
+                .post(SavingTransactionResponse.class, request);
     }
 }
