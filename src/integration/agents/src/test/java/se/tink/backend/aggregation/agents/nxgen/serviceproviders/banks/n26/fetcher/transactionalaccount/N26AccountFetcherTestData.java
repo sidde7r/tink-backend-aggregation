@@ -19,7 +19,7 @@ public class N26AccountFetcherTestData {
     private static final String fetchSavingsSpacesResponseFilePath =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26/resources/fetch_savings_spaces_response.json";
 
-    static AccountResponse fetchAccountsResponse() {
+    public static AccountResponse fetchAccountsResponse() {
         return SerializationUtils.deserializeFromString(
                 new File(fetchAccountsResponseFilePath), AccountResponse.class);
     }

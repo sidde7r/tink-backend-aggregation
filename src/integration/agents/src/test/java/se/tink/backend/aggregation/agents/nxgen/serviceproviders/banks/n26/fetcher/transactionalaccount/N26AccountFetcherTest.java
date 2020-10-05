@@ -53,7 +53,7 @@ public class N26AccountFetcherTest {
                         .findAny()
                         .orElseThrow(IllegalStateException::new);
 
-        assertThat(acc1).hasFieldOrPropertyWithValue("accountNumber", "DE12345678901234567890");
+        assertThat(acc1).hasFieldOrPropertyWithValue("accountNumber", "DE95100110016601026293");
         assertThat(acc1.getExactBalance().getExactValue()).isEqualByComparingTo("100.0");
         assertThat(acc1.getExactBalance().getCurrencyCode()).isEqualTo("EUR");
 
