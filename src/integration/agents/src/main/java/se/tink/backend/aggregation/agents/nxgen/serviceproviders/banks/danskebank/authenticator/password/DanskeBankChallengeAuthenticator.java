@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -72,6 +73,7 @@ public class DanskeBankChallengeAuthenticator
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalRequester supplementalRequester;
     private final DanskeBankApiClient apiClient;
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
@@ -87,6 +89,7 @@ public class DanskeBankChallengeAuthenticator
     public DanskeBankChallengeAuthenticator(
             Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
+            SupplementalRequester supplementalRequester,
             DanskeBankApiClient apiClient,
             TinkHttpClient client,
             PersistentStorage persistentStorage,
@@ -95,6 +98,7 @@ public class DanskeBankChallengeAuthenticator
             DanskeBankConfiguration configuration) {
         this.catalog = catalog;
         this.supplementalInformationHelper = supplementalInformationHelper;
+        this.supplementalRequester = supplementalRequester;
         this.apiClient = apiClient;
         this.client = client;
         this.persistentStorage = persistentStorage;
@@ -193,7 +197,7 @@ public class DanskeBankChallengeAuthenticator
                         apiClient, client, preferredDevice, username, bindChallengeResponseBody);
         NemIdCodeAppAuthenticationController nemIdAuthenticationController =
                 new NemIdCodeAppAuthenticationController(
-                        codeAppAuthenticator, supplementalInformationHelper, catalog);
+                        codeAppAuthenticator, credentials, supplementalRequester, catalog);
 
         try {
             // Credentials are not needed for this implementation

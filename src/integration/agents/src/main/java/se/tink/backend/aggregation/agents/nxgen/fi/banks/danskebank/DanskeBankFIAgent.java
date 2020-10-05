@@ -46,6 +46,7 @@ public final class DanskeBankFIAgent extends DanskeBankAgent
                 new DanskeBankChallengeAuthenticator(
                         catalog,
                         supplementalInformationHelper,
+                        supplementalRequester,
                         apiClient,
                         client,
                         persistentStorage,
