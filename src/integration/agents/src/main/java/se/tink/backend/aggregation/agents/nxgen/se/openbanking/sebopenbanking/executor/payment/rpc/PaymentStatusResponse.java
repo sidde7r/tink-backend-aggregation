@@ -65,22 +65,34 @@ public class PaymentStatusResponse {
 
     @JsonIgnore
     private boolean isDueDateTooCloseError() {
-        return tppMessages.contains(ErrorMessages.DATE_TOO_CLOSE_ERROR_MESSAGE);
+        return tppMessages.stream()
+                .anyMatch(
+                        tppMessage ->
+                                tppMessage.contains(ErrorMessages.DATE_TOO_CLOSE_ERROR_MESSAGE));
     }
 
     @JsonIgnore
     private boolean isDueDateNotBusinessDayError() {
-        return tppMessages.contains(ErrorMessages.NOT_BUSINESS_DAY_ERROR_MESSAGE);
+        return tppMessages.stream()
+                .anyMatch(
+                        tppMessage ->
+                                tppMessage.contains(ErrorMessages.NOT_BUSINESS_DAY_ERROR_MESSAGE));
     }
 
     @JsonIgnore
     private boolean isSimilarPaymentError() {
-        return tppMessages.contains(ErrorMessages.SIMILAR_PAYMENT_ERROR_MESSAGE);
+        return tppMessages.stream()
+                .anyMatch(
+                        tppMessage ->
+                                tppMessage.contains(ErrorMessages.SIMILAR_PAYMENT_ERROR_MESSAGE));
     }
 
     @JsonIgnore
     private boolean isServiceUnavailableError() {
-        return tppMessages.contains(ErrorMessages.PAYMENT_SERVICE_UNAVAILABLE);
+        return tppMessages.stream()
+                .anyMatch(
+                        tppMessage ->
+                                tppMessage.contains(ErrorMessages.PAYMENT_SERVICE_UNAVAILABLE));
     }
 
     @JsonIgnore
