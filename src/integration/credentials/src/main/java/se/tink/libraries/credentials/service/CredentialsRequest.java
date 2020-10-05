@@ -2,6 +2,7 @@ package se.tink.libraries.credentials.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableSortedMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +30,8 @@ public abstract class CredentialsRequest {
     private String callbackUri;
     private String originatingUserIp;
 
+    @JsonProperty("forceAuthenticate")
+    private boolean forceAuthenticate;
     // TODO: Remove with new AgentWorker
     protected boolean create;
     // TODO: Remove with new AgentWorker
@@ -190,5 +193,13 @@ public abstract class CredentialsRequest {
 
     public void setOriginatingUserIp(String originatingUserIp) {
         this.originatingUserIp = originatingUserIp;
+    }
+
+    public boolean isForceAuthenticate() {
+        return forceAuthenticate;
+    }
+
+    public void setForceAuthenticate(boolean forceAuthenticate) {
+        this.forceAuthenticate = forceAuthenticate;
     }
 }
