@@ -60,6 +60,6 @@ public final class AccountEntity {
     }
 
     BigDecimal getBalance(String symbol, String balance) {
-        return new BigDecimal(symbol + balance).divide(new BigDecimal("100"));
+        return new BigDecimal(symbol + balance).movePointLeft(2);
     }
 }

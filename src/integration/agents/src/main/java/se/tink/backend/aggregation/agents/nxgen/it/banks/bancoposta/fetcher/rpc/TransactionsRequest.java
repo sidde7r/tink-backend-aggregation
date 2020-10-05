@@ -12,7 +12,7 @@ public class TransactionsRequest extends BaseRequest {
         private String accountNumber;
 
         @JsonProperty("numeroMovimentiPagina")
-        private int transactionNumberPage;
+        private int transactionsPerPage;
 
         @JsonProperty("numeroPagina")
         private int page;
@@ -21,7 +21,7 @@ public class TransactionsRequest extends BaseRequest {
     public TransactionsRequest(String accountNumber, int transactionNumberPage, int page) {
         this.body = new Body();
         this.body.accountNumber = accountNumber;
-        this.body.transactionNumberPage = transactionNumberPage;
+        this.body.transactionsPerPage = transactionNumberPage;
         this.body.page = page;
     }
 }

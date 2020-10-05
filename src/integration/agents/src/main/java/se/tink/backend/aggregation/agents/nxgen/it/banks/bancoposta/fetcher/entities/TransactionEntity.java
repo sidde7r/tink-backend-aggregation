@@ -38,7 +38,7 @@ public class TransactionEntity {
         Date date = isPending ? this.bookedDate : this.valueDate;
 
         BigDecimal calculatedAmount =
-                new BigDecimal(this.amountSymbol + this.amount).divide(new BigDecimal("100"));
+                new BigDecimal(this.amountSymbol + this.amount).movePointLeft(2);
 
         return Transaction.builder()
                 .setDate(date)
