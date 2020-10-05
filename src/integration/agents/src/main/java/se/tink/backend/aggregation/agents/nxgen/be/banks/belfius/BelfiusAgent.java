@@ -112,7 +112,9 @@ public final class BelfiusAgent extends NextGenerationAgent
                         BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(
                 new BadGatewayRetryFilter(2, BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new SslHandshakeRetryFilter(2, 0));
+        client.addFilter(
+                new SslHandshakeRetryFilter(
+                        3, BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
 
         if (agentsServiceConfiguration.isFeatureEnabled("beProxy")) {
             final PasswordBasedProxyConfiguration proxyConfiguration =
