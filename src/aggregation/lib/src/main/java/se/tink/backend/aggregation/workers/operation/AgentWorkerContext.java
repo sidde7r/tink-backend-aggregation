@@ -179,7 +179,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         List<Transaction> transactionsWithDate =
                 prepareTransactionsForUpdateRequest(credentials, transactionsToProcess);
 
-        if (transactionsToProcess.isEmpty()) {
+        if (transactionsWithDate.isEmpty()) {
             logAboutTransactionsEmpty(credentials);
             return;
         }
@@ -238,6 +238,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 transactionsWithDate.size(),
                 credentials.getUserId(),
                 credentials.getId());
+
+        if (transactionsToProcess.size() != transactionsWithDate.size()) {
+            logger.warn("There were some transactions without date, which where filtered.");
+        }
+
         return transactionsWithDate;
     }
 
