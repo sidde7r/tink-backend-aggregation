@@ -309,12 +309,12 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder addPsuIpAddressHeaderIfNeeded(RequestBuilder requestBuilder) {
+        String originatingUserIPAddress =
+                (psuIpAddress != null
+                        ? psuIpAddress
+                        : sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS));
         return requestManual
-                ? requestBuilder.header(
-                        HeaderKeys.PSU_IP_ADDRESS,
-                        psuIpAddress != null
-                                ? psuIpAddress
-                                : sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS))
+                ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, originatingUserIPAddress)
                 : requestBuilder;
     }
 
