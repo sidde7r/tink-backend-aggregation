@@ -111,7 +111,7 @@ public final class BelfiusAgent extends NextGenerationAgent
                         BelfiusConstants.HttpClient.MAX_RETRIES,
                         BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(
-                new BadGatewayRetryFilter(2, BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+                new BadGatewayRetryFilter(5, BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(
                 new SslHandshakeRetryFilter(
                         3, BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
