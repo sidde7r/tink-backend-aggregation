@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.agentplatform.authentication;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.AgentAuthenticationResultAggregationHandler;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.AgentAuthenticationResultHandlingResult;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.AgentAuthenticationService;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;
@@ -21,8 +20,7 @@ public class AgentPlatformAuthenticationService {
         this.persistentStorageService = persistentStorageService;
     }
 
-    public void authenticate(final AgentPlatformAuthenticator agentPlatformAuthenticator)
-            throws AgentException {
+    public void authenticate(final AgentPlatformAuthenticator agentPlatformAuthenticator) {
         AuthenticationExecutor executor =
                 new AuthenticationExecutor(
                         persistentStorageService,
@@ -40,8 +38,8 @@ public class AgentPlatformAuthenticationService {
         checkForAuthenticationError(handlingResult);
     }
 
-    private void checkForAuthenticationError(AgentAuthenticationResultHandlingResult handlingResult)
-            throws AgentException {
+    private void checkForAuthenticationError(
+            AgentAuthenticationResultHandlingResult handlingResult) {
         if (handlingResult.getAuthenticationError().isPresent()) {
             throw handlingResult.getAuthenticationError().get().exception();
         }

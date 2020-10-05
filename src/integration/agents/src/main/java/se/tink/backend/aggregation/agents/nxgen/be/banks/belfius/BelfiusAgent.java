@@ -213,6 +213,11 @@ public final class BelfiusAgent extends NextGenerationAgent
     }
 
     @Override
+    public boolean isBackgroundRefreshPossible() {
+        return true;
+    }
+
+    @Override
     public AgentPlatformStorageMigrator getMigrator() {
         return new BelfiusAgentPlatformStorageMigrator(
                 credentials, objectMapperFactory.getInstance());

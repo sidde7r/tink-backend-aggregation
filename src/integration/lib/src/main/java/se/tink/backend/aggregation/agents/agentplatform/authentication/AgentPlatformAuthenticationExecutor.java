@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication;
 
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageServiceFactory;
@@ -20,11 +21,14 @@ public class AgentPlatformAuthenticationExecutor {
         PersistentStorageService persistentStorageService =
                 PersistentStorageServiceFactory.create(
                         agent, agentPersistentStorageReceiver.getPersistentStorage().get());
-
+        AgentPlatformAuthenticator agentPlatformAuthenticator = (AgentPlatformAuthenticator) agent;
         new AgentPlatformAuthenticationService(
                         new UserInteractionService(
                                 supplementalInformationController, credentialsRequest),
                         persistentStorageService)
-                .authenticate((AgentPlatformAuthenticator) agent);
+                .authenticate(agentPlatformAuthenticator);
+        if (agentPlatformAuthenticator.isBackgroundRefreshPossible()) {
+            credentialsRequest.getCredentials().setType(CredentialsTypes.PASSWORD);
+        }
     }
 }

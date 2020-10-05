@@ -5,4 +5,6 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 public interface AgentPlatformAuthenticator {
 
     AgentAuthenticationProcess getAuthenticationProcess();
+
+    boolean isBackgroundRefreshPossible();
 }

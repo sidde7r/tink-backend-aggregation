@@ -99,6 +99,11 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
     }
 
     @Override
+    public boolean isBackgroundRefreshPossible() {
+        return true;
+    }
+
+    @Override
     public AgentPlatformStorageMigrator getMigrator() {
         return new KbcStorageMigrator(objectMapperFactory.getInstance());
     }

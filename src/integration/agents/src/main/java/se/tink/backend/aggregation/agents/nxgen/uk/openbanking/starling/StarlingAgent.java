@@ -166,4 +166,9 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                         new StarlingOAuth2AuthorizationSpecification(
                                 aisConfiguration, redirectUrl));
     }
+
+    @Override
+    public boolean isBackgroundRefreshPossible() {
+        return true;
+    }
 }
