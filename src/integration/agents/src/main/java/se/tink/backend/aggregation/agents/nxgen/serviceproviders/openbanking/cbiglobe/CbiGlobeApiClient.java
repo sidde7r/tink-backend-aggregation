@@ -310,7 +310,11 @@ public class CbiGlobeApiClient {
 
     protected RequestBuilder addPsuIpAddressHeaderIfNeeded(RequestBuilder requestBuilder) {
         return requestManual
-                ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)
+                ? requestBuilder.header(
+                        HeaderKeys.PSU_IP_ADDRESS,
+                        psuIpAddress != null
+                                ? psuIpAddress
+                                : sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS))
                 : requestBuilder;
     }
 

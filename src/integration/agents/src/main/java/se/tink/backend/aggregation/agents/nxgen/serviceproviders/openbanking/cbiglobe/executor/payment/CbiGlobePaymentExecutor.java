@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -42,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
+import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -53,6 +55,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
+    private final Provider provider;
 
     private static final Logger logger = LoggerFactory.getLogger(CbiGlobePaymentExecutor.class);
 
@@ -60,11 +63,13 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             CbiGlobeApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
             SessionStorage sessionStorage,
-            StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState strongAuthenticationState,
+            Provider provider) {
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
+        this.provider = provider;
     }
 
     @Override
@@ -205,12 +210,17 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             PaymentMultiStepRequest paymentMultiStepRequest,
             CreatePaymentResponse createPaymentResponse) {
         sessionStorage.put(StorageKeys.LINK, null);
-        return new PaymentMultiStepResponse(
-                createPaymentResponse.toTinkPaymentResponse(
-                        paymentMultiStepRequest.getPayment().getUniqueId(),
-                        paymentMultiStepRequest.getPayment().getType()),
-                CbiGlobeConstants.PaymentStep.IN_PROGRESS,
-                new ArrayList<>());
+        // As for BPM payment is parked for 30 min at bank in RCVD state we need special handling.
+        // Ref: https://tinkab.atlassian.net/browse/PAY2-734
+        if (isBPMProvider()) {
+            return handleSignedPayment(paymentMultiStepRequest, createPaymentResponse);
+        } else
+            return new PaymentMultiStepResponse(
+                    createPaymentResponse.toTinkPaymentResponse(
+                            paymentMultiStepRequest.getPayment().getUniqueId(),
+                            paymentMultiStepRequest.getPayment().getType()),
+                    CbiGlobeConstants.PaymentStep.IN_PROGRESS,
+                    new ArrayList<>());
     }
 
     private PaymentMultiStepResponse handleRedirectURLs(
@@ -255,6 +265,9 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                         createPaymentResponse.getPsuAuthenticationStatus())
                 && CbiGlobeConstants.PSUAuthenticationStatus.VERIFIED.equalsIgnoreCase(
                         createPaymentResponse.getScaStatus())) {
+            if (isBPMProvider()) {
+                paymentMultiStepRequest.getPayment().setStatus(PaymentStatus.SIGNED);
+            }
             return new PaymentMultiStepResponse(
                     createPaymentResponse.toTinkPaymentResponse(
                             paymentMultiStepRequest.getPayment().getType()),
@@ -346,6 +359,10 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                                 new NotImplementedException(
                                         "No PaymentType found for your AccountIdentifiers pair "
                                                 + accountIdentifiersKey));
+    }
+
+    private boolean isBPMProvider() {
+        return "it-bpm-oauth2".equalsIgnoreCase(provider.getName());
     }
 
     private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
