@@ -22,5 +22,6 @@ junit_test(
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
