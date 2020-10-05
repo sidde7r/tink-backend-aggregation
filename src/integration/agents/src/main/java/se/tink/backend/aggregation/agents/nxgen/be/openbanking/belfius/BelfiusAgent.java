@@ -46,6 +46,7 @@ public final class BelfiusAgent extends NextGenerationAgent
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.apiClient = new BelfiusApiClient(client, agentConfiguration, randomValueGenerator);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        client.setResponseStatusHandler(new BelfiusResponseStatusHandler(persistentStorage));
     }
 
     @Override
