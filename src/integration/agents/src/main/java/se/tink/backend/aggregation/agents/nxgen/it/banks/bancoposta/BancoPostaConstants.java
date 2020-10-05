@@ -4,42 +4,60 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BancoPostaConstants {
     public static class Urls {
-        public static final URL AUTH_REQ_AZ =
-                new URL(
-                        "https://oidc-proxy.mobile.poste.it/jod-oidc-proxy/federation/mobile/v1/az-req");
-        public static final URL AUTH_JWT =
-                new URL("https://securelogin.mobile.poste.it/jod-fcc/authorizationJwt");
-        public static final URL REGISTER_INIT = new URL(Base.BASE_AUTH2 + Endpoints.REGISTER_INIT);
-        public static final URL ACTIVATION = new URL(Base.BASE_AUTH2 + Endpoints.ACTIVATION);
-        public static final URL REGISTER = new URL(Base.BASE_AUTH2 + Endpoints.REGISTER);
-        public static final URL REGISTER_APP = new URL(Base.BASE_AUTH3 + Endpoints.REGISTER_APP);
-        public static final URL CHECK_REGISTER =
-                new URL(Base.BASE_AUTH3 + Endpoints.CHECK_REGISTER);
-        public static final URL AUTHORIZE_TRANSACTION =
-                new URL(Base.BASE_AUTH3 + Endpoints.AUTHORIZE_TRANSACTION);
-        public static final URL INIT_SYNC_WALLET =
-                new URL(Base.BASE_API + Endpoints.INIT_SYNC_WALLET);
-        public static final URL SEND_OTP = new URL(Base.BASE_API + Endpoints.SEND_OTP);
-        public static final URL ELIMINA_WALLET = new URL(Base.BASE_API + Endpoints.ELIMINA_WALLET);
-        public static final URL INIT_CODE_VERIFICATION =
-                new URL(Base.BASE_API + Endpoints.INIT_CODE_VERIFICATION);
-        public static final URL SEND_POSTE_CODE =
-                new URL(Base.BASE_API + Endpoints.SEND_POSTE_CODE);
-        public static final URL ONBOARDING_VERIFICATION =
-                new URL(Base.BASE_API + Endpoints.ONBOARDING_VERIFICATION);
-        public static final URL FETCH_ACCOUNTS = new URL(Base.BASE_DATA + Endpoints.FETCH_ACCOUNTS);
-        public static final URL FETCH_ACCOUNT_DETAILS =
-                new URL(Base.BASE_API + Endpoints.ACCOUNT_DETAILS);
-        public static final URL FETCH_TRANSACTIONS =
-                new URL(Base.BASE_API + Endpoints.FETCH_TRANSACTIONS);
-        public static final URL AUTH_OPENID_AZ =
-                new URL(Base.BASE_AUTH4 + Endpoints.AUTH_OPENID_AZ);
-        public static final URL CHALLENGE = new URL(Base.BASE_AUTH4 + Endpoints.CHALLENGE);
+        public static class Authentication {
+            public static final URL AUTH_REQ_AZ =
+                    new URL(
+                            "https://oidc-proxy.mobile.poste.it/jod-oidc-proxy/federation/mobile/v1/az-req");
+            public static final URL AUTH_JWT =
+                    new URL("https://securelogin.mobile.poste.it/jod-fcc/authorizationJwt");
+            public static final URL REGISTER_INIT =
+                    new URL(Base.BASE_AUTH2 + Endpoints.REGISTER_INIT);
+            public static final URL ACTIVATION = new URL(Base.BASE_AUTH2 + Endpoints.ACTIVATION);
+            public static final URL REGISTER = new URL(Base.BASE_AUTH2 + Endpoints.REGISTER);
+            public static final URL REGISTER_APP =
+                    new URL(Base.BASE_AUTH3 + Endpoints.REGISTER_APP);
+            public static final URL CHECK_REGISTER =
+                    new URL(Base.BASE_AUTH3 + Endpoints.CHECK_REGISTER);
+            public static final URL AUTHORIZE_TRANSACTION =
+                    new URL(Base.BASE_AUTH3 + Endpoints.AUTHORIZE_TRANSACTION);
+            public static final URL INIT_SYNC_WALLET =
+                    new URL(Base.BASE_API + Endpoints.INIT_SYNC_WALLET);
+            public static final URL SEND_OTP = new URL(Base.BASE_API + Endpoints.SEND_OTP);
+            public static final URL ELIMINA_WALLET =
+                    new URL(Base.BASE_API + Endpoints.ELIMINA_WALLET);
+            public static final URL INIT_CODE_VERIFICATION =
+                    new URL(Base.BASE_API + Endpoints.INIT_CODE_VERIFICATION);
+            public static final URL SEND_POSTE_CODE =
+                    new URL(Base.BASE_API + Endpoints.SEND_POSTE_CODE);
+            public static final URL ONBOARDING_VERIFICATION =
+                    new URL(Base.BASE_API + Endpoints.ONBOARDING_VERIFICATION);
+            public static final URL AUTH_OPENID_AZ =
+                    new URL(Base.BASE_AUTH4 + Endpoints.AUTH_OPENID_AZ);
+            public static final URL CHALLENGE = new URL(Base.BASE_AUTH4 + Endpoints.CHALLENGE);
+        }
+
+        public static class CheckingAccounts {
+            public static final URL FETCH_ACCOUNTS =
+                    new URL(Base.BASE_DATA + Endpoints.FETCH_ACCOUNTS);
+            public static final URL FETCH_ACCOUNT_DETAILS =
+                    new URL(Base.BASE_API + Endpoints.ACCOUNT_DETAILS);
+            public static final URL FETCH_TRANSACTIONS =
+                    new URL(Base.BASE_API + Endpoints.FETCH_TRANSACTIONS);
+        }
+
+        public static class SavingAccounts {
+            public static final URL FETCH_SAVING_ACCOUNTS =
+                    new URL(Base.BASE_API + Endpoints.FETCH_SAVING_ACCOUNTS);
+            public static final URL FETCH_SAVING_ACCOUNTS_DETAILS =
+                    new URL(Base.BASE_API + Endpoints.FETCH_SAVING_ACCOUNTS_DETAILS);
+            public static final URL FETCH_SAVING_TRANSACTIONS =
+                    new URL(Base.BASE_API + Endpoints.FETCH_SAVING_TRANSACTIONS);
+        }
 
         public static class Base {
             public static final String BASE_DATA = "https://pfm.poste.it/user/v1";
             public static final String BASE_API =
-                    "https://appbp.mobile.poste.it/jod-mobile-server/json/services/sca/v1/bancoposta";
+                    "https://appbp.mobile.poste.it/jod-mobile-server/json/services/sca";
             public static final String BASE_AUTH2 =
                     "https://appregistry.mobile.poste.it/jod-app-registry/v2";
             public static final String BASE_AUTH3 =
@@ -49,23 +67,32 @@ public class BancoPostaConstants {
 
         public static class Endpoints {
             public static final String FETCH_ACCOUNTS = "/accounts";
-            public static final String FETCH_TRANSACTIONS = "/ricercaListaMovimentiConto";
-            public static final String ACCOUNT_DETAILS = "/ricercaListaMovimentiConto";
+            public static final String FETCH_TRANSACTIONS =
+                    "/v1/bancoposta/ricercaListaMovimentiConto";
+            public static final String ACCOUNT_DETAILS =
+                    "/v1/bancoposta/ricercaListaMovimentiConto";
             public static final String REGISTER_INIT = "/registerInit";
             public static final String ACTIVATION = "/activation";
             public static final String REGISTER = "/register";
             public static final String REGISTER_APP = "/registerApp";
             public static final String CHECK_REGISTER = "/checkRegisterApp";
             public static final String AUTHORIZE_TRANSACTION = "/authorizeTransaction";
-            public static final String INIT_SYNC_WALLET = "/initSyncWallet";
-            public static final String SEND_OTP = "/sendOtpEliminaWallet";
-            public static final String ELIMINA_WALLET = "/eliminaWallet";
+            public static final String INIT_SYNC_WALLET = "/v1/bancoposta/initSyncWallet";
+            public static final String SEND_OTP = "/v1/bancoposta/sendOtpEliminaWallet";
+            public static final String ELIMINA_WALLET = "/v1/bancoposta/eliminaWallet";
             public static final String INIT_CODE_VERIFICATION =
-                    "/initAssociaContoWalletByCodiceDigital";
-            public static final String SEND_POSTE_CODE = "/associaContoWalletByCodiceDigital";
-            public static final String ONBOARDING_VERIFICATION = "/verificaOnboarding";
+                    "/v1/bancoposta/initAssociaContoWalletByCodiceDigital";
+            public static final String SEND_POSTE_CODE =
+                    "/v1/bancoposta/associaContoWalletByCodiceDigital";
+            public static final String ONBOARDING_VERIFICATION =
+                    "/v1/bancoposta/verificaOnboarding";
             public static final String CHALLENGE = "/securetool/v1/challenge";
             public static final String AUTH_OPENID_AZ = "/federation/v2/openid-az";
+            public static final String FETCH_SAVING_ACCOUNTS = "/v2/bancoposta/listaLibrettiH24";
+            public static final String FETCH_SAVING_ACCOUNTS_DETAILS =
+                    "/v2/bancoposta/listaMovimentiLibrettoH24";
+            public static final String FETCH_SAVING_TRANSACTIONS =
+                    "/v2/bancoposta/listaMovimentiLibrettoH24";
         }
     }
 
