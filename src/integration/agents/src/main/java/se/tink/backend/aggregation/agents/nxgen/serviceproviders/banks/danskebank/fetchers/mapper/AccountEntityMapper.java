@@ -113,6 +113,29 @@ public class AccountEntityMapper {
                 .build();
     }
 
+    public Optional<TransactionalAccount> toUnknownAccount(AccountEntity accountEntity) {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.OTHER)
+                .withoutFlags()
+                .withBalance(
+                        BalanceModule.builder()
+                                .withBalance(
+                                        ExactCurrencyAmount.of(
+                                                accountEntity.getBalance(),
+                                                accountEntity.getCurrency()))
+                                .setAvailableCredit(calculateAvailableCredit(accountEntity))
+                                .build())
+                .withId(buildIdModule(accountEntity))
+                .setBankIdentifier(accountEntity.getAccountNoInt())
+                .setApiIdentifier(accountEntity.getAccountNoInt())
+                .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
+                .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
+                .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
+                .canWithdrawCash(AccountCapabilities.Answer.UNKNOWN)
+                .sourceInfo(createAccountSourceInfo(accountEntity))
+                .build();
+    }
+
     public Optional<TransactionalAccount> toCheckingAccount(AccountEntity accountEntity) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
