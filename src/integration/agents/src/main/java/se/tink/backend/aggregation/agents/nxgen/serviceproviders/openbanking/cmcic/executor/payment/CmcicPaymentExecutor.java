@@ -350,11 +350,12 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 new PaymentTypeInformationEntity(null, ServiceLevelCodeEntity.SEPA, null, null);
 
         AccountIdentificationEntity debtorAccount =
-                new AccountIdentificationEntity(
-                        Optional.ofNullable(paymentRequest.getPayment().getDebtor())
-                                .map(Debtor::getAccountNumber)
-                                .orElse(null),
-                        null);
+                Optional.ofNullable(paymentRequest.getPayment().getDebtor())
+                        .map(
+                                debtor ->
+                                        new AccountIdentificationEntity(
+                                                debtor.getAccountNumber(), null))
+                        .orElse(null);
 
         PartyIdentificationEntity creditor =
                 new PartyIdentificationEntity(
