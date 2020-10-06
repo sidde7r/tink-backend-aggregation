@@ -7,11 +7,13 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionDateFromFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountTransactionDateFromFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.filters.TransactionFetchRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -42,7 +44,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         super(componentProvider);
 
         configuration = getConfiguration(baseUrl);
-        apiClient = getApiClient();
+        apiClient = getApiClient(componentProvider);
         oauth2Authenticator =
                 new Xs2aDevelopersAuthenticator(apiClient, persistentStorage, configuration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -52,6 +54,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         this.client.setEidasProxy(configuration.getEidasProxy());
+        this.client.addFilter(new TransactionFetchRetryFilter());
     }
 
     protected Xs2aDevelopersProviderConfiguration getConfiguration(String baseUrl) {
@@ -70,8 +73,14 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 organizationIdentifier, baseUrl, redirectUrl);
     }
 
-    protected Xs2aDevelopersApiClient getApiClient() {
-        return new Xs2aDevelopersApiClient(client, persistentStorage, configuration);
+    protected Xs2aDevelopersApiClient getApiClient(AgentComponentProvider componentProvider) {
+        return new Xs2aDevelopersApiClient(
+                client,
+                persistentStorage,
+                configuration,
+                request.isManual(),
+                userIp,
+                componentProvider.getRandomValueGenerator());
     }
 
     @Override
@@ -119,9 +128,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
 
         final TransactionFetcher<TransactionalAccount> transactionFetcher =
                 new TransactionKeyWithInitDateFromFetcherController<>(
-                        request,
-                        new Xs2aDevelopersTransactionalAccountTransactionDateFromFetcher(
-                                apiClient, oauth2Authenticator));
+                        request, new Xs2aDevelopersTransactionDateFromFetcher(apiClient));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);

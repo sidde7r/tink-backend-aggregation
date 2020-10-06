@@ -73,7 +73,6 @@ public final class Xs2aDevelopersConstants {
         public static final String PAYMENT_ID = "payment_id";
         public static final String PIS_TOKEN = "pis_token";
         public static final String CODE_VERIFIER = "code_verifier";
-        public static final String ACCOUNT_ID = "accountId";
         public static final String AUTHORISATION_URL = "authorisation_url";
     }
 
@@ -94,7 +93,6 @@ public final class Xs2aDevelopersConstants {
         public static final String BOTH = "both";
         public static final String CODE = "code";
         public static final String CODE_CHALLENGE_TYPE = "S256";
-        public static final String PSU_IP_ADDRESS = "127.0.0.1";
         public static final String SCOPE = "AIS:";
     }
 
@@ -131,13 +129,7 @@ public final class Xs2aDevelopersConstants {
         public static final String PAYMENT_ID = "paymentId";
     }
 
-    public static class BalanceTypes {
-        public static final ImmutableList<String> BALANCES =
-                ImmutableList.of("authorised", "expected");
-    }
-
     public static class Transactions {
-        public static final int EMPTY_PAGES_RESPONSE_LIMIT = 1;
         public static final int ERROR_CODE_MAX_ACCESS_EXCEEDED = 429;
         public static final int ERROR_CODE_SERVICE_UNAVAILABLE = 503;
         public static final String HREF = "href";

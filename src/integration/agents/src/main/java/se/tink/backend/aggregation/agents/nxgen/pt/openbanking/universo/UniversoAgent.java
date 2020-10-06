@@ -30,9 +30,14 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
     }
 
     @Override
-    protected Xs2aDevelopersApiClient getApiClient() {
+    protected Xs2aDevelopersApiClient getApiClient(AgentComponentProvider componentProvider) {
         return new UniversoApiClient(
-                client, persistentStorage, (UniversoProviderConfiguration) configuration);
+                client,
+                persistentStorage,
+                (UniversoProviderConfiguration) configuration,
+                request.isManual(),
+                userIp,
+                componentProvider.getRandomValueGenerator());
     }
 
     @Override

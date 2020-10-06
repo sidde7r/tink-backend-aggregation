@@ -18,7 +18,6 @@ import static se.tink.libraries.serialization.utils.SerializationUtils.deseriali
 
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -26,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentBody;
@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -81,11 +81,18 @@ public class Xs2aDevelopersApiClientTest {
         when(requestBuilder.body(any(Object.class))).thenReturn(requestBuilder);
         when(requestBuilder.queryParam(anyString(), anyString())).thenReturn(requestBuilder);
 
-        apiClient = new Xs2aDevelopersApiClient(tinkHttpClient, storage, configuration);
+        apiClient =
+                new Xs2aDevelopersApiClient(
+                        tinkHttpClient,
+                        storage,
+                        configuration,
+                        true,
+                        "127.0.0.1",
+                        new RandomValueGeneratorImpl());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void shouldThrowIllegalStateExceptionWhenTokenDoesNotExistsInStorageDuringAis() {
+    @Test(expected = SessionException.class)
+    public void shouldThrowSessionExceptionWhenTokenDoesNotExistsInStorageDuringAis() {
         when(storage.get(OAUTH_TOKEN, OAuth2Token.class)).thenReturn(Optional.empty());
         apiClient.getAccounts();
     }
@@ -165,27 +172,6 @@ public class Xs2aDevelopersApiClientTest {
         // then
         Assert.assertTrue(result.size() == 1);
         assertThat(result.get(0)).isEqualTo(getTransactionsResponse.toTinkTransactions().get(0));
-        verify(tinkHttpClient).request(url);
-        verifyNoMoreInteractions(tinkHttpClient);
-    }
-
-    @Test
-    public void shouldBuildAndExecuteGetCreditTransactionsRequest() {
-        // given
-        URL url = new URL(BASE_URL + "/berlingroup/v1/accounts/1/transactions");
-        GetTransactionsResponse getTransactionsResponse =
-                deserializeFromString(JSON_MOCK, GetTransactionsResponse.class);
-        when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
-        when(requestBuilder.get(GetTransactionsResponse.class)).thenReturn(getTransactionsResponse);
-        CreditCardAccount account = mock(CreditCardAccount.class);
-        when(account.getApiIdentifier()).thenReturn("1");
-
-        // when
-        GetTransactionsResponse result =
-                apiClient.getCreditTransactions(account, new Date(), new Date());
-
-        // then
-        assertThat(result).isEqualTo(getTransactionsResponse);
         verify(tinkHttpClient).request(url);
         verifyNoMoreInteractions(tinkHttpClient);
     }

@@ -40,7 +40,7 @@ public class Xs2aDevelopersTransactionalAccountFetcherTest {
     public void shouldFetchAndMapCheckingTransactionalAccount(String accountType) {
         // given
         GetAccountsResponse getAccountsResponse = getAccountsResponse(accountType);
-        AccountEntity accountEntity = getAccountsResponse.getAccountList().get(0);
+        AccountEntity accountEntity = getAccountsResponse.getAccounts().get(0);
         given(apiClient.getAccounts()).willReturn(getAccountsResponse);
         given(apiClient.getBalance(accountEntity)).willReturn(BALANCE_RESPONSE);
 
@@ -61,7 +61,7 @@ public class Xs2aDevelopersTransactionalAccountFetcherTest {
     public void shouldFetchAndMapSavingTransactionalAccount(String accountType) {
         // given
         GetAccountsResponse getAccountsResponse = getAccountsResponse(accountType);
-        AccountEntity accountEntity = getAccountsResponse.getAccountList().get(0);
+        AccountEntity accountEntity = getAccountsResponse.getAccounts().get(0);
         given(apiClient.getAccounts()).willReturn(getAccountsResponse);
         given(apiClient.getBalance(accountEntity)).willReturn(BALANCE_RESPONSE);
 
@@ -81,7 +81,7 @@ public class Xs2aDevelopersTransactionalAccountFetcherTest {
     public void shouldNotMapUnknownTypeTransactionalAccount() {
         // given
         GetAccountsResponse getAccountsResponse = getAccountsResponse("UNKNOWN_TYPE");
-        AccountEntity accountEntity = getAccountsResponse.getAccountList().get(0);
+        AccountEntity accountEntity = getAccountsResponse.getAccounts().get(0);
         given(apiClient.getAccounts()).willReturn(getAccountsResponse);
         given(apiClient.getBalance(accountEntity)).willReturn(BALANCE_RESPONSE);
 
