@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.metrics.core.MetricId;
 
 public interface TransactionRefresher extends Refresher {
-    MetricId METRIC_ID = REFRESHER_METRIC_ID.label(METRIC_ITEM_TYPE, "transactions");
+    MetricId METRIC_ID = REFRESHER_METRIC_ID;
     List<Integer> METRIC_COUNTER_BUCKETS =
             ImmutableList.<Integer>builder()
                     .add(0)

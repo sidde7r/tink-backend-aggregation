@@ -13,8 +13,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public final class EInvoiceRefreshController implements Refresher {
-    private static final MetricId METRIC_ID =
-            Refresher.REFRESHER_METRIC_ID.label(Refresher.METRIC_ITEM_TYPE, "einvoices");
+    private static final MetricId METRIC_ID = Refresher.REFRESHER_METRIC_ID;
     private static final List<Number> COUNTER_METRIC_BUCKETS =
             ImmutableList.<Number>builder()
                     .add(0)

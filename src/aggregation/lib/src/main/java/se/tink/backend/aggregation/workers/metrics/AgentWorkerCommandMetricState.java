@@ -154,7 +154,6 @@ public class AgentWorkerCommandMetricState {
                 MetricId.newId(command.getMetricName())
                         .label(action)
                         .label("provider_type", provider.getMetricTypeName())
-                        .label("provider", provider.getName())
                         .label("market", provider.getMarket())
                         .label("className", provider.getClassName())
                         .label("credential", credentials.getMetricTypeName())
