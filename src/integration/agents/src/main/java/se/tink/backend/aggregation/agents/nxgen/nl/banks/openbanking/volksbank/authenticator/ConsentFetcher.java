@@ -23,7 +23,6 @@ public final class ConsentFetcher {
         this.clientId = clientId;
     }
 
-    /** @return A consent ID, either by asking the bank for it or by getting it from storage. */
     public String fetchConsent() {
         final String consentId;
 
