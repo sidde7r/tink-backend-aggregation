@@ -27,4 +27,9 @@ public class HandelsbankenErrorResponse {
     public boolean isTokenNotActiveError() {
         return Errors.TOKEN_NOT_ACTIVE.equalsIgnoreCase(moreInformation);
     }
+
+    @JsonIgnore
+    public boolean hasNotRegisteredToPlanError() {
+        return Errors.NOT_REGISTERED_TO_PLAN.equals(moreInformation);
+    }
 }
