@@ -72,7 +72,7 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                                         "Account: apiIdentifier = {}, accountProduct = {}",
                                         accountEntity.getAccountNoInt(),
                                         accountEntity.getAccountProduct()))
-                .map(accountEntityMapper::toCheckingAccount)
+                .map(accountEntityMapper::toUnknownAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

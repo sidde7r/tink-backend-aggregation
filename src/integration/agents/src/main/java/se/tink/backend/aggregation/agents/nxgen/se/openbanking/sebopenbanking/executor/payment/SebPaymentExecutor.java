@@ -1,34 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment;
 
-import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.PaymentValue;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.CreditorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.DebtorAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.PaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.RemittanceInformationStructuredEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentSigningRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebDateUtil;
-import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
-import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -43,9 +33,6 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
-import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -68,10 +55,11 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         final Payment payment = paymentRequest.getPayment();
-        final PaymentType type = getPaymentType(payment);
+        final PaymentType type = SebPaymentUtil.getPaymentType(payment);
 
         final String paymentProduct =
-                getPaymentProduct(type, payment.getCreditor().getAccountIdentifierType())
+                SebPaymentUtil.getPaymentProduct(
+                                type, payment.getCreditor().getAccountIdentifierType())
                         .getValue();
 
         final DebtorAccountEntity debtorAccountEntity =
@@ -87,21 +75,24 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .withTemplateId(paymentProduct)
                         .withCreditorAccount(creditorAccountEntity)
                         .withDebtorAccount(debtorAccountEntity)
-                        .withExecutionDate(getExecutionDateOrCurrentDate(payment, paymentProduct))
+                        .withExecutionDate(
+                                SebPaymentUtil.getExecutionDateOrCurrentDate(
+                                        payment, paymentProduct))
                         .withAmount(amountEntity)
                         .withCreditorName(payment.getCreditor().getName())
                         .build();
 
         RemittanceInformation remittanceInformation =
-                validateAndGetRemittanceInformation(paymentProduct, payment);
+                SebPaymentUtil.validateAndGetRemittanceInformation(paymentProduct, payment);
         if (RemittanceInformationType.OCR.equals(remittanceInformation.getType())) {
             createPaymentRequest.setRemittanceInformationStructured(
                     new RemittanceInformationStructuredEntity()
                             .createOCRRemittanceInformation(remittanceInformation.getValue()));
         } else {
+            SebPaymentUtil.validateUnStructuredRemittanceInformation(
+                    payment.getRemittanceInformation().getValue());
             createPaymentRequest.setRemittanceInformationUnstructured(
-                    getRemittanceInformationUnStructured(
-                            payment.getRemittanceInformation().getValue()));
+                    payment.getRemittanceInformation().getValue());
         }
 
         CreatePaymentResponse createPaymentResponse =
@@ -121,7 +112,8 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         final String paymentId = payment.getUniqueId();
         final PaymentType paymentType = payment.getType();
         final String paymentProduct =
-                getPaymentProduct(paymentType, payment.getCreditor().getAccountIdentifierType())
+                SebPaymentUtil.getPaymentProduct(
+                                paymentType, payment.getCreditor().getAccountIdentifierType())
                         .getValue();
 
         return apiClient
@@ -138,7 +130,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         String nextStep;
         final Payment payment = paymentMultiStepRequest.getPayment();
         final String paymentProduct =
-                getPaymentProduct(
+                SebPaymentUtil.getPaymentProduct(
                                 payment.getType(), payment.getCreditor().getAccountIdentifierType())
                         .getValue();
         final String paymentId = payment.getUniqueId();
@@ -192,115 +184,18 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .collect(Collectors.toList()));
     }
 
-    public PaymentType getPaymentType(Payment payment) {
-        return payment.getCreditor().getAccountIdentifierType().equals(Type.IBAN)
-                        && !payment.getCreditor().getAccountNumber().startsWith(SebConstants.MARKET)
-                ? PaymentType.SEPA
-                : PaymentType.DOMESTIC;
-    }
-
-    public PaymentProduct getPaymentProduct(PaymentType paymentType, Type creditorAccountType) {
-        switch (paymentType) {
-            case SEPA:
-                return PaymentProduct.SEPA_CREDIT_TRANSFER;
-            case INTERNATIONAL:
-                throw new IllegalStateException(ErrorMessages.CROSS_BORDER_PAYMENT_NOT_SUPPORTED);
-            case DOMESTIC:
-                return getDomesticPaymentProduct(creditorAccountType);
-            default:
-                throw new IllegalStateException(ErrorMessages.UNKNOWN_PAYMENT_PRODUCT);
-        }
-    }
-
-    private String getExecutionDateOrCurrentDate(Payment payment, String paymentProduct) {
-        switch (paymentProduct) {
-            case SebConstants.PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS:
-            case SebConstants.PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS:
-                return SebDateUtil.getTransferDateForBgPg(payment.getExecutionDate());
-            case SebConstants.PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS:
-                return SebDateUtil.getTransferDate(
-                        payment.getExecutionDate(),
-                        IntraBankChecker.isSwedishMarketIntraBank(
-                                payment.getDebtor().getAccountIdentifier(),
-                                payment.getCreditor().getAccountIdentifier()));
-            case SebConstants.PaymentProduct.SEPA_CREDIT_TRANSFER:
-                return SebDateUtil.getTransferDateForSepa(payment.getExecutionDate());
-            default:
-                throw new IllegalStateException(ErrorMessages.UNKNOWN_PAYMENT_PRODUCT);
-        }
-    }
-
-    private RemittanceInformation validateAndGetRemittanceInformation(
-            String paymentProduct, Payment payment) {
-        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
-
-        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation,
-                null,
-                RemittanceInformationType.UNSTRUCTURED,
-                RemittanceInformationType.OCR);
-
-        if (remittanceInformation.getType() == null
-                && StringUtils.containsAny(
-                        paymentProduct,
-                        PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BANKGIROS.getValue(),
-                        PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS.getValue())) {
-            remittanceInformation.setType(decideRemittanceInformationType(remittanceInformation));
-        }
-
-        return remittanceInformation;
-    }
-
-    private RemittanceInformationType decideRemittanceInformationType(
-            RemittanceInformation remittanceInformation) {
-        return isValidSoftOcr(remittanceInformation.getValue())
-                ? RemittanceInformationType.OCR
-                : RemittanceInformationType.UNSTRUCTURED;
-    }
-
-    private boolean isValidSoftOcr(String message) {
-        OcrValidationConfiguration validationConfiguration = OcrValidationConfiguration.softOcr();
-        GiroMessageValidator validator = GiroMessageValidator.create(validationConfiguration);
-        return validator.validate(message).getValidOcr().isPresent();
-    }
-
-    private String getRemittanceInformationUnStructured(String message) throws PaymentException {
-        if (Strings.isNullOrEmpty(message)) {
-            return message;
-        }
-
-        if (message.length() > PaymentValue.MAX_DEST_MSG_LEN) {
-            throw new ReferenceValidationException(
-                    String.format(
-                            ErrorMessages.PAYMENT_REF_TOO_LONG, PaymentValue.MAX_DEST_MSG_LEN));
-        }
-
-        return message;
-    }
-
-    private PaymentProduct getDomesticPaymentProduct(Type creditorAccountType) {
-        switch (creditorAccountType) {
-            case SE_BG:
-                return PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BANKGIROS;
-            case SE_PG:
-                return PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS;
-            default:
-                return PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS;
-        }
-    }
-
     private Signer getSigner() {
-        return new BankIdSigningController(
-                supplementalRequester, new SebBankIdSigner(this, apiClient));
+        return new BankIdSigningController(supplementalRequester, new SebBankIdSigner(apiClient));
     }
 
     public PaymentStatus fetchStatus(PaymentRequest paymentRequest) throws PaymentException {
         final Payment payment = paymentRequest.getPayment();
         final PaymentType type =
                 Optional.ofNullable(paymentRequest.getPayment().getType())
-                        .orElse(getPaymentType(payment));
+                        .orElse(SebPaymentUtil.getPaymentType(payment));
         final String paymentProduct =
-                getPaymentProduct(type, payment.getCreditor().getAccountIdentifierType())
+                SebPaymentUtil.getPaymentProduct(
+                                type, payment.getCreditor().getAccountIdentifierType())
                         .getValue();
         return getPaymentStatus(payment.getUniqueId(), paymentProduct);
     }
