@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.payment;
 
+import se.tink.libraries.signableoperation.enums.InternalStatus;
+
 public class DateValidationException extends PaymentValidationException {
     private static final String DATE_TOO_CLOSE_ERROR_MESSAGE =
             "The date when the money will reach the recipient is too close.";
@@ -12,6 +14,14 @@ public class DateValidationException extends PaymentValidationException {
 
     public DateValidationException(String message) {
         super(message);
+    }
+
+    public DateValidationException(
+            String message,
+            String path,
+            InternalStatus internalStatus,
+            IllegalArgumentException cause) {
+        super(message, path, internalStatus, cause);
     }
 
     public static DateValidationException paymentDateTooCloseException() {

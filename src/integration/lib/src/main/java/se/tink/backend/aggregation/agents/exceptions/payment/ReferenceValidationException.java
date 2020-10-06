@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.payment;
 
+import se.tink.libraries.signableoperation.enums.InternalStatus;
+
 public class ReferenceValidationException extends PaymentValidationException {
 
     public ReferenceValidationException(String message, String path, Throwable cause) {
@@ -8,5 +10,10 @@ public class ReferenceValidationException extends PaymentValidationException {
 
     public ReferenceValidationException(String message) {
         super(message);
+    }
+
+    public ReferenceValidationException(
+            String message, String path, InternalStatus internalStatus, Throwable cause) {
+        super(message, path, internalStatus, cause);
     }
 }

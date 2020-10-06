@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.payment;
 
+import se.tink.libraries.signableoperation.enums.InternalStatus;
+
 public class InsufficientFundsException extends DebtorValidationException {
 
     public InsufficientFundsException(String message, String path, Throwable cause) {
@@ -8,5 +10,9 @@ public class InsufficientFundsException extends DebtorValidationException {
 
     public InsufficientFundsException(String message) {
         super(message);
+    }
+
+    public InsufficientFundsException(String message, InternalStatus internalStatus) {
+        super(message, internalStatus);
     }
 }
