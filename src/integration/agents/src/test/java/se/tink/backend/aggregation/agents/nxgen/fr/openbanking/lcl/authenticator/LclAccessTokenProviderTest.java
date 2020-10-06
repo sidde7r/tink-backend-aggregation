@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTes
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createTokenResponseDto;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
@@ -31,8 +32,9 @@ public class LclAccessTokenProviderTest {
     @Test
     public void shouldExchangeAuthorizationCode() {
         // given
+        final OAuth2Token expectedResult = createOAuth2Token();
+        // and
         final TokenResponseDto tokenResponseDto = createTokenResponseDto();
-
         when(apiClientMock.retrieveAccessToken(AUTH_CODE)).thenReturn(tokenResponseDto);
 
         // when
@@ -40,16 +42,15 @@ public class LclAccessTokenProviderTest {
                 lclAccessTokenProvider.exchangeAuthorizationCode(AUTH_CODE);
 
         // then
-        final OAuth2Token expectedResult = createOAuth2Token();
-
-        assertThat(returnedResult).isEqualTo(expectedResult);
+        assertThat(returnedResult).matches(new OAuth2TokenPredicate(expectedResult));
     }
 
     @Test
     public void shouldRefreshAccessToken() {
         // given
+        final OAuth2Token expectedResult = createOAuth2Token();
+        // and
         final TokenResponseDto tokenResponseDto = createTokenResponseDto();
-
         when(apiClientMock.refreshAccessToken(REFRESH_TOKEN))
                 .thenReturn(Optional.of(tokenResponseDto));
 
@@ -59,8 +60,25 @@ public class LclAccessTokenProviderTest {
 
         // then
         assertThat(returnedResult).isPresent();
+        returnedResult.ifPresent(
+                actualToken ->
+                        assertThat(actualToken).matches(new OAuth2TokenPredicate(expectedResult)));
+    }
+}
 
-        final OAuth2Token expectedResult = createOAuth2Token();
-        returnedResult.ifPresent(actualToken -> assertThat(actualToken).isEqualTo(expectedResult));
+class OAuth2TokenPredicate implements Predicate<OAuth2Token> {
+
+    private final OAuth2Token expectedToken;
+
+    OAuth2TokenPredicate(OAuth2Token expectedToken) {
+        this.expectedToken = expectedToken;
+    }
+
+    @Override
+    public boolean test(OAuth2Token actualToken) {
+        return expectedToken.getTokenType().equals(actualToken.getTokenType())
+                && expectedToken.getAccessToken().equals(actualToken.getAccessToken())
+                && expectedToken.getRefreshToken().equals(actualToken.getRefreshToken())
+                && expectedToken.getExpiresInSeconds() == actualToken.getExpiresInSeconds();
     }
 }
