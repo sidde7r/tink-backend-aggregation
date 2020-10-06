@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.workers.listeners;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -10,6 +12,8 @@ public class CredentialsStatusEventListener implements AgentEventListener {
     private final AgentWorkerCommandContext context;
     private final SignableOperation signableOperation;
     private final Credentials credentials;
+    private static final Logger logger =
+            LoggerFactory.getLogger(CredentialsStatusEventListener.class);
 
     public CredentialsStatusEventListener(
             AgentWorkerCommandContext context,
@@ -29,6 +33,9 @@ public class CredentialsStatusEventListener implements AgentEventListener {
                         signableOperation,
                         SignableOperationStatuses.CANCELLED,
                         credentials.getStatusPayload());
+                logger.info(
+                        "Signable operation status is set to cancelled for credentials with status {}",
+                        credentials.getStatus());
                 break;
             case TEMPORARY_ERROR:
                 context.updateSignableOperationStatus(

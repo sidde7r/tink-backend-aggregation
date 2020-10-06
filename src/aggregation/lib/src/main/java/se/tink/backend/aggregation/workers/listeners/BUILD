@@ -11,5 +11,6 @@ java_library(
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//third_party:com_google_guava_guava",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )
