@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -19,17 +20,16 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.creditcards.OpBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.OpBankTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.sessionhandler.OpBankSessionHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
@@ -42,7 +42,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -60,35 +59,34 @@ public final class OpBankAgent extends NextGenerationAgent
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
 
-    private final OpBankApiClient bankClient;
-    private OpBankPersistentStorage opBankPersistentStorage;
+    private final OpBankApiClient apiClient;
+    private final OpBankPersistentStorage opBankPersistentStorage;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public OpBankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-        bankClient = new OpBankApiClient(client);
-        this.opBankPersistentStorage = new OpBankPersistentStorage(credentials, persistentStorage);
+    @Inject
+    public OpBankAgent(final AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
+        apiClient = new OpBankApiClient(client);
+        opBankPersistentStorage = new OpBankPersistentStorage(credentials, persistentStorage);
 
-        this.investmentRefreshController =
+        investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
-                        new OpBankInvestmentFetcher(bankClient, credentials));
+                        new OpBankInvestmentFetcher(apiClient, credentials));
 
-        this.loanRefreshController =
+        loanRefreshController =
                 new LoanRefreshController(
                         metricRefreshController,
                         updateController,
-                        new OpBankLoanFetcher(bankClient, credentials));
+                        new OpBankLoanFetcher(apiClient, credentials));
 
-        this.creditCardRefreshController = constructCreditCardRefreshController();
+        creditCardRefreshController = constructCreditCardRefreshController();
 
-        this.transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController();
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -99,11 +97,10 @@ public final class OpBankAgent extends NextGenerationAgent
                 new KeyCardAuthenticationController(
                         catalog,
                         supplementalInformationHelper,
-                        new OpAuthenticator(
-                                bankClient, opBankPersistentStorage, credentials, sessionStorage),
+                        new OpKeyCardAuthenticator(
+                                apiClient, opBankPersistentStorage, credentials, sessionStorage),
                         OpBankConstants.KEYCARD_PIN_LENGTH),
-                new OpAutoAuthenticator(
-                        bankClient, opBankPersistentStorage, credentials, sessionStorage));
+                new OpAutoAuthenticator(apiClient, opBankPersistentStorage, credentials));
     }
 
     @Override
@@ -126,17 +123,6 @@ public final class OpBankAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new OpBankTransactionalAccountsFetcher(bankClient),
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(
-                                new OpBankTransactionalAccountsFetcher(bankClient))));
-    }
-
     @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
         return creditCardRefreshController.fetchCreditCardAccounts();
@@ -145,20 +131,6 @@ public final class OpBankAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
-    }
-
-    private CreditCardRefreshController constructCreditCardRefreshController() {
-        OpBankCreditCardFetcher creditCardFetcher = new OpBankCreditCardFetcher(bankClient);
-        TransactionFetcher<CreditCardAccount> creditCardTransactionFetcher =
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(creditCardFetcher));
-
-        return new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                creditCardFetcher,
-                creditCardTransactionFetcher);
     }
 
     @Override
@@ -183,11 +155,36 @@ public final class OpBankAgent extends NextGenerationAgent
 
     @Override
     public SessionHandler constructSessionHandler() {
-        return new OpBankSessionHandler(bankClient);
+        return new OpBankSessionHandler(apiClient);
     }
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return OpBankIdentityFetcher.fetchIdentity(sessionStorage);
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new OpBankTransactionalAccountsFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                new OpBankTransactionalAccountsFetcher(apiClient))));
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        OpBankCreditCardFetcher creditCardFetcher = new OpBankCreditCardFetcher(apiClient);
+        TransactionFetcher<CreditCardAccount> creditCardTransactionFetcher =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(creditCardFetcher));
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                creditCardTransactionFetcher);
     }
 }

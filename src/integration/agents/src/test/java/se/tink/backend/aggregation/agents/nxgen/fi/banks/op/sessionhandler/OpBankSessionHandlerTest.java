@@ -26,11 +26,9 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OpBankSessionHandlerTest {
     private OpBankApiClient bankClient;
-    private SessionStorage sessionStorage;
 
     @Before
     public void setUp() throws Exception {
@@ -52,14 +50,13 @@ public class OpBankSessionHandlerTest {
                                 null,
                                 context.getLogMasker(),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS));
-        sessionStorage = new SessionStorage();
         OpBankPersistentStorage persistentStorage =
                 new OpBankPersistentStorage(credentials, new PersistentStorage());
         persistentStorage.put(
                 OpBankConstants.Authentication.APPLICATION_INSTANCE_ID,
                 OpBankTestConfig.APPLICATION_INSTANCE_ID);
         OpAutoAuthenticator opBankAuthenticator =
-                new OpAutoAuthenticator(bankClient, persistentStorage, credentials, sessionStorage);
+                new OpAutoAuthenticator(bankClient, persistentStorage, credentials);
         opBankAuthenticator.authenticate(USERNAME, PASSWORD);
     }
 

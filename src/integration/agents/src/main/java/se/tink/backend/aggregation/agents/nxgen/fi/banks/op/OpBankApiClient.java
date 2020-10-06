@@ -31,9 +31,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-/*
- * A class representing the API published by OP Bank used by Tink.
- */
 public class OpBankApiClient {
 
     private final TinkHttpClient client;
@@ -42,7 +39,8 @@ public class OpBankApiClient {
         this.client = client;
     }
 
-    public InitResponseEntity init(InitRequestEntity requestEntity) {
+    public InitResponseEntity init() {
+        InitRequestEntity requestEntity = new InitRequestEntity();
         return createRequest(Urls.INIT_URI).post(InitResponseEntity.class, requestEntity);
     }
 

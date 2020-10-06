@@ -23,7 +23,7 @@ public class OpBankAuthenticationChallengerTest {
 
     private String applicationInstanceId;
     private OpBankApiClient client;
-    private OpAuthenticator authenticationChallenger;
+    private OpKeyCardAuthenticator authenticationChallenger;
     private PersistentStorage persistentStorage;
     private SessionStorage sessionStorage;
 
@@ -42,7 +42,7 @@ public class OpBankAuthenticationChallengerTest {
         SupplementalInformationController supplementalInformationController =
                 new SupplementalInformationControllerImpl(context, credentials);
         authenticationChallenger =
-                new OpAuthenticator(client, persistentStorage, credentials, sessionStorage);
+                new OpKeyCardAuthenticator(client, persistentStorage, credentials, sessionStorage);
 
         doReturn("{\"authenticationToken\":\"0000\"}")
                 .when(context)

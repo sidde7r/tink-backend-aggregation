@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class OpBankSessionHandler implements SessionHandler {
     private static final Logger logger =
@@ -29,6 +30,13 @@ public class OpBankSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        throw SessionError.SESSION_EXPIRED.exception();
+        try {
+            OpBankResponseEntity opBankResponseEntity = bankClient.refreshSession();
+            if (!opBankResponseEntity.isSuccess()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+        } catch (HttpResponseException e) {
+            throw SessionError.SESSION_EXPIRED.exception(e);
+        }
     }
 }

@@ -7,35 +7,27 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStorage;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.InitRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.InitResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginRequestEntity;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginResponseEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OpAutoAuthenticator implements PasswordAuthenticator, AutoAuthenticator {
 
     private final OpBankApiClient apiClient;
     private final OpBankPersistentStorage persistentStorage;
     private final Credentials credentials;
-    private String authToken;
     private final PasswordAuthenticationController authenticationController;
-    private SessionStorage sessionStorage;
 
     public OpAutoAuthenticator(
             OpBankApiClient client,
             OpBankPersistentStorage persistentStorage,
-            Credentials credentials,
-            SessionStorage sessionStorage) {
+            Credentials credentials) {
         this.apiClient = client;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
-        this.sessionStorage = sessionStorage;
         this.authenticationController = new PasswordAuthenticationController(this);
     }
 
@@ -46,21 +38,16 @@ public class OpAutoAuthenticator implements PasswordAuthenticator, AutoAuthentic
         }
         try {
             authenticationController.authenticate(credentials);
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        } catch (AuthorizationException e) {
-            e.printStackTrace();
+        } catch (AuthenticationException | AuthorizationException e) {
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        credentials.setSensitivePayload(Field.Key.USERNAME, username);
-        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
-        InitResponseEntity iResponse = apiClient.init(new InitRequestEntity());
+        InitResponseEntity iResponse = apiClient.init();
         String authToken = OpAuthenticationTokenGenerator.calculateAuthToken(iResponse.getSeed());
-        this.authToken = authToken;
         credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, authToken);
         OpBankLoginRequestEntity request =
                 new OpBankLoginRequestEntity()
@@ -68,10 +55,8 @@ public class OpAutoAuthenticator implements PasswordAuthenticator, AutoAuthentic
                         .setUserid(username)
                         .setApplicationInstanceId(persistentStorage.retrieveInstanceId());
 
-        final OpBankLoginResponseEntity loginResponse = apiClient.login(request);
-        sessionStorage.put(OpBankConstants.Storage.FULL_NAME, loginResponse.getName());
-
+        apiClient.login(request);
         apiClient.setRepresentationType();
-        apiClient.postLogin(this.authToken, persistentStorage.retrieveInstanceId());
+        apiClient.postLogin(authToken, persistentStorage.retrieveInstanceId());
     }
 }
