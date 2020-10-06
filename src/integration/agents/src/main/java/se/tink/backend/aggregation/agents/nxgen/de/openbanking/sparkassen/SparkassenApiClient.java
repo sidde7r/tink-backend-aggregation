@@ -35,20 +35,29 @@ public class SparkassenApiClient {
 
     private final TinkHttpClient client;
     private final String bankCode;
+    private final boolean isManual;
+    private final String userIp;
 
-    public SparkassenApiClient(TinkHttpClient client, String bankCode) {
+    public SparkassenApiClient(
+            TinkHttpClient client, String bankCode, boolean isManual, String userIp) {
         this.client = client;
         this.bankCode = bankCode;
+        this.isManual = isManual;
+        this.userIp = userIp;
     }
 
     private RequestBuilder createRequest(URL url) {
         if (url.get().contains("{" + PathVariables.BANK_CODE + "}")) {
             url = url.parameter(PathVariables.BANK_CODE, bankCode);
         }
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
+
+        RequestBuilder requestBuilder =
+                client.request(url)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
+
+        return isManual ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp) : requestBuilder;
     }
 
     private RequestBuilder createRequestInSession(URL url, String consentId) {
