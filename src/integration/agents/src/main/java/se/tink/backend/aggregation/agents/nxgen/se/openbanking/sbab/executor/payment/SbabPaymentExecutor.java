@@ -42,6 +42,7 @@ import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -116,12 +117,16 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
             throw new ReferenceValidationException(
                     String.format(ErrorMessage.PAYMENT_REF_TOO_LONG, PaymentValue.MAX_DEST_MSG_LEN),
                     "",
+                    InternalStatus.DESTINATION_MESSAGE_TOO_LONG,
                     new IllegalArgumentException());
         }
 
         if (!PaymentValue.ALLOWED_CHARS_PATTERN.matcher(counterPartStatement).matches()) {
             throw new ReferenceValidationException(
-                    ErrorMessage.PAYMENT_REF_ILLEGAL_CHARS, "", new IllegalArgumentException());
+                    ErrorMessage.PAYMENT_REF_ILLEGAL_CHARS,
+                    "",
+                    InternalStatus.INVALID_DESTINATION_MESSAGE,
+                    new IllegalArgumentException());
         }
 
         return counterPartStatement;
