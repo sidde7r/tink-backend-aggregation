@@ -4,6 +4,7 @@ import com.google.common.base.Splitter;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.agent.Agent;
@@ -237,7 +239,11 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 Optional.ofNullable(accountHolder)
                         .map(AccountHolder::getIdentities)
                         .map(Collection::size)
-                        .orElse(0));
+                        .orElse(0),
+                Optional.ofNullable(accountHolder).map(AccountHolder::getIdentities)
+                        .orElse(Collections.emptyList()).stream()
+                        .map(HolderIdentity::getRole)
+                        .collect(Collectors.toList()));
     }
 
     public Agent getAgent() {
