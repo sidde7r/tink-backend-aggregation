@@ -10,7 +10,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaPersistentStorage;
@@ -114,13 +116,22 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
     private ValidateAuthResponse validateDevice(
             StartAuthResponse startAuthResponse, String username)
             throws SupplementalInfoException, LoginException, AuthorizationException {
-        String twoFactorResponse =
-                supplementalInformationHelper.waitForLoginChallengeResponse(
-                        startAuthResponse.getChallenge());
-        ValidateAuthRequest validateAuthRequest =
-                new ValidateAuthRequest(
-                        username, twoFactorResponse, ArgentaConstants.Api.AUTH_METHOD_REGISTER);
-        return apiClient.validateAuth(validateAuthRequest, persistentStorage.getDeviceId());
+        String twoFactorResponse;
+        try {
+            twoFactorResponse =
+                    supplementalInformationHelper.waitForLoginChallengeResponse(
+                            startAuthResponse.getChallenge());
+            ValidateAuthRequest validateAuthRequest =
+                    new ValidateAuthRequest(
+                            username, twoFactorResponse, ArgentaConstants.Api.AUTH_METHOD_REGISTER);
+            return apiClient.validateAuth(validateAuthRequest, persistentStorage.getDeviceId());
+        } catch (SupplementalInfoException supplementalInfoException) {
+            if (!supplementalInfoException.getError().equals(SupplementalInfoError.NO_VALID_CODE)) {
+                throw LoginError.ACTIVATION_TIMED_OUT.exception(supplementalInfoException);
+            } else {
+                throw supplementalInfoException;
+            }
+        }
     }
 
     private String generateRandomDeviceID() {
