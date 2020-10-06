@@ -29,6 +29,7 @@ public class BpmAgentPaymentTest {
                 new AgentIntegrationTest.Builder("it", "it-bpm-oauth2")
                         .setFinancialInstitutionId("bpm")
                         .setAppId("tink")
+                        .setOriginatingUserIp(System.getProperty("tink.ORIGINATING_USER_IP"))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -162,7 +162,8 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                         apiClient,
                         supplementalInformationProvider.getSupplementalInformationHelper(),
                         sessionStorage,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        request.getProvider());
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
