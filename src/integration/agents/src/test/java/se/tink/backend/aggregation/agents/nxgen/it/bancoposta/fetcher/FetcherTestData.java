@@ -418,7 +418,6 @@ public class FetcherTestData {
                         + "                \"descrizione\": \"ACCREDITO GIRO CONTO ALTRO INTERMEDIARIO\",\n"
                         + "                \"divisa\": \"EUR\",\n"
                         + "                \"dataValuta\": \"05/02/2020\",\n"
-                        + "                \"dataContabile\": \"\",\n"
                         + "                \"descrizioneEstesa\": \"ACCREDITO GIRO CONTO ALTRO INT\",\n"
                         + "                \"importo\": 300,\n"
                         + "                \"causale\": \"BO79\"\n"
