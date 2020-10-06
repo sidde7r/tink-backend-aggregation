@@ -133,6 +133,7 @@ public final class BelfiusAgent extends NextGenerationAgent
                     new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
             gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
         }
+        client.disableAggregatorHeader();
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
