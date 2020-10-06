@@ -1,5 +1,13 @@
+REQUEST 0
+POST https://open.nordea.com/personal/v5/authorize
+Content-Type: application/json
+
+RESPONSE 0
+302
+Location: someRedirectUrl
+
 REQUEST 1
-POST https://open.nordea.com/personal/v4/authorize/token
+POST https://open.nordea.com/personal/v5/authorize/token
 Content-Type: application/x-www-form-urlencoded
 
 code=dummyCode&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
