@@ -23,25 +23,18 @@ public class TransactionPaginationHelper {
     public boolean isContentWithRefresh(
             Account account, List<AggregationTransaction> transactions) {
         if (transactions.size() == 0) {
-            log.info("Returning false because transactions list size is 0.");
             return false;
         }
 
-        log.info("Number of transactions: {}", transactions.size());
-
         if (request.getAccounts() == null || request.getCredentials().getUpdated() == null) {
-            log.info("Returning false because account is null or credencial updater is null.");
             return false;
         }
 
         final Optional<Date> certainDate = getContentWithRefreshDate(account);
 
         if (!certainDate.isPresent()) {
-            log.info("Returning false because certain date is not present.");
             return false;
         }
-
-        log.info("Certain date for this account: {}", certainDate.get());
 
         // Reached certain date and check next SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS transactions
         // to not be after the previous one.
@@ -75,17 +68,11 @@ public class TransactionPaginationHelper {
                 }
             }
 
-            log.info("Transactions before certain date: {}", transactionsBeforeCertainDate);
-
             int overlappingTransactionDays =
                     Math.abs(DateUtils.getNumberOfDaysBetween(t.getDate(), certainDate.get()));
 
-            log.info("Overlaping transactions days: {}", overlappingTransactionDays);
-
             if (transactionsBeforeCertainDate >= SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
                     && overlappingTransactionDays >= SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
-                log.info(
-                        "Returning true because transactionsBeforeCertainDate is grater then safe treshold AND overlapingTransactionDays is greater then safe number of days treshold.");
                 return true;
             }
         }
