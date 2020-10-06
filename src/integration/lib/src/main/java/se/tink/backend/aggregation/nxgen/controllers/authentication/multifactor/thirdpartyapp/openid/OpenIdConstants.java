@@ -10,6 +10,7 @@ public class OpenIdConstants {
     public static final String DANSKEBANK_ORG_ID = "0015800000jf7AeAAI";
     public static final String HSBC_ORG_ID = "00158000016i44JAAQ";
     public static final String NATIONWIDE_ORG_ID = "0015800000jf8aKAAQ";
+    public static final String RBS_ORG_ID = "0015800000jfwB4AAI";
 
     public static class Scopes {
         public static final String OPEN_ID = "openid";
