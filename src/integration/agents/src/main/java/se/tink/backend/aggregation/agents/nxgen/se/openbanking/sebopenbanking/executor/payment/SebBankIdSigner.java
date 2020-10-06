@@ -16,11 +16,9 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class SebBankIdSigner implements BankIdSigner<PaymentRequest> {
 
-    private SebPaymentExecutor paymentExecutor;
     private SebApiClient apiClient;
 
-    public SebBankIdSigner(SebPaymentExecutor paymentExecutor, SebApiClient apiClient) {
-        this.paymentExecutor = paymentExecutor;
+    public SebBankIdSigner(SebApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

@@ -185,8 +185,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     }
 
     private Signer getSigner() {
-        return new BankIdSigningController(
-                supplementalRequester, new SebBankIdSigner(this, apiClient));
+        return new BankIdSigningController(supplementalRequester, new SebBankIdSigner(apiClient));
     }
 
     public PaymentStatus fetchStatus(PaymentRequest paymentRequest) throws PaymentException {
