@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -14,13 +17,15 @@ public class DeutscheBankAuthenticator {
 
     private final DeutscheBankApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final String psuId;
+    private final Credentials credentials;
 
     public DeutscheBankAuthenticator(
-            DeutscheBankApiClient apiClient, PersistentStorage persistentStorage, String psuId) {
+            DeutscheBankApiClient apiClient,
+            PersistentStorage persistentStorage,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.psuId = psuId;
+        this.credentials = credentials;
     }
 
     public Optional<String> getPersistedConsentId() {
@@ -28,7 +33,8 @@ public class DeutscheBankAuthenticator {
     }
 
     public URL authenticate(String state) {
-        ConsentBaseResponse consent = apiClient.getConsent(state, psuId);
+        ConsentResponse consent =
+                apiClient.getConsent(state, credentials.getField(CredentialKeys.USERNAME));
         persistentStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
         return new URL(consent.getLinks().getScaRedirect().getHref());
     }
@@ -40,5 +46,10 @@ public class DeutscheBankAuthenticator {
                         consentStatus ->
                                 consentStatus.equals(DeutscheBankConstants.StatusValues.VALID))
                 .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
+    }
+
+    public void storeSessionExpiry() {
+        ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails();
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 }

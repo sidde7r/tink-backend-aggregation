@@ -9,6 +9,8 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -365,6 +367,16 @@ public class Credentials implements Cloneable {
 
     public void setSessionExpiryDate(Date sessionExpiryDate) {
         this.sessionExpiryDate = sessionExpiryDate;
+    }
+
+    @JsonIgnore
+    public void setSessionExpiryDate(LocalDate sessionExpiryDate) {
+        this.sessionExpiryDate =
+                Date.from(
+                        sessionExpiryDate
+                                .atStartOfDay()
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant());
     }
 
     public void setSensitivePayloadSerialized(String sensitivePayloadSerialized) {

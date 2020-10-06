@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ConsentBaseResponse {
+public class ConsentResponse {
 
     private String consentStatus;
     private String consentId;

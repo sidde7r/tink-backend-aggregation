@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
@@ -38,11 +37,7 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent {
         final DeutscheBankAuthenticatorController deutscheBankAuthenticatorController =
                 new DeutscheBankAuthenticatorController(
                         supplementalInformationHelper,
-                        new DeutscheBankAuthenticator(
-                                apiClient,
-                                persistentStorage,
-                                credentials.getField(
-                                        DeutscheBankConstants.CredentialKeys.USERNAME)),
+                        new DeutscheBankAuthenticator(apiClient, persistentStorage, credentials),
                         strongAuthenticationState);
 
         return new AutoAuthenticationController(
