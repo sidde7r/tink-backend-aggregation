@@ -18,23 +18,27 @@ public class BancoPostaConstants {
         public static final URL AUTHORIZE_TRANSACTION =
                 new URL(Base.BASE_AUTH3 + Endpoints.AUTHORIZE_TRANSACTION);
         public static final URL INIT_SYNC_WALLET =
-                new URL(Base.BASE_AUTH + Endpoints.INIT_SYNC_WALLET);
-        public static final URL SEND_OTP = new URL(Base.BASE_AUTH + Endpoints.SEND_OTP);
-        public static final URL ELIMINA_WALLET = new URL(Base.BASE_AUTH + Endpoints.ELIMINA_WALLET);
+                new URL(Base.BASE_API + Endpoints.INIT_SYNC_WALLET);
+        public static final URL SEND_OTP = new URL(Base.BASE_API + Endpoints.SEND_OTP);
+        public static final URL ELIMINA_WALLET = new URL(Base.BASE_API + Endpoints.ELIMINA_WALLET);
         public static final URL INIT_CODE_VERIFICATION =
-                new URL(Base.BASE_AUTH + Endpoints.INIT_CODE_VERIFICATION);
+                new URL(Base.BASE_API + Endpoints.INIT_CODE_VERIFICATION);
         public static final URL SEND_POSTE_CODE =
-                new URL(Base.BASE_AUTH + Endpoints.SEND_POSTE_CODE);
+                new URL(Base.BASE_API + Endpoints.SEND_POSTE_CODE);
         public static final URL ONBOARDING_VERIFICATION =
-                new URL(Base.BASE_AUTH + Endpoints.ONBOARDING_VERIFICATION);
+                new URL(Base.BASE_API + Endpoints.ONBOARDING_VERIFICATION);
         public static final URL FETCH_ACCOUNTS = new URL(Base.BASE_DATA + Endpoints.FETCH_ACCOUNTS);
+        public static final URL FETCH_ACCOUNT_DETAILS =
+                new URL(Base.BASE_API + Endpoints.ACCOUNT_DETAILS);
+        public static final URL FETCH_TRANSACTIONS =
+                new URL(Base.BASE_API + Endpoints.FETCH_TRANSACTIONS);
         public static final URL AUTH_OPENID_AZ =
                 new URL(Base.BASE_AUTH4 + Endpoints.AUTH_OPENID_AZ);
         public static final URL CHALLENGE = new URL(Base.BASE_AUTH4 + Endpoints.CHALLENGE);
 
         public static class Base {
             public static final String BASE_DATA = "https://pfm.poste.it/user/v1";
-            public static final String BASE_AUTH =
+            public static final String BASE_API =
                     "https://appbp.mobile.poste.it/jod-mobile-server/json/services/sca/v1/bancoposta";
             public static final String BASE_AUTH2 =
                     "https://appregistry.mobile.poste.it/jod-app-registry/v2";
@@ -45,6 +49,8 @@ public class BancoPostaConstants {
 
         public static class Endpoints {
             public static final String FETCH_ACCOUNTS = "/accounts";
+            public static final String FETCH_TRANSACTIONS = "/ricercaListaMovimentiConto";
+            public static final String ACCOUNT_DETAILS = "/ricercaListaMovimentiConto";
             public static final String REGISTER_INIT = "/registerInit";
             public static final String ACTIVATION = "/activation";
             public static final String REGISTER = "/register";

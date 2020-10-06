@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticato
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterInitCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SendOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.SimpleRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.Token;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.AccessTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.AuthorizationTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.CheckRegisterAppResponse;
@@ -21,6 +22,11 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticato
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.RegisterInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.RegistrationWithDigitalCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.VerificationOnboardingResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.HOTP;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -96,7 +102,7 @@ public class BancoPostaApiClient {
                 .post(baseRequest);
     }
 
-    public String performSecondOpenIdAz(String form) {
+    public Token performSecondOpenIdAz(String form) {
         HttpResponse response =
                 createBaseRequest(Urls.AUTH_OPENID_AZ)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
@@ -107,7 +113,7 @@ public class BancoPostaApiClient {
                     "Something went wrong with JWE structure in request call");
         }
 
-        return response.getBody(String.class);
+        return response.getBody(Token.class);
     }
 
     public AuthorizationTransactionResponse authorizeTransaction(String jwe) {
@@ -179,7 +185,7 @@ public class BancoPostaApiClient {
                         generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
                 .header(
                         HttpHeaders.AUTHORIZATION,
-                        HeaderValues.BEARER + storage.getRegistrationSessionToken())
+                        HeaderValues.BEARER + storage.getAccessBasicToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .post(VerificationOnboardingResponse.class, body);
     }
@@ -193,5 +199,38 @@ public class BancoPostaApiClient {
         long movingFactor = new Random().nextInt();
         String otp = HOTP.generateOTP(otpSecretKeyByte, movingFactor, 8, 20);
         return String.format("%s:%s:%s", appUid, otp, movingFactor);
+    }
+
+    public AccountsResponse fetchAccounts() {
+        return createBaseRequest(Urls.FETCH_ACCOUNTS)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        HeaderValues.BEARER + storage.getAccessDataToken())
+                .get(AccountsResponse.class);
+    }
+
+    public AccountDetailsResponse fetchAccountDetails(AccountDetailsRequest accountDetailsRequest) {
+        return createBaseRequest(Urls.FETCH_ACCOUNT_DETAILS)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(
+                        HeaderValues.XKEY,
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        HeaderValues.BEARER + storage.getAccessBasicToken())
+                .post(AccountDetailsResponse.class, accountDetailsRequest);
+    }
+
+    public TransactionsResponse fetchTransactions(TransactionsRequest transactionsRequest) {
+        return createBaseRequest(Urls.FETCH_TRANSACTIONS)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(
+                        HeaderValues.XKEY,
+                        generateXKey(storage.getAppId(), storage.getOtpSecretKey()))
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        HeaderValues.BEARER + storage.getAccessBasicToken())
+                .post(TransactionsResponse.class, transactionsRequest);
     }
 }

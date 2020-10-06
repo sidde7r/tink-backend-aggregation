@@ -31,7 +31,7 @@ public class BancoPostaAuthenticator extends StatelessProgressiveAuthenticator {
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
-        return storage.isManualAuthFinished();
+        return !storage.isManualAuthFinished();
     }
 
     @Override

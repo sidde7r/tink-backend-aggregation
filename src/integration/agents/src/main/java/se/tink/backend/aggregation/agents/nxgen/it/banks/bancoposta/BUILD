@@ -4,6 +4,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
+        "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib",
@@ -18,6 +19,8 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/models",
+        "//src/libraries/account_identifier",
         "//src/libraries/retrypolicy",
         "//src/libraries/serialization",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
