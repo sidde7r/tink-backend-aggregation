@@ -38,52 +38,13 @@ Content-Type: application/json;charset=utf-8
 {}
 
 REQUEST 4
-POST https://aggregation.com/aggregation/controller/v1/system/process/transactions/update
-Accept: application/json
-Content-Type: application/json
-
-{"credentials": "not_dummy_cornwall", "requestType": "CREATE", "aggregationId": "foo", "transactions": [], "user": "Dummy_User", "userTriggered": false, "topic": "foo"}
-
-RESPONSE 4
-200
-Content-Type: application/json;charset=utf-8
-
-{}
-
-REQUEST 5
-POST https://aggregation.com/aggregation/controller/v1/system/process/transactions/update
-Accept: application/json
-Content-Type: application/json
-
-{"credentials": "dummy_cornwall", "transactions": [], "user": "Dummy_User", "userTriggered": false, "topic": "foo"}
-
-RESPONSE 5
-200
-Content-Type: application/json;charset=utf-8
-
-{}
-
-REQUEST 6
-POST https://aggregation.com/aggregation/controller/v1/system/process/transactions/update
-Accept: application/json
-Content-Type: application/json
-
-{"credentials": "dummy_cornwall", "transactions": [], "requestType": "CREATE", "aggregationId": "foo" , "user": "Dummy_User", "userTriggered": false, "topic": "foo"}
-
-RESPONSE 6
-500
-Content-Type: application/json;charset=utf-8
-
-{}
-
-REQUEST 7
 POST https://aggregation.com/aggregation/controller/v1/account-holder/update
 Accept: application/json
 Content-Type: application/json
 
 {"appId": "dummy_id", "userId": "dummy_id", "accountHolder": {"accountId": "dummy_id", "type":"BUSINESS", "identities": [{"name": "Dummy Name"}]}}
 
-RESPONSE 7
+RESPONSE 4
 200
 Content-Type: application/json;charset=utf-8
 
