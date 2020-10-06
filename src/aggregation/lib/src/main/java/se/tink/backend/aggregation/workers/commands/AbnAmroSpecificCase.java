@@ -35,7 +35,7 @@ public class AbnAmroSpecificCase extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
 
         List<Account> updatedAccounts = context.getUpdatedAccounts();
         if (updatedAccounts != null) {
@@ -56,5 +56,5 @@ public class AbnAmroSpecificCase extends AgentWorkerCommand {
     }
 
     @Override
-    public void postProcess() throws Exception {}
+    protected void doPostProcess() throws Exception {}
 }

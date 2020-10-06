@@ -15,12 +15,12 @@ public class ClearSensitiveInformationCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         return AgentWorkerCommandResult.CONTINUE;
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         CredentialsRequest request = context.getRequest();
         Provider provider = request.getProvider();
 

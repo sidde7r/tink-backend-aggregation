@@ -48,7 +48,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() {
+    protected AgentWorkerCommandResult doExecute() {
         if (Objects.isNull(context.getAgentConfigurationController())) {
             throw new IllegalStateException(
                     "`CreateAgentConfigurationControllerWorkerCommand` was not executed before `DebugAgentWorkerCommand`.");
@@ -58,7 +58,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public void postProcess() {
+    protected void doPostProcess() {
 
         // Disable logging depending on this.
         if (LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS.equals(

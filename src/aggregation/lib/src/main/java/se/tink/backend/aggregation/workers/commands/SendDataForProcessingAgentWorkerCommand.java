@@ -37,12 +37,12 @@ public class SendDataForProcessingAgentWorkerCommand extends AgentWorkerCommand
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         return AgentWorkerCommandResult.CONTINUE;
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         Credentials credentials = context.getRequest().getCredentials();
 
         if (credentials.getStatus() != CredentialsStatus.UPDATING) {

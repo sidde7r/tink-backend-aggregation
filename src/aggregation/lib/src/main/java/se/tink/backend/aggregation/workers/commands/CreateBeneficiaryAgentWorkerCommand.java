@@ -51,7 +51,7 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
     }
 
     @Override
-    public AgentWorkerCommandResult execute() {
+    protected AgentWorkerCommandResult doExecute() {
         Agent agent = context.getAgent();
 
         if (!(agent instanceof CreateBeneficiaryControllerable)) {
@@ -137,7 +137,7 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         // Deliberately left empty.
     }
 

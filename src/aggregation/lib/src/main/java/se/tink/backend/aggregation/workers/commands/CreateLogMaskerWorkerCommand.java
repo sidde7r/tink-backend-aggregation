@@ -20,7 +20,7 @@ public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         if (agentWorkerCommandContext.getAgentConfigurationController() == null) {
             throw new IllegalStateException(
                     "No AgentConfigurationController found in CreateLogMaskerWorkerCommand, make sure to put the commands in the right order, this should come after the CreateAgentConfigurationControllerWorkerCommand.");
@@ -40,7 +40,7 @@ public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         Optional.ofNullable(logMasker).ifPresent(LogMasker::disposeOfAllSubscriptions);
     }
 }

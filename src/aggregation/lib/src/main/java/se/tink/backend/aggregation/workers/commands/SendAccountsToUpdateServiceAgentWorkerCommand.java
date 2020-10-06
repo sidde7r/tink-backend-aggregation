@@ -36,7 +36,7 @@ public class SendAccountsToUpdateServiceAgentWorkerCommand extends AgentWorkerCo
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
         try {
             MetricAction action =
@@ -61,7 +61,7 @@ public class SendAccountsToUpdateServiceAgentWorkerCommand extends AgentWorkerCo
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         // Deliberately left empty.
     }
 

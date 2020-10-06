@@ -52,7 +52,7 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         Credentials credentials = context.getRequest().getCredentials();
         Provider provider = context.getRequest().getProvider();
         wasCircuitBreaked = false;
@@ -102,7 +102,7 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         final CircuitBreakerStatistics circuitBreakerStatistics =
                 state.getCircuitBreakerStatistics().get(context.getRequest().getProvider());
 

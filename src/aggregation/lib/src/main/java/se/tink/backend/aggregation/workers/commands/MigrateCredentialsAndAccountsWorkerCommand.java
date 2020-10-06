@@ -107,7 +107,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
      * @throws Exception
      */
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
 
         migrations.entrySet().stream()
                 .filter(e -> e.getKey().equals(request.getProvider().getName()))
@@ -138,7 +138,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         // Deliberately left empty.
     }
 }

@@ -27,7 +27,7 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         CredentialsRequest request = context.getRequest();
 
         if (!credentialsCrypto.encrypt(request, doUpdateCredential)) {
@@ -38,7 +38,7 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         // Purposely left empty.
     }
 }

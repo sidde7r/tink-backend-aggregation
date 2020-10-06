@@ -47,12 +47,12 @@ public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorker
     }
 
     @Override
-    public AgentWorkerCommandResult execute() {
+    protected AgentWorkerCommandResult doExecute() {
         return AgentWorkerCommandResult.CONTINUE;
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
 
         CredentialsRequest request = context.getRequest();
         if (!Objects.equal(request.getType(), CredentialsRequestType.TRANSFER)) {

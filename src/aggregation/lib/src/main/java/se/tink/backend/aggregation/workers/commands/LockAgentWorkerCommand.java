@@ -45,7 +45,7 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         CredentialsRequest request = context.getRequest();
 
         String userId = request.getUser().getId();
@@ -75,7 +75,7 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public void postProcess() {
+    protected void doPostProcess() {
         try {
             // If we never executed the command
             if (lock == null) {

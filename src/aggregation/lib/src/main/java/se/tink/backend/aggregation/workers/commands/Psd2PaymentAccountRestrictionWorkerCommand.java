@@ -64,7 +64,7 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         try {
             List<Account> restrictedAccounts = new ArrayList<>();
             this.context
@@ -159,7 +159,7 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         // Intentionally left empty.
     }
 }

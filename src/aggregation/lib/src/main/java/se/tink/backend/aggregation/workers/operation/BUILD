@@ -36,6 +36,7 @@ java_library(
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:javax_inject_javax_inject",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_slf4j_slf4j_api",
