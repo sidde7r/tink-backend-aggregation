@@ -52,8 +52,7 @@ public class SebBankIdSigner implements BankIdSigner<PaymentRequest> {
     private PaymentStatus fetchPaymentStatus(PaymentRequest paymentRequest) throws BankIdException {
         final Payment payment = paymentRequest.getPayment();
         final String paymentProduct =
-                paymentExecutor
-                        .getPaymentProduct(
+                SebPaymentUtil.getPaymentProduct(
                                 payment.getType(), payment.getCreditor().getAccountIdentifierType())
                         .getValue();
         final String paymentId = payment.getUniqueId();
