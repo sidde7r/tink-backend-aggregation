@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.nxgen.controllers.utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -50,15 +52,26 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
             throws SupplementalInfoException {
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        logger.info("Requesting supplemental information");
+        String names = Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(","));
+        logger.info("Requesting supplemental information for fields: {}", names);
         String supplementalInformation =
                 Optional.ofNullable(
                                 Strings.emptyToNull(
                                         supplementalRequester.requestSupplementalInformation(
                                                 credentials)))
                         .orElseThrow(SupplementalInfoError.NO_VALID_CODE::exception);
+        Map<String, String> suplementalInformation =
+                deserializeSupplementalInformation(supplementalInformation);
         logger.info("Finished requesting supplemental information");
+        suplementalInformation.forEach(
+                (key, value) -> {
+                    String message = value == null ? "equals null" : "has length " + value.length();
+                    logger.info("supplemental information {} {}", key, message);
+                });
+        return suplementalInformation;
+    }
 
+    private Map<String, String> deserializeSupplementalInformation(String supplementalInformation) {
         return Optional.ofNullable(
                         SerializationUtils.deserializeFromString(
                                 supplementalInformation,
