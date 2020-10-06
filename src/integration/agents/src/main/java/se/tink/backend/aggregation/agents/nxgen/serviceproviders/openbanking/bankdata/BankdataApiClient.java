@@ -201,6 +201,17 @@ public final class BankdataApiClient {
                 .get(TransactionResponse.class);
     }
 
+    public TransactionResponse fetchNextTransactions(String nextTransactionsPath) {
+        final String requestId = UUID.randomUUID().toString();
+        final URL fullUrl = new URL(baseUrl + Endpoints.AIS_PRODUCT + nextTransactionsPath);
+
+        return createRequestInSession(fullUrl)
+                .header(HeaderKeys.X_REQUEST_ID, requestId)
+                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .get(TransactionResponse.class);
+    }
+
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest paymentRequest, PaymentType type) throws PaymentException {
         final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
