@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.common.rpc.SimpleRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.entities.SavingAccountEntity;
@@ -15,13 +16,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
+@RequiredArgsConstructor
 public class BancoPostaSavingTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>, TransactionPagePaginator {
     private final BancoPostaApiClient apiClient;
-
-    public BancoPostaSavingTransactionalAccountFetcher(BancoPostaApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {

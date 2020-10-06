@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.CheckingAccounts;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.CheckingAccUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.BancoPostaCheckingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -43,13 +43,13 @@ public class BancoPostaCheckingTransactionalAccountFetcherTest {
         // given
 
         RequestBuilder fetchAccountMockRequestBuilder =
-                FetcherTestHelper.mockRequestBuilder(CheckingAccounts.FETCH_ACCOUNTS, httpClient);
+                FetcherTestHelper.mockRequestBuilder(CheckingAccUrl.FETCH_ACCOUNTS, httpClient);
         when(fetchAccountMockRequestBuilder.get(any()))
                 .thenReturn(FetcherTestData.getAccountResponse());
 
         RequestBuilder fetchAccountDetailsMockRequestBuilder =
                 FetcherTestHelper.mockRequestBuilder(
-                        CheckingAccounts.FETCH_ACCOUNT_DETAILS, httpClient);
+                        CheckingAccUrl.FETCH_ACCOUNT_DETAILS, httpClient);
         when(fetchAccountDetailsMockRequestBuilder.post(any(), any()))
                 .thenReturn(FetcherTestData.getAccountDetailsResponse());
         // when
@@ -58,7 +58,7 @@ public class BancoPostaCheckingTransactionalAccountFetcherTest {
         // then
 
         assertThat(accounts).hasSize(2);
-        verify(httpClient, times(2)).request(CheckingAccounts.FETCH_ACCOUNT_DETAILS);
+        verify(httpClient, times(2)).request(CheckingAccUrl.FETCH_ACCOUNT_DETAILS);
     }
 
     @Test
@@ -66,8 +66,7 @@ public class BancoPostaCheckingTransactionalAccountFetcherTest {
         // given
 
         RequestBuilder fetchTransactionMockRequestBuilder =
-                FetcherTestHelper.mockRequestBuilder(
-                        CheckingAccounts.FETCH_TRANSACTIONS, httpClient);
+                FetcherTestHelper.mockRequestBuilder(CheckingAccUrl.FETCH_TRANSACTIONS, httpClient);
         when(fetchTransactionMockRequestBuilder.post(any(), any()))
                 .thenReturn(FetcherTestData.getCheckingTransactionResponse());
 
@@ -89,8 +88,7 @@ public class BancoPostaCheckingTransactionalAccountFetcherTest {
         // given
 
         RequestBuilder fetchTransactionMockRequestBuilder =
-                FetcherTestHelper.mockRequestBuilder(
-                        CheckingAccounts.FETCH_TRANSACTIONS, httpClient);
+                FetcherTestHelper.mockRequestBuilder(CheckingAccUrl.FETCH_TRANSACTIONS, httpClient);
         when(fetchTransactionMockRequestBuilder.post(any(), any()))
                 .thenReturn(FetcherTestData.getEmptyCheckingTransactionResponse());
         Account account = mock(Account.class);

@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BancoPostaConstants {
     public static class Urls {
-        public static class Authentication {
+        public static class AuthUrl {
             public static final URL AUTH_REQ_AZ =
                     new URL(
                             "https://oidc-proxy.mobile.poste.it/jod-oidc-proxy/federation/mobile/v1/az-req");
@@ -36,7 +36,7 @@ public class BancoPostaConstants {
             public static final URL CHALLENGE = new URL(Base.BASE_AUTH4 + Endpoints.CHALLENGE);
         }
 
-        public static class CheckingAccounts {
+        public static class CheckingAccUrl {
             public static final URL FETCH_ACCOUNTS =
                     new URL(Base.BASE_DATA + Endpoints.FETCH_ACCOUNTS);
             public static final URL FETCH_ACCOUNT_DETAILS =
@@ -45,7 +45,7 @@ public class BancoPostaConstants {
                     new URL(Base.BASE_API + Endpoints.FETCH_TRANSACTIONS);
         }
 
-        public static class SavingAccounts {
+        public static class SavingAccUrl {
             public static final URL FETCH_SAVING_ACCOUNTS =
                     new URL(Base.BASE_API + Endpoints.FETCH_SAVING_ACCOUNTS);
             public static final URL FETCH_SAVING_ACCOUNTS_DETAILS =

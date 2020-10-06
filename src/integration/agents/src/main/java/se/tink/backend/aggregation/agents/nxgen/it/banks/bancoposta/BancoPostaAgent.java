@@ -36,9 +36,9 @@ public class BancoPostaAgent extends SubsequentProgressiveGenerationAgent
         this.savingAccountsRefreshController = constructSavingsAccountTransactionController();
     }
 
-    private TransactionalAccountRefreshController constructSavingsAccountTransactionController() {
-        BancoPostaSavingTransactionalAccountFetcher transactionalAccountFetcher =
-                new BancoPostaSavingTransactionalAccountFetcher(this.apiClient);
+    private TransactionalAccountRefreshController constructCheckingAccountTransactionController() {
+        BancoPostaCheckingTransactionalAccountFetcher transactionalAccountFetcher =
+                new BancoPostaCheckingTransactionalAccountFetcher(this.apiClient);
 
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
@@ -49,9 +49,9 @@ public class BancoPostaAgent extends SubsequentProgressiveGenerationAgent
                         new TransactionPagePaginationController<>(transactionalAccountFetcher, 0)));
     }
 
-    private TransactionalAccountRefreshController constructCheckingAccountTransactionController() {
-        BancoPostaCheckingTransactionalAccountFetcher transactionalAccountFetcher =
-                new BancoPostaCheckingTransactionalAccountFetcher(this.apiClient);
+    private TransactionalAccountRefreshController constructSavingsAccountTransactionController() {
+        BancoPostaSavingTransactionalAccountFetcher transactionalAccountFetcher =
+                new BancoPostaSavingTransactionalAccountFetcher(this.apiClient);
 
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,

@@ -1,25 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDMYFormatDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class TransactionEntity {
     @JsonProperty("dataContabile")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date bookedDate;
+    @JsonDeserialize(using = LocalDateDMYFormatDeserializer.class)
+    private LocalDate bookedDate;
 
     @JsonProperty("dataValuta")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date valueDate;
+    @JsonDeserialize(using = LocalDateDMYFormatDeserializer.class)
+    private LocalDate valueDate;
 
     @JsonProperty("descrizioneCausale")
     private String shortDescription;
@@ -35,7 +42,7 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction(String currency) {
         boolean isPending = this.bookedDate == null;
-        Date date = isPending ? this.bookedDate : this.valueDate;
+        LocalDate date = isPending ? this.valueDate : this.bookedDate;
 
         BigDecimal calculatedAmount =
                 new BigDecimal(this.amountSymbol + this.amount).movePointLeft(2);
