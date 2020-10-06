@@ -1,0 +1,30 @@
+{
+  "size": 1,
+  "page": 1,
+  "page_size": 2,
+  "transactions": [
+    {
+      "transaction_id": "280695500",
+      "transaction_type": null,
+      "amount": -604.00,
+      "currency": "DKK",
+      "exchange_rate": null,
+      "original_amount": null,
+      "original_currency": null,
+      "title": "Hojbjerg proshop.dk",
+      "booked": true,
+      "merchant_city": "Hojbjerg",
+      "merchant_country": "DNK",
+      "mcc": null,
+      "ecological_footprint": null,
+      "invoiced_date": null,
+      "invoice_status": "invoiced"
+    }
+  ],
+  "billing_period": {
+    "non_invoiced_sum": null,
+    "last_invoiced_sum": 1507,
+    "billing_period_start_date": "2020-08-18",
+    "billing_period_end_date": "2020-09-17"
+  }
+}

@@ -1,26 +1,35 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.investment;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.util.Collection;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.investment.NordeaInvestmentFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClientMockWrapper;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.InvestmentTestData;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class InvestmentsFetcherTest {
 
+    private NordeaDkApiClientMockWrapper apiClientMockWrapper;
     private NordeaInvestmentFetcher fetcher;
 
     @Before
     public void before() {
-        fetcher = new NordeaInvestmentFetcher(NordeaDkTestUtils.mockApiClient());
+        NordeaDkApiClient apiClient = mock(NordeaDkApiClient.class);
+        apiClientMockWrapper = new NordeaDkApiClientMockWrapper(apiClient);
+        fetcher = new NordeaInvestmentFetcher(apiClient);
     }
 
     @Test
     public void shouldFetchInvestments() {
+        // given
+        apiClientMockWrapper.mockFetchInvestmentsUsingFile(
+                InvestmentTestData.INVESTMENT_ACCOUNTS_FILE);
         // when
         Collection<InvestmentAccount> investments = fetcher.fetchAccounts();
         // then
@@ -30,7 +39,7 @@ public class InvestmentsFetcherTest {
                 investments.stream()
                         .filter(
                                 i ->
-                                        NordeaTestData.INVESTMENT_1_ID.equals(
+                                        InvestmentTestData.INVESTMENT_1_ID.equals(
                                                 i.getIdModule().getUniqueId()))
                         .findAny();
         assertThat(investment1.isPresent()).isTrue();

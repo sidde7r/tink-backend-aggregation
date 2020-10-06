@@ -15,7 +15,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.LoansTestDataFiles;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.LoansTestData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -33,8 +33,8 @@ public class LoanDetailsResponseTest {
 
     private final ObjectNode jsonResponseWithPropertiesAssumedToExistForTinkModelConversion =
             readObjectNodeFromFile(
-                    LoansTestDataFiles
-                            .LOAN_DETAILS_PROPERTIES_ASSUMED_TO_EXIST_FOR_TINK_MODEL_CONVERSION);
+                    LoansTestData
+                            .LOAN_DETAILS_PROPERTIES_ASSUMED_TO_EXIST_FOR_TINK_MODEL_CONVERSION_FILE);
 
     @Test
     public void unknownPropertiesShouldBeIgnoredInDeserialization() {
@@ -160,8 +160,8 @@ public class LoanDetailsResponseTest {
         // given
         LoanDetailsResponse response =
                 readResponseFromFile(
-                        LoansTestDataFiles
-                                .LOAN_DETAILS_WITH_ALL_PROPERTIES_RELEVANT_FOR_TINK_MODEL);
+                        LoansTestData
+                                .LOAN_DETAILS_WITH_ALL_PROPERTIES_RELEVANT_FOR_TINK_MODEL_FILE);
 
         // when
         LoanAccount loanAccount = response.toTinkLoanAccount();
