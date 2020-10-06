@@ -14,9 +14,8 @@ public class ForceAuthentication {
             return false; // payments reuse lots of aggregation functionality and they do not
             // populate credentials request
         }
-        boolean shouldForceAuthentication =
-                (request instanceof CredentialsRequest && request.isForceAuthenticate());
 
+        boolean shouldForceAuthentication = request.isForceAuthenticate();
         logger.info(
                 "[forceAuthenticate] Should force authentication for credentials: {}, {}",
                 request.getCredentials().getId(),
