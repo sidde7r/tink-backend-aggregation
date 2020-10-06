@@ -10,7 +10,6 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTes
 
 import java.util.Optional;
 import java.util.function.Predicate;
-import org.assertj.core.api.Condition;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
@@ -43,11 +42,7 @@ public class LclAccessTokenProviderTest {
                 lclAccessTokenProvider.exchangeAuthorizationCode(AUTH_CODE);
 
         // then
-        assertThat(returnedResult)
-                .is(
-                        new Condition<>(
-                                new OAuth2TokenPredicate(expectedResult),
-                                "Tokens should be equal."));
+        assertThat(returnedResult).matches(new OAuth2TokenPredicate(expectedResult));
     }
 
     @Test
@@ -64,13 +59,10 @@ public class LclAccessTokenProviderTest {
                 lclAccessTokenProvider.refreshAccessToken(REFRESH_TOKEN);
 
         // then
+        assertThat(returnedResult).isPresent();
         returnedResult.ifPresent(
                 actualToken ->
-                        assertThat(actualToken)
-                                .is(
-                                        new Condition<OAuth2Token>(
-                                                new OAuth2TokenPredicate(expectedResult),
-                                                "Tokens should be equal.")));
+                        assertThat(actualToken).matches(new OAuth2TokenPredicate(expectedResult)));
     }
 }
 
