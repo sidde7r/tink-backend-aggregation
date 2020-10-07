@@ -109,7 +109,8 @@ public final class VolksbankAgent
                         urlFactory,
                         consentFetcher,
                         clientId,
-                        clientSecret);
+                        clientSecret,
+                        bankPath);
 
         OAuth2AuthenticationProgressiveController oAuth2AuthenticationController =
                 new OAuth2AuthenticationProgressiveController(
@@ -150,7 +151,6 @@ public final class VolksbankAgent
         client.addFilter(
                 new VolksbankRetryFilter(
                         RegioBankConstants.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-
     }
 
     private void configureHttpClientForVolksbank(TinkHttpClient client) {

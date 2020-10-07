@@ -2,11 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.QueryParams;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.RegioBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TokenParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUrlFactory;
@@ -27,6 +30,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final ConsentFetcher consentFetcher;
     private final String clientId;
     private final String clientSecret;
+    private final String bankPath;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
@@ -35,7 +39,8 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
             VolksbankUrlFactory urlFactory,
             ConsentFetcher consentFetcher,
             String clientId,
-            String clientSecret) {
+            String clientSecret,
+            String bankPath) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
@@ -43,6 +48,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
         this.consentFetcher = consentFetcher;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.bankPath = bankPath;
     }
 
     @Override
@@ -92,7 +98,18 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
+    public OAuth2Token refreshAccessToken(String refreshToken)
+            throws SessionException, BankServiceException {
+
+        // Apparently we can successfully refresh the access token even though the consent has
+        // expired. This later causes errors during account fetching. Temporarily only check
+        // consent status for Regiobank, as the consent status endpoint is consistently giving us
+        // timeouts. In parallel investigating if filters can help with the timeouts.
+        if (RegioBankConstants.REGIOBANK.equalsIgnoreCase(bankPath)
+                && !consentFetcher.isConsentValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
         URL url =
                 urlFactory
                         .buildURL(Paths.TOKEN)
