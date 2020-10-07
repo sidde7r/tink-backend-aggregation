@@ -59,6 +59,7 @@ public final class SparkassenConstants {
         public static final String CONSENT_ID = "Consent-ID";
         public static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
         public static final String PSU_ID = "PSU-ID";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class FormValues {
