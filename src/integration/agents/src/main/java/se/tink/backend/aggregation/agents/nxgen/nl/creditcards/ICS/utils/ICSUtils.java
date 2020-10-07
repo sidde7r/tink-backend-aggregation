@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupRequest;
 
 public class ICSUtils {
 
@@ -20,11 +19,6 @@ public class ICSUtils {
     // Not required to send actual values, sending dummy data
     public static String getCustomerIpAdress() {
         return "234.213.323.123";
-    }
-
-    // Not required to send actual values, sending dummy data
-    public static String getJWSSignature(AccountSetupRequest request) {
-        return "";
     }
 
     // Can fetch transactions max 2 years back

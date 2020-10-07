@@ -139,7 +139,6 @@ public class ICSApiClient {
         final String lastLoggedTime = ICSUtils.getLastLoggedTime(new Date());
 
         return createRequestInSession(Urls.ACCOUNT_SETUP, token)
-                .header(HeaderKeys.X_JWS_SIGNATURE, ICSUtils.getJWSSignature(request))
                 .header(HeaderKeys.X_FAPI_CUSTOMER_LAST_LOGGED_TIME, lastLoggedTime)
                 .post(AccountSetupResponse.class, request);
     }

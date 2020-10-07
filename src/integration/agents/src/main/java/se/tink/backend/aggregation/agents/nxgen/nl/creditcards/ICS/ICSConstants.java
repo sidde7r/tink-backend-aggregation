@@ -67,7 +67,6 @@ public class ICSConstants {
         // An RFC4122 UID used as a correlation id. This id is used to track end-to-end interaction
         // between TPP request and response sent by the API platform.
         public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
-        public static final String X_JWS_SIGNATURE = "x-jws-signature";
     }
 
     public static final class Permissions {
