@@ -38,31 +38,35 @@ public class BankdataTransactionalAccountFetcher
         if (isMaxDateToFetchInThePastAfterGivenDate(endDate)) {
             return PaginatorResponseImpl.createEmpty(false);
         }
+        Date dateFrom = startDate;
         if (isMaxDateToFetchInThePastAfterGivenDate(startDate)) {
-            startDate = MAX_DATE_TO_FETCH_IN_THE_PAST;
+            dateFrom = MAX_DATE_TO_FETCH_IN_THE_PAST;
         }
+
         TransactionResponse transactionResponse =
-                apiClient.fetchTransactions(account, startDate, endDate);
-
-        transactionResponse
-                .getTransactions()
-                .toTinkTransactions()
-                .addAll(getNextTransactionsInThisPeriodOfTime(transactionResponse.nextKey()));
+                apiClient.fetchTransactions(account, dateFrom, endDate);
+        Collection<Transaction> transactions = getAllTransactions(transactionResponse);
 
         if (isMaxDateToFetchInThePastAfterGivenDate(startDate)) {
-            return PaginatorResponseImpl.create(transactionResponse.getTinkTransactions(), false);
+            return PaginatorResponseImpl.create(transactions, false);
         }
-        return transactionResponse;
+        return PaginatorResponseImpl.create(transactions);
     }
 
-    private List<Transaction> getNextTransactionsInThisPeriodOfTime(String nextKey) {
-        List<Transaction> result = new LinkedList<>();
+    private Collection<Transaction> getAllTransactions(TransactionResponse transactionResponse) {
+        Collection<Transaction> transactions = transactionResponse.getTinkTransactions();
+        transactions.addAll(getNextTransactionsInThisPeriodOfTime(transactionResponse.nextKey()));
+        return transactions;
+    }
+
+    private Collection<Transaction> getNextTransactionsInThisPeriodOfTime(String nextKey) {
+        List<Transaction> nextTransactions = new LinkedList<>();
         while (nextKey != null) {
             TransactionResponse nextTransactionsPage = apiClient.fetchNextTransactions(nextKey);
-            result.addAll(nextTransactionsPage.getTransactions().toTinkTransactions());
+            nextTransactions.addAll(nextTransactionsPage.getTinkTransactions());
             nextKey = nextTransactionsPage.nextKey();
         }
-        return result;
+        return nextTransactions;
     }
 
     private boolean isMaxDateToFetchInThePastAfterGivenDate(Date date) {

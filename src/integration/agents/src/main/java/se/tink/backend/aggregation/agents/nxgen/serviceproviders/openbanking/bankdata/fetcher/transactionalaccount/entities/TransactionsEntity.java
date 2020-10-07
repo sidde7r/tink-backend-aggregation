@@ -8,13 +8,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
-import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 @Getter
-@Setter
 public class TransactionsEntity {
 
     protected List<BookedTransactionEntity> booked = Collections.emptyList();

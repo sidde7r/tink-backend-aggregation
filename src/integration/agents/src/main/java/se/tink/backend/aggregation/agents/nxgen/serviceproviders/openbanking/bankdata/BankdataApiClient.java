@@ -52,7 +52,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.payment.enums.PaymentType;
 
-public final class BankdataApiClient {
+public class BankdataApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
@@ -87,7 +87,7 @@ public final class BankdataApiClient {
             this.clientId =
                     CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
         } catch (CertificateException e) {
-            throw new RuntimeException("Could not extract organization identifier!", e);
+            throw new IllegalStateException("Could not extract organization identifier!", e);
         }
     }
 
@@ -302,7 +302,7 @@ public final class BankdataApiClient {
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl);
     }
 
-    public void getTokenWithClientCredentials() {
+    private void getTokenWithClientCredentials() {
         final InitialTokenRequest request =
                 new InitialTokenRequest(FormValues.CLIENT_CREDENTIALS, FormValues.SCOPE, clientId);
         URL url = new URL(baseAuthUrl + Endpoints.TOKEN);
