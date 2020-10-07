@@ -54,13 +54,15 @@ public final class ICSAgent extends NextGenerationAgent
 
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 
+        final String customerIpAddress = request.isManual() ? userIp : "";
         apiClient =
                 new ICSApiClient(
                         client,
                         sessionStorage,
                         persistentStorage,
                         agentConfiguration.getRedirectUrl(),
-                        icsConfiguration);
+                        icsConfiguration,
+                        customerIpAddress);
 
         creditCardRefreshController = constructCreditCardRefreshController();
     }

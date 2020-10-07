@@ -16,11 +16,6 @@ public class ICSUtils {
         return "e3213dfd-435fgrd5-e7edr4";
     }
 
-    // Not required to send actual values, sending dummy data
-    public static String getCustomerIpAdress() {
-        return "234.213.323.123";
-    }
-
     // Can fetch transactions max 3 years back
     public static Date getFromDate() {
         Calendar c = Calendar.getInstance();

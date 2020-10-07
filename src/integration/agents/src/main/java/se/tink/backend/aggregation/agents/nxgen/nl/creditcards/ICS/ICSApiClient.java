@@ -47,6 +47,7 @@ public class ICSApiClient {
     private final PersistentStorage persistentStorage;
     private final String redirectUri;
     private final ICSConfiguration configuration;
+    private final String customerIpAddress;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public ICSApiClient(
@@ -54,12 +55,14 @@ public class ICSApiClient {
             final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
             final String redirectUri,
-            final ICSConfiguration configuration) {
+            final ICSConfiguration configuration,
+            final String customerIpAddress) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
         this.configuration = configuration;
+        this.customerIpAddress = customerIpAddress;
 
         this.client.addFilter(new BankServiceInternalErrorFilter());
     }
@@ -105,7 +108,6 @@ public class ICSApiClient {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
         final String xFinancialID = ICSUtils.getFinancialId();
-        final String xCustomerIPAddress = ICSUtils.getCustomerIpAdress();
         final String xInteractionId = ICSUtils.getInteractionId();
 
         return createRequest(url)
@@ -113,7 +115,7 @@ public class ICSApiClient {
                 .header(HeaderKeys.CLIENT_ID, clientId)
                 .header(HeaderKeys.CLIENT_SECRET, clientSecret)
                 .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFinancialID)
-                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, xCustomerIPAddress)
+                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, customerIpAddress)
                 .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
