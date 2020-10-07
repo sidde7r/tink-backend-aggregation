@@ -21,11 +21,11 @@ public class ICSUtils {
         return "234.213.323.123";
     }
 
-    // Can fetch transactions max 2 years back
+    // Can fetch transactions max 3 years back
     public static Date getFromDate() {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
-        c.add(Calendar.YEAR, -2);
+        c.add(Calendar.YEAR, -3);
         return c.getTime();
     }
 
