@@ -1,42 +1,46 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator;
 
-import static java.util.Objects.requireNonNull;
-
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
+@RequiredArgsConstructor
 public class FiduciaSignatureHeaderGenerator {
 
-    private final String signatureHeaderFormat;
-    private final List<String> headersToSign;
-    private final QsealcSigner qsealcSigner;
+    private static final String SIGNATURE_HEADER_FORMAT =
+            "algorithm=\"SHA256withRSA\",headers=\"%s\",signature=\"%s\"";
 
-    public FiduciaSignatureHeaderGenerator(
-            String signatureHeaderFormat, List<String> headersToSign, QsealcSigner qsealcSigner) {
-        this.signatureHeaderFormat = requireNonNull(signatureHeaderFormat);
-        this.headersToSign = requireNonNull(headersToSign);
-        this.qsealcSigner = requireNonNull(qsealcSigner);
-    }
+    private static final List<String> HEADERS_TO_SIGN =
+            Arrays.asList(
+                    FiduciaConstants.HeaderKeys.DATE,
+                    FiduciaConstants.HeaderKeys.DIGEST,
+                    FiduciaConstants.HeaderKeys.X_REQUEST_ID,
+                    FiduciaConstants.HeaderKeys.PSU_ID,
+                    FiduciaConstants.HeaderKeys.PSU_CORPORATE_ID);
+
+    private final QsealcSigner qsealcSigner;
 
     public String generateSignatureHeader(Map<String, Object> headers) {
         String signedHeaders = getSignedHeaders(headers);
         String signedHeadersWithValues = getSignedHeadersWithValues(headers);
         String signature = qsealcSigner.getSignatureBase64(signedHeadersWithValues.getBytes());
 
-        return String.format(signatureHeaderFormat, signedHeaders, signature);
+        return String.format(SIGNATURE_HEADER_FORMAT, signedHeaders, signature);
     }
 
     private String getSignedHeaders(Map<String, Object> headers) {
-        return headersToSign.stream()
+        return HEADERS_TO_SIGN.stream()
                 .filter(headers::containsKey)
                 .map(String::toLowerCase)
                 .collect(Collectors.joining(" "));
     }
 
     private String getSignedHeadersWithValues(Map<String, Object> headers) {
-        return headersToSign.stream()
+        return HEADERS_TO_SIGN.stream()
                 .filter(headers::containsKey)
                 .map(header -> String.format("%s: %s", header.toLowerCase(), headers.get(header)))
                 .collect(Collectors.joining("\n"));

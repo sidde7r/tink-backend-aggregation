@@ -4,7 +4,6 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.Access;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.ChosenScaMethod;
@@ -176,10 +175,9 @@ public class FiduciaApiClient {
             String reqId,
             String date) {
         return fiduciaRequestBuilder
-                .createRequest(
+                .createPaymentRequest(
                         createUrl(PAYMENTS_ENDPOINT), reqId, digest, signature, certificate, date)
                 .header(HeaderKeys.PSU_ID, psuId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .type(MediaType.APPLICATION_XML_TYPE)
                 .post(CreatePaymentResponse.class, body);
     }
@@ -194,7 +192,7 @@ public class FiduciaApiClient {
             String reqId,
             String date) {
         return fiduciaRequestBuilder
-                .createRequest(
+                .createPaymentRequest(
                         createUrl(PAYMENT_AUTHORIZATION_ENDPOINT).parameter(PAYMENT_ID, paymentId),
                         reqId,
                         digest,
@@ -213,7 +211,7 @@ public class FiduciaApiClient {
             String reqId,
             String date) {
         return fiduciaRequestBuilder
-                .createRequest(
+                .createPaymentRequest(
                         createUrl(PAYMENT_ENDPOINT).parameter(PAYMENT_ID, paymentId),
                         reqId,
                         digest,

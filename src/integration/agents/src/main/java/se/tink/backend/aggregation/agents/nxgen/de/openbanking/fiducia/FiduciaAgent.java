@@ -3,10 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import java.security.cert.CertificateException;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -18,6 +16,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaSignatureHeaderGenerator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.FiduciaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
@@ -44,51 +43,50 @@ public final class FiduciaAgent extends NextGenerationAgent
     private final FiduciaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    private String tppOrganizationIdentifier;
     private String qsealcDerBase64;
 
     @Inject
     public FiduciaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
         String serverUrl = request.getProvider().getPayload();
-        extractDataFromCertificates();
+
+        FiduciaHeaderValues fiduciaHeaderValues = setupHeaderValues();
         FiduciaRequestBuilder fiduciaRequestBuilder =
                 new FiduciaRequestBuilder(
                         client,
                         sessionStorage,
-                        tppOrganizationIdentifier,
-                        qsealcDerBase64,
-                        getAgentConfiguration().getRedirectUrl(),
-                        createSignatureHeaderGenerator(qsealcSigner));
+                        new FiduciaSignatureHeaderGenerator(qsealcSigner),
+                        fiduciaHeaderValues);
 
         this.apiClient = new FiduciaApiClient(persistentStorage, serverUrl, fiduciaRequestBuilder);
-
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    private void extractDataFromCertificates() {
+    private FiduciaHeaderValues setupHeaderValues() {
+        AgentConfiguration<FiduciaConfiguration> agentConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(FiduciaConfiguration.class);
+
+        String tppOrganizationIdentifier;
         try {
             tppOrganizationIdentifier =
-                    CertificateUtils.getOrganizationIdentifier(getAgentConfiguration().getQsealc());
+                    CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc());
             qsealcDerBase64 =
                     CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
-                            getAgentConfiguration().getQsealc());
+                            agentConfiguration.getQsealc());
         } catch (CertificateException e) {
-            log.error("Failed to extract organizationId or Qsealc from agent configuration", e);
+            throw new IllegalStateException(
+                    "Failed to extract organizationId or Qsealc from agent configuration", e);
         }
+
+        return new FiduciaHeaderValues(
+                tppOrganizationIdentifier,
+                qsealcDerBase64,
+                getAgentConfiguration().getRedirectUrl(),
+                request.isManual() ? userIp : null);
     }
 
-    private FiduciaSignatureHeaderGenerator createSignatureHeaderGenerator(
-            QsealcSigner qsealcSigner) {
-        return new FiduciaSignatureHeaderGenerator(
-                FiduciaConstants.SIGNATURE_HEADER, FiduciaConstants.HEADERS_TO_SIGN, qsealcSigner);
-    }
-
-    protected AgentConfiguration<FiduciaConfiguration> getAgentConfiguration() {
-        final AgentConfiguration<FiduciaConfiguration> agentConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(FiduciaConfiguration.class);
-        Objects.requireNonNull(Strings.emptyToNull(agentConfiguration.getRedirectUrl()));
-        return agentConfiguration;
+    private AgentConfiguration<FiduciaConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController().getAgentConfiguration(FiduciaConfiguration.class);
     }
 
     @Override
@@ -102,6 +100,19 @@ public final class FiduciaAgent extends NextGenerationAgent
 
         return new AutoAuthenticationController(
                 request, context, fiduciaAuthenticator, fiduciaAuthenticator);
+    }
+
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        final FiduciaTransactionalAccountFetcher accountFetcher =
+                new FiduciaTransactionalAccountFetcher(apiClient);
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(accountFetcher)));
     }
 
     @Override
@@ -122,19 +133,6 @@ public final class FiduciaAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return transactionalAccountRefreshController.fetchSavingsTransactions();
-    }
-
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final FiduciaTransactionalAccountFetcher accountFetcher =
-                new FiduciaTransactionalAccountFetcher(apiClient);
-
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(accountFetcher)));
     }
 
     @Override
