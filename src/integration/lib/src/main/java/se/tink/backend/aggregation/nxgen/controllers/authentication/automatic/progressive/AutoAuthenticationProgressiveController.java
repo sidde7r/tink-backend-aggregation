@@ -27,7 +27,7 @@ public class AutoAuthenticationProgressiveController
     private final boolean requestIsUpdate;
     private final boolean requestIsCreate;
     private final boolean requestIsManual;
-
+    private final boolean requestIsForceAuthenticate;
     private final SystemUpdater systemUpdater;
     private final ProgressiveTypedAuthenticator manualAuthenticator;
     private final AutoAuthenticator autoAuthenticator;
@@ -43,6 +43,7 @@ public class AutoAuthenticationProgressiveController
         this.requestIsUpdate = request.isUpdate();
         this.requestIsCreate = request.isCreate();
         this.requestIsManual = request.isManual();
+        this.requestIsForceAuthenticate = request.isForceAuthenticate();
 
         this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
         this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);
@@ -73,7 +74,7 @@ public class AutoAuthenticationProgressiveController
                                         && !Objects.equals(
                                                 credentialsRequestType,
                                                 CredentialsRequestType.TRANSFER)))
-                || credentials.forceManualAuthentication();
+                || requestIsForceAuthenticate;
     }
 
     @Override

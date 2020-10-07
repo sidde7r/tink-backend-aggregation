@@ -38,12 +38,7 @@ public class CoreCredentialsMapper {
                                 mapper ->
                                         mapper.skip(
                                                 se.tink.backend.agents.rpc.Credentials
-                                                        ::setPersistentSession))
-                        .addMappings(
-                                mapper ->
-                                        mapper.skip(
-                                                se.tink.backend.agents.rpc.Credentials
-                                                        ::setForceManualAuthentication));
+                                                        ::setPersistentSession));
         fromAggregationMap =
                 new ModelMapper()
                         .createTypeMap(

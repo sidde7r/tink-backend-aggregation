@@ -75,30 +75,32 @@ public class AutoAuthenticationController
         }
     }
 
-    private boolean shouldDoManualAuthentication(final Credentials credentials) {
+    private boolean shouldDoManualAuthentication(final CredentialsRequest request) {
         if (isDebugEnabled) {
             log.debug("forceAutoAuthentication status: {}", forceAutoAuthentication());
             log.debug("manualAuthenticatorType: {}", manualAuthenticator.getType());
-            log.debug("credentialsTypes: {}", credentials.getType());
+            log.debug("credentialsType: {}", request.getCredentials().getType());
             log.debug("request create status: {}", request.isCreate());
             log.debug("requestUpdate status: {}", request.isUpdate());
             log.debug("requestType: {}", request.getType());
             log.debug(
                     "credentials.forceAutoAuthentication status: {}",
-                    credentials.forceManualAuthentication());
+                    request.isForceAuthenticate());
         }
         return !forceAutoAuthentication()
-                        && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
+                        && (Objects.equals(
+                                        manualAuthenticator.getType(),
+                                        request.getCredentials().getType())
                                 || (request.isUpdate()
                                         && !Objects.equals(
                                                 request.getType(),
                                                 CredentialsRequestType.TRANSFER)))
-                || credentials.forceManualAuthentication();
+                || request.isForceAuthenticate();
     }
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
-        return shouldDoManualAuthentication(request.getCredentials());
+        return shouldDoManualAuthentication(request);
     }
 
     // TODO: Remove this when there is support for new MultiFactor credential types.

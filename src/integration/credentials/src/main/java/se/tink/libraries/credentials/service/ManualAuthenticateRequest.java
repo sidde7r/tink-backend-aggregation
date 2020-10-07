@@ -44,8 +44,4 @@ public class ManualAuthenticateRequest extends CredentialsRequest {
     public boolean isManual() {
         return manual;
     }
-
-    public void setManualAuthentication() {
-        this.getCredentials().setForceManualAuthentication(true);
-    }
 }

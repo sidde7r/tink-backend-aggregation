@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.util.Objects;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -56,7 +55,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
-        isManualAuthentication = shouldDoManualAuthentication(request.getCredentials());
+        isManualAuthentication = shouldDoManualAuthentication(request);
         /*
             ING in their documentation use country code in lowercase, however their API treat
             lowercase as wrong country code and returns error that it's malformed
@@ -205,14 +204,17 @@ public abstract class IngBaseAgent extends NextGenerationAgent
      * see https://developer.ing.com/api-marketplace/marketplace/b6d5093d-626e-41e9-b9e8-ff287bbe2c07/versions/b063703e-1437-4995-90e2-06dac67fef92/documentation#country-specific-information
      */
 
-    private boolean shouldDoManualAuthentication(final Credentials credentials) {
+    private boolean shouldDoManualAuthentication(final CredentialsRequest request) {
+
         return !forceAutoAuthentication()
-                        && (Objects.equals(CredentialsTypes.THIRD_PARTY_APP, credentials.getType())
+                        && (Objects.equals(
+                                        CredentialsTypes.THIRD_PARTY_APP,
+                                        request.getCredentials().getType())
                                 || (request.isUpdate()
                                         && !Objects.equals(
                                                 request.getType(),
                                                 CredentialsRequestType.TRANSFER)))
-                || credentials.forceManualAuthentication();
+                || request.isForceAuthenticate();
     }
 
     private boolean forceAutoAuthentication() {

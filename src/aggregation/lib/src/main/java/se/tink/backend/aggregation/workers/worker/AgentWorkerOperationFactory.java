@@ -460,10 +460,6 @@ public class AgentWorkerOperationFactory {
 
         log.debug("Creating Authenticate operation chain for credential");
 
-        if (request.isManual()) {
-            request.setManualAuthentication();
-        }
-
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
