@@ -119,14 +119,6 @@ public class ICSApiClient {
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createRequestWithDateInSession(
-            String url, OAuth2Token token, Date fromDate, Date toDate) {
-        RequestBuilder requestBuilder = createRequestInSession(url, token);
-        return requestBuilder
-                .queryParam("fromBookingDate", dateFormat.format(fromDate))
-                .queryParam("toBookingDate", dateFormat.format(toDate));
-    }
-
     public AccountSetupResponse setupAccount(OAuth2Token token) {
         final Date fromDate = ICSUtils.getFromDate();
         final Date toDate = ICSUtils.getToAndExpiredDate();
@@ -194,7 +186,9 @@ public class ICSApiClient {
     public CreditTransactionsResponse getTransactionsByDate(
             String accountId, Date fromDate, Date toDate) {
         final String url = String.format(Urls.TRANSACTIONS, accountId);
-        return createRequestWithDateInSession(url, getToken(), fromDate, toDate)
+        return createRequestInSession(url, getToken())
+                .queryParam(QueryKeys.FROM_BOOKING_DATE, dateFormat.format(fromDate))
+                .queryParam(QueryKeys.TO_BOOKING_DATE, dateFormat.format(toDate))
                 .get(CreditTransactionsResponse.class);
     }
 }

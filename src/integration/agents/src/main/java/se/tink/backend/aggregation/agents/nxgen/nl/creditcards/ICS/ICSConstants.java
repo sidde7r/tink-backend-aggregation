@@ -28,6 +28,8 @@ public class ICSConstants {
         public static final String RESPONSE_TYPE = "response_type";
         public static final String AUTH_CODE = "code";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String FROM_BOOKING_DATE = "fromBookingDate";
+        public static final String TO_BOOKING_DATE = "toBookingDate";
     }
 
     public static final class QueryValues {
