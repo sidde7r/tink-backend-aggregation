@@ -81,4 +81,17 @@ public class VolksbankConstants {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
     }
+
+    public static class ConsentStatuses {
+        private ConsentStatuses() {}
+
+        public static final String VALID = "valid";
+    }
+
+    public static class RegioBankConstants {
+        private RegioBankConstants() {}
+
+        public static final String REGIOBANK = "regiobank";
+        public static final int MAX_RETRIES = 2;
+    }
 }

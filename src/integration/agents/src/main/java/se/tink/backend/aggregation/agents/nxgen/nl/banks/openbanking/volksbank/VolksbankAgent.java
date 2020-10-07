@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.HttpClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.RegioBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.ConsentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.VolksbankAuthenticator;
@@ -38,7 +39,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
@@ -50,6 +50,7 @@ public final class VolksbankAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final AutoAuthenticationProgressiveController progressiveAuthenticator;
+    private final String bankPath;
 
     public VolksbankAgent(
             CredentialsRequest request,
@@ -61,22 +62,18 @@ public final class VolksbankAgent
 
         final String[] payload = request.getProvider().getPayload().split(" ");
 
-        final String bankPath = payload[1];
+        bankPath = payload[1];
 
         final VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, bankPath);
 
         final AgentConfiguration<VolksbankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(VolksbankConfiguration.class);
-        final VolksbankConfiguration volksbankConfiguration =
-                agentConfiguration.getProviderSpecificConfiguration();
+
         final VolksbankApiClient volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
-        final URL redirectUrl = new URL(agentConfiguration.getRedirectUrl());
-        final String clientId = volksbankConfiguration.getClientId();
-
         final ConsentFetcher consentFetcher =
-                new ConsentFetcher(volksbankApiClient, persistentStorage, redirectUrl, clientId);
+                new ConsentFetcher(volksbankApiClient, persistentStorage, agentConfiguration);
 
         final EidasProxyConfiguration eidasProxyConfiguration =
                 agentsServiceConfiguration.getEidasProxy();
@@ -90,26 +87,21 @@ public final class VolksbankAgent
                         metricRefreshController,
                         updateController,
                         new VolksbankTransactionalAccountFetcher(
-                                volksbankApiClient, consentFetcher, persistentStorage),
+                                volksbankApiClient, persistentStorage),
                         new TransactionFetcherController<>(
                                 this.transactionPaginationHelper,
                                 new TransactionDatePaginationController<>(
                                         new VolksbankTransactionFetcher(
-                                                volksbankApiClient,
-                                                consentFetcher,
-                                                persistentStorage))));
-
-        final String clientSecret = volksbankConfiguration.getClientSecret();
+                                                volksbankApiClient, persistentStorage))));
 
         VolksbankAuthenticator authenticator =
                 new VolksbankAuthenticator(
                         volksbankApiClient,
                         persistentStorage,
-                        redirectUrl,
+                        agentConfiguration,
                         urlFactory,
                         consentFetcher,
-                        clientId,
-                        clientSecret);
+                        bankPath);
 
         OAuth2AuthenticationProgressiveController oAuth2AuthenticationController =
                 new OAuth2AuthenticationProgressiveController(
@@ -118,18 +110,40 @@ public final class VolksbankAgent
                         credentials,
                         strongAuthenticationState,
                         request);
-        final AutoAuthenticationProgressiveController autoAuthenticationController =
+
+        progressiveAuthenticator =
                 new AutoAuthenticationProgressiveController(
                         request,
                         context,
                         new ThirdPartyAppAuthenticationProgressiveController(
                                 oAuth2AuthenticationController),
                         oAuth2AuthenticationController);
-
-        progressiveAuthenticator = autoAuthenticationController;
     }
 
     private void configureHttpClient(TinkHttpClient client) {
+        // Temporarily extracted specific config for RegioBank to alter and monitor the filter
+        // effectiveness without affecting all Volksbank providers.
+        if (RegioBankConstants.REGIOBANK.equalsIgnoreCase(bankPath)) {
+            configureHttpClientForRegiobank(client);
+        } else {
+            configureHttpClientForVolksbank(client);
+        }
+
+        client.addFilter(new BankErrorResponseFilter());
+        client.getInternalClient();
+    }
+
+    private void configureHttpClientForRegiobank(TinkHttpClient client) {
+        client.addFilter(new TimeoutFilter());
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        RegioBankConstants.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new VolksbankRetryFilter(
+                        RegioBankConstants.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+    }
+
+    private void configureHttpClientForVolksbank(TinkHttpClient client) {
         // Prevent read timeouts
         client.setTimeout(HttpClient.READ_TIMEOUT_MILLISECONDS);
         client.addFilter(new TimeoutFilter());
@@ -139,8 +153,6 @@ public final class VolksbankAgent
         client.addFilter(
                 new VolksbankRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new BankErrorResponseFilter());
-        client.getInternalClient();
     }
 
     @Override

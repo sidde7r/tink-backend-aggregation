@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.ConsentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -23,15 +22,11 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class VolksbankTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
 
     private final VolksbankApiClient apiClient;
-    private final ConsentFetcher consentFetcher;
     private final PersistentStorage persistentStorage;
 
     public VolksbankTransactionFetcher(
-            final VolksbankApiClient apiClient,
-            final ConsentFetcher consentFetcher,
-            final PersistentStorage persistentStorage) {
+            final VolksbankApiClient apiClient, final PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
-        this.consentFetcher = consentFetcher;
         this.persistentStorage = persistentStorage;
     }
 
@@ -45,7 +40,8 @@ public class VolksbankTransactionFetcher implements TransactionDatePaginator<Tra
             return PaginatorResponseImpl.createEmpty(false);
         }
 
-        final String consentId = consentFetcher.fetchConsent();
+        final String consentId = persistentStorage.get(Storage.CONSENT);
+
         final OAuth2Token oauthToken =
                 persistentStorage
                         .get(Storage.OAUTH_TOKEN, OAuth2Token.class)
