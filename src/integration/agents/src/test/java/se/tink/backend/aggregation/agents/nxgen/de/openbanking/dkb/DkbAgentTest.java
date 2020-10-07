@@ -21,7 +21,6 @@ public class DkbAgentTest {
                     .loadCredentialsBefore(false)
                     .saveCredentialsAfter(false)
                     .setAppId("tink")
-                    .setClusterId("oxford-preprod")
                     .setFinancialInstitutionId("de-dkb-ob");
 
     @AfterClass
