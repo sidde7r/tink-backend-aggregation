@@ -32,24 +32,27 @@ public class BankdataTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date startDate, Date endDate) {
-        if (isStartDateBeforeLimit(startDate)) {
+        if (isDateBeforeLimit(endDate)) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
+        if (isDateBeforeLimit(startDate)) {
             return getTransactionResponseUntilTimeLimit(account, endDate);
         }
         TransactionResponse transactionResponse =
                 apiClient.fetchTransactions(account, startDate, endDate);
-        getNextTransactionsInThisPeriodOfTime(transactionResponse);
-        return transactionResponse;
+        return getAllTransactionsInThisPeriodOfTime(transactionResponse);
     }
 
     private PaginatorResponse getTransactionResponseUntilTimeLimit(
             TransactionalAccount account, Date endDate) {
         TransactionResponse transactionResponse =
                 apiClient.fetchTransactions(account, MAX_DATE_TO_FETCH_IN_THE_PAST, endDate);
-        getNextTransactionsInThisPeriodOfTime(transactionResponse);
+        getAllTransactionsInThisPeriodOfTime(transactionResponse);
         return PaginatorResponseImpl.create(transactionResponse.getTinkTransactions(), false);
     }
 
-    private void getNextTransactionsInThisPeriodOfTime(TransactionResponse transactionResponse) {
+    private TransactionResponse getAllTransactionsInThisPeriodOfTime(
+            TransactionResponse transactionResponse) {
         while (transactionResponse.nextKey() != null) {
             TransactionResponse nextTransactionsPage =
                     apiClient.fetchNextTransactions(transactionResponse.nextKey());
@@ -65,9 +68,10 @@ public class BankdataTransactionalAccountFetcher
                     .getTransactions()
                     .setLinks(nextTransactionsPage.getTransactions().getLinks());
         }
+        return transactionResponse;
     }
 
-    private boolean isStartDateBeforeLimit(Date startDate) {
-        return MAX_DATE_TO_FETCH_IN_THE_PAST.after(startDate);
+    private boolean isDateBeforeLimit(Date date) {
+        return MAX_DATE_TO_FETCH_IN_THE_PAST.after(date);
     }
 }
