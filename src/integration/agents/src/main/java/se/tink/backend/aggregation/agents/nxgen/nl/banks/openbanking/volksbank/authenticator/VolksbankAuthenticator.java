@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
@@ -13,6 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TokenParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUrlFactory;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -21,34 +21,29 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class VolksbankAuthenticator implements OAuth2Authenticator {
 
-    private final Logger logger = LoggerFactory.getLogger(VolksbankAuthenticator.class);
-
     private final VolksbankApiClient client;
     private final PersistentStorage persistentStorage;
-    private final URL redirectUri;
+    private final AgentConfiguration<VolksbankConfiguration> agentConfiguration;
     private final VolksbankUrlFactory urlFactory;
     private final ConsentFetcher consentFetcher;
-    private final String clientId;
-    private final String clientSecret;
     private final String bankPath;
+    private final VolksbankConfiguration volksbankConfiguration;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
             PersistentStorage persistentStorage,
-            URL redirectUri,
+            AgentConfiguration<VolksbankConfiguration> agentConfiguration,
             VolksbankUrlFactory urlFactory,
             ConsentFetcher consentFetcher,
-            String clientId,
-            String clientSecret,
             String bankPath) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.redirectUri = redirectUri;
+        this.agentConfiguration = agentConfiguration;
         this.urlFactory = urlFactory;
         this.consentFetcher = consentFetcher;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
         this.bankPath = bankPath;
+
+        this.volksbankConfiguration = agentConfiguration.getProviderSpecificConfiguration();
     }
 
     @Override
@@ -61,9 +56,9 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 .queryParam(QueryParams.SCOPE, QueryParams.SCOPE_VALUE)
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParams.RESPONSE_TYPE_VALUE)
                 .queryParam(QueryParams.STATE, state)
-                .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString())
+                .queryParam(QueryParams.REDIRECT_URI, agentConfiguration.getRedirectUrl())
                 .queryParam(QueryParams.CONSENT_ID, consentId)
-                .queryParam(QueryParams.CLIENT_ID, consentFetcher.getClientId());
+                .queryParam(QueryParams.CLIENT_ID, volksbankConfiguration.getClientId());
     }
 
     @Override
@@ -74,7 +69,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .buildURL(Paths.TOKEN)
                         .queryParam(QueryParams.CODE, code)
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
-                        .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString());
+                        .queryParam(QueryParams.REDIRECT_URI, agentConfiguration.getRedirectUrl());
 
         OAuth2Token token = getBearerToken(url);
         persistentStorage.put(Storage.OAUTH_TOKEN, token);
@@ -84,7 +79,10 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private OAuth2Token getBearerToken(final URL url) {
 
         try {
-            return client.getBearerToken(url, clientId, clientSecret);
+            return client.getBearerToken(
+                    url,
+                    volksbankConfiguration.getClientId(),
+                    volksbankConfiguration.getClientSecret());
         } catch (HttpResponseException e) {
             if (e.getResponse().getBody(String.class).contains("unsupported_grant_type")) {
                 // Likely indicates that the consent ID has been invalidated. At this point, there

@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
@@ -70,15 +69,11 @@ public final class VolksbankAgent
         final AgentConfiguration<VolksbankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(VolksbankConfiguration.class);
-        final VolksbankConfiguration volksbankConfiguration =
-                agentConfiguration.getProviderSpecificConfiguration();
+
         final VolksbankApiClient volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
-        final URL redirectUrl = new URL(agentConfiguration.getRedirectUrl());
-        final String clientId = volksbankConfiguration.getClientId();
-
         final ConsentFetcher consentFetcher =
-                new ConsentFetcher(volksbankApiClient, persistentStorage, redirectUrl, clientId);
+                new ConsentFetcher(volksbankApiClient, persistentStorage, agentConfiguration);
 
         final EidasProxyConfiguration eidasProxyConfiguration =
                 agentsServiceConfiguration.getEidasProxy();
@@ -99,17 +94,13 @@ public final class VolksbankAgent
                                         new VolksbankTransactionFetcher(
                                                 volksbankApiClient, persistentStorage))));
 
-        final String clientSecret = volksbankConfiguration.getClientSecret();
-
         VolksbankAuthenticator authenticator =
                 new VolksbankAuthenticator(
                         volksbankApiClient,
                         persistentStorage,
-                        redirectUrl,
+                        agentConfiguration,
                         urlFactory,
                         consentFetcher,
-                        clientId,
-                        clientSecret,
                         bankPath);
 
         OAuth2AuthenticationProgressiveController oAuth2AuthenticationController =
@@ -119,15 +110,14 @@ public final class VolksbankAgent
                         credentials,
                         strongAuthenticationState,
                         request);
-        final AutoAuthenticationProgressiveController autoAuthenticationController =
+
+        progressiveAuthenticator =
                 new AutoAuthenticationProgressiveController(
                         request,
                         context,
                         new ThirdPartyAppAuthenticationProgressiveController(
                                 oAuth2AuthenticationController),
                         oAuth2AuthenticationController);
-
-        progressiveAuthenticator = autoAuthenticationController;
     }
 
     private void configureHttpClient(TinkHttpClient client) {
