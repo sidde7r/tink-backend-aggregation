@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.HttpClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.RegioBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.ConsentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.VolksbankAuthenticator;
@@ -50,6 +51,7 @@ public final class VolksbankAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final AutoAuthenticationProgressiveController progressiveAuthenticator;
+    private final String bankPath;
 
     public VolksbankAgent(
             CredentialsRequest request,
@@ -61,7 +63,7 @@ public final class VolksbankAgent
 
         final String[] payload = request.getProvider().getPayload().split(" ");
 
-        final String bankPath = payload[1];
+        bankPath = payload[1];
 
         final VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, bankPath);
 
@@ -130,6 +132,30 @@ public final class VolksbankAgent
     }
 
     private void configureHttpClient(TinkHttpClient client) {
+        // Temporarily extracted specific config for RegioBank to alter and monitor the filter
+        // effectiveness without affecting all Volksbank providers.
+        if (RegioBankConstants.REGIOBANK.equalsIgnoreCase(bankPath)) {
+            configureHttpClientForRegiobank(client);
+        } else {
+            configureHttpClientForVolksbank(client);
+        }
+
+        client.addFilter(new BankErrorResponseFilter());
+        client.getInternalClient();
+    }
+
+    private void configureHttpClientForRegiobank(TinkHttpClient client) {
+        client.addFilter(new TimeoutFilter());
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        RegioBankConstants.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new VolksbankRetryFilter(
+                        RegioBankConstants.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+
+    }
+
+    private void configureHttpClientForVolksbank(TinkHttpClient client) {
         // Prevent read timeouts
         client.setTimeout(HttpClient.READ_TIMEOUT_MILLISECONDS);
         client.addFilter(new TimeoutFilter());
@@ -139,8 +165,6 @@ public final class VolksbankAgent
         client.addFilter(
                 new VolksbankRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new BankErrorResponseFilter());
-        client.getInternalClient();
     }
 
     @Override
