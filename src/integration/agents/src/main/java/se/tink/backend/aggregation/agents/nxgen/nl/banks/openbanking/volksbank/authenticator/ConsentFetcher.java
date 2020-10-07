@@ -24,14 +24,8 @@ public final class ConsentFetcher {
     }
 
     public String fetchConsent() {
-        final String consentId;
-
-        if (persistentStorage.containsKey(Storage.CONSENT)) {
-            consentId = persistentStorage.get(Storage.CONSENT);
-        } else {
-            consentId = client.consentRequest(redirectUrl, clientId).getConsentId();
-            persistentStorage.put(Storage.CONSENT, consentId);
-        }
+        final String consentId = client.consentRequest(redirectUrl, clientId).getConsentId();
+        persistentStorage.put(Storage.CONSENT, consentId);
 
         return consentId;
     }
