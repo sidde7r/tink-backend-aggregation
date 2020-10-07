@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class PaymentController {
     private final PaymentExecutor paymentExecutor;
@@ -38,22 +39,33 @@ public class PaymentController {
                 switch (bankIdError) {
                     case CANCELLED:
                         throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.CANCELLED, e);
+                                PaymentConstants.BankId.CANCELLED,
+                                InternalStatus.BANKID_CANCELLED,
+                                e);
                     case NO_CLIENT:
                         throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.NO_CLIENT, e);
+                                PaymentConstants.BankId.NO_CLIENT,
+                                InternalStatus.BANKID_NO_RESPONSE,
+                                e);
                     case TIMEOUT:
-                        throw new PaymentAuthorizationException(PaymentConstants.BankId.TIMEOUT, e);
+                        throw new PaymentAuthorizationException(
+                                PaymentConstants.BankId.TIMEOUT, InternalStatus.BANKID_TIMEOUT, e);
                     case INTERRUPTED:
                         throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.INTERRUPTED, e);
+                                PaymentConstants.BankId.INTERRUPTED,
+                                InternalStatus.BANKID_INTERRUPTED,
+                                e);
                     case UNKNOWN:
                     default:
-                        throw new PaymentAuthorizationException(PaymentConstants.BankId.UNKNOWN, e);
+                        throw new PaymentAuthorizationException(
+                                PaymentConstants.BankId.UNKNOWN,
+                                InternalStatus.BANKID_UNKNOWN_EXCEPTION,
+                                e);
                 }
             }
 
-            throw new PaymentAuthorizationException("Payment could not be signed", e);
+            throw new PaymentAuthorizationException(
+                    "Payment could not be signed", InternalStatus.BANKID_UNKNOWN_EXCEPTION, e);
         }
     }
 

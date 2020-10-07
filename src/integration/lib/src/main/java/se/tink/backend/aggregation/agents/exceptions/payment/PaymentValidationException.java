@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.payment;
 
+import se.tink.libraries.signableoperation.enums.InternalStatus;
+
 public class PaymentValidationException extends PaymentException {
     private static final String INVALID_MINIMUM_AMOUNT =
             "The transfer amount, less than 1 SEK is not supported";
@@ -22,6 +24,16 @@ public class PaymentValidationException extends PaymentException {
 
     public PaymentValidationException(String message) {
         super(message);
+    }
+
+    public PaymentValidationException(
+            String message, String path, InternalStatus internalStatus, Throwable cause) {
+        super(message, internalStatus, cause);
+        this.path = path;
+    }
+
+    public PaymentValidationException(String message, InternalStatus internalStatus) {
+        super(message, internalStatus);
     }
 
     public String getPath() {

@@ -250,6 +250,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
                     catalog.getString("Could not validate the destination account."));
+            signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
@@ -264,6 +265,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
                     catalog.getString("Could not validate the date you entered for the payment."));
+            signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
@@ -278,6 +280,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
                     catalog.getString("Could not execute payment due to insufficient funds."));
+            signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
@@ -293,6 +296,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             signableOperation.setStatusMessage(
                     catalog.getString(
                             "Could not validate the account, you are trying to pay from."));
+            signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
@@ -307,6 +311,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
                     catalog.getString("The reference you provided for the payment is not valid."));
+            signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
@@ -320,6 +325,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(catalog.getString("Payment authentication failed."));
+            signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
@@ -333,6 +339,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(catalog.getString("Payment authorization failed."));
+            signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
@@ -346,6 +353,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(catalog.getString("Payment validation failed."));
+            signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
@@ -359,6 +367,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
             signableOperation.setStatusMessage(catalog.getString("Payment failed."));
+            signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;

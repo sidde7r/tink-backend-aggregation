@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public final class SbabApiClient {
 
@@ -183,23 +184,31 @@ public final class SbabApiClient {
             case HttpStatus.SC_BAD_REQUEST:
                 if (errorResponse.isInvalidDateError()) {
                     throw new DateValidationException(
-                            ErrorMessage.INVALID_DATE, "", new IllegalArgumentException());
+                            ErrorMessage.INVALID_DATE,
+                            "",
+                            InternalStatus.INVALID_DUE_DATE,
+                            new IllegalArgumentException());
                 }
                 if (errorResponse.isAmountExceedsCurrentBalance()) {
-                    throw new InsufficientFundsException(ErrorMessage.AMOUNT_EXCEEDS_BALANCE);
+                    throw new InsufficientFundsException(
+                            ErrorMessage.AMOUNT_EXCEEDS_BALANCE, InternalStatus.INSUFFICIENT_FUNDS);
                 }
                 break;
             case HttpStatus.SC_CONFLICT:
                 if (errorResponse.isAmountLimitReached()) {
-                    throw new PaymentValidationException(ErrorMessage.AMOUNT_LIMIT_REACHED);
+                    throw new PaymentValidationException(
+                            ErrorMessage.AMOUNT_LIMIT_REACHED,
+                            InternalStatus.TRANSFER_LIMIT_REACHED);
                 }
                 break;
             case HttpStatus.SC_FORBIDDEN:
                 if (errorResponse.isFailedSignature()) {
-                    throw new PaymentAuthorizationException(ErrorMessage.SIGNATURE_FAILED);
+                    throw new PaymentAuthorizationException(
+                            ErrorMessage.SIGNATURE_FAILED, InternalStatus.PAYMENT_SIGNATURE_FAILED);
                 }
                 if (errorResponse.isForbiddenWithNoErrorCode()) {
-                    throw new PaymentException(ErrorMessage.FORBIDDEN);
+                    throw new PaymentException(
+                            ErrorMessage.FORBIDDEN, InternalStatus.USER_UNAUTHORIZED);
                 }
                 break;
             default:
