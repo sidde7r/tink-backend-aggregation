@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount;
 
+import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -7,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.ConsentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.balances.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.entities.accounts.AccountsEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -18,21 +18,21 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class VolksbankTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final VolksbankApiClient apiClient;
-    private final ConsentFetcher consentFetcher;
     private final PersistentStorage persistentStorage;
 
     public VolksbankTransactionalAccountFetcher(
-            final VolksbankApiClient apiClient,
-            final ConsentFetcher consentFetcher,
-            final PersistentStorage persistentStorage) {
+            final VolksbankApiClient apiClient, final PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
-        this.consentFetcher = consentFetcher;
         this.persistentStorage = persistentStorage;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        final String consentId = consentFetcher.fetchConsent();
+        final String consentId = persistentStorage.get(Storage.CONSENT);
+
+        if (Strings.isNullOrEmpty(consentId)) {
+            throw new IllegalStateException("Consent ID was not found, can't fetch accounts.");
+        }
 
         final OAuth2Token oauth2Token =
                 persistentStorage

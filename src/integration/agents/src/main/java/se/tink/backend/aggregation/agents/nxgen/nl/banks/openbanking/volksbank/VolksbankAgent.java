@@ -92,14 +92,12 @@ public final class VolksbankAgent
                         metricRefreshController,
                         updateController,
                         new VolksbankTransactionalAccountFetcher(
-                                volksbankApiClient, consentFetcher, persistentStorage),
+                                volksbankApiClient, persistentStorage),
                         new TransactionFetcherController<>(
                                 this.transactionPaginationHelper,
                                 new TransactionDatePaginationController<>(
                                         new VolksbankTransactionFetcher(
-                                                volksbankApiClient,
-                                                consentFetcher,
-                                                persistentStorage))));
+                                                volksbankApiClient, persistentStorage))));
 
         final String clientSecret = volksbankConfiguration.getClientSecret();
 
