@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.TransactionResponse;
@@ -10,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class BankdataTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -32,46 +35,37 @@ public class BankdataTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date startDate, Date endDate) {
-        if (isDateBeforeLimit(endDate)) {
+        if (isMaxDateToFetchInThePastAfterGivenDate(endDate)) {
             return PaginatorResponseImpl.createEmpty(false);
         }
-        if (isDateBeforeLimit(startDate)) {
-            return getTransactionResponseUntilTimeLimit(account, endDate);
+        if (isMaxDateToFetchInThePastAfterGivenDate(startDate)) {
+            startDate = MAX_DATE_TO_FETCH_IN_THE_PAST;
         }
         TransactionResponse transactionResponse =
                 apiClient.fetchTransactions(account, startDate, endDate);
-        return getAllTransactionsInThisPeriodOfTime(transactionResponse);
-    }
 
-    private PaginatorResponse getTransactionResponseUntilTimeLimit(
-            TransactionalAccount account, Date endDate) {
-        TransactionResponse transactionResponse =
-                apiClient.fetchTransactions(account, MAX_DATE_TO_FETCH_IN_THE_PAST, endDate);
-        getAllTransactionsInThisPeriodOfTime(transactionResponse);
-        return PaginatorResponseImpl.create(transactionResponse.getTinkTransactions(), false);
-    }
+        transactionResponse
+                .getTransactions()
+                .toTinkTransactions()
+                .addAll(getNextTransactionsInThisPeriodOfTime(transactionResponse.nextKey()));
 
-    private TransactionResponse getAllTransactionsInThisPeriodOfTime(
-            TransactionResponse transactionResponse) {
-        while (transactionResponse.nextKey() != null) {
-            TransactionResponse nextTransactionsPage =
-                    apiClient.fetchNextTransactions(transactionResponse.nextKey());
-            transactionResponse
-                    .getTransactions()
-                    .getBooked()
-                    .addAll(nextTransactionsPage.getTransactions().getBooked());
-            transactionResponse
-                    .getTransactions()
-                    .getPending()
-                    .addAll(nextTransactionsPage.getTransactions().getPending());
-            transactionResponse
-                    .getTransactions()
-                    .setLinks(nextTransactionsPage.getTransactions().getLinks());
+        if (isMaxDateToFetchInThePastAfterGivenDate(startDate)) {
+            return PaginatorResponseImpl.create(transactionResponse.getTinkTransactions(), false);
         }
         return transactionResponse;
     }
 
-    private boolean isDateBeforeLimit(Date date) {
+    private List<Transaction> getNextTransactionsInThisPeriodOfTime(String nextKey) {
+        List<Transaction> result = new LinkedList<>();
+        while (nextKey != null) {
+            TransactionResponse nextTransactionsPage = apiClient.fetchNextTransactions(nextKey);
+            result.addAll(nextTransactionsPage.getTransactions().toTinkTransactions());
+            nextKey = nextTransactionsPage.nextKey();
+        }
+        return result;
+    }
+
+    private boolean isMaxDateToFetchInThePastAfterGivenDate(Date date) {
         return MAX_DATE_TO_FETCH_IN_THE_PAST.after(date);
     }
 }
