@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues.SCOPE;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues.SCOPE_WITHOUT_PAYMENT;
-
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -14,18 +12,21 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ApiService;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.IdTags;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.AuthorizeRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.AuthorizeRequest.AuthorizeRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
@@ -134,19 +135,25 @@ public class NordeaBaseApiClient implements TokenInterface {
         return createRequest(Urls.GET_TOKEN, HttpMethod.POST, body);
     }
 
-    public URL getAuthorizeUrl(String state, String country) {
-        return client.request(
-                        Urls.AUTHORIZE
-                                .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
-                                .queryParam(QueryKeys.STATE, state)
-                                .queryParam(QueryKeys.DURATION, QueryValues.DURATION_MINUTES)
-                                .queryParam(QueryKeys.COUNTRY, country)
-                                .queryParam(QueryKeys.SCOPE, getScopes())
-                                .queryParam(
-                                        QueryKeys.MAX_TX_HISTORY,
-                                        QueryValues.FETCH_NUMBER_OF_MONTHS)
-                                .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl()))
-                .getUrl();
+    public URL getAuthorizeUrl(AuthorizeRequestBuilder builder) {
+
+        AuthorizeRequest authorizeRequest =
+                builder.withRedirectUri(getRedirectUrl())
+                        .withScope(ImmutableList.copyOf(getScopes().split(",")))
+                        .withDuration(BodyValues.DURATION_MINUTES)
+                        .withMaxTransactionHistory(BodyValues.FETCH_NUMBER_OF_MONTHS)
+                        .build();
+        String requestBody = SerializationUtils.serializeToString(authorizeRequest);
+        try {
+            createRequest(Urls.AUTHORIZE, HttpMethod.POST, requestBody).post(requestBody);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_MOVED_TEMPORARILY) {
+                return URL.of(e.getResponse().getHeaders().get(HeaderKeys.LOCATION).get(0));
+            } else {
+                throw e;
+            }
+        }
+        throw LoginError.DEFAULT_MESSAGE.exception();
     }
 
     public OAuth2Token getToken(GetTokenForm form) {
@@ -389,11 +396,11 @@ public class NordeaBaseApiClient implements TokenInterface {
     }
 
     protected String getScope() {
-        return SCOPE;
+        return QueryValues.SCOPE;
     }
 
     protected String getScopeWithoutPayment() {
-        return SCOPE_WITHOUT_PAYMENT;
+        return QueryValues.SCOPE_WITHOUT_PAYMENT;
     }
 
     private String createSignature(
