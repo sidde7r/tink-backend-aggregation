@@ -896,10 +896,13 @@ public final class LansforsakringarAgent extends AbstractAgent
                     case "001515":
                     case "000115":
                     case "00015":
+                    case "12251007":
                         throw BankIdError.CANCELLED.exception();
                     case "00159":
                     case "001512":
                         throw BankIdError.TIMEOUT.exception();
+                    case "12251006":
+                        throw BankIdError.UNKNOWN.exception();
                     case "00151":
                         throw BankServiceError.BANK_SIDE_FAILURE.exception();
                     default:
