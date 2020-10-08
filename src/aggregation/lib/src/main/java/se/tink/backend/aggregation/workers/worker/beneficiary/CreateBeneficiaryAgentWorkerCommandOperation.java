@@ -51,6 +51,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class CreateBeneficiaryAgentWorkerCommandOperation {
+
+    // States
+    private static MetricRegistry metricRegistry;
+    private static LoginAgentEventProducer loginAgentEventProducer;
+    private static LoginAgentWorkerCommandState loginAgentWorkerCommandState;
+
     public static AgentWorkerOperation createOperationCreateBeneficiary(
             CreateBeneficiaryCredentialsRequest request,
             ClientInfo clientInfo,
@@ -76,6 +82,13 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             AgentWorkerOperationState agentWorkerOperationState,
             ProviderTierConfiguration providerTierConfiguration,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
+
+        CreateBeneficiaryAgentWorkerCommandOperation.metricRegistry = metricRegistry;
+        CreateBeneficiaryAgentWorkerCommandOperation.loginAgentEventProducer =
+                loginAgentEventProducer;
+        CreateBeneficiaryAgentWorkerCommandOperation.loginAgentWorkerCommandState =
+                loginAgentWorkerCommandState;
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -140,13 +153,10 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(new ClearSensitivePayloadOnForceAuthenticateCommand(context));
-        commands.add(
-                new LoginAgentWorkerCommand(
-                        context,
-                        loginAgentWorkerCommandState,
-                        createCommandMetricState(request, metricRegistry),
-                        loginAgentEventProducer));
+
+        addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
+                commands, context);
+
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.add(
@@ -160,5 +170,17 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             CredentialsRequest request, MetricRegistry metricRegistry) {
         return new AgentWorkerCommandMetricState(
                 request.getProvider(), request.getCredentials(), metricRegistry, request.getType());
+    }
+
+    private static void
+            addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
+                    List<AgentWorkerCommand> commands, AgentWorkerCommandContext context) {
+        commands.add(new ClearSensitivePayloadOnForceAuthenticateCommand(context));
+        commands.add(
+                new LoginAgentWorkerCommand(
+                        context,
+                        loginAgentWorkerCommandState,
+                        createCommandMetricState(context.getRequest(), metricRegistry),
+                        loginAgentEventProducer));
     }
 }
