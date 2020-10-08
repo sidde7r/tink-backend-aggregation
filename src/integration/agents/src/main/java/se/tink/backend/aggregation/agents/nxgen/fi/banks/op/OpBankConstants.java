@@ -11,8 +11,6 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class OpBankConstants {
-    public static final String AUTH_TOKEN_KEY = "f944972f20ea3de522f312d4a5baf0f9";
-    public static final String AUTH_TOKEN_START = "F";
 
     public static final String LANGUAGE_CODE = "en";
     public static final String AUTH_TOKEN_PREFIX = "F";
@@ -29,7 +27,7 @@ public class OpBankConstants {
 
     public static class Urls {
 
-        private static final String BASE_URL = "https://mobile.op-palvelut.fi";
+        private static final String BASE_URL = "https://mobiili.op-palvelut.fi";
         public static final URL TRANSACTIONS_URL =
                 new URL(BASE_URL + "/mobile/transactions/{" + PARAM_ENCRYPTED_ACCOUNT_NUMBER + "}");
         public static final URL ACCOUNTS_URI = new URL(BASE_URL + "/mobile/accounts");
@@ -121,7 +119,7 @@ public class OpBankConstants {
         public static final String OS_NAME = "ios";
         public static final String OS_VERSION = "11.2.1";
         public static final String ROOTED = "false";
-        public static final String APP_VERSION = "27.0";
+        public static final String APP_VERSION = "33.0";
         public static final String HW_TYPE = "mobile";
         public static final String CORE = "KR2";
         public static final String APPLICATION_GROUP_ID = "mob";
@@ -130,20 +128,6 @@ public class OpBankConstants {
     // KEY for AUTH_TOKEN used by iphone
     //    private static final String KEY = "f944972f20ea3de522f312d4a5baf0f9";
     public static class KeyGenerator {
-
-        public static final String CHAR_STRING_1 =
-                "3gg6gom3jtgk6skkj0i6767i6f78n31k28u9j8bg9755ac1dmr7528on4c2s4rsi9f02i2ev6moicc5f0ijbml9fb4hdumtsfqkf3hkgull6clm20rmpqr4fnuup1994";
-        public static final String CHAR_STRING_2 =
-                "de9it27nr0n241oa7jlif84emv56gtdd06ol0fi9h09l1jkeksar8oae1urns2pj8ljpg1b7ra7hbhak1gnbj0i2dpskf9rslfnaippvgqgfhd60ovdgp9ds914uharf";
-        public static final String CHAR_STRING_3 =
-                "ardcm9ih9d3tfdd12hhfeq3ohrp1c455a97s3pgae6ep15jhd15saer7v6bv7jcbghgbf4cs765qkm4it1dt0nkolrp0tpjsbd02236gieuspp4acuhf1allngof5qd0";
-        public static final String CHAR_STRING_4 =
-                "viktdqgdctlefcudcpo5icnacf1ji370enfq5lmnl10qr0eepoqukjgrmigoudqifc0rvpchqa2qqte0ghpkh5c15g3m1popgjhfpt6hnstbdang36s7vs7pg2bs9sds";
-        public static final int RAND_INT_A = 123456789;
-
-        public static final int RAND_INT_B = 362436069;
-        public static final int RAND_INT_C = 521288629;
-        public static final int RAND_INT_D = 88675123;
         public static final String SALT = "f944972f20ea3de522f312d4a5baf0f9";
     }
 

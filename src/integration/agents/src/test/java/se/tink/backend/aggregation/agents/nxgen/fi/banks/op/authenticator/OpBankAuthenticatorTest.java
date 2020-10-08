@@ -51,7 +51,7 @@ public class OpBankAuthenticatorTest {
     private String username;
     private String password;
     private ResultCaptor<OpBankLoginResponseEntity> loginResultCaptor;
-    private OpAuthenticator authenticationChallenger;
+    private OpKeyCardAuthenticator authenticationChallenger;
     private SessionStorage sessionStorage;
 
     @Before
@@ -88,10 +88,7 @@ public class OpBankAuthenticatorTest {
                 OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, applicationInstanceId);
         OpAutoAuthenticator oaa =
                 new OpAutoAuthenticator(
-                        new OpBankApiClient(tinkHttpClient),
-                        persistentStorage,
-                        credentials,
-                        sessionStorage);
+                        new OpBankApiClient(tinkHttpClient), persistentStorage, credentials);
         try {
             oaa.autoAuthenticate();
             oaa.authenticate(username, password);
@@ -226,12 +223,10 @@ public class OpBankAuthenticatorTest {
                 OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, applicationInstanceId);
         authenticationChallenger =
                 spy(
-                        new OpAuthenticator(
+                        new OpKeyCardAuthenticator(
                                 bankClient, persistentStorage, credentials, sessionStorage));
         opBankAuthenticator =
-                spy(
-                        new OpAutoAuthenticator(
-                                bankClient, persistentStorage, credentials, sessionStorage));
+                spy(new OpAutoAuthenticator(bankClient, persistentStorage, credentials));
     }
 
     private void authenticate() throws AuthenticationException, AuthorizationException {
