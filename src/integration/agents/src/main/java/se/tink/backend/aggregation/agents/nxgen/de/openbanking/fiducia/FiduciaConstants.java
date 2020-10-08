@@ -1,21 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
-import java.util.Arrays;
-import java.util.List;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class FiduciaConstants {
-
-    public static final String SIGNATURE_HEADER =
-            "algorithm=\"SHA256withRSA\",headers=\"%s\",signature=\"%s\"";
-    static final List<String> HEADERS_TO_SIGN =
-            Arrays.asList(
-                    HeaderKeys.DATE,
-                    HeaderKeys.DIGEST,
-                    HeaderKeys.X_REQUEST_ID,
-                    HeaderKeys.PSU_ID,
-                    "psu-corporate-id");
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
             TypeMapper.<PaymentStatus>builder()
@@ -43,14 +31,11 @@ public final class FiduciaConstants {
         public static final String DIGEST = "digest";
         public static final String X_REQUEST_ID = "x-request-id";
         public static final String PSU_ID = "psu-id";
+        public static final String PSU_CORPORATE_ID = "psu-corporate-id";
         public static final String ACCEPT = "accept";
         public static final String TPP_ID = "tpp-id";
         public static final String TPP_REDIRECT_URI = "tpp-redirect";
-        public static final String PSU_IP_ADDRESS = "psu-ip-adress";
-    }
-
-    public static class HeaderValues {
-        public static final Object PSU_IP_ADDRESS = "192.168.8.78";
+        public static final String PSU_IP_ADDRESS = "psu-ip-address";
     }
 
     public static class FormValues {
