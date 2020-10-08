@@ -33,6 +33,7 @@ deps = [
     "@system_tests//:org_springframework_spring_test",
     "@system_tests//:org_springframework_spring_web",
     "@system_tests//:org_testcontainers_testcontainers",
+    "@system_tests//:com_github_docker_java_docker_java_api",
 ]
 
 junit_test(
