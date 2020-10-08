@@ -112,11 +112,13 @@ public class SparebankenSorConstants {
         public static final String OTHER_ACCOUNT = "other";
         public static final String UNKNOWN = "unknown";
         public static final String LOAN = "loan";
+        public static final String ESTATE_CREDIT = "estatecredit";
 
         public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
                 AccountTypeMapper.builder()
                         .put(AccountTypes.SAVINGS, SAVINGS_ACCOUNT, YOUNG_PEOPLE_SAVINGS)
                         .put(AccountTypes.CHECKING, CHECKING_ACCOUNT, OTHER_ACCOUNT, UNKNOWN)
+                        .put(AccountTypes.MORTGAGE, ESTATE_CREDIT)
                         .put(AccountTypes.LOAN, LOAN)
                         .build();
     }

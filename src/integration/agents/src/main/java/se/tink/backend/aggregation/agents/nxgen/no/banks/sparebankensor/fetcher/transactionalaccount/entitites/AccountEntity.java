@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import java.util.Map;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +28,9 @@ public class AccountEntity {
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
-        return SparebankenSorConstants.Accounts.CHECKING_ACCOUNT.equalsIgnoreCase(
-                        properties.getType())
-                || SparebankenSorConstants.Accounts.SAVINGS_ACCOUNT.equalsIgnoreCase(
-                        properties.getType());
+        return SparebankenSorConstants.Accounts.ACCOUNT_TYPE_MAPPER.isOneOf(
+                properties.getType(),
+                ImmutableList.of(AccountTypes.CHECKING, AccountTypes.SAVINGS));
     }
 
     @JsonIgnore
@@ -57,8 +57,8 @@ public class AccountEntity {
 
     @JsonIgnore
     public boolean isLoanAccount() {
-        return SparebankenSorConstants.Accounts.ACCOUNT_TYPE_MAPPER.isOf(
-                properties.getType(), AccountTypes.LOAN);
+        return SparebankenSorConstants.Accounts.ACCOUNT_TYPE_MAPPER.isOneOf(
+                properties.getType(), ImmutableList.of(AccountTypes.LOAN, AccountTypes.MORTGAGE));
     }
 
     // Currently logging loan details.
