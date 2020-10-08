@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.workers.commands.AbnAmroSpecificCase;
 import se.tink.backend.aggregation.workers.commands.AccountWhitelistRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
+import se.tink.backend.aggregation.workers.commands.ClearSensitivePayloadOnForceAuthenticateCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
@@ -426,6 +427,7 @@ public class AgentWorkerOperationFactory {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        commands.add(new ClearSensitivePayloadOnForceAuthenticateCommand(context));
         commands.add(
                 new LoginAgentWorkerCommand(
                         context,
@@ -529,6 +531,8 @@ public class AgentWorkerOperationFactory {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+
+        commands.add(new ClearSensitivePayloadOnForceAuthenticateCommand(context));
         commands.add(
                 new LoginAgentWorkerCommand(
                         context,
@@ -794,6 +798,7 @@ public class AgentWorkerOperationFactory {
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
+                new ClearSensitivePayloadOnForceAuthenticateCommand(context),
                 new LoginAgentWorkerCommand(
                         context,
                         loginAgentWorkerCommandState,
@@ -1177,6 +1182,7 @@ public class AgentWorkerOperationFactory {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        commands.add(new ClearSensitivePayloadOnForceAuthenticateCommand(context));
         commands.add(
                 new LoginAgentWorkerCommand(
                         context,
@@ -1298,6 +1304,7 @@ public class AgentWorkerOperationFactory {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        commands.add(new ClearSensitivePayloadOnForceAuthenticateCommand(context));
         commands.add(
                 new LoginAgentWorkerCommand(
                         context,

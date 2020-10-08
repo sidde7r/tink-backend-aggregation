@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.ClearSensitivePayloadOnForceAuthenticateCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CreateBeneficiaryAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand;
@@ -139,6 +140,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        commands.add(new ClearSensitivePayloadOnForceAuthenticateCommand(context));
         commands.add(
                 new LoginAgentWorkerCommand(
                         context,
