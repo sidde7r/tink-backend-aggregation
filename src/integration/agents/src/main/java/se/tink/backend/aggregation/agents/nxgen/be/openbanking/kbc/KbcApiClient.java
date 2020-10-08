@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.OAuth;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
@@ -36,6 +37,7 @@ import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -144,9 +146,23 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
     }
 
     private String rotateConsentId() {
-        final String consentId = getConsentId();
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
-        return consentId;
+        try {
+            final String consentId = getConsentId();
+            persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
+            return consentId;
+        } catch (HttpResponseException exception) {
+            logger.error(exception.getMessage());
+            if (checkResponseExceptionForIbanErrors(exception.getMessage())) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(exception);
+            } else {
+                throw exception;
+            }
+        }
+    }
+
+    private boolean checkResponseExceptionForIbanErrors(String exceptionMessage) {
+        return exceptionMessage.contains("CONSENT_INVALID")
+                || exceptionMessage.contains("FORMAT_ERROR");
     }
 
     @Override
