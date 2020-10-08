@@ -9,7 +9,7 @@ metadata:
 data:
   config.yml: |
     server:
-      shutdownGracePeriod: 130s
+      shutdownGracePeriod: 600s
       applicationConnectors:
         {{- if eq "local" .Values.Cluster }}
         - type: http
