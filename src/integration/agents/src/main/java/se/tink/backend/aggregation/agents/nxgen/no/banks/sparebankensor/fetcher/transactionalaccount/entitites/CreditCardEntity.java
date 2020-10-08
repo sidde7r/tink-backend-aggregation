@@ -17,7 +17,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class CreditCardEntity {
     private String id;
     private String accountNumber;
-    private ProductEntity productEntity;
+    private ProductEntity product;
     private OwnerEntity owner;
     private PropertiesEntity properties;
     private AccountBalanceEntity accountBalance;
@@ -38,14 +38,14 @@ public class CreditCardEntity {
                                         ExactCurrencyAmount.of(
                                                 accountBalance.getAvailableBalance(),
                                                 properties.getCurrencyCode()))
-                                .withCardAlias(productEntity.getName())
+                                .withCardAlias(product.getName())
                                 .build())
                 .withPaymentAccountFlag()
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
-                                .withAccountName(productEntity.getName())
+                                .withAccountName(product.getName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 AccountIdentifier.Type.PAYMENT_CARD_NUMBER,
