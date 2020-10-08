@@ -152,7 +152,7 @@ public final class DemobankAgent extends NextGenerationAgent
     private Authenticator constructPasswordAndOtpAuthenticator() {
         DemobankPasswordAndOtpAuthenticator authenticator =
                 new DemobankPasswordAndOtpAuthenticator(
-                        apiClient, supplementalInformationController);
+                        apiClient, supplementalInformationController, sessionStorage);
         return new AutoAuthenticationController(request, context, authenticator, authenticator);
     }
 
