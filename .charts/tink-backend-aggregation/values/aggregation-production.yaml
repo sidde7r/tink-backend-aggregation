@@ -222,6 +222,8 @@ clients:
     aggregatorIdentifier: "ABN AMRO"
   nl-bunq-oauth2:
     aggregatorIdentifier: "Bunq"
+  nl-dyme-prod:
+    aggregatorIdentifier: "Dyme"
   no-68-nord-testing:
     aggregatorIdentifier: "Sparebank 68 Nord"
   no-aasen-sparebank:
