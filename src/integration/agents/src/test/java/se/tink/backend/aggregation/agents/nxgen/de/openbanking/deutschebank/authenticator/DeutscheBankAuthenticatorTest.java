@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
@@ -208,6 +209,7 @@ public class DeutscheBankAuthenticatorTest {
         when(tinkHttpClient.request(any(URL.class))).thenReturn(requestBuilder);
         when(requestBuilder.header(any(), any())).thenReturn(requestBuilder);
         when(requestBuilder.type(anyString())).thenReturn(requestBuilder);
+        when(requestBuilder.accept(anyString())).thenReturn(requestBuilder);
         return requestBuilder;
     }
 
@@ -218,7 +220,7 @@ public class DeutscheBankAuthenticatorTest {
                 new DeutscheBankApiClient(
                         tinkHttpClient,
                         persistentStorage,
-                        "redirectUrl",
+                        new DeutscheHeaderValues("redirectUrl", "userIp"),
                         deutscheMarketConfiguration);
         deutscheBankAuthenticator =
                 new DeutscheBankAuthenticator(

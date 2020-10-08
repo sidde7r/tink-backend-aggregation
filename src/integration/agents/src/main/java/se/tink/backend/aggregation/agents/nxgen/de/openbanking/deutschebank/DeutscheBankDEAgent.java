@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
@@ -27,9 +28,9 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent {
     }
 
     @Override
-    protected DeutscheBankApiClient constructApiClient(String redirectUrl) {
+    protected DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues) {
         return new DeutscheBankDEApiClient(
-                client, persistentStorage, redirectUrl, DEUTSCHE_DE_CONFIGURATION);
+                client, persistentStorage, headerValues, DEUTSCHE_DE_CONFIGURATION);
     }
 
     @Override
