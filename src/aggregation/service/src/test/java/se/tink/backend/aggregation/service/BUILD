@@ -23,6 +23,7 @@ deps = [
     "//third_party:org_assertj_assertj_core",
     "@lombok//:org_projectlombok_lombok",
     "@system_tests//:com_fasterxml_jackson_core_jackson_databind",
+    "@system_tests//:com_github_docker_java_docker_java_api",
     "@system_tests//:com_google_guava_guava",
     "@system_tests//:commons_io_commons_io",
     "@system_tests//:org_apache_httpcomponents_httpclient",
@@ -33,7 +34,6 @@ deps = [
     "@system_tests//:org_springframework_spring_test",
     "@system_tests//:org_springframework_spring_web",
     "@system_tests//:org_testcontainers_testcontainers",
-    "@system_tests//:com_github_docker_java_docker_java_api",
 ]
 
 junit_test(

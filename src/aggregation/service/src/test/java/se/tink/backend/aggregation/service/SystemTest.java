@@ -89,20 +89,13 @@ public class SystemTest {
 
     @AfterClass
     public static void tearDown() throws IOException {
-        try {
-            Optional.ofNullable(aggregationContainer).ifPresent(GenericContainer::stop);
-            Optional.ofNullable(fakeAggregationControllerContainer)
-                    .ifPresent(GenericContainer::stop);
+        Optional.ofNullable(aggregationContainer).ifPresent(GenericContainer::stop);
+        Optional.ofNullable(fakeAggregationControllerContainer).ifPresent(GenericContainer::stop);
 
-            // Just if we don't want to leave any traces behind
-            if (client != null) {
-                client.removeImageCmd(AggregationDecoupled.IMAGE).exec();
-                client.removeImageCmd(FakeAggregationController.IMAGE).exec();
-            }
-        } finally {
-            if (client != null) {
-                client.close();
-            }
+        // Just if we don't want to leave any traces behind
+        if (client != null) {
+            client.removeImageCmd(AggregationDecoupled.IMAGE).exec();
+            client.removeImageCmd(FakeAggregationController.IMAGE).exec();
         }
     }
 
