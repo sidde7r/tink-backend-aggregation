@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.AccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @RequiredArgsConstructor
@@ -21,7 +20,7 @@ public class RevolutTransactionalAccountMapperDecorator
     private static final String NO_IDENTIFIER_FOUND_LOG_MESSAGE_FORMAT =
             "No valid id for account with accountNickname: {}, accountDescription: {}. Skipping account mapping.";
 
-    private final TransactionalAccountMapper transactionalAccountMapper;
+    private final RevolutTransactionalAccountMapper transactionalAccountMapper;
 
     @Override
     public boolean supportsAccountType(AccountTypes type) {

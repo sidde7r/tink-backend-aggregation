@@ -12,17 +12,16 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.TransactionalAccountFixtures;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class RevolutTransactionalAccountMapperDecoratorTest {
 
     private RevolutTransactionalAccountMapperDecorator mapperDecorator;
-    private TransactionalAccountMapper transactionalAccountMapperMock;
+    private RevolutTransactionalAccountMapper transactionalAccountMapperMock;
 
     @Before
     public void setUp() {
-        transactionalAccountMapperMock = mock(TransactionalAccountMapper.class);
+        transactionalAccountMapperMock = mock(RevolutTransactionalAccountMapper.class);
         mapperDecorator =
                 new RevolutTransactionalAccountMapperDecorator(transactionalAccountMapperMock);
     }
