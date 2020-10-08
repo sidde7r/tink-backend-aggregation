@@ -47,7 +47,8 @@ public final class DeutscheBankConstants {
 
     public static class Urls {
         public static final String CONSENT = "/v1/consents";
-        public static final String STATUS = "/v1/consents/%s/status";
+        public static final String CONSENT_DETAILS = "/v1/consents/{consentId}";
+        public static final String CONSENTS_STATUS = "/v1/consents/{consentId}/status";
         public static final String ACCOUNTS = "/v1/accounts";
         public static final String BALANCES = "/v1/accounts/%s/balances";
         public static final String TRANSACTIONS = "/v1/accounts/%s/transactions";
@@ -56,6 +57,10 @@ public final class DeutscheBankConstants {
                 "https://apps.apple.com/be/app/mybank-belgium/id1082668633";
         public static final String MYBANK_BELGIUM_ANDROID =
                 "https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.db.pbc.mybankbelgium&ddl=1&pcampaignid=web_ddl_1";
+    }
+
+    public static class IdKeys {
+        public static final String CONSENT_ID = "consentId";
     }
 
     public static class StorageKeys {

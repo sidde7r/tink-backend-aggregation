@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities.GlobalConsentAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -36,8 +36,7 @@ public class PostbankApiClient extends DeutscheBankApiClient {
     }
 
     public ConsentResponse getConsents(String psuId) {
-        ConsentBaseRequest consentBaseRequest =
-                new ConsentBaseRequest(new GlobalConsentAccessEntity());
+        ConsentRequest consentRequest = new ConsentRequest(new GlobalConsentAccessEntity());
         try {
             return createRequest(new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT))
                     .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
@@ -45,7 +44,7 @@ public class PostbankApiClient extends DeutscheBankApiClient {
                     .header(HeaderKeys.PSU_ID, psuId)
                     .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
                     .type(MediaType.APPLICATION_JSON)
-                    .post(ConsentResponse.class, consentBaseRequest);
+                    .post(ConsentResponse.class, consentRequest);
         } catch (HttpResponseException hre) {
             handleHttpResponseException(
                     hre, ERR_BAD_REQUEST, LoginError.INCORRECT_CREDENTIALS.exception(hre));

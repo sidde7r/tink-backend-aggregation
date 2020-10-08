@@ -1,0 +1,18 @@
+{
+  "consentId": "consentId",
+  "_links": {
+    "scaStatus": {
+      "href": "***MASKED***/v1/consents/***MASKED***/authorisations/080a2b7e-4089-483c-97dc-78a8452101bb"
+    },
+    "scaRedirect": {
+      "href": "https://meine.deutsche-bank.de/taf/db/#/authorizexs2a?transaction-id=***MASKED***&psu-id=***MASKED***&authorization-id=080a2b7e-4089-483c-97dc-78a8452101bb"
+    },
+    "self": {
+      "href": "***MASKED***/v1/consents/***MASKED***"
+    },
+    "status": {
+      "href": "***MASKED***/v1/consents/***MASKED***/status"
+    }
+  },
+  "consentStatus": "received"
+}

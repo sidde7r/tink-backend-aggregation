@@ -58,6 +58,7 @@ public class DeutscheBankAuthenticatorController
                 TimeUnit.MINUTES);
 
         authenticator.verifyPersistedConsentIdIsValid();
+        authenticator.storeSessionExpiry();
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 

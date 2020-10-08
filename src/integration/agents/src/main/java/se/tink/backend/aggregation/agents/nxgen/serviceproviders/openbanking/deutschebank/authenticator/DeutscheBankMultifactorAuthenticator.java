@@ -13,7 +13,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -46,11 +47,16 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        ConsentBaseResponse consent =
-                apiClient.getConsent(strongAuthenticationState.getState(), psuId);
+        ConsentResponse consent = apiClient.getConsent(strongAuthenticationState.getState(), psuId);
         persistentStorage.put(DeutscheBankConstants.StorageKeys.CONSENT_ID, consent.getConsentId());
         deutscheBankRedirectHandler.handleRedirect();
         poll();
+        storeSessionExpiry(credentials);
+    }
+
+    private void storeSessionExpiry(Credentials credentials) {
+        ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails();
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
     @Override

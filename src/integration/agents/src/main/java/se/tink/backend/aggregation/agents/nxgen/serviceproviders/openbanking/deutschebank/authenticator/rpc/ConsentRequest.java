@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ConsentBaseRequest {
+public class ConsentRequest {
 
     private final AccessEntity access;
     private final boolean recurringIndicator;
@@ -18,7 +18,7 @@ public class ConsentBaseRequest {
     private final int frequencyPerDay;
     private final boolean combinedServiceIndicator;
 
-    public ConsentBaseRequest(AccessEntity accessEntity) {
+    public ConsentRequest(AccessEntity accessEntity) {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MONTH, 11);
         this.access = accessEntity;

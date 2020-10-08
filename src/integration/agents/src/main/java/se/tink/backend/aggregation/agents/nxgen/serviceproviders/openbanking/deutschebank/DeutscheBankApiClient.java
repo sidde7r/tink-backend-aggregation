@@ -5,13 +5,15 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.IdKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities.GlobalConsentAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.AccountEntity;
@@ -58,14 +60,13 @@ public class DeutscheBankApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, uuid);
     }
 
-    public ConsentBaseResponse getConsent(String state, String psuId) {
-        ConsentBaseRequest consentBaseRequest =
-                new ConsentBaseRequest(new GlobalConsentAccessEntity());
-        return getConsent(consentBaseRequest, state, psuId);
+    public ConsentResponse getConsent(String state, String psuId) {
+        ConsentRequest consentRequest = new ConsentRequest(new GlobalConsentAccessEntity());
+        return getConsent(consentRequest, state, psuId);
     }
 
-    protected ConsentBaseResponse getConsent(
-            ConsentBaseRequest consentBaseRequest, String state, String psuId) {
+    protected ConsentResponse getConsent(
+            ConsentRequest consentRequest, String state, String psuId) {
         return client.request(new URL(marketConfiguration.getBaseUrl().concat(Urls.CONSENT)))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
@@ -78,16 +79,23 @@ public class DeutscheBankApiClient {
                         HeaderKeys.TPP_NOK_REDIRECT_URI,
                         new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
                 .type(MediaType.APPLICATION_JSON)
-                .post(ConsentBaseResponse.class, consentBaseRequest);
+                .post(ConsentResponse.class, consentRequest);
+    }
+
+    public ConsentDetailsResponse getConsentDetails() {
+        String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        return createRequest(
+                        new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT_DETAILS)
+                                .parameter(IdKeys.CONSENT_ID, consentId))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(ConsentDetailsResponse.class);
     }
 
     public ConsentStatusResponse getConsentStatus() {
         String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
         return createRequest(
-                        new URL(
-                                marketConfiguration
-                                        .getBaseUrl()
-                                        .concat(String.format(Urls.STATUS, consentId))))
+                        new URL(marketConfiguration.getBaseUrl() + Urls.CONSENTS_STATUS)
+                                .parameter(IdKeys.CONSENT_ID, consentId))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
                 .get(ConsentStatusResponse.class);
