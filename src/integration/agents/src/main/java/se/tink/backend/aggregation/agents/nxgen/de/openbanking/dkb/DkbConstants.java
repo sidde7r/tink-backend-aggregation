@@ -87,12 +87,6 @@ public final class DkbConstants {
     }
 
     @NoArgsConstructor(access = PRIVATE)
-    public static class Configuration {
-
-        public static final String LOCALHOST = "127.0.0.1";
-    }
-
-    @NoArgsConstructor(access = PRIVATE)
     public static class FormKeys {
 
         public static final String GRANT_TYPE = "grant_type";

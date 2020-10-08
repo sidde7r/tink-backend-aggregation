@@ -16,9 +16,9 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Value;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -33,17 +33,22 @@ public class DkbAuthRequestsFactory {
 
     private final DkbConfiguration config;
     private final DkbStorage storage;
+    private final DkbUserIpInformation dkbUserIpInformation;
 
-    public DkbAuthRequestsFactory(DkbConfiguration config, DkbStorage storage) {
+    public DkbAuthRequestsFactory(
+            DkbConfiguration config,
+            DkbStorage storage,
+            DkbUserIpInformation dkbUserIpInformation) {
         this.config = config;
         this.storage = storage;
+        this.dkbUserIpInformation = dkbUserIpInformation;
     }
 
     private HttpRequestBuilder newRequest(String urlPath) {
         return getRequestBuilder(config.getBaseUrl() + urlPath)
                 .accept(APPLICATION_JSON_TYPE)
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.LOCALHOST)
+                .header(HeaderKeys.PSU_IP_ADDRESS, dkbUserIpInformation.getUserIp())
                 .acceptLanguage(US);
     }
 

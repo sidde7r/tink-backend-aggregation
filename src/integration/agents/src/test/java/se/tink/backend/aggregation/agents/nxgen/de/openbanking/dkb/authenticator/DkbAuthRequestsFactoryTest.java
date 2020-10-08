@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.ConsentAuthorizationMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.ConsentAuthorizationOtp;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.SelectedAuthMethod;
@@ -39,8 +40,10 @@ public class DkbAuthRequestsFactoryTest {
 
     private DkbConfiguration configMock = mock(DkbConfiguration.class);
     private DkbStorage storageMock = mock(DkbStorage.class);
+    private DkbUserIpInformation dkbUserIpInformation = mock(DkbUserIpInformation.class);
 
-    private DkbAuthRequestsFactory tested = new DkbAuthRequestsFactory(configMock, storageMock);
+    private DkbAuthRequestsFactory tested =
+            new DkbAuthRequestsFactory(configMock, storageMock, dkbUserIpInformation);
 
     @Before
     public void setupMocks() {

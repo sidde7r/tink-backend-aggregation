@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.QueryKeys;
@@ -23,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @Slf4j
@@ -32,7 +30,7 @@ public final class DkbApiClient {
 
     private final TinkHttpClient client;
     private final DkbStorage storage;
-    private final CredentialsRequest credentialsRequest;
+    private final DkbUserIpInformation dkbUserIpInformation;
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
@@ -53,9 +51,9 @@ public final class DkbApiClient {
     }
 
     private void addPsuIpAddressHeaderIfManualRefresh(RequestBuilder requestBuilder) {
-        if (credentialsRequest.isManual()) {
+        if (dkbUserIpInformation.isManualRequest()) {
             log.info("Request is attended -- adding PSU header");
-            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, Configuration.LOCALHOST);
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, dkbUserIpInformation.getUserIp());
         } else {
             log.info("Request is unattended -- omitting PSU header");
         }

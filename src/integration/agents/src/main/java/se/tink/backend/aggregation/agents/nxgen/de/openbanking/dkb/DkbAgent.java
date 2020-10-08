@@ -61,7 +61,7 @@ public final class DkbAgent extends NextGenerationAgent
                 persistentStorage,
                 dkbConfiguration,
                 supplementalInformationHelper,
-                request);
+                new DkbUserIpInformation(request.isManual(), userIp));
         moduleDependenciesRegistration.registerInternalModuleDependencies();
         return moduleDependenciesRegistration.createModuleDependenciesRegistry();
     }
