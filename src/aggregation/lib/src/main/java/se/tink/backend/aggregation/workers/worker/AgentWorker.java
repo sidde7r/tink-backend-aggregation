@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.worker;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
@@ -8,6 +9,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.ratelimit.RateLimitedExecutorService;
@@ -21,6 +24,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentWorker implements Managed {
+    private static final Logger log = LoggerFactory.getLogger(AgentWorker.class);
     private static final int NUMBER_OF_THREADS = 1000;
     private static final MetricId AGGREGATION_OPERATION_TASKS_METRIC_NAME =
             MetricId.newId("aggregation_operation_tasks");
@@ -126,6 +130,8 @@ public class AgentWorker implements Managed {
 
     @Override
     public void stop() throws Exception {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        log.info("Initiated shutdown of thread pools");
         rateLimitedExecutorService.stop();
 
         ExecutorServiceUtils.shutdownExecutor(
@@ -134,6 +140,7 @@ public class AgentWorker implements Managed {
                 SHUTDOWN_TIMEOUT_SECONDS,
                 TimeUnit.SECONDS);
         aggregationExecutorService = null;
+        log.info("Shutdown took {} seconds", stopwatch.elapsed(TimeUnit.SECONDS));
     }
 
     public void execute(AgentWorkerOperation operation) throws Exception {

@@ -177,7 +177,7 @@ public class NemIdIFrameController {
     private void validateCredentials(WebDriver driver) throws LoginException {
         boolean isValid = false;
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 120; i++) {
             checkForErrorMessage(driver);
             if (isApproveWithKeyAppPageRendered(driver)) {
                 isValid = true;
@@ -187,7 +187,10 @@ public class NemIdIFrameController {
         }
 
         if (!isValid) {
-            throw LoginError.INVALIDATED_CREDENTIALS.exception("Can't validate NemId credentials.");
+            log.warn(
+                    "Can't validate NemId = please verify page source: {}", driver.getPageSource());
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                    "Can't validate NemId credentials.");
         }
     }
 

@@ -232,7 +232,7 @@ public class NemIdIFrameControllerTest {
         Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
 
         // then
-        verify(sleeper, times(20)).sleepFor(1_000);
+        verify(sleeper, times(120)).sleepFor(1_000);
         // and
         assertThat(throwable)
                 .isInstanceOf(AuthenticationException.class)
