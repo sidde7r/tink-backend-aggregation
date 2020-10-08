@@ -5,16 +5,19 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.common.rpc.B
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountDetailsRequest extends BaseRequest {
+public class SavingAccountDetailsTransactionRequest extends BaseRequest {
     private Body body;
 
     @JsonObject
     public static class Body {
-        @JsonProperty("numeroConto")
+        @JsonProperty("numeroRapporto")
         private String accountNumber;
+
+        @JsonProperty("numMovimenti")
+        private int transactionsPerPage = 40;
     }
 
-    public AccountDetailsRequest(String accountNumber) {
+    public SavingAccountDetailsTransactionRequest(String accountNumber) {
         this.body = new Body();
         this.body.accountNumber = accountNumber;
     }

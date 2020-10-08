@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc;
+package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.common.rpc;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;

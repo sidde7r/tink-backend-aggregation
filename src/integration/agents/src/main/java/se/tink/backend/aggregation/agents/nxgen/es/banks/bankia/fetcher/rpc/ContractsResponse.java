@@ -25,7 +25,7 @@ public class ContractsResponse {
     private List<LoanAccountEntity> loanList;
 
     public List<AccountEntity> getAccounts() {
-        return accountsList;
+        return Optional.ofNullable(accountsList).orElse(Collections.emptyList());
     }
 
     public List<CardEntity> getCards() {
@@ -33,10 +33,10 @@ public class ContractsResponse {
     }
 
     public List<InvestmentAccountEntity> getInvestments() {
-        return investmentsList;
+        return Optional.ofNullable(investmentsList).orElse(Collections.emptyList());
     }
 
     public List<LoanAccountEntity> getLoans() {
-        return loanList;
+        return Optional.ofNullable(loanList).orElse(Collections.emptyList());
     }
 }

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity;
+package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.common.rpc;
 
 import java.util.Collections;
 import java.util.Map;
