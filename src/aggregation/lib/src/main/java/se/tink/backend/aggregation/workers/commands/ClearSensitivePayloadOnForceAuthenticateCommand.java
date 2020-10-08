@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.workers.commands;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 
 public class ClearSensitivePayloadOnForceAuthenticateCommand extends AgentWorkerCommand {
     private static final Logger log =
@@ -20,8 +22,10 @@ public class ClearSensitivePayloadOnForceAuthenticateCommand extends AgentWorker
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
         try {
+
             if (context.getAgent() instanceof PersistentLogin
-                    && context.getRequest().isForceAuthenticate()) {
+                    && context.getRequest().isForceAuthenticate()
+                    && isTestProvider(context.getRequest().getProvider())) {
 
                 log.info(
                         "Credentials contain - isForceAuthenticate: {}",
@@ -35,6 +39,10 @@ public class ClearSensitivePayloadOnForceAuthenticateCommand extends AgentWorker
             log.warn("Could not clear sensitive payload", clearSensitivePayload);
         }
         return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    public boolean isTestProvider(Provider provider) {
+        return provider != null && provider.getType() == ProviderTypes.TEST;
     }
 
     @Override
