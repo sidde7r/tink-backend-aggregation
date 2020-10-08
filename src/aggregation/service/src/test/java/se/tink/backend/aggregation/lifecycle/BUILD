@@ -1,4 +1,4 @@
-load("//tools/bzl:junit_old.bzl", "junit_test")
+load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "lifecycle",
@@ -16,14 +16,17 @@ junit_test(
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/libraries/draining",
+        "//src/libraries/queue_lib",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_jetty",
+        "//third_party:io_dropwizard_dropwizard_logging",
         "//third_party:io_dropwizard_dropwizard_metrics",
         "//third_party:javax_validation_validation_api",
         "//third_party:jetty_server9",
         "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
     ],
 )

@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.draining.DrainModeTask;
+import se.tink.libraries.queue.QueueConsumer;
 
 public class LifecycleTest {
     private DefaultServerFactory serverFactory;
@@ -74,10 +75,16 @@ public class LifecycleTest {
         when(injector.getInstance(ConfigurationValidator.class)).thenReturn(validator);
 
         setUpInjectorMock(injector, DrainModeTask.class);
+        setUpInjectorMock(injector, QueueConsumer.class);
 
         managedTppSecretsServiceClient =
                 setUpInjectorMock(injector, ManagedTppSecretsServiceClient.class);
-        agentWorker = setUpInjectorMock(injector, AgentWorker.class);
+
+        agentWorker =
+                spy(
+                        new AgentWorker(
+                                new se.tink.libraries.metrics.registry.MetricRegistry(), false));
+        when(injector.getInstance(AgentWorker.class)).thenReturn(agentWorker);
         setUpInjectorMock(injector, AgentDataAvailabilityTrackerClient.class);
 
         AggregationServiceContainer actualAggregationContainer = new AggregationServiceContainer();
