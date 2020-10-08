@@ -158,14 +158,15 @@ public class Xs2aDevelopersApiClient {
         return fetchedTransactions;
     }
 
-    public GetTransactionsResponse getTransactions(Account account, LocalDate dateFrom) {
+    public GetTransactionsResponse getTransactions(
+            Account account, LocalDate dateFrom, LocalDate toDate) {
         URL transactionFetchUrl =
                 new URL(configuration.getBaseUrl() + ApiServices.GET_TRANSACTIONS)
                         .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());
 
         return createFetchingRequest(transactionFetchUrl)
                 .queryParam(QueryKeys.DATE_FROM, DATE_FORMATTER.format(dateFrom))
-                .queryParam(QueryKeys.DATE_TO, DATE_FORMATTER.format(LocalDate.now()))
+                .queryParam(QueryKeys.DATE_TO, DATE_FORMATTER.format(toDate))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
     }

@@ -34,27 +34,18 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     protected final Xs2aDevelopersProviderConfiguration configuration;
-
+    protected final Xs2aDevelopersApiClient apiClient;
+    protected final Xs2aDevelopersAuthenticator authenticator;
     protected final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    protected Xs2aDevelopersApiClient apiClient;
-    protected Xs2aDevelopersAuthenticator oauth2Authenticator;
 
     protected Xs2aDevelopersTransactionalAgent(
             AgentComponentProvider componentProvider, String baseUrl) {
         super(componentProvider);
-
         configuration = getConfiguration(baseUrl);
-        apiClient = getApiClient(componentProvider);
-        oauth2Authenticator =
-                new Xs2aDevelopersAuthenticator(apiClient, persistentStorage, configuration);
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        this.client.setEidasProxy(configuration.getEidasProxy());
-        this.client.addFilter(new TransactionFetchRetryFilter());
+        apiClient = constructApiClient(componentProvider);
+        authenticator = constructXs2aAuthenticator(componentProvider);
+        transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController(componentProvider);
     }
 
     protected Xs2aDevelopersProviderConfiguration getConfiguration(String baseUrl) {
@@ -73,14 +64,45 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 organizationIdentifier, baseUrl, redirectUrl);
     }
 
-    protected Xs2aDevelopersApiClient getApiClient(AgentComponentProvider componentProvider) {
+    protected Xs2aDevelopersApiClient constructApiClient(AgentComponentProvider componentProvider) {
         return new Xs2aDevelopersApiClient(
-                client,
+                componentProvider.getTinkHttpClient(),
                 persistentStorage,
                 configuration,
                 request.isManual(),
                 userIp,
                 componentProvider.getRandomValueGenerator());
+    }
+
+    protected Xs2aDevelopersAuthenticator constructXs2aAuthenticator(
+            AgentComponentProvider componentProvider) {
+        return new Xs2aDevelopersAuthenticator(
+                apiClient,
+                persistentStorage,
+                configuration,
+                componentProvider.getLocalDateTimeSource());
+    }
+
+    protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            AgentComponentProvider agentComponentProvider) {
+        final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
+                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticator);
+
+        final TransactionFetcher<TransactionalAccount> transactionFetcher =
+                new TransactionKeyWithInitDateFromFetcherController<>(
+                        request,
+                        new Xs2aDevelopersTransactionDateFromFetcher(
+                                apiClient, agentComponentProvider.getLocalDateTimeSource()));
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController, updateController, accountFetcher, transactionFetcher);
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        this.client.setEidasProxy(configuration.getEidasProxy());
+        this.client.addFilter(new TransactionFetchRetryFilter());
     }
 
     @Override
@@ -89,7 +111,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        oauth2Authenticator,
+                        authenticator,
                         credentials,
                         strongAuthenticationState,
                         request);
@@ -120,18 +142,6 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return transactionalAccountRefreshController.fetchSavingsTransactions();
-    }
-
-    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
-                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, oauth2Authenticator);
-
-        final TransactionFetcher<TransactionalAccount> transactionFetcher =
-                new TransactionKeyWithInitDateFromFetcherController<>(
-                        request, new Xs2aDevelopersTransactionDateFromFetcher(apiClient));
-
-        return new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, accountFetcher, transactionFetcher);
     }
 
     @Override

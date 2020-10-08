@@ -23,9 +23,10 @@ public final class VdkAgent extends Xs2aDevelopersTransactionalAgent {
     }
 
     @Override
-    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            AgentComponentProvider agentComponentProvider) {
         final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
-                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, oauth2Authenticator);
+                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticator);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

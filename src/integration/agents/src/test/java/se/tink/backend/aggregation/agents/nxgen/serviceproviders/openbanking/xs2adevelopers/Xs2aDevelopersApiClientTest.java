@@ -65,6 +65,7 @@ public class Xs2aDevelopersApiClientTest {
         OAuth2Token oauth2Token =
                 OAuth2Token.create("TOKEN_TYPE", "ACCESS_TOKEN", "REFRESH_TOKEN", 1);
         tinkHttpClient = mock(TinkHttpClient.class);
+
         requestBuilder = mock(RequestBuilder.class);
         storage = mock(PersistentStorage.class);
 

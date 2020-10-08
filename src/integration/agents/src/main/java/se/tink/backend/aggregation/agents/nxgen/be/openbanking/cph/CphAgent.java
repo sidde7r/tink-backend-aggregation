@@ -23,9 +23,10 @@ public final class CphAgent extends Xs2aDevelopersTransactionalAgent {
     }
 
     @Override
-    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            AgentComponentProvider componentProvider) {
         final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
-                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, oauth2Authenticator);
+                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticator);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.ErrorResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.KeyWithInitiDateFromFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -20,6 +21,7 @@ public class Xs2aDevelopersTransactionDateFromFetcher<A extends Account>
     private static final LocalDate START_DATE_ALL_HISTORY = LocalDate.ofEpochDay(0);
 
     private final Xs2aDevelopersApiClient apiClient;
+    private final LocalDateTimeSource localDateTimeSource;
 
     @Override
     public LocalDate minimalFromDate() {
@@ -35,7 +37,8 @@ public class Xs2aDevelopersTransactionDateFromFetcher<A extends Account>
     public TransactionKeyPaginatorResponse<String> fetchTransactionsFor(
             A account, LocalDate dateFrom) {
         try {
-            return apiClient.getTransactions(account, dateFrom);
+            return apiClient.getTransactions(
+                    account, dateFrom, localDateTimeSource.now().toLocalDate());
         } catch (HttpResponseException hre) {
             if (isConsentTimeoutException(hre)) {
                 return fetchTransactionsFor(account, START_DATE_90_DAYS);
