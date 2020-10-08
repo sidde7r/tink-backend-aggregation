@@ -66,14 +66,15 @@ public class TransactionalAccountBalanceMapper {
                                                         TRANSACTIONAL_ACCOUNT_BALANCE_PREFERRED_TYPES)));
     }
 
-    Optional<ExactCurrencyAmount> getAvailableBalance(Collection<AccountBalanceEntity> balances) {
+    public Optional<ExactCurrencyAmount> getAvailableBalance(
+            Collection<AccountBalanceEntity> balances) {
         return valueExtractor
                 .pickByValuePriority(
                         balances, AccountBalanceEntity::getType, AVAILABLE_BALANCE_PREFERRED_TYPES)
                 .map(AccountBalanceEntity::getAmount);
     }
 
-    Optional<ExactCurrencyAmount> calculateAvailableCredit(
+    public Optional<ExactCurrencyAmount> calculateAvailableCredit(
             Collection<AccountBalanceEntity> balances) {
 
         return balances.stream()
@@ -84,7 +85,8 @@ public class TransactionalAccountBalanceMapper {
                 .map(a -> ExactCurrencyAmount.of(a.getUnsignedAmount(), a.getCurrency()));
     }
 
-    Optional<ExactCurrencyAmount> calculateCreditLimit(Collection<AccountBalanceEntity> balances) {
+    public Optional<ExactCurrencyAmount> calculateCreditLimit(
+            Collection<AccountBalanceEntity> balances) {
         List<CreditLineEntity> creditLines = getAllCreditLines(balances);
 
         Option<ExactCurrencyAmount> creditLimit =
