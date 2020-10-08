@@ -52,7 +52,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.payment.enums.PaymentType;
 
-public final class BankdataApiClient {
+public class BankdataApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
@@ -87,7 +87,7 @@ public final class BankdataApiClient {
             this.clientId =
                     CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
         } catch (CertificateException e) {
-            throw new RuntimeException("Could not extract organization identifier!", e);
+            throw new IllegalStateException("Could not extract organization identifier!", e);
         }
     }
 
@@ -201,6 +201,17 @@ public final class BankdataApiClient {
                 .get(TransactionResponse.class);
     }
 
+    public TransactionResponse fetchNextTransactions(String nextTransactionsPath) {
+        final String requestId = UUID.randomUUID().toString();
+        final URL fullUrl = new URL(baseUrl + Endpoints.AIS_PRODUCT + nextTransactionsPath);
+
+        return createRequestInSession(fullUrl)
+                .header(HeaderKeys.X_REQUEST_ID, requestId)
+                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .get(TransactionResponse.class);
+    }
+
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest paymentRequest, PaymentType type) throws PaymentException {
         final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
@@ -291,7 +302,7 @@ public final class BankdataApiClient {
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl);
     }
 
-    public void getTokenWithClientCredentials() {
+    private void getTokenWithClientCredentials() {
         final InitialTokenRequest request =
                 new InitialTokenRequest(FormValues.CLIENT_CREDENTIALS, FormValues.SCOPE, clientId);
         URL url = new URL(baseAuthUrl + Endpoints.TOKEN);

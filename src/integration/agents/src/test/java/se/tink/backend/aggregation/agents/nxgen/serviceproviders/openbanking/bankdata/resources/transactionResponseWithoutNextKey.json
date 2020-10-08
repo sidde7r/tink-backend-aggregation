@@ -1,0 +1,56 @@
+{
+    "account": {
+        "iban": "DK123123123",
+        "bban": "123123123",
+        "currency": "DKK"
+    },
+    "transactions": {
+        "booked": [
+            {
+                "collection": false,
+                "partOfCollection": false,
+                "transactionId": "111111",
+                "entryReference": "111111",
+                "bookingDate": "2019-09-11",
+                "valueDate": "2019-09-11",
+                "transactionAmount": {
+                    "currency": "DKK",
+                    "amount": "-10.00"
+                },
+                "remittanceInformationUnstructured": "DK 12345 Testo",
+                "_links": {
+                    "transactionDetails": {
+                        "href": "/v1/accounts/00001111/transactions/111111"
+                    }
+                }
+            },
+            {
+                "collection": false,
+                "partOfCollection": false,
+                "transactionId": "222222",
+                "entryReference": "2222222222",
+                "bookingDate": "2019-09-11",
+                "valueDate": "2019-09-11",
+                "transactionAmount": {
+                    "currency": "DKK",
+                    "amount": "-11.11"
+                },
+                "remittanceInformationUnstructured": "DK 11123 Testotesto",
+                "_links": {
+                    "transactionDetails": {
+                        "href": "/v1/accounts/00001111/transactions/222222"
+                    }
+                }
+            }
+        ],
+        "pending": [],
+        "_links": {
+            "account": {
+                "href": "/v1/accounts/00001111"
+            },
+            "first": {
+                "href": "/v1/accounts/00001111/transactions?bookingStatus=both&dateFrom=2019-09-11&dateTo=2019-12-11&withBalance=false"
+            }
+        }
+    }
+}

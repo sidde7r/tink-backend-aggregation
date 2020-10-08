@@ -1171,7 +1171,7 @@ maven_install(
         "org.springframework:spring-test:%s" % SPRING_FRAMEWORK_VERSION,
         "org.springframework:spring-web:%s" % SPRING_FRAMEWORK_VERSION,
         "org.springframework:spring-webmvc:%s" % SPRING_FRAMEWORK_VERSION,
-        "org.testcontainers:testcontainers:1.14.1",
+        "org.testcontainers:testcontainers:1.15.0-rc2",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party/system_tests:system_tests_install.json",
