@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -14,8 +15,11 @@ public class UniversoApiClient extends Xs2aDevelopersApiClient {
     public UniversoApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            UniversoProviderConfiguration configuration) {
-        super(client, persistentStorage, configuration);
+            UniversoProviderConfiguration configuration,
+            boolean isManual,
+            String userIp,
+            RandomValueGenerator randomValueGenerator) {
+        super(client, persistentStorage, configuration, isManual, userIp, randomValueGenerator);
         this.configuration = configuration;
     }
 

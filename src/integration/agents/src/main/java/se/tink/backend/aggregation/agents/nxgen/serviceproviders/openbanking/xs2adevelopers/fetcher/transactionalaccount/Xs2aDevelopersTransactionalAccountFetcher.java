@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@AllArgsConstructor
 public class Xs2aDevelopersTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
@@ -24,16 +26,10 @@ public class Xs2aDevelopersTransactionalAccountFetcher
     private final Xs2aDevelopersApiClient apiClient;
     private final Xs2aDevelopersAuthenticator authenticator;
 
-    public Xs2aDevelopersTransactionalAccountFetcher(
-            Xs2aDevelopersApiClient apiClient, Xs2aDevelopersAuthenticator authenticator) {
-        this.apiClient = apiClient;
-        this.authenticator = authenticator;
-    }
-
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
-        return getAccountsResponse.getAccountList().stream()
+        return getAccountsResponse.getAccounts().stream()
                 .map(this::transformAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -45,6 +41,7 @@ public class Xs2aDevelopersTransactionalAccountFetcher
         return accountEntity.toTinkAccount();
     }
 
+    // Agents that use this should probably be moved to use Xs2aDevelopersTransactionDateFromFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {

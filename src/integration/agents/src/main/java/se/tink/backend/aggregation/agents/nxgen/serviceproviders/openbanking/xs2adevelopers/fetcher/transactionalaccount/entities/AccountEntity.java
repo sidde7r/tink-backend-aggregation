@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BerlinGroupBalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -59,10 +58,9 @@ public class AccountEntity {
                                 .withAccountName(getAccountName())
                                 .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                                 .build())
-                .addHolderName(getAccountName())
+                .addHolderName(ownerName)
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(getAccountNumber())
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
                 .build();
     }
 
@@ -103,7 +101,6 @@ public class AccountEntity {
                 .setApiIdentifier(resourceId)
                 .addHolderName(ownerName)
                 .setBankIdentifier(getAccountNumber())
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
                 .build();
     }
 
@@ -121,7 +118,7 @@ public class AccountEntity {
     }
 
     private String getAccountName() {
-        return Strings.nullToEmpty(!Strings.isNullOrEmpty(name) ? name : getAccountType());
+        return ObjectUtils.firstNonNull(name, product, getAccountType());
     }
 
     private String getAccountType() {

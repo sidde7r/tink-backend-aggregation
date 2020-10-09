@@ -12,8 +12,8 @@ public class CommerzBankAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("de", "de-commerzbank-ob")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .setFinancialInstitutionId("commerzbank")
                         .setAppId("tink");
     }

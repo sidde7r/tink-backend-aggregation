@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -35,7 +36,7 @@ public class PostbankApiClientTest {
                 new PostbankApiClient(
                         tinkClient,
                         null,
-                        "",
+                        new DeutscheHeaderValues("", ""),
                         new DeutscheMarketConfiguration(TEST_URL, "PSU_ID_TYPE"));
     }
 

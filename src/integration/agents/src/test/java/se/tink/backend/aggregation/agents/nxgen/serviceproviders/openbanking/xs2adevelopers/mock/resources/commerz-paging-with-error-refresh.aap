@@ -1,0 +1,359 @@
+REQUEST 1
+POST https://psd2.api.commerzbank.com/berlingroup/v1/consents
+Accept: application/json
+Content-Type: application/json
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+PSU-IP-ADDRESS: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+{"access":{"accounts":null,"allPsd2":"allAccounts","availableAccounts":null,"availableAccountsWithBalances":null,"balances":null,"transactions":null},"combinedServiceIndicator":false,"frequencyPerDay":4,"recurringIndicator":true,"validUntil":"1992-07-08"}
+
+RESPONSE 1
+201
+Date: Tue, 06 Oct 2020 07:37:26 GMT
+Date: Tue, 06 Oct 2020 07:37:27 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Strict-Transport-Security: *** MASKED ***
+Strict-Transport-Security: *** MASKED ***
+ASPSP-SCA-Approach: *** MASKED ***
+Location: *** MASKED ***
+X-Content-Type-Options: *** MASKED ***
+X-XSS-Protection: *** MASKED ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: *** MASKED ***
+Content-Length: 649
+
+{
+  "consentStatus" : "received",
+  "consentId" : "1601969847-ba91d97",
+  "_links" : {
+    "scaOAuth" : {
+      "href" : "https://psd2.redirect.commerzbank.com/public/berlingroup/authorize/fea4a2df-b0f2-4999-8422-87e7ec4d1130"
+    },
+    "scaStatus" : {
+      "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/consents/1601969847-ba91d97/authorisations/fea4a2df-b0f2-4999-8422-87e7ec4d1130"
+    },
+    "status" : {
+      "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/consents/1601969847-ba91d97/status"
+    },
+    "self" : {
+      "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/consents/1601969847-ba91d97"
+    }
+  }
+}
+
+REQUEST 2
+POST https://psd2.api.commerzbank.com/berlingroup/v1/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+201
+Date: Tue, 06 Oct 2020 07:38:13 GMT
+Date: Tue, 06 Oct 2020 07:38:13 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+Strict-Transport-Security: *** MASKED ***
+Strict-Transport-Security: *** MASKED ***
+X-Content-Type-Options: *** MASKED ***
+X-XSS-Protection: *** MASKED ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: *** MASKED ***
+Content-Length: 329
+
+{
+  "access_token" : "asdf",
+  "token_type" : "Bearer",
+  "expires_in" : 3600,
+  "refresh_token" : "zxcv",
+  "scope" : "AIS:1601969847-ba91d97"
+}
+
+REQUEST 3
+GET https://psd2.api.commerzbank.com/berlingroup/v1/accounts
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer asdf
+Consent-Id: 1601969847-ba91d97
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-ADDRESS: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Tue, 06 Oct 2020 07:38:14 GMT
+Date: Tue, 06 Oct 2020 07:38:14 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Strict-Transport-Security: *** MASKED ***
+Strict-Transport-Security: *** MASKED ***
+X-Content-Type-Options: *** MASKED ***
+X-XSS-Protection: *** MASKED ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: *** MASKED ***
+Content-Length: 813
+
+{
+  "accounts" : [ {
+    "resourceId" : "cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22",
+    "bic" : "COBADEFFXXX",
+    "currency" : "EUR",
+    "ownerName" : "Full Name Even With Middle Names",
+    "cashAccountType" : "CACC",
+    "iban" : "DE9576040061036235462326",
+    "_links" : {
+      "account" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22"
+      },
+      "balances" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/balances"
+      },
+      "transactions" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions"
+      }
+    },
+    "product" : "0-Euro-Konto Vorteil"
+  } ]
+}
+
+REQUEST 4
+GET https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/balances
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer asdf
+Consent-Id: 1601969847-ba91d97
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-ADDRESS: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Tue, 06 Oct 2020 07:38:15 GMT
+Date: Tue, 06 Oct 2020 07:38:15 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Strict-Transport-Security: *** MASKED ***
+Strict-Transport-Security: *** MASKED ***
+X-Content-Type-Options: *** MASKED ***
+X-XSS-Protection: *** MASKED ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: *** MASKED ***
+Content-Length: 264
+
+{
+  "account" : {
+    "iban" : "DE9576040061036235462326",
+    "currency" : "EUR"
+  },
+  "balances" : [ {
+    "balanceAmount" : {
+      "currency" : "EUR",
+      "amount" : 96.510
+    },
+    "referenceDate" : "2020-10-06",
+    "balanceType" : "closingBooked"
+  } ]
+}
+
+
+REQUEST 5
+GET https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=1992-04-10&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer asdf
+Consent-Id: 1601969847-ba91d97
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-ADDRESS: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Tue, 06 Oct 2020 07:03:22 GMT
+Date: Tue, 06 Oct 2020 07:03:23 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Strict-Transport-Security: *** MASKED ***
+Strict-Transport-Security: *** MASKED ***
+X-Content-Type-Options: *** MASKED ***
+X-XSS-Protection: *** MASKED ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: *** MASKED ***
+Transfer-Encoding: chunked
+
+{
+  "account" : {
+    "iban" : "DE9576040061036235462326",
+    "currency" : "EUR"
+  },
+  "transactions" : {
+    "booked" : [ {
+      "endToEndId" : "Not provided",
+      "bookingDate" : "2020-09-30",
+      "valueDate" : "2020-09-30",
+      "transactionAmount" : {
+        "currency" : "EUR",
+        "amount" : 0
+      },
+      "creditorAccount" : { },
+      "debtorName" : "Rechnungsabschluss",
+      "debtorAccount" : { },
+      "remittanceInformationUnstructured" : "asdfzxcv234"
+    }, {
+      "endToEndId" : "NOTPROVIDED",
+      "bookingDate" : "2020-09-22",
+      "valueDate" : "2020-09-22",
+      "transactionAmount" : {
+        "currency" : "EUR",
+        "amount" : 10
+      },
+      "creditorAccount" : {
+        "iban" : "DE9576040061036235462326"
+      },
+      "debtorName" : "Name Surname",
+      "debtorAccount" : {
+        "iban" : "DE4312030000136235462326"
+      },
+      "remittanceInformationUnstructured" : "asdfzxcv234"
+    }],
+    "pending" : [ ],
+    "_links" : {
+      "next" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=2020-10-06&bookingStatus=BOTH&withBalance=false&page=1"
+      },
+      "first" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=2020-10-06&bookingStatus=BOTH&withBalance=false&page=0"
+      },
+      "last" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=2020-10-06&bookingStatus=BOTH&withBalance=false&page=1"
+      },
+      "account" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22?withBalance=false"
+      },
+      "balances" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/balances"
+      },
+      "transactions" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions"
+      }
+    }
+  }
+}
+
+REQUEST 6
+GET https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=2020-10-06&bookingStatus=BOTH&withBalance=false&page=1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer asdf
+Consent-Id: 1601969847-ba91d97
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-ADDRESS: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 6 SET STATE1
+400
+Date: Tue, 06 Oct 2020 07:03:23 GMT
+Date: Tue, 06 Oct 2020 07:03:24 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Strict-Transport-Security: *** MASKED ***
+Strict-Transport-Security: *** MASKED ***
+X-Content-Type-Options: *** MASKED ***
+X-XSS-Protection: *** MASKED ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: *** MASKED ***
+Content-Length: 143
+
+{
+  "tppMessages" : [ {
+    "category" : "ERROR",
+    "code" : "PARAMETER_NOT_CONSISTENT",
+    "text" : "requested page does not exist"
+  } ]
+}
+
+REQUEST 7 MATCH STATE1
+GET https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=2020-10-06&bookingStatus=BOTH&withBalance=false&page=1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer asdf
+Consent-Id: 1601969847-ba91d97
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-ADDRESS: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Date: Tue, 06 Oct 2020 07:03:24 GMT
+Date: Tue, 06 Oct 2020 07:03:25 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Strict-Transport-Security: *** MASKED ***
+Strict-Transport-Security: *** MASKED ***
+X-Content-Type-Options: *** MASKED ***
+X-XSS-Protection: *** MASKED ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: *** MASKED ***
+Transfer-Encoding: chunked
+
+{
+  "account" : {
+    "iban" : "DE9576040061036235462326",
+    "currency" : "EUR"
+  },
+  "transactions" : {
+    "booked" : [ {
+      "endToEndId" : "Not provided",
+      "bookingDate" : "2020-07-30",
+      "valueDate" : "2020-09-30",
+      "transactionAmount" : {
+        "currency" : "EUR",
+        "amount" : 0
+      },
+      "creditorAccount" : { },
+      "debtorName" : "Rechnungsabschluss",
+      "debtorAccount" : { },
+      "remittanceInformationUnstructured" : "asdfzxcv234"
+    }],
+    "pending" : [ ],
+    "_links" : {
+      "first" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=2020-10-06&bookingStatus=BOTH&withBalance=false&page=0"
+      },
+      "last" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=2020-10-06&bookingStatus=BOTH&withBalance=false&page=1"
+      },
+      "account" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22?withBalance=false"
+      },
+      "balances" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/balances"
+      },
+      "transactions" : {
+        "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions"
+      }
+    }
+  }
+}

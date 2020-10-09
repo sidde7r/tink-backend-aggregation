@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.norisbank;
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
@@ -16,8 +17,8 @@ public final class NorisbankAgent extends DeutscheBankAgent {
     }
 
     @Override
-    protected DeutscheBankApiClient constructApiClient(String redirectUrl) {
+    protected DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues) {
         return new DeutscheBankApiClient(
-                client, persistentStorage, redirectUrl, NORIS_CONFIGURATION);
+                client, persistentStorage, headerValues, NORIS_CONFIGURATION);
     }
 }

@@ -41,7 +41,7 @@ public class Xs2aDevelopersCreditCardAccountFetcherTest {
     @Test
     public void shouldReturnProperlyMappedAccount() {
         // given
-        AccountEntity accountEntity = SINGLE_CREDIT_CARD_ACCOUNT_RESPONSE.getAccountList().get(0);
+        AccountEntity accountEntity = SINGLE_CREDIT_CARD_ACCOUNT_RESPONSE.getAccounts().get(0);
         given(apiClient.getAccounts()).willReturn(SINGLE_CREDIT_CARD_ACCOUNT_RESPONSE);
         given(apiClient.getBalance(accountEntity)).willReturn(BALANCE_RESPONSE);
 
@@ -64,9 +64,9 @@ public class Xs2aDevelopersCreditCardAccountFetcherTest {
     public void shouldOnlyMapCreditCardAccounts() {
         // given
         AccountEntity accountEntityOne =
-                TWO_CREDIT_CARD_ACCOUNT_AND_FEW_OTHERS_RESPONSE.getAccountList().get(0);
+                TWO_CREDIT_CARD_ACCOUNT_AND_FEW_OTHERS_RESPONSE.getAccounts().get(0);
         AccountEntity accountEntityTwo =
-                TWO_CREDIT_CARD_ACCOUNT_AND_FEW_OTHERS_RESPONSE.getAccountList().get(3);
+                TWO_CREDIT_CARD_ACCOUNT_AND_FEW_OTHERS_RESPONSE.getAccounts().get(3);
         given(apiClient.getAccounts()).willReturn(TWO_CREDIT_CARD_ACCOUNT_AND_FEW_OTHERS_RESPONSE);
         given(apiClient.getBalance(accountEntityOne)).willReturn(BALANCE_RESPONSE);
         given(apiClient.getBalance(accountEntityTwo)).willReturn(BALANCE_RESPONSE);

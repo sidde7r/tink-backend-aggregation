@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 import com.google.common.base.Strings;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.IdKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryKeys;
@@ -32,23 +31,24 @@ public class DeutscheBankApiClient {
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected final DeutscheMarketConfiguration marketConfiguration;
-    protected final String redirectUrl;
+    private final DeutscheHeaderValues headerValues;
 
     public DeutscheBankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            String redirectUrl,
+            DeutscheHeaderValues headerValues,
             DeutscheMarketConfiguration marketConfiguration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.redirectUrl = redirectUrl;
+        this.headerValues = headerValues;
         this.marketConfiguration = marketConfiguration;
     }
 
     protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
     }
 
     protected RequestBuilder createRequestInSession(URL url) {
@@ -67,18 +67,14 @@ public class DeutscheBankApiClient {
 
     protected ConsentResponse getConsent(
             ConsentRequest consentRequest, String state, String psuId) {
-        return client.request(new URL(marketConfiguration.getBaseUrl().concat(Urls.CONSENT)))
+        URL redirectWithState =
+                new URL(headerValues.getRedirectUrl()).queryParam(QueryKeys.STATE, state);
+        return createRequest(new URL(marketConfiguration.getBaseUrl().concat(Urls.CONSENT)))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                 .header(HeaderKeys.PSU_ID, psuId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
-                .header(
-                        HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
-                .header(
-                        HeaderKeys.TPP_NOK_REDIRECT_URI,
-                        new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
-                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectWithState)
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectWithState)
                 .post(ConsentResponse.class, consentRequest);
     }
 
@@ -97,7 +93,6 @@ public class DeutscheBankApiClient {
                         new URL(marketConfiguration.getBaseUrl() + Urls.CONSENTS_STATUS)
                                 .parameter(IdKeys.CONSENT_ID, consentId))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
                 .get(ConsentStatusResponse.class);
     }
 

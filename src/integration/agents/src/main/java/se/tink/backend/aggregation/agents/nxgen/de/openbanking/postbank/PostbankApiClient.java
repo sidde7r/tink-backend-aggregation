@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenti
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.UpdateAuthorisationRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.utils.PostbankCryptoUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities.GlobalConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
@@ -30,9 +30,9 @@ public class PostbankApiClient extends DeutscheBankApiClient {
     PostbankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            String redirectUrl,
+            DeutscheHeaderValues headerValues,
             DeutscheMarketConfiguration marketConfiguration) {
-        super(client, persistentStorage, redirectUrl, marketConfiguration);
+        super(client, persistentStorage, headerValues, marketConfiguration);
     }
 
     public ConsentResponse getConsents(String psuId) {
@@ -42,7 +42,6 @@ public class PostbankApiClient extends DeutscheBankApiClient {
                     .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                     .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                     .header(HeaderKeys.PSU_ID, psuId)
-                    .header(HeaderKeys.PSU_IP_ADDRESS, Configuration.PSU_IP_ADDRESS)
                     .type(MediaType.APPLICATION_JSON)
                     .post(ConsentResponse.class, consentRequest);
         } catch (HttpResponseException hre) {

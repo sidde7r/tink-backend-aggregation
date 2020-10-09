@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.deutschebank;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities.BankDrivenAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
@@ -13,9 +14,9 @@ public class DeutscheBankDEApiClient extends DeutscheBankApiClient {
     DeutscheBankDEApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            String redirectUrl,
+            DeutscheHeaderValues headerValues,
             DeutscheMarketConfiguration marketConfiguration) {
-        super(client, persistentStorage, redirectUrl, marketConfiguration);
+        super(client, persistentStorage, headerValues, marketConfiguration);
     }
 
     @Override

@@ -26,12 +26,19 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
 
     public DeutscheBankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        DeutscheHeaderValues headerValues = setupHeaderValues(componentProvider);
+        apiClient = constructApiClient(headerValues);
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    private DeutscheHeaderValues setupHeaderValues(AgentComponentProvider componentProvider) {
         String redirectUrl =
                 getAgentConfigurationController()
                         .getAgentConfiguration(DeutscheBankConfiguration.class)
                         .getRedirectUrl();
-        apiClient = constructApiClient(redirectUrl);
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
+        return new DeutscheHeaderValues(
+                redirectUrl, componentProvider.getCredentialsRequest().isManual() ? userIp : null);
     }
 
     @Override
@@ -40,7 +47,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
         client.setEidasProxy(configuration.getEidasProxy());
     }
 
-    protected abstract DeutscheBankApiClient constructApiClient(String redirectUrl);
+    protected abstract DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues);
 
     @Override
     protected Authenticator constructAuthenticator() {
