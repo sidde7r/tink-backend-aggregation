@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.RegioBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.ConsentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.VolksbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
@@ -64,7 +63,7 @@ public final class VolksbankAgent
 
         bankPath = payload[1];
 
-        final VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, bankPath);
+        final VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(bankPath);
 
         final AgentConfiguration<VolksbankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
