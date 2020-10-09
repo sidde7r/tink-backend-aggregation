@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
@@ -37,7 +36,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.types.timers.Timer.Context;
-import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.user.rpc.User;
 
 public class LoginAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
@@ -181,18 +179,12 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     public boolean shouldForceAuthenticate() {
-        boolean result =
-                ForceAuthentication.shouldForceAuthentication(context.getRequest())
-                        && !isTestProvider(context.getRequest().getProvider());
+        boolean result = ForceAuthentication.shouldForceAuthentication(context.getRequest());
         logger.info(
                 "RefreshInformationRequest contain - isForceAuthenticate: {}, credentialsId: {}",
                 result,
                 credentials.getId());
         return result;
-    }
-
-    public boolean isTestProvider(Provider provider) {
-        return provider != null && provider.getType() == ProviderTypes.TEST;
     }
 
     private Optional<Boolean> isLoggedIn() throws Exception {
