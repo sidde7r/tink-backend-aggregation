@@ -32,7 +32,7 @@ public class ExpireSessionAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         if (isManualRefresh) {
             return AgentWorkerCommandResult.CONTINUE;
         }
@@ -67,7 +67,7 @@ public class ExpireSessionAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         // NOP
     }
 }

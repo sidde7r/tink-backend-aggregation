@@ -38,7 +38,7 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
 
         log.info(
                 "Credentials contain - supplemental Information: {}",
@@ -56,7 +56,7 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         if (!setStatusUpdatedPredicate.test(context)) {
             return;
         }

@@ -117,7 +117,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
 
         logger.info(CREDENTIAL_SUPPLEMENTAL_INFO_LOG, credentials.getSupplementalInformation());
         logger.info(CREDENTIAL_STATUS_PAYLOAD_LOG, credentials.getStatusPayload());
@@ -351,7 +351,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
 
         // If we did not successfully execute in case when credentials has been just created,
         // there's no point in doing anything here.

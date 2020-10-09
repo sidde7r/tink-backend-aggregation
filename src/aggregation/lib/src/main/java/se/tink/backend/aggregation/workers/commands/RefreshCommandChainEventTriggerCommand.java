@@ -34,14 +34,14 @@ public class RefreshCommandChainEventTriggerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         credentialsEventProducer.sendCredentialsRefreshCommandChainStarted(
                 credentials, appId, correlationId, clusterId, manual, refreshableItems);
         return AgentWorkerCommandResult.CONTINUE;
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         credentialsEventProducer.sendCredentialsRefreshCommandChainFinished(
                 credentials, appId, correlationId, clusterId, manual);
     }

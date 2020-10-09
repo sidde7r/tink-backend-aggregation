@@ -57,7 +57,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
     // refresh account and send supplemental information to system
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         // Get accounts that have been fetched from the bank.
         List<Pair<Account, AccountFeatures>> accountsInContext =
                 context.getCachedAccountsWithFeatures();
@@ -105,7 +105,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     }
 
     @Override
-    public void postProcess() {}
+    protected void doPostProcess() {}
 
     private void filterOptInAccounts(List<String> optInAccountUniqueIds) {
         this.context

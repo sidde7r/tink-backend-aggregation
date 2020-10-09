@@ -49,7 +49,7 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         Provider provider = context.getRequest().getProvider();
 
         if (blacklistedProviderStatuses.containsKey(provider.getStatus())) {
@@ -86,7 +86,7 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         // Deliberately left empty.
     }
 }

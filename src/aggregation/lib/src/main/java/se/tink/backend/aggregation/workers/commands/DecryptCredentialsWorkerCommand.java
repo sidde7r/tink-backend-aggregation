@@ -30,7 +30,7 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         CredentialsRequest request = context.getRequest();
 
         didDecryptCredential = credentialsCrypto.decrypt(request);
@@ -42,7 +42,7 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         if (!didDecryptCredential) {
             // Do not encrypt it again since we didn't do anything with it.
             return;

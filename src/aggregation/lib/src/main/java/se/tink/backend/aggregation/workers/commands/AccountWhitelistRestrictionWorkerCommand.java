@@ -40,7 +40,7 @@ public class AccountWhitelistRestrictionWorkerCommand extends AgentWorkerCommand
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         // Always filter excluded accounts.
         this.context.getAccountDataCache().addFilter(this::filterExcludedAccounts);
 
@@ -63,7 +63,7 @@ public class AccountWhitelistRestrictionWorkerCommand extends AgentWorkerCommand
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         // Intentionally left empty.
     }
 }

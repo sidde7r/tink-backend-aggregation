@@ -50,7 +50,7 @@ public class SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
         MetricAction action = null;
         try {
@@ -120,7 +120,7 @@ public class SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         // Deliberately left empty.
     }
 

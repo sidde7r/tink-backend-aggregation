@@ -25,7 +25,7 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         agentConfigurationController =
                 new AgentConfigurationController(
                         tppSecretsServiceClient,
@@ -41,7 +41,7 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         Optional.ofNullable(agentConfigurationController)
                 .ifPresent(AgentConfigurationControllerable::completeSecretValuesSubject);
     }

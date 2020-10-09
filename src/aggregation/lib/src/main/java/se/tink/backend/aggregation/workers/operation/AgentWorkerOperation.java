@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
@@ -42,6 +43,8 @@ public class AgentWorkerOperation implements Runnable {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final String AGENT_WORKER_OPERATION_MDC_KEY = "operation";
+
     private List<AgentWorkerCommand> commands;
     private AgentWorkerContext context;
     private String operationMetricName;
@@ -73,6 +76,15 @@ public class AgentWorkerOperation implements Runnable {
 
     @Override
     public void run() {
+        MDC.put(AGENT_WORKER_OPERATION_MDC_KEY, this.operationMetricName);
+        try {
+            internalRun();
+        } finally {
+            MDC.remove(AGENT_WORKER_OPERATION_MDC_KEY);
+        }
+    }
+
+    private void internalRun() {
         try {
             context.start();
         } catch (Exception e) {

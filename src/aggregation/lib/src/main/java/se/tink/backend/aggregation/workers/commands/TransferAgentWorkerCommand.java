@@ -65,7 +65,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     }
 
     @Override
-    public AgentWorkerCommandResult execute() {
+    protected AgentWorkerCommandResult doExecute() {
         Agent agent = context.getAgent();
         Catalog catalog = context.getCatalog();
 
@@ -442,7 +442,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         // Deliberately left empty.
     }
 

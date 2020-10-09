@@ -114,7 +114,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    protected AgentWorkerCommandResult doExecute() throws Exception {
         try {
             log.info(
                     "[Restrict] Restrictions for credentialsId: {} are: {}",
@@ -287,7 +287,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         if (getRefreshableItem() == RefreshableItem.IDENTITY_DATA) {
             try {
                 sendIdentityToAgentDataAvailabilityTracker();

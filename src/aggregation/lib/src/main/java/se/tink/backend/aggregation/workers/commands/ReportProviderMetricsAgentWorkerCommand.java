@@ -54,14 +54,14 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
     }
 
     @Override
-    public AgentWorkerCommandResult execute() {
+    protected AgentWorkerCommandResult doExecute() {
         context.setTimeLeavingQueue(System.currentTimeMillis());
 
         return AgentWorkerCommandResult.CONTINUE;
     }
 
     @Override
-    public void postProcess() throws Exception {
+    protected void doPostProcess() throws Exception {
         Credentials credentials = context.getRequest().getCredentials();
 
         // Update the error meters.
