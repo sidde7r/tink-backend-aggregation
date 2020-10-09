@@ -13,6 +13,10 @@ public class ClearSensitivePayloadOnForceAuthenticateCommand extends AgentWorker
     private static final Logger log =
             LoggerFactory.getLogger(ClearSensitivePayloadOnForceAuthenticateCommand.class);
 
+    /* This worker command checks if the incoming credentials request contains the flag for force authenticate or not.
+     * It is essential that this command runs before the LoginAgentWorkerCommand in each place where LoginAgentWorkerCommand
+     * has been used so that we can facilitate the force authentication feature  */
+
     private final AgentWorkerCommandContext context;
 
     public ClearSensitivePayloadOnForceAuthenticateCommand(AgentWorkerCommandContext context) {

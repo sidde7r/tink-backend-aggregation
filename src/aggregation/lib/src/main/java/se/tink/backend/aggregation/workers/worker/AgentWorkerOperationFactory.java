@@ -1449,6 +1449,9 @@ public class AgentWorkerOperationFactory {
 
     private void addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
             List<AgentWorkerCommand> commands, AgentWorkerCommandContext context) {
+
+        /* LoginAgentWorkerCommand needs to always be used together with ClearSensitivePayloadOnForceAuthenticateCommand */
+
         commands.add(new ClearSensitivePayloadOnForceAuthenticateCommand(context));
         commands.add(
                 new LoginAgentWorkerCommand(
