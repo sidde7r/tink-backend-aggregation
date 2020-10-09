@@ -25,6 +25,7 @@ public abstract class TransactionDetailsEntity {
     protected String remittanceInformationStructured;
     protected String remittanceInformationUnstructured;
     protected String transactionId;
+    protected String transactionDetails;
     protected String ultimateCreditor;
     protected String ultimateDebtor;
     protected CreditorAccountEntity creditorAccount;

@@ -1,0 +1,45 @@
+{
+  "_links": {
+    "self": "/v1/card-accounts/83873042231/transactions"
+  },
+  "cardAccount": {
+    "bban": "83873042231"
+  },
+  "cardTransactions": {
+    "booked": [
+      {
+        "bookingDate": "2010-10-02",
+        "originalAmount": {
+          "amount": "0.00"
+        },
+        "transactionAmount": {
+          "amount": "10.20"
+        },
+        "transactionDate": "2010-10-02",
+        "transactionDetails": "ASDF Description 1"
+      },
+      {
+        "bookingDate": "2000-10-02",
+        "originalAmount": {
+          "amount": "0.00"
+        },
+        "transactionAmount": {
+          "amount": "510.20"
+        },
+        "transactionDate": "2000-10-02",
+        "transactionDetails": "ZXCV Description 2"
+      },
+      {
+        "bookingDate": "2020-10-02",
+        "originalAmount": {
+          "amount": "0.00"
+        },
+        "transactionAmount": {
+          "amount": "150.20"
+        },
+        "transactionDate": "2020-10-02",
+        "transactionDetails": "QWER Description 3"
+      }
+    ]
+  }
+}
