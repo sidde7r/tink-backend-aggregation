@@ -21,6 +21,7 @@ public class CardAccountsEntity {
     private String currency;
     private CreditLimitEntity creditLimit;
     private List<BalancesEntity> balances;
+    private String product;
 
     @JsonProperty("_links")
     private LinksEntity links;
@@ -39,7 +40,7 @@ public class CardAccountsEntity {
         return IdModule.builder()
                 .withUniqueIdentifier(cards.get(0).getMaskedPan())
                 .withAccountNumber(cards.get(0).getMaskedPan())
-                .withAccountName(cards.get(0).getName())
+                .withAccountName(product)
                 .addIdentifier(
                         AccountIdentifier.create(
                                 Type.PAYMENT_CARD_NUMBER, cards.get(0).getMaskedPan()))
@@ -52,7 +53,7 @@ public class CardAccountsEntity {
                 .withCardNumber(cards.get(0).getMaskedPan())
                 .withBalance(getAvailableBalance(availableCredit).negate())
                 .withAvailableCredit(availableCredit)
-                .withCardAlias(cards.get(0).getName())
+                .withCardAlias(product)
                 .build();
     }
 
