@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterIds;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterSpecificCallbacks;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankAppToAppAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankDecoupledAppAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockDkNemIdReAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAuthenticator;
@@ -150,10 +151,12 @@ public final class DemobankAgent extends NextGenerationAgent
     }
 
     private Authenticator constructPasswordAndOtpAuthenticator() {
+        DemobankAutoAuthenticator autoAuthenticator =
+                new DemobankAutoAuthenticator(sessionStorage, apiClient);
         DemobankPasswordAndOtpAuthenticator authenticator =
                 new DemobankPasswordAndOtpAuthenticator(
-                        apiClient, supplementalInformationController, sessionStorage);
-        return new AutoAuthenticationController(request, context, authenticator, authenticator);
+                        apiClient, supplementalInformationController);
+        return new AutoAuthenticationController(request, context, authenticator, autoAuthenticator);
     }
 
     private Authenticator constructMockNemIdAuthenticator() {
