@@ -180,6 +180,8 @@ public final class DemobankAgent extends NextGenerationAgent
     }
 
     private Authenticator constructApptToAppAuthenticator() {
+        DemobankAutoAuthenticator autoAuthenticator =
+                new DemobankAutoAuthenticator(sessionStorage, apiClient);
         DemobankAppToAppAuthenticator authenticator =
                 new DemobankAppToAppAuthenticator(
                         apiClient,
@@ -192,7 +194,7 @@ public final class DemobankAgent extends NextGenerationAgent
                 systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
                         authenticator, supplementalInformationHelper),
-                authenticator);
+                autoAuthenticator);
     }
 
     private Authenticator constructRedirectAuthenticator() {
