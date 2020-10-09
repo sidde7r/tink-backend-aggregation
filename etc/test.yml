@@ -6831,6 +6831,11 @@ agentsServiceConfiguration:
     icabanken:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    ics:
+      tink:
+        clientId: dummyClientId
+        clientSecret: dummyClientSecret
+        redirectUrl: https://localhost:7357/api/v1/thirdparty/callback
     ing:
       tink:
         redirectUrl: https://localhost:7357/api/v1/thirdparty/callback
