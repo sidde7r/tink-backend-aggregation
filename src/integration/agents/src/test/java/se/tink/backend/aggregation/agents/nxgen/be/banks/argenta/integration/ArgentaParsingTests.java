@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +13,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ConfigResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaTransactionResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -110,5 +112,38 @@ public class ArgentaParsingTests {
         assertTrue(
                 ArgentaConstants.ErrorResponse.ERROR_CODE_SBB,
                 argentaErrorResponse.getMessage().contains("maximumaantal actieve registraties"));
+    }
+
+    @Test
+    public void shouldParseUnavailabilityNullCase() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ConfigResponse configResponse =
+                objectMapper.readValue(ArgentaTestData.CONFIG_NULL, ConfigResponse.class);
+        assertFalse(configResponse.isServiceNotAvailable());
+    }
+
+    @Test
+    public void shouldParseUnavailabilityFalseCase() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ConfigResponse configResponse =
+                objectMapper.readValue(ArgentaTestData.CONFIG_AVAILABLE, ConfigResponse.class);
+        assertFalse(configResponse.isServiceNotAvailable());
+    }
+
+    @Test
+    public void shouldParseUnavailabilityPlannedCase() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ConfigResponse configResponse =
+                objectMapper.readValue(
+                        ArgentaTestData.CONFIG_PLANNED_DOWNTIME, ConfigResponse.class);
+        assertFalse(configResponse.isServiceNotAvailable());
+    }
+
+    @Test
+    public void shouldParseUnavailabilityOutageCase() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ConfigResponse configResponse =
+                objectMapper.readValue(ArgentaTestData.CONFIG_DOWNTIME, ConfigResponse.class);
+        assertTrue(configResponse.isServiceNotAvailable());
     }
 }

@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
@@ -143,7 +144,10 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         ValidateAuthResponse validateAuthResponse;
         StartAuthResponse startAuthResponse;
         try {
-            mandatoryGetConfig(deviceToken);
+            ConfigResponse configResponse = mandatoryGetConfig(deviceToken);
+            if (configResponse.isServiceNotAvailable()) {
+                throw BankServiceError.NO_BANK_SERVICE.exception();
+            }
             startAuthResponse = startAuth(cardNumber, deviceToken, true);
             validateAuthResponse = validatePin(startAuthResponse, cardNumber);
             return validateAuthResponse;
@@ -156,7 +160,10 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
             throws SupplementalInfoException, LoginException, AuthorizationException {
         String deviceToken = generateRandomDeviceID();
         persistentStorage.setNewCredential(true);
-        mandatoryGetConfig(deviceToken);
+        ConfigResponse configResponse = mandatoryGetConfig(deviceToken);
+        if (configResponse.isServiceNotAvailable()) {
+            throw BankServiceError.NO_BANK_SERVICE.exception();
+        }
         StartAuthResponse startAuthResponse = startAuth(cardNumber, deviceToken, false);
         persistentStorage.storeDeviceId(deviceToken);
         return validateDevice(startAuthResponse, cardNumber);
