@@ -11,27 +11,32 @@ import java.util.HashMap;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
-public class DnbAuthenticatorControllerTest {
+public class DnbAuthenticatorTest {
 
     private SupplementalInformationHelper mockSupplemental;
-    private DnbAuthenticator mockAuthenticator;
     private StrongAuthenticationState mockState;
+    private DnbApiClient mockApiClient;
+    private Credentials mockCredentials;
 
-    private DnbAuthenticatorController dnbAuthenticatorController;
+    private DnbAuthenticator dnbAuthenticator;
 
     @Before
     public void setup() {
         mockSupplemental = mock(SupplementalInformationHelper.class);
-        mockAuthenticator = mock(DnbAuthenticator.class);
         mockState = mock(StrongAuthenticationState.class);
+        mockApiClient = mock(DnbApiClient.class);
+        mockCredentials = mock(Credentials.class);
 
-        dnbAuthenticatorController =
-                new DnbAuthenticatorController(mockSupplemental, mockAuthenticator, mockState);
+        dnbAuthenticator =
+                new DnbAuthenticator(mockSupplemental, mockState, mockApiClient, mockCredentials);
     }
 
     @Test
@@ -42,7 +47,7 @@ public class DnbAuthenticatorControllerTest {
                 .willReturn(Optional.empty());
 
         // when
-        ThirdPartyAppResponse<String> result = dnbAuthenticatorController.collect("");
+        ThirdPartyAppResponse<String> result = dnbAuthenticator.collect("");
 
         // then
         assertThat(result.getStatus()).isEqualTo(ThirdPartyAppStatus.TIMED_OUT);
@@ -54,10 +59,10 @@ public class DnbAuthenticatorControllerTest {
         given(mockState.getSupplementalKey()).willReturn("");
         given(mockSupplemental.waitForSupplementalInformation(anyString(), anyLong(), any()))
                 .willReturn(Optional.of(new HashMap<>()));
-        given(mockAuthenticator.isConsentValid()).willReturn(false);
+        given(mockApiClient.isConsentValid()).willReturn(false);
 
         // when
-        ThirdPartyAppResponse<String> result = dnbAuthenticatorController.collect("");
+        ThirdPartyAppResponse<String> result = dnbAuthenticator.collect("");
 
         // then
         assertThat(result.getStatus()).isEqualTo(ThirdPartyAppStatus.AUTHENTICATION_ERROR);
@@ -69,12 +74,24 @@ public class DnbAuthenticatorControllerTest {
         given(mockState.getSupplementalKey()).willReturn("");
         given(mockSupplemental.waitForSupplementalInformation(anyString(), anyLong(), any()))
                 .willReturn(Optional.of(new HashMap<>()));
-        given(mockAuthenticator.isConsentValid()).willReturn(true);
+        given(mockApiClient.isConsentValid()).willReturn(true);
 
         // when
-        ThirdPartyAppResponse<String> result = dnbAuthenticatorController.collect("");
+        ThirdPartyAppResponse<String> result = dnbAuthenticator.collect("");
 
         // then
         assertThat(result.getStatus()).isEqualTo(ThirdPartyAppStatus.DONE);
+    }
+
+    @Test
+    public void shouldReturnAuthErrorDuringInitIfNoPsuIdInCredentials() {
+        // given
+        given(mockCredentials.getField(DnbConstants.CredentialsKeys.PSU_ID)).willReturn("");
+
+        // when
+        ThirdPartyAppResponse<String> result = dnbAuthenticator.init();
+
+        // then
+        assertThat(result.getStatus()).isEqualTo(ThirdPartyAppStatus.AUTHENTICATION_ERROR);
     }
 }

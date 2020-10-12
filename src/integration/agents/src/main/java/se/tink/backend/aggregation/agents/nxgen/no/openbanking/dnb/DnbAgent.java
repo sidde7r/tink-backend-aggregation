@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.DnbAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.DnbAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.DnbPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.DnbPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbAccountFetcher;
@@ -74,18 +73,19 @@ public final class DnbAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final DnbAuthenticatorController controller =
-                new DnbAuthenticatorController(
+        final DnbAuthenticator dnbAuthenticator =
+                new DnbAuthenticator(
                         supplementalInformationHelper,
-                        new DnbAuthenticator(apiClient),
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        apiClient,
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                controller);
+                        dnbAuthenticator, supplementalInformationHelper),
+                dnbAuthenticator);
     }
 
     @Override
