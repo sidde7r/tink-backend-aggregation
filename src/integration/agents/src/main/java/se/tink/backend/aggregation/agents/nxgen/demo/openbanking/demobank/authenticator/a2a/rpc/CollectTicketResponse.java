@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 @JsonObject
 public class CollectTicketResponse {
     private String status;
-    private String token;
     private String accessToken;
     private String refreshToken;
     private Integer expiresIn;
@@ -15,10 +14,6 @@ public class CollectTicketResponse {
 
     public String getStatus() {
         return status;
-    }
-
-    public String getToken() {
-        return token;
     }
 
     public OAuth2Token getOAuthToken() {
