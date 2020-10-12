@@ -224,7 +224,7 @@ public class BancoPostaApiClient {
                 .post(SavingTransactionResponse.class, request);
     }
 
-    public String fetchIdentityDate() {
+    public String fetchIdentityData() {
         return createBaseRequestWithBearerToken(
                         storage.getAccessBasicToken(), IdentityUrl.FETCH_IDENTITY_DATA)
                 .post(String.class);

@@ -17,7 +17,7 @@ public class BancoPostaIdentityFetcher implements IdentityDataFetcher {
     @SneakyThrows
     @Override
     public IdentityData fetchIdentityData() {
-        String identityDataJweResponse = apiClient.fetchIdentityDate();
+        String identityDataJweResponse = apiClient.fetchIdentityData();
         JSONObject json = JWSObject.parse(identityDataJweResponse).getPayload().toJSONObject();
         IdentityEntity identityData =
                 SerializationUtils.deserializeFromString(json.toJSONString(), IdentityEntity.class);
