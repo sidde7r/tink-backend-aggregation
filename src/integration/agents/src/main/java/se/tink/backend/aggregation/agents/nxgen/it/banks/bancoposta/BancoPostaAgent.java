@@ -2,14 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.BancoPostaCheckingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.BancoPostaSavingTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.identity.BancoPostaIdentityFetcher;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -20,7 +23,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @AgentCapabilities
 public class BancoPostaAgent extends SubsequentProgressiveGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshIdentityDataExecutor {
 
     private final BancoPostaApiClient apiClient;
     private final BancoPostaStorage storage;
@@ -90,5 +95,11 @@ public class BancoPostaAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return savingAccountsRefreshController.fetchSavingsTransactions();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        BancoPostaIdentityFetcher identityFetcher = new BancoPostaIdentityFetcher(apiClient);
+        return new FetchIdentityDataResponse(identityFetcher.fetchIdentityData());
     }
 }

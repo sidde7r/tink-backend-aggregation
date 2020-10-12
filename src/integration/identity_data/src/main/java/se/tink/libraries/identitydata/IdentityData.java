@@ -16,10 +16,12 @@ public class IdentityData {
 
     private final List<NameElement> nameElements;
     private final LocalDate dateOfBirth;
+    private final String ssn;
 
     protected IdentityData(Builder builder) {
         nameElements = ImmutableList.copyOf(builder.nameElements);
         dateOfBirth = builder.dateOfBirth;
+        ssn = builder.ssn;
     }
 
     public static InitialBuilderStep builder() {
@@ -28,6 +30,8 @@ public class IdentityData {
 
     public interface InitialBuilderStep {
         DateOfBirthBuilderStep setFullName(String fullname);
+
+        InitialBuilderStep setSsn(String ssn);
 
         FirstNameElementBuilderStep addFirstNameElement(String val);
     }
@@ -60,6 +64,7 @@ public class IdentityData {
                     FinalBuilderStep {
         private List<NameElement> nameElements;
         private LocalDate dateOfBirth;
+        private String ssn;
 
         protected Builder() {
             this.nameElements = new ArrayList<>();
@@ -88,6 +93,12 @@ public class IdentityData {
 
         public IdentityData build() {
             return new IdentityData(this);
+        }
+
+        @Override
+        public InitialBuilderStep setSsn(String ssn) {
+            this.ssn = ssn;
+            return this;
         }
     }
 
@@ -144,6 +155,10 @@ public class IdentityData {
             map.put("dateOfBirth", dateOfBirth.toString());
         }
 
+        if (ssn != null) {
+            map.put("ssn", ssn);
+        }
+
         return map;
     }
 
@@ -162,7 +177,7 @@ public class IdentityData {
 
     @JsonIgnore
     public String getSsn() {
-        return null;
+        return ssn;
     }
 
     public List<NameElement> getNameElements() {
@@ -198,6 +213,8 @@ public class IdentityData {
                 + Joiner.on(",").join(nameElements)
                 + ", dateOfBirth="
                 + dateOfBirth
+                + ", ssn="
+                + ssn
                 + '}';
     }
 }
