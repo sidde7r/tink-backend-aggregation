@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class UnicreditAuthenticationController
@@ -27,8 +26,7 @@ public class UnicreditAuthenticationController
     public UnicreditAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
             UnicreditAuthenticator authenticator,
-            StrongAuthenticationState strongAuthenticationState,
-            CredentialsRequest request) {
+            StrongAuthenticationState strongAuthenticationState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
         this.strongAuthenticationState = strongAuthenticationState;

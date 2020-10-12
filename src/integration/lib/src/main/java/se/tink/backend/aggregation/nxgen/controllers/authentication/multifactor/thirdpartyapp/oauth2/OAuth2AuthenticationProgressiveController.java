@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OAuth2AuthenticationProgressiveController
@@ -54,16 +53,14 @@ public class OAuth2AuthenticationProgressiveController
             PersistentStorage persistentStorage,
             OAuth2Authenticator authenticator,
             Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState,
-            CredentialsRequest request) {
+            StrongAuthenticationState strongAuthenticationState) {
         this(
                 persistentStorage,
                 authenticator,
                 credentials,
                 strongAuthenticationState,
                 DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT,
-                request);
+                DEFAULT_TOKEN_LIFETIME_UNIT);
     }
 
     private OAuth2AuthenticationProgressiveController(
@@ -72,8 +69,7 @@ public class OAuth2AuthenticationProgressiveController
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit,
-            CredentialsRequest request) {
+            TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
         this.authenticator = authenticator;
         this.credentials = credentials;

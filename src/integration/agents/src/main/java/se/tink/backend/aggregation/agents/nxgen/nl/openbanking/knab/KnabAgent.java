@@ -70,8 +70,7 @@ public final class KnabAgent extends NextGenerationAgent
                                 persistentStorage,
                                 clientConfiguration),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

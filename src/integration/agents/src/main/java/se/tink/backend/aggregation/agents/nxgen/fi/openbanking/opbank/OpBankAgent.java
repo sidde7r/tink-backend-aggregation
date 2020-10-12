@@ -70,8 +70,7 @@ public final class OpBankAgent extends NextGenerationAgent
                         new OpBankAuthenticator(
                                 apiClient, persistentStorage, credentials, getAgentConfiguration()),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

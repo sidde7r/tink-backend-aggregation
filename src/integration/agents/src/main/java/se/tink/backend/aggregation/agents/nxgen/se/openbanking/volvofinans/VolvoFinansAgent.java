@@ -61,8 +61,7 @@ public final class VolvoFinansAgent extends NextGenerationAgent
                                 persistentStorage,
                                 getAgentConfiguration().getProviderSpecificConfiguration()),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

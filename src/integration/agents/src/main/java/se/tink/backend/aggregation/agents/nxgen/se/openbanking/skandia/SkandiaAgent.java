@@ -62,8 +62,7 @@ public final class SkandiaAgent extends NextGenerationAgent
                                 persistentStorage,
                                 getAgentConfiguration().getProviderSpecificConfiguration()),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

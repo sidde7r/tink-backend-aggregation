@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -48,8 +47,7 @@ public class FabricRedirectAuthenticationController
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             FabricAuthenticator authenticator,
-            StrongAuthenticationState strongAuthenticationState,
-            CredentialsRequest request) {
+            StrongAuthenticationState strongAuthenticationState) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;

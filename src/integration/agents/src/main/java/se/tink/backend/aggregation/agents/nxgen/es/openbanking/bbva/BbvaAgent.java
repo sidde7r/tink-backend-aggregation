@@ -59,8 +59,7 @@ public final class BbvaAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         authenticator,
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

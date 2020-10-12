@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -61,15 +60,13 @@ public class OAuth2AuthenticationController
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
             Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState,
-            CredentialsRequest request) {
+            StrongAuthenticationState strongAuthenticationState) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
                 credentials,
                 strongAuthenticationState,
-                request,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
     }
@@ -80,7 +77,6 @@ public class OAuth2AuthenticationController
             OAuth2Authenticator authenticator,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
-            CredentialsRequest request,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;

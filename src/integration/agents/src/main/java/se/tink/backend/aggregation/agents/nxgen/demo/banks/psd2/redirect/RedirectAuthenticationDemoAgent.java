@@ -119,8 +119,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
                         supplementalInformationHelper,
                         redirectOAuth2Authenticator,
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,
@@ -165,8 +164,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
                         supplementalInformationHelper,
                         redirectOAuth2Authenticator,
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(
@@ -200,8 +198,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
                         supplementalInformationHelper,
                         redirectOAuth2Authenticator,
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(
@@ -236,8 +233,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
                         supplementalInformationHelper,
                         redirectOAuth2Authenticator,
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
         ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(
                         controller, supplementalInformationHelper);

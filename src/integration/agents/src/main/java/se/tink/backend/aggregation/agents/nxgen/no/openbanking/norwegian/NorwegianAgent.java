@@ -71,8 +71,7 @@ public final class NorwegianAgent extends NextGenerationAgent
                                 sessionStorage,
                                 agentConfiguration.getProviderSpecificConfiguration()),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

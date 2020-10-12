@@ -105,8 +105,7 @@ public final class RabobankAgent
                         persistentStorage,
                         new RabobankAuthenticator(apiClient, persistentStorage, agentConfiguration),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         progressiveAuthenticator =
                 new AutoAuthenticationProgressiveController(

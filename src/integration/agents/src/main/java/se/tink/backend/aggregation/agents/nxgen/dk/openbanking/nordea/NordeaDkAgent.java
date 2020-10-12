@@ -56,8 +56,7 @@ public final class NordeaDkAgent extends NordeaBaseAgent
                         supplementalInformationHelper,
                         authenticator,
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
         return new AutoAuthenticationController(
                 request,
                 context,

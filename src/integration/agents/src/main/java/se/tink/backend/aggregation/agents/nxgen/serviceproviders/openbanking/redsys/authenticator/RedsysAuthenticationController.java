@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class RedsysAuthenticationController extends OAuth2AuthenticationController {
     private static final Logger LOG = LoggerFactory.getLogger(RedsysAuthenticationController.class);
@@ -32,15 +31,13 @@ public class RedsysAuthenticationController extends OAuth2AuthenticationControll
             OAuth2Authenticator authenticator,
             RedsysConsentController consentController,
             Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState,
-            CredentialsRequest request) {
+            StrongAuthenticationState strongAuthenticationState) {
         super(
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
                 credentials,
-                strongAuthenticationState,
-                request);
+                strongAuthenticationState);
         this.consentController = consentController;
         this.persistentStorage = persistentStorage;
     }

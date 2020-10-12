@@ -64,8 +64,7 @@ public final class BunqAgent extends BunqBaseAgent {
                                 getAggregatorInfo().getAggregatorIdentifier(),
                                 agentConfiguration),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

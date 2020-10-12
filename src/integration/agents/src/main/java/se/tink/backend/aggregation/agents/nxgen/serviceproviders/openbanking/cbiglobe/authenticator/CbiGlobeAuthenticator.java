@@ -29,20 +29,17 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
     protected final CbiUserState userState;
     protected final ConsentManager consentManager;
     private final CbiGlobeConfiguration configuration;
-    private final CredentialsRequest request;
 
     public CbiGlobeAuthenticator(
             CbiGlobeApiClient apiClient,
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
-            CbiGlobeConfiguration configuration,
-            CredentialsRequest request) {
+            CbiGlobeConfiguration configuration) {
         this.apiClient = apiClient;
         this.strongAuthenticationState = strongAuthenticationState;
         this.userState = userState;
         this.consentManager = new ConsentManager(apiClient, userState);
         this.configuration = configuration;
-        this.request = request;
     }
 
     CbiGlobeAuthenticator(
@@ -50,14 +47,12 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
             ConsentManager consentManager,
-            CbiGlobeConfiguration configuration,
-            CredentialsRequest request) {
+            CbiGlobeConfiguration configuration) {
         this.apiClient = apiClient;
         this.strongAuthenticationState = strongAuthenticationState;
         this.userState = userState;
         this.consentManager = consentManager;
         this.configuration = configuration;
-        this.request = request;
     }
 
     @Override

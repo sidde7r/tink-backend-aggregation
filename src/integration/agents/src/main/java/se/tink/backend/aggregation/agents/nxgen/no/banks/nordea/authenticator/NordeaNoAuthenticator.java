@@ -22,7 +22,6 @@ public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
             AuthenticationClient authenticationClient,
             NordeaNoStorage storage,
             RandomValueGenerator randomValueGenerator,
-            CredentialsRequest request,
             SupplementalRequester supplementalRequester,
             Catalog catalog) {
         this.storage = storage;

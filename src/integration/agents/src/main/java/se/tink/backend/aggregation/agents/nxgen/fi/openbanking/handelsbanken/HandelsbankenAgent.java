@@ -42,8 +42,7 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
                         new HandelsbankenOAuth2Authenticator(
                                 apiClient, agentConfiguration, persistentStorage),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

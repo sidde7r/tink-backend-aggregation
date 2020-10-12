@@ -13,15 +13,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 
 @RunWith(JUnitParamsRunner.class)
 public class CbiGlobeAuthenticatorTest {
@@ -42,14 +39,7 @@ public class CbiGlobeAuthenticatorTest {
                         Mockito.mock(StrongAuthenticationState.class),
                         userState,
                         consentManager,
-                        Mockito.mock(CbiGlobeConfiguration.class),
-                        createRequest());
-    }
-
-    private CredentialsRequest createRequest() {
-        CredentialsRequest request = new RefreshInformationRequest();
-        request.setCredentials(new Credentials());
-        return request;
+                        Mockito.mock(CbiGlobeConfiguration.class));
     }
 
     @Test

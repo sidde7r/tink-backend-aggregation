@@ -113,8 +113,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                         supplementalInformationHelper,
                         authenticator,
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,
@@ -153,8 +152,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                         new Xs2aDevelopersPaymentAuthenticator(
                                 apiClient, persistentStorage, configuration),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         Xs2aDevelopersPaymentExecutor xs2aDevelopersPaymentExecutor =
                 new Xs2aDevelopersPaymentExecutor(

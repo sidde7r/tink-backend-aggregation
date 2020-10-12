@@ -45,7 +45,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -84,8 +83,7 @@ public class OpenIdAuthenticationController
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
             URL appToAppRedirectURL,
-            RandomValueGenerator randomValueGenerator,
-            CredentialsRequest credentialsRequest) {
+            RandomValueGenerator randomValueGenerator) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -97,8 +95,7 @@ public class OpenIdAuthenticationController
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT,
                 appToAppRedirectURL,
-                randomValueGenerator,
-                credentialsRequest);
+                randomValueGenerator);
     }
 
     public OpenIdAuthenticationController(
@@ -112,8 +109,7 @@ public class OpenIdAuthenticationController
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit,
             URL appToAppRedirectURL,
-            RandomValueGenerator randomValueGenerator,
-            CredentialsRequest credentialsRequest) {
+            RandomValueGenerator randomValueGenerator) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
