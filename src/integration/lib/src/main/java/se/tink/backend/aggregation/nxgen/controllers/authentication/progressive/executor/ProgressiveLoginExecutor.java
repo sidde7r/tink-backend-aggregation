@@ -8,8 +8,8 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
@@ -82,9 +82,7 @@ public final class ProgressiveLoginExecutor {
                                     waitRequest.getKey(),
                                     waitRequest.getWaitFor(),
                                     waitRequest.getTimeUnit())
-                            .orElseThrow(
-                                    LoginError.INCORRECT_CREDENTIALS
-                                            ::exception)); // todo: change this exception
+                            .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception));
         }
         return Optional.empty();
     }
