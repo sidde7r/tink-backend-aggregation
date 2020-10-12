@@ -100,7 +100,7 @@ public final class OpBankApiClient {
                 client.request(Urls.ACCOUNTS_AUTHORIZATION)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .body(AuthorizationRequest.expiresInDays(60))
+                        .body(AuthorizationRequest.expiresInDays(90))
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_FAPI_FINANCIAL_ID, HeaderValues.TINK)
                         .header(HeaderKeys.AUTHORIZATION, "Bearer " + bearerToken)

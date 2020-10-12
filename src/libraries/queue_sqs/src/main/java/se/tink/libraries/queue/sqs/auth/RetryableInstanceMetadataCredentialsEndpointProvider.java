@@ -22,13 +22,20 @@ import com.amazonaws.util.EC2MetadataUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RetryableInstanceMetadataCredentialsEndpointProvider
         extends CredentialsEndpointProvider {
 
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(RetryableEC2CredentialsFetcher.class);
+
     @Override
     public URI getCredentialsEndpoint() throws URISyntaxException, IOException {
         String host = EC2MetadataUtils.getHostAddressForEC2MetadataService();
+        LOGGER.info("Endpoint for fetching AWS crerdentials: " + host);
 
         String securityCredentialsList =
                 EC2CredentialsUtils.getInstance()
@@ -40,6 +47,9 @@ public class RetryableInstanceMetadataCredentialsEndpointProvider
         if (securityCredentials.length == 0) {
             throw new SdkClientException("Unable to load credentials path");
         }
+
+        LOGGER.info(
+                "securityCredentials endpoint suffixes: " + Arrays.toString(securityCredentials));
 
         return new URI(
                 host + EC2MetadataUtils.SECURITY_CREDENTIALS_RESOURCE + securityCredentials[0]);
