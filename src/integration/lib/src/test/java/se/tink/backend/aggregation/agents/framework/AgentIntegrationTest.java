@@ -10,7 +10,6 @@ import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,13 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Strings;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
@@ -46,7 +43,6 @@ import se.tink.backend.aggregation.agents.framework.dao.CredentialDataDao;
 import se.tink.backend.aggregation.agents.framework.modules.production.AgentIntegrationTestModule;
 import se.tink.backend.aggregation.agents.framework.testserverclient.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
@@ -81,8 +77,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -90,10 +84,7 @@ import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
-import se.tink.libraries.payment.rpc.Creditor;
-import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
@@ -803,36 +794,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
-    private List<Payment> createItalianPayments(List<Account> accounts, String desinationAccount) {
-
-        return accounts.stream()
-                .map(a -> createPayment(a.getAccountNumber(), desinationAccount))
-                .collect(Collectors.toList());
-    }
-
-    private Payment createPayment(String sourceAccount, String desinationAccount) {
-        LocalDate executionDate = LocalDate.now();
-        ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "EUR");
-        return new Payment.Builder()
-                .withDebtor(
-                        new Debtor(
-                                AccountIdentifier.create(
-                                        AccountIdentifier.Type.SEPA_EUR,
-                                        desinationAccount))) // source account
-                .withCreditor(
-                        new Creditor(
-                                AccountIdentifier.create(
-                                        AccountIdentifier.Type.SEPA_EUR,
-                                        desinationAccount), // desination account
-                                "Unknown Person"))
-                .withExactCurrencyAmount(amount)
-                .withExecutionDate(executionDate)
-                .withCurrency("EUR")
-                .withReference(new Reference("TRANSFER", "test Tink"))
-                .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
-                .build();
-    }
-
     public void testCreateBeneficiary(CreateBeneficiary createBeneficiary) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
@@ -935,60 +896,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     public void testGenericPaymentForRedirect(List<Payment> paymentList) throws Exception {
-        initiateCredentials();
-        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
-        readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
-
-        try {
-            // todo: Look into this, currently authentication is done in
-            // RedirectDemoPaymentExecutor. Maybe can remove this
-            // login(agent, credentialsRequest);
-            if (agent instanceof PaymentControllerable) {
-                doGenericPaymentBankTransfer(agent, paymentList);
-            } else {
-                throw new NotImplementedException(
-                        String.format("%s", agent.getAgentClass().getSimpleName()));
-            }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
-            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
-
-            if (doLogout) {
-                logout(agent);
-            }
-        } finally {
-            saveCredentials(agent);
-        }
-
-        context.printCollectedData();
-    }
-
-    /**
-     * Todo: Remove this later
-     *
-     * @param destinationAccount
-     * @throws Exception
-     */
-    public void testGenericPaymentItalia(String destinationAccount) throws Exception {
-        /**
-         * The italian flow is special, so we will have to run the AIS flow first and store the
-         * aggregated accounts to be used as the source account in the payment flow.
-         */
-        NewAgentTestContext newAgentTestContext = this.testRefresh();
-        List<Account> accounts = newAgentTestContext.getUpdatedAccounts();
-
-        /**
-         * Todo: Somehow provide the fetched accounts to frontend, according to Gustaf Fredriksson
-         * they use TransferService in tink-backend to fetch source accounts, see @Path("accounts").
-         *
-         * <p>AccountRepository in tink-backend is responsible for fetching the list of accounts for
-         * a specific user. It's an interface and has two implementations, AccountRepositoryV2 and
-         * FakeAccountRepository.
-         */
-        List<Payment> paymentList = createItalianPayments(accounts, destinationAccount);
-
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
