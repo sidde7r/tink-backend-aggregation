@@ -54,6 +54,14 @@ spec:
         matchLabels:
           service: agents-platform
 
+  - ports:
+    - port: 8443
+      protocol: TCP
+    from:
+    - namespaceSelector:
+        matchLabels:
+          service: provider-configuration
+
   policyTypes:
   - Egress
   - Ingress

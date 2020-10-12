@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.entities.accounts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
@@ -7,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.e
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -18,6 +21,7 @@ public class AccountsEntity {
     private String product;
     private String iban;
     private String name;
+    private String ownerName;
     private String currency;
     private String customerBic;
 
@@ -58,24 +62,11 @@ public class AccountsEntity {
     }
 
     public Optional<TransactionalAccount> toTinkAccount(List<BalanceEntity> balances) {
-
+        // Account type is not present, parse every account as checking account
         return toCheckingAccount(balances);
-
-        /*
-            TODO: In the future when we can get the account type we will check it and
-            return an object with correct TransactionalAccount type by using the code
-            below.
-        */
-
-        /*Optional<AccountTypes> accountType =
-                VolksbankConstants.ACCOUNT_TYPE_MAPPER.translate("Current");
-
-        if (accountType.isPresent() && accountType.get() == AccountTypes.CHECKING)
-            return toCheckingAccount(balances);
-        else
-            return null;*/
     }
 
+    @JsonIgnore
     private Optional<TransactionalAccount> toCheckingAccount(List<BalanceEntity> balances) {
 
         balances.sort((o1, o2) -> o2.getLastChangeDateTime().compareTo(o1.getLastChangeDateTime()));
@@ -83,18 +74,35 @@ public class AccountsEntity {
         BalanceEntity lastBalance =
                 balances.stream().findFirst().orElseThrow(IllegalStateException::new);
 
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(lastBalance.toAmount()))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(VolksbankUtils.getAccountNumber(iban))
-                                .withAccountName(name)
-                                .addIdentifier(new IbanIdentifier(iban))
-                                .build())
-                .setApiIdentifier(getResourceId())
-                .build();
+        TransactionalBuildStep builder =
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.CHECKING)
+                        .withPaymentAccountFlag()
+                        .withBalance(BalanceModule.of(lastBalance.toAmount()))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(iban)
+                                        .withAccountNumber(VolksbankUtils.getAccountNumber(iban))
+                                        .withAccountName(name)
+                                        .addIdentifier(new IbanIdentifier(iban))
+                                        .build())
+                        .setApiIdentifier(getResourceId());
+
+        addHolderNamesToBuilder(builder);
+
+        return builder.build();
+    }
+
+    @JsonIgnore
+    private void addHolderNamesToBuilder(TransactionalBuildStep builder) {
+        if (Strings.isNullOrEmpty(ownerName)) {
+            return;
+        }
+
+        String[] holderNames = ownerName.split(" CJ ");
+
+        for (String holderName : holderNames) {
+            builder.addHolderName(holderName);
+        }
     }
 }
