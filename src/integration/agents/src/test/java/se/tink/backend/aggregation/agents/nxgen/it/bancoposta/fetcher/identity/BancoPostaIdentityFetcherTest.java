@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.fetcher.FetcherTestData;
@@ -22,9 +21,6 @@ import se.tink.libraries.identitydata.IdentityData;
 
 public class BancoPostaIdentityFetcherTest {
 
-    @Before
-    public void init() {}
-
     @Test
     public void shouldFetchIdentityIfAvailable() {
         // given
@@ -38,7 +34,7 @@ public class BancoPostaIdentityFetcherTest {
         RequestBuilder fetchIdentityMockRequestBuilder =
                 FetcherTestHelper.mockRequestBuilder(IdentityUrl.FETCH_IDENTITY_DATA, httpClient);
         when(fetchIdentityMockRequestBuilder.post(any()))
-                .thenReturn(FetcherTestData.getIdentityFetcherResponse());
+                .thenReturn(FetcherTestData.IDENTITY_FETCHER_RESPONSE);
 
         IdentityData identityData = fetcher.fetchIdentityData();
 

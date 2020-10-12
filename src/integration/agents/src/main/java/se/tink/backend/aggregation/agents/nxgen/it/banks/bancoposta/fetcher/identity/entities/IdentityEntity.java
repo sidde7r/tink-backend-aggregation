@@ -19,7 +19,7 @@ public class IdentityEntity {
         private String firstName;
 
         @JsonProperty("surname")
-        private String Surname;
+        private String surname;
 
         @JsonProperty("taxcode")
         private String ssn;
