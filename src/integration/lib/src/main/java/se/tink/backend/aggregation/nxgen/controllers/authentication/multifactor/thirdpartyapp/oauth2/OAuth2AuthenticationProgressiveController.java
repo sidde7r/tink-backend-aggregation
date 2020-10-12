@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.ErrorType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -84,9 +83,6 @@ public class OAuth2AuthenticationProgressiveController
         this.strongAuthenticationStateSupplementalKey =
                 strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
-        if (ForceAuthentication.shouldForceAuthentication(request)) {
-            invalidateToken();
-        }
     }
 
     @Override
@@ -218,9 +214,5 @@ public class OAuth2AuthenticationProgressiveController
 
         throw new IllegalStateException(
                 String.format("Unknown error: %s:%s.", errorType, errorDescription.orElse("")));
-    }
-
-    private void invalidateToken() {
-        persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
     }
 }

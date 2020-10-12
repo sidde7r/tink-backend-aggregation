@@ -38,7 +38,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.validator.IdTokenValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.validator.IdTokenValidator.ValidatorMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -131,10 +130,6 @@ public class OpenIdAuthenticationController
 
         this.nonce = randomValueGenerator.generateRandomHexEncoded(8);
         this.appToAppRedirectURL = appToAppRedirectURL;
-
-        if (ForceAuthentication.shouldForceAuthentication(credentialsRequest)) {
-            invalidateToken();
-        }
     }
 
     @Override
@@ -433,9 +428,5 @@ public class OpenIdAuthenticationController
 
         throw new IllegalStateException(
                 String.format("Unknown error: %s:%s.", errorType, errorDescription));
-    }
-
-    private void invalidateToken() {
-        persistentStorage.remove(OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN);
     }
 }

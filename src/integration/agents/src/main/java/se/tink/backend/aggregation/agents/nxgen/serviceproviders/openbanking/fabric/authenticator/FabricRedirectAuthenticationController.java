@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Desktop;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -57,10 +56,6 @@ public class FabricRedirectAuthenticationController
         this.strongAuthenticationStateSupplementalKey =
                 strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
-
-        if (ForceAuthentication.shouldForceAuthentication(request)) {
-            persistentStorage.remove(FabricConstants.StorageKeys.CONSENT_ID);
-        }
     }
 
     public ThirdPartyAppResponse<String> init() {

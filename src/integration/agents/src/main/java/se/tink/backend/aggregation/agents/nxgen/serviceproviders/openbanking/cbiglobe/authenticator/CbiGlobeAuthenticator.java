@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -44,7 +43,6 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
         this.consentManager = new ConsentManager(apiClient, userState);
         this.configuration = configuration;
         this.request = request;
-        handleForceAuthenticate();
     }
 
     CbiGlobeAuthenticator(
@@ -60,7 +58,6 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
         this.consentManager = consentManager;
         this.configuration = configuration;
         this.request = request;
-        handleForceAuthenticate();
     }
 
     @Override
@@ -105,8 +102,7 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
         try {
             return !userState.isManualAuthenticationInProgress()
                     && fetchToken()
-                    && consentManager.isConsentAccepted()
-                    && !ForceAuthentication.shouldForceAuthentication(request);
+                    && consentManager.isConsentAccepted();
         } catch (SessionException e) {
             return false;
         }
@@ -149,11 +145,5 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
 
     public GetAccountsResponse fetchAccounts() {
         return apiClient.fetchAccounts();
-    }
-
-    private void handleForceAuthenticate() {
-        if (ForceAuthentication.shouldForceAuthentication(request)) {
-            apiClient.invalidateToken();
-        }
     }
 }
