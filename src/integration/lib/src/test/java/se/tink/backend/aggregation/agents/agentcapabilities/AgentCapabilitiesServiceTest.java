@@ -51,7 +51,8 @@ public class AgentCapabilitiesServiceTest {
                             "banks.handelsbanken.v6.HandelsbankenV6Agent",
                             "banks.gr.nationalbank.NationalBankAgent",
                             "banks.citibank.v11.CitibankV11Agent",
-                            "banks.sk.slovenskasporitelna.SlovenskaSporitelnaAgent");
+                            "banks.sk.slovenskasporitelna.SlovenskaSporitelnaAgent",
+                            "nxgen.ie.openbanking.kbc.KbcIrelandAgent");
 
     private Map<String, Set<String>> expectedCapabilitiesMap;
     private Map<String, Set<Capability>> capabilities;
