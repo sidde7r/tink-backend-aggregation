@@ -17,12 +17,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ConsentAuthorization {
 
-    private static final Set<String> METHODS_EXCLUDED_FROM_SELECTION =
-            ImmutableSet.of("CHIP_OTP", "PHOTO_OTP");
+    private static final Set<String> METHODS_EXCLUDED_FROM_SELECTION = ImmutableSet.of("PHOTO_OTP");
     private String scaStatus;
     private String authorisationId;
     private List<ScaMethod> scaMethods = new ArrayList<>();
     private ChallengeData challengeData;
+    private ScaMethod chosenScaMethod;
 
     boolean isScaMethodSelectionRequired() {
         return !getScaMethods().isEmpty();

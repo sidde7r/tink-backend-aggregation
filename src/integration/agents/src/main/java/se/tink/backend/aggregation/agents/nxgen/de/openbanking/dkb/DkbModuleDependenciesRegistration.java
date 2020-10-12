@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.i18n.Catalog;
 
 public class DkbModuleDependenciesRegistration extends ModuleDependenciesRegistration {
 
@@ -19,11 +20,13 @@ public class DkbModuleDependenciesRegistration extends ModuleDependenciesRegistr
             PersistentStorage persistentStorage,
             DkbConfiguration configuration,
             SupplementalInformationHelper supplementalInformationHelper,
-            DkbUserIpInformation dkbUserIpInformation) {
+            DkbUserIpInformation dkbUserIpInformation,
+            Catalog catalog) {
         registerExternalDependencies(tinkHttpClient, sessionStorage, persistentStorage);
         registerBean(DkbConfiguration.class, configuration);
         registerBean(SupplementalInformationHelper.class, supplementalInformationHelper);
         registerBean(DkbUserIpInformation.class, dkbUserIpInformation);
+        registerBean(Catalog.class, catalog);
     }
 
     @Override
@@ -49,7 +52,9 @@ public class DkbModuleDependenciesRegistration extends ModuleDependenciesRegistr
                         getBean(DkbAuthRequestsFactory.class),
                         getBean(DkbStorage.class)));
 
-        registerBean(new DkbSupplementalDataProvider(getBean(SupplementalInformationHelper.class)));
+        registerBean(
+                new DkbSupplementalDataProvider(
+                        getBean(SupplementalInformationHelper.class), getBean(Catalog.class)));
 
         registerBean(
                 new DkbAuthenticator(

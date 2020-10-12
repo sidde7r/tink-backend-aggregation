@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import java.util.regex.Pattern;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -137,21 +136,24 @@ public final class DkbConstants {
     }
 
     @NoArgsConstructor(access = PRIVATE)
-    public static class SupplementalDataLabels {
+    public static class SupplementalStrings {
 
-        public static final String GENERATED_TAN_LABEL = "Enter Generated TAN";
-        public static final String CHIP_TAN_DESCRIPTION_LABEL =
-                "Please insert card to TAN-Generator and press “TAN”. Then insert start code %s and press “OK”";
-        public static final String SELECT_AUTH_METHOD_LABEL = "Authentication method index";
-        public static final String SELECT_AUTH_METHOD_INFO =
+        public static final String STARTCODE_FIELD_KEY = "startcodeField";
+        public static final String STARTCODE_DESCRIPTION = "Startcode";
+        public static final String STARTCODE_HELPTEXT =
+                "Please insert your card into the TAN-Generator, type in Startcode and press OK";
+
+        public static final String GENERATED_TAN_FIELD_KEY = "generatedTanField";
+        public static final String GENERATED_TAN_DESCRIPTION = "TAN";
+        public static final String GENERATED_TAN_HELPTEXT_FORMAT =
+                "Please insert generated TAN from device \"%s\"";
+        public static final String GENERATED_TAN_HELPTEXT = "Please insert generated TAN";
+
+        public static final String SELECT_AUTH_METHOD_FIELD_KEY = "selectAuthMethodField";
+        public static final String SELECT_AUTH_METHOD_DESCRIPTION = "Authentication method index";
+
+        public static final String SELECT_AUTH_METHOD_HINT_FORMAT = "Select from 1 to %d";
+        public static final String SELECT_AUTH_METHOD_HELPTEXT_FORMAT =
                 "Please insert authentication method index from 1 to %d \n";
-        public static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode (\\d+)");
-    }
-
-    @NoArgsConstructor(access = PRIVATE)
-    public static class SupplementalDataKeys {
-
-        public static final String GENERATED_TAN_KEY = "generatedTAN";
-        public static final String SELECT_AUTH_METHOD_KEY = "selectAuthMethod";
     }
 }
