@@ -87,10 +87,4 @@ public class VolksbankConstants {
 
         public static final String VALID = "valid";
     }
-
-    public static class RegioBankConstants {
-        private RegioBankConstants() {}
-
-        public static final String REGIOBANK = "regiobank";
-    }
 }

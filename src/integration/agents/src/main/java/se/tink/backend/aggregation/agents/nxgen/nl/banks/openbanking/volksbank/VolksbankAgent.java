@@ -98,8 +98,7 @@ public final class VolksbankAgent
                         persistentStorage,
                         agentConfiguration,
                         urlFactory,
-                        consentFetcher,
-                        bankPath);
+                        consentFetcher);
 
         OAuth2AuthenticationProgressiveController oAuth2AuthenticationController =
                 new OAuth2AuthenticationProgressiveController(
