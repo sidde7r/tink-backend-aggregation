@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.mock;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -7,6 +8,9 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
+// This wire mock test is for the nxgen SBAB agent but the provider points at a different SBAB agent
+// which does screen scraping
+@Ignore
 public class SBABAgentWireMockTest {
     @Test
     public void test() throws Exception {
