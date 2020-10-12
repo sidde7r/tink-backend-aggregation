@@ -145,9 +145,9 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "b1d85c82a76f7eeb63449e930637e2a6927263fd",
+    commit = "2a52df7897ec8243cf513a7c7e9516c6787b4428",
     remote = "git@github.com:tink-ab/tink-backend.git",
-    shallow_since = "1595000000 +0000",
+    shallow_since = "1601479333 +0000",
 )
 
 # To be used only by //src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework

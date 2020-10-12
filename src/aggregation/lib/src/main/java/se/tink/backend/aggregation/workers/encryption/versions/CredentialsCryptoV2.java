@@ -8,7 +8,7 @@ import com.google.protobuf.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
-import se.tink.backend.credentials_revamp.grpc.OpaquePayload;
+import se.tink.backend.aggregation.orchestration.grpc.OpaquePayload;
 import se.tink.libraries.encryptedpayload.AesEncryptedData;
 import se.tink.libraries.encryptedpayload.EncryptedPayloadV2;
 import se.tink.libraries.serialization.utils.SerializationUtils;
