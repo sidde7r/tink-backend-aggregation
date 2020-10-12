@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
@@ -26,6 +27,9 @@ public class AccountsItem {
     @JsonProperty("status")
     private String status;
 
+    @JsonAlias("name")
+    private String ownerName;
+
     public String getResourceId() {
         return resourceId;
     }
@@ -43,6 +47,7 @@ public class AccountsItem {
                 .setAlias(getIban())
                 .addAccountIdentifier(new IbanIdentifier(getIban()))
                 .putInTemporaryStorage(StorageKey.RESOURCE_ID, getResourceId())
+                .addHolderName(ownerName)
                 .build();
     }
 }
