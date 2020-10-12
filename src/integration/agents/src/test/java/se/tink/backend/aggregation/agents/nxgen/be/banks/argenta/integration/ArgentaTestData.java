@@ -477,4 +477,44 @@ public class ArgentaTestData {
                     + "}";
     public static final String CARD_NUMBER_REQUIRED =
             "Card number is required when no ib subscription is passed and should be in the following format: 6703 xxxx xxxx xxxx x with the final x being the control digit.";
+
+    static final String CONFIG_AVAILABLE =
+            "{"
+                    + "    \"appConfigMap\": {},"
+                    + "    \"countryMapNl\": {},"
+                    + "    \"countryMapFr\": {},"
+                    + "    \"featureToggles\": {},"
+                    + "    \"onlineAppointmentBranches\": [],"
+                    + "    \"unavailability\": false"
+                    + "}";
+
+    static final String CONFIG_PLANNED_DOWNTIME =
+            "{"
+                    + "    \"appConfigMap\": {},"
+                    + "    \"countryMapNl\": {},"
+                    + "    \"countryMapFr\": {},"
+                    + "    \"featureToggles\": {},"
+                    + "    \"onlineAppointmentBranches\": [],"
+                    + "    \"unavailability\": {\"type\":\"PLANNED_ANNOUNCEMENT\",\"header\":\"INFO\",\"message\":\"Om onze dienstverlening te verbeteren, zullen we aan de app werken op **11-10 van 0 tot 5 u.** \\n\\nDaardoor zal de app tijdelijk niet beschikbaar zijn. Onze excuses voor het ongemak.\"}"
+                    + "}";
+
+    static final String CONFIG_DOWNTIME =
+            "{"
+                    + "    \"appConfigMap\": {},"
+                    + "    \"countryMapNl\": {},"
+                    + "    \"countryMapFr\": {},"
+                    + "    \"featureToggles\": {},"
+                    + "    \"onlineAppointmentBranches\": [],"
+                    + "    \"unavailability\": {\"type\":\"PLANNED\",\"header\":\"TIJDELIJK ONBESCHIKBAAR\",\"message\":\"De app is tijdelijk onbeschikbaar. We lossen het probleem zo snel mogelijk op. Onze excuses voor het ongemak.\"}"
+                    + "}";
+
+    static final String CONFIG_NULL =
+            "{"
+                    + "    \"appConfigMap\": {},"
+                    + "    \"countryMapNl\": {},"
+                    + "    \"countryMapFr\": {},"
+                    + "    \"featureToggles\": {},"
+                    + "    \"onlineAppointmentBranches\": [],"
+                    + "    \"unavailability\": null"
+                    + "}";
 }

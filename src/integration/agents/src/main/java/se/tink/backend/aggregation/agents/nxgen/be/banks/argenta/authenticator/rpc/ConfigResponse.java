@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Map;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.entity.UnavailabilityEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.utils.UnavailabilityDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -17,7 +20,8 @@ public class ConfigResponse {
 
     private List<String> onlineAppointmentBranches;
 
-    private Boolean unavailability;
+    @JsonDeserialize(using = UnavailabilityDeserializer.class)
+    private UnavailabilityEntity unavailability;
 
     public Map<String, String> getAppConfigMap() {
         return appConfigMap;
@@ -39,7 +43,7 @@ public class ConfigResponse {
         return onlineAppointmentBranches;
     }
 
-    public Boolean getUnavailability() {
-        return unavailability;
+    public boolean isServiceNotAvailable() {
+        return unavailability != null && unavailability.isDown();
     }
 }
