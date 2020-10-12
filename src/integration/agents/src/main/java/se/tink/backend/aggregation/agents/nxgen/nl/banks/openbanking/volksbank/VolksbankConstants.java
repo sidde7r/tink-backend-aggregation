@@ -4,6 +4,7 @@ public class VolksbankConstants {
 
     public static class Urls {
         public static final String HOST = "https://psd.bancairediensten.nl";
+        public static final String HOST_PORT_10443 = "https://psd.bancairediensten.nl:10443";
         public static final String BASE_PATH = "/psd2/";
     }
 

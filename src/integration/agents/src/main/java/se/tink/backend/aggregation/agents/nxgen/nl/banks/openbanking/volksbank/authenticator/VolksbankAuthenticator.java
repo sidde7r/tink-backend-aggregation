@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.RegioBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TokenParams;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -52,7 +53,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
         final String consentId = consentFetcher.fetchConsent();
 
         return urlFactory
-                .buildURL(Paths.AUTHORIZE)
+                .buildURL(Urls.HOST_PORT_10443, Paths.AUTHORIZE)
                 .queryParam(QueryParams.SCOPE, QueryParams.SCOPE_VALUE)
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParams.RESPONSE_TYPE_VALUE)
                 .queryParam(QueryParams.STATE, state)
@@ -66,7 +67,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
         URL url =
                 urlFactory
-                        .buildURL(Paths.TOKEN)
+                        .buildURL(Urls.HOST, Paths.TOKEN)
                         .queryParam(QueryParams.CODE, code)
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
                         .queryParam(QueryParams.REDIRECT_URI, agentConfiguration.getRedirectUrl());
@@ -110,7 +111,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
         URL url =
                 urlFactory
-                        .buildURL(Paths.TOKEN)
+                        .buildURL(Urls.HOST, Paths.TOKEN)
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.REFRESH_TOKEN)
                         .queryParam(QueryParams.REFRESH_TOKEN, refreshToken);
 

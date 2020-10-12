@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TransactionFetcherParams;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentStatusResponse;
@@ -75,7 +76,7 @@ public class VolksbankApiClient {
 
     private URL getTransactionsUrl(TransactionalAccount account) {
         return urlFactory.buildURL(
-                Paths.ACCOUNTS + "/" + account.getApiIdentifier() + Paths.TRANSACTIONS);
+                Urls.HOST, Paths.ACCOUNTS + "/" + account.getApiIdentifier() + Paths.TRANSACTIONS);
     }
 
     private TransactionResponse readTransactions(
@@ -94,7 +95,7 @@ public class VolksbankApiClient {
 
         URL url =
                 urlFactory.buildURL(
-                        Paths.ACCOUNTS + "/" + account.getResourceId() + Paths.BALANCES);
+                        Urls.HOST, Paths.ACCOUNTS + "/" + account.getResourceId() + Paths.BALANCES);
 
         return client.request(url)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
@@ -106,7 +107,7 @@ public class VolksbankApiClient {
 
     public AccountsResponse fetchAccounts(final String consentId, final OAuth2Token oAuth2Token) {
 
-        URL url = urlFactory.buildURL(Paths.ACCOUNTS);
+        URL url = urlFactory.buildURL(Urls.HOST, Paths.ACCOUNTS);
 
         return client.request(url)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
@@ -117,7 +118,7 @@ public class VolksbankApiClient {
     }
 
     public ConsentResponse consentRequest(final URL redirectUrl, final String clientId) {
-        final URL url = urlFactory.buildURL(VolksbankConstants.Paths.CONSENT);
+        final URL url = urlFactory.buildURL(Urls.HOST, VolksbankConstants.Paths.CONSENT);
         final ConsentRequestBody body =
                 new ConsentRequestBody(
                         VolksbankUtils.getFutureDateAsString(ConsentParams.VALID_YEAR),
@@ -147,7 +148,7 @@ public class VolksbankApiClient {
 
     public ConsentStatusResponse consentStatusRequest(
             final String clientId, final String consentId) {
-        final URL url = urlFactory.buildURL(Paths.CONSENT + "/" + consentId + "/status");
+        final URL url = urlFactory.buildURL(Urls.HOST, Paths.CONSENT + "/" + consentId + "/status");
 
         return client.request(url)
                 .header(HeaderKeys.CONSENT_ID, consentId)

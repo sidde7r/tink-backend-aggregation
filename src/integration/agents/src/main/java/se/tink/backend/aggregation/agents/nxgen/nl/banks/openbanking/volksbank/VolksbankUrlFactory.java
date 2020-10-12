@@ -4,15 +4,13 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class VolksbankUrlFactory {
 
-    private final String host;
     private final String bankPath;
 
-    VolksbankUrlFactory(final String host, final String bankPath) {
-        this.host = host;
+    VolksbankUrlFactory(final String bankPath) {
         this.bankPath = bankPath;
     }
 
-    public URL buildURL(final String uri) {
+    public URL buildURL(final String host, final String uri) {
 
         StringBuilder s = new StringBuilder();
         s.append(host);
