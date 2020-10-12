@@ -63,6 +63,7 @@ public class SqsQueue {
                                         configuration.getUrl(), configuration.getRegion()));
 
         if (validLocalConfiguration(configuration)) {
+            logger.info("We have a valid local configuration for fetching AWS credentials");
             createRequest.withQueueName(configuration.getQueueName());
 
             final AWSCredentialsProvider staticCredentialsProvider =
@@ -76,6 +77,7 @@ public class SqsQueue {
                             createRequest, amazonSQSClientBuilder, staticCredentialsProvider);
             this.url = getQueueUrl(configuration.getQueueName());
         } else {
+            logger.info("We don't have a valid local configuration for fetching AWS credentials");
             final AWSCredentialsProvider instanceCredentialsProvider =
                     RetryableInstanceProfileCredentialsProvider.createAsyncRefreshingProvider(true);
 

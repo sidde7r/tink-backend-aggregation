@@ -120,6 +120,10 @@ class RetryableEC2CredentialsFetcher {
                                     credentialsEndpointProvider.getRetryPolicy(),
                                     credentialsEndpointProvider.getHeaders());
 
+            LOGGER.info(
+                    "Endpoint for fetching AWS credentals = "
+                            + credentialsEndpointProvider.getCredentialsEndpoint());
+
             node = Jackson.jsonNodeOf(credentialsResponse);
             accessKey = node.get(ACCESS_KEY_ID);
             secretKey = node.get(SECRET_ACCESS_KEY);
