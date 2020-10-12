@@ -24,7 +24,7 @@ public class ClearSensitivePayloadOnForceAuthenticateCommand extends AgentWorker
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    public AgentWorkerCommandResult doExecute() throws Exception {
         try {
 
             if (context.getAgent() instanceof PersistentLogin
@@ -50,7 +50,7 @@ public class ClearSensitivePayloadOnForceAuthenticateCommand extends AgentWorker
     }
 
     @Override
-    public void postProcess() throws Exception {
+    public void doPostProcess() throws Exception {
         // NOP
     }
 }
