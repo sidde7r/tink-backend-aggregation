@@ -35,7 +35,6 @@ java_library(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
         "@com_google_protobuf//:protobuf_java",
-        "@tink_backend//src/credentials-revamp/common/models/proto:java_proto",
         "@tink_backend//src/libraries/serialization_utils",
     ],
 )
