@@ -267,7 +267,6 @@ public final class RabobankApiClient {
                             .queryParam(QueryParams.BOOKING_STATUS, bookingStatus)
                             .queryParam(QueryParams.DATE_FROM, sdf.format(fromDate))
                             .queryParam(QueryParams.DATE_TO, sdf.format(toDate))
-                            .queryParam(QueryParams.SIZE, "" + QueryValues.TRANSACTIONS_SIZE)
                             .queryParam(QueryParams.PAGE, "" + currentPage)
                             .get(TransactionalTransactionsResponse.class);
             pages.add(page);
