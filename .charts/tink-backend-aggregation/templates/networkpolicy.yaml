@@ -43,6 +43,17 @@ spec:
         matchLabels:
           service: aggregation
 
+  - ports:
+    - port: 8443
+      protocol: TCP
+    from:
+    - podSelector:
+        matchLabels:
+          app: agents-platform-gateway
+    - namespaceSelector:
+        matchLabels:
+          service: agents-platform
+
   policyTypes:
   - Egress
   - Ingress
