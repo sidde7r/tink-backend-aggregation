@@ -3,14 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authe
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CollectTicketResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CreateTicketRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CreateTicketResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -18,11 +14,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Desktop;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class DemobankAppToAppAuthenticator
-        implements ThirdPartyAppAuthenticator<CreateTicketResponse>, AutoAuthenticator {
+        implements ThirdPartyAppAuthenticator<CreateTicketResponse> {
 
     private final DemobankApiClient apiClient;
     private final String username;
@@ -93,8 +88,7 @@ public class DemobankAppToAppAuthenticator
                 }
             };
         } else {
-            apiClient.setTokenToSession(
-                    OAuth2Token.createBearer(response.getToken(), response.getToken(), 3600));
+            apiClient.setTokenToSession(response.getOAuthToken());
             return new ThirdPartyAppResponse<CreateTicketResponse>() {
                 @Override
                 public ThirdPartyAppStatus getStatus() {
@@ -141,8 +135,4 @@ public class DemobankAppToAppAuthenticator
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
     }
-
-    @Override
-    public void autoAuthenticate()
-            throws SessionException, LoginException, BankServiceException, AuthorizationException {}
 }

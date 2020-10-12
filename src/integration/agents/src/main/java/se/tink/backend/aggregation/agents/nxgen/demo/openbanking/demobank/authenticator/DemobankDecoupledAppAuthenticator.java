@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
@@ -20,10 +21,10 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.Demoba
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CollectTicketResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CreateTicketResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class DemobankDecoupledAppAuthenticator implements Authenticator {
+public class DemobankDecoupledAppAuthenticator implements TypedAuthenticator, Authenticator {
 
     private final DemobankApiClient apiClient;
     private final SupplementalRequester supplementalRequester;
@@ -57,8 +58,7 @@ public class DemobankDecoupledAppAuthenticator implements Authenticator {
                             .build()
                             .call(() -> apiClient.collectAppToApp(ticket));
             if ("CONFIRMED".equals(response.getStatus())) {
-                apiClient.setTokenToSession(
-                        OAuth2Token.createBearer(response.getToken(), response.getToken(), 3600));
+                apiClient.setTokenToSession(response.getOAuthToken());
             } else {
                 throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
             }
@@ -81,5 +81,10 @@ public class DemobankDecoupledAppAuthenticator implements Authenticator {
                 SerializationUtils.serializeToString(Collections.singletonList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         supplementalRequester.requestSupplementalInformation(credentials, false);
+    }
+
+    @Override
+    public CredentialsTypes getType() {
+        return CredentialsTypes.PASSWORD;
     }
 }

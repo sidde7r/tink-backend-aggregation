@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterIds;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterSpecificCallbacks;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankAppToAppAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankDecoupledAppAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockDkNemIdReAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAuthenticator;
@@ -150,10 +151,12 @@ public final class DemobankAgent extends NextGenerationAgent
     }
 
     private Authenticator constructPasswordAndOtpAuthenticator() {
+        DemobankAutoAuthenticator autoAuthenticator =
+                new DemobankAutoAuthenticator(sessionStorage, apiClient);
         DemobankPasswordAndOtpAuthenticator authenticator =
                 new DemobankPasswordAndOtpAuthenticator(
                         apiClient, supplementalInformationController);
-        return new AutoAuthenticationController(request, context, authenticator, authenticator);
+        return new AutoAuthenticationController(request, context, authenticator, autoAuthenticator);
     }
 
     private Authenticator constructMockNemIdAuthenticator() {
@@ -173,10 +176,17 @@ public final class DemobankAgent extends NextGenerationAgent
     }
 
     private Authenticator constructDecoupledAppAuthenticator() {
-        return new DemobankDecoupledAppAuthenticator(apiClient, supplementalRequester);
+        DemobankDecoupledAppAuthenticator demobankDecoupledAppAuthenticator =
+                new DemobankDecoupledAppAuthenticator(apiClient, supplementalRequester);
+        DemobankAutoAuthenticator autoAuthenticator =
+                new DemobankAutoAuthenticator(sessionStorage, apiClient);
+        return new AutoAuthenticationController(
+                request, systemUpdater, demobankDecoupledAppAuthenticator, autoAuthenticator);
     }
 
     private Authenticator constructApptToAppAuthenticator() {
+        DemobankAutoAuthenticator autoAuthenticator =
+                new DemobankAutoAuthenticator(sessionStorage, apiClient);
         DemobankAppToAppAuthenticator authenticator =
                 new DemobankAppToAppAuthenticator(
                         apiClient,
@@ -189,7 +199,7 @@ public final class DemobankAgent extends NextGenerationAgent
                 systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
                         authenticator, supplementalInformationHelper),
-                authenticator);
+                autoAuthenticator);
     }
 
     private Authenticator constructRedirectAuthenticator() {

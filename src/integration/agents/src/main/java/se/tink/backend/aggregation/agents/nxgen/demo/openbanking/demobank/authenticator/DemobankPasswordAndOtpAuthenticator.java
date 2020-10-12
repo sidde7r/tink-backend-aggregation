@@ -6,18 +6,12 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
-public class DemobankPasswordAndOtpAuthenticator
-        implements MultiFactorAuthenticator, AutoAuthenticator {
+public class DemobankPasswordAndOtpAuthenticator implements MultiFactorAuthenticator {
 
     private DemobankApiClient apiClient;
     private SupplementalInformationController supplementalInformationController;
@@ -51,25 +45,19 @@ public class DemobankPasswordAndOtpAuthenticator
                                         .build())
                         .get("otpinput");
 
-        String token =
+        OAuth2Token token =
                 this.apiClient
                         .completeEmbeddedOtp(
                                 credentials.getField(Key.USERNAME),
                                 credentials.getField(Key.PASSWORD),
                                 otp)
-                        .getToken();
+                        .toOAuth2Token();
 
-        this.apiClient.setTokenToSession(OAuth2Token.createBearer(token, token, 3600));
+        this.apiClient.setTokenToSession(token);
     }
 
     @Override
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
-    }
-
-    @Override
-    public void autoAuthenticate()
-            throws SessionException, LoginException, BankServiceException, AuthorizationException {
-        throw SessionError.SESSION_EXPIRED.exception();
     }
 }
