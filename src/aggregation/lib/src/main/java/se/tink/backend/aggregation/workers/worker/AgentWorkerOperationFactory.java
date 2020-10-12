@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.workers.commands.AbnAmroSpecificCase;
 import se.tink.backend.aggregation.workers.commands.AccountWhitelistRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
+import se.tink.backend.aggregation.workers.commands.ClearSensitivePayloadOnForceAuthenticateCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
@@ -426,12 +427,8 @@ public class AgentWorkerOperationFactory {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(
-                new LoginAgentWorkerCommand(
-                        context,
-                        loginAgentWorkerCommandState,
-                        createCommandMetricState(request),
-                        loginAgentEventProducer));
+        addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
+                commands, context);
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
@@ -529,12 +526,10 @@ public class AgentWorkerOperationFactory {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(
-                new LoginAgentWorkerCommand(
-                        context,
-                        loginAgentWorkerCommandState,
-                        createCommandMetricState(request),
-                        loginAgentEventProducer));
+
+        addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
+                commands, context);
+
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
 
@@ -744,29 +739,33 @@ public class AgentWorkerOperationFactory {
         CredentialsCrypto credentialsCrypto =
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
-
-        return Lists.newArrayList(
-                new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+        commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
+        commands.add(
                 new ExpireSessionAgentWorkerCommand(
                         request.isManual(),
                         context,
                         request.getCredentials(),
-                        request.getProvider()),
-                new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
+                        request.getProvider()));
+        commands.add(
+                new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
+        commands.add(
                 new LockAgentWorkerCommand(
                                 context, operationName, interProcessSemaphoreMutexFactory)
-                        .withLoginEvent(loginAgentEventProducer),
-                new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
+                        .withLoginEvent(loginAgentEventProducer));
+        commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
+        commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper, clientInfo),
-                // Update the status to `UPDATED` if the credential isn't waiting on transactions
-                // from the
-                // connector and if
-                // transactions aren't processed in system. The transaction processing in system
-                // will set
-                // the status
-                // to `UPDATED` when transactions have been processed and new statistics are
-                // generated.
+                        context.getRequest(), controllerWrapper, clientInfo));
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions
+        // from the
+        // connector and if
+        // transactions aren't processed in system. The transaction processing in system
+        // will set
+        // the status
+        // to `UPDATED` when transactions have been processed and new statistics are
+        // generated.
+        commands.add(
                 new UpdateCredentialsStatusAgentWorkerCommand(
                         controllerWrapper,
                         request.getCredentials(),
@@ -774,34 +773,39 @@ public class AgentWorkerOperationFactory {
                         context,
                         c ->
                                 !c.isWaitingOnConnectorTransactions()
-                                        && !c.isSystemProcessingTransactions()),
+                                        && !c.isSystemProcessingTransactions()));
+        commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context,
                         operationName,
                         reportMetricsAgentWorkerCommandState,
                         new AgentWorkerMetricReporter(
-                                metricRegistry, this.providerTierConfiguration)),
-                new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
+                                metricRegistry, this.providerTierConfiguration)));
+        commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
                         createCommandMetricState(request),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(
-                                        RefreshableItem.REFRESHABLE_ITEMS_ALL))),
+                                        RefreshableItem.REFRESHABLE_ITEMS_ALL))));
+        commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient),
-                new CreateLogMaskerWorkerCommand(context),
+                        context, tppSecretsServiceClient));
+        commands.add(new CreateLogMaskerWorkerCommand(context));
+        commands.add(
                 new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler),
-                new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
-                new LoginAgentWorkerCommand(
-                        context,
-                        loginAgentWorkerCommandState,
-                        createCommandMetricState(request),
-                        loginAgentEventProducer),
-                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING),
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+        commands.add(
+                new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
+                commands, context);
+        commands.add(
+                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
+        commands.add(
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request)));
+
+        return commands;
     }
 
     List<AgentWorkerCommand> createTransferWithoutRefreshBaseCommands(
@@ -1177,12 +1181,8 @@ public class AgentWorkerOperationFactory {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(
-                new LoginAgentWorkerCommand(
-                        context,
-                        loginAgentWorkerCommandState,
-                        createCommandMetricState(request),
-                        loginAgentEventProducer));
+        addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
+                commands, context);
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
@@ -1298,12 +1298,8 @@ public class AgentWorkerOperationFactory {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(
-                new LoginAgentWorkerCommand(
-                        context,
-                        loginAgentWorkerCommandState,
-                        createCommandMetricState(request),
-                        loginAgentEventProducer));
+        addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
+                commands, context);
 
         commands.addAll(
                 createWhitelistRefreshableItemsCommands(
@@ -1449,5 +1445,19 @@ public class AgentWorkerOperationFactory {
             return UUIDUtils.generateUUID();
         }
         return correlationId;
+    }
+
+    private void addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
+            List<AgentWorkerCommand> commands, AgentWorkerCommandContext context) {
+
+        /* LoginAgentWorkerCommand needs to always be used together with ClearSensitivePayloadOnForceAuthenticateCommand */
+
+        commands.add(new ClearSensitivePayloadOnForceAuthenticateCommand(context));
+        commands.add(
+                new LoginAgentWorkerCommand(
+                        context,
+                        loginAgentWorkerCommandState,
+                        createCommandMetricState(context.getRequest()),
+                        loginAgentEventProducer));
     }
 }
