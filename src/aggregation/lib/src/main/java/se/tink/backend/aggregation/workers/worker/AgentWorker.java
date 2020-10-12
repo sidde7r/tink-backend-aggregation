@@ -131,6 +131,9 @@ public class AgentWorker implements Managed {
     @Override
     public void stop() throws Exception {
         Stopwatch stopwatch = Stopwatch.createStarted();
+        log.info(
+                "Sleeping for {}ms, to ensure that we get all new operations before we start the countdown",
+                NEW_AGGREGATION_SLACK.toMillis());
         Thread.sleep(NEW_AGGREGATION_SLACK.toMillis());
         log.info("Initiated shutdown of thread pools");
         rateLimitedExecutorService.stop();
