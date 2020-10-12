@@ -46,7 +46,7 @@ public class DnbAuthenticator implements AutoAuthenticator, ThirdPartyAppAuthent
 
     @Override
     public ThirdPartyAppResponse<String> init() {
-        if (!StringUtils.isNotEmpty(credentials.getField(DnbConstants.CredentialsKeys.PSU_ID))) {
+        if (StringUtils.isEmpty(credentials.getField(DnbConstants.CredentialsKeys.PSU_ID))) {
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.AUTHENTICATION_ERROR);
         } else {
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
