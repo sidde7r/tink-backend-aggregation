@@ -34,14 +34,18 @@ public class ExecutorServiceUtils {
         Stopwatch timer = Stopwatch.createStarted();
 
         log.info(
-                "Initiated shutdown of thread pool '"
-                        + executorServiceIdentifier
-                        + "'. Waiting for it to drain...");
+                "Initiated shutdown of thread pool '{}'. Waiting for maximum {} seconds.",
+                executorServiceIdentifier,
+                waitingTimeUnit.toSeconds(waitingTime));
 
         boolean wasGracefulShutdown;
         try {
             wasGracefulShutdown = executor.awaitTermination(waitingTime, waitingTimeUnit);
         } catch (InterruptedException e) {
+            log.warn(
+                    "Shutdown of '{}' was interrupted while awaiting termination.",
+                    executorServiceIdentifier,
+                    e);
             Thread.currentThread().interrupt();
             wasGracefulShutdown = false;
         }

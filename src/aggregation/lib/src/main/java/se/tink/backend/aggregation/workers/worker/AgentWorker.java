@@ -5,6 +5,7 @@ import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
+import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -60,13 +61,12 @@ public class AgentWorker implements Managed {
      * Instance from the internal load-balancer, we need to add some slack in order for the instance
      * to not hit the above timeout before we terminate the instance.
      */
-    private static final long NEW_AGGREGATION_SLACK_SECONDS = 60;
+    private static final Duration NEW_AGGREGATION_SLACK = Duration.ofSeconds(60);
     /**
      * The time in minutes we wait until we forcefully shut down all agent work. This is a
      * combination of the above two numbers.
      */
-    private static final long SHUTDOWN_TIMEOUT_SECONDS =
-            LONGEST_SUPPLEMENTAL_INFORMATION_SECONDS + NEW_AGGREGATION_SLACK_SECONDS;
+    private static final long SHUTDOWN_TIMEOUT_SECONDS = LONGEST_SUPPLEMENTAL_INFORMATION_SECONDS;
 
     private static final MetricId AGGREGATION_EXECUTOR_SERVICE_METRIC_NAME =
             MetricId.newId("aggregation_executor_service");
@@ -131,6 +131,10 @@ public class AgentWorker implements Managed {
     @Override
     public void stop() throws Exception {
         Stopwatch stopwatch = Stopwatch.createStarted();
+        log.info(
+                "Sleeping for {}ms, to ensure that we get all new operations before we start the countdown",
+                NEW_AGGREGATION_SLACK.toMillis());
+        Thread.sleep(NEW_AGGREGATION_SLACK.toMillis());
         log.info("Initiated shutdown of thread pools");
         rateLimitedExecutorService.stop();
 
