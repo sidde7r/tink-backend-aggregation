@@ -177,15 +177,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         return new MetricId.MetricLabels().add("action", action);
     }
 
-    public boolean shouldForceAuthenticate() {
-        boolean result = context.getRequest().isForceAuthenticate();
-        logger.info(
-                "RefreshInformationRequest contain - isForceAuthenticate: {}, credentialsId: {}",
-                result,
-                credentials.getId());
-        return result;
-    }
-
     private Optional<Boolean> isLoggedIn() throws Exception {
         if (!(agent instanceof PersistentLogin)) {
             logger.info("agent is not instanceof PersistentLogin");
@@ -208,12 +199,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             timeLoadingSession = System.nanoTime() - beforeLoad;
 
             long beforeIsLoggedIn = System.nanoTime();
-            if (shouldForceAuthenticate()) {
-                timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
-                action.completed();
-                logger.info("Clearing session to force authentication towards the bank");
-                persistentAgent.clearLoginSession();
-            } else if (persistentAgent.isLoggedIn()) {
+            if (persistentAgent.isLoggedIn()) {
                 timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
                 logger.info("We're already logged in. Moving along.");
