@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
@@ -41,6 +40,8 @@ public class LoginExecutor {
     private final LoginAgentEventProducer loginAgentEventProducer;
     private long loginWorkerStartTimestamp;
     private AgentWorkerCommandContext context;
+    private SupplementalInformationControllerUsageMonitorProxy
+            supplementalInformationControllerUsageMonitorProxy;
 
     private static final ImmutableMap<LoginError, LoginResult> LOGIN_ERROR_MAPPER =
             ImmutableMap.<LoginError, LoginResult>builder()
@@ -186,14 +187,17 @@ public class LoginExecutor {
     public LoginExecutor(
             final StatusUpdater statusUpdater,
             final AgentWorkerCommandContext context,
-            final SupplementalInformationController supplementalInformationController,
+            final SupplementalInformationControllerUsageMonitorProxy
+                    supplementalInformationControllerUsageMonitorProxy,
             final LoginAgentEventProducer loginAgentEventProducer,
             final long loginWorkerStartTimestamp) {
-        initLoginHandlerChain(supplementalInformationController);
-        initLoginExceptionHandlerChain(statusUpdater, context);
+        this.supplementalInformationControllerUsageMonitorProxy =
+                supplementalInformationControllerUsageMonitorProxy;
         this.loginAgentEventProducer = loginAgentEventProducer;
         this.loginWorkerStartTimestamp = loginWorkerStartTimestamp;
         this.context = context;
+        initLoginHandlerChain();
+        initLoginExceptionHandlerChain(statusUpdater);
     }
 
     private void emitLoginResultEvent(LoginResult reason) {
@@ -211,16 +215,15 @@ public class LoginExecutor {
                 context.getRequest().getCredentials().getUserId());
     }
 
-    private void initLoginHandlerChain(
-            final SupplementalInformationController supplementalInformationController) {
+    private void initLoginHandlerChain() {
         loginHandlerChain.add(
-                new ProgressiveAuthenticatorLoginHandler(supplementalInformationController));
+                new ProgressiveAuthenticatorLoginHandler(
+                        supplementalInformationControllerUsageMonitorProxy));
         loginHandlerChain.add(new DefaultAgentLoginController());
         loginHandlerChain.add(new LoginFailedHandler());
     }
 
-    private void initLoginExceptionHandlerChain(
-            final StatusUpdater statusUpdater, final AgentWorkerCommandContext context) {
+    private void initLoginExceptionHandlerChain(final StatusUpdater statusUpdater) {
         loginExceptionHandlerChain.add(new BankIdLoginExceptionHandler(statusUpdater, context));
         loginExceptionHandlerChain.add(
                 new BankServiceLoginExceptionHandler(statusUpdater, context));
@@ -261,7 +264,7 @@ public class LoginExecutor {
             if (result.isPresent()) {
                 switch (result.get()) {
                     case CONTINUE:
-                        emitLoginResultEvent(LoginResult.SUCCESSFUL_LOGIN);
+                        publishSuccessLoginResultEvent();
                         break;
                     case ABORT:
                         // TODO: Send a dedicated event here (USER_ABORT)
@@ -274,6 +277,14 @@ public class LoginExecutor {
             }
         }
         throw new IllegalStateException("There is no more login handlers to process");
+    }
+
+    private void publishSuccessLoginResultEvent() {
+        LoginResult result =
+                supplementalInformationControllerUsageMonitorProxy.isUsed()
+                        ? LoginResult.SUCCESSFUL_LOGIN
+                        : LoginResult.ALREADY_LOGGED_IN;
+        emitLoginResultEvent(result);
     }
 
     private AgentWorkerCommandResult processLoginExceptionHandlerChain(

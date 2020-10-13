@@ -17,9 +17,9 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.workers.commands.login.LoginExecutor;
+import se.tink.backend.aggregation.workers.commands.login.SupplementalInformationControllerUsageMonitorProxy;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -71,7 +71,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     private final Credentials credentials;
     private final User user;
     private Agent agent;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationControllerUsageMonitorProxy
+            supplementalInformationController;
     private final LoginAgentEventProducer loginAgentEventProducer;
 
     private InterProcessSemaphoreMutex lock;
@@ -90,7 +91,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.credentials = request.getCredentials();
         this.user = request.getUser();
         this.supplementalInformationController =
-                new SupplementalInformationControllerImpl(context, request.getCredentials());
+                new SupplementalInformationControllerUsageMonitorProxy(
+                        new SupplementalInformationControllerImpl(
+                                context, request.getCredentials()));
         this.loginAgentEventProducer = loginAgentEventProducer;
         this.startTime = System.nanoTime();
     }

@@ -16,9 +16,9 @@ import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.commands.login.BankIdLoginExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.login.LoginExecutor;
+import se.tink.backend.aggregation.workers.commands.login.SupplementalInformationControllerUsageMonitorProxy;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
@@ -100,7 +100,7 @@ public class LoginExecutorTest {
                 new LoginExecutor(
                         Mockito.mock(StatusUpdater.class),
                         context,
-                        Mockito.mock(SupplementalInformationController.class),
+                        Mockito.mock(SupplementalInformationControllerUsageMonitorProxy.class),
                         loginAgentEventProducer,
                         0);
 
