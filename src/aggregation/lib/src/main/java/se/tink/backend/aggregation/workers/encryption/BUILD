@@ -5,7 +5,6 @@ java_library(
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/encryption/versions",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/wrappers",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
@@ -35,6 +34,7 @@ java_library(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
         "@com_google_protobuf//:protobuf_java",
+        "@tink_backend//src/credentials/libraries/encryption/versions",
         "@tink_backend//src/libraries/serialization_utils",
     ],
 )
