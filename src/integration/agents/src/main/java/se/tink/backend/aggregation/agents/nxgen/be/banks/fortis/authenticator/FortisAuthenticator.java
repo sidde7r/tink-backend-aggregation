@@ -35,7 +35,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.UserInfoResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -62,10 +61,6 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
-
-        if (ForceAuthentication.shouldForceAuthentication(credentialsRequest)) {
-            clearAuthenticationData();
-        }
     }
 
     @Override

@@ -124,8 +124,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                         new CreditAgricoleBaseAuthenticator(
                                 apiClient, persistentStorage, agentConfiguration),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

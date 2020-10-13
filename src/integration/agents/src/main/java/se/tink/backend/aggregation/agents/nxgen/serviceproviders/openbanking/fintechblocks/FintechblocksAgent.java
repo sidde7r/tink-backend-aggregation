@@ -66,8 +66,7 @@ public abstract class FintechblocksAgent extends NextGenerationAgent
                         new FintechblocksAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

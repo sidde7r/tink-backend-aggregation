@@ -24,8 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.sec
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuthenticator {
 
@@ -36,15 +34,10 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuth
     public JyskeKeyCardAuthenticator(
             JyskeApiClient client,
             JyskePersistentStorage persistentStorage,
-            Credentials credentials,
-            CredentialsRequest request) {
+            Credentials credentials) {
         this.apiClient = client;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
-
-        if (ForceAuthentication.shouldForceAuthentication(request)) {
-            persistentStorage.invalidateToken();
-        }
     }
 
     @Override

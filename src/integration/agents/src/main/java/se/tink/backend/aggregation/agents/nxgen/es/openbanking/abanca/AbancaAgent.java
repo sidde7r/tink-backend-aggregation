@@ -61,8 +61,7 @@ public final class AbancaAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         abancaAuthenticator,
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
         return new AutoAuthenticationController(
                 request,
                 context,

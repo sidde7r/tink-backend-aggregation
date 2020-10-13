@@ -71,8 +71,7 @@ public final class ChebancaAgent extends NextGenerationAgent
                         new ChebancaAuthenticator(
                                 apiClient, getAgentConfiguration(), strongAuthenticationState),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

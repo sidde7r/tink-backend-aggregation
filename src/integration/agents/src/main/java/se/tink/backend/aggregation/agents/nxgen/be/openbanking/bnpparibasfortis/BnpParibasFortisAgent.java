@@ -58,8 +58,7 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         authenticator,
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

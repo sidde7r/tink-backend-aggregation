@@ -32,7 +32,7 @@ public final class JyskeNemidAgent extends JyskeAbstractAgent {
 
         JyskeNemidAuthenticator jyskeNemidAuthenticator =
                 new JyskeNemidAuthenticator(
-                        apiClient, client, persistentStorage, username, password, request);
+                        apiClient, client, persistentStorage, username, password);
 
         return new AutoAuthenticationController(
                 request,

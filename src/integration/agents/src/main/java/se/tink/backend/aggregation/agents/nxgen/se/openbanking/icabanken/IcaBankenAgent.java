@@ -69,8 +69,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
                                 agentConfiguration,
                                 credentialsRequest),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

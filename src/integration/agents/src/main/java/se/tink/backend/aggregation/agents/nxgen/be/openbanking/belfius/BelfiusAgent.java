@@ -67,8 +67,7 @@ public final class BelfiusAgent extends NextGenerationAgent
                                 agentConfiguration,
                                 credentials.getField(BelfiusConstants.CredentialKeys.IBAN)),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

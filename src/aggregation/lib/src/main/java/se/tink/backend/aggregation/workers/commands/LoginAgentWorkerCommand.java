@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.workers.commands.login.LoginExecutor;
@@ -179,7 +178,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     public boolean shouldForceAuthenticate() {
-        boolean result = ForceAuthentication.shouldForceAuthentication(context.getRequest());
+        boolean result = context.getRequest().isForceAuthenticate();
         logger.info(
                 "RefreshInformationRequest contain - isForceAuthenticate: {}, credentialsId: {}",
                 result,

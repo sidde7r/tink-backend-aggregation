@@ -18,10 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.sec
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppPollResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class JyskeNemidAuthenticator extends NemIdCodeAppAuthenticator<NemIdGenerateCodeResponse>
         implements AutoAuthenticator {
@@ -34,17 +32,12 @@ public class JyskeNemidAuthenticator extends NemIdCodeAppAuthenticator<NemIdGene
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             String userId,
-            String pincode,
-            CredentialsRequest request) {
+            String pincode) {
         super(client);
         this.apiClient = apiClient;
         this.jyskePersistentStorage = new JyskePersistentStorage(persistentStorage);
         jyskePersistentStorage.setUserId(userId);
         jyskePersistentStorage.setPincode(pincode);
-
-        if (ForceAuthentication.shouldForceAuthentication(request)) {
-            jyskePersistentStorage.invalidateToken();
-        }
     }
 
     @Override

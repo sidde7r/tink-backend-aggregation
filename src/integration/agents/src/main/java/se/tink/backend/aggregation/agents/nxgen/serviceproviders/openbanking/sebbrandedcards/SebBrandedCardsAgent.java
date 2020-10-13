@@ -50,8 +50,7 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
                         supplementalInformationHelper,
                         authenticator,
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
         return new AutoAuthenticationController(
                 request,
                 context,

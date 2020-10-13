@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class UbiAuthenticator extends CbiGlobeAuthenticator {
 
@@ -27,9 +26,8 @@ public class UbiAuthenticator extends CbiGlobeAuthenticator {
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
             CbiGlobeConfiguration configuration,
-            SupplementalRequester supplementalRequester,
-            CredentialsRequest request) {
-        super(apiClient, strongAuthenticationState, userState, configuration, request);
+            SupplementalRequester supplementalRequester) {
+        super(apiClient, strongAuthenticationState, userState, configuration);
 
         this.supplementalRequester = supplementalRequester;
     }

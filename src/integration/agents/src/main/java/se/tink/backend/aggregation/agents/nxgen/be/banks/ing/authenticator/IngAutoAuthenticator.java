@@ -17,10 +17,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.MobileHelloResponseEntity;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngAutoAuthenticator implements AutoAuthenticator {
     private static final Logger logger =
@@ -33,18 +31,11 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
     private int tryCounter;
 
     public IngAutoAuthenticator(
-            IngApiClient apiClient,
-            PersistentStorage persistentStorage,
-            IngHelper ingHelper,
-            CredentialsRequest request) {
+            IngApiClient apiClient, PersistentStorage persistentStorage, IngHelper ingHelper) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.ingHelper = ingHelper;
         this.tryCounter = 0;
-
-        if (ForceAuthentication.shouldForceAuthentication(request)) {
-            persistentStorage.put(IngConstants.Storage.IS_MANUAL_AUTHENTICATION, true);
-        }
     }
 
     @Override

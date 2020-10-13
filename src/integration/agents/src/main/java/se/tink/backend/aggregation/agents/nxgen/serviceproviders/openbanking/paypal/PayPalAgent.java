@@ -91,8 +91,7 @@ public final class PayPalAgent extends NextGenerationAgent
                                 persistentStorage,
                                 getAgentConfiguration().getProviderSpecificConfiguration()),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         Authenticator aisAuthenticator =
                 new AutoAuthenticationController(

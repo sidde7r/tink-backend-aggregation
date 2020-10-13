@@ -106,8 +106,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                             apiClient,
                             new StrongAuthenticationState(request.getAppUriId()),
                             userState,
-                            getAgentConfiguration().getProviderSpecificConfiguration(),
-                            request);
+                            getAgentConfiguration().getProviderSpecificConfiguration());
         }
 
         return authenticator;

@@ -83,8 +83,7 @@ public final class ICSAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new ICSOAuthAuthenticator(apiClient, sessionStorage),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

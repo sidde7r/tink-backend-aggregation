@@ -69,8 +69,7 @@ public abstract class BankdataAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new BankdataAuthenticator(apiClient),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

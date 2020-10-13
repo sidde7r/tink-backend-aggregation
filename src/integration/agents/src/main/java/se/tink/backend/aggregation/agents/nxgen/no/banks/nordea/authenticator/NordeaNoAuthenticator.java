@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.Authentic
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.ForceAuthentication;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
@@ -23,7 +22,6 @@ public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
             AuthenticationClient authenticationClient,
             NordeaNoStorage storage,
             RandomValueGenerator randomValueGenerator,
-            CredentialsRequest request,
             SupplementalRequester supplementalRequester,
             Catalog catalog) {
         this.storage = storage;
@@ -37,10 +35,6 @@ public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
                                 supplementalRequester,
                                 catalog),
                         new VerifySessionStep(authenticationClient, storage, randomValueGenerator));
-
-        if (ForceAuthentication.shouldForceAuthentication(request)) {
-            storage.invalidateOauthToken();
-        }
     }
 
     @Override

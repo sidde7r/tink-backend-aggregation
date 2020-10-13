@@ -110,8 +110,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new BpceGroupAuthenticator(bpceGroupApiClient, bpceOAuth2TokenStorage),
                         credentials,
-                        strongAuthenticationState,
-                        request);
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

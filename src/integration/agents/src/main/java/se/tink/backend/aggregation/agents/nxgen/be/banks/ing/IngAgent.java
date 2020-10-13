@@ -85,7 +85,7 @@ public final class IngAgent
                                 new IngCardReaderAuthenticator(
                                         apiClient, persistentStorage, ingHelper),
                                 supplementalInformationFormer),
-                        new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper, request));
+                        new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper));
     }
 
     protected void configureHttpClient(
