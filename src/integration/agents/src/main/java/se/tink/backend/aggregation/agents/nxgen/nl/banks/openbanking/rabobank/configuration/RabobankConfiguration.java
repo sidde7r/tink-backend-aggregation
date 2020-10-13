@@ -53,7 +53,13 @@ public final class RabobankConfiguration implements ClientConfiguration {
         return Base64.getDecoder().decode(getClientSSLP12());
     }
 
+    @JsonIgnore private RabobankUrlFactory urlFactory;
+
+    @JsonIgnore
     public RabobankUrlFactory getUrls() {
-        return new RabobankUrlFactory(new URL(RabobankConstants.BASE_URL));
+        if (urlFactory == null) {
+            urlFactory = new RabobankUrlFactory(new URL(RabobankConstants.BASE_URL));
+        }
+        return urlFactory;
     }
 }
