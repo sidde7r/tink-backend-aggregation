@@ -17,6 +17,8 @@ public final class BarclaysConstants {
                     "https://oauth.tiaa.barclays.com/BarclaysBusiness/.well-known/openid-configuration";
             public static final String CORPORATE_WELL_KNOWN_URL =
                     "https://oauth.tiaa.barclays.com/BarclaysCorporate/.well-known/openid-configuration";
+            public static final String BARCLAYCARD_BUSINESS_WELL_KNOWN_URL =
+                    "https://oauth.tiaa.barclays.com/BCP/.well-known/openid-configuration";
         }
     }
 }
