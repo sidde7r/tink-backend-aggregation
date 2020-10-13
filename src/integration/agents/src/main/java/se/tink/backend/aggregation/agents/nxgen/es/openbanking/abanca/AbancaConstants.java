@@ -11,11 +11,10 @@ public final class AbancaConstants {
 
     public static class Urls {
 
-        public static final String BASE_API_URL = "https://api.abanca.com/psd2";
-        public static final String BASE_AUTH_URL = "https://api.abanca.com";
+        public static final String BASE_API_URL = "https://api.abanca.com";
 
-        public static final URL AUTHORIZATION = new URL(BASE_AUTH_URL + Endpoints.AUTHORIZATION);
-        public static final URL TOKEN = new URL(BASE_AUTH_URL + Endpoints.TOKEN);
+        public static final URL AUTHORIZATION = new URL(BASE_API_URL + Endpoints.AUTHORIZATION);
+        public static final URL TOKEN = new URL(BASE_API_URL + Endpoints.TOKEN);
         public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
         public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
         public static final URL BALANCE = new URL(BASE_API_URL + Endpoints.BALANCE);
@@ -23,10 +22,10 @@ public final class AbancaConstants {
 
     public static class Endpoints {
         public static final String AUTHORIZATION = "/oauth/{clientId}/Abanca";
-        public static final String ACCOUNTS = "/me/accounts";
-        public static final String TRANSACTIONS = "/me/accounts/{accountId}/transactions";
         public static final String TOKEN = "/oauth2/token";
-        public static final String BALANCE = "/me/accounts/{accountId}/balance";
+        public static final String ACCOUNTS = "/psd2/me/accounts";
+        public static final String TRANSACTIONS = "/psd2/me/accounts/{accountId}/transactions";
+        public static final String BALANCE = "/psd2/me/accounts/{accountId}/balance";
     }
 
     public static class StorageKeys {

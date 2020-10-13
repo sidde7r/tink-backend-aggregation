@@ -32,7 +32,6 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Str
 
     @Override
     public String nextKey() {
-        // TODO: fix when bank will fix their API
-        return links.getNext().replace("/psd2001/psd2", "");
+        return links.getNext();
     }
 }
