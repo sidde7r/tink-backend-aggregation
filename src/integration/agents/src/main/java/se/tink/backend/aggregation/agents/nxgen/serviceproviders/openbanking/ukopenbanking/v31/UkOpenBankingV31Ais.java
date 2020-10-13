@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.IdentityDataMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -146,14 +146,14 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         return new CreditCardAccountMapper(
                 new DefaultCreditCardBalanceMapper(valueExtractor),
-                new IdentifierMapper(valueExtractor));
+                new DefaultIdentifierMapper(valueExtractor));
     }
 
     public static TransactionalAccountMapper defaultTransactionalAccountMapper() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         return new TransactionalAccountMapper(
                 new TransactionalAccountBalanceMapper(valueExtractor),
-                new IdentifierMapper(valueExtractor));
+                new DefaultIdentifierMapper(valueExtractor));
     }
 
     public static IdentityDataV31Fetcher defaultIdentityDataFetcher(
