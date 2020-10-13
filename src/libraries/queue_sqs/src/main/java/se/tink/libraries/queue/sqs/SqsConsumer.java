@@ -12,10 +12,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 import se.tink.libraries.queue.QueueConsumer;
 import se.tink.libraries.queue.QueueProducer;
 
-public class SqsConsumer implements QueueConsumer {
+public class SqsConsumer extends ManagedSafeStop implements QueueConsumer {
 
     private final AbstractExecutionThreadService service;
     private final SqsQueue sqsQueue;
@@ -108,7 +109,7 @@ public class SqsConsumer implements QueueConsumer {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void doStop() throws Exception {
         if (service.isRunning()) {
             service.awaitTerminated(30, TimeUnit.SECONDS);
         }

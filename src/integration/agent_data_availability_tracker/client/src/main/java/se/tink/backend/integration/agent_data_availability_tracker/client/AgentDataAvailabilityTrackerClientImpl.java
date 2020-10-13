@@ -18,8 +18,10 @@ import se.tink.backend.integration.agent_data_availability_tracker.client.serial
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.LoanTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.PortfolioTrackingSerializer;
+import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 
-public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabilityTrackerClient {
+public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
+        implements AgentDataAvailabilityTrackerClient {
 
     private static final Logger log =
             LoggerFactory.getLogger(AgentDataAvailabilityTrackerClient.class);
@@ -203,7 +205,7 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     }
 
     @Override
-    public void stop() throws Exception {
+    public void doStop() throws Exception {
         log.debug("Received signal to stop.");
         service.stopAsync();
         service.awaitTerminated(60, TimeUnit.SECONDS);
