@@ -114,6 +114,7 @@ ignoredAgentsForCapabilityTest:
   - nxgen.pt.openbanking.cofidis.CofidisAgent
   - nxgen.pt.openbanking.unicre.UnicreAgent
   - nxgen.demo.openbanking.demobank.DemobankAgent
+  - nxgen.fr.openbanking.creditagricole.savoie.CreditAgricoleSavoieAgent
 
 #
 #  These agents are temporarily ignored for initialisation tests,
