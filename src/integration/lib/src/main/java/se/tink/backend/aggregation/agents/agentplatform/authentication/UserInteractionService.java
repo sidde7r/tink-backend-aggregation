@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class UserInteractionService {
                     .map(entry -> new AgentFieldValue(entry.getKey(), entry.getValue()))
                     .collect(Collectors.toList());
         } catch (SupplementalInfoException e) {
-            return new LinkedList<>();
+            return Collections.emptyList();
         }
     }
 }

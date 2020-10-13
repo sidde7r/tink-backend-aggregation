@@ -26,8 +26,12 @@ public class AgentAuthenticationResultHandlingResult {
         return Optional.ofNullable(authenticationError);
     }
 
-    public Optional<AgentAuthenticationRequest> getAgentAuthenticationNextRequest() {
-        return Optional.ofNullable(agentAuthenticationNextRequest);
+    public AgentAuthenticationRequest getAgentAuthenticationNextRequest() {
+        return agentAuthenticationNextRequest;
+    }
+
+    public boolean isFinalResult() {
+        return agentAuthenticationNextRequest == null;
     }
 
     public static AgentAuthenticationResultHandlingResult authenticationFailed(

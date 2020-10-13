@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator;
 
-public class AuthenticatorSleepHelper {
+public class HumanInteractionDelaySimulator {
 
-    public void sleepForMilliseconds(final int milliseconds) {
+    public void delayExecution(final int milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {

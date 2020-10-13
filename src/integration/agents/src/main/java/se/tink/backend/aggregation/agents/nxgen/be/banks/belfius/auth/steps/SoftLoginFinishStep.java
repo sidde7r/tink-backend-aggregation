@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusSessionService;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
@@ -41,9 +42,6 @@ public class SoftLoginFinishStep
     }
 
     private void closeSession(BelfiusProcessState processState) {
-        apiClient.closeSession(
-                processState.getSessionId(),
-                processState.getMachineId(),
-                processState.incrementAndGetRequestCounterAggregated());
+        new BelfiusSessionService(apiClient, processState).closeSession();
     }
 }

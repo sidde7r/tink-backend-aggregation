@@ -25,6 +25,18 @@ public class KbcFetchConsentAuthenticationStep
     @Override
     public AgentAuthenticationResult execute(
             AgentUserInteractionAuthenticationProcessRequest authenticationProcessRequest) {
+        KbcPersistedData persistedData =
+                kbcPersistedDataAccessorFactory.createKbcAuthenticationPersistedDataAccessor(
+                        authenticationProcessRequest.getAuthenticationPersistedData());
+        KbcAuthenticationData kbcAuthenticationData = persistedData.getKbcAuthenticationData();
+        kbcAuthenticationData.setConsentId(fetchConsentId(authenticationProcessRequest));
+        return new AgentProceedNextStepAuthenticationResult(
+                AgentAuthenticationProcessStep.identifier(RedirectPreparationRedirectUrlStep.class),
+                persistedData.storeKbcAuthenticationData(kbcAuthenticationData));
+    }
+
+    private String fetchConsentId(
+            AgentUserInteractionAuthenticationProcessRequest authenticationProcessRequest) {
         KbcFetchConsentExternalApiCallParameters fetchConsentExternalApiCallParameters =
                 new KbcFetchConsentExternalApiCallParameters(
                         authenticationProcessRequest
@@ -32,18 +44,9 @@ public class KbcFetchConsentAuthenticationStep
                                 .getFieldValue(IbanFieldDefinition.id()),
                         redirectUrl.toString(),
                         psuIpAddress);
-        final String consentId =
-                fetchConsentExternalApiCall
-                        .execute(fetchConsentExternalApiCallParameters)
-                        .getResponse()
-                        .get();
-        KbcPersistedData persistedData =
-                kbcPersistedDataAccessorFactory.createKbcAuthenticationPersistedDataAccessor(
-                        authenticationProcessRequest.getAuthenticationPersistedData());
-        KbcAuthenticationData kbcAuthenticationData = persistedData.getKbcAuthenticationData();
-        kbcAuthenticationData.setConsentId(consentId);
-        return new AgentProceedNextStepAuthenticationResult(
-                AgentAuthenticationProcessStep.identifier(RedirectPreparationRedirectUrlStep.class),
-                persistedData.storeKbcAuthenticationData(kbcAuthenticationData));
+        return fetchConsentExternalApiCall
+                .execute(fetchConsentExternalApiCallParameters)
+                .getResponse()
+                .get();
     }
 }

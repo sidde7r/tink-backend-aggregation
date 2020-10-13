@@ -44,7 +44,7 @@ public class AgentPlatformHttpClientTest extends WireMockIntegrationTest {
                                         .withHeader("Content-Type", "application/json")));
 
         AgentPlatformHttpClient adapter = new AgentPlatformHttpClient(httpClient);
-        LinkedMultiValueMap headers = new LinkedMultiValueMap<String, String>();
+        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap();
         headers.add("header", "headerValue");
         headers.add("Content-Type", "application/json");
         RequestEntity request =

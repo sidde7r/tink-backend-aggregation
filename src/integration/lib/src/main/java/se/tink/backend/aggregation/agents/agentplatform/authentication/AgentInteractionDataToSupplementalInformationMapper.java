@@ -3,19 +3,16 @@ package se.tink.backend.aggregation.agents.agentplatform.authentication;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.label.ConstantFieldLabel;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 
+@AllArgsConstructor
 public class AgentInteractionDataToSupplementalInformationMapper {
 
-    private SupplementalInformationFormer supplementalInformationFormer;
-
-    public AgentInteractionDataToSupplementalInformationMapper(
-            SupplementalInformationFormer supplementalInformationFormer) {
-        this.supplementalInformationFormer = supplementalInformationFormer;
-    }
+    private final SupplementalInformationFormer supplementalInformationFormer;
 
     public Field toField(final AgentFieldDefinition fieldDefinition) {
         Field field = supplementalInformationFormer.getField(fieldDefinition.getFieldIdentifier());

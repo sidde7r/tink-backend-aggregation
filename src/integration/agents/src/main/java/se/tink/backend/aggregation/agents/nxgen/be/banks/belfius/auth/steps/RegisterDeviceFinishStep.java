@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusSessionService;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedData;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessorFactory;
@@ -41,9 +42,6 @@ public class RegisterDeviceFinishStep
     }
 
     private void closeSession(BelfiusProcessState processState) {
-        apiClient.closeSession(
-                processState.getSessionId(),
-                processState.getMachineId(),
-                processState.incrementAndGetRequestCounterAggregated());
+        new BelfiusSessionService(apiClient, processState).closeSession();
     }
 }

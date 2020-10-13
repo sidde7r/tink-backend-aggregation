@@ -15,8 +15,10 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
@@ -54,21 +56,18 @@ public class AgentPlatformAuthenticationServiceTest {
         // given
         AgentAuthenticationProcessStepIdentifier lastStepIdentifier =
                 AgentAuthenticationProcessStepIdentifier.of("lastStep");
-        AgentAuthenticationProcessStep firstStep =
-                Mockito.mock(AgentAuthenticationProcessStep.class);
-        Mockito.when(agentAuthenticationProcess.getStartStep()).thenReturn(firstStep);
         AgentUserInteractionDefinitionResult firstStepResult =
                 new AgentUserInteractionDefinitionResult(
-                        lastStepIdentifier, new AgentAuthenticationPersistedData(new HashMap<>()));
-        AgentFieldDefinition usernameFieldDefinition = Mockito.mock(AgentFieldDefinition.class);
-        firstStepResult.requireField(usernameFieldDefinition);
-        Mockito.when(
-                        firstStep.execute(
-                                Mockito.eq(
-                                        new AgentStartAuthenticationProcessRequest(
-                                                new AgentAuthenticationPersistedData(
-                                                        new HashMap<>())))))
-                .thenReturn(firstStepResult);
+                                lastStepIdentifier,
+                                new AgentAuthenticationPersistedData(new HashMap<>()))
+                        .requireField(Mockito.mock(AgentFieldDefinition.class));
+        AgentAuthenticationProcessStep firstStep =
+                createAuthenticationStep(
+                        new AgentStartAuthenticationProcessRequest(
+                                new AgentAuthenticationPersistedData(new HashMap<>())),
+                        firstStepResult);
+        Mockito.when(agentAuthenticationProcess.getStartStep()).thenReturn(firstStep);
+
         AgentFieldValue usernameFieldValue = Mockito.mock(AgentFieldValue.class);
         List<AgentFieldValue> agentFieldValues = Lists.newArrayList(usernameFieldValue);
         Mockito.when(
@@ -76,24 +75,17 @@ public class AgentPlatformAuthenticationServiceTest {
                                 firstStepResult.getUserInteractionDefinition().getRequiredFields()))
                 .thenReturn(agentFieldValues);
 
-        AgentAuthenticationProcessStep lastStep =
-                Mockito.mock(AgentAuthenticationProcessStep.class);
         Map<String, String> persistentData = new HashMap<>();
         persistentData.put("key", "value");
-        AgentSucceededAuthenticationResult finalResult =
-                new AgentSucceededAuthenticationResult(
-                        new AgentAuthenticationPersistedData(persistentData));
-        Mockito.when(
-                        lastStep.execute(
-                                Mockito.eq(
-                                        new AgentUserInteractionAuthenticationProcessRequest(
-                                                lastStepIdentifier,
-                                                new AgentAuthenticationPersistedData(
-                                                        new HashMap<>()),
-                                                new AgentAuthenticationProcessState(
-                                                        new HashMap<>()),
-                                                agentFieldValues))))
-                .thenReturn(finalResult);
+        AgentAuthenticationProcessStep lastStep =
+                createAuthenticationStep(
+                        new AgentUserInteractionAuthenticationProcessRequest(
+                                lastStepIdentifier,
+                                new AgentAuthenticationPersistedData(new HashMap<>()),
+                                new AgentAuthenticationProcessState(new HashMap<>()),
+                                agentFieldValues),
+                        new AgentSucceededAuthenticationResult(
+                                new AgentAuthenticationPersistedData(persistentData)));
         Mockito.when(agentAuthenticationProcess.nextStep(Mockito.eq(lastStepIdentifier)))
                 .thenReturn(lastStep);
 
@@ -112,16 +104,13 @@ public class AgentPlatformAuthenticationServiceTest {
         persistentData.put("username", usernameValue);
         persistentStorage.put("username", usernameValue);
         AgentAuthenticationProcessStep firstStep =
-                Mockito.mock(AgentAuthenticationProcessStep.class);
+                createAuthenticationStep(
+                        new AgentStartAuthenticationProcessRequest(
+                                new AgentAuthenticationPersistedData(persistentData)),
+                        new AgentFailedAuthenticationResult(
+                                new ServerError(),
+                                new AgentAuthenticationPersistedData(new HashMap<>())));
         Mockito.when(agentAuthenticationProcess.getStartStep()).thenReturn(firstStep);
-        AgentFailedAuthenticationResult failedAuthenticationResult =
-                new AgentFailedAuthenticationResult(
-                        new ServerError(), new AgentAuthenticationPersistedData(new HashMap<>()));
-        AgentStartAuthenticationProcessRequest startAuthenticationProcessRequest =
-                new AgentStartAuthenticationProcessRequest(
-                        new AgentAuthenticationPersistedData(persistentData));
-        Mockito.when(firstStep.execute(Mockito.eq(startAuthenticationProcessRequest)))
-                .thenReturn(failedAuthenticationResult);
 
         // when
         Throwable thrown =
@@ -131,5 +120,13 @@ public class AgentPlatformAuthenticationServiceTest {
         // then
         Assertions.assertThat(thrown).isInstanceOf(AgentAuthenticationException.class);
         Assertions.assertThat(persistentStorage.isEmpty()).isTrue();
+    }
+
+    private AgentAuthenticationProcessStep createAuthenticationStep(
+            AgentAuthenticationRequest request, AgentAuthenticationResult result) {
+        AgentAuthenticationProcessStep authStep =
+                Mockito.mock(AgentAuthenticationProcessStep.class);
+        Mockito.when(authStep.execute(Mockito.eq(request))).thenReturn(result);
+        return authStep;
     }
 }

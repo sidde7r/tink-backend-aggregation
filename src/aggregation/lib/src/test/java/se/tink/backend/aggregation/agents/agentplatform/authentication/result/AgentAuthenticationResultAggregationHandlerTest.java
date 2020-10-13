@@ -57,7 +57,7 @@ public class AgentAuthenticationResultAggregationHandlerTest {
         Mockito.verify(persistentStorageService)
                 .writeToAgentPersistentStorage(agentAuthenticationPersistedData);
         Assert.assertFalse(result.getAuthenticationError().isPresent());
-        Assert.assertFalse(result.getAgentAuthenticationNextRequest().isPresent());
+        Assert.assertTrue(result.isFinalResult());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class AgentAuthenticationResultAggregationHandlerTest {
         Assert.assertEquals(
                 new AgentAuthenticationError(new InvalidCredentialsError()),
                 result.getAuthenticationError().get());
-        Assert.assertFalse(result.getAgentAuthenticationNextRequest().isPresent());
+        Assert.assertTrue(result.isFinalResult());
     }
 
     @Test
@@ -110,11 +110,11 @@ public class AgentAuthenticationResultAggregationHandlerTest {
         AgentAuthenticationResultHandlingResult result =
                 objectUnderTest.handle(authenticationResult);
         // then
-        Assertions.assertThat(result.getAgentAuthenticationNextRequest().get())
+        Assertions.assertThat(result.getAgentAuthenticationNextRequest())
                 .isExactlyInstanceOf(AgentUserInteractionAuthenticationProcessRequest.class);
         AgentUserInteractionAuthenticationProcessRequest userInteractionRequest =
                 (AgentUserInteractionAuthenticationProcessRequest)
-                        result.getAgentAuthenticationNextRequest().get();
+                        result.getAgentAuthenticationNextRequest();
         Assertions.assertThat(userInteractionRequest.getAuthenticationProcessState())
                 .isEqualTo(agentAuthenticationProcessState);
         Assertions.assertThat(userInteractionRequest.getAuthenticationProcessStepIdentifier().get())
@@ -146,12 +146,12 @@ public class AgentAuthenticationResultAggregationHandlerTest {
         AgentAuthenticationResultHandlingResult result =
                 objectUnderTest.handle(authenticationResult);
         // then
-        Assertions.assertThat(result.getAgentAuthenticationNextRequest().isPresent()).isTrue();
-        Assertions.assertThat(result.getAgentAuthenticationNextRequest().get())
+        Assertions.assertThat(result.isFinalResult()).isFalse();
+        Assertions.assertThat(result.getAgentAuthenticationNextRequest())
                 .isExactlyInstanceOf(AgentRemoteInteractionAuthenticationRequest.class);
         AgentRemoteInteractionAuthenticationRequest remoteInteractionRequest =
                 (AgentRemoteInteractionAuthenticationRequest)
-                        result.getAgentAuthenticationNextRequest().get();
+                        result.getAgentAuthenticationNextRequest();
         Assertions.assertThat(
                         remoteInteractionRequest.getAuthenticationProcessStepIdentifier().get())
                 .isEqualTo(agentAuthenticationProcessStepIdentifier);

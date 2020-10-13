@@ -33,20 +33,26 @@ public class RegisterDeviceStartStep
                         request.getAuthenticationPersistedData());
         BelfiusAuthenticationData authenticationData =
                 persistenceData.getBelfiusAuthenticationData();
-        BelfiusProcessState processState =
-                request.getAuthenticationProcessState().get(BelfiusProcessState.KEY);
-        String token = BelfiusIdGenerationUtils.generateDeviceToken();
-        processState.setDeviceToken(token);
-        openSession(processState);
-        startFlow(processState);
-        bacProductList(processState);
-        sendIsDeviceRegistered(authenticationData, processState);
+
+        initProcessState(request, authenticationData);
 
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(
                         RegisterDeviceGetLoginCodeStep.class.getSimpleName()),
                 request.getAuthenticationProcessState(),
                 persistenceData.storeBelfiusAuthenticationData(authenticationData));
+    }
+
+    private void initProcessState(
+            AgentProceedNextStepAuthenticationRequest request,
+            BelfiusAuthenticationData authenticationData) {
+        BelfiusProcessState processState =
+                request.getAuthenticationProcessState().get(BelfiusProcessState.KEY);
+        processState.setDeviceToken(BelfiusIdGenerationUtils.generateDeviceToken());
+        openSession(processState);
+        startFlow(processState);
+        bacProductList(processState);
+        sendIsDeviceRegistered(authenticationData, processState);
     }
 
     private void sendIsDeviceRegistered(

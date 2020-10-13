@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication;
 
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.AgentAuthenticationResultAggregationHandler;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.AgentAuthenticationResultHandlingResult;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
@@ -8,17 +9,11 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 
+@AllArgsConstructor
 public class AgentPlatformAuthenticationService {
 
     private final UserInteractionService userInteractionService;
     private final PersistentStorageService persistentStorageService;
-
-    public AgentPlatformAuthenticationService(
-            UserInteractionService userInteractionService,
-            PersistentStorageService persistentStorageService) {
-        this.userInteractionService = userInteractionService;
-        this.persistentStorageService = persistentStorageService;
-    }
 
     public void authenticate(final AgentPlatformAuthenticator agentPlatformAuthenticator) {
         AuthenticationExecutor executor =
@@ -31,18 +26,16 @@ public class AgentPlatformAuthenticationService {
                 executor.execute(
                         new AgentStartAuthenticationProcessRequest(
                                 persistentStorageService.readFromAgentPersistentStorage()));
-        while (handlingResult.getAgentAuthenticationNextRequest().isPresent()) {
+        while (!handlingResult.isFinalResult()) {
             handlingResult =
-                    executor.execute(handlingResult.getAgentAuthenticationNextRequest().get());
+                    executor.execute(handlingResult.getAgentAuthenticationNextRequest());
         }
         checkForAuthenticationError(handlingResult);
     }
 
     private void checkForAuthenticationError(
             AgentAuthenticationResultHandlingResult handlingResult) {
-        if (handlingResult.getAuthenticationError().isPresent()) {
-            throw handlingResult.getAuthenticationError().get().exception();
-        }
+        handlingResult.getAuthenticationError().ifPresent((e) -> {throw e.exception();});
     }
 
     private class AuthenticationExecutor {

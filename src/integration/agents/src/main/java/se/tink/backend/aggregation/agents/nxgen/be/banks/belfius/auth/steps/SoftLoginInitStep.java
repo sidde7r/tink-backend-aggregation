@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.SessionOpenedResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusSessionService;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -23,26 +23,11 @@ public class SoftLoginInitStep
         BelfiusProcessState processState =
                 request.getAuthenticationProcessState().get(BelfiusProcessState.KEY);
 
-        openSession(processState);
-        startFlow(processState);
+        new BelfiusSessionService(apiClient, processState).openSession();
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(
                         SoftLoginGetContactNumberAndChallegeStep.class.getSimpleName()),
                 request.getAuthenticationProcessState(),
                 request.getAuthenticationPersistedData());
-    }
-
-    private void openSession(BelfiusProcessState processState) {
-        SessionOpenedResponse sessionOpenedResponse =
-                apiClient.openSession(processState.getMachineId());
-        processState.resetRequestCounterAggregated();
-        processState.setSessionId(sessionOpenedResponse.getSessionId());
-    }
-
-    private void startFlow(BelfiusProcessState processState) {
-        apiClient.startFlow(
-                processState.getSessionId(),
-                processState.getMachineId(),
-                processState.incrementAndGetRequestCounterAggregated());
     }
 }

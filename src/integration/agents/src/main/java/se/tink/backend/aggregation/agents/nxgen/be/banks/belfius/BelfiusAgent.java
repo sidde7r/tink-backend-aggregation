@@ -20,8 +20,8 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.A
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BefiusAuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAgentPlatformStorageMigrator;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.AuthenticatorSleepHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.HumanInteractionDelaySimulator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.BelfiusSessionHandler;
@@ -100,7 +100,7 @@ public final class BelfiusAgent extends NextGenerationAgent
                         belfiusSessionStorage,
                         supplementalInformationHelper,
                         belfiusSignatureCreator,
-                        new AuthenticatorSleepHelper());
+                        new HumanInteractionDelaySimulator());
 
         return new AutoAuthenticationController(
                 request,

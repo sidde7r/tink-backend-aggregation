@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.AuthenticatorSleepHelper;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.HumanInteractionDelaySimulator;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -31,7 +31,7 @@ public class RegisterDeviceLoginStep
                         .getFieldValue(CardReaderLoginInputAgentField.id())
                         .replace(" ", "");
         keepAlive(processState);
-        new AuthenticatorSleepHelper().sleepForMilliseconds(500);
+        new HumanInteractionDelaySimulator().delayExecution(500);
         authenticateWithCode(processState, code);
 
         return new AgentProceedNextStepAuthenticationResult(

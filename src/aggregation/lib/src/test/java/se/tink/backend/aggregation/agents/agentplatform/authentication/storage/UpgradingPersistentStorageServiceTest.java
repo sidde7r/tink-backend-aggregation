@@ -66,8 +66,6 @@ public class UpgradingPersistentStorageServiceTest {
     }
 
     private void markAsUpgraded(PersistentStorage ps) {
-        ps.put(
-                UpgradingPersistentStorageService.MARKER,
-                StringSerializer.serialize(UpgradingPersistentStorageService.MARKER));
+        ps.put(UpgradingPersistentStorageService.MARKER, true);
     }
 }

@@ -11,6 +11,11 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
+/**
+ * The purpose of this class of being a proxy for the TinkHttpClient, is to switch the
+ * implementation for the Spring RestTemplate in the future, when agents will be migrating to the
+ * Agent Platform
+ */
 public class AgentPlatformHttpClient implements HttpClient {
 
     private final TinkHttpClient tinkHttpClient;

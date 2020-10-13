@@ -34,7 +34,7 @@ public class UpgradingPersistentStorageService extends PersistentStorageService 
     }
 
     private void markAsUpgraded() {
-        agentPersistentStorage.put(MARKER, StringSerializer.serialize(MARKER));
+        agentPersistentStorage.put(MARKER, true);
     }
 
     private boolean wasNotMarkedAsUpgraded() {
