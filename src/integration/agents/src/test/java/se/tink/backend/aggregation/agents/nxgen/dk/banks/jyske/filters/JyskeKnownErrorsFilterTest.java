@@ -96,6 +96,10 @@ public class JyskeKnownErrorsFilterTest {
             new Object[] {
                 "{\"errorCode\": 300, \"status\": \"INTERNAL_SERVER_ERROR\", \"errorMessage\": \"Kunne ikke hente kontobevægelser - Prøv igen senere.\"}",
                 BankServiceError.BANK_SIDE_FAILURE
+            },
+            new Object[] {
+                "{\"errorCode\": 110, \"status\": \"BAD_REQUEST\", \"errorMessage\": \"Din adgang til mobilbanken er spærret. Åbn den igen i Jyske Netbank.\"}",
+                AuthorizationError.ACCOUNT_BLOCKED
             }
         };
     }
