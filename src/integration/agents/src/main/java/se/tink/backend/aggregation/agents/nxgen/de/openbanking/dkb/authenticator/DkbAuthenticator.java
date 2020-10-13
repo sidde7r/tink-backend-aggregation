@@ -159,7 +159,10 @@ public class DkbAuthenticator implements PasswordAuthenticator {
     private void provide2ndFactorConsentAuthorization(
             String consentId, String authorisationId, ConsentAuthorization consentAuth)
             throws SupplementalInfoException, LoginException {
-        String code = supplementalDataProvider.getTanCode(consentAuth.getChallengeData().getData());
+        String code =
+                supplementalDataProvider.getTanCode(
+                        consentAuth.getChosenScaMethod().getName(),
+                        consentAuth.getChallengeData().getData());
         authApiClient.consentAuthorization2ndFactor(consentId, authorisationId, code);
     }
 }

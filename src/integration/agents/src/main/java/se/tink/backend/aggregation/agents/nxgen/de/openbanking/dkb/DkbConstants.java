@@ -2,10 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import java.util.regex.Pattern;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 @NoArgsConstructor(access = PRIVATE)
 public final class DkbConstants {
@@ -137,21 +138,25 @@ public final class DkbConstants {
     }
 
     @NoArgsConstructor(access = PRIVATE)
-    public static class SupplementalDataLabels {
+    public static class SupplementalStrings {
 
-        public static final String GENERATED_TAN_LABEL = "Enter Generated TAN";
-        public static final String CHIP_TAN_DESCRIPTION_LABEL =
-                "Please insert card to TAN-Generator and press “TAN”. Then insert start code %s and press “OK”";
-        public static final String SELECT_AUTH_METHOD_LABEL = "Authentication method index";
-        public static final String SELECT_AUTH_METHOD_INFO =
-                "Please insert authentication method index from 1 to %d \n";
-        public static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode (\\d+)");
-    }
+        public static final String STARTCODE_FIELD_KEY = "startcodeField";
+        public static final LocalizableKey STARTCODE_DESCRIPTION = new LocalizableKey("Startcode");
+        public static final LocalizableKey STARTCODE_HELPTEXT =
+                new LocalizableKey(
+                        "Please insert your card into the TAN-Generator, type in Startcode and press OK");
 
-    @NoArgsConstructor(access = PRIVATE)
-    public static class SupplementalDataKeys {
+        public static final String GENERATED_TAN_FIELD_KEY = "generatedTanField";
+        public static final LocalizableKey GENERATED_TAN_DESCRIPTION = new LocalizableKey("TAN");
+        public static final LocalizableParametrizedKey GENERATED_TAN_HELPTEXT_FORMAT =
+                new LocalizableParametrizedKey("Please insert generated TAN from device \"{0}\"");
+        public static final LocalizableKey GENERATED_TAN_HELPTEXT =
+                new LocalizableKey("Please insert generated TAN");
 
-        public static final String GENERATED_TAN_KEY = "generatedTAN";
-        public static final String SELECT_AUTH_METHOD_KEY = "selectAuthMethod";
+        public static final String SELECT_AUTH_METHOD_FIELD_KEY = "selectAuthMethodField";
+        public static final LocalizableKey SELECT_AUTH_METHOD_DESCRIPTION =
+                new LocalizableKey("Authentication method index");
+        public static final LocalizableParametrizedKey SELECT_AUTH_METHOD_HINT_FORMAT =
+                new LocalizableParametrizedKey("Select from 1 to {0}");
     }
 }

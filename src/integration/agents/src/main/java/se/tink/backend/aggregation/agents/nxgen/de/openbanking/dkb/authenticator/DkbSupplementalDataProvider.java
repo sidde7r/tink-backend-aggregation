@@ -1,58 +1,89 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator;
 
-import static java.lang.Integer.MAX_VALUE;
-import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.SupplementalDataKeys;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.SupplementalDataLabels;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.SupplementalStrings;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.utils.RangeRegex;
+import se.tink.libraries.i18n.Catalog;
 
 public class DkbSupplementalDataProvider {
 
+    private static final Pattern EXTRACT_STARTCODE_PATTERN = Pattern.compile("Startcode (\\d+)");
+
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final Catalog catalog;
 
     public DkbSupplementalDataProvider(
-            SupplementalInformationHelper supplementalInformationHelper) {
+            SupplementalInformationHelper supplementalInformationHelper, Catalog catalog) {
         this.supplementalInformationHelper = supplementalInformationHelper;
+        this.catalog = catalog;
     }
 
     String getTanCode(List<String> challengeData) throws SupplementalInfoException {
-        return supplementalInformationHelper
-                .askSupplementalInformation(getFieldForGeneratedTan(challengeData))
-                .get(SupplementalDataKeys.GENERATED_TAN_KEY);
+        return getTanCode(null, challengeData);
     }
 
-    Field getFieldForGeneratedTan(List<String> challengeData) {
+    String getTanCode(String scaMethodName, List<String> challengeData)
+            throws SupplementalInfoException {
+        return supplementalInformationHelper
+                .askSupplementalInformation(getSupplementalFields(scaMethodName, challengeData))
+                .get(SupplementalStrings.GENERATED_TAN_FIELD_KEY);
+    }
+
+    Field[] getSupplementalFields(String scaMethodName, List<String> challengeData) {
+        List<Field> fields = new LinkedList<>();
+
+        extractStartCode(challengeData).ifPresent(s -> fields.add(getStartcodeField(s)));
+        fields.add(getGeneratedCodeField(scaMethodName));
+
+        return fields.toArray(new Field[0]);
+    }
+
+    private Optional<String> extractStartCode(List<String> challengeData) {
+        return challengeData.stream()
+                .filter(s -> EXTRACT_STARTCODE_PATTERN.matcher(s).find())
+                .map(
+                        s -> {
+                            Matcher matcher = EXTRACT_STARTCODE_PATTERN.matcher(s);
+                            return matcher.find() ? matcher.group(1) : null;
+                        })
+                .findFirst();
+    }
+
+    private Field getStartcodeField(String startcode) {
         return Field.builder()
-                .description(getDescription(challengeData))
-                .name(SupplementalDataKeys.GENERATED_TAN_KEY)
-                .numeric(false)
-                .minLength(1)
-                .maxLength(MAX_VALUE)
+                .immutable(true)
+                .name(SupplementalStrings.STARTCODE_FIELD_KEY)
+                .description(catalog.getString(SupplementalStrings.STARTCODE_DESCRIPTION))
+                .value(startcode)
+                .helpText(catalog.getString(SupplementalStrings.STARTCODE_HELPTEXT))
                 .build();
     }
 
-    private String getDescription(List<String> challengeData) {
-        return challengeData.stream()
-                .filter(s -> SupplementalDataLabels.STARTCODE_CHIP_PATTERN.matcher(s).find())
-                .map(
-                        s -> {
-                            Matcher matcher =
-                                    SupplementalDataLabels.STARTCODE_CHIP_PATTERN.matcher(s);
-                            matcher.find();
-                            return matcher.group(1);
-                        })
-                .findFirst()
-                .map(s -> String.format(SupplementalDataLabels.CHIP_TAN_DESCRIPTION_LABEL, s))
-                .orElse(SupplementalDataLabels.GENERATED_TAN_LABEL);
+    private Field getGeneratedCodeField(String scaMethodName) {
+        String helpText =
+                scaMethodName != null
+                        ? catalog.getString(
+                                SupplementalStrings.GENERATED_TAN_HELPTEXT_FORMAT, scaMethodName)
+                        : catalog.getString(SupplementalStrings.GENERATED_TAN_HELPTEXT);
+
+        return Field.builder()
+                .name(SupplementalStrings.GENERATED_TAN_FIELD_KEY)
+                .description(catalog.getString(SupplementalStrings.GENERATED_TAN_DESCRIPTION))
+                .helpText(helpText)
+                .minLength(1)
+                .build();
     }
 
     String selectAuthMethod(List<? extends SelectableMethod> methods)
@@ -73,29 +104,34 @@ public class DkbSupplementalDataProvider {
         int index =
                 Integer.parseInt(
                                 supplementalInformation.get(
-                                        SupplementalDataKeys.SELECT_AUTH_METHOD_KEY))
+                                        SupplementalStrings.SELECT_AUTH_METHOD_FIELD_KEY))
                         - 1;
         return methods.get(index).getIdentifier();
     }
 
     private Field buildScaMethodsField(List<? extends SelectableMethod> methods) {
         int maxNumber = methods.size();
-        String description =
+
+        String helpText =
                 IntStream.range(0, maxNumber)
                         .mapToObj(
-                                index -> format("(%d) %s", index + 1, methods.get(index).getName()))
-                        .collect(joining(";\n"));
+                                index ->
+                                        String.format(
+                                                "(%d) %s", index + 1, methods.get(index).getName()))
+                        .collect(joining("\n"));
 
         return Field.builder()
-                .description(SupplementalDataLabels.SELECT_AUTH_METHOD_LABEL)
-                .helpText(
-                        format(SupplementalDataLabels.SELECT_AUTH_METHOD_INFO, maxNumber)
-                                .concat(description))
-                .name(SupplementalDataKeys.SELECT_AUTH_METHOD_KEY)
+                .name(SupplementalStrings.SELECT_AUTH_METHOD_FIELD_KEY)
+                .description(catalog.getString(SupplementalStrings.SELECT_AUTH_METHOD_DESCRIPTION))
+                .hint(
+                        catalog.getString(
+                                SupplementalStrings.SELECT_AUTH_METHOD_HINT_FORMAT, maxNumber))
+                .helpText(helpText)
                 .numeric(true)
                 .minLength(1)
-                .pattern(format("([1-%d])", maxNumber))
-                .patternError(ErrorMessages.SELECT_AUTH_METHOD_ERROR_MESSAGE)
+                .maxLength(Integer.toString(maxNumber).length())
+                .pattern(RangeRegex.regexForRange(1, maxNumber))
+                .patternError(catalog.getString(ErrorMessages.SELECT_AUTH_METHOD_ERROR_MESSAGE))
                 .build();
     }
 }

@@ -89,6 +89,11 @@ public class Catalog {
                 localizableParametrizedKey.getParameters());
     }
 
+    public String getString(
+            LocalizableParametrizedKey localizableParametrizedKey, Object... parameters) {
+        return Catalog.format(getString(localizableParametrizedKey.get()), parameters);
+    }
+
     public String getPluralString(LocalizablePluralKey localizablePluralKey, long n) {
         return getPluralString(
                 localizablePluralKey.getSingular(), localizablePluralKey.getPlural(), n);
