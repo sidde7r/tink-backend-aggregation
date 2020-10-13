@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticato
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.AuthResult.AuthMethod;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 public class DkbSupplementalDataProviderTest {
 
@@ -42,7 +44,14 @@ public class DkbSupplementalDataProviderTest {
 
     @BeforeClass
     public static void beforeAll() {
-        when(catalog.getString(anyString())).thenAnswer(i -> i.getArguments()[0]);
+        when(catalog.getString(any(LocalizableKey.class)))
+                .thenAnswer(i -> ((LocalizableKey) i.getArguments()[0]).get());
+        when(catalog.getString(any(LocalizableParametrizedKey.class), any()))
+                .thenAnswer(
+                        i ->
+                                MessageFormat.format(
+                                        ((LocalizableParametrizedKey) i.getArguments()[0]).get(),
+                                        i.getArguments()[1]));
     }
 
     @Test
@@ -129,9 +138,9 @@ public class DkbSupplementalDataProviderTest {
     private Field getTestFieldForGeneratedTan() {
         return Field.builder()
                 .name(SupplementalStrings.GENERATED_TAN_FIELD_KEY)
-                .description(SupplementalStrings.GENERATED_TAN_DESCRIPTION)
+                .description(catalog.getString(SupplementalStrings.GENERATED_TAN_DESCRIPTION))
                 .helpText(
-                        String.format(
+                        catalog.getString(
                                 SupplementalStrings.GENERATED_TAN_HELPTEXT_FORMAT,
                                 TEST_SCA_METHOD_NAME))
                 .minLength(1)
@@ -141,8 +150,8 @@ public class DkbSupplementalDataProviderTest {
     private Field getTestFieldForStartcode() {
         return Field.builder()
                 .name(SupplementalStrings.STARTCODE_FIELD_KEY)
-                .description(SupplementalStrings.STARTCODE_DESCRIPTION)
-                .helpText(SupplementalStrings.STARTCODE_HELPTEXT)
+                .description(catalog.getString(SupplementalStrings.STARTCODE_DESCRIPTION))
+                .helpText(catalog.getString(SupplementalStrings.STARTCODE_HELPTEXT))
                 .immutable(true)
                 .value(START_CODE)
                 .build();

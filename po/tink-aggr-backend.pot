@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-01 11:41+0200\n"
+"POT-Creation-Date: 2020-10-13 11:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1500,4 +1500,26 @@ msgid "Verifying credentials"
 msgstr ""
 
 msgid "Credentials are valid"
+msgstr ""
+
+msgid "Startcode"
+msgstr ""
+
+msgid ""
+"Please insert your card into the TAN-Generator, type in Startcode and press "
+"OK"
+msgstr ""
+
+#, java-format
+msgid "Please insert generated TAN from device \"{0}\""
+msgstr ""
+
+msgid "Please insert generated TAN"
+msgstr ""
+
+msgid "Authentication method index"
+msgstr ""
+
+#, java-format
+msgid "Select from 1 to {0}"
 msgstr ""

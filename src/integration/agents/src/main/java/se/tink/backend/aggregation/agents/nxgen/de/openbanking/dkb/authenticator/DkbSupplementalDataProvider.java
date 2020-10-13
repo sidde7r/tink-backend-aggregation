@@ -65,23 +65,21 @@ public class DkbSupplementalDataProvider {
         return Field.builder()
                 .immutable(true)
                 .name(SupplementalStrings.STARTCODE_FIELD_KEY)
-                .description(SupplementalStrings.STARTCODE_DESCRIPTION)
+                .description(catalog.getString(SupplementalStrings.STARTCODE_DESCRIPTION))
                 .value(startcode)
-                .helpText(SupplementalStrings.STARTCODE_HELPTEXT)
+                .helpText(catalog.getString(SupplementalStrings.STARTCODE_HELPTEXT))
                 .build();
     }
 
     private Field getGeneratedCodeField(String scaMethodName) {
         String helpText =
                 scaMethodName != null
-                        ? String.format(
-                                catalog.getString(
-                                        SupplementalStrings.GENERATED_TAN_HELPTEXT_FORMAT),
-                                scaMethodName)
+                        ? catalog.getString(
+                                SupplementalStrings.GENERATED_TAN_HELPTEXT_FORMAT, scaMethodName)
                         : catalog.getString(SupplementalStrings.GENERATED_TAN_HELPTEXT);
 
         return Field.builder()
-                .name(catalog.getString(SupplementalStrings.GENERATED_TAN_FIELD_KEY))
+                .name(SupplementalStrings.GENERATED_TAN_FIELD_KEY)
                 .description(catalog.getString(SupplementalStrings.GENERATED_TAN_DESCRIPTION))
                 .helpText(helpText)
                 .minLength(1)
@@ -126,10 +124,8 @@ public class DkbSupplementalDataProvider {
                 .name(SupplementalStrings.SELECT_AUTH_METHOD_FIELD_KEY)
                 .description(catalog.getString(SupplementalStrings.SELECT_AUTH_METHOD_DESCRIPTION))
                 .hint(
-                        String.format(
-                                catalog.getString(
-                                        SupplementalStrings.SELECT_AUTH_METHOD_HINT_FORMAT),
-                                maxNumber))
+                        catalog.getString(
+                                SupplementalStrings.SELECT_AUTH_METHOD_HINT_FORMAT, maxNumber))
                 .helpText(helpText)
                 .numeric(true)
                 .minLength(1)
