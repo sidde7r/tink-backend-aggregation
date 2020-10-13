@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -170,8 +171,8 @@ public final class DemobankAgent extends NextGenerationAgent
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new ThirdPartyAppAuthenticationController<>(
-                        demobankNemIdAuthenticator, supplementalInformationHelper),
+                new NemIdCodeAppAuthenticationController(
+                        demobankNemIdAuthenticator, credentials, supplementalRequester, catalog),
                 demobankNemIdAuthenticator);
     }
 
