@@ -24,6 +24,8 @@ public class JyskeKnownErrorsFilter extends Filter {
     private static final String INCORRECT_CREDENTIALS_MESSAGE = "Forkert bruger-id eller mobilkode";
     private static final String COULD_NOT_RETRIEVE_MESSAGE =
             "Kunne ikke hente kontobevægelser - Prøv igen senere.";
+    private static final String ACCESS_TO_BANK_BLOCKED =
+            "Din adgang til mobilbanken er spærret. Åbn den igen i Jyske Netbank.";
 
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
@@ -53,6 +55,7 @@ public class JyskeKnownErrorsFilter extends Filter {
             case MUST_REGISTER_MESSAGE:
             case NO_ACTIVE_APPS_MESSAGE:
                 throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(internalMessage);
+            case ACCESS_TO_BANK_BLOCKED:
             case USER_ID_BLOCKED_MESSAGE:
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception(internalMessage);
             case INCORRECT_CREDENTIALS_MESSAGE:
