@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,13 +56,5 @@ public final class VolksbankUtils {
                         "yyyy-MM-dd"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         return df;
-    }
-
-    public static String getFutureDateAsString(int year) {
-        Calendar date = Calendar.getInstance();
-        date.setTime(new Date());
-        date.add(Calendar.YEAR, year);
-        Date later = date.getTime();
-        return getDateFormat().format(later);
     }
 }
