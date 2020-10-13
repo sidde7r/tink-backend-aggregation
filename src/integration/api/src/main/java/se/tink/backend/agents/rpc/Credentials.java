@@ -3,6 +3,7 @@ package se.tink.backend.agents.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.MoreObjects;
@@ -360,6 +361,7 @@ public class Credentials implements Cloneable {
         this.providerName = provider;
     }
 
+    @JsonProperty
     public void setSessionExpiryDate(Date sessionExpiryDate) {
         this.sessionExpiryDate = sessionExpiryDate;
     }
