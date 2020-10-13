@@ -18,7 +18,6 @@ public class IdentityEntity {
         @JsonProperty("name")
         private String firstName;
 
-        @JsonProperty("surname")
         private String surname;
 
         @JsonProperty("taxcode")
