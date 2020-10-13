@@ -227,24 +227,43 @@ public class CommerzbankPhotoTanAuthenticatorTest {
     }
 
     @Test
-    public void authenticateShouldThrowIllegalStateExceptionWhenTanRequestedStatusIsFalse() {
+    public void authenticateShouldThrowLoginExceptionWhenLoginStatusIsTanNotActive() {
         // given
         given(apiClient.manualLogin(USERNAME, PASSWORD))
-                .willReturn(loginResponseWithStatus("NOT_" + Values.TAN_REQUESTED));
+                .willReturn(loginResponseWithStatus(Values.TAN_NOTACTIVE));
 
         // when
         Throwable t = catchThrowable(() -> authenticator.authenticate(credentials));
 
         // then
         assertThat(t)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage(
-                        "Excepted login status to be TAN_REQUESTED, but it was NOT_TAN_REQUESTED.");
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.NO_AVAILABLE_SCA_METHODS");
         // and
         verify(credentials)
                 .setSensitivePayload(
                         CommerzbankConstants.LOGIN_INFO_ENTITY,
-                        "{\"challenge\":\"CHALLENGE\",\"loginStatus\":\"NOT_TAN_REQUESTED\"}");
+                        "{\"challenge\":\"CHALLENGE\",\"loginStatus\":\"TAN_NOTACTIVE\"}");
+    }
+
+    @Test
+    public void authenticateShouldThrowGeneralLoginExceptionWhenLoginStatusIsTotallyDifferent() {
+        // given
+        given(apiClient.manualLogin(USERNAME, PASSWORD))
+                .willReturn(loginResponseWithStatus("TOTALLY_DIFFERENT"));
+
+        // when
+        Throwable t = catchThrowable(() -> authenticator.authenticate(credentials));
+
+        // then
+        assertThat(t)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.DEFAULT_MESSAGE");
+        // and
+        verify(credentials)
+                .setSensitivePayload(
+                        CommerzbankConstants.LOGIN_INFO_ENTITY,
+                        "{\"challenge\":\"CHALLENGE\",\"loginStatus\":\"TOTALLY_DIFFERENT\"}");
     }
 
     @Test
