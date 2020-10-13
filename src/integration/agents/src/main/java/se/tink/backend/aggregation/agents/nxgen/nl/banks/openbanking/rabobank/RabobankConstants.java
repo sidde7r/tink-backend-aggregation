@@ -22,6 +22,7 @@ public class RabobankConstants {
                         HttpStatus.SC_INTERNAL_SERVER_ERROR,
                         HttpStatus.SC_BAD_GATEWAY,
                         HttpStatus.SC_SERVICE_UNAVAILABLE);
+        public static final String NOT_SUBSCRIBED = "Not registered to plan";
     }
 
     public static class Consents {
