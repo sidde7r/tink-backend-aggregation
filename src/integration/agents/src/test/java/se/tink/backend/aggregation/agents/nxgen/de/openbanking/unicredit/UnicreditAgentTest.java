@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
  * For more details please check documentation at <a
  * href="http://developer.unicredit.eu/">http://developer.unicredit.eu/</a>.
  */
-@Ignore
 public class UnicreditAgentTest {
 
     private AgentIntegrationTest.Builder builder;

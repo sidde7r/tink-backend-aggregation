@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank;
 
 import java.util.UUID;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.rpc.BuddybankConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.rpc.BuddybankCreateConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.rpc.BuddybankCreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
@@ -22,20 +22,13 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BuddybankApiClient extends UnicreditBaseApiClient {
 
-    BuddybankApiClient(
+    public BuddybankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            Credentials credentials,
-            boolean manualRequest,
-            UnicreditProviderConfiguration providerConfiguration) {
-        super(
-                client,
-                persistentStorage,
-                sessionStorage,
-                credentials,
-                manualRequest,
-                providerConfiguration);
+            UnicreditProviderConfiguration providerConfiguration,
+            UnicreditBaseHeaderValues headerValues) {
+        super(client, persistentStorage, sessionStorage, providerConfiguration, headerValues);
     }
 
     public BuddybankCreateConsentResponse createConsent(String state) {
@@ -45,7 +38,7 @@ public class BuddybankApiClient extends UnicreditBaseApiClient {
                         .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(getRedirectUrl())
+                                new URL(headerValues.getRedirectUrl())
                                         .queryParam(HeaderKeys.STATE, state)
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                         .header(HeaderKeys.TPP_REDIRECT_PREFERED, true)

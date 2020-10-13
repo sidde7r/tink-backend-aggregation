@@ -6,7 +6,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
@@ -18,17 +17,6 @@ public final class UnicreditAgent extends UnicreditBaseAgent {
 
     @Inject
     public UnicreditAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider);
-    }
-
-    @Override
-    protected UnicreditBaseApiClient getApiClient(boolean manualRequest) {
-        return new UnicreditBaseApiClient(
-                client,
-                persistentStorage,
-                sessionStorage,
-                credentials,
-                manualRequest,
-                PROVIDER_CONFIG);
+        super(componentProvider, PROVIDER_CONFIG);
     }
 }

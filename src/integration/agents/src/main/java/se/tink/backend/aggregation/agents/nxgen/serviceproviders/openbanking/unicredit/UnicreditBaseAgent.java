@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit;
 
-import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -12,12 +11,12 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.UnicreditAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.UnicreditAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -38,28 +37,37 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
 
     protected final UnicreditBaseApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private AutoAuthenticationController authenticator;
 
-    @Inject
-    public UnicreditBaseAgent(AgentComponentProvider componentProvider) {
+    public UnicreditBaseAgent(
+            AgentComponentProvider componentProvider,
+            UnicreditProviderConfiguration providerConfiguration) {
         super(componentProvider);
 
-        apiClient = getApiClient(request.isManual());
+        UnicreditBaseHeaderValues headerValues = setupHeaderValues(componentProvider);
+        apiClient = getApiClient(providerConfiguration, headerValues);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    protected abstract UnicreditBaseApiClient getApiClient(boolean manualRequest);
+    private UnicreditBaseHeaderValues setupHeaderValues(AgentComponentProvider componentProvider) {
+        String redirectUrl =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(UnicreditBaseConfiguration.class)
+                        .getRedirectUrl();
+
+        return new UnicreditBaseHeaderValues(
+                redirectUrl, componentProvider.getCredentialsRequest().isManual() ? userIp : null);
+    }
+
+    protected UnicreditBaseApiClient getApiClient(
+            UnicreditProviderConfiguration providerConfiguration,
+            UnicreditBaseHeaderValues headerValues) {
+        return new UnicreditBaseApiClient(
+                client, persistentStorage, sessionStorage, providerConfiguration, headerValues);
+    }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
-        final AgentConfiguration<UnicreditBaseConfiguration> agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(UnicreditBaseConfiguration.class);
-
-        apiClient.setConfiguration(agentConfiguration);
-
         client.setEidasProxy(configuration.getEidasProxy());
     }
 
@@ -72,15 +80,12 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                         strongAuthenticationState,
                         request);
 
-        authenticator =
-                new AutoAuthenticationController(
-                        request,
-                        systemUpdater,
-                        new ThirdPartyAppAuthenticationController<>(
-                                controller, supplementalInformationHelper),
-                        controller);
-
-        return authenticator;
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override

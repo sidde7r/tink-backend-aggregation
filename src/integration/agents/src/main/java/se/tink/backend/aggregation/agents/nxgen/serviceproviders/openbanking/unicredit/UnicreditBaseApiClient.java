@@ -6,11 +6,8 @@ import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
@@ -36,7 +33,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -54,25 +50,20 @@ public class UnicreditBaseApiClient {
     private final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
-    private String redirectUrl;
-    private final Credentials credentials;
-    protected UnicreditProviderConfiguration providerConfiguration;
-
-    protected final boolean manualRequest;
+    protected final UnicreditProviderConfiguration providerConfiguration;
+    protected final UnicreditBaseHeaderValues headerValues;
 
     public UnicreditBaseApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            Credentials credentials,
-            boolean manualRequest,
-            UnicreditProviderConfiguration providerConfiguration) {
+            UnicreditProviderConfiguration providerConfiguration,
+            UnicreditBaseHeaderValues headerValues) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
-        this.credentials = credentials;
-        this.manualRequest = manualRequest;
         this.providerConfiguration = providerConfiguration;
+        this.headerValues = headerValues;
     }
 
     protected ConsentRequest getConsentRequest() {
@@ -108,67 +99,28 @@ public class UnicreditBaseApiClient {
         return UnicreditCreatePaymentResponse.class;
     }
 
-    protected String getRedirectUrl() {
-        return Optional.ofNullable(redirectUrl)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    protected Credentials getCredentials() {
-        return Optional.ofNullable(credentials)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CREDENTIALS));
-    }
-
-    protected void setConfiguration(
-            AgentConfiguration<UnicreditBaseConfiguration> agentConfiguration) {
-        this.redirectUrl = agentConfiguration.getRedirectUrl();
-    }
-
     protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
     }
 
     private RequestBuilder createRequestInSession(URL url) {
-        final String consentId = getConsentFromStorage();
-
-        RequestBuilder requestBuilder =
-                createRequest(url)
-                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, consentId);
-
-        // This header must be present if the request was initiated by the PSU
-        if (manualRequest) {
-            log.info(
-                    "Request is attended -- adding PSU header for requestId = {}",
-                    Psd2Headers.getRequestId());
-            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
-        } else {
-            log.info(
-                    "Request is unattended -- omitting PSU header for requestId = {}",
-                    Psd2Headers.getRequestId());
-        }
-
-        return requestBuilder;
-    }
-
-    private String getConsentFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.CONSENT_ID, String.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+        final String consentId = getConsentIdFromStorage();
+        return createRequest(url)
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(HeaderKeys.CONSENT_ID, consentId);
     }
 
     public URL buildAuthorizeUrl(String state) {
-
         ConsentResponse consentResponse =
                 createRequest(new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENTS))
                         .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
-                        .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(getRedirectUrl())
+                                new URL(headerValues.getRedirectUrl())
                                         .queryParam(HeaderKeys.STATE, state)
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                         .header(HeaderKeys.TPP_REDIRECT_PREFERED, true) // true for redirect auth
@@ -180,7 +132,7 @@ public class UnicreditBaseApiClient {
         return getScaRedirectUrlFromConsentResponse(consentResponse);
     }
 
-    public ConsentStatusResponse getConsentStatus() throws SessionException {
+    public ConsentStatusResponse getConsentStatus() {
         return createRequest(
                         new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENT_STATUS)
                                 .parameter(PathParameters.CONSENT_ID, getConsentIdFromStorage()))
@@ -188,7 +140,7 @@ public class UnicreditBaseApiClient {
                 .get(ConsentStatusResponse.class);
     }
 
-    public ConsentDetailsResponse getConsentDetails() throws SessionException {
+    public ConsentDetailsResponse getConsentDetails() {
         return createRequest(
                         new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENT_DETAILS)
                                 .parameter(PathParameters.CONSENT_ID, getConsentIdFromStorage()))
@@ -196,7 +148,7 @@ public class UnicreditBaseApiClient {
                 .get(ConsentDetailsResponse.class);
     }
 
-    public String getConsentIdFromStorage() throws SessionException {
+    private String getConsentIdFromStorage() {
         return persistentStorage
                 .get(StorageKeys.CONSENT_ID, String.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
@@ -265,7 +217,7 @@ public class UnicreditBaseApiClient {
                         .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(getRedirectUrl())
+                                new URL(headerValues.getRedirectUrl())
                                         .queryParam(
                                                 HeaderKeys.STATE,
                                                 persistentStorage.get(StorageKeys.STATE))
