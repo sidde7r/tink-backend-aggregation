@@ -55,7 +55,7 @@ public class VolksbankTransactionFetcher implements TransactionDatePaginator<Tra
         String link = response.getNextLink();
         while (link != null) {
             Map<String, String> urlParams = VolksbankUtils.splitURLQuery(link);
-            if (VolksbankUtils.IsEntryReferenceFromAfterDate(
+            if (VolksbankUtils.isEntryReferenceFromAfterDate(
                     urlParams.get("entryReferenceFrom"), toDate)) {
                 break;
             }
