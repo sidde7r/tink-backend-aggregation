@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
@@ -19,11 +18,8 @@ import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfigurati
 @JsonObject
 public class LaBanquePostaleConfiguration implements BerlinGroupConfiguration {
 
-    @JsonProperty @Secret private String oauthBaseUrl;
-    @JsonProperty @Secret private String baseUrl;
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @JsonProperty @Secret private String psuIpAddress;
 
     @Override
     public String getClientId() {
@@ -45,19 +41,11 @@ public class LaBanquePostaleConfiguration implements BerlinGroupConfiguration {
 
     @Override
     public String getBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(baseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
-
-        return baseUrl;
+        return LaBanquePostaleConstants.Urls.BASE_URL;
     }
 
     @Override
     public String getPsuIpAddress() {
-        if (Objects.nonNull(psuIpAddress)) {
-            return psuIpAddress;
-        }
-
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
@@ -66,12 +54,6 @@ public class LaBanquePostaleConfiguration implements BerlinGroupConfiguration {
     }
 
     public String getOauthBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(oauthBaseUrl),
-                String.format(
-                        LaBanquePostaleConstants.ErrorMessages.INVALID_CONFIGURATION,
-                        "oauth base url"));
-
-        return oauthBaseUrl;
+        return LaBanquePostaleConstants.Urls.OAUTH_BASE_URL;
     }
 }

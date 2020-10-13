@@ -2,9 +2,6 @@ agentsServiceConfiguration:
   integrations:
     4100331c75e246b8b667ea90856f9af4:
       tink:
-        authorizeUrl: https://psu.lcl.fr/authorize
-        baseUrl: https://psd.lcl.fr
-        clientId: DUMMY_CLIENT_ID
         qsealcKeyId: https://cdn.tink.se/eidas/tink-qsealc.pem
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
   eidasProxy:

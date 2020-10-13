@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
@@ -28,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -86,12 +88,12 @@ public class N26PaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .build());
     }
 
+    @SneakyThrows
     private TokenRequest createTokenRequest(TransferBodyEntity transferBody) {
         final N26Configuration n26Configuration = configuration.getProviderSpecificConfiguration();
         final AliasEntity aliasEntity =
                 new AliasEntity(
-                        n26Configuration.getAliasType(),
-                        n26Configuration.getAliasValue(),
+                        CertificateUtils.getOrganizationIdentifier(configuration.getQwac()),
                         n26Configuration.getRealmId());
         final ToEntity toEntity = new ToEntity(n26Configuration.getMemberId(), aliasEntity);
 

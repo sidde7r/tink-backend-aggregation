@@ -4,8 +4,10 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclAgent;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.RetrieveTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.TokenResponseDto;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenStorage;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -38,21 +41,24 @@ public class LclApiClient implements FrAispApiClient {
     private final OAuth2TokenStorage tokenStorage;
     private final AgentConfiguration<LclConfiguration> agentConfiguration;
 
+    @SneakyThrows
     public TokenResponseDto retrieveAccessToken(String code) {
         final RetrieveTokenRequest request =
                 new RetrieveTokenRequest(
-                        agentConfiguration.getProviderSpecificConfiguration().getClientId(),
+                        CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac()),
                         agentConfiguration.getRedirectUrl(),
                         code);
 
         return sendTokenRequestAndGetResponse(request);
     }
 
+    @SneakyThrows
     public Optional<TokenResponseDto> refreshAccessToken(String refreshToken) {
         try {
             final RefreshTokenRequest request =
                     new RefreshTokenRequest(
-                            agentConfiguration.getProviderSpecificConfiguration().getClientId(),
+                            CertificateUtils.getOrganizationIdentifier(
+                                    agentConfiguration.getQwac()),
                             refreshToken);
             final TokenResponseDto response = sendTokenRequestAndGetResponse(request);
 
@@ -106,7 +112,7 @@ public class LclApiClient implements FrAispApiClient {
     }
 
     private String createUrl(String path) {
-        return agentConfiguration.getProviderSpecificConfiguration().getBaseUrl() + path;
+        return LclAgent.BASE_URL + path;
     }
 
     private RequestBuilder createRequestAndSetHeaders(String url, Object body) {

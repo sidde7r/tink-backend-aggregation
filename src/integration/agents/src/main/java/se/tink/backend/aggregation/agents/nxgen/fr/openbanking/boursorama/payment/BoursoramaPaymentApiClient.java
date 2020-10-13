@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AllArgsConstructor
@@ -25,7 +24,7 @@ public class BoursoramaPaymentApiClient implements FrOpenBankingPaymentApiClient
 
     @Override
     public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
-        return client.request(createUrl(Urls.CREATE_PAYMENT))
+        return client.request(Urls.CREATE_PAYMENT)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .post(CreatePaymentResponse.class, SerializationUtils.serializeToString(request));
@@ -38,13 +37,9 @@ public class BoursoramaPaymentApiClient implements FrOpenBankingPaymentApiClient
 
     @Override
     public GetPaymentResponse getPayment(String paymentId) {
-        return client.request(createUrl(Urls.GET_PAYMENT).parameter("paymentId", paymentId))
+        return client.request(Urls.GET_PAYMENT.parameter("paymentId", paymentId))
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .get(GetPaymentResponse.class);
-    }
-
-    private URL createUrl(String path) {
-        return new URL(configuration.getBaseUrl() + path);
     }
 }

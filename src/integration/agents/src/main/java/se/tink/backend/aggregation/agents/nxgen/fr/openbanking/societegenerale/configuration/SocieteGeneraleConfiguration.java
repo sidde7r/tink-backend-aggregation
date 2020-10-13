@@ -12,20 +12,10 @@ public class SocieteGeneraleConfiguration implements ClientConfiguration {
 
     @Secret @ClientIdConfiguration private String clientId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @Secret private String eidasQwac;
-    @Secret private String eidasOrgNmr;
     @Secret private String keyId;
-
-    public String getEidasOrgNmr() {
-        return eidasOrgNmr;
-    }
 
     public String getKeyId() {
         return keyId;
-    }
-
-    public String getEidasQwac() {
-        return eidasQwac;
     }
 
     public String getClientSecret() {

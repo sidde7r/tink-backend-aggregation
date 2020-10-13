@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.BnpParibasAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasBankConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasTransactionFetcher;
@@ -38,7 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-public class BnpParibasBaseAgent extends NextGenerationAgent
+public abstract class BnpParibasBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
@@ -53,7 +54,9 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
     private final BnpParibasPaymentApiClient paymentApiClient;
 
     public BnpParibasBaseAgent(
-            AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+            AgentComponentProvider componentProvider,
+            QsealcSigner qsealcSigner,
+            BnpParibasBankConfig bankConfig) {
         super(componentProvider);
 
         agentConfiguration =
@@ -66,16 +69,17 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 new BnpParibasApiBaseClient(
                         client,
                         sessionStorage,
-                        agentConfiguration.getProviderSpecificConfiguration(),
-                        agentConfiguration.getRedirectUrl(),
-                        bnpParibasSignatureHeaderProvider);
+                        agentConfiguration,
+                        bnpParibasSignatureHeaderProvider,
+                        bankConfig);
 
         this.paymentApiClient =
                 new BnpParibasPaymentApiClient(
                         client,
                         sessionStorage,
-                        agentConfiguration.getProviderSpecificConfiguration(),
-                        bnpParibasSignatureHeaderProvider);
+                        agentConfiguration,
+                        bnpParibasSignatureHeaderProvider,
+                        bankConfig);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 

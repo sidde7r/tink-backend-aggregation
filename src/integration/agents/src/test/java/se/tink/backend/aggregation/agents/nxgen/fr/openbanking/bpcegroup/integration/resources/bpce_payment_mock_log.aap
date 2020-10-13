@@ -4,7 +4,7 @@ Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 X-Aggregator: Tink Testing
 
-client_id=DUMMY_CLIENT_ID&grant_type=client_credentials&scope=pisp
+client_id=PSDSE-FINA-44059&grant_type=client_credentials&scope=pisp
 
 RESPONSE 1
 200

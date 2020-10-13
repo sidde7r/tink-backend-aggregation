@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.PisTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.RefreshTokenTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.ConfirmationResourceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestCreation;
@@ -61,6 +62,7 @@ public class CmcicApiClient implements FrAispApiClient {
     private final CmcicDigestProvider digestProvider;
     private final CmcicSignatureProvider signatureProvider;
     private final CmcicCodeChallengeProvider codeChallengeProvider;
+    private final CmcicAgentConfig cmcicAgentConfig;
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
@@ -152,7 +154,7 @@ public class CmcicApiClient implements FrAispApiClient {
     }
 
     public URL getAuthorizeUrl(String state) {
-        return client.request(configuration.getAuthBaseUrl())
+        return client.request(cmcicAgentConfig.getAuthBaseUrl())
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
@@ -169,16 +171,16 @@ public class CmcicApiClient implements FrAispApiClient {
     }
 
     public FetchAccountsResponse fetchAccounts() {
-        String baseUrl = configuration.getBaseUrl();
-        String basePath = configuration.getBasePath();
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
 
         return createAispRequestInSession(baseUrl, basePath + Urls.FETCH_ACCOUNTS_PATH)
                 .get(FetchAccountsResponse.class);
     }
 
     public FetchTransactionsResponse fetchTransactions(TransactionalAccount account, URL nextUrl) {
-        String baseUrl = configuration.getBaseUrl();
-        String basePath = configuration.getBasePath();
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
 
         String path =
                 Optional.ofNullable(nextUrl)
@@ -196,8 +198,8 @@ public class CmcicApiClient implements FrAispApiClient {
     public HalPaymentRequestCreation makePayment(
             PaymentRequestResourceEntity paymentRequestResourceEntity) {
 
-        String baseUrl = configuration.getBaseUrl();
-        String basePath = configuration.getBasePath();
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
 
         String body = SerializationUtils.serializeToString(paymentRequestResourceEntity);
 
@@ -255,8 +257,8 @@ public class CmcicApiClient implements FrAispApiClient {
     }
 
     public HalPaymentRequestEntity fetchPayment(String uniqueId) {
-        String baseUrl = configuration.getBaseUrl();
-        String basePath = configuration.getBasePath();
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
 
         return createPispRequestInSession(
                         baseUrl, basePath + Urls.PAYMENT_REQUESTS + "/" + uniqueId)
@@ -266,8 +268,8 @@ public class CmcicApiClient implements FrAispApiClient {
 
     public HalPaymentRequestEntity confirmPayment(
             String uniqueId, ConfirmationResourceEntity confirmationResourceEntity) {
-        String baseUrl = configuration.getBaseUrl();
-        String basePath = configuration.getBasePath();
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
         String body = SerializationUtils.serializeToString(confirmationResourceEntity);
         return createPispRequestInSession(
                         new URL(baseUrl),
@@ -292,8 +294,8 @@ public class CmcicApiClient implements FrAispApiClient {
     }
 
     public EndUserIdentityResponse getEndUserIdentity() {
-        String baseUrl = configuration.getBaseUrl();
-        String basePath = configuration.getBasePath();
+        String baseUrl = cmcicAgentConfig.getBaseUrl();
+        String basePath = cmcicAgentConfig.getBasePath();
 
         return createAispRequestInSession(baseUrl, basePath + Urls.FETCH_END_USER_IDENTITY)
                 .get(EndUserIdentityResponse.class);
@@ -321,8 +323,8 @@ public class CmcicApiClient implements FrAispApiClient {
     }
 
     private URL getTokenUrl() {
-        final String baseUrl = configuration.getBaseUrl();
-        final String basePath = configuration.getBasePath();
+        final String baseUrl = cmcicAgentConfig.getBaseUrl();
+        final String basePath = cmcicAgentConfig.getBasePath();
         final URL baseApiUrl = new URL(baseUrl + basePath);
 
         return baseApiUrl.concat(Urls.TOKEN_PATH);
@@ -347,8 +349,8 @@ public class CmcicApiClient implements FrAispApiClient {
 
     @Override
     public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
-        final String baseUrl = configuration.getBaseUrl();
-        final String basePath = configuration.getBasePath();
+        final String baseUrl = cmcicAgentConfig.getBaseUrl();
+        final String basePath = cmcicAgentConfig.getBasePath();
 
         final HttpResponse response =
                 createAispRequestInSession(baseUrl, basePath + BASE_API_PATH + path)

@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasBankConfig;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -17,8 +18,16 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, TRANSFERS})
 public final class BnpParibasAgent extends BnpParibasBaseAgent {
 
+    private static final String AUTHORIZE_URL =
+            "https://api-nav-psd2.bddf.bnpparibas/as/psd2/retail/authorize";
+    private static final String TOKEN_URL = "https://api-psd2.bddf.bnpparibas/as/psd2/retail/token";
+    private static final String BASE_URL = "https://api-psd2.bddf.bnpparibas/psd2/retail/V1.4";
+
     @Inject
     public BnpParibasAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
-        super(componentProvider, qsealcSigner);
+        super(
+                componentProvider,
+                qsealcSigner,
+                new BnpParibasBankConfig(AUTHORIZE_URL, TOKEN_URL, BASE_URL));
     }
 }

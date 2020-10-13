@@ -67,6 +67,7 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                 RefreshBeneficiariesExecutor {
 
     private static final ZoneId ZONE_ID = ZoneId.of("CET");
+    public static final String BASE_URL = "https://psd.lcl.fr";
 
     private final LclApiClient lclApiClient;
     private final LclPaymentApiClient paymentApiClient;

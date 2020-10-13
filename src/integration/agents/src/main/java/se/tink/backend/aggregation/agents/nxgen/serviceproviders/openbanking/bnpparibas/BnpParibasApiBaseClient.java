@@ -13,12 +13,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasBankConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -32,15 +34,15 @@ public class BnpParibasApiBaseClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final BnpParibasConfiguration bnpParibasConfiguration;
-    private final String redirectUrl;
+    private final AgentConfiguration<BnpParibasConfiguration> agentConfiguration;
     private final BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider;
+    private final BnpParibasBankConfig bankConfig;
 
     public URL getAuthorizeUrl(String state) {
-        return client.request(new URL(bnpParibasConfiguration.getAuthorizeUrl()))
+        return client.request(new URL(bankConfig.getAuthorizeUrl()))
                 .queryParam(
                         BnpParibasBaseConstants.QueryKeys.CLIENT_ID,
-                        bnpParibasConfiguration.getClientId())
+                        agentConfiguration.getProviderSpecificConfiguration().getClientId())
                 .queryParam(
                         BnpParibasBaseConstants.QueryKeys.RESPONSE_TYPE,
                         BnpParibasBaseConstants.QueryValues.CODE)
@@ -55,11 +57,12 @@ public class BnpParibasApiBaseClient {
     private String getAuthorizationString() {
         return String.format(
                 "%s:%s",
-                bnpParibasConfiguration.getClientId(), bnpParibasConfiguration.getClientSecret());
+                agentConfiguration.getProviderSpecificConfiguration().getClientId(),
+                agentConfiguration.getProviderSpecificConfiguration().getClientSecret());
     }
 
     private String getRedirectUrl() {
-        return Optional.ofNullable(redirectUrl)
+        return Optional.ofNullable(agentConfiguration.getRedirectUrl())
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
@@ -71,7 +74,7 @@ public class BnpParibasApiBaseClient {
         String reqId = UUID.randomUUID().toString();
         String signature =
                 bnpParibasSignatureHeaderProvider.buildSignatureHeader(
-                        sessionStorage.get(StorageKeys.TOKEN), reqId, bnpParibasConfiguration);
+                        sessionStorage.get(StorageKeys.TOKEN), reqId, agentConfiguration);
 
         return client.request(url)
                 .addBearerToken(
@@ -94,7 +97,7 @@ public class BnpParibasApiBaseClient {
     }
 
     public TokenResponse exchangeAuthorizationToken(AbstractForm request) {
-        return client.request(new URL(bnpParibasConfiguration.getTokenUrl()))
+        return client.request(new URL(bankConfig.getTokenUrl()))
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(
                         BnpParibasBaseConstants.HeaderKeys.AUTHORIZATION,
@@ -106,7 +109,7 @@ public class BnpParibasApiBaseClient {
     }
 
     public OAuth2Token exchangeRefreshToken(RefreshRequest request) {
-        return client.request(new URL(bnpParibasConfiguration.getTokenUrl()))
+        return client.request(new URL(bankConfig.getTokenUrl()))
                 .header(
                         BnpParibasBaseConstants.HeaderKeys.AUTHORIZATION,
                         BnpParibasBaseConstants.HeaderValues.BASIC
@@ -119,8 +122,7 @@ public class BnpParibasApiBaseClient {
 
     public AccountsResponse fetchAccounts() {
         HttpResponse httpResponse =
-                createRequestInSession(
-                                new URL(bnpParibasConfiguration.getBaseUrl() + Urls.ACCOUNTS_PATH))
+                createRequestInSession(new URL(bankConfig.getBaseUrl() + Urls.ACCOUNTS_PATH))
                         .get(HttpResponse.class);
 
         return extractBody(httpResponse, AccountsResponse.class).orElse(new AccountsResponse());
@@ -129,7 +131,7 @@ public class BnpParibasApiBaseClient {
     public BalanceResponse getBalance(String resourceId) {
         HttpResponse httpResponse =
                 createRequestInSession(
-                                new URL(bnpParibasConfiguration.getBaseUrl() + Urls.BALANCES_PATH)
+                                new URL(bankConfig.getBaseUrl() + Urls.BALANCES_PATH)
                                         .parameter(IdTags.ACCOUNT_RESOURCE_ID, resourceId))
                         .get(HttpResponse.class);
 
@@ -140,9 +142,7 @@ public class BnpParibasApiBaseClient {
             String resourceId, LocalDate dateFrom, LocalDate dateTo) {
         HttpResponse httpResponse =
                 createRequestInSession(
-                                new URL(
-                                                bnpParibasConfiguration.getBaseUrl()
-                                                        + Urls.TRANSACTIONS_PATH)
+                                new URL(bankConfig.getBaseUrl() + Urls.TRANSACTIONS_PATH)
                                         .parameter(IdTags.ACCOUNT_RESOURCE_ID, resourceId))
                         .queryParam(QueryKeys.DATE_FROM, dateFrom.toString())
                         .queryParam(QueryKeys.DATE_TO, dateTo.toString())
@@ -155,7 +155,7 @@ public class BnpParibasApiBaseClient {
     public EndUserIdentityResponse getEndUserIdentity() {
         return createRequestInSession(
                         new URL(
-                                bnpParibasConfiguration.getBaseUrl()
+                                bankConfig.getBaseUrl()
                                         + BnpParibasBaseConstants.Urls.FETCH_USER_IDENTITY_DATA))
                 .get(EndUserIdentityResponse.class);
     }

@@ -11,9 +11,6 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @JsonObject
 public class CmcicConfiguration implements ClientConfiguration {
 
-    @Secret private String baseUrl;
-    @Secret private String basePath;
-    @Secret private String authBaseUrl;
     @Secret private String clientId;
     @SensitiveSecret private String keyId;
 
@@ -31,29 +28,5 @@ public class CmcicConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
-    }
-
-    public String getBasePath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(basePath),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base Path"));
-
-        return basePath;
-    }
-
-    public String getBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(baseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
-
-        return baseUrl;
-    }
-
-    public String getAuthBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(authBaseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Auth Base URL"));
-
-        return authBaseUrl;
     }
 }

@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.RefreshTokenTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicDigestProvider;
@@ -66,6 +67,7 @@ public class CmcicApiClientTest {
         final CmcicSignatureProvider signatureProviderMock = mock(CmcicSignatureProvider.class);
         final CmcicCodeChallengeProvider codeChallengeProviderMock =
                 mock(CmcicCodeChallengeProvider.class);
+        final CmcicAgentConfig cmcicAgentConfig = createCmcicAgentConfigurationMock();
 
         cmcicApiClient =
                 new CmcicApiClient(
@@ -75,7 +77,8 @@ public class CmcicApiClientTest {
                         cmcicConfigurationMock,
                         digestProviderMock,
                         signatureProviderMock,
-                        codeChallengeProviderMock);
+                        codeChallengeProviderMock,
+                        cmcicAgentConfig);
     }
 
     @Test
@@ -257,11 +260,18 @@ public class CmcicApiClientTest {
     private static CmcicConfiguration createCmcicConfigurationMock() {
         final CmcicConfiguration cmcicConfigurationMock = mock(CmcicConfiguration.class);
 
-        when(cmcicConfigurationMock.getBaseUrl()).thenReturn(BASE_URL);
-        when(cmcicConfigurationMock.getBasePath()).thenReturn(BASE_PATH);
         when(cmcicConfigurationMock.getClientId()).thenReturn(CLIENT_ID);
 
         return cmcicConfigurationMock;
+    }
+
+    private static CmcicAgentConfig createCmcicAgentConfigurationMock() {
+        final CmcicAgentConfig agentConfig = mock(CmcicAgentConfig.class);
+
+        when(agentConfig.getBaseUrl()).thenReturn(BASE_URL);
+        when(agentConfig.getBasePath()).thenReturn(BASE_PATH);
+
+        return agentConfig;
     }
 
     private static PersistentStorage createPersistentStorageMock() {

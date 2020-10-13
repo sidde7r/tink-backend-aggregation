@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @AllArgsConstructor
@@ -31,13 +32,13 @@ public class BoursoramaApiClient implements FrAispApiClient {
     private final SessionStorage sessionStorage;
 
     public TokenResponse exchangeAuthorizationCode(TokenRequest tokenRequest) {
-        return client.request(configuration.getBaseUrl() + Urls.CONSUME_AUTH_CODE)
+        return client.request(Urls.CONSUME_AUTH_CODE)
                 .body(tokenRequest, MediaType.APPLICATION_JSON)
                 .post(TokenResponse.class);
     }
 
     public TokenResponse refreshToken(RefreshTokenRequest tokenRequest) {
-        return client.request(configuration.getBaseUrl() + Urls.REFRESH_TOKEN)
+        return client.request(Urls.REFRESH_TOKEN)
                 .body(tokenRequest, MediaType.APPLICATION_JSON)
                 .post(TokenResponse.class);
     }
@@ -51,12 +52,13 @@ public class BoursoramaApiClient implements FrAispApiClient {
     }
 
     public BalanceResponse fetchBalances(String resourceId) {
-        return baseAISRequest(Urls.BALANCES_TEMPLATE + resourceId).get(BalanceResponse.class);
+        return baseAISRequest(Urls.BALANCES_TEMPLATE.parameter("resourceId", resourceId))
+                .get(BalanceResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(
             String resourceId, LocalDate dateFrom, LocalDate dateTo) {
-        return baseAISRequest(Urls.TRANSACTIONS_TEMPLATE + resourceId)
+        return baseAISRequest(Urls.TRANSACTIONS_TEMPLATE.parameter("resourceId", resourceId))
                 .queryParam("dateFrom", dateFrom.toString())
                 .queryParam("dateTo", dateTo.toString())
                 .get(TransactionsResponse.class);
@@ -75,11 +77,11 @@ public class BoursoramaApiClient implements FrAispApiClient {
         return Optional.empty();
     }
 
-    private RequestBuilder baseAISRequest(String urlTemplate) {
+    private RequestBuilder baseAISRequest(URL urlTemplate) {
         final String userHash = sessionStorage.get(BoursoramaConstants.USER_HASH);
-        final String url = String.format(urlTemplate, userHash);
+        final URL url = urlTemplate.parameter("userHash", userHash);
 
-        return client.request(configuration.getBaseUrl() + url)
+        return client.request(url)
                 .type(MediaType.APPLICATION_JSON)
                 .addBearerToken(getTokenFromStorage());
     }
