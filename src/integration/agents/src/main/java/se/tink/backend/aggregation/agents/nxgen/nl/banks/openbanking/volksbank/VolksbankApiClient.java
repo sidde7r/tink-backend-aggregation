@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
@@ -121,7 +122,7 @@ public class VolksbankApiClient {
         final URL url = urlFactory.buildURL(Urls.HOST, VolksbankConstants.Paths.CONSENT);
         final ConsentRequestBody body =
                 new ConsentRequestBody(
-                        VolksbankUtils.getFutureDateAsString(ConsentParams.VALID_YEAR),
+                        LocalDate.now().plusDays(ConsentParams.CONSENT_DAYS_VALID).toString(),
                         ConsentParams.FREQUENCY_PER_DAY,
                         ConsentParams.RECURRING_INDICATOR);
 

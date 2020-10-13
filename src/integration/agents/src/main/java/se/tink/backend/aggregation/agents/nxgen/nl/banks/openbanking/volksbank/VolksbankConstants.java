@@ -60,7 +60,7 @@ public class VolksbankConstants {
     }
 
     public static class ConsentParams {
-        public static final Integer VALID_YEAR = 2;
+        public static final Integer CONSENT_DAYS_VALID = 90;
         public static final Integer FREQUENCY_PER_DAY = 100;
         public static final boolean RECURRING_INDICATOR = true;
         public static final int REFRESH_TOKEN_EXPIRY_TIME = 90 * 24 * 3600;

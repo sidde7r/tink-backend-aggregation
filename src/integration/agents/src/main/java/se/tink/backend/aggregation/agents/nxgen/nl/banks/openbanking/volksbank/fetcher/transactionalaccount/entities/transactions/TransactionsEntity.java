@@ -36,7 +36,7 @@ public class TransactionsEntity {
                 .filter(bookedEntity -> Objects.nonNull(bookedEntity.getEntryReference()))
                 .filter(
                         bookedEntity ->
-                                !VolksbankUtils.IsEntryReferenceFromAfterDate(
+                                !VolksbankUtils.isEntryReferenceFromAfterDate(
                                         bookedEntity.getEntryReference(), limitDate))
                 .map(
                         movement ->
