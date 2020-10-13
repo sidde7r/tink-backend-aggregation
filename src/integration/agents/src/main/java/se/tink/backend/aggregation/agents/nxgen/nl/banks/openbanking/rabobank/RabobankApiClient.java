@@ -258,20 +258,32 @@ public final class RabobankApiClient {
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
 
         final Collection<PaginatorResponse> pages = new ArrayList<>();
-        int currentPage = 1;
-        TransactionalTransactionsResponse page;
+        TransactionalTransactionsResponse page =
+                buildRequest(url, uuid, digest, signatureHeader, date)
+                        .queryParam(QueryParams.BOOKING_STATUS, bookingStatus)
+                        .queryParam(QueryParams.DATE_FROM, sdf.format(fromDate))
+                        .queryParam(QueryParams.DATE_TO, sdf.format(toDate))
+                        .queryParam(QueryParams.SIZE, "" + QueryValues.TRANSACTIONS_SIZE)
+                        .get(TransactionalTransactionsResponse.class);
 
-        do {
+        pages.add(page);
+        while (page.getTransactions().getLinks().getNextKey() != null && !isSandbox) {
             page =
-                    buildRequest(url, uuid, digest, signatureHeader, date)
-                            .queryParam(QueryParams.BOOKING_STATUS, bookingStatus)
-                            .queryParam(QueryParams.DATE_FROM, sdf.format(fromDate))
-                            .queryParam(QueryParams.DATE_TO, sdf.format(toDate))
-                            .queryParam(QueryParams.PAGE, "" + currentPage)
+                    buildRequest(
+                                    new URL(
+                                            rabobankConfiguration
+                                                            .getUrls()
+                                                            .buildNextTransactionBaseUrl()
+                                                    + page.getTransactions()
+                                                            .getLinks()
+                                                            .getNextKey()),
+                                    uuid,
+                                    digest,
+                                    signatureHeader,
+                                    date)
                             .get(TransactionalTransactionsResponse.class);
             pages.add(page);
-            currentPage++;
-        } while (currentPage <= page.getLastPage() && !isSandbox);
+        }
 
         return new CompositePaginatorResponse(pages);
     }

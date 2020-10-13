@@ -49,4 +49,10 @@ public final class RabobankUrlFactory {
                 .concatWithSeparator(accountId)
                 .concatWithSeparator("transactions");
     }
+
+    public URL buildNextTransactionBaseUrl() {
+        return getPaymentsUrl()
+                .concatWithSeparator("account-information")
+                .concatWithSeparator("ais");
+    }
 }
