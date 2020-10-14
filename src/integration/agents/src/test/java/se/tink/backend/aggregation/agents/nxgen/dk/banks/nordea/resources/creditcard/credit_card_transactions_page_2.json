@@ -1,0 +1,30 @@
+{
+  "billing_period": {
+    "billing_period_end_date": "2020-02-17",
+    "billing_period_start_date": "2020-01-18",
+    "last_invoiced_sum": 3600.5,
+    "non_invoiced_sum": null
+  },
+  "page": 2,
+  "page_size": 100,
+  "size": 1,
+  "transactions": [
+    {
+      "amount": -111.00,
+      "booked": true,
+      "booking_date": "2020-02-17",
+      "currency": "DKK",
+      "exchange_rate": null,
+      "invoice_status": "paid",
+      "invoiced_date": null,
+      "merchant_city": "City",
+      "merchant_country": "DNK",
+      "original_amount": null,
+      "original_currency": null,
+      "title": "Something from page 2",
+      "transaction_date": "2020-02-14",
+      "transaction_id": "230407857",
+      "transaction_type": null
+    }
+  ]
+}

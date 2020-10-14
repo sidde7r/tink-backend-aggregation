@@ -7,7 +7,7 @@
   },
   "page": 1,
   "page_size": 100,
-  "size": 3,
+  "size": 2,
   "transactions": [
     {
       "amount": -410.00,
@@ -28,8 +28,8 @@
     },
     {
       "amount": -578.00,
-      "booked": true,
-      "booking_date": "2020-02-15",
+      "booked": false,
+      "booking_date": null,
       "currency": "DKK",
       "exchange_rate": null,
       "invoice_status": "paid",
@@ -41,23 +41,6 @@
       "title": "Awesome burger",
       "transaction_date": "2020-02-14",
       "transaction_id": "230163349",
-      "transaction_type": null
-    },
-    {
-      "amount": -1347.50,
-      "booked": true,
-      "booking_date": "2020-02-13",
-      "currency": "DKK",
-      "exchange_rate": null,
-      "invoice_status": "paid",
-      "invoiced_date": null,
-      "merchant_city": "ARHUS C",
-      "merchant_country": "DNK",
-      "original_amount": null,
-      "original_currency": null,
-      "title": "Some other thingy",
-      "transaction_date": "2020-02-11",
-      "transaction_id": "229937819",
       "transaction_type": null
     }
   ]

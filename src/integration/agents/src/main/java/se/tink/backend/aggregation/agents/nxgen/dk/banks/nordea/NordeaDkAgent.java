@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaNemIdAuthenticatorV2;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.NordeaCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.NordeaCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.investment.NordeaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.NordeaDkLoansFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.NordeaAccountFetcher;
@@ -30,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.Investme
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
@@ -63,9 +65,14 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
-        NordeaCreditCardFetcher fetcher = new NordeaCreditCardFetcher(nordeaClient);
         return new CreditCardRefreshController(
-                metricRefreshController, updateController, fetcher, fetcher);
+                metricRefreshController,
+                updateController,
+                new NordeaCreditCardFetcher(nordeaClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                new NordeaCreditCardTransactionFetcher(nordeaClient))));
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {

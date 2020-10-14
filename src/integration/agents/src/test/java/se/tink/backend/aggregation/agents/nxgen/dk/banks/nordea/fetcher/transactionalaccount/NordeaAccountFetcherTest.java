@@ -8,8 +8,8 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.ACCOUNT_1_API_ID;
-import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.ACCOUNT_WITH_CREDIT_API_ID;
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.TransactionalAccountTestData.ACCOUNT_1_API_ID;
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.TransactionalAccountTestData.ACCOUNT_WITH_CREDIT_API_ID;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -19,9 +19,9 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClientMockWrapper;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkTestUtils;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.TransactionalAccountTestData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -37,8 +37,10 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaAccountFetcherTest {
 
-    private NordeaAccountFetcher fetcher;
     private NordeaDkApiClient client;
+    private NordeaDkApiClientMockWrapper clientMockWrapper;
+    private NordeaAccountFetcher fetcher;
+
     private TransactionalAccount transactionalAccount;
     private Date dateTo;
     private Date dateFrom;
@@ -48,6 +50,9 @@ public class NordeaAccountFetcherTest {
     @Before
     public void before() {
         client = mock(NordeaDkApiClient.class);
+        clientMockWrapper = new NordeaDkApiClientMockWrapper(client);
+        fetcher = new NordeaAccountFetcher(client);
+
         transactionalAccount = getTransactionalAccount();
         Calendar calendar = Calendar.getInstance();
         dateTo = calendar.getTime();
@@ -60,7 +65,8 @@ public class NordeaAccountFetcherTest {
     @Test
     public void shouldFetchAccountsAndMapCorrectly() {
         // given
-        fetcher = new NordeaAccountFetcher(NordeaDkTestUtils.mockApiClient());
+        clientMockWrapper.mockGetAccountsUsingFile(
+                TransactionalAccountTestData.TRANSACTIONAL_ACCOUNTS_FILE);
 
         // when
         Collection<TransactionalAccount> fetchedAccounts = fetcher.fetchAccounts();
@@ -126,12 +132,10 @@ public class NordeaAccountFetcherTest {
     public void shouldFetchTransactionsForAccountAndMapCorrectly() {
         // given
         mockAccountTransactionsQueriedByDate(
-                null, NordeaTestData.ACCOUNT_TRANSACTIONS_WITH_CONTINUATION);
+                null, TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_WITH_CONTINUATION_FILE);
         mockAccountTransactionsQueriedByDate(
-                NordeaTestData.TRANSACTIONS_CONTINUATION_KEY,
-                NordeaTestData.ACCOUNT_TRANSACTIONS_CONTINUATION);
-
-        fetcher = new NordeaAccountFetcher(client);
+                TransactionalAccountTestData.TRANSACTIONS_CONTINUATION_KEY,
+                TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_CONTINUATION_FILE);
 
         // when
         PaginatorResponse paginatorResponse =
@@ -156,8 +160,7 @@ public class NordeaAccountFetcherTest {
     public void shouldFetchTransactionsWithoutDate() {
         // given
         mockAccountTransactionsQueriedByDate(
-                null, NordeaTestData.ACCOUNT_TRANSACTIONS_WITHOUT_DATE);
-        fetcher = new NordeaAccountFetcher(client);
+                null, TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_WITHOUT_DATE_FILE);
 
         // when
         PaginatorResponse paginatorResponse =
@@ -169,8 +172,8 @@ public class NordeaAccountFetcherTest {
     @Test
     public void shouldFetchTransactionsUsingDate() {
         // given
-        mockAccountTransactionsQueriedByDate(null, NordeaTestData.ACCOUNT_TRANSACTIONS);
-        fetcher = new NordeaAccountFetcher(client);
+        mockAccountTransactionsQueriedByDate(
+                null, TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_FILE);
 
         // when
         PaginatorResponse paginatorResponse =

@@ -19,6 +19,7 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/metrics:core",
         "//src/libraries/pair",
+        "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
         "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",
