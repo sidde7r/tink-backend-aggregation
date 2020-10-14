@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -43,6 +44,7 @@ public class NemIdIFrameController {
 
     private static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
     private static final By ERROR_MESSAGE = By.cssSelector("p.error");
+    private static final By NEMID_CODE_CARD = By.className("otp__card-number");
     private static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
     private static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
     private static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
@@ -113,15 +115,32 @@ public class NemIdIFrameController {
             displayPromptToOpenNemIdApp(credentials);
 
             // wait some time for user's 2nd factor and token
-            waitForNemidToken(driver);
+            String nemIdToken = verifyOtpAndTryToGetNemIdToken(driver);
+
             log.info(
                     "Whole 2fa process took {} ms.",
                     System.currentTimeMillis() - askForNemIdStartTime);
 
-            return collectToken(driver);
+            return nemIdToken != null ? nemIdToken : collectToken(driver);
         } finally {
             driver.quit();
         }
+    }
+
+    private String verifyOtpAndTryToGetNemIdToken(WebDriver driver) {
+        // According to recorded page sources there is a possibility that
+        // opt icon is not presented, but nemIdToken is successfully rendered
+
+        String nemIdToken = null;
+        boolean hasOTPIconAppeared = waitForOTPIcon(driver);
+        if (!hasOTPIconAppeared) {
+            nemIdToken = waitForNemIdToken(driver);
+            if (nemIdToken == null) {
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                        "NemID request was not approved.");
+            }
+        }
+        return nemIdToken;
     }
 
     private void instantiateIFrameWithNemIdForm(WebDriver driver) throws AuthenticationException {
@@ -187,10 +206,8 @@ public class NemIdIFrameController {
         }
 
         if (!isValid) {
-            log.warn(
-                    "Can't validate NemId = please verify page source: {}", driver.getPageSource());
-            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                    "Can't validate NemId credentials.");
+            tryThrowingNoCodeAppException(driver);
+            throwNemidCredentialsError(driver);
         }
     }
 
@@ -213,26 +230,44 @@ public class NemIdIFrameController {
         return otpIconPhone.isPresent();
     }
 
-    private void waitForNemidToken(WebDriver driver) throws LoginException {
-        boolean isNemIdApproved = false;
+    private void tryThrowingNoCodeAppException(WebDriver driver) {
+        if (isNemIdSuggestingCodeCard(driver)) {
+            throw NemIdError.CODEAPP_NOT_REGISTERED.exception();
+        }
+    }
+
+    private boolean isNemIdSuggestingCodeCard(WebDriver driver) {
+        Optional<WebElement> webElement = webdriverHelper.waitForElement(driver, NEMID_CODE_CARD);
+        return webElement.isPresent();
+    }
+
+    private void throwNemidCredentialsError(WebDriver driver) {
+        log.warn("Can't validate NemId = please verify page source: {}", driver.getPageSource());
+        throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                "Can't validate NemId credentials.");
+    }
+
+    private boolean waitForOTPIcon(WebDriver driver) throws LoginException {
+        boolean hasOTPIconAppeared = false;
         for (int i = 0; i < 120; i++) {
 
             Optional<WebElement> otpIconPhone = webdriverHelper.waitForElement(driver, OTP_ICON);
             if (!otpIconPhone.isPresent()) {
-                isNemIdApproved = true;
+                hasOTPIconAppeared = true;
                 break;
             }
             sleeper.sleepFor(1_000);
         }
 
-        if (!isNemIdApproved) {
-            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                    "NemID request was not approved.");
-        }
+        return hasOTPIconAppeared;
     }
 
     private String collectToken(WebDriver driver) {
         driver.switchTo().defaultContent();
+        return waitForNemIdToken(driver);
+    }
+
+    private String waitForNemIdToken(WebDriver driver) {
         for (int i = 0; i < 7; i++) {
             Optional<String> nemIdToken = getNemIdToken(driver);
 
@@ -240,7 +275,7 @@ public class NemIdIFrameController {
                 return nemIdToken.get();
             }
         }
-        throw new IllegalStateException("Could not find nemId token.");
+        return null;
     }
 
     private void throwError(String errorText) throws LoginException {
