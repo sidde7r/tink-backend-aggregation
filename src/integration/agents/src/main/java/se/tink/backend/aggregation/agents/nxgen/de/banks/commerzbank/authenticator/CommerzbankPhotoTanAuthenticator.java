@@ -82,13 +82,10 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
                 SerializationUtils.serializeToString(loginInfoEntity));
 
         if (!loginInfoEntity.isTanRequestedStatus()) {
-            log.info(
-                    "Excepted login status to be {}, but it was {}.",
-                    Values.TAN_REQUESTED,
-                    loginInfoEntity.getLoginStatus());
             if (Values.TAN_NOTACTIVE.equals(loginInfoEntity.getLoginStatus())) {
                 throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
             }
+            log.info("Unexpected login status: {}.", loginInfoEntity.getLoginStatus());
             throw LoginError.DEFAULT_MESSAGE.exception();
         }
 
