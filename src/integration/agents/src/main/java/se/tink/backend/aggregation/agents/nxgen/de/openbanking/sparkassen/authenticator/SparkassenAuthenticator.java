@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
@@ -97,9 +98,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
                 getScaMethodDetails(initAuthorizationResponse);
 
         authorizeConsentWithOtp(
-                scaMethodDetails.getChosenScaMethod().getAuthenticationType(),
-                scaMethodDetails.getChallengeData().getOtpMaxLength(),
-                scaMethodDetails.getChallengeData().getAdditionalInformation());
+                scaMethodDetails.getChosenScaMethod(), scaMethodDetails.getChallengeData());
     }
 
     private void validateInput(Credentials credentials) throws LoginException {
@@ -204,9 +203,9 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     private void authorizeConsentWithOtp(
-            String otpType, int otpValueLength, String additionalInformation)
+            ScaMethodEntity scaMethod, ChallengeDataEntity challengeData)
             throws AuthenticationException {
-        String otp = collectOtp(otpType, otpValueLength, additionalInformation);
+        String otp = collectOtp(scaMethod, challengeData);
         FinalizeAuthorizationResponse finalizeAuthorizationResponse =
                 apiClient.finalizeAuthorization(
                         persistentStorage.getConsentId(),
@@ -223,11 +222,11 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         }
     }
 
-    private String collectOtp(String otpType, int otpCodeLength, String additionalInformation)
-            throws SupplementalInfoException, LoginException {
-        Field otpField = fieldBuilder.getOtpField(otpType, otpCodeLength, additionalInformation);
+    private String collectOtp(ScaMethodEntity scaMethod, ChallengeDataEntity challengeData) {
+        List<Field> fields = fieldBuilder.getOtpFields(scaMethod, challengeData);
         Map<String, String> supplementalInformation =
-                supplementalInformationHelper.askSupplementalInformation(otpField);
-        return supplementalInformation.get(otpField.getName());
+                supplementalInformationHelper.askSupplementalInformation(
+                        fields.toArray(new Field[0]));
+        return supplementalInformation.get(fields.get(fields.size() - 1).getName());
     }
 }

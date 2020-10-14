@@ -5,8 +5,6 @@ import static lombok.AccessLevel.PRIVATE;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 @NoArgsConstructor(access = PRIVATE)
 public final class DkbConstants {
@@ -135,29 +133,5 @@ public final class DkbConstants {
 
         public static final String INSTANT_SEPA_CREDIT_TRANSFER = "instant-sepa-credit-transfers";
         public static final String CROSS_BORDER_CREDIT_TRANSFERS = "cross-border-credit-transfers";
-    }
-
-    @NoArgsConstructor(access = PRIVATE)
-    public static class SupplementalStrings {
-
-        public static final String STARTCODE_FIELD_KEY = "startcodeField";
-        public static final LocalizableKey STARTCODE_DESCRIPTION = new LocalizableKey("Startcode");
-        public static final LocalizableKey STARTCODE_HELPTEXT =
-                new LocalizableKey(
-                        "Insert your girocard into the TAN-generator and press \"TAN\". Enter the startcode and press \"OK\".");
-
-        public static final String GENERATED_TAN_FIELD_KEY = "generatedTanField";
-        public static final LocalizableKey GENERATED_TAN_DESCRIPTION = new LocalizableKey("TAN");
-        public static final LocalizableParametrizedKey GENERATED_TAN_HELPTEXT_FORMAT =
-                new LocalizableParametrizedKey(
-                        "Confirm by entering the generated TAN for \"(0}\".");
-        public static final LocalizableKey GENERATED_TAN_HELPTEXT =
-                new LocalizableKey("Confirm by entering the generated TAN.");
-
-        public static final String SELECT_AUTH_METHOD_FIELD_KEY = "selectAuthMethodField";
-        public static final LocalizableKey SELECT_AUTH_METHOD_DESCRIPTION =
-                new LocalizableKey("Authentication method index");
-        public static final LocalizableParametrizedKey SELECT_AUTH_METHOD_HINT_FORMAT =
-                new LocalizableParametrizedKey("Select from 1 to {0}");
     }
 }

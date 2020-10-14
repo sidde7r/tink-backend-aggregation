@@ -59,6 +59,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 
 @RunWith(JUnitParamsRunner.class)
 public class SparkassenAuthenticatorTest {
@@ -78,6 +79,9 @@ public class SparkassenAuthenticatorTest {
         persistentStorage = new SparkassenPersistentStorage(new PersistentStorage());
 
         when(catalog.getString(anyString())).thenReturn("");
+        when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
+        when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
+        when(catalog.getString(any(), any())).thenReturn("");
         authenticator =
                 new SparkassenAuthenticator(
                         catalog, supplementalInformationHelper, apiClient, persistentStorage);

@@ -32,8 +32,8 @@ class AuthenticatorTestData {
         OK_CREDENTIALS.setType(CredentialsTypes.PASSWORD);
         OK_CREDENTIALS.setField(Field.Key.USERNAME, OK_USERNAME);
         OK_CREDENTIALS.setField(Field.Key.PASSWORD, OK_PASSWORD);
-        SUPPLEMENTAL_RESPONSE_OK.put("otpValue", TEST_OTP);
-        SUPPLEMENTAL_RESPONSE_OK.put("chosenScaMethod", "1");
+        SUPPLEMENTAL_RESPONSE_OK.put("tanField", TEST_OTP);
+        SUPPLEMENTAL_RESPONSE_OK.put("selectAuthMethodField", "1");
     }
 
     static final String TEST_CONSENT_ID = "147852369";
