@@ -84,7 +84,16 @@ public class SupplementalInformationController {
             throw e;
         } finally {
             logger.info("CacheClient clear the cache for credentialsId: {}", credentialsId);
-            cacheClient.delete(CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, credentialsId);
+            try {
+                Future<Boolean> future =
+                        cacheClient.delete(
+                                CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, credentialsId);
+                if (future == null || !future.get(10, TimeUnit.SECONDS)) {
+                    logger.error("Failed to clear the cache for {}", credentialsId);
+                }
+            } catch (Exception e) {
+                logger.error("Failed to clear the cache for {}", credentialsId, e);
+            }
         }
     }
 }

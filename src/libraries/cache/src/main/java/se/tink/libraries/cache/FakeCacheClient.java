@@ -31,7 +31,7 @@ public class FakeCacheClient implements CacheClient {
     }
 
     @Override
-    public void delete(CacheScope scope, String key) {
+    public Future<Boolean> delete(CacheScope scope, String key) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
