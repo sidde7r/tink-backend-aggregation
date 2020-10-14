@@ -6,6 +6,15 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.ERROR_MESSAGE;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.IFRAME;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_APP_BUTTON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_CODE_CARD;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_TOKEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.OTP_ICON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.PASSWORD_INPUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.SUBMIT_BUTTON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.USERNAME_INPUT;
 
 import java.util.Arrays;
 import java.util.Base64;
@@ -18,7 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.InOrder;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebDriver.Timeouts;
 import org.openqa.selenium.WebElement;
@@ -28,6 +36,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.libraries.i18n.Catalog;
 
 public class NemIdIFrameControllerTest {
@@ -48,21 +57,13 @@ public class NemIdIFrameControllerTest {
 
     private NemIdIFrameController controller;
 
-    private static final By IFRAME = By.tagName("iframe");
-    private static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
-    private static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
-    private static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
-    private static final By ERROR_MESSAGE = By.cssSelector("p.error");
-    private static final By OTP_ICON = By.className("otp__icon-phone-pulse");
-    private static final By NEMID_APP_BUTTON = By.cssSelector("button.button--submit");
-    private static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
-
     private InOrder inOrder;
 
     // web page elements
     private WebElement iframeMock;
     private WebElement userinputMock;
     private WebElement errorMessageMock;
+    private WebElement nemIdCodeCardMock;
     private WebElement otpIconMock;
     private WebElement nemIdTokenMock;
 
@@ -128,6 +129,11 @@ public class NemIdIFrameControllerTest {
         errorMessageMock = mock(WebElement.class);
         given(webdriverHelper.waitForElement(driver, ERROR_MESSAGE))
                 .willReturn(Optional.of(errorMessageMock));
+
+        // nemid code card info
+        nemIdCodeCardMock = mock(WebElement.class);
+        given(webdriverHelper.waitForElement(driver, NEMID_CODE_CARD))
+                .willReturn(Optional.of(nemIdCodeCardMock));
 
         // otp icon placeholder
         otpIconMock = mock(WebElement.class);
@@ -202,7 +208,7 @@ public class NemIdIFrameControllerTest {
         // and
         assertThat(throwable)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Can't instantiate iframe element with NemId form.");
+                .hasMessage("[NemId] Can't instantiate iframe element with NemId form.");
     }
 
     @SneakyThrows
@@ -220,13 +226,15 @@ public class NemIdIFrameControllerTest {
         // and
         assertThat(throwable)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Can't instantiate iframe element with NemId form.");
+                .hasMessage("[NemId] Can't instantiate iframe element with NemId form.");
     }
 
     @Test
-    public void doLoginWithShouldFailWhenOtpIconDoesNotAppearAfterEnteringCredentials() {
+    public void
+            doLoginWithShouldFailWhenOtpIconAndNemIdCodeCardDoesNotAppearAfterEnteringCredentials() {
         // given
         given(webdriverHelper.waitForElement(driver, OTP_ICON)).willReturn(Optional.empty());
+        given(webdriverHelper.waitForElement(driver, NEMID_CODE_CARD)).willReturn(Optional.empty());
 
         // when
         Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
@@ -236,7 +244,26 @@ public class NemIdIFrameControllerTest {
         // and
         assertThat(throwable)
                 .isInstanceOf(AuthenticationException.class)
-                .hasMessage("Can't validate NemId credentials.");
+                .hasMessage("[NemId] Can't validate NemId credentials.");
+    }
+
+    @Test
+    public void
+            doLoginWithShouldFailWhenOtpIconDoesNotAppearAndNemIdCodeCardAppearAfterEnteringCredentials() {
+        // given
+        given(webdriverHelper.waitForElement(driver, OTP_ICON)).willReturn(Optional.empty());
+        given(webdriverHelper.waitForElement(driver, NEMID_CODE_CARD))
+                .willReturn(Optional.of(nemIdCodeCardMock));
+
+        // when
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
+
+        // then
+        verify(sleeper, times(120)).sleepFor(1_000);
+        // and
+        assertThat(throwable)
+                .isInstanceOf(AuthenticationException.class)
+                .hasMessage("[NemId] User has code card.");
     }
 
     @Test
@@ -250,7 +277,8 @@ public class NemIdIFrameControllerTest {
         // then
         assertThat(throwable)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Unknown login error '--- WRONG CREDENTIALS UNKNOWN ERROR ---'.");
+                .hasMessage(
+                        "[NemId] Unknown login error '--- WRONG CREDENTIALS UNKNOWN ERROR ---'.");
     }
 
     @Test
@@ -273,7 +301,9 @@ public class NemIdIFrameControllerTest {
                     Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
 
             // then
-            assertThat(throwable).isInstanceOf(LoginException.class).hasMessage(errorMsg);
+            assertThat(throwable)
+                    .isInstanceOf(LoginException.class)
+                    .hasMessage("[NemId]" + errorMsg);
         }
     }
 
@@ -282,6 +312,8 @@ public class NemIdIFrameControllerTest {
         // given
         given(webdriverHelper.waitForElement(driver, OTP_ICON))
                 .willReturn(Optional.of(otpIconMock));
+        given(webdriverHelper.waitForElement(driver, NEMID_CODE_CARD)).willReturn(Optional.empty());
+        given(webdriverHelper.waitForElement(driver, NEMID_TOKEN)).willReturn(Optional.empty());
 
         // when
         Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
@@ -291,7 +323,7 @@ public class NemIdIFrameControllerTest {
         // and
         assertThat(throwable)
                 .isInstanceOf(AuthenticationException.class)
-                .hasMessage("NemID request was not approved.");
+                .hasMessage("[NemId] NemID request was not approved.");
     }
 
     @Test
@@ -306,8 +338,8 @@ public class NemIdIFrameControllerTest {
         verify(webdriverHelper, times(7)).waitForElement(driver, NEMID_TOKEN);
         // and
         assertThat(throwable)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Could not find nemId token.");
+                .isInstanceOf(NemIdException.class)
+                .hasMessage("Cause: NemIdError.TIMEOUT");
     }
 
     @Test
@@ -322,8 +354,8 @@ public class NemIdIFrameControllerTest {
         verify(webdriverHelper, times(7)).waitForElement(driver, NEMID_TOKEN);
         // and
         assertThat(throwable)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Could not find nemId token.");
+                .isInstanceOf(NemIdException.class)
+                .hasMessage("Cause: NemIdError.TIMEOUT");
     }
 
     @SneakyThrows

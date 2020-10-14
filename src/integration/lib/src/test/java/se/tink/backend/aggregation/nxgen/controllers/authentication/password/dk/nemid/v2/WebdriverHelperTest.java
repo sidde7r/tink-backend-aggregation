@@ -36,7 +36,7 @@ public class WebdriverHelperTest {
         driver = mock(WebDriver.class, Answers.RETURNS_DEEP_STUBS);
         sleeper = mock(Sleeper.class);
 
-        helper = new WebdriverHelper();
+        helper = new WebdriverHelper(sleeper);
     }
 
     @Test

@@ -19,7 +19,15 @@ class WebdriverHelper {
 
     private static final long WAIT_FOR_RENDER_MILLIS = 5_000;
 
-    private final Sleeper sleeper = new Sleeper();
+    private final Sleeper sleeper;
+
+    WebdriverHelper() {
+        this(new Sleeper());
+    }
+
+    WebdriverHelper(Sleeper sleeper) {
+        this.sleeper = sleeper;
+    }
 
     WebDriver constructWebDriver(long waitTimeout) {
 
@@ -116,8 +124,7 @@ class WebdriverHelper {
 
     private void logErrorUsingPhantomJS(WebDriver driver, String errorMessage) {
         if (log.isDebugEnabled()) {
-            log.debug(
-                    String.format("PhantomJS current(reported) URL: %s", driver.getCurrentUrl()));
+            log.debug(String.format("PhantomJS current(reported) URL: %s", driver.getCurrentUrl()));
             log.debug("PHANTOMJS LOGS: ");
         }
         driver.manage()

@@ -42,11 +42,23 @@ public class NemIdIFrameController {
     // NemId Javascript Client Integration for mobile:
     // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Integration%20-%20Mobile.pdf
 
-    private final WebdriverHelper webdriverHelper = new WebdriverHelper();
-    private final Sleeper sleeper = new Sleeper();
+    private final WebdriverHelper webdriverHelper;
+    private final Sleeper sleeper;
     private final NemIdParametersFetcher nemIdParametersFetcher;
     private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
+
+    public NemIdIFrameController(
+            NemIdParametersFetcher nemIdParametersFetcher,
+            SupplementalRequester supplementalRequester,
+            Catalog catalog) {
+        this(
+                new WebdriverHelper(),
+                new Sleeper(),
+                nemIdParametersFetcher,
+                supplementalRequester,
+                catalog);
+    }
 
     public String doLoginWith(Credentials credentials) throws AuthenticationException {
         log.info("{} Start authentication process with nem-id iframe.", NEM_ID_PREFIX);
@@ -93,7 +105,8 @@ public class NemIdIFrameController {
         String nemIdToken = verifyOtpAndTryToGetNemIdToken(driver);
 
         log.info(
-                 "{} Whole 2fa process took {} ms.", NEM_ID_PREFIX,
+                "{} Whole 2fa process took {} ms.",
+                NEM_ID_PREFIX,
                 System.currentTimeMillis() - askForNemIdStartTime);
 
         return nemIdToken != null ? nemIdToken : collectToken(driver);
@@ -101,7 +114,8 @@ public class NemIdIFrameController {
 
     private void instantiateIFrameWithNemIdForm(WebDriver driver) throws AuthenticationException {
         if (!isNemIdInitialized(driver)) {
-            throw new IllegalStateException(NEM_ID_PREFIX + " Can't instantiate iframe element with NemId form.");
+            throw new IllegalStateException(
+                    NEM_ID_PREFIX + " Can't instantiate iframe element with NemId form.");
         }
     }
 
@@ -175,7 +189,9 @@ public class NemIdIFrameController {
                         .filter(e -> !e.isEmpty());
         if (errorText.isPresent()) {
             log.error(
-                    "{} Error occured when validating NemID credentials for page: {}", NEM_ID_PREFIX, driver.getPageSource());
+                    "{} Error occured when validating NemID credentials for page: {}",
+                    NEM_ID_PREFIX,
+                    driver.getPageSource());
             throwError(errorText.get());
         }
     }
@@ -187,7 +203,8 @@ public class NemIdIFrameController {
 
     private void tryThrowingNoCodeAppException(WebDriver driver) {
         if (isNemIdSuggestingCodeCard(driver)) {
-            throw NemIdError.CODEAPP_NOT_REGISTERED.exception(NEM_ID_PREFIX + " User has code card.");
+            throw NemIdError.CODEAPP_NOT_REGISTERED.exception(
+                    NEM_ID_PREFIX + " User has code card.");
         }
     }
 
@@ -197,17 +214,22 @@ public class NemIdIFrameController {
     }
 
     private void throwNemidCredentialsError(WebDriver driver) {
-        log.warn("{} Can't validate NemId = please verify page source: {}", NEM_ID_PREFIX, driver.getPageSource());
-        throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(NEM_ID_PREFIX +
-                " Can't validate NemId credentials.");
+        log.warn(
+                "{} Can't validate NemId = please verify page source: {}",
+                NEM_ID_PREFIX,
+                driver.getPageSource());
+        throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                NEM_ID_PREFIX + " Can't validate NemId credentials.");
     }
 
     private String collectToken(WebDriver driver) {
         driver.switchTo().defaultContent();
         String token = waitForNemIdToken(driver);
         if (token == null) {
-            log.error("{} Failed to obtain NemID token, please verify page source: {}",
-                    NEM_ID_PREFIX, driver.getPageSource());
+            log.error(
+                    "{} Failed to obtain NemID token, please verify page source: {}",
+                    NEM_ID_PREFIX,
+                    driver.getPageSource());
             throw NemIdError.TIMEOUT.exception();
         }
         return token;
@@ -233,7 +255,8 @@ public class NemIdIFrameController {
             throw LoginError.INCORRECT_CREDENTIALS.exception(NEM_ID_PREFIX + err);
         }
 
-        throw new IllegalStateException(String.format(NEM_ID_PREFIX + " Unknown login error '%s'.", errorText));
+        throw new IllegalStateException(
+                String.format(NEM_ID_PREFIX + " Unknown login error '%s'.", errorText));
     }
 
     private void setUserName(WebDriver driver, String username) {
@@ -284,8 +307,8 @@ public class NemIdIFrameController {
         if (!hasOTPIconAppeared) {
             nemIdToken = waitForNemIdToken(driver);
             if (nemIdToken == null) {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(NEM_ID_PREFIX +
-                        " NemID request was not approved.");
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                        NEM_ID_PREFIX + " NemID request was not approved.");
             }
         }
         return nemIdToken;
