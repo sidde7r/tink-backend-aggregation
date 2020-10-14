@@ -15,6 +15,10 @@ spec:
   selector:
     matchLabels:
       app: aggregation-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
   template:
     metadata:
       labels:
