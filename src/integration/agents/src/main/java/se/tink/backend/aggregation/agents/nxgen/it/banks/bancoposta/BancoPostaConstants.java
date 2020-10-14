@@ -32,8 +32,8 @@ public class BancoPostaConstants {
             public static final URL ONBOARDING_VERIFICATION =
                     new URL(Base.BASE_API + Endpoints.ONBOARDING_VERIFICATION);
             public static final URL AUTH_OPENID_AZ =
-                    new URL(Base.BASE_AUTH4 + Endpoints.AUTH_OPENID_AZ);
-            public static final URL CHALLENGE = new URL(Base.BASE_AUTH4 + Endpoints.CHALLENGE);
+                    new URL(Base.BASE_API2 + Endpoints.AUTH_OPENID_AZ);
+            public static final URL CHALLENGE = new URL(Base.BASE_API2 + Endpoints.CHALLENGE);
         }
 
         public static class CheckingAccUrl {
@@ -54,6 +54,11 @@ public class BancoPostaConstants {
                     new URL(Base.BASE_API + Endpoints.FETCH_SAVING_TRANSACTIONS);
         }
 
+        public static class IdentityUrl {
+            public static final URL FETCH_IDENTITY_DATA =
+                    new URL(Base.BASE_API2 + Endpoints.FETCH_IDENTITY_DATA);
+        }
+
         public static class Base {
             public static final String BASE_DATA = "https://pfm.poste.it/user/v1";
             public static final String BASE_API =
@@ -62,7 +67,7 @@ public class BancoPostaConstants {
                     "https://appregistry.mobile.poste.it/jod-app-registry/v2";
             public static final String BASE_AUTH3 =
                     "https://sh2-web.poste.it//jod-secure-holder2-web/public/app/v1";
-            public static final String BASE_AUTH4 = "https://idp-poste.poste.it/jod-idp-retail";
+            public static final String BASE_API2 = "https://idp-poste.poste.it/jod-idp-retail";
         }
 
         public static class Endpoints {
@@ -93,6 +98,7 @@ public class BancoPostaConstants {
                     "/v2/bancoposta/listaMovimentiLibrettoH24";
             public static final String FETCH_SAVING_TRANSACTIONS =
                     "/v2/bancoposta/listaMovimentiLibrettoH24";
+            public static final String FETCH_IDENTITY_DATA = "/federation/v2/openid-userinfo";
         }
     }
 

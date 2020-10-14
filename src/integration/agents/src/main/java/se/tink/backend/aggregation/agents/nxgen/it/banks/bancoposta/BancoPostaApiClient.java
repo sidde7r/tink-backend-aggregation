@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.AuthUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.CheckingAccUrl;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.IdentityUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.SavingAccUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterCodeRequest;
@@ -221,5 +222,11 @@ public class BancoPostaApiClient {
         return createBaseRequestWithBearerTokenAndXKey(
                         storage.getAccessBasicToken(), SavingAccUrl.FETCH_SAVING_TRANSACTIONS)
                 .post(SavingTransactionResponse.class, request);
+    }
+
+    public String fetchIdentityData() {
+        return createBaseRequestWithBearerToken(
+                        storage.getAccessBasicToken(), IdentityUrl.FETCH_IDENTITY_DATA)
+                .post(String.class);
     }
 }
