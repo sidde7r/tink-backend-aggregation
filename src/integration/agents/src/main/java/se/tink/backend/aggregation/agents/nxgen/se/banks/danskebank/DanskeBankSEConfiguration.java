@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -84,12 +83,21 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
 
     @Override
     public List<String> getCheckingAccountTypes() {
-        return Collections.emptyList();
+        return ImmutableList.<String>builder()
+                .add("2AB")
+                .add("2AE")
+                .add("2A3")
+                .add("2A4")
+                .add("2B4")
+                .add("2EH")
+                .add("2EX")
+                .add("3BH")
+                .build();
     }
 
     @Override
     public List<String> getSavingsAccountTypes() {
-        return ImmutableList.<String>builder().add("2EX").add("2BP").add("2AB").build();
+        return ImmutableList.<String>builder().add("2BP").add("2CF").add("2C2").add("2DC").build();
     }
 
     @Override
