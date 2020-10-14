@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
 
 public class CapabilitiesExtractor {
 
-    private static List<Mapping> mappings =
+    private static final List<Mapping> MAPPINGS =
             Arrays.asList(
                     new Mapping(RefreshCreditCardAccountsExecutor.class, Capability.CREDIT_CARDS),
                     new Mapping(RefreshIdentityDataExecutor.class, Capability.IDENTITY_DATA),
@@ -39,14 +39,20 @@ public class CapabilitiesExtractor {
     public static Set<Capability> readCapabilities(Class<? extends Agent> klass) {
         AgentCapabilities capabilities = klass.getAnnotation(AgentCapabilities.class);
         if (capabilities.generateFromImplementedExecutors()) {
-            return readCapabilitiesFromImplementation(klass);
+            return readCapabilitiesFromInterfaces(klass);
         }
         return readCapabilitiesFromAnnotation(capabilities);
     }
 
-    private static Set<Capability> readCapabilitiesFromImplementation(
+    public static Set<Mapping> getMappingsFor(Capability capability) {
+        return MAPPINGS.stream()
+                .filter(mapping -> mapping.getCapability().equals(capability))
+                .collect(Collectors.toSet());
+    }
+
+    private static Set<Capability> readCapabilitiesFromInterfaces(
             Class<? extends Agent> agentClass) {
-        return mappings.stream()
+        return MAPPINGS.stream()
                 .filter(mapping -> mapping.canMap(agentClass))
                 .map(Mapping::getCapability)
                 .collect(Collectors.toSet());
