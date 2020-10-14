@@ -7,7 +7,6 @@
 ignoredAgentsForCapabilityTest:
   - abnamro.AbnAmroAgent
   - nxgen.at.openbanking.bawag.BawagAgent
-  - nxgen.be.banks.ing.IngAgent
   - nxgen.be.openbanking.aion.AionAgent
   - nxgen.be.openbanking.argenta.ArgentaAgent
   - nxgen.be.openbanking.axa.AxaAgent
