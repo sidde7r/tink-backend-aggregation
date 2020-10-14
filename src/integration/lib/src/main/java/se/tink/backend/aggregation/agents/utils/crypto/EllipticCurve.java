@@ -144,8 +144,16 @@ public class EllipticCurve {
         }
     }
 
+    public static byte[] signNone(PrivateKey privateKey, byte[] input) {
+        return sign("NONEwithECDSA", privateKey, input);
+    }
+
     public static byte[] signSha256(PrivateKey privateKey, byte[] input) {
         return sign("SHA256withECDSA", privateKey, input);
+    }
+
+    public static boolean verifySignNone(PublicKey publicKey, byte[] input, byte[] signature) {
+        return verify("NONEwithECDSA", publicKey, input, signature);
     }
 
     public static boolean verifySignSha256(PublicKey publicKey, byte[] input, byte[] signature) {

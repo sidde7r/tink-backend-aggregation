@@ -72,6 +72,10 @@ public class Hash {
         return hashFunction("SHA-512", data.getBytes());
     }
 
+    public static byte[] sha512(final byte[]... data) {
+        return hashFunction("SHA-512", data);
+    }
+
     public static byte[] md5(final String data) {
         return hashFunction("MD5", data.getBytes());
     }
