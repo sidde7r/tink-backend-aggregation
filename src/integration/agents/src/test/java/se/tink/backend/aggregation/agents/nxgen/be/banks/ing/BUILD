@@ -8,7 +8,7 @@ junit_test(
     ),
     data = [
         "//data:aggregation_test",
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/ing/resources"
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/ing/resources",
     ],
     visibility = ["//visibility:public"],
     deps = [

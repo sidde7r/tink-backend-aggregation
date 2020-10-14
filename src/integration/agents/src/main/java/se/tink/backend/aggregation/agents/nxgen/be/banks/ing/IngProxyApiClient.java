@@ -36,7 +36,13 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.P
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.ProxyOauthTokenRevokeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.ProxySignRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.ProxySignResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entities.AgreementsResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entities.TransactionsResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.ProxyFilter;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.ProxyGetAgreementsRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.ProxyGetAgreementsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.ProxyGetTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.ProxyGetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.ProxyResponseMessage;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -145,6 +151,33 @@ public class IngProxyApiClient {
                         .body(new ProxyOauthTokenRevokeRequest(token))
                         .post(ProxyOauthTokenRevokeResponse.class);
         validate(response);
+    }
+
+    public AgreementsResponseEntity getAgreements(String type) {
+        ProxyGetAgreementsResponse response =
+                request()
+                        .body(new ProxyGetAgreementsRequest(type))
+                        .post(ProxyGetAgreementsResponse.class);
+        validate(response);
+        return response.getContent();
+    }
+
+    public TransactionsResponseEntity getTransactionsFirstPage(String href, String accountType) {
+        return getTransactions(href, "agreementType=" + accountType);
+    }
+
+    public TransactionsResponseEntity getTransactionsNextPages(String href, String query) {
+        return getTransactions(href, query);
+    }
+
+    private TransactionsResponseEntity getTransactions(String href, String query) {
+        ProxyGetTransactionsResponse response =
+                request()
+                        .body(new ProxyGetTransactionsRequest(href, query))
+                        .post(ProxyGetTransactionsResponse.class);
+
+        validate(response);
+        return response.getContent();
     }
 
     private RequestBuilder request() {

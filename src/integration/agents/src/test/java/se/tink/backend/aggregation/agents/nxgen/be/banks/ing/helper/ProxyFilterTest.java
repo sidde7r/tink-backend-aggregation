@@ -80,7 +80,7 @@ public class ProxyFilterTest {
             ArgumentCaptor.forClass(ByteArrayInputStream.class);
 
     @Test
-    public void shouldTransformBody()  {
+    public void shouldTransformBody() {
         when(ingStorage.getSigningKey()).thenReturn(new SecretKeySpec(SIGNING_KEY, "HmacSHA256"));
         when(ingStorage.getEncryptionKey())
                 .thenReturn(new SecretKeySpec(ENCRYPTION_KEY, "HmacSHA256"));

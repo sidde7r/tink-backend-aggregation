@@ -72,11 +72,6 @@ public final class IngConstants {
         public static final String INVESTMENT_MONEY_ACCOUNT = "INVESTMENT_MONEY_ACCOUNT";
     }
 
-    public static class CardPeriod {
-        public static final String CURRENT = "CURRENT";
-        public static final String PREVIOUS = "PREVIOUS";
-    }
-
     public static final Pattern TRANSACTION_PREFIXES =
             Pattern.compile(
                     "^((naar:|zu:|á:|to:|van:|von:|de:|from:|vers:)|(\\d{2}/\\d{2}\\s-\\s\\d{1,2}h\\d{2}\\s+-\\s+)).*",
