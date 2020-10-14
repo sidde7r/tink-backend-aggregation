@@ -4,19 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.assertj.core.util.Lists;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 public class TransactionalTransactionsResponse implements PaginatorResponse {
@@ -121,19 +117,5 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.empty();
-    }
-
-    @JsonIgnore
-    public int getLastPage() {
-        final URL last = new URL(transactions.getLinks().getLast());
-        final String query = last.toUri().getQuery();
-        final String[] pairs = query.split("&");
-        final Map<String, String> query_pairs = new LinkedHashMap<>();
-        for (final String pair : pairs) {
-            final int idx = pair.indexOf("=");
-            query_pairs.put(pair.substring(0, idx), pair.substring(idx + 1));
-        }
-        final String lastPage = query_pairs.get(QueryParams.PAGE);
-        return Integer.parseInt(lastPage);
     }
 }

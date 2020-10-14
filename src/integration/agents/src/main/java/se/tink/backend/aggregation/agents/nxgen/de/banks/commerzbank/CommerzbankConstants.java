@@ -60,6 +60,7 @@ public class CommerzbankConstants {
         public static final boolean CREATE_SESSION_TOKEN_TRUE = true;
         public static final String BIOMETRIC_TOUCHID = "TOUCHID";
         public static final String TAN_REQUESTED = "TAN_REQUESTED";
+        public static final String TAN_NOTACTIVE = "TAN_NOTACTIVE";
         public static final String CHALLENGE = "CHALLENGE";
     }
 

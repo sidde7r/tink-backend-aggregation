@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class RabobankUrlFactory {
     private final URL baseUrl;
+    private boolean consumeLatest = true;
 
     RabobankUrlFactory(final URL baseUrl) {
         this.baseUrl = baseUrl;
@@ -26,10 +27,14 @@ public final class RabobankUrlFactory {
     }
 
     public URL getAccountInformationUrl() {
-        return getPaymentsUrl()
-                .concatWithSeparator("account-information")
-                .concatWithSeparator("ais")
-                .concatWithSeparator("v3");
+        URL url =
+                getPaymentsUrl()
+                        .concatWithSeparator("account-information")
+                        .concatWithSeparator("ais");
+        if (!consumeLatest) {
+            return url.concatWithSeparator("v3");
+        }
+        return url;
     }
 
     public URL buildConsentUrl(final String consentId) {
@@ -48,5 +53,15 @@ public final class RabobankUrlFactory {
         return getAisAccountsUrl()
                 .concatWithSeparator(accountId)
                 .concatWithSeparator("transactions");
+    }
+
+    public URL buildNextTransactionBaseUrl() {
+        return getPaymentsUrl()
+                .concatWithSeparator("account-information")
+                .concatWithSeparator("ais");
+    }
+
+    public void setConsumeLatest(boolean consumeLatest) {
+        this.consumeLatest = consumeLatest;
     }
 }

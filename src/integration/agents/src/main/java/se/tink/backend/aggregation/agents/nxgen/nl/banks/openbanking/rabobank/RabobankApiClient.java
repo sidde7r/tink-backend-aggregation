@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.au
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.BalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
@@ -180,7 +182,7 @@ public final class RabobankApiClient {
         }
     }
 
-    public TransactionalAccountsResponse fetchAccounts() {
+    private RequestBuilder buildFetchAccountsRequest() {
         final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
         final String uuid = Psd2Headers.getRequestId();
         final String date =
@@ -188,12 +190,28 @@ public final class RabobankApiClient {
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
 
         return buildRequest(
-                        rabobankConfiguration.getUrls().getAisAccountsUrl(),
-                        uuid,
-                        digest,
-                        signatureHeader,
-                        date)
-                .get(TransactionalAccountsResponse.class);
+                rabobankConfiguration.getUrls().getAisAccountsUrl(),
+                uuid,
+                digest,
+                signatureHeader,
+                date);
+    }
+
+    public TransactionalAccountsResponse fetchAccounts() {
+        try {
+            return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
+        } catch (HttpResponseException e) {
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
+                    && errorResponse
+                            .getMoreInformation()
+                            .trim()
+                            .equalsIgnoreCase(ErrorMessages.NOT_SUBSCRIBED)) {
+                rabobankConfiguration.getUrls().setConsumeLatest(false);
+                return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
+            }
+            throw e;
+        }
     }
 
     public BalanceResponse getBalance(final String accountId) {
@@ -258,21 +276,32 @@ public final class RabobankApiClient {
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
 
         final Collection<PaginatorResponse> pages = new ArrayList<>();
-        int currentPage = 1;
-        TransactionalTransactionsResponse page;
+        TransactionalTransactionsResponse page =
+                buildRequest(url, uuid, digest, signatureHeader, date)
+                        .queryParam(QueryParams.BOOKING_STATUS, bookingStatus)
+                        .queryParam(QueryParams.DATE_FROM, sdf.format(fromDate))
+                        .queryParam(QueryParams.DATE_TO, sdf.format(toDate))
+                        .queryParam(QueryParams.SIZE, "" + QueryValues.TRANSACTIONS_SIZE)
+                        .get(TransactionalTransactionsResponse.class);
 
-        do {
+        pages.add(page);
+        while (page.getTransactions().getLinks().getNextKey() != null && !isSandbox) {
             page =
-                    buildRequest(url, uuid, digest, signatureHeader, date)
-                            .queryParam(QueryParams.BOOKING_STATUS, bookingStatus)
-                            .queryParam(QueryParams.DATE_FROM, sdf.format(fromDate))
-                            .queryParam(QueryParams.DATE_TO, sdf.format(toDate))
-                            .queryParam(QueryParams.SIZE, "" + QueryValues.TRANSACTIONS_SIZE)
-                            .queryParam(QueryParams.PAGE, "" + currentPage)
+                    buildRequest(
+                                    new URL(
+                                            rabobankConfiguration
+                                                            .getUrls()
+                                                            .buildNextTransactionBaseUrl()
+                                                    + page.getTransactions()
+                                                            .getLinks()
+                                                            .getNextKey()),
+                                    uuid,
+                                    digest,
+                                    signatureHeader,
+                                    date)
                             .get(TransactionalTransactionsResponse.class);
             pages.add(page);
-            currentPage++;
-        } while (currentPage <= page.getLastPage() && !isSandbox);
+        }
 
         return new CompositePaginatorResponse(pages);
     }
