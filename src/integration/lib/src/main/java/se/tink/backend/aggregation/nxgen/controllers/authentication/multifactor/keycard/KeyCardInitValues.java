@@ -17,7 +17,8 @@ public class KeyCardInitValues {
     }
 
     public KeyCardInitValues(String cardIndex) {
-        this(null, cardIndex);
+        this.cardId = null;
+        this.cardIndex = Preconditions.checkNotNull(cardIndex, "Card index must be set");
     }
 
     public Optional<String> getCardId() {
