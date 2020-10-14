@@ -1,19 +1,29 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.ErrorPatterns.INCORRECT_CREDENTIALS_ERROR_PATTERNS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.ERROR_MESSAGE;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.IFRAME;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_APP_BUTTON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_CODE_CARD;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_TOKEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.OTP_ICON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.PASSWORD_INPUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.SUBMIT_BUTTON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.USERNAME_INPUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.NEM_ID_PREFIX;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.PHANTOMJS_TIMEOUT_SECONDS;
+
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.openqa.selenium.By;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
@@ -26,126 +36,72 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-// Temporarily renaming this to V2. V1 will be removed once the Nordea DK update is finished
+@Slf4j
+@RequiredArgsConstructor
 public class NemIdIFrameController {
-
-    private static final Logger log = LoggerFactory.getLogger(NemIdIFrameController.class);
-
     // NemId Javascript Client Integration for mobile:
     // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Integration%20-%20Mobile.pdf
 
-    private static final ImmutableList<Pattern> INCORRECT_CREDENTIALS_ERROR_PATTERNS =
-            ImmutableList.<Pattern>builder()
-                    .add(
-                            Pattern.compile("^incorrect (user|password).*"),
-                            Pattern.compile("^fejl i (bruger|adgangskode).*"),
-                            Pattern.compile("^indtast (bruger|adgangskode).*"))
-                    .build();
-
-    private static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
-    private static final By ERROR_MESSAGE = By.cssSelector("p.error");
-    private static final By NEMID_CODE_CARD = By.className("otp__card-number");
-    private static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
-    private static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
-    private static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
-    private static final By IFRAME = By.tagName("iframe");
-    private static final By OTP_ICON = By.className("otp__icon-phone-pulse");
-
-    private static final By NEMID_APP_BUTTON = By.cssSelector("button.button--submit");
-
-    private static final long PHANTOMJS_TIMEOUT_SECONDS = 30;
-
-    private final WebdriverHelper webdriverHelper;
-    private final Sleeper sleeper;
+    private final WebdriverHelper webdriverHelper = new WebdriverHelper();
+    private final Sleeper sleeper = new Sleeper();
     private final NemIdParametersFetcher nemIdParametersFetcher;
     private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
 
-    public NemIdIFrameController(
-            final NemIdParametersFetcher nemIdParametersFetcher,
-            final SupplementalRequester supplementalRequester,
-            final Catalog catalog) {
-        this(
-                new WebdriverHelper(),
-                new Sleeper(),
-                nemIdParametersFetcher,
-                supplementalRequester,
-                catalog);
-    }
-
-    NemIdIFrameController(
-            final WebdriverHelper webdriverHelper,
-            final Sleeper sleeper,
-            final NemIdParametersFetcher nemIdParametersFetcher,
-            final SupplementalRequester supplementalRequester,
-            final Catalog catalog) {
-        this.webdriverHelper = webdriverHelper;
-        this.sleeper = sleeper;
-        this.nemIdParametersFetcher = nemIdParametersFetcher;
-        this.supplementalRequester = supplementalRequester;
-        this.catalog = catalog;
-    }
-
     public String doLoginWith(Credentials credentials) throws AuthenticationException {
-        log.info("Start authentication process with nem-id iframe.");
+        log.info("{} Start authentication process with nem-id iframe.", NEM_ID_PREFIX);
         WebDriver driver = webdriverHelper.constructWebDriver(PHANTOMJS_TIMEOUT_SECONDS);
         try {
-            // inject nemId form into iframe
-            instantiateIFrameWithNemIdForm(driver);
-            log.info("NemId iframe is initialized");
-
-            credentials.setStatusPayload(catalog.getString(UserMessage.NEM_ID_PROCESS_INIT));
-
-            // provide credentials and submit
-            setUserName(driver, credentials.getField(Field.Key.USERNAME));
-            setPassword(driver, credentials.getField(Field.Key.PASSWORD));
-            clickLogin(driver);
-
-            credentials.setStatusPayload(catalog.getString(UserMessage.VERIFYING_CREDS));
-
-            // validate response
-            validateCredentials(driver);
-            log.info("Provided credentials are valid.");
-
-            credentials.setStatusPayload(catalog.getString(UserMessage.VALID_CREDS));
+            initNemIdIFrame(credentials, driver);
+            login(credentials, driver);
+            validateResponse(credentials, driver);
 
             final long askForNemIdStartTime = System.currentTimeMillis();
             // credentials are valid let's ask for 2nd factor
             sendNemIdApprovalNotification(driver);
             displayPromptToOpenNemIdApp(credentials);
+            return waitFor2ndFactorAndGetToken(driver, askForNemIdStartTime);
 
-            // wait some time for user's 2nd factor and token
-            String nemIdToken = verifyOtpAndTryToGetNemIdToken(driver);
-
-            log.info(
-                    "Whole 2fa process took {} ms.",
-                    System.currentTimeMillis() - askForNemIdStartTime);
-
-            return nemIdToken != null ? nemIdToken : collectToken(driver);
         } finally {
             driver.quit();
         }
     }
 
-    private String verifyOtpAndTryToGetNemIdToken(WebDriver driver) {
-        // According to recorded page sources there is a possibility that
-        // opt icon is not presented, but nemIdToken is successfully rendered
+    public void initNemIdIFrame(Credentials credentials, WebDriver driver) {
+        instantiateIFrameWithNemIdForm(driver);
+        log.info("{} iframe is initialized", NEM_ID_PREFIX);
 
-        String nemIdToken = null;
-        boolean hasOTPIconAppeared = waitForOTPIcon(driver);
-        if (!hasOTPIconAppeared) {
-            nemIdToken = waitForNemIdToken(driver);
-            if (nemIdToken == null) {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                        "NemID request was not approved.");
-            }
-        }
-        return nemIdToken;
+        credentials.setStatusPayload(catalog.getString(UserMessage.NEM_ID_PROCESS_INIT));
+    }
+
+    public void login(Credentials credentials, WebDriver driver) {
+        setUserName(driver, credentials.getField(Field.Key.USERNAME));
+        setPassword(driver, credentials.getField(Field.Key.PASSWORD));
+        clickLogin(driver);
+
+        credentials.setStatusPayload(catalog.getString(UserMessage.VERIFYING_CREDS));
+    }
+
+    public void validateResponse(Credentials credentials, WebDriver driver) {
+        validateCredentials(driver);
+        log.info("{} Provided credentials are valid.", NEM_ID_PREFIX);
+
+        credentials.setStatusPayload(catalog.getString(UserMessage.VALID_CREDS));
+    }
+
+    public String waitFor2ndFactorAndGetToken(WebDriver driver, long askForNemIdStartTime) {
+        String nemIdToken = verifyOtpAndTryToGetNemIdToken(driver);
+
+        log.info(
+                 "{} Whole 2fa process took {} ms.", NEM_ID_PREFIX,
+                System.currentTimeMillis() - askForNemIdStartTime);
+
+        return nemIdToken != null ? nemIdToken : collectToken(driver);
     }
 
     private void instantiateIFrameWithNemIdForm(WebDriver driver) throws AuthenticationException {
         if (!isNemIdInitialized(driver)) {
-            throw new IllegalStateException("Can't instantiate iframe element with NemId form.");
+            throw new IllegalStateException(NEM_ID_PREFIX + " Can't instantiate iframe element with NemId form.");
         }
     }
 
@@ -219,8 +175,7 @@ public class NemIdIFrameController {
                         .filter(e -> !e.isEmpty());
         if (errorText.isPresent()) {
             log.error(
-                    "Error occured when validating NemID credentials for page:\n"
-                            + driver.getPageSource());
+                    "{} Error occured when validating NemID credentials for page: {}", NEM_ID_PREFIX, driver.getPageSource());
             throwError(errorText.get());
         }
     }
@@ -232,7 +187,7 @@ public class NemIdIFrameController {
 
     private void tryThrowingNoCodeAppException(WebDriver driver) {
         if (isNemIdSuggestingCodeCard(driver)) {
-            throw NemIdError.CODEAPP_NOT_REGISTERED.exception();
+            throw NemIdError.CODEAPP_NOT_REGISTERED.exception(NEM_ID_PREFIX + " User has code card.");
         }
     }
 
@@ -242,29 +197,20 @@ public class NemIdIFrameController {
     }
 
     private void throwNemidCredentialsError(WebDriver driver) {
-        log.warn("Can't validate NemId = please verify page source: {}", driver.getPageSource());
-        throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                "Can't validate NemId credentials.");
-    }
-
-    private boolean waitForOTPIcon(WebDriver driver) throws LoginException {
-        boolean hasOTPIconAppeared = false;
-        for (int i = 0; i < 120; i++) {
-
-            Optional<WebElement> otpIconPhone = webdriverHelper.waitForElement(driver, OTP_ICON);
-            if (!otpIconPhone.isPresent()) {
-                hasOTPIconAppeared = true;
-                break;
-            }
-            sleeper.sleepFor(1_000);
-        }
-
-        return hasOTPIconAppeared;
+        log.warn("{} Can't validate NemId = please verify page source: {}", NEM_ID_PREFIX, driver.getPageSource());
+        throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(NEM_ID_PREFIX +
+                " Can't validate NemId credentials.");
     }
 
     private String collectToken(WebDriver driver) {
         driver.switchTo().defaultContent();
-        return waitForNemIdToken(driver);
+        String token = waitForNemIdToken(driver);
+        if (token == null) {
+            log.error("{} Failed to obtain NemID token, please verify page source: {}",
+                    NEM_ID_PREFIX, driver.getPageSource());
+            throw NemIdError.TIMEOUT.exception();
+        }
+        return token;
     }
 
     private String waitForNemIdToken(WebDriver driver) {
@@ -284,10 +230,10 @@ public class NemIdIFrameController {
         if (INCORRECT_CREDENTIALS_ERROR_PATTERNS.stream()
                 .map(p -> p.matcher(err))
                 .anyMatch(Matcher::matches)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception(err);
+            throw LoginError.INCORRECT_CREDENTIALS.exception(NEM_ID_PREFIX + err);
         }
 
-        throw new IllegalStateException(String.format("Unknown login error '%s'.", errorText));
+        throw new IllegalStateException(String.format(NEM_ID_PREFIX + " Unknown login error '%s'.", errorText));
     }
 
     private void setUserName(WebDriver driver, String username) {
@@ -328,5 +274,35 @@ public class NemIdIFrameController {
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
         supplementalRequester.requestSupplementalInformation(credentials, true);
+    }
+
+    private String verifyOtpAndTryToGetNemIdToken(WebDriver driver) {
+        // According to recorded page sources there is a possibility that
+        // opt icon is not presented, but nemIdToken is successfully rendered
+        String nemIdToken = null;
+        boolean hasOTPIconAppeared = waitForOTPIcon(driver);
+        if (!hasOTPIconAppeared) {
+            nemIdToken = waitForNemIdToken(driver);
+            if (nemIdToken == null) {
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(NEM_ID_PREFIX +
+                        " NemID request was not approved.");
+            }
+        }
+        return nemIdToken;
+    }
+
+    private boolean waitForOTPIcon(WebDriver driver) throws LoginException {
+        boolean hasOTPIconAppeared = false;
+        for (int i = 0; i < 120; i++) {
+
+            Optional<WebElement> otpIconPhone = webdriverHelper.waitForElement(driver, OTP_ICON);
+            if (!otpIconPhone.isPresent()) {
+                hasOTPIconAppeared = true;
+                break;
+            }
+            sleeper.sleepFor(1_000);
+        }
+
+        return hasOTPIconAppeared;
     }
 }

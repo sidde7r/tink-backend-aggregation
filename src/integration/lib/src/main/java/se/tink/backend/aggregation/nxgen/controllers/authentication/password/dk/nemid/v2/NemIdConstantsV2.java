@@ -1,5 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
+import com.google.common.collect.ImmutableList;
+import java.util.regex.Pattern;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.openqa.selenium.By;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NemIdConstantsV2 {
 
     public static final String NEM_ID_APPLET_URL = "https://applet.danid.dk";
@@ -39,7 +46,34 @@ public class NemIdConstantsV2 {
                     + "    </body>\n"
                     + "</html>";
 
+    static final long PHANTOMJS_TIMEOUT_SECONDS = 30;
+    static final String NEM_ID_PREFIX = "[NemId]";
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Storage {
         public static final String NEMID_INSTALL_ID = "NEMID_INSTALL_ID";
+    }
+
+    static class ErrorPatterns {
+        static final ImmutableList<Pattern> INCORRECT_CREDENTIALS_ERROR_PATTERNS =
+                ImmutableList.<Pattern>builder()
+                        .add(
+                                Pattern.compile("^incorrect (user|password).*"),
+                                Pattern.compile("^fejl i (bruger|adgangskode).*"),
+                                Pattern.compile("^indtast (bruger|adgangskode).*"))
+                        .build();
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    static class HtmlElements {
+        static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
+        static final By ERROR_MESSAGE = By.cssSelector("p.error");
+        static final By NEMID_CODE_CARD = By.className("otp__card-number");
+        static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
+        static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
+        static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
+        static final By IFRAME = By.tagName("iframe");
+        static final By OTP_ICON = By.className("otp__icon-phone-pulse");
+        static final By NEMID_APP_BUTTON = By.cssSelector("button.button--submit");
     }
 }
