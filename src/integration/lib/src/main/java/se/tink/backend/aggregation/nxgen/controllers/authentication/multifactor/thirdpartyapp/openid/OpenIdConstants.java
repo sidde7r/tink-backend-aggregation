@@ -100,6 +100,7 @@ public class OpenIdConstants {
         public static final String APPLICATION_TYPE = "application_type";
         public static final String STATE = "state";
         public static final String NONCE = "nonce";
+        public static final String SOFTWARE_JWKS_ENDPOINT = "software_jwks_endpoint";
     }
 
     public static class ParamDefaults {
