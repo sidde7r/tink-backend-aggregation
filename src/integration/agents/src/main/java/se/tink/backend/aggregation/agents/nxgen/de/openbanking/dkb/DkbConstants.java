@@ -144,14 +144,15 @@ public final class DkbConstants {
         public static final LocalizableKey STARTCODE_DESCRIPTION = new LocalizableKey("Startcode");
         public static final LocalizableKey STARTCODE_HELPTEXT =
                 new LocalizableKey(
-                        "Please insert your card into the TAN-Generator, type in Startcode and press OK");
+                        "Insert your girocard into the TAN-generator and press \"TAN\". Enter the startcode and press \"OK\".");
 
         public static final String GENERATED_TAN_FIELD_KEY = "generatedTanField";
         public static final LocalizableKey GENERATED_TAN_DESCRIPTION = new LocalizableKey("TAN");
         public static final LocalizableParametrizedKey GENERATED_TAN_HELPTEXT_FORMAT =
-                new LocalizableParametrizedKey("Please insert generated TAN from device \"{0}\"");
+                new LocalizableParametrizedKey(
+                        "Confirm by entering the generated TAN for \"(0}\".");
         public static final LocalizableKey GENERATED_TAN_HELPTEXT =
-                new LocalizableKey("Please insert generated TAN");
+                new LocalizableKey("Confirm by entering the generated TAN.");
 
         public static final String SELECT_AUTH_METHOD_FIELD_KEY = "selectAuthMethodField";
         public static final LocalizableKey SELECT_AUTH_METHOD_DESCRIPTION =
