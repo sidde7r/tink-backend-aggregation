@@ -1,118 +1,145 @@
 package se.tink.backend.aggregation.agents.agentcapabilities;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static java.util.stream.Collectors.groupingBy;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.agents.rpc.ProviderStatuses;
+import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
+import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderReader;
+import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReader;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
 
 public class AgentCapabilitiesServiceTest {
 
+    private static final String DEFAULT_AGENT_PACKAGE_CLASS_PREFIX =
+            "se.tink.backend.aggregation.agents";
+
+    private static final String IGNORED_AGENTS_FOR_TESTS_FILE_PATH =
+            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml";
+
+    private static final String PROVIDER_CONFIG_FOLDER_PATH =
+            "external/tink_backend/src/provider_configuration/data/seeding";
+
+    private static final AgentFactoryTestConfiguration agentFactoryTestConfiguration =
+            new TestConfigurationReader().read(IGNORED_AGENTS_FOR_TESTS_FILE_PATH);
+
     @Rule public ErrorCollector collector = new ErrorCollector();
 
-    private static final String EXPECTED_AGENT_CAPABILITIES_FILE_PATH =
-            "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json";
-
-    private static final Set<String>
-            AGENTS_THAT_DO_NOT_EXISTS_BUT_ARE_LISTED_IN_AGENT_CAPABILITIES_JSON_FILE =
-                    newHashSet(
-                            "nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisAgent",
-                            "nxgen.se.openbanking.volvofinans.VolvoFinansAgent",
-                            "nxgen.it.openbanking.bancoposta.BancoPostaAgent",
-                            "banks.fi.op.OsuuspankkiAgent",
-                            "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent",
-                            "banks.sdc.v7.SDCV7Agent",
-                            "banks.fi.alandsbanken.AlandsBankenAgent",
-                            "banks.ie.aib.AibAgent",
-                            "banks.ICABankenAgent",
-                            "banks.ro.bcr.BCRAgent",
-                            "banks.pl.pko.PkoBankPolskiAgent",
-                            "nxgen.demo.banks.multisupplemental.MultiSupplementalAgent",
-                            "banks.swedbank.SwedbankAPIAgent",
-                            "nxgen.uk.openbanking.modelo.ModeloAgent",
-                            "nxgen.uk.openbanking.tide.TideBusinessAgent",
-                            "banks.dk.bankdata.BankDataAgent",
-                            "banks.pl.mbank.MBankAgent",
-                            "banks.swedbank.SwedbankAgent",
-                            "banks.handelsbanken.v6.HandelsbankenV6Agent",
-                            "banks.gr.nationalbank.NationalBankAgent",
-                            "banks.citibank.v11.CitibankV11Agent",
-                            "banks.sk.slovenskasporitelna.SlovenskaSporitelnaAgent",
-                            "nxgen.ie.openbanking.kbc.KbcIrelandAgent");
-
-    private Map<String, Set<String>> expectedCapabilitiesMap;
     private Map<String, Set<Capability>> capabilities;
-
-    private Function<Entry<String, List<String>>, Set<String>> convertFromListToSet =
-            entry -> new HashSet<>(entry.getValue());
+    private Set<Provider> activeProviders;
 
     @Before
     public void init() {
-        expectedCapabilitiesMap =
-                readExpectedAgentCapabilities(EXPECTED_AGENT_CAPABILITIES_FILE_PATH);
-
         capabilities = new AgentCapabilitiesService().getAgentsCapabilities();
-        removeTestAgents();
-    }
-
-    private void removeTestAgents() {
-        capabilities.remove("agentcapabilities.TestAgentImplementingExecutors");
-        capabilities.remove("agentcapabilities.TestAgentWithListedCapabilities");
+        activeProviders =
+                getActiveProviders(
+                        new ProviderReader()
+                                .getProviderConfigurations(PROVIDER_CONFIG_FOLDER_PATH));
     }
 
     @Test
-    public void shouldComputeCapabilitiesExactlyAsInAgentCapabilitiesJsonFile() {
-        expectedCapabilitiesMap.forEach(
-                (agentName, expectedCapabilities) -> {
-                    try {
-                        if (!capabilities.containsKey(agentName)) {
-                            throw new AssertionError(
-                                    "agent: " + agentName + " doesnt exist in the source code");
-                        }
+    public void shouldHaveCapabilitiesForActiveProviders() {
+        Set<String> providersAgents =
+                activeProviders.stream().map(Provider::getClassName).collect(Collectors.toSet());
+        Set<String> agentsWithCapabilitiesAnnotation =
+                capabilities.entrySet().stream().map(Entry::getKey).collect(Collectors.toSet());
 
-                        Set<String> computedCapabilities = getCapabilitiesAsSet(agentName);
-                        assertThat(computedCapabilities)
-                                .as(
-                                        "for agent %s\n expected capabilities are %s,\n but found: \n%s",
-                                        agentName, expectedCapabilities, computedCapabilities)
-                                .isEqualTo(expectedCapabilities);
-                    } catch (AssertionError t) {
-                        // get rid of useless stack trace
-                        t.setStackTrace(new StackTraceElement[0]);
-                        collector.addError(t);
-                    }
-                });
+        providersAgents.removeAll(agentsWithCapabilitiesAnnotation);
+        assertThat(providersAgents)
+                .as("missing @AgentCapabilities annotation for agents:{}", providersAgents)
+                .isEmpty();
     }
 
-    private Set<String> getCapabilitiesAsSet(String agentName) {
-        return capabilities.get(agentName).stream().map(Enum::name).collect(Collectors.toSet());
+    @Test
+    public void agentShouldImplementInterfacesForExpectedCapabilities() {
+        getFilterAgents()
+                .forEach(
+                        (agentName, expectedCapabilities) -> {
+                            Class<? extends Agent> agentClass;
+                            try {
+                                agentClass = getAgentClass(agentName);
+                            } catch (ClassNotFoundException e) {
+                                collector.addError(e);
+                                return;
+                            }
+                            for (Capability capability : expectedCapabilities) {
+                                try {
+                                    Set<Mapping> mapping = getMappingsFor(capability);
+                                    Assert.assertTrue(
+                                            "agent :"
+                                                    + agentName
+                                                    + " is marked with annotation @AgentCapability as capable of: "
+                                                    + capability
+                                                    + " but doesnt implement any of: "
+                                                    + mapping.stream()
+                                                            .map(Mapping::getExecutorClass)
+                                                            .collect(Collectors.toSet()),
+                                            mapping.stream().anyMatch(m -> m.canMap(agentClass)));
+                                } catch (AssertionError t) {
+                                    // get rid of useless stack trace
+                                    t.setStackTrace(new StackTraceElement[0]);
+                                    collector.addError(t);
+                                }
+                            }
+                        });
     }
 
-    private Map<String, Set<String>> readExpectedAgentCapabilities(String filePath) {
-        try {
-            byte[] agentCapabilitiesFileData = Files.readAllBytes(Paths.get(filePath));
-            Map<String, List<String>> capabilitiesMap =
-                    new ObjectMapper().readValue(new String(agentCapabilitiesFileData), Map.class);
-            AGENTS_THAT_DO_NOT_EXISTS_BUT_ARE_LISTED_IN_AGENT_CAPABILITIES_JSON_FILE.forEach(
-                    capabilitiesMap::remove);
-            return capabilitiesMap.entrySet().stream()
-                    .collect(Collectors.toMap(Entry::getKey, convertFromListToSet));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private Map<String, Set<Capability>> getFilterAgents() {
+        Map<String, Set<Capability>> filteredCapabilities = new HashMap<>(capabilities);
+
+        agentFactoryTestConfiguration
+                .getIgnoredAgentsForCapabilityTest()
+                .forEach(filteredCapabilities::remove);
+
+        return filteredCapabilities;
+    }
+
+    private Set<Mapping> getMappingsFor(Capability capability) {
+        Set<Mapping> mapping = CapabilitiesExtractor.getMappingsFor(capability);
+        // handle deprecated capabilities
+        if (capability.equals(Capability.MORTGAGE_AGGREGATION)) {
+            mapping.addAll(CapabilitiesExtractor.getMappingsFor(Capability.LOANS));
+        } else if (capability.equals(Capability.TRANSFERS)) {
+            mapping.addAll(CapabilitiesExtractor.getMappingsFor(Capability.PAYMENTS));
         }
+        return mapping;
+    }
+
+    private Class<? extends Agent> getAgentClass(String agentName) throws ClassNotFoundException {
+        return (Class<? extends Agent>)
+                Class.forName(DEFAULT_AGENT_PACKAGE_CLASS_PREFIX + "." + agentName);
+    }
+
+    // This method returns one provider for each agent (for each agent it picks the provider
+    // which is the first in alphabetical order)
+    private Set<Provider> getActiveProviders(Set<Provider> providerConfigurations) {
+        return providerConfigurations.stream()
+                .filter(
+                        provider ->
+                                ProviderStatuses.ENABLED.equals(provider.getStatus())
+                                        || ProviderStatuses.OBSOLETE.equals(provider.getStatus()))
+                .filter(provider -> !provider.getName().toLowerCase().contains("test"))
+                .collect(groupingBy(Provider::getClassName))
+                .entrySet()
+                .stream()
+                .map(
+                        entry -> {
+                            entry.getValue().sort(Comparator.comparing(Provider::getName));
+                            return entry.getValue().get(0);
+                        })
+                .collect(Collectors.toSet());
     }
 }

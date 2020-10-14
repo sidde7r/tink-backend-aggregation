@@ -7,6 +7,7 @@ junit_test(
     ),
     data = [
         "//data:provider_configurations",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
