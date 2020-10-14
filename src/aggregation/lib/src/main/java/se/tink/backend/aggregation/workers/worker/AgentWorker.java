@@ -4,7 +4,6 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
-import io.dropwizard.lifecycle.Managed;
 import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -20,11 +19,12 @@ import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.NamedRunnable;
 import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
 import se.tink.libraries.concurrency.WrappedRunnableListenableFutureTask;
+import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
-public class AgentWorker implements Managed {
+public class AgentWorker extends ManagedSafeStop {
     private static final Logger log = LoggerFactory.getLogger(AgentWorker.class);
     private static final int NUMBER_OF_THREADS = 1000;
     private static final MetricId AGGREGATION_OPERATION_TASKS_METRIC_NAME =
@@ -129,7 +129,7 @@ public class AgentWorker implements Managed {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void doStop() throws Exception {
         Stopwatch stopwatch = Stopwatch.createStarted();
         log.info(
                 "Sleeping for {}ms, to ensure that we get all new operations before we start the countdown",

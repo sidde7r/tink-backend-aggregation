@@ -15,8 +15,10 @@ import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppS
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
 import se.tink.backend.secretservice.grpc.InternalSecretsServiceGrpc;
 import se.tink.backend.secretservice.grpc.PingMessage;
+import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 
-public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServiceClient {
+public final class TppSecretsServiceClientImpl extends ManagedSafeStop
+        implements ManagedTppSecretsServiceClient {
 
     private static final Logger log = LoggerFactory.getLogger(TppSecretsServiceClientImpl.class);
     private final AtomicBoolean isShutDown = new AtomicBoolean(false);
@@ -72,7 +74,7 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
     }
 
     @Override
-    public synchronized void stop() {
+    public synchronized void doStop() {
         isShutDown.set(true);
         if (enabled) {
             if (channel == null) {

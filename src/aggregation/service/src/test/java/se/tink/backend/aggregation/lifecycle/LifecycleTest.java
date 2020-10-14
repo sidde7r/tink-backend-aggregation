@@ -5,10 +5,10 @@ import static org.mockito.Mockito.*;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Injector;
-import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.ConfigurationFactory;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jetty.HttpConnectorFactory;
+import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.logging.ConsoleAppenderFactory;
 import io.dropwizard.logging.FileAppenderFactory;
 import io.dropwizard.logging.SyslogAppenderFactory;
@@ -48,7 +48,7 @@ public class LifecycleTest {
     private AgentWorker agentWorker;
 
     @Before
-    public void setUp() throws IOException, ConfigurationException {
+    public void setUp() throws Exception {
         objectMapper
                 .getSubtypeResolver()
                 .registerSubtypes(
@@ -75,17 +75,23 @@ public class LifecycleTest {
         when(injector.getInstance(ConfigurationValidator.class)).thenReturn(validator);
 
         setUpInjectorMock(injector, DrainModeTask.class);
-        setUpInjectorMock(injector, QueueConsumer.class);
+        QueueConsumer queueConsumer = setUpInjectorMock(injector, QueueConsumer.class);
+        makeStartStopNoOp(queueConsumer);
 
         managedTppSecretsServiceClient =
                 setUpInjectorMock(injector, ManagedTppSecretsServiceClient.class);
+        makeStartStopNoOp(managedTppSecretsServiceClient);
 
         agentWorker =
                 spy(
                         new AgentWorker(
                                 new se.tink.libraries.metrics.registry.MetricRegistry(), false));
+        makeStartStopNoOp(agentWorker);
         when(injector.getInstance(AgentWorker.class)).thenReturn(agentWorker);
-        setUpInjectorMock(injector, AgentDataAvailabilityTrackerClient.class);
+
+        AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient =
+                setUpInjectorMock(injector, AgentDataAvailabilityTrackerClient.class);
+        makeStartStopNoOp(agentDataAvailabilityTrackerClient);
 
         AggregationServiceContainer actualAggregationContainer = new AggregationServiceContainer();
         aggregationContainer = Mockito.spy(actualAggregationContainer);
@@ -120,6 +126,7 @@ public class LifecycleTest {
                     }
                 });
         server.start();
+
         InOrder startOrder = inOrder(managedTppSecretsServiceClient, agentWorker);
         startOrder.verify(managedTppSecretsServiceClient).start();
         startOrder.verify(agentWorker).start();
@@ -130,9 +137,54 @@ public class LifecycleTest {
         stopOrder.verify(managedTppSecretsServiceClient).stop();
     }
 
+    @Test
+    public void ensureExceptionUnderStopDoesNotStopShutdown() throws Exception {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        MetricRegistry metricRegistry = new MetricRegistry();
+
+        Environment environment =
+                new Environment(
+                        "test",
+                        objectMapper,
+                        validator,
+                        metricRegistry,
+                        ClassLoader.getSystemClassLoader());
+        aggregationContainer.run(configuration, environment);
+        final Server server = serverFactory.build(environment);
+        server.setHandler(
+                new AbstractHandler() {
+                    @Override
+                    public void handle(
+                            String s,
+                            Request request,
+                            HttpServletRequest httpServletRequest,
+                            HttpServletResponse httpServletResponse)
+                            throws IOException, ServletException {
+                        // This is empty since the server does not have to be functioning
+                        // It just has to be able to start and stop
+                    }
+                });
+        server.start();
+
+        // First in chain, reset mock to be the real implementation.
+        doCallRealMethod().when(agentWorker).stop();
+        doThrow(new RuntimeException("stop() did not finish")).when(agentWorker).doStop();
+
+        server.stop();
+
+        // Should get called
+        verify(managedTppSecretsServiceClient, times(1)).stop();
+        verify(agentWorker, times(1)).doStop();
+    }
+
     private <T> T setUpInjectorMock(Injector injector, Class<T> type) {
         T mocked = mock(type);
         when(injector.getInstance(type)).thenReturn(mocked);
         return mocked;
+    }
+
+    private void makeStartStopNoOp(Managed managed) throws Exception {
+        doNothing().when(managed).start();
+        doNothing().when(managed).stop();
     }
 }
