@@ -120,7 +120,6 @@ public class DkbAuthenticator implements PasswordAuthenticator {
         if (consent.isNotAuthorized()) {
             authorizeConsent(consent.getConsentId());
         }
-        storage.setConsentId(consent.getConsentId());
     }
 
     private Optional<Consent> getExistingConsent() {
@@ -128,7 +127,9 @@ public class DkbAuthenticator implements PasswordAuthenticator {
     }
 
     private Consent createNewConsent() {
-        return authApiClient.createConsent(getMaxConsentValidityDate());
+        Consent consent = authApiClient.createConsent(getMaxConsentValidityDate());
+        storage.setConsentId(consent.getConsentId());
+        return consent;
     }
 
     private LocalDate getMaxConsentValidityDate() {

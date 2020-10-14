@@ -58,7 +58,11 @@ public class DkbAuthApiClient {
 
     Consent getConsent(String consentId) {
         HttpRequest request = requestsFactory.generateGetConsentRequest(consentId);
-        return executeHttpRequest(request, Consent.class);
+        Consent consent = executeHttpRequest(request, Consent.class);
+        // Consent details returned from bank do not contain consentId
+        // Enrich the object here to keep the handling of Consent object consistent
+        consent.setConsentId(consentId);
+        return consent;
     }
 
     ConsentAuthorization startConsentAuthorization(String consentId) throws LoginException {
