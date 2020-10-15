@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,14 +13,11 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class WebdriverHelper {
+@Slf4j
+class WebdriverHelper {
 
     private static final long WAIT_FOR_RENDER_MILLIS = 5_000;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebdriverHelper.class);
 
     private final Sleeper sleeper;
 
@@ -27,7 +25,7 @@ public class WebdriverHelper {
         this(new Sleeper());
     }
 
-    WebdriverHelper(final Sleeper sleeper) {
+    WebdriverHelper(Sleeper sleeper) {
         this.sleeper = sleeper;
     }
 
@@ -125,23 +123,22 @@ public class WebdriverHelper {
     }
 
     private void logErrorUsingPhantomJS(WebDriver driver, String errorMessage) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(
-                    String.format("PhantomJS current(reported) URL: %s", driver.getCurrentUrl()));
-            LOGGER.debug("PHANTOMJS LOGS: ");
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("PhantomJS current(reported) URL: %s", driver.getCurrentUrl()));
+            log.debug("PHANTOMJS LOGS: ");
         }
         driver.manage()
                 .logs()
                 .getAvailableLogTypes()
                 .forEach(
                         logName -> {
-                            LOGGER.debug(logName);
+                            log.debug(logName);
                             driver.manage()
                                     .logs()
                                     .get(logName)
-                                    .forEach(l -> LOGGER.debug(l.toString()));
+                                    .forEach(l -> log.debug(l.toString()));
                         });
 
-        LOGGER.warn(errorMessage);
+        log.warn(errorMessage);
     }
 }

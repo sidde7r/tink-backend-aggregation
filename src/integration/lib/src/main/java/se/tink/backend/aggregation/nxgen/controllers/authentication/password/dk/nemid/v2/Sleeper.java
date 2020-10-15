@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
-public class Sleeper {
-
+class Sleeper {
     void sleepFor(final long millis) {
         try {
             Thread.sleep(millis);

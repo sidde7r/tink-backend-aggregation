@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
 import com.google.common.base.Strings;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -12,21 +13,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.ty
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@RequiredArgsConstructor
 public class NemIdAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
 
     private final NemIdIFrameController iFrameController;
     private final NemIdAuthenticatorV2 authenticator;
     private final Storage storage;
-
-    public NemIdAuthenticationController(
-            NemIdIFrameController iFrameController,
-            NemIdAuthenticatorV2 authenticator,
-            Storage storage) {
-        this.iFrameController = iFrameController;
-        this.authenticator = authenticator;
-        this.storage = storage;
-    }
 
     @Override
     public void authenticate(Credentials credentials)
