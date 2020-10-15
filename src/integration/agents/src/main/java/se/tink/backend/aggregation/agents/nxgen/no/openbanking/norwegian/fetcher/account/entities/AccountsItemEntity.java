@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.Href;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.exception.RequiredDataMissingException;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.rpc.BalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -23,18 +22,11 @@ public class AccountsItemEntity {
     private static final String SAVINGS_ACCOUNT = "SavingsAccount";
     private static final String CREDIT_CARD = "CreditCard";
 
-    @JsonProperty("_links")
-    private Href linksEntity;
-
-    private String resourceId;
+    @Getter private String resourceId;
     private String bban;
     private String name;
     private String currency;
     private String product;
-
-    public String getResourceId() {
-        return resourceId;
-    }
 
     public boolean isSavings() {
         return SAVINGS_ACCOUNT.equalsIgnoreCase(product);
