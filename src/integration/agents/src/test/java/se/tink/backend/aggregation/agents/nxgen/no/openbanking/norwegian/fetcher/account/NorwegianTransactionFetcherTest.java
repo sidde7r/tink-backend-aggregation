@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher;
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -16,15 +16,14 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.NorwegianApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.data.NorwegianFetcherTestData;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.NorwegianTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.data.NorwegianFetcherTestData;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class TransactionFetcherTest {
+public class NorwegianTransactionFetcherTest {
 
     NorwegianTransactionFetcher fetcher;
     TransactionalAccount someAccount;

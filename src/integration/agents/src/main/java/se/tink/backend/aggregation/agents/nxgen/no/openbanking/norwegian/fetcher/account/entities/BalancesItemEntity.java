@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConstants;
@@ -9,24 +9,8 @@ public class BalancesItemEntity {
 
     private String balanceType;
 
-    private String name;
-
-    private String lastCommittedTransaction;
-
     @JsonProperty("balanceAmount")
     private AmountEntity amountEntity;
-
-    public String getBalanceType() {
-        return balanceType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getLastCommittedTransaction() {
-        return lastCommittedTransaction;
-    }
 
     public AmountEntity getAmountEntity() {
         return amountEntity;

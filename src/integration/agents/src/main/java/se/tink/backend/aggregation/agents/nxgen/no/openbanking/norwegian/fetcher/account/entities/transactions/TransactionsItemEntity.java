@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.entities.transactions;
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.entities.transactions;
 
 import java.util.Date;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -9,11 +9,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class TransactionsItemEntity {
 
     private String remittanceInformationUnstructured;
-
     private AmountEntity transactionAmount;
-
     private Date bookingDate;
-
     private Date transactionDate;
 
     public Transaction toTinkTransactions(boolean pending) {

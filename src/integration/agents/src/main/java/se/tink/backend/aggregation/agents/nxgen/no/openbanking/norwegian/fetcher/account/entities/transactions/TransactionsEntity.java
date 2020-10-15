@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.entities.transactions;
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.entities.transactions;
 
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;

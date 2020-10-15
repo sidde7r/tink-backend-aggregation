@@ -1,0 +1,109 @@
+{
+  "_links": {
+    "account": {
+      "href": "/accounts/ffa06464-8171-4908-9748-2aa6a61f7694"
+    }
+  },
+  "accountReference": {
+    "bban": "01234567890",
+    "currency": "NOK"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "bookingDate": "2020-02-12T00:00:00.0000000+01:00",
+        "creditorName": "UBER TRIP HELP.UBER.COM  ",
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "currencyTo": "NOK",
+            "rate": "10.316369",
+            "rateDate": "2020-02-11T00:00:00.0000000"
+          }
+        ],
+        "mccName": "Taxicabs and Limousines             ",
+        "proprietaryBankTransactionCode": "Kjøp",
+        "remittanceInformationUnstructured": "TRANSACTION_0_DESCRIPTION",
+        "transactionAmount": {
+          "amount": "-75",
+          "currency": "NOK"
+        },
+        "transactionDate": "2020-02-11T00:00:00.0000000",
+        "transactionId": "1298063261",
+        "valueDate": "2020-03-15T00:00:00.0000000+01:00"
+      },
+      {
+        "bookingDate": "2020-02-11T00:00:00.0000000+01:00",
+        "creditorName": "UBER TRIP HELP.UBER.COM  ",
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "currencyTo": "NOK",
+            "rate": "10.374752",
+            "rateDate": "2020-02-10T00:00:00.0000000"
+          }
+        ],
+        "mccName": "Taxicabs and Limousines             ",
+        "proprietaryBankTransactionCode": "Kjøp",
+        "remittanceInformationUnstructured": "TRANSACTION_1_DESCRIPTION",
+        "transactionAmount": {
+          "amount": "40",
+          "currency": "NOK"
+        },
+        "transactionDate": "2020-02-10T00:00:00.0000000",
+        "transactionId": "1297071204",
+        "valueDate": "2020-03-15T00:00:00.0000000+01:00"
+      },
+      {
+        "bookingDate": "2020-02-11T00:00:00.0000000+01:00",
+        "creditorName": "UBER TRIP HELP.UBER.COM  ",
+        "exchangeRate": [
+          {
+            "currencyFrom": "EUR",
+            "currencyTo": "NOK",
+            "rate": "10.375",
+            "rateDate": "2020-02-10T00:00:00.0000000"
+          }
+        ],
+        "mccName": "Taxicabs and Limousines             ",
+        "proprietaryBankTransactionCode": "Kjøp",
+        "remittanceInformationUnstructured": "TRANSACTION_2_DESCRIPTION",
+        "transactionAmount": {
+          "amount": "-161.31",
+          "currency": "NOK"
+        },
+        "transactionDate": "2020-02-10T00:00:00.0000000",
+        "transactionId": "1296940455",
+        "valueDate": "2020-03-15T00:00:00.0000000+01:00"
+      }
+    ],
+    "pending": [
+      {
+        "creditorAccount": {},
+        "creditorName": "",
+        "proprietaryBankTransactionCode": "Reservert",
+        "remittanceInformationStructured": "02-12 14:02:40 Panda TaxibetriebsGmbH Berlin DE",
+        "remittanceInformationUnstructured": "TRANSACTION_3_DESCRIPTION",
+        "transactionAmount": {
+          "amount": "300",
+          "currency": "NOK"
+        },
+        "transactionDate": "2020-02-12T00:00:00.0000000+01:00",
+        "transactionId": "1297478698"
+      },
+      {
+        "creditorAccount": {},
+        "creditorName": "",
+        "proprietaryBankTransactionCode": "Reservert",
+        "remittanceInformationStructured": "02-12 04:27:26 INTERCONTI BERLIN BERLIN DE",
+        "remittanceInformationUnstructured": "TRANSACTION_4_DESCRIPTION",
+        "transactionAmount": {
+          "amount": "-3563.58",
+          "currency": "NOK"
+        },
+        "transactionDate": "2020-02-12T00:00:00.0000000+01:00",
+        "transactionId": "1297385596"
+      }
+    ]
+  }
+}

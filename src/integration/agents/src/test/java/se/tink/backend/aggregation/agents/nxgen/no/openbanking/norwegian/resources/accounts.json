@@ -1,0 +1,51 @@
+{
+  "accounts": [
+    {
+      "_links": {
+        "balances": {
+          "href": "/accounts/someResourceId/balances"
+        },
+        "transactions": {
+          "href": "/accounts/someResourceId/transactions"
+        }
+      },
+      "bban": "01234567890",
+      "cashAccountType": "CurrentAccount",
+      "currency": "NOK",
+      "name": "SavingsAccount",
+      "product": "SavingsAccount",
+      "remittanceInformation": {
+        "accountType": "BBAN",
+        "bban": "01234567890",
+        "resourceId": "someResourceId"
+      },
+      "resourceId": "someResourceId",
+      "status": "Enabled"
+    },
+    {
+      "_links": {
+        "balances": {
+          "href": "/accounts/anotherResourceId/balances"
+        },
+        "transactions": {
+          "href": "/accounts/anotherResourceId/transactions"
+        }
+      },
+      "bban": "98745632145",
+      "cashAccountType": "CurrentAccount",
+      "currency": "NOK",
+      "name": "CreditCard",
+      "product": "CreditCard",
+      "remittanceInformation": {
+        "accountType": "BBAN",
+        "bban": "4231.33.44444",
+        "remittanceInformationStructured": {
+          "reference": "98745632145"
+        },
+        "resourceId": "anotherResourceId"
+      },
+      "resourceId": "anotherResourceId",
+      "status": "Enabled"
+    }
+  ]
+}
