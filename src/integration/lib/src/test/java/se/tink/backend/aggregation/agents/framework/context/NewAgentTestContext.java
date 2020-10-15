@@ -151,8 +151,10 @@ public final class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public String requestSupplementalInformation(Credentials credentials, boolean wait) {
-        return supplementalRequester.requestSupplementalInformation(credentials, wait);
+    public String requestSupplementalInformation(
+            Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
+        return supplementalRequester.requestSupplementalInformation(
+                credentials, waitFor, timeUnit, wait);
     }
 
     @Override

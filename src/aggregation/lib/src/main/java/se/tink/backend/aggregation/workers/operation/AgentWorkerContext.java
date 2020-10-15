@@ -353,12 +353,13 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public String requestSupplementalInformation(Credentials credentials, boolean wait) {
+    public String requestSupplementalInformation(
+            Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
         if (wait) {
             updateCredentialsExcludingSensitiveInformation(credentials, true);
 
             Optional<String> supplementalInformation =
-                    waitForSupplementalInformation(credentials.getId(), 2, TimeUnit.MINUTES);
+                    waitForSupplementalInformation(credentials.getId(), waitFor, timeUnit);
 
             return supplementalInformation.orElse(null);
         } else {

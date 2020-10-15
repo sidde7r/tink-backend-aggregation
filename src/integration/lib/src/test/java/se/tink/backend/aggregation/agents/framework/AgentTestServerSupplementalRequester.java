@@ -47,7 +47,8 @@ public final class AgentTestServerSupplementalRequester implements SupplementalR
     }
 
     @Override
-    public String requestSupplementalInformation(Credentials credentials, boolean wait) {
+    public String requestSupplementalInformation(
+            Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
         log.info(
                 "Requesting additional info from client. Status: {}, wait: {}",
                 credentials.getStatus(),

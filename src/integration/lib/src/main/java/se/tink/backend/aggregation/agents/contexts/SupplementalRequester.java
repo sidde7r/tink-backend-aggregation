@@ -8,7 +8,8 @@ public interface SupplementalRequester {
 
     void openBankId(String autoStartToken, boolean wait);
 
-    String requestSupplementalInformation(Credentials credentials, boolean wait);
+    String requestSupplementalInformation(
+            Credentials credentials, long waitFor, TimeUnit unit, boolean wait);
 
     Optional<String> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit);
 
@@ -18,5 +19,9 @@ public interface SupplementalRequester {
 
     default String requestSupplementalInformation(Credentials credentials) {
         return requestSupplementalInformation(credentials, true);
+    }
+
+    default String requestSupplementalInformation(Credentials credentials, boolean wait) {
+        return requestSupplementalInformation(credentials, 2, TimeUnit.MINUTES, wait);
     }
 }
