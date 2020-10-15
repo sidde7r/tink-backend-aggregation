@@ -124,7 +124,7 @@ public class NemIdIFrameController {
             NemIdParametersV2 nemIdParameters = nemIdParametersFetcher.getNemIdParameters();
 
             // this will setup browser with values specific to nemid page, like current url, etc.
-            driver.get(nemIdParameters.getInitialUrl());
+            driver.get(NemIdConstantsV2.NEM_ID_APPLET_URL);
 
             // create initial html to inject
             String html =
