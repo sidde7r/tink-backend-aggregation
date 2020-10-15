@@ -1,0 +1,46 @@
+package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entities.ProxyRequestHeaders;
+
+public class IngMiscUtils {
+
+    public static String decodeUrl(String encoded) {
+        try {
+            return URLDecoder.decode(encoded, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException("Cannot decode href", ex);
+        }
+    }
+
+    public static void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public static ProxyRequestHeaders constructInfoHeaders() {
+        return ProxyRequestHeaders.builder()
+                .appVersion(Headers.APP_VERSION_VALUE)
+                .appIdentifier(Headers.APP_IDENTIFIER_VALUE)
+                .deviceModel(Headers.DEVICE_MODEL_VALUE)
+                .osVersion(Headers.OS_VERSION_VALUE)
+                .devicePlatform(Headers.DEVICE_PLATFORM_VALUE)
+                .build();
+    }
+
+    public static String cleanDescription(String description) {
+        Matcher matcher = IngConstants.TRANSACTION_PREFIXES.matcher(description);
+        if (matcher.matches() && matcher.groupCount() > 1) {
+            return description.replace(matcher.group(1), "").trim();
+        }
+        return description;
+    }
+}

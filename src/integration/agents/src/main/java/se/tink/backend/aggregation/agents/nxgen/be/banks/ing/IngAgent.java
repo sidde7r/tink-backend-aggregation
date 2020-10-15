@@ -10,41 +10,25 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngAutoAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller.IngCardReaderAuthenticationController;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.IngTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.IngTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.filter.IngHttpFilter;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.session.IngSessionHandler;
-import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.progressive.AutoAuthenticationProgressiveController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.ProgressiveAuthController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
-public final class IngAgent
-        extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                ProgressiveAuthAgent {
-    private final IngApiClient apiClient;
-    private final IngHelper ingHelper;
+public final class IngAgent extends SubsequentProgressiveGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+
+    private final IngConfiguration ingConfiguration;
+    private final StatelessProgressiveAuthenticator authenticator;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final AutoAuthenticationProgressiveController authenticator;
 
     @Inject
     public IngAgent(
@@ -52,41 +36,34 @@ public final class IngAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(componentProvider);
         configureHttpClient(client, agentsServiceConfiguration);
-        this.apiClient =
-                new IngApiClient(
-                        client,
-                        persistentStorage,
-                        context.getAggregatorInfo().getAggregatorIdentifier());
-        this.ingHelper = new IngHelper(sessionStorage);
 
-        this.transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController();
+        ingConfiguration = new IngConfiguration(persistentStorage, sessionStorage, client);
 
-        authenticator =
-                new AutoAuthenticationProgressiveController(
-                        request,
-                        systemUpdater,
-                        new IngCardReaderAuthenticationController(
-                                new IngCardReaderAuthenticator(
-                                        apiClient, persistentStorage, ingHelper),
-                                supplementalInformationFormer),
-                        new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper));
+        authenticator = ingConfiguration.createAuthenticator(supplementalInformationFormer);
+
+        transactionalAccountRefreshController = constructRefreshController();
     }
 
-    protected void configureHttpClient(
+    private void configureHttpClient(
             TinkHttpClient client, AgentsServiceConfiguration agentsServiceConfiguration) {
-        client.setUserAgent(Headers.USER_AGENT);
+        client.setUserAgent(Headers.USER_AGENT_VALUE);
         client.setFollowRedirects(false);
-        client.addFilter(new IngHttpFilter());
-        client.addFilter(
-                new TimeoutRetryFilter(
-                        IngConstants.HttpClient.MAX_RETRIES,
-                        IngConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new TimeoutFilter());
 
         final MultiIpGateway gateway =
                 new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
         gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
+    }
+
+    private TransactionalAccountRefreshController constructRefreshController() {
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                ingConfiguration.createAccountFetcher(),
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                ingConfiguration.createTransactionFetcher())));
     }
 
     @Override
@@ -109,46 +86,13 @@ public final class IngAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        IngTransactionFetcher transactionFetcher =
-                new IngTransactionFetcher(credentials, apiClient, ingHelper);
-
-        TransactionPagePaginationController<TransactionalAccount>
-                transactionPagePaginationController =
-                        new TransactionPagePaginationController<>(
-                                transactionFetcher, IngConstants.Fetcher.START_PAGE);
-
-        TransactionFetcherController<TransactionalAccount> transactionFetcherController =
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        transactionPagePaginationController,
-                        transactionFetcher);
-
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new IngTransactionalAccountFetcher(apiClient, ingHelper),
-                transactionFetcherController);
-    }
-
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new IngSessionHandler(apiClient, ingHelper);
+        return ingConfiguration.createSessionHandler();
     }
 
     @Override
-    public AutoAuthenticationProgressiveController getAuthenticator() {
+    public StatelessProgressiveAuthenticator getAuthenticator() {
         return authenticator;
-    }
-
-    @Override
-    public SteppableAuthenticationResponse login(final SteppableAuthenticationRequest request)
-            throws Exception {
-        return ProgressiveAuthController.of(authenticator, credentials).login(request);
-    }
-
-    @Override
-    public boolean login() throws Exception {
-        throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
     }
 }
