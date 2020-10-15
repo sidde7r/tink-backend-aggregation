@@ -170,5 +170,8 @@ public class NordeaNoConstants {
         public static final String MOBILE_OPERATOR_ERROR_RETRY_2 = "C325";
         public static final String MOBILE_BANK_ID_BLOCKED_1 = "C30E";
         public static final String MOBILE_BANK_ID_BLOCKED_2 = "C30F";
+        public static final String MOBILE_BANK_ID_TIMEOUT_1 = "C30B";
+        public static final String MOBILE_BANK_ID_TIMEOUT_2 = "C308";
+        public static final String MOBILE_BANK_ID_SUBSCRIPTION_CHANGED = "C167";
     }
 }

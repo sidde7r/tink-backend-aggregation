@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator;
 
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_BANK_ID_BLOCKED_1;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_BANK_ID_BLOCKED_2;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_BANK_ID_SUBSCRIPTION_CHANGED;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_BANK_ID_TIMEOUT_1;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_BANK_ID_TIMEOUT_2;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_OPERATOR_ERROR_RETRY_1;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.MOBILE_OPERATOR_ERROR_RETRY_2;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.ErrorCode.WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE;
@@ -56,6 +59,15 @@ class OidcSessionHelper {
                 throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
                         new LocalizableKey(
                                 "Error Code C30F. " + BankIdError.BLOCKED.userMessage().get()));
+            case MOBILE_BANK_ID_TIMEOUT_1:
+            case MOBILE_BANK_ID_TIMEOUT_2:
+                throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
+                        new LocalizableKey(
+                                "Error code C308. There was a timeout due to slow response time. This can happen if there"
+                                        + " are weak or unstable signals or if the mobile operator is having trouble."
+                                        + " Please try again in 5 minutes."));
+            case MOBILE_BANK_ID_SUBSCRIPTION_CHANGED:
+                throw BankIdError.INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE.exception();
             default:
                 throw LoginError.DEFAULT_MESSAGE.exception(
                         "Unexpected error code from Bank ID: " + errorCode);
