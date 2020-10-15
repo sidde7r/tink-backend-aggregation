@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authe
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -78,10 +77,7 @@ public class SparkassenAuthenticatorTest {
         apiClient = mock(SparkassenApiClient.class);
         persistentStorage = new SparkassenPersistentStorage(new PersistentStorage());
 
-        when(catalog.getString(anyString())).thenReturn("");
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
-        when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
-        when(catalog.getString(any(), any())).thenReturn("");
         authenticator =
                 new SparkassenAuthenticator(
                         catalog, supplementalInformationHelper, apiClient, persistentStorage);
