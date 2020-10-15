@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.UnicreditAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.UnicreditAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -20,18 +19,7 @@ public final class UnicreditAgent extends UnicreditBaseAgent {
 
     @Inject
     public UnicreditAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider);
-    }
-
-    @Override
-    protected UnicreditBaseApiClient getApiClient(boolean manualRequest) {
-        return new UnicreditBaseApiClient(
-                client,
-                persistentStorage,
-                sessionStorage,
-                credentials,
-                manualRequest,
-                PROVIDER_CONFIG);
+        super(componentProvider, PROVIDER_CONFIG);
     }
 
     @Override

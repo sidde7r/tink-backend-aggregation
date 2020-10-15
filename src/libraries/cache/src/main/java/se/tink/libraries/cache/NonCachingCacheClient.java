@@ -16,8 +16,9 @@ public class NonCachingCacheClient implements CacheClient {
     }
 
     @Override
-    public void delete(CacheScope scope, String key) {
+    public Future<Boolean> delete(CacheScope scope, String key) {
         // Do nothing
+        return Futures.immediateFuture(true);
     }
 
     @Override

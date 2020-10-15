@@ -265,9 +265,10 @@ public class DkbAuthApiClientTest {
                 .thenReturn(givenSuccessfulHttpResponse);
 
         // when
-        tested.getConsent(givenConsentId);
+        Consent consent = tested.getConsent(givenConsentId);
 
         // then
+        assertThat(consent.getConsentId()).isEqualTo(givenConsentId);
         verify(requestFactoryMock).generateGetConsentRequest(givenConsentId);
         verify(clientMock).request(HttpResponse.class, givenHttpRequest);
     }

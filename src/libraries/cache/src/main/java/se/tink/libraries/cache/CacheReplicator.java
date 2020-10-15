@@ -51,8 +51,8 @@ public class CacheReplicator implements CacheClient {
     }
 
     @Override
-    public void delete(final CacheScope scope, final String key) {
-        primaryClient.delete(scope, key);
+    public Future<Boolean> delete(final CacheScope scope, final String key) {
+        Future<Boolean> future = primaryClient.delete(scope, key);
         for (final CacheClient asyncMirrorClient : asyncMirrorClients) {
             try {
                 asyncExecutor.execute(() -> asyncMirrorClient.delete(scope, key));
@@ -60,6 +60,7 @@ public class CacheReplicator implements CacheClient {
                 // Deliberately ignored.
             }
         }
+        return future;
     }
 
     @Override

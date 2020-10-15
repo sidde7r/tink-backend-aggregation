@@ -7,7 +7,7 @@ public interface CacheClient {
 
     Object get(CacheScope scope, String key);
 
-    void delete(CacheScope scope, String key);
+    Future<Boolean> delete(CacheScope scope, String key);
 
     void shutdown();
 }

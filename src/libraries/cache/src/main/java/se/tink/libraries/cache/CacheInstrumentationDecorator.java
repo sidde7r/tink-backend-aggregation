@@ -100,13 +100,14 @@ public class CacheInstrumentationDecorator implements CacheClient {
     }
 
     @Override
-    public void delete(CacheScope scope, String key) {
+    public Future<Boolean> delete(CacheScope scope, String key) {
         // This is called a "hit", but that doesn't mean that the command was actually deleting
         // anything.
         final Timer.Context context =
                 cache.getUnchecked(new TimerKey("delete", "hit", scope)).time();
-        delegate.delete(scope, key);
+        Future<Boolean> future = delegate.delete(scope, key);
         context.stop();
+        return future;
     }
 
     @Override

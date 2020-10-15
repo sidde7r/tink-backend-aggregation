@@ -39,11 +39,12 @@ public class MemcacheClient implements CacheClient {
     }
 
     @Override
-    public void delete(CacheScope scope, String key) {
+    public Future<Boolean> delete(CacheScope scope, String key) {
         try {
-            memcachedClient.delete(scope.withKey(key));
+            return memcachedClient.delete(scope.withKey(key));
         } catch (Exception e) {
             log.warn("Could not delete a key in memcache.", e);
+            return Futures.immediateFailedFuture(e);
         }
     }
 
