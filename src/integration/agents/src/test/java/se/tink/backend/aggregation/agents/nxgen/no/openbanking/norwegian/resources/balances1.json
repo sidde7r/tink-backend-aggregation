@@ -1,0 +1,35 @@
+{
+  "accountReference": {
+    "bban": "01234567890",
+    "currency": "NOK"
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "amount": 3000.01,
+        "currency": "NOK"
+      },
+      "balanceType": "ClosingBooked",
+      "creditLimitIncluded": false,
+      "referenceDate": "2020-02-13T00:00:00.000000001:00"
+    },
+    {
+      "balanceAmount": {
+        "amount": 3000.01,
+        "currency": "NOK"
+      },
+      "balanceType": "Expected",
+      "creditLimitIncluded": false,
+      "referenceDate": "2020-02-13T10:45:35.170298901:00"
+    },
+    {
+      "balanceAmount": {
+        "amount": 3000.01,
+        "currency": "NOK"
+      },
+      "balanceType": "InterimAvailable",
+      "creditLimitIncluded": false,
+      "referenceDate": "2020-02-13T10:45:35.170300101:00"
+    }
+  ]
+}

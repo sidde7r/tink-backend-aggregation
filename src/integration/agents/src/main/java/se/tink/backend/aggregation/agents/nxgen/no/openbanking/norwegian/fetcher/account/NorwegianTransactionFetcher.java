@@ -1,25 +1,25 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount;
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.NorwegianApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class NorwegianTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
+public class NorwegianTransactionFetcher<T extends Account> implements TransactionDatePaginator<T> {
 
     private final NorwegianApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -35,19 +35,18 @@ public class NorwegianTransactionFetcher implements TransactionDatePaginator<Tra
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(T account, Date fromDate, Date toDate) {
         boolean moreThan90DaysAllowed = canFetchMoreThan90Days();
 
         if (!moreThan90DaysAllowed && !fetched90DaysInSession()) {
             fromDate = changeFromDateTo90DaysAgo();
         } else if (!moreThan90DaysAllowed) {
-            return new NorwegianPaginatorResponse(Collections.emptyList());
+            return PaginatorResponseImpl.createEmpty();
         }
 
         List<Transaction> transactions =
-                fetchTransactionBatch(account.getAccountNumber(), fromDate, toDate);
-        return new NorwegianPaginatorResponse(transactions);
+                fetchTransactionBatch(account.getApiIdentifier(), fromDate, toDate);
+        return PaginatorResponseImpl.create(transactions);
     }
 
     private List<Transaction> fetchTransactionBatch(

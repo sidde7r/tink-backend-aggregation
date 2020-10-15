@@ -7,9 +7,7 @@ junit_test(
         exclude = ["agent/*.java"],
     ),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/norwegian/resources",
     ],
     tags = [
     ],
@@ -20,6 +18,7 @@ junit_test(
     ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/norwegian",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
