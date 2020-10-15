@@ -14,7 +14,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.SupplementalStrings;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.AuthResult.AuthMethod;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.Catalog;
@@ -59,9 +58,7 @@ public class DkbSupplementalDataProviderTest {
         // given
         challengeData = Collections.emptyList();
         when(supplementalInfoHelperMock.askSupplementalInformation(any()))
-                .thenReturn(
-                        Collections.singletonMap(
-                                SupplementalStrings.GENERATED_TAN_FIELD_KEY, TAN_TEST_VALUE));
+                .thenReturn(Collections.singletonMap("tanField", TAN_TEST_VALUE));
 
         // when
         String result = tested.getTanCode(challengeData);
@@ -77,11 +74,11 @@ public class DkbSupplementalDataProviderTest {
         challengeData = Collections.emptyList();
 
         // when
-        Field[] result = tested.getSupplementalFields(TEST_SCA_METHOD_NAME, challengeData);
+        List<Field> result = tested.getSupplementalFields(TEST_SCA_METHOD_NAME, challengeData);
 
         // then
         assertThat(result).hasSize(1);
-        assertThat(result[0]).isEqualToComparingFieldByField(getTestFieldForGeneratedTan());
+        assertTanField(result.get(0));
     }
 
     @Test
@@ -91,11 +88,11 @@ public class DkbSupplementalDataProviderTest {
         challengeData = Arrays.asList(PUSH_TAN_CHALLENGE, TEST_CHALLENGE);
 
         // when
-        Field[] result = tested.getSupplementalFields(TEST_SCA_METHOD_NAME, challengeData);
+        List<Field> result = tested.getSupplementalFields(TEST_SCA_METHOD_NAME, challengeData);
 
         // then
         assertThat(result).hasSize(1);
-        assertThat(result[0]).isEqualToComparingFieldByField(getTestFieldForGeneratedTan());
+        assertTanField(result.get(0));
     }
 
     @Test
@@ -104,12 +101,12 @@ public class DkbSupplementalDataProviderTest {
         challengeData = Arrays.asList(CHALLENGE_WITH_START_CODE, TEST_CHALLENGE);
 
         // when
-        Field[] result = tested.getSupplementalFields(TEST_SCA_METHOD_NAME, challengeData);
+        List<Field> result = tested.getSupplementalFields(TEST_SCA_METHOD_NAME, challengeData);
 
         // then
         assertThat(result).hasSize(2);
-        assertThat(result[0]).isEqualToComparingFieldByField(getTestFieldForStartcode());
-        assertThat(result[1]).isEqualToComparingFieldByField(getTestFieldForGeneratedTan());
+        assertStartcodeField(result.get(0));
+        assertTanField(result.get(1));
     }
 
     @Test
@@ -117,10 +114,7 @@ public class DkbSupplementalDataProviderTest {
             throws SupplementalInfoException {
         // given
         when(supplementalInfoHelperMock.askSupplementalInformation(any()))
-                .thenReturn(
-                        Collections.singletonMap(
-                                SupplementalStrings.SELECT_AUTH_METHOD_FIELD_KEY,
-                                TEST_INDEX_VALUE));
+                .thenReturn(Collections.singletonMap("selectAuthMethodField", TEST_INDEX_VALUE));
 
         AuthMethod givenMethod1 = new AuthMethod().setIdentifier(TEST_VALUE_1);
 
@@ -135,25 +129,18 @@ public class DkbSupplementalDataProviderTest {
         assertThat(result).isEqualTo(TEST_VALUE_2);
     }
 
-    private Field getTestFieldForGeneratedTan() {
-        return Field.builder()
-                .name(SupplementalStrings.GENERATED_TAN_FIELD_KEY)
-                .description(catalog.getString(SupplementalStrings.GENERATED_TAN_DESCRIPTION))
-                .helpText(
-                        catalog.getString(
-                                SupplementalStrings.GENERATED_TAN_HELPTEXT_FORMAT,
-                                TEST_SCA_METHOD_NAME))
-                .minLength(1)
-                .build();
+    private void assertTanField(Field field) {
+        assertThat(field.getName()).isEqualTo("tanField");
+        assertThat(field.isImmutable()).isFalse();
+        assertThat(field.getDescription()).isEqualTo("TAN");
+        assertThat(field.getValue()).isNull();
+        assertThat(field.getHelpText()).contains(TEST_SCA_METHOD_NAME);
     }
 
-    private Field getTestFieldForStartcode() {
-        return Field.builder()
-                .name(SupplementalStrings.STARTCODE_FIELD_KEY)
-                .description(catalog.getString(SupplementalStrings.STARTCODE_DESCRIPTION))
-                .helpText(catalog.getString(SupplementalStrings.STARTCODE_HELPTEXT))
-                .immutable(true)
-                .value(START_CODE)
-                .build();
+    private void assertStartcodeField(Field field) {
+        assertThat(field.getName()).isEqualTo("startcodeField");
+        assertThat(field.isImmutable()).isTrue();
+        assertThat(field.getDescription()).isEqualTo("Startcode");
+        assertThat(field.getValue()).isEqualTo(START_CODE);
     }
 }
