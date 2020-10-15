@@ -20,4 +20,6 @@ public class AuthenticateResponseEntity {
     private String keyId;
 
     private String encryptedId;
+
+    private String reason;
 }

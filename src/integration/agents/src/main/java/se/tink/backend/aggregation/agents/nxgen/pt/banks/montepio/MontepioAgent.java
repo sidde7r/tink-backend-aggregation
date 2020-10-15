@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -34,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
 public final class MontepioAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,

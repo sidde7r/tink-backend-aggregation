@@ -190,6 +190,7 @@ public class IngProxyApiClient {
     private void validate(ProxyResponseMessage<?> response) {
         int status = response.getStatus();
         if (status >= 400) {
+            logResponse(response);
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
@@ -197,10 +198,19 @@ public class IngProxyApiClient {
     private void validate(ProxyResponseMessage<?> response, AgentError toThrowWhen400) {
         int status = response.getStatus();
         if (status >= 500) {
+            logResponse(response);
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
         if (status >= 400) {
+            logResponse(response);
             throw toThrowWhen400.exception();
         }
+    }
+
+    private void logResponse(ProxyResponseMessage<?> response) {
+        LOGGER.warn(
+                "Received invalid response {} with body {}",
+                response.getStatus(),
+                response.getContent());
     }
 }

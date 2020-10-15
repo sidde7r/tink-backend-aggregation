@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import java.util.NoSuchElementException;
@@ -36,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, IDENTITY_DATA})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
 public final class AktiaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCheckingAccountsExecutor,

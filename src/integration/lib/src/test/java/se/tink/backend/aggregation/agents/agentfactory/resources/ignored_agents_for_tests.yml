@@ -5,8 +5,6 @@
 #  from this list.
 #
 ignoredAgentsForCapabilityTest:
-  - nxgen.pt.banks.montepio.MontepioAgent
-  - nxgen.fi.banks.aktia.AktiaAgent
   - creditcards.okq8.OKQ8BankAgent
   - agentcapabilities.TestAgentWithListedCapabilities
   - other.CSNAgent
