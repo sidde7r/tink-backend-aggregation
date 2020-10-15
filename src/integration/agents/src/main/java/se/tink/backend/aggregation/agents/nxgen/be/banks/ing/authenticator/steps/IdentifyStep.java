@@ -2,8 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.step
 
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngComponents;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.CallbackProcessorMultiData;
@@ -13,17 +12,17 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 public class IdentifyStep extends SupplementalFieldsAuthenticationStep {
 
     public IdentifyStep(
-            IngComponents ingComponents,
+            IngConfiguration ingConfiguration,
             SupplementalInformationFormer supplementalInformationFormer) {
         super(
                 "IDENTIFY",
-                callback(ingComponents.getIngStorage()),
+                callback(ingConfiguration.getIngStorage()),
                 supplementalInformationFormer.getField(Field.Key.OTP_INPUT));
     }
 
     private static CallbackProcessorMultiData callback(IngStorage ingStorage) {
         return callbackData -> {
-            ingStorage.storeForSession(Storage.OTP, callbackData.get(Key.OTP_INPUT.getFieldKey()));
+            ingStorage.storeOtp(callbackData.get(Key.OTP_INPUT.getFieldKey()));
             return AuthenticationStepResponse.executeNextStep();
         };
     }

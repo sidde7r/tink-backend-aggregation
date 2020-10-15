@@ -8,8 +8,7 @@ import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngComponents;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngProxyApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.ChallengeEntity;
@@ -33,23 +32,23 @@ public class PreSignStep extends SupplementalFieldsAuthenticationStep {
     private final IngRequestFactory ingRequestFactory;
 
     public PreSignStep(
-            IngComponents ingComponents,
+            IngConfiguration ingConfiguration,
             SupplementalInformationFormer supplementalInformationFormer) {
         super(
                 "PRESIGN",
-                callback(ingComponents.getIngStorage()),
+                callback(ingConfiguration.getIngStorage()),
                 supplementalInformationFormer.getField(Field.Key.SIGN_CODE_DESCRIPTION),
                 supplementalInformationFormer.getField(Field.Key.SIGN_CODE_INPUT));
-        this.ingProxyApiClient = ingComponents.getIngProxyApiClient();
-        this.ingStorage = ingComponents.getIngStorage();
-        this.ingCryptoUtils = ingComponents.getIngCryptoUtils();
-        this.ingRequestFactory = ingComponents.getIngRequestFactory();
+        this.ingProxyApiClient = ingConfiguration.getIngProxyApiClient();
+        this.ingStorage = ingConfiguration.getIngStorage();
+        this.ingCryptoUtils = ingConfiguration.getIngCryptoUtils();
+        this.ingRequestFactory = ingConfiguration.getIngRequestFactory();
     }
 
     private static CallbackProcessorMultiData callback(IngStorage ingStorage) {
         return callbackData -> {
             String otp = callbackData.get(Key.SIGN_CODE_INPUT.getFieldKey());
-            ingStorage.storeForSession(Storage.OTP, otp);
+            ingStorage.storeOtp(otp);
             return AuthenticationStepResponse.executeNextStep();
         };
     }
@@ -69,7 +68,7 @@ public class PreSignStep extends SupplementalFieldsAuthenticationStep {
         fields.stream()
                 .filter(f -> f.getName().equals(Key.SIGN_CODE_DESCRIPTION.getFieldKey()))
                 .findAny()
-                .ifPresent(f -> f.setValue(ingStorage.getForSession(Storage.CHALLENGE)));
+                .ifPresent(f -> f.setValue(ingStorage.getChallenge()));
     }
 
     private String preSign() {
@@ -81,14 +80,14 @@ public class PreSignStep extends SupplementalFieldsAuthenticationStep {
         byte[] deviceSalt = ingCryptoUtils.getRandomBytes(16);
         String mpinSaltStr = EncodingUtils.encodeHexAsString(mpinSalt).toUpperCase();
         String deviceSaltStr = EncodingUtils.encodeHexAsString(deviceSalt).toUpperCase();
-        ingStorage.storePermanent(Storage.MPIN_SALT, mpinSaltStr);
-        ingStorage.storePermanent(Storage.DEVICE_SALT, deviceSaltStr);
+        ingStorage.storeMpinSalt(mpinSaltStr);
+        ingStorage.storeDeviceSalt(deviceSaltStr);
 
         String mobileAppId = UUID.randomUUID().toString();
-        ingStorage.storePermanent(Storage.MOBILE_APP_ID, mobileAppId);
+        ingStorage.storeMobileAppId(mobileAppId);
 
         byte[] randomPassword = ingCryptoUtils.getRandomBytes(160);
-        ingStorage.storePermanent(Storage.SRP6_PASSWORD, Hex.toHexString(randomPassword));
+        ingStorage.storeSRP6Password(Hex.toHexString(randomPassword));
 
         String mpinVerifier =
                 ingCryptoUtils.generateSRP6Verifier(mpinSalt, mobileAppId, randomPassword);
@@ -102,7 +101,7 @@ public class PreSignStep extends SupplementalFieldsAuthenticationStep {
         CreateEnrollmentResponseEntity enrollResponse = ingProxyApiClient.enroll(requestEntity);
 
         String basketId = enrollResponse.getId();
-        ingStorage.storeForSession(Storage.BASKET_ID, basketId);
+        ingStorage.storeBasketId(basketId);
 
         GetSignResponseEntity signResponse = ingProxyApiClient.getSign(basketId);
 
@@ -112,13 +111,13 @@ public class PreSignStep extends SupplementalFieldsAuthenticationStep {
                         .orElseThrow(LoginError.DEFAULT_MESSAGE::exception);
 
         String challenge = challengeEntity.getValue();
-        ingStorage.storeForSession(Storage.CHALLENGE, challenge);
+        ingStorage.storeChallenge(challenge);
 
         return challenge;
     }
 
     private boolean alreadyPresigned() {
-        return ingStorage.getForSession(Storage.CHALLENGE) != null;
+        return ingStorage.getChallenge() != null;
     }
 
     private void generateAndStoreEnrollKeys() {

@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.steps;
 
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngComponents;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.RemoteProfileMeansResponse;
 
 public class DeviceAgreementStep extends AbstractAgreementStep {
 
     public static final String STEP_ID = "DEVICE_AGREEMENT";
 
-    public DeviceAgreementStep(IngComponents ingComponents) {
-        super(STEP_ID, ingComponents);
+    public DeviceAgreementStep(IngConfiguration ingConfiguration) {
+        super(STEP_ID, ingConfiguration);
     }
 
     @Override
@@ -19,7 +18,7 @@ public class DeviceAgreementStep extends AbstractAgreementStep {
 
     @Override
     protected String getSalt() {
-        return ingStorage.getPermanent(Storage.DEVICE_SALT);
+        return ingStorage.getDeviceSalt();
     }
 
     @Override

@@ -5,6 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
+/**
+ * Warning: DO NOT USE THIS CLASS ON PRODUCTION
+ *
+ * <p>This class is only used for encryption debugging. It is referenced in ProxyFilter and it is
+ * disabled by default
+ */
 @Slf4j
 public class BodyPrinter {
 

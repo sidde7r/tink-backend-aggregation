@@ -43,7 +43,7 @@ public class ProxyFilter extends Filter {
     public ProxyFilter(IngStorage ingStorage, IngCryptoUtils ingCryptoUtils) {
         this.ingStorage = ingStorage;
         this.ingCryptoUtils = ingCryptoUtils;
-        this.debug = false; // change to true only for local encryption debugging
+        this.debug = false; // DO NOT USE ON PROD. ONLY FOR LOCAL DEBUGGING
     }
 
     @Override

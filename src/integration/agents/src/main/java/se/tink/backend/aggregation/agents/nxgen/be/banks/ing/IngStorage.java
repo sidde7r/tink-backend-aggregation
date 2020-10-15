@@ -110,6 +110,14 @@ public class IngStorage {
         return sessionStorage.get(Storage.ACCESS_TOKEN);
     }
 
+    public void storeRefreshToken(String accessToken) {
+        sessionStorage.put(Storage.REFRESH_TOKEN, accessToken);
+    }
+
+    public String getRefreshToken() {
+        return sessionStorage.get(Storage.REFRESH_TOKEN);
+    }
+
     public void storeEnrollPinningPrivateKey(PrivateKey privateKey) {
         persistentStorage.put(
                 Storage.ENROLL_DEVICE_PINNING_PRIVKEY,
@@ -174,19 +182,59 @@ public class IngStorage {
         return persistentStorage.get(Storage.ENROLL_SIGNING_PRIVKEY, String.class).isPresent();
     }
 
-    public void storePermanent(String key, String value) {
-        persistentStorage.put(key, value);
+    public void storeMobileAppId(String mobileAppId) {
+        persistentStorage.put(Storage.MOBILE_APP_ID, mobileAppId);
     }
 
-    public String getPermanent(String key) {
-        return persistentStorage.get(key);
+    public String getMobileAppId() {
+        return persistentStorage.get(Storage.MOBILE_APP_ID);
     }
 
-    public void storeForSession(String key, String value) {
-        sessionStorage.put(key, value);
+    public void storeSRP6Password(String password) {
+        persistentStorage.put(Storage.SRP6_PASSWORD, password);
     }
 
-    public String getForSession(String key) {
-        return sessionStorage.get(key);
+    public String getSRP6Password() {
+        return persistentStorage.get(Storage.SRP6_PASSWORD);
+    }
+
+    public void storeChallenge(String challenge) {
+        sessionStorage.put(Storage.CHALLENGE, challenge);
+    }
+
+    public String getChallenge() {
+        return sessionStorage.get(Storage.CHALLENGE);
+    }
+
+    public void storeBasketId(String basketId) {
+        sessionStorage.put(Storage.BASKET_ID, basketId);
+    }
+
+    public String getBasketId() {
+        return sessionStorage.get(Storage.BASKET_ID);
+    }
+
+    public void storeOtp(String otp) {
+        sessionStorage.put(Storage.OTP, otp);
+    }
+
+    public String getOtp() {
+        return sessionStorage.get(Storage.OTP);
+    }
+
+    public void storeDeviceSalt(String deviceSalt) {
+        persistentStorage.put(Storage.DEVICE_SALT, deviceSalt);
+    }
+
+    public String getDeviceSalt() {
+        return persistentStorage.get(Storage.DEVICE_SALT);
+    }
+
+    public void storeMpinSalt(String mpinSalt) {
+        persistentStorage.put(Storage.MPIN_SALT, mpinSalt);
+    }
+
+    public String getMpinSalt() {
+        return persistentStorage.get(Storage.MPIN_SALT);
     }
 }

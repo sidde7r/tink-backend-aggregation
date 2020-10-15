@@ -6,8 +6,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngComponents;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngProxyApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.GetEnrollmentsResponseEntity;
@@ -30,17 +29,17 @@ public class SignStep extends AbstractAuthenticationStep {
     private final IngStorage ingStorage;
     private final IngRequestFactory ingRequestFactory;
 
-    public SignStep(IngComponents ingComponents) {
+    public SignStep(IngConfiguration ingConfiguration) {
         super("SIGN");
-        this.ingProxyApiClient = ingComponents.getIngProxyApiClient();
-        this.ingStorage = ingComponents.getIngStorage();
-        this.ingRequestFactory = ingComponents.getIngRequestFactory();
+        this.ingProxyApiClient = ingConfiguration.getIngProxyApiClient();
+        this.ingStorage = ingConfiguration.getIngStorage();
+        this.ingRequestFactory = ingConfiguration.getIngRequestFactory();
     }
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        String challengeOtp = ingStorage.getForSession(Storage.OTP);
+        String challengeOtp = ingStorage.getOtp();
 
         sign(challengeOtp);
 
@@ -60,7 +59,7 @@ public class SignStep extends AbstractAuthenticationStep {
     }
 
     private boolean getEnrollment() {
-        String mobileAppId = ingStorage.getPermanent(Storage.MOBILE_APP_ID);
+        String mobileAppId = ingStorage.getMobileAppId();
 
         for (int i = 0; i < ENROLLMENT_MAX_ATTEMPTS; i++) {
             GetEnrollmentsResponseEntity enrollment = ingProxyApiClient.getEnrollment(mobileAppId);

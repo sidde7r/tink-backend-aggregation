@@ -9,8 +9,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class GetSignResponseEntity {
 
     private List<ChallengeEntity> challenges;
-
     private String summary;
-
     private String title;
 }

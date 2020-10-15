@@ -2,8 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.step
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngComponents;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngProxyApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -15,10 +14,10 @@ public class BridgeStep extends AbstractAuthenticationStep {
     private final IngProxyApiClient ingProxyApiClient;
     private final IngStorage ingStorage;
 
-    public BridgeStep(IngComponents ingComponents) {
+    public BridgeStep(IngConfiguration ingConfiguration) {
         super("BRIDGE");
-        this.ingProxyApiClient = ingComponents.getIngProxyApiClient();
-        this.ingStorage = ingComponents.getIngStorage();
+        this.ingProxyApiClient = ingConfiguration.getIngProxyApiClient();
+        this.ingStorage = ingConfiguration.getIngStorage();
     }
 
     @Override
@@ -35,7 +34,7 @@ public class BridgeStep extends AbstractAuthenticationStep {
     }
 
     private String prepareRevokeTokenContent() {
-        String refreshToken = ingStorage.getForSession(Storage.REFRESH_TOKEN);
+        String refreshToken = ingStorage.getRefreshToken();
         return "token=" + refreshToken;
     }
 }

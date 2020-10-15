@@ -1,15 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.steps;
 
-import java.lang.invoke.MethodHandles;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngComponents;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngDirectApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngStorage;
@@ -17,24 +14,20 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.K
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.KeyAgreementResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.crypto.DerivedKeyOutput;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.crypto.IngCryptoUtils;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AbstractAuthenticationStep;
 
 public class KeyAgreementStep extends AbstractAuthenticationStep {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     private final IngDirectApiClient ingDirectApiClient;
     private final IngStorage ingStorage;
     private final IngCryptoUtils ingCryptoUtils;
 
-    public KeyAgreementStep(IngComponents ingComponents) {
-        this.ingDirectApiClient = ingComponents.getIngDirectApiClient();
-        this.ingStorage = ingComponents.getIngStorage();
-        this.ingCryptoUtils = ingComponents.getIngCryptoUtils();
+    public KeyAgreementStep(IngConfiguration ingConfiguration) {
+        this.ingDirectApiClient = ingConfiguration.getIngDirectApiClient();
+        this.ingStorage = ingConfiguration.getIngStorage();
+        this.ingCryptoUtils = ingConfiguration.getIngCryptoUtils();
     }
 
     @Override
@@ -90,14 +83,7 @@ public class KeyAgreementStep extends AbstractAuthenticationStep {
         DerivedKeyOutput derivedKeyOutput =
                 ingCryptoUtils.deriveKeys(clientPrivateKey, serverPublicKey, salt, context);
 
-        logger.info(
-                "Storing encryption key: {}",
-                EncodingUtils.encodeAsBase64String(
-                        derivedKeyOutput.getEncryptionKey().getEncoded()));
         ingStorage.storeEncryptionKey(derivedKeyOutput.getEncryptionKey());
-        logger.info(
-                "Storing signing    key: {}",
-                EncodingUtils.encodeAsBase64String(derivedKeyOutput.getSigningKey().getEncoded()));
         ingStorage.storeSigningKey(derivedKeyOutput.getSigningKey());
     }
 }

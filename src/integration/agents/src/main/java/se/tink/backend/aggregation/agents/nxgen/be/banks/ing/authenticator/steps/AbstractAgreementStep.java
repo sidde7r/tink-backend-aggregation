@@ -7,8 +7,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngComponents;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngDirectApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.AuthenticateTokenResultEntity;
@@ -35,32 +34,48 @@ public abstract class AbstractAgreementStep extends AbstractAuthenticationStep {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public AbstractAgreementStep(String stepId, IngComponents ingComponents) {
+    public AbstractAgreementStep(String stepId, IngConfiguration ingConfiguration) {
         super(stepId);
-        this.ingDirectApiClient = ingComponents.getIngDirectApiClient();
-        this.ingStorage = ingComponents.getIngStorage();
-        this.ingCryptoUtils = ingComponents.getIngCryptoUtils();
-        this.ingRequestFactory = ingComponents.getIngRequestFactory();
+        this.ingDirectApiClient = ingConfiguration.getIngDirectApiClient();
+        this.ingStorage = ingConfiguration.getIngStorage();
+        this.ingCryptoUtils = ingConfiguration.getIngCryptoUtils();
+        this.ingRequestFactory = ingConfiguration.getIngRequestFactory();
     }
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        pinIt();
+        pinAgreement();
         return AuthenticationStepResponse.executeNextStep();
     }
 
-    private void pinIt() {
-        String mobileAppId = ingStorage.getPermanent(Storage.MOBILE_APP_ID);
+    private void pinAgreement() {
+        String mobileAppId = ingStorage.getMobileAppId();
         RemoteProfileMeansResponse profileMeans = getRemoteProfileMeans(mobileAppId);
 
-        String serverPublicValue = profileMeans.getServerPublicValue();
+        IngMiscUtils.sleep(1000);
+
+        RemoteEvidenceSessionResponse evidence = createEvidence(profileMeans, mobileAppId);
+
+        AuthenticateTokenResultEntity tokens = decryptAndMapExtra(evidence.getExtra());
+
+        handleExtraTokens(tokens);
+    }
+
+    protected abstract RemoteProfileMeansResponse getRemoteProfileMeans(String mobileAppId);
+
+    protected abstract String getSalt();
+
+    protected abstract int getRequiredLevelOfAssurance();
+
+    private RemoteEvidenceSessionResponse createEvidence(
+            RemoteProfileMeansResponse profileMeans, String mobileAppId) {
         String salt = getSalt();
-        String passwordHex = ingStorage.getPermanent(Storage.SRP6_PASSWORD);
+        String passwordHex = ingStorage.getSRP6Password();
         byte[] password = EncodingUtils.decodeHexString(passwordHex);
         SRP6ClientValues srp6ClientValues =
                 ingCryptoUtils.generateSRP6ClientValues(
-                        serverPublicValue, salt, mobileAppId, password);
+                        profileMeans.getServerPublicValue(), salt, mobileAppId, password);
 
         String clientEvidenceMessageSignature =
                 ingCryptoUtils.getClientEvidenceSignature(
@@ -73,23 +88,16 @@ public abstract class AbstractAgreementStep extends AbstractAuthenticationStep {
                         clientEvidenceMessageSignature,
                         getRequiredLevelOfAssurance());
 
-        IngMiscUtils.sleep(1000);
-
         RemoteEvidenceSessionResponse evidence =
                 ingDirectApiClient.createEvidence(profileMeans.getSid(), request);
 
         byte[] secret = Hash.sha256(srp6ClientValues.getSecretBytes());
         generateAndStoreDerivedKeys(secret, mobileAppId, profileMeans.getHmacSalt());
 
-        AuthenticateTokenResultEntity tokens = decryptAndMapExtra(evidence.getExtra());
-
-        String accessToken = tokens.findAccessToken();
-        ingStorage.storeAccessToken(accessToken);
-        String refreshToken = tokens.findRefreshToken();
-        ingStorage.storeForSession(Storage.REFRESH_TOKEN, refreshToken);
+        return evidence;
     }
 
-    protected void generateAndStoreDerivedKeys(byte[] secret, String mobileAppId, String hmacSalt) {
+    private void generateAndStoreDerivedKeys(byte[] secret, String mobileAppId, String hmacSalt) {
         byte[] context = mobileAppId.getBytes();
         DerivedKeyOutput derivedKeyOutput =
                 ingCryptoUtils.deriveKeys(secret, EncodingUtils.decodeHexString(hmacSalt), context);
@@ -98,7 +106,7 @@ public abstract class AbstractAgreementStep extends AbstractAuthenticationStep {
         ingStorage.storeSigningKey(derivedKeyOutput.getSigningKey());
     }
 
-    protected AuthenticateTokenResultEntity decryptAndMapExtra(String extra) {
+    private AuthenticateTokenResultEntity decryptAndMapExtra(String extra) {
         try {
             SecretKey encryptionKey = ingStorage.getEncryptionKey();
             SecretKey convertedKey = new SecretKeySpec(encryptionKey.getEncoded(), "AES");
@@ -110,9 +118,10 @@ public abstract class AbstractAgreementStep extends AbstractAuthenticationStep {
         }
     }
 
-    protected abstract RemoteProfileMeansResponse getRemoteProfileMeans(String mobileAppId);
-
-    protected abstract String getSalt();
-
-    protected abstract int getRequiredLevelOfAssurance();
+    private void handleExtraTokens(AuthenticateTokenResultEntity tokens) {
+        String accessToken = tokens.findAccessToken();
+        ingStorage.storeAccessToken(accessToken);
+        String refreshToken = tokens.findRefreshToken();
+        ingStorage.storeRefreshToken(refreshToken);
+    }
 }

@@ -5,7 +5,6 @@ import java.util.Base64;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.AuthenticateRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.AuthenticationContextEntity;
@@ -99,8 +98,8 @@ public class IngRequestFactory {
     }
 
     public SignRequestEntity createSignRequest(String responseCode) {
-        String challenge = ingStorage.getForSession(Storage.CHALLENGE);
-        String basketId = ingStorage.getForSession(Storage.BASKET_ID);
+        String challenge = ingStorage.getChallenge();
+        String basketId = ingStorage.getBasketId();
 
         return SignRequestEntity.builder()
                 .challenge(challenge)

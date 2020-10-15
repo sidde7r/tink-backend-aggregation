@@ -5,8 +5,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngComponents;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngProxyApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.AuthenticateRequestEntity;
@@ -24,11 +23,11 @@ public class AuthenticateStep extends AbstractAuthenticationStep {
     private final IngStorage ingStorage;
     private final IngRequestFactory ingRequestFactory;
 
-    public AuthenticateStep(IngComponents ingComponents) {
+    public AuthenticateStep(IngConfiguration ingConfiguration) {
         super("AUTHENTICATE");
-        this.ingProxyApiClient = ingComponents.getIngProxyApiClient();
-        this.ingStorage = ingComponents.getIngStorage();
-        this.ingRequestFactory = ingComponents.getIngRequestFactory();
+        this.ingProxyApiClient = ingConfiguration.getIngProxyApiClient();
+        this.ingStorage = ingConfiguration.getIngStorage();
+        this.ingRequestFactory = ingConfiguration.getIngRequestFactory();
     }
 
     @Override
@@ -37,7 +36,7 @@ public class AuthenticateStep extends AbstractAuthenticationStep {
 
         String username = request.getCredentials().getField(Field.Key.USERNAME);
         String cardNumber = request.getCredentials().getField(CARD_ID_FIELD);
-        String identifyOtp = ingStorage.getForSession(Storage.OTP);
+        String identifyOtp = ingStorage.getOtp();
 
         if (Strings.isNullOrEmpty(username)
                 || Strings.isNullOrEmpty(cardNumber)
