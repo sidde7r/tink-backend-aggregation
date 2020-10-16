@@ -5,6 +5,7 @@ import java.util.Date;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.date.DateUtils;
 
 @Getter
 @JsonObject
@@ -13,6 +14,6 @@ public class ValidatePaymentDateResponse extends AbstractResponse {
 
     @JsonIgnore
     public boolean isTransferDateSameAsBookingDate(Date transferDate) {
-        return bookingDate.equals(transferDate);
+        return DateUtils.isSameDay(transferDate, bookingDate);
     }
 }

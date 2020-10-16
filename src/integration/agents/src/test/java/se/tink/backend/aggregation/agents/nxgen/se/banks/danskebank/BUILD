@@ -1,14 +1,13 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "manual",
-    srcs = glob(["*.java"]),
+    name = "danskebank",
+    srcs = glob(["**/*.java"]),
     data = ["//:agent_test_data"],
-    tags = [
-        "external",
-        "manual",
-    ],
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank",
+    ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank",
         "//src/integration/amount",
