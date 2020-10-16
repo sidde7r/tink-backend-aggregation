@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Optional;
 import org.junit.Before;
@@ -17,6 +18,9 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaAp
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.CheckingAccUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.BancoPostaCheckingTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -24,10 +28,39 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BancoPostaCheckingTransactionalAccountFetcherTest {
     private BancoPostaCheckingTransactionalAccountFetcher objUnderTest;
     private TinkHttpClient httpClient;
+
+    private static final String ACCOUNTS_RESPONSE_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/bancoposta/resources/accountResponse.json";
+
+    private static final String ACCOUNTS_DETAILS_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/bancoposta/resources/accountDetails.json";
+
+    private static final String TRANSACTIONS_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/bancoposta/resources/accountTransactionResponse.json";
+
+    private static final String EMPTY_TRANSACTIONS_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/bancoposta/resources/emptyTransactionResponse.json";
+
+    private static final AccountsResponse ACCOUNTS_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    new File(ACCOUNTS_RESPONSE_FILE_PATH), AccountsResponse.class);
+
+    private static final AccountDetailsResponse ACCOUNTS_DETAILS_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    new File(ACCOUNTS_DETAILS_FILE_PATH), AccountDetailsResponse.class);
+
+    private static final TransactionsResponse TRANSACTIONS_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    new File(TRANSACTIONS_FILE_PATH), TransactionsResponse.class);
+
+    private static final TransactionsResponse EMPTY_TRANSACTIONS_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    new File(EMPTY_TRANSACTIONS_FILE_PATH), TransactionsResponse.class);
 
     @Before
     public void init() {
@@ -44,14 +77,13 @@ public class BancoPostaCheckingTransactionalAccountFetcherTest {
 
         RequestBuilder fetchAccountMockRequestBuilder =
                 FetcherTestHelper.mockRequestBuilder(CheckingAccUrl.FETCH_ACCOUNTS, httpClient);
-        when(fetchAccountMockRequestBuilder.get(any()))
-                .thenReturn(FetcherTestData.getAccountResponse());
+        when(fetchAccountMockRequestBuilder.post(any(), any())).thenReturn(ACCOUNTS_RESPONSE);
 
         RequestBuilder fetchAccountDetailsMockRequestBuilder =
                 FetcherTestHelper.mockRequestBuilder(
                         CheckingAccUrl.FETCH_ACCOUNT_DETAILS, httpClient);
         when(fetchAccountDetailsMockRequestBuilder.post(any(), any()))
-                .thenReturn(FetcherTestData.getAccountDetailsResponse());
+                .thenReturn(ACCOUNTS_DETAILS_RESPONSE);
         // when
 
         Collection<TransactionalAccount> accounts = objUnderTest.fetchAccounts();
@@ -68,7 +100,7 @@ public class BancoPostaCheckingTransactionalAccountFetcherTest {
         RequestBuilder fetchTransactionMockRequestBuilder =
                 FetcherTestHelper.mockRequestBuilder(CheckingAccUrl.FETCH_TRANSACTIONS, httpClient);
         when(fetchTransactionMockRequestBuilder.post(any(), any()))
-                .thenReturn(FetcherTestData.getCheckingTransactionResponse());
+                .thenReturn(TRANSACTIONS_RESPONSE);
 
         Account account = mock(Account.class);
         given(account.getExactBalance()).willReturn(ExactCurrencyAmount.of("0", "EUR"));
@@ -90,7 +122,7 @@ public class BancoPostaCheckingTransactionalAccountFetcherTest {
         RequestBuilder fetchTransactionMockRequestBuilder =
                 FetcherTestHelper.mockRequestBuilder(CheckingAccUrl.FETCH_TRANSACTIONS, httpClient);
         when(fetchTransactionMockRequestBuilder.post(any(), any()))
-                .thenReturn(FetcherTestData.getEmptyCheckingTransactionResponse());
+                .thenReturn(EMPTY_TRANSACTIONS_RESPONSE);
         Account account = mock(Account.class);
         given(account.getExactBalance()).willReturn(ExactCurrencyAmount.of("0", "EUR"));
         when(account.getApiIdentifier()).thenReturn("123456789");

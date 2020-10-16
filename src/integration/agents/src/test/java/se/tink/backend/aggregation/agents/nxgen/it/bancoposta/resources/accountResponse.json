@@ -1,0 +1,44 @@
+{
+    "body": {
+        "listaCarte": [],
+        "listaConti": [
+            {
+                "aliasPostamat": "000000000000",
+                "attivo": true,
+                "categoria": "1210 ",
+                "filiale": "41421 ",
+                "numeroConto": "dummyNumber1",
+                "panMascheratoPostamat": "****                ",
+                "postamatAttivo": true,
+                "presenzaPCR": false,
+                "tipoConto": "C",
+                "utenteBloccato": false
+            },
+            {
+                "aliasPostamat": "000000000000",
+                "attivo": true,
+                "categoria": "1210 ",
+                "filiale": "41421 ",
+                "numeroConto": "dummyNumber2",
+                "panMascheratoPostamat": "****                ",
+                "postamatAttivo": true,
+                "presenzaPCR": false,
+                "tipoConto": "C",
+                "utenteBloccato": false
+            }
+        ],
+        "pfmEnabled": false
+    },
+    "header": {
+        "clientid": "79b6f0f9-ba50-472c-b36e-6ea79a0760c3",
+        "command-request-command": "listaProdotti",
+        "command-request-service": "bancoposta",
+        "command-request-version": "v1",
+        "command-result": "0",
+        "command-result-description": "",
+        "command-result-details": "",
+        "command-result-reason": "",
+        "requestid": "1fa959a7-b586-4d77-a0e0-b1266c9a6c94:node-2",
+        "status": "COMPLETED"
+    }
+}

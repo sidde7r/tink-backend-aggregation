@@ -5,27 +5,36 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.fetcher.FetcherTestData;
 import se.tink.backend.aggregation.agents.nxgen.it.bancoposta.fetcher.FetcherTestHelper;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.InvestmentUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.investment.BancoPostaInvestmentController;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.investment.rpc.InvestmentResponse;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BancoPostaInvestmentControllerTest {
     private TinkHttpClient httpClient;
     private BancoPostaInvestmentController fetcher;
+
+    private static final String INVESTMENT_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/bancoposta/resources/investmentAccountResponse.json";
+
+    private static final InvestmentResponse INVESTMENT_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    new File(INVESTMENT_FILE_PATH), InvestmentResponse.class);
 
     @Before
     public void initSetUp() {
@@ -42,8 +51,7 @@ public class BancoPostaInvestmentControllerTest {
         // when
         RequestBuilder fetchInvestmentMockRequestBuilder =
                 FetcherTestHelper.mockRequestBuilder(InvestmentUrl.FETCH_INVESTMENTS, httpClient);
-        when(fetchInvestmentMockRequestBuilder.post(any(), any()))
-                .thenReturn(FetcherTestData.getInvestmentResponse());
+        when(fetchInvestmentMockRequestBuilder.post(any(), any())).thenReturn(INVESTMENT_RESPONSE);
 
         Collection<InvestmentAccount> investments = fetcher.fetchAccounts();
 

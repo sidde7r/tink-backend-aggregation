@@ -1,0 +1,85 @@
+{
+    "header": {
+        "command-result": "0",
+        "clientId": "1887b02c-6508-426b-92b9-9b627d1319b0",
+        "command-result-description": "",
+        "requestId": "",
+        "requestid": "61ac3324-5a45-405e-9b3e-b7b38783a9d0:node-4",
+        "command-result-details": "",
+        "command-request-version": "v3",
+        "command-request-service": "bancoposta",
+        "command-request-command": "posizioneBuoniTotaleH24",
+        "command-result-reason": "",
+        "status": "COMPLETED"
+    },
+    "body": {
+        "totaleLordo": 5000,
+        "statoSemaforoBfp": "standard",
+        "posizioneConti": [
+            {
+                "listaBuoni": [
+                    {
+                        "impostaDiBollo": 0,
+                        "valoreRimborsoLordo": 5000,
+                        "numeroRateRendita": 0,
+                        "valoreRimborsoNetto": 5000,
+                        "valoreRataNettoRendita": "0",
+                        "numerica": "dummyId1",
+                        "ritenutaFiscaleScadenza": 79,
+                        "valoreLordoScadenza": 5634,
+                        "canaleEmissione": "WEB",
+                        "buonoSenior": false,
+                        "dataScadenza": "02/10/2032 00:00",
+                        "flagLord": "N",
+                        "valoreNominale": 5000,
+                        "descrizione": "dummydescription1",
+                        "codFacolta": "1",
+                        "tipoBuono": "D",
+                        "modalitaEmissioneCodice": "0",
+                        "modalitaEmissioneDescrizione": "STANDARD",
+                        "dataSottoscrizione": "02/10/2020 00:00",
+                        "importoContabile": 5000,
+                        "ritenutaFiscale": 0,
+                        "flagPresenzaRendita": false,
+                        "valoreNettoScadenza": 5555
+                    },
+                    {
+                        "impostaDiBollo": 0,
+                        "valoreRimborsoLordo": 10000,
+                        "numeroRateRendita": 0,
+                        "valoreRimborsoNetto": 5000,
+                        "valoreRataNettoRendita": "0",
+                        "numerica": "dummyId2",
+                        "ritenutaFiscaleScadenza": 79,
+                        "valoreLordoScadenza": 5634,
+                        "canaleEmissione": "WEB",
+                        "buonoSenior": false,
+                        "dataScadenza": "02/10/2032 00:00",
+                        "flagLord": "N",
+                        "valoreNominale": 5000,
+                        "descrizione": "dummydescription2",
+                        "codFacolta": "1",
+                        "tipoBuono": "D",
+                        "modalitaEmissioneCodice": "0",
+                        "modalitaEmissioneDescrizione": "STANDARD",
+                        "dataSottoscrizione": "02/10/2020 00:00",
+                        "importoContabile": 5000,
+                        "ritenutaFiscale": 0,
+                        "flagPresenzaRendita": false,
+                        "valoreNettoScadenza": 5555
+                    }
+                ],
+                "totaleLordo": 5000,
+                "numeroBuoni": 1,
+                "numeroConto": "dummyNumber",
+                "totaleNominale": 5000,
+                "capitaleNettoRendita": 0
+            }
+        ],
+        "posizioneLibretti": [],
+        "totaleNominale": 5000,
+        "listaPosizioneBuoni": [],
+        "totaleBuoni": 1,
+        "statoSemaforoDr": "standard"
+    }
+}

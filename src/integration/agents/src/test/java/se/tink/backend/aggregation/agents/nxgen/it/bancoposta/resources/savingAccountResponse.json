@@ -1,0 +1,39 @@
+{
+    "header": {
+        "command-result": "0",
+        "clientId": "f358a2ee-eb26-4726-8282-16aa65df8043",
+        "command-result-description": "",
+        "requestId": "",
+        "requestid": "7681efa9-bbcd-40b7-8be6-730055eca35f:node-2",
+        "command-result-details": "",
+        "command-request-version": "v2",
+        "command-request-service": "bancoposta",
+        "command-request-command": "listaLibrettiH24",
+        "command-result-reason": "",
+        "status": "COMPLETED"
+    },
+    "body": {
+        "statoSemaforoBfp": "standard",
+        "listaLibretti": [
+            {
+                "onBoardable": true,
+                "presenzaBfp": false,
+                "presenzaPvr": false,
+                "monointestato": true,
+                "iban": "dummyIban1",
+                "numeroRapporto": "000050444884",
+                "librettoSmart": true
+            },
+            {
+                "onBoardable": true,
+                "presenzaBfp": false,
+                "presenzaPvr": false,
+                "monointestato": true,
+                "iban": "dummyIban2",
+                "numeroRapporto": "000050444884",
+                "librettoSmart": true
+            }
+        ],
+        "statoSemaforoDr": "standard"
+    }
+}
