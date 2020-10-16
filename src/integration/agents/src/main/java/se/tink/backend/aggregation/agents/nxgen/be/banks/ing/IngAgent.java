@@ -49,6 +49,7 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
         client.setUserAgent(Headers.USER_AGENT_VALUE);
         client.setFollowRedirects(false);
         client.addFilter(new TimeoutFilter());
+        client.setDebugOutput(true);
 
         final MultiIpGateway gateway =
                 new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
