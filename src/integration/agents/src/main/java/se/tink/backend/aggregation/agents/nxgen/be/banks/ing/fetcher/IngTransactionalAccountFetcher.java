@@ -4,11 +4,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Types;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngProxyApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entities.AgreementEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entities.AgreementsResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.IngMiscUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -47,16 +49,9 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
                 .withoutFlags()
                 .withBalance(
                         BalanceModule.builder()
-                                .withBalance(
-                                        ExactCurrencyAmount.of(
-                                                agreementEntity.getBalance().getValue(),
-                                                agreementEntity.getBalance().getCurrency()))
+                                .withBalance(extractBalance(agreementEntity.getBalance()))
                                 .setAvailableBalance(
-                                        ExactCurrencyAmount.of(
-                                                agreementEntity.getAvailableBalance().getValue(),
-                                                agreementEntity
-                                                        .getAvailableBalance()
-                                                        .getCurrency()))
+                                        extractBalance(agreementEntity.getAvailableBalance()))
                                 .build())
                 .withId(
                         IdModule.builder()
@@ -80,7 +75,14 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
         } else if (Types.SAVINGS.equals(type)) {
             return TransactionalAccountType.SAVINGS;
         }
-        throw new IllegalStateException("Unknown account type " + type);
+        throw new AccountRefreshException("Unknown account type " + type);
+    }
+
+    private ExactCurrencyAmount extractBalance(AmountEntity amountEntity) {
+        if (amountEntity == null) {
+            return null;
+        }
+        return ExactCurrencyAmount.of(amountEntity.getValue(), amountEntity.getCurrency());
     }
 
     private String extractTransactionsHref(List<LinkEntity> links) {
