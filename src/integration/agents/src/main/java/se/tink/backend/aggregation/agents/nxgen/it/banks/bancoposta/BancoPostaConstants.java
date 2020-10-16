@@ -59,6 +59,11 @@ public class BancoPostaConstants {
                     new URL(Base.BASE_API2 + Endpoints.FETCH_IDENTITY_DATA);
         }
 
+        public static class InvestmentUrl {
+            public static final URL FETCH_INVESTMENTS =
+                    new URL(Base.BASE_API + Endpoints.FETCH_INVESTMENTS);
+        }
+
         public static class Base {
             public static final String BASE_DATA = "https://pfm.poste.it/user/v1";
             public static final String BASE_API =
@@ -99,6 +104,7 @@ public class BancoPostaConstants {
             public static final String FETCH_SAVING_TRANSACTIONS =
                     "/v2/bancoposta/listaMovimentiLibrettoH24";
             public static final String FETCH_IDENTITY_DATA = "/federation/v2/openid-userinfo";
+            public static final String FETCH_INVESTMENTS = "/v3/bancoposta/posizioneBuoniTotaleH24";
         }
     }
 
