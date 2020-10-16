@@ -1,6 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank;
 
+import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+
 public class DemobankConstants {
+    public static final TypeMapper<AccountHolderType> HOLDER_TYPE_TYPE_MAPPER =
+            TypeMapper.<AccountHolderType>builder()
+                    .put(AccountHolderType.PERSONAL, "PERSONAL")
+                    .put(AccountHolderType.BUSINESS, "BUSINESS")
+                    .put(AccountHolderType.CORPORATE, "CORPORATE")
+                    .build();
 
     public static class Urls {
         public static final String BASE_URL = "https://demobank.production.global.tink.se";

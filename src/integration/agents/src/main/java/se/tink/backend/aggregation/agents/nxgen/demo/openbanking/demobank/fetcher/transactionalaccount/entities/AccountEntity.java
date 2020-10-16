@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -40,6 +42,9 @@ public class AccountEntity {
     @JsonProperty("accountType")
     private String accountType;
 
+    @JsonProperty("holderType")
+    private String holderType;
+
     @JsonIgnore
     public TransactionalAccount toTinkAccount(List<AccountHolder> accountHolders) {
         return TransactionalAccount.nxBuilder()
@@ -57,6 +62,7 @@ public class AccountEntity {
                                 .withAccountName(description)
                                 .addIdentifier(new IbanIdentifier(accountNumber))
                                 .build())
+                .setHolderType(getAccountHolderType())
                 .addHolders(
                         accountHolders.stream()
                                 .map(AccountHolder::getName)
@@ -85,6 +91,7 @@ public class AccountEntity {
                                 .withAccountName(description)
                                 .addIdentifier(new IbanIdentifier(accountNumber))
                                 .build())
+                .setHolderType(getAccountHolderType())
                 .addHolders(
                         accountHolders.stream()
                                 .map(AccountHolder::getName)
@@ -92,6 +99,10 @@ public class AccountEntity {
                                 .collect(Collectors.toList()))
                 .setApiIdentifier(getId())
                 .build();
+    }
+
+    private AccountHolderType getAccountHolderType() {
+        return DemobankConstants.HOLDER_TYPE_TYPE_MAPPER.translate(holderType).orElse(null);
     }
 
     @JsonIgnore
