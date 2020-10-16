@@ -88,7 +88,8 @@ public class BankIdAuthenticationControllerNO
                 SerializationUtils.serializeToString(Lists.newArrayList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        supplementalRequester.requestSupplementalInformation(credentials, true);
+        supplementalRequester.requestSupplementalInformation(
+                credentials, 90, TimeUnit.SECONDS, true);
     }
 
     public void poll() throws AuthenticationException, AuthorizationException {

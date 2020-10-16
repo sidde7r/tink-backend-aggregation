@@ -136,7 +136,8 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public String requestSupplementalInformation(Credentials credentials, boolean wait) {
+    public String requestSupplementalInformation(
+            Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
         log.info(
                 "Requesting supplemental information:"
                         + credentials.getStatus().name()

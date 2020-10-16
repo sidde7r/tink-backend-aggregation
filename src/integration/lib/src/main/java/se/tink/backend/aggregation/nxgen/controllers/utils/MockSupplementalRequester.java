@@ -21,7 +21,8 @@ public final class MockSupplementalRequester implements SupplementalRequester {
     }
 
     @Override
-    public String requestSupplementalInformation(Credentials credentials, boolean wait) {
+    public String requestSupplementalInformation(
+            Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
         return SerializationUtils.serializeToString(callbackData);
     }
 
