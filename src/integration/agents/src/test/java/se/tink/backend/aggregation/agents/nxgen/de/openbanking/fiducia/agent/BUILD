@@ -1,13 +1,12 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "fiducia",
-    srcs = glob(
-        ["**/*.java"],
-        exclude = ["agent/*.java"],
-    ),
-    data = [
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fiducia/resources",
+    name = "agent",
+    srcs = glob(["**/*.java"]),
+    data = ["//:agent_test_data"],
+    tags = [
+        "external",
+        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [

@@ -1,0 +1,32 @@
+{
+  "_links": {
+    "selectAuthenticationMethod": {
+      "href": "/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id"
+    }
+  },
+  "scaMethods": [
+    {
+      "authenticationMethodId": "944",
+      "authenticationType": "PUSH_OTP",
+      "name": "SecureGo"
+    },
+    {
+      "authenticationMethodId": "962",
+      "authenticationType": "CHIP_OTP",
+      "authenticationVersion": "1.4",
+      "name": "Smart-TAN plus manuell"
+    },
+    {
+      "authenticationMethodId": "972",
+      "authenticationType": "CHIP_OTP",
+      "authenticationVersion": "1.4",
+      "name": "Smart-TAN plus optisch / USB"
+    },
+    {
+      "authenticationMethodId": "982",
+      "authenticationType": "PHOTO_OTP",
+      "name": "Smart-TAN photo"
+    }
+  ],
+  "scaStatus": "psuAuthenticated"
+}

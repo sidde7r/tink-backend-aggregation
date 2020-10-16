@@ -96,7 +96,8 @@ public final class FiduciaAgent extends NextGenerationAgent
                         apiClient,
                         persistentStorage,
                         sessionStorage,
-                        supplementalInformationHelper);
+                        supplementalInformationHelper,
+                        catalog);
 
         return new AutoAuthenticationController(
                 request, context, fiduciaAuthenticator, fiduciaAuthenticator);

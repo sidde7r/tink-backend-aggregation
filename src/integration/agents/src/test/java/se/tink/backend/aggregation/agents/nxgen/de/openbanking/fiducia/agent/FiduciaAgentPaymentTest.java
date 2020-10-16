@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.agent;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
