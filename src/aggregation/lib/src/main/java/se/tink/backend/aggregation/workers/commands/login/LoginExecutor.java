@@ -248,7 +248,8 @@ public class LoginExecutor {
                     "LoginExecutor-EXCEPTION for credentials {}",
                     Optional.ofNullable(credentialsRequest.getCredentials())
                             .map(Credentials::getId)
-                            .orElse(null));
+                            .orElse(null),
+                    ex);
             return processLoginExceptionHandlerChain(ex, metricAction);
         }
     }
