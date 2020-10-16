@@ -181,7 +181,16 @@ public class LoginExecutor {
 
     private static final ImmutableMap<NemIdError, LoginResult> NEM_ID_ERROR_MAPPER =
             ImmutableMap.<NemIdError, LoginResult>builder()
+                    .put(NemIdError.CODEAPP_NOT_REGISTERED, LoginResult.LOGIN_ERROR_NOT_SUPPORTED)
                     .put(NemIdError.INTERRUPTED, LoginResult.NEMID_ERROR_INTERRUPTED)
+                    .put(NemIdError.LOCKED_PIN, LoginResult.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
+                    .put(
+                            NemIdError.REJECTED,
+                            LoginResult.LOGIN_ERROR_CREDENTIALS_VERIFICATION_ERROR)
+                    .put(
+                            NemIdError.SECOND_FACTOR_NOT_REGISTERED,
+                            LoginResult.LOGIN_ERROR_NOT_SUPPORTED)
+                    .put(NemIdError.TIMEOUT, LoginResult.THIRD_PARTY_APP_ERROR_TIMED_OUT)
                     .build();
 
     public LoginExecutor(
