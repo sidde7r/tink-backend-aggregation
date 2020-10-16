@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.exceptions.refresh.TransactionRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngProxyApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entities.LinkEntity;
@@ -57,7 +58,7 @@ public class IngTransactionFetcher
                                 transactionEntity.getAmount().getCurrency()))
                 .setDate(transactionEntity.getExecutionDate())
                 .setRawDetails(mapRawDetails(transactionEntity))
-                .setDescription(extractDescription(transactionEntity.getSubject()))
+                .setDescription(extractDescription(transactionEntity))
                 .build();
     }
 
@@ -67,12 +68,23 @@ public class IngTransactionFetcher
         } else if (AccountTypes.SAVINGS.equals(type)) {
             return "SAVINGS";
         }
-        throw new IllegalStateException("Unknown account type " + type);
+        throw new TransactionRefreshException("Unknown account type " + type);
     }
 
-    private String extractDescription(String subject) {
-        int lastLineSep = subject.lastIndexOf('\n');
-        return IngMiscUtils.cleanDescription(subject.substring(lastLineSep + 1));
+    private String extractDescription(TransactionEntity entity) {
+        String subject = entity.getSubject();
+        if (subject != null) {
+            int lastLineSep = subject.lastIndexOf('\n');
+            return IngMiscUtils.cleanDescription(subject.substring(lastLineSep + 1));
+        }
+        List<String> subjectLines = entity.getSubjectLines();
+        if (subjectLines != null && !subjectLines.isEmpty()) {
+            if (subjectLines.size() > 1) {
+                return subjectLines.get(1);
+            }
+            return subjectLines.get(0);
+        }
+        return "";
     }
 
     private IngRawDetails mapRawDetails(TransactionEntity entity) {
