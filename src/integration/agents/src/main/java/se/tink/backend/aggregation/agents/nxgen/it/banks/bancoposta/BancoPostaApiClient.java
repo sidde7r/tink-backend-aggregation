@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaCo
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.AuthUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.CheckingAccUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.IdentityUrl;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.InvestmentUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.SavingAccUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.entity.RegisterCodeRequest;
@@ -25,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticato
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.RegistrationWithDigitalCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.rpc.VerificationOnboardingResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.common.rpc.SimpleRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.investment.rpc.InvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.AccountsResponse;
@@ -228,5 +230,11 @@ public class BancoPostaApiClient {
         return createBaseRequestWithBearerToken(
                         storage.getAccessBasicToken(), IdentityUrl.FETCH_IDENTITY_DATA)
                 .post(String.class);
+    }
+
+    public InvestmentResponse fetchInvestments() {
+        return createBaseRequestWithBearerTokenAndXKey(
+                        storage.getAccessBasicToken(), InvestmentUrl.FETCH_INVESTMENTS)
+                .post(InvestmentResponse.class, new SimpleRequest());
     }
 }

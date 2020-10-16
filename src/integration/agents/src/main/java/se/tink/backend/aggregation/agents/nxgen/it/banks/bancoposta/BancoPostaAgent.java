@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta;
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaAuthenticator;
@@ -13,9 +15,11 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticato
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.BancoPostaCheckingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.BancoPostaSavingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.identity.BancoPostaIdentityFetcher;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.investment.BancoPostaInvestmentController;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -25,12 +29,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public class BancoPostaAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor {
+                RefreshIdentityDataExecutor,
+                RefreshInvestmentAccountsExecutor {
 
     private final BancoPostaApiClient apiClient;
     private final BancoPostaStorage storage;
     private final TransactionalAccountRefreshController checkingAccountRefreshController;
     private final TransactionalAccountRefreshController savingAccountsRefreshController;
+    private final InvestmentRefreshController investmentRefreshController;
 
     @Inject
     public BancoPostaAgent(AgentComponentProvider agentComponentProvider) {
@@ -39,6 +45,7 @@ public class BancoPostaAgent extends SubsequentProgressiveGenerationAgent
         this.apiClient = new BancoPostaApiClient(client, storage);
         this.checkingAccountRefreshController = constructCheckingAccountTransactionController();
         this.savingAccountsRefreshController = constructSavingsAccountTransactionController();
+        this.investmentRefreshController = constructInvestmentController();
     }
 
     private TransactionalAccountRefreshController constructCheckingAccountTransactionController() {
@@ -65,6 +72,13 @@ public class BancoPostaAgent extends SubsequentProgressiveGenerationAgent
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionPagePaginationController<>(transactionalAccountFetcher, 0)));
+    }
+
+    private InvestmentRefreshController constructInvestmentController() {
+        BancoPostaInvestmentController investmentController =
+                new BancoPostaInvestmentController(apiClient);
+        return new InvestmentRefreshController(
+                metricRefreshController, updateController, investmentController);
     }
 
     @Override
@@ -101,5 +115,15 @@ public class BancoPostaAgent extends SubsequentProgressiveGenerationAgent
     public FetchIdentityDataResponse fetchIdentityData() {
         BancoPostaIdentityFetcher identityFetcher = new BancoPostaIdentityFetcher(apiClient);
         return new FetchIdentityDataResponse(identityFetcher.fetchIdentityData());
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 }
