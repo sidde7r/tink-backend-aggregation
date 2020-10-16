@@ -43,7 +43,7 @@ public class FiduciaAuthenticatorTest {
     private static final String CONSENT_ID = "consentId";
     private static final String OTP_CODE = "123456";
     private static final String SCA_METHOD_ID_CHIP_TAN = "962";
-    private static final String AUTH_URL_PATH =
+    private static final String AUTH_PATH =
             "/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id";
 
     private FiduciaAuthenticator authenticator;
@@ -91,7 +91,7 @@ public class FiduciaAuthenticatorTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaResponseSelected.json").toFile(),
                                 ScaResponse.class));
-        when(apiClient.authorizeWithOtpCode(AUTH_URL_PATH, OTP_CODE))
+        when(apiClient.authorizeWithOtpCode(AUTH_PATH, OTP_CODE))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaFinalised.json").toFile(),
@@ -105,7 +105,7 @@ public class FiduciaAuthenticatorTest {
         verify(persistentStorage).put(StorageKeys.CONSENT_ID, CONSENT_ID);
         verify(apiClient).createConsent();
         verify(apiClient).authorizeConsent(CONSENT_ID, PASSWORD);
-        verify(apiClient).authorizeWithOtpCode(AUTH_URL_PATH, OTP_CODE);
+        verify(apiClient).authorizeWithOtpCode(AUTH_PATH, OTP_CODE);
         verifyNoMoreInteractions(apiClient);
     }
 
@@ -124,13 +124,13 @@ public class FiduciaAuthenticatorTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaResponseMultiple.json").toFile(),
                                 ScaResponse.class));
-        when(apiClient.selectAuthMethod(AUTH_URL_PATH, SCA_METHOD_ID_CHIP_TAN))
+        when(apiClient.selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaResponseSelectedChipTan.json")
                                         .toFile(),
                                 ScaResponse.class));
-        when(apiClient.authorizeWithOtpCode(AUTH_URL_PATH, OTP_CODE))
+        when(apiClient.authorizeWithOtpCode(AUTH_PATH, OTP_CODE))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaFinalised.json").toFile(),
@@ -144,8 +144,8 @@ public class FiduciaAuthenticatorTest {
         verify(persistentStorage).put(StorageKeys.CONSENT_ID, CONSENT_ID);
         verify(apiClient).createConsent();
         verify(apiClient).authorizeConsent(CONSENT_ID, PASSWORD);
-        verify(apiClient).authorizeWithOtpCode(AUTH_URL_PATH, OTP_CODE);
-        verify(apiClient).selectAuthMethod(AUTH_URL_PATH, SCA_METHOD_ID_CHIP_TAN);
+        verify(apiClient).authorizeWithOtpCode(AUTH_PATH, OTP_CODE);
+        verify(apiClient).selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN);
         verifyNoMoreInteractions(apiClient);
     }
 

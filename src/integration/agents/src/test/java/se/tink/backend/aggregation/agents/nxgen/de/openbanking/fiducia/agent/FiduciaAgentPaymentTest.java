@@ -28,7 +28,6 @@ public class FiduciaAgentPaymentTest {
             new ArgumentManager<>(PsuIdArgumentEnum.values());
     private final ArgumentManager<PasswordArgumentEnum> passwordManager =
             new ArgumentManager<>(PasswordArgumentEnum.values());
-    private AgentIntegrationTest.Builder builder;
 
     @AfterClass
     public static void afterClass() {
