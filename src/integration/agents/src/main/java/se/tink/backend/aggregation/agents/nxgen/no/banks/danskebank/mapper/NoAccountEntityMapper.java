@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank.mapper;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.mapper;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
@@ -9,12 +9,12 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.enums.MarketCode;
 
 @Slf4j
-public class DkAccountEntityMapper extends AccountEntityMapper {
+public class NoAccountEntityMapper extends AccountEntityMapper {
 
-    private static final int DK_ACCOUNT_NO_MIN_LENGTH = 10;
+    private static final int NO_ACCOUNT_NO_MIN_LENGTH = 11;
 
-    public DkAccountEntityMapper() {
-        super(MarketCode.DK.name());
+    public NoAccountEntityMapper() {
+        super(MarketCode.NO.name());
     }
 
     @Override
@@ -31,17 +31,17 @@ public class DkAccountEntityMapper extends AccountEntityMapper {
                 .withAccountName(accountEntity.getAccountName())
                 .addIdentifier(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.DK, accountEntity.getAccountNoExt()))
+                                AccountIdentifier.Type.BBAN, accountEntity.getAccountNoExt()))
                 .build();
     }
 
     private String getAccountNumberWithZerosIfIsTooShort(String accountNumber) {
-        if (accountNumber.length() < DK_ACCOUNT_NO_MIN_LENGTH) {
+        if (accountNumber.length() < NO_ACCOUNT_NO_MIN_LENGTH) {
             log.error(
-                    "Danish Danske Bank account number is shorter than expected({}). Its length is [{}]",
-                    DK_ACCOUNT_NO_MIN_LENGTH,
+                    "Norwegian Danske Bank account number is shorter than expected ({}). Its length is [{}]",
+                    NO_ACCOUNT_NO_MIN_LENGTH,
                     accountNumber.length());
         }
-        return Strings.padStart(accountNumber, DK_ACCOUNT_NO_MIN_LENGTH, '0');
+        return Strings.padStart(accountNumber, NO_ACCOUNT_NO_MIN_LENGTH, '0');
     }
 }

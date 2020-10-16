@@ -22,6 +22,7 @@ public class DkAccountEntityMapperTest {
     private static final String ACCOUNT_NO_EXT = "123234345";
     private static final String ACCOUNT_NO_INT = "567678789";
     private static final String BANK_IDENTIFIER = "bankIdentifier";
+    private static final String DK_MARKET_CODE = "dk";
     private static final String ZERO = "0";
 
     private DkAccountEntityMapper dkAccountEntityMapper;
@@ -41,10 +42,14 @@ public class DkAccountEntityMapperTest {
 
         // then
         assert result != null;
+        assertThat(result.getIdModule().getUniqueId()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
+        assertThat(result.getIdentifiers().size()).isEqualTo(1);
+        assertThat(result.getIdentifiers().get(0).getIdentifier()).isEqualTo(ACCOUNT_NO_EXT);
+        assertThat(result.getIdentifiers().get(0).getType().toString()).isEqualTo(DK_MARKET_CODE);
+        assertThat(result.getIdentifiers().get(0).getType().toString()).isEqualTo(DK_MARKET_CODE);
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_NO_EXT);
-        assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER))
-                .isEqualTo(ZERO + ACCOUNT_NO_INT);
-        assertThat(result.getApiIdentifier()).isEqualTo(ZERO + ACCOUNT_NO_INT);
+        assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER)).isEqualTo(ACCOUNT_NO_INT);
+        assertThat(result.getApiIdentifier()).isEqualTo(ACCOUNT_NO_INT);
     }
 
     @Test
@@ -60,6 +65,9 @@ public class DkAccountEntityMapperTest {
 
         // then
         assert result != null;
+        assertThat(result.getIdModule().getUniqueId()).isEqualTo(tenDigitAccountNoExt);
+        assertThat(result.getIdentifiers().size()).isEqualTo(1);
+        assertThat(result.getIdentifiers().get(0).getIdentifier()).isEqualTo(tenDigitAccountNoExt);
         assertThat(result.getAccountNumber()).isEqualTo(tenDigitAccountNoExt);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER)).isEqualTo(tenDigitAccountNoInt);
         assertThat(result.getApiIdentifier()).isEqualTo(tenDigitAccountNoInt);
@@ -76,10 +84,12 @@ public class DkAccountEntityMapperTest {
 
         // then
         assert result != null;
+        assertThat(result.getIdModule().getUniqueId()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
+        assertThat(result.getIdentifiers().size()).isEqualTo(1);
+        assertThat(result.getIdentifiers().get(0).getIdentifier()).isEqualTo(ACCOUNT_NO_EXT);
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_NO_EXT);
-        assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER))
-                .isEqualTo(ZERO + ACCOUNT_NO_INT);
-        assertThat(result.getApiIdentifier()).isEqualTo(ZERO + ACCOUNT_NO_INT);
+        assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER)).isEqualTo(ACCOUNT_NO_INT);
+        assertThat(result.getApiIdentifier()).isEqualTo(ACCOUNT_NO_INT);
     }
 
     @Test
@@ -96,6 +106,9 @@ public class DkAccountEntityMapperTest {
 
         // then
         assert result != null;
+        assertThat(result.getIdModule().getUniqueId()).isEqualTo(tenDigitAccountNoExt);
+        assertThat(result.getIdentifiers().size()).isEqualTo(1);
+        assertThat(result.getIdentifiers().get(0).getIdentifier()).isEqualTo(tenDigitAccountNoExt);
         assertThat(result.getAccountNumber()).isEqualTo(tenDigitAccountNoExt);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER)).isEqualTo(tenDigitAccountNoInt);
         assertThat(result.getApiIdentifier()).isEqualTo(tenDigitAccountNoInt);
@@ -112,9 +125,8 @@ public class DkAccountEntityMapperTest {
 
         // then
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_NO_EXT);
-        assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER))
-                .isEqualTo(ZERO + ACCOUNT_NO_INT);
-        assertThat(result.getApiIdentifier()).isEqualTo(ZERO + ACCOUNT_NO_INT);
+        assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER)).isEqualTo(ACCOUNT_NO_INT);
+        assertThat(result.getApiIdentifier()).isEqualTo(ACCOUNT_NO_INT);
     }
 
     @Test

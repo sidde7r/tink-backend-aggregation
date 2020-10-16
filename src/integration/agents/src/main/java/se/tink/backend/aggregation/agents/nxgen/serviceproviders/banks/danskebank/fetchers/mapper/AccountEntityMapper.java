@@ -96,7 +96,7 @@ public class AccountEntityMapper {
     public CreditCardAccount toCreditCardAccount(
             DanskeBankConfiguration configuration, AccountEntity accountEntity) {
         return CreditCardAccount.builder(
-                        accountEntity.getAccountNoInt(),
+                        getCreditCardUniqueIdentifier(accountEntity),
                         ExactCurrencyAmount.of(
                                 accountEntity.getBalance(), accountEntity.getCurrency()),
                         calculateAvailableCredit(accountEntity))
@@ -111,6 +111,10 @@ public class AccountEntityMapper {
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
                 .build();
+    }
+
+    protected String getCreditCardUniqueIdentifier(AccountEntity accountEntity) {
+        return accountEntity.getAccountNoInt();
     }
 
     public Optional<TransactionalAccount> toUnknownAccount(AccountEntity accountEntity) {
@@ -160,7 +164,7 @@ public class AccountEntityMapper {
                 .build();
     }
 
-    private IdModule buildIdModule(AccountEntity accountEntity) {
+    protected IdModule buildIdModule(AccountEntity accountEntity) {
         return IdModule.builder()
                 .withUniqueIdentifier(accountEntity.getAccountNoInt())
                 .withAccountNumber(accountEntity.getAccountNoExt())
@@ -177,7 +181,7 @@ public class AccountEntityMapper {
                 .orElse(AccountIdentifier.Type.COUNTRY_SPECIFIC);
     }
 
-    protected Optional<TransactionalAccount> toSavingsAccount(
+    public Optional<TransactionalAccount> toSavingsAccount(
             DanskeBankConfiguration configuration, AccountEntity accountEntity) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
@@ -199,14 +203,14 @@ public class AccountEntityMapper {
                 .build();
     }
 
-    protected AccountSourceInfo createAccountSourceInfo(AccountEntity accountEntity) {
+    private AccountSourceInfo createAccountSourceInfo(AccountEntity accountEntity) {
         return AccountSourceInfo.builder()
                 .bankProductCode(accountEntity.getAccountProduct())
                 .bankAccountType(accountEntity.getAccountType())
                 .build();
     }
 
-    protected ExactCurrencyAmount calculateAvailableCredit(AccountEntity accountEntity) {
+    private ExactCurrencyAmount calculateAvailableCredit(AccountEntity accountEntity) {
         return ExactCurrencyAmount.of(
                 Math.max(accountEntity.getBalanceAvailable() - accountEntity.getBalance(), 0.0),
                 accountEntity.getCurrency());

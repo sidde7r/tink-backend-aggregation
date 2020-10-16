@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -40,6 +42,8 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                 apiClient.listAccounts(
                         ListAccountsRequest.createFromLanguageCode(
                                 configuration.getLanguageCode()));
+
+        logDuplicatedAccountNoExt(listAccounts.getAccounts());
 
         return ImmutableList.<TransactionalAccount>builder()
                 .addAll(logAndGetTransactionalAccountsOfUnknownType(listAccounts))
@@ -76,5 +80,41 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    List<AccountEntity> logDuplicatedAccountNoExt(List<AccountEntity> accounts) {
+        List<String> accountsNoExt =
+                accounts.stream().map(AccountEntity::getAccountNoExt).collect(Collectors.toList());
+        List<AccountEntity> accountIds =
+                accounts.stream()
+                        .filter(
+                                account ->
+                                        isAccountNumberFrequencyMoreThanOne(
+                                                accountsNoExt, account.getAccountNoExt()))
+                        .distinct()
+                        .collect(Collectors.toList());
+        logDuplicates(accountIds);
+        return accountIds;
+    }
+
+    private boolean isAccountNumberFrequencyMoreThanOne(
+            List<String> accountsNoExt, String accountNumber) {
+        return Collections.frequency(accountsNoExt, accountNumber) > 1;
+    }
+
+    private void logDuplicates(List<AccountEntity> duplicates) {
+        if (!duplicates.isEmpty()) {
+            log.error(
+                    "There were [{}] duplicated accounts in bank's response: {} !",
+                    duplicates.size(),
+                    duplicates.stream()
+                            .map(
+                                    account ->
+                                            String.format(
+                                                    "[accountNoExt: %s, accountNoInt: %s]",
+                                                    account.getAccountNoExt(),
+                                                    account.getAccountNoInt()))
+                            .collect(Collectors.joining(", ")));
+        }
     }
 }

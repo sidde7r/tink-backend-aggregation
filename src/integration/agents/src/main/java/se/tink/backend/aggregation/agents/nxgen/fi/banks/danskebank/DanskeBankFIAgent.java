@@ -17,11 +17,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankChallengeAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.FiIdentityData;
 
@@ -30,7 +32,12 @@ public final class DanskeBankFIAgent extends DanskeBankAgent
         implements RefreshIdentityDataExecutor {
     public DanskeBankFIAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new DanskeBankFIConfiguration());
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                new DanskeBankFIConfiguration(),
+                new AccountEntityMapper(MarketCode.FI.name()));
     }
 
     @Override
