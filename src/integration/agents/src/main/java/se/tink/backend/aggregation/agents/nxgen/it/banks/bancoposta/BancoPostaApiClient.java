@@ -188,9 +188,9 @@ public class BancoPostaApiClient {
     }
 
     public AccountsResponse fetchAccounts() {
-        return createBaseRequestWithBearerToken(
-                        storage.getAccessDataToken(), CheckingAccUrl.FETCH_ACCOUNTS)
-                .get(AccountsResponse.class);
+        return createBaseRequestWithBearerTokenAndXKey(
+                        storage.getAccessBasicToken(), CheckingAccUrl.FETCH_ACCOUNTS)
+                .post(AccountsResponse.class, new SimpleRequest());
     }
 
     public AccountDetailsResponse fetchAccountDetails(AccountDetailsRequest accountDetailsRequest) {
