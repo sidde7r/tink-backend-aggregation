@@ -90,7 +90,7 @@ public final class DemobankAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final DemobankTransactionalAccountFetcher demobankTransactionalAccountFetcher =
-                new DemobankTransactionalAccountFetcher(apiClient, sessionStorage);
+                new DemobankTransactionalAccountFetcher(apiClient, sessionStorage, provider);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -104,7 +104,7 @@ public final class DemobankAgent extends NextGenerationAgent
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
         final DemobankCreditCardFetcher demobankCreditCardFetcher =
-                new DemobankCreditCardFetcher(apiClient);
+                new DemobankCreditCardFetcher(apiClient, provider);
 
         return new CreditCardRefreshController(
                 metricRefreshController,

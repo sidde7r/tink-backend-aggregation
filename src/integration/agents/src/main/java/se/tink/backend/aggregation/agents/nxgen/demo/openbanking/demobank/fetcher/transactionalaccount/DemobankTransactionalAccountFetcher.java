@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetch
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -16,11 +17,13 @@ public class DemobankTransactionalAccountFetcher
                 TransactionDatePaginator<TransactionalAccount> {
     private final DemobankApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final Provider provider;
 
     public DemobankTransactionalAccountFetcher(
-            DemobankApiClient apiClient, SessionStorage sessionStorage) {
+            DemobankApiClient apiClient, SessionStorage sessionStorage, Provider provider) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.provider = provider;
     }
 
     @Override
@@ -31,6 +34,10 @@ public class DemobankTransactionalAccountFetcher
                         accountEntity ->
                                 accountEntity.toTinkAccount(
                                         apiClient.fetchAccountHolders(accountEntity.getId())))
+                .filter(
+                        a ->
+                                AccountFetcherUtils.getHolderTypeSupportedByProvider(provider)
+                                        == a.getHolderType())
                 .collect(Collectors.toList());
     }
 
