@@ -442,8 +442,6 @@ clients:
     aggregatorIdentifier: "Anyfin"
   anyfin-testing:
     aggregatorIdentifier: "Anyfin"
-  se-rao-security-testing:
-    aggregatorIdentifier: "Rao security testing"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
