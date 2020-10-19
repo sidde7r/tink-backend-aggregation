@@ -78,8 +78,9 @@ public class DanskeBankExecutorHelper {
 
         // Case when we get a dueDate from the user and bank sends another date since the user's
         // date is not valid.
-        if (paymentDateResponse.isTransferDateSameAsBookingDate(
-                paymentDateRequest.getBookingDate())) {
+        if (transfer.getDueDate() != null
+                && !paymentDateResponse.isTransferDateSameAsBookingDate(
+                        paymentDateRequest.getBookingDate())) {
             logger.error(
                     "Transfer Date is {} and booking date from Danskebank is {}",
                     paymentDateRequest.getBookingDate(),
