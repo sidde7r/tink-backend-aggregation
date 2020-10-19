@@ -28,36 +28,39 @@ RESPONSE 2
 ASPSP-SCA-Approach: EMBEDDED
 Content-Type: application/json;charset=utf-8
 
-{"chosenScaMethod":{"authenticationType":"PUSH_OTP","authenticationMethodId":"944","name":"SecureGo"},"challengeData":{"additionalInformation":"Ihre TAN wurde an Ihre App 'Google Pixel 2' gesendet."},"_links":{"authoriseTransaction":{"href":"/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id"}},"scaStatus":"started"}
+{"scaStatus":"psuAuthenticated","scaMethods":[{"authenticationType":"PUSH_OTP","authenticationMethodId":"944","name":"SecureGo"},{"authenticationType":"CHIP_OTP","authenticationVersion":"1.4","authenticationMethodId":"962","name":"Smart-TAN plus manuell"},{"authenticationType":"CHIP_OTP","authenticationVersion":"1.4","authenticationMethodId":"972","name":"Smart-TAN plus optisch / USB"},{"authenticationType":"PHOTO_OTP","authenticationMethodId":"982","name":"Smart-TAN photo"}],"_links":{"selectAuthenticationMethod":{"href":"/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id"}}}
 
 REQUEST 3
 PUT https://www.raiba-muc-sued.de/services_xs2a/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id
 accept: application/json
-psu-id: dummy_psu_id
 Content-Type: application/json
+psu-id: dummy_psu_id
 
-{"scaAuthenticationData":"dummy_otp_code"}
+{"authenticationMethodId":"962"}
 
 RESPONSE 3
 200
-Content-Type: application/json;charset=utf-8
+Content-Type: application/json;charset=UTF-8
+Content-Length: 550
 
-{"scaStatus": "finalised"}
+{"challengeData":{"additionalInformation":"1. Stecken Sie Ihre Chipkarte in den TAN-Generator und drücken \"TAN\"<br>2. Geben Sie den Startcode \"12345678\" ein und drücken \"OK\"<br>3. Prüfen Sie die Anzeige auf dem Leserdisplay und drücken \"OK\"<br><br>Bitte geben Sie die auf Ihrem TAN-Generator angezeigte TAN hier ein und bestätigen Sie diese mit \"OK\""},"_links":{"authoriseTransaction":{"href":"/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id"}},"scaStatus":"started"}
 
 REQUEST 4
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts
+PUT https://www.raiba-muc-sued.de/services_xs2a/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id
 accept: application/json
+Content-Type: application/json
 psu-id: dummy_psu_id
-consent-id: dummy_consent_id
+
+{"scaAuthenticationData":"dummy_otp_code"}
 
 RESPONSE 4
 200
 Content-Type: application/json;charset=utf-8
 
-{"accounts":[{"resourceId":"dummy_resource_id","iban":"some_iban","currency":"EUR","ownerName":"Jan Unknown","name":"Kontokorrent","bic":"GENODEF1M03"}]}
+{"scaStatus": "finalised"}
 
 REQUEST 5
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/balances
+GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts
 accept: application/json
 psu-id: dummy_psu_id
 consent-id: dummy_consent_id
@@ -66,15 +69,27 @@ RESPONSE 5
 200
 Content-Type: application/json;charset=utf-8
 
-{"balances":[{"balanceAmount":{"currency":"EUR","amount":"274.56"},"balanceType":"closingBooked"}]}
+{"accounts":[{"resourceId":"dummy_resource_id","iban":"some_iban","currency":"EUR","ownerName":"Jan Unknown","name":"Kontokorrent","bic":"GENODEF1M03"}]}
 
 REQUEST 6
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/transactions?bookingStatus=booked&dateFrom=2015-01-01
+GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/balances
 accept: application/json
 psu-id: dummy_psu_id
 consent-id: dummy_consent_id
 
 RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":"274.56"},"balanceType":"closingBooked"}]}
+
+REQUEST 7
+GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/transactions?bookingStatus=booked&dateFrom=2015-01-01
+accept: application/json
+psu-id: dummy_psu_id
+consent-id: dummy_consent_id
+
+RESPONSE 7
 200
 Content-Type: application/json;charset=utf-8
 

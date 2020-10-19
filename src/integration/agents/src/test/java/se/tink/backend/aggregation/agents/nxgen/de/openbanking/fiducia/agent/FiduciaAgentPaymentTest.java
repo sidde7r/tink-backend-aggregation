@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.agent;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,7 +28,6 @@ public class FiduciaAgentPaymentTest {
             new ArgumentManager<>(PsuIdArgumentEnum.values());
     private final ArgumentManager<PasswordArgumentEnum> passwordManager =
             new ArgumentManager<>(PasswordArgumentEnum.values());
-    private AgentIntegrationTest.Builder builder;
 
     @AfterClass
     public static void afterClass() {
