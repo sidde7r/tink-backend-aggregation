@@ -56,6 +56,8 @@ agentDataAvailabilityTrackerAvailable: true
 clients:
   provision-job-testing:
     aggregatorIdentifier: "Provision Job Testing"
+  se-rao-testing:
+    aggregatorIdentifier: "Rao testing"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
