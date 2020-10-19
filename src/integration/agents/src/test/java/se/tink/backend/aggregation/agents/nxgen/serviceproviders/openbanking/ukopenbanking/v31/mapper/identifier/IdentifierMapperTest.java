@@ -28,13 +28,13 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class IdentifierMapperTest {
 
-    private IdentifierMapper identifierMapper;
+    private DefaultIdentifierMapper identifierMapper;
     private PrioritizedValueExtractor valueExtractor;
 
     @Before
     public void setUp() {
         valueExtractor = mock(PrioritizedValueExtractor.class);
-        identifierMapper = new IdentifierMapper(valueExtractor);
+        identifierMapper = new DefaultIdentifierMapper(valueExtractor);
     }
 
     @Test

@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.IdentifierFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.PartyFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.TransactionalAccountFixtures;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -33,12 +33,12 @@ public class TransactionalAccountMapperTest {
 
     private TransactionalAccountMapper mapper;
     private TransactionalAccountBalanceMapper balanceMapper;
-    private IdentifierMapper identifierMapper;
+    private DefaultIdentifierMapper identifierMapper;
 
     @Before
     public void setUp() {
         balanceMapper = Mockito.mock(TransactionalAccountBalanceMapper.class);
-        identifierMapper = Mockito.mock(IdentifierMapper.class);
+        identifierMapper = Mockito.mock(DefaultIdentifierMapper.class);
         mapper = new TransactionalAccountMapper(balanceMapper, identifierMapper);
 
         when(balanceMapper.getAccountBalance(anyCollection()))
