@@ -22,3 +22,26 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
     ],
 )
+
+junit_test(
+    name = "danskebank_no_unit_tests",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = [
+            "DanskebankV31NOAgentTest.java",
+            "DanskeNoIdentifierFixtures.java",
+        ],
+    ),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/danskebank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/danskebank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/danskebank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/base",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/v31",
+        "//src/libraries/mapper",
+        "//src/libraries/serialization",
+        "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_assertj_assertj_core",
+    ],
+)

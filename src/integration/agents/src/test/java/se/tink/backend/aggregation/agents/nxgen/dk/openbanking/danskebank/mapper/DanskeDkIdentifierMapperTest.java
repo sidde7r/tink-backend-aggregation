@@ -8,8 +8,9 @@ import java.util.Collections;
 import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank.DanskeConstants;
+import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank.DanskeDkConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank.fixtures.DanskeIdentifierFixtures;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountIdentifierEntity;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
@@ -22,6 +23,8 @@ public class DanskeDkIdentifierMapperTest {
     private AccountIdentifierEntity shortDanskeIbanIdentifier;
     private AccountIdentifierEntity differentIbanIdentifier;
     private AccountIdentifierEntity shortDifferentIbanIdentifier;
+    private AccountIdentifierEntity panIdentifier;
+    private AccountIdentifierEntity shortPanIdentifier;
 
     @Before
     public void setUp() {
@@ -33,6 +36,8 @@ public class DanskeDkIdentifierMapperTest {
         shortDanskeIbanIdentifier = DanskeIdentifierFixtures.shortDanskeIbanIdentifier();
         differentIbanIdentifier = DanskeIdentifierFixtures.ibanIdentifier();
         shortDifferentIbanIdentifier = DanskeIdentifierFixtures.shortIbanIdentifier();
+        panIdentifier = DanskeIdentifierFixtures.panIdentifier();
+        shortPanIdentifier = DanskeIdentifierFixtures.shortPanIdentifier();
     }
 
     @Test
@@ -41,7 +46,7 @@ public class DanskeDkIdentifierMapperTest {
         AccountIdentifierEntity returnedId =
                 danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
                         Arrays.asList(bbanIdentifier, danskeIbanIdentifier),
-                        DanskeConstants.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
+                        DanskebankV31Constant.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
 
         // then
         assertThat(returnedId).isEqualTo(bbanIdentifier);
@@ -54,7 +59,7 @@ public class DanskeDkIdentifierMapperTest {
                 danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
                         Arrays.asList(
                                 DanskeIdentifierFixtures.panIdentifier(), danskeIbanIdentifier),
-                        DanskeConstants.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
+                        DanskebankV31Constant.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
 
         // then
         assertThat(returnedId).isEqualTo(danskeIbanIdentifier);
@@ -68,7 +73,8 @@ public class DanskeDkIdentifierMapperTest {
                         () ->
                                 danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
                                         Collections.emptyList(),
-                                        DanskeConstants.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS));
+                                        DanskebankV31Constant
+                                                .ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS));
 
         // then
         assertThat(throwable)
@@ -86,7 +92,8 @@ public class DanskeDkIdentifierMapperTest {
                                 danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
                                         Collections.singletonList(
                                                 DanskeIdentifierFixtures.panIdentifier()),
-                                        DanskeConstants.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS));
+                                        DanskebankV31Constant
+                                                .ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS));
 
         // then
         assertThat(throwable)
@@ -98,84 +105,82 @@ public class DanskeDkIdentifierMapperTest {
     @Test
     public void shouldFormatBban() {
         // given when
-        AccountIdentifierEntity returnedId =
-                danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        Collections.singletonList(bbanIdentifier),
-                        DanskeConstants.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
-
-        String result = danskeDkIdentifierMapper.formatIdentificationNumber(returnedId);
+        String result = danskeDkIdentifierMapper.formatIdentificationNumber(bbanIdentifier);
 
         // then
-        assertThat(result).hasSize((DanskeConstants.ACCOUNT_NO_MIN_LENGTH));
+        assertThat(result).hasSize((DanskeDkConstants.ACCOUNT_NO_MIN_LENGTH));
+        assertThat(bbanIdentifier.getIdentification()).contains(result);
     }
 
     @Test
     public void shouldFormatShortBban() {
         // given when
-        AccountIdentifierEntity returnedId =
-                danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        Collections.singletonList(shortBbanIdentifier),
-                        DanskeConstants.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
-
-        String result = danskeDkIdentifierMapper.formatIdentificationNumber(returnedId);
+        String result = danskeDkIdentifierMapper.formatIdentificationNumber(shortBbanIdentifier);
 
         // then
-        assertThat(result).hasSize(DanskeConstants.ACCOUNT_NO_MIN_LENGTH);
+        assertThat(result).hasSize(DanskeDkConstants.ACCOUNT_NO_MIN_LENGTH).startsWith("0");
     }
 
     @Test
     public void shouldFormatIban() {
         // given when
-        AccountIdentifierEntity returnedId =
-                danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        Collections.singletonList(danskeIbanIdentifier),
-                        DanskeConstants.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
-
-        String result = danskeDkIdentifierMapper.formatIdentificationNumber(returnedId);
+        String result = danskeDkIdentifierMapper.formatIdentificationNumber(danskeIbanIdentifier);
 
         // then
-        assertThat(result).hasSize((DanskeConstants.ACCOUNT_NO_MIN_LENGTH));
+        assertThat(result).hasSize((DanskeDkConstants.ACCOUNT_NO_MIN_LENGTH));
+        assertThat(danskeIbanIdentifier.getIdentification()).contains(result);
     }
 
     @Test
     public void shouldFormatShortIban() {
         // given when
-        AccountIdentifierEntity returnedId =
-                danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        Collections.singletonList(shortDanskeIbanIdentifier),
-                        DanskeConstants.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
-
-        String result = danskeDkIdentifierMapper.formatIdentificationNumber(returnedId);
+        String result =
+                danskeDkIdentifierMapper.formatIdentificationNumber(shortDanskeIbanIdentifier);
 
         // then
-        assertThat(result).hasSize(DanskeConstants.ACCOUNT_NO_MIN_LENGTH);
+        assertThat(result).hasSize(DanskeDkConstants.ACCOUNT_NO_MIN_LENGTH).startsWith("0");
     }
 
     @Test
     public void shouldFormatIbanIdentifierInWrongFormat() {
         // given when
-        AccountIdentifierEntity returnedId =
-                danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        Collections.singletonList(differentIbanIdentifier),
-                        DanskeConstants.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
-
-        String result = danskeDkIdentifierMapper.formatIdentificationNumber(returnedId);
+        String result =
+                danskeDkIdentifierMapper.formatIdentificationNumber(differentIbanIdentifier);
 
         // then
-        assertThat(result).hasSize((DanskeConstants.ACCOUNT_NO_MIN_LENGTH));
+        assertThat(result).hasSize((DanskeDkConstants.ACCOUNT_NO_MIN_LENGTH));
+        assertThat(differentIbanIdentifier.getIdentification()).contains(result);
     }
 
     @Test
     public void shouldFormatShortIbanIdentifierInWrongFormat() {
         // given when
-        AccountIdentifierEntity returnedId =
-                danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        Collections.singletonList(shortDifferentIbanIdentifier),
-                        DanskeConstants.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
-
-        String result = danskeDkIdentifierMapper.formatIdentificationNumber(returnedId);
+        String result =
+                danskeDkIdentifierMapper.formatIdentificationNumber(shortDifferentIbanIdentifier);
 
         // then
-        assertThat(result).hasSize((DanskeConstants.ACCOUNT_NO_MIN_LENGTH));
+        assertThat(result).hasSize((DanskeDkConstants.ACCOUNT_NO_MIN_LENGTH)).startsWith("0");
+    }
+
+    @Test
+    public void shouldFormatOtherIdentifier() {
+        // given when
+        String result = danskeDkIdentifierMapper.formatIdentificationNumber(panIdentifier);
+
+        // then
+        assertThat(result).hasSize((DanskeDkConstants.ACCOUNT_NO_MIN_LENGTH));
+        assertThat(panIdentifier.getIdentification()).contains(result);
+    }
+
+    @Test
+    public void shouldFormatOtherShortIdentifier() {
+        // given when
+        String result = danskeDkIdentifierMapper.formatIdentificationNumber(shortPanIdentifier);
+
+        // then
+        assertThat(result)
+                .hasSize((DanskeDkConstants.ACCOUNT_NO_MIN_LENGTH))
+                .endsWith(shortPanIdentifier.getIdentification())
+                .startsWith("0");
     }
 }
