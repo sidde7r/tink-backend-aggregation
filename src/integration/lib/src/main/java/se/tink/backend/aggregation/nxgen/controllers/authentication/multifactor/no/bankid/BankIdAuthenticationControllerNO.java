@@ -6,6 +6,10 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.lang.invoke.MethodHandles;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +21,8 @@ import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
@@ -35,6 +41,7 @@ public class BankIdAuthenticationControllerNO
     private final BankIdAuthenticatorNO authenticator;
     private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public BankIdAuthenticationControllerNO(
             SupplementalRequester supplementalRequester,
@@ -68,31 +75,23 @@ public class BankIdAuthenticationControllerNO
 
         String dob = nationalId.substring(0, 6);
         String bankIdReference = authenticator.init(nationalId, dob, mobilenumber);
+        handleBankIdReferenceAndPollBankIDStatus(credentials, bankIdReference);
+    }
+
+    public void handleBankIdReferenceAndPollBankIDStatus(
+            Credentials credentials, String bankIdReference) {
+        // This should be treated as temporary solution.
+        // We should not be blocked by supplemental info.
+        Future<?> future = startPolling();
         displayBankIdReference(credentials, bankIdReference);
-        poll();
+        stopPolling(future);
     }
 
-    private void displayBankIdReference(Credentials credentials, String bankIdReference) {
-        Field field =
-                Field.builder()
-                        .name("name")
-                        .immutable(true)
-                        .description("Reference")
-                        .value(bankIdReference)
-                        .helpText(
-                                catalog.getString(
-                                        "Continue by clicking update when you have verified the reference and signed with Mobile BankID."))
-                        .build();
-
-        credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(Lists.newArrayList(field)));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-
-        supplementalRequester.requestSupplementalInformation(
-                credentials, 90, TimeUnit.SECONDS, true);
+    private Future<?> startPolling() {
+        return executor.submit(this::poll);
     }
 
-    public void poll() throws AuthenticationException, AuthorizationException {
+    private void poll() throws AuthenticationException, AuthorizationException {
         BankIdStatus status = null;
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
@@ -119,6 +118,47 @@ public class BankIdAuthenticationControllerNO
         logger.info(
                 String.format("Norweigan BankID timed out internally, last status: %s", status));
         throw BankIdError.TIMEOUT.exception();
+    }
+
+    private void displayBankIdReference(Credentials credentials, String bankIdReference) {
+        Field field =
+                Field.builder()
+                        .name("name")
+                        .immutable(true)
+                        .description("Reference")
+                        .value(bankIdReference)
+                        .helpText(
+                                catalog.getString(
+                                        "Continue by clicking update when you have verified the reference and signed with Mobile BankID."))
+                        .build();
+
+        credentials.setSupplementalInformation(
+                SerializationUtils.serializeToString(Lists.newArrayList(field)));
+        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
+
+        supplementalRequester.requestSupplementalInformation(
+                credentials, 90, TimeUnit.SECONDS, true);
+    }
+
+    private void stopPolling(Future<?> future) throws BankIdException, LoginException {
+        try {
+            future.get();
+            executor.shutdown();
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+            throw LoginError.DEFAULT_MESSAGE.exception(e);
+        } catch (ExecutionException e) {
+            handlePossibleBankIDException(e);
+        }
+    }
+
+    private void handlePossibleBankIDException(ExecutionException e) {
+        if (e.getCause() instanceof BankIdException) {
+            throw (BankIdException) e.getCause();
+        } else {
+            throw LoginError.DEFAULT_MESSAGE.exception();
+        }
     }
 
     @Override
