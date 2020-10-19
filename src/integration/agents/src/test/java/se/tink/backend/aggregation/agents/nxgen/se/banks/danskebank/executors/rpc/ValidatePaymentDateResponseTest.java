@@ -42,4 +42,12 @@ public class ValidatePaymentDateResponseTest {
 
         Assert.assertFalse(fetchPaymentResponse.isTransferDateSameAsBookingDate(transferDate));
     }
+
+    @Test
+    public void testForNullDate() {
+        ValidatePaymentDateResponse fetchPaymentResponse =
+                SerializationUtils.deserializeFromString(
+                        DATE_RESPONSE, ValidatePaymentDateResponse.class);
+        Assert.assertFalse(fetchPaymentResponse.isTransferDateSameAsBookingDate(null));
+    }
 }
