@@ -91,7 +91,10 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
             case STARTED:
                 return authorizeWithOtp(scaResponse);
             default:
-                throw LoginError.DEFAULT_MESSAGE.exception();
+                throw LoginError.DEFAULT_MESSAGE.exception(
+                        "Unexpected scaStatus during authorization ["
+                                + scaResponse.getScaStatus()
+                                + "]");
         }
     }
 
@@ -157,11 +160,12 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     private Optional<String> extractStartcode(ScaResponse scaResponse) {
         return Optional.ofNullable(scaResponse.getChallengeData())
                 .map(ChallengeData::getAdditionalInformation)
-                .map(
-                        x -> {
-                            Matcher matcher = STARTCODE_CHIP_PATTERN.matcher(x);
-                            return matcher.find() ? matcher.group(1) : null;
-                        });
+                .map(this::extractStartCodeFromChallengeString);
+    }
+
+    private String extractStartCodeFromChallengeString(String challengeString) {
+        Matcher matcher = STARTCODE_CHIP_PATTERN.matcher(challengeString);
+        return matcher.find() ? matcher.group(1) : null;
     }
 
     private boolean isUnsupportedMethod(ScaMethod scaMethod) {
