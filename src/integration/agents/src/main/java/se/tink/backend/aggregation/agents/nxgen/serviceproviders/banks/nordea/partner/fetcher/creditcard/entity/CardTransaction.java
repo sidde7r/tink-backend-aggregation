@@ -70,8 +70,7 @@ public class CardTransaction {
                         .setAmount(ExactCurrencyAmount.of(amount, currency))
                         .setDate(getDate())
                         .setDescription(title)
-                        .setPending(!booked)
-                        .setPayload(TransactionPayloadTypes.EXTERNAL_ID, transactionId);
+                        .setPending(!booked);
         if (hasExchangeRateInfo()) {
             builder.setPayload(TransactionPayloadTypes.EXCHANGE_RATE, exchangeRate.toPlainString());
             builder.setPayload(TransactionPayloadTypes.LOCAL_CURRENCY, originalCurrency);

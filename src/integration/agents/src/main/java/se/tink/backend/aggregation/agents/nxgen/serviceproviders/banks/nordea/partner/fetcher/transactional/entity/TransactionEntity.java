@@ -142,8 +142,7 @@ public class TransactionEntity {
                         .setAmount(ExactCurrencyAmount.of(amount, currency))
                         .setDate(getDate())
                         .setDescription(getTransactionDescription())
-                        .setPending(!booked)
-                        .setPayload(TransactionPayloadTypes.EXTERNAL_ID, transactionId);
+                        .setPending(!booked);
         if (Objects.nonNull(exchange)) {
             builder.setPayload(TransactionPayloadTypes.EXCHANGE_RATE, exchange.getOriginalRate());
             builder.setPayload(
