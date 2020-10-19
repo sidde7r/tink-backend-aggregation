@@ -34,7 +34,7 @@ public class RegisterAppJWEManagerTest {
         // given
         given(storage.isUserPinSetRequired()).willReturn(true);
         // when
-        String jweEncrypted = objUnderTest.genRegisterAppJWE();
+        String jweEncrypted = objUnderTest.genRegisterAppJWE(USER_PIN);
         JWEObject jweDecrypted = JWEObject.parse(jweEncrypted);
         jweDecrypted.decrypt(new RSADecrypter(storage.getKeyPair().getPrivate()));
         // then
@@ -52,7 +52,7 @@ public class RegisterAppJWEManagerTest {
         // given
         given(storage.isUserPinSetRequired()).willReturn(false);
         // when
-        String jweEncrypted = objUnderTest.genRegisterAppJWE();
+        String jweEncrypted = objUnderTest.genRegisterAppJWE(USER_PIN);
         JWEObject jweDecrypted = JWEObject.parse(jweEncrypted);
         jweDecrypted.decrypt(new RSADecrypter(storage.getKeyPair().getPrivate()));
         // then

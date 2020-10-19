@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.SneakyThrows;
 import net.minidev.json.JSONObject;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -50,7 +51,9 @@ public class FinalizeAuthStep implements AuthenticationStep {
         }
         ChallengeResponse challengeResponse = challenge();
 
-        String signature = authorizeTransaction(challengeResponse);
+        String signature =
+                authorizeTransaction(
+                        challengeResponse, request.getCredentials().getField(Key.ACCESS_PIN));
 
         Token basicToken = requestAccessToken(signature, challengeResponse.getTransactionId());
         storage.saveToPersistentStorage(Storage.ACCESS_BASIC_TOKEN, basicToken.getAccessToken());
@@ -64,8 +67,9 @@ public class FinalizeAuthStep implements AuthenticationStep {
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 
-    private String authorizeTransaction(ChallengeResponse challengeResponse) {
-        String authorizeTransactionJWE = jweManager.genAuthorizeTransactionJWE(challengeResponse);
+    private String authorizeTransaction(ChallengeResponse challengeResponse, String userPin) {
+        String authorizeTransactionJWE =
+                jweManager.genAuthorizeTransactionJWE(challengeResponse, userPin);
         AuthorizationTransactionResponse response =
                 apiClient.authorizeTransaction(authorizeTransactionJWE);
         return Optional.ofNullable(response.getCommandResult().getSignature())

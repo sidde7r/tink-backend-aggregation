@@ -22,6 +22,7 @@ public class FinalizeAuthJWEManagerTest {
     private static final String TRANSACTION_CHALLENGE =
             "HVCXr0hkTDgXXlO2gkewlYLy8I1SpyZrLmGe18RZnCs";
     private static final String RAND_K = "-2869187136524957696";
+    private static final String USER_PIN = "userPIN";
 
     @Before
     public void init() {
@@ -70,7 +71,7 @@ public class FinalizeAuthJWEManagerTest {
         ChallengeResponse challengeResponse =
                 new ChallengeResponse(UUID.randomUUID().toString(), TRANSACTION_CHALLENGE, RAND_K);
         // when
-        String jweEncrypted = objUnderTest.genAuthorizeTransactionJWE(challengeResponse);
+        String jweEncrypted = objUnderTest.genAuthorizeTransactionJWE(challengeResponse, USER_PIN);
         JWEObject jweDecrypted = JWEObject.parse(jweEncrypted);
         jweDecrypted.decrypt(new RSADecrypter(storage.getKeyPair().getPrivate()));
         // then

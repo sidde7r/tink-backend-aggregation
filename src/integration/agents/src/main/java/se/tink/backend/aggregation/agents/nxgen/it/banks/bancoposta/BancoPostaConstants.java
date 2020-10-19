@@ -38,7 +38,7 @@ public class BancoPostaConstants {
 
         public static class CheckingAccUrl {
             public static final URL FETCH_ACCOUNTS =
-                    new URL(Base.BASE_DATA + Endpoints.FETCH_ACCOUNTS);
+                    new URL(Base.BASE_API + Endpoints.FETCH_ACCOUNTS);
             public static final URL FETCH_ACCOUNT_DETAILS =
                     new URL(Base.BASE_API + Endpoints.ACCOUNT_DETAILS);
             public static final URL FETCH_TRANSACTIONS =
@@ -76,7 +76,7 @@ public class BancoPostaConstants {
         }
 
         public static class Endpoints {
-            public static final String FETCH_ACCOUNTS = "/accounts";
+            public static final String FETCH_ACCOUNTS = "/v1/bancoposta/listaProdotti";
             public static final String FETCH_TRANSACTIONS =
                     "/v1/bancoposta/ricercaListaMovimentiConto";
             public static final String ACCOUNT_DETAILS =

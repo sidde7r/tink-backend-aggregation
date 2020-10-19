@@ -8,6 +8,7 @@ import com.nimbusds.jose.crypto.RSADecrypter;
 import java.util.Map;
 import java.util.Optional;
 import lombok.SneakyThrows;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -39,7 +40,8 @@ public class RegisterAppStep implements AuthenticationStep {
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        String registerAppJWE = jweManager.genRegisterAppJWE();
+        String userPin = request.getCredentials().getField(Key.ACCESS_PIN);
+        String registerAppJWE = jweManager.genRegisterAppJWE(userPin);
         Map<String, String> responseJwt = apiClient.registerApp(registerAppJWE);
 
         String errorCode = responseJwt.get("command-error-code");

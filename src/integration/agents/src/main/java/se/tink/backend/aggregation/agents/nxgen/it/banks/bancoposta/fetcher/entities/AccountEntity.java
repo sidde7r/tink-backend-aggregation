@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Optional;
 import lombok.Data;
@@ -15,11 +16,11 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 @Data
 public final class AccountEntity {
+    private static final String CURRENCY = "EUR";
+
+    @JsonProperty("numeroConto")
     private String accountIdentifier;
-    private String name;
-    private double balance;
-    private String currencyCode;
-    private String limit;
+
     private AccountDetailsResponse accountDetails;
 
     public Optional<TransactionalAccount> toTinkAccount() {
@@ -37,7 +38,7 @@ public final class AccountEntity {
         return IdModule.builder()
                 .withUniqueIdentifier(iban)
                 .withAccountNumber(iban)
-                .withAccountName(name)
+                .withAccountName("Conto")
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .build();
     }
@@ -53,9 +54,9 @@ public final class AccountEntity {
                         this.accountDetails.getBody().getSaldo().getAvailableBalance());
 
         return BalanceModule.builder()
-                .withBalance(ExactCurrencyAmount.of(bookedBalance, currencyCode))
-                .setAvailableBalance(ExactCurrencyAmount.of(availableBalance, currencyCode))
-                .setCreditLimit(ExactCurrencyAmount.of(limit, currencyCode))
+                // No information about currency in responses, so EUR used as default
+                .withBalance(ExactCurrencyAmount.of(bookedBalance, CURRENCY))
+                .setAvailableBalance(ExactCurrencyAmount.of(availableBalance, CURRENCY))
                 .build();
     }
 

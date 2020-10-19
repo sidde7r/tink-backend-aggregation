@@ -78,8 +78,6 @@ public class RegisterInitStep implements AuthenticationStep {
     private AccessTokenResponse requestForAccessToken(Credentials credentials) {
         String username = credentials.getField(Key.USERNAME);
         String password = credentials.getField(Key.PASSWORD);
-        String userPin = credentials.getField(Key.ACCESS_PIN);
-        storage.saveToPersistentStorage(Storage.USER_PIN, userPin);
         String jweObject = jweManager.genAZTokenJWE(username, password);
 
         Form azForm = buildAZRequestForm();

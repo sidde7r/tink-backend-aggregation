@@ -30,17 +30,17 @@ public class OnboardingStep implements AuthenticationStep {
     private final Catalog catalog;
 
     private static final String OTP_NAME = "otpOnboarding";
-    private static final String CODE_NAME = "codeDigital";
+    private static final String ACCOUNT_CODE = "accountcode";
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
         String otp = request.getUserInputs().get(OTP_NAME);
-        String accountNumberCode = request.getUserInputs().get(CODE_NAME);
 
-        if (otp != null && accountNumberCode != null) {
-            registerWithDigitalCode(otp, accountNumberCode);
+        if (otp != null) {
+            String accountCode = request.getCredentials().getField(ACCOUNT_CODE);
+            registerWithDigitalCode(otp, accountCode);
             return AuthenticationStepResponse.executeStepWithId(
                     BancoPostaAuthenticator.REGSITER_VERIFICATION_STEP_ID);
         }
@@ -49,7 +49,7 @@ public class OnboardingStep implements AuthenticationStep {
         log.info("Waiting for user to input account code and sms otp");
         return AuthenticationStepResponse.requestForSupplementInformation(
                 new SupplementInformationRequester.Builder()
-                        .withFields(ImmutableList.of(buildCodeDigitalField(), buildOtpField()))
+                        .withFields(ImmutableList.of(buildOtpField()))
                         .build());
     }
 
@@ -86,20 +86,6 @@ public class OnboardingStep implements AuthenticationStep {
                 .minLength(4)
                 .maxLength(4)
                 .helpText(catalog.getString("Enter 4 digits code from SMS"))
-                .build();
-    }
-
-    private Field buildCodeDigitalField() {
-        return Field.builder()
-                .name(CODE_NAME)
-                .immutable(true)
-                .description(catalog.getString("account number"))
-                .numeric(true)
-                .minLength(4)
-                .maxLength(4)
-                .helpText(
-                        catalog.getString(
-                                "Enter 4 digit account number, can be found in aggreement"))
                 .build();
     }
 

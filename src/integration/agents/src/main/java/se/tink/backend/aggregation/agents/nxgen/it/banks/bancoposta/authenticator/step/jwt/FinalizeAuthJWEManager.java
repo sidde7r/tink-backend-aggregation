@@ -33,11 +33,10 @@ public class FinalizeAuthJWEManager {
                 .build();
     }
 
-    public String genAuthorizeTransactionJWE(ChallengeResponse challengeResponse) {
+    public String genAuthorizeTransactionJWE(ChallengeResponse challengeResponse, String userPin) {
         return new JWE.Builder()
                 .setJWEHeaderWithKeyId(storage.getAppId())
-                .setJwtClaimsSet(
-                        buildAuthorizeTransactionsClaims(storage.getUserPin(), challengeResponse))
+                .setJwtClaimsSet(buildAuthorizeTransactionsClaims(userPin, challengeResponse))
                 .setRSAEnrypter(storage.getPubServerKey())
                 .build();
     }
