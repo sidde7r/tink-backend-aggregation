@@ -88,6 +88,10 @@ public class IngTransactionFetcher
     }
 
     private IngRawDetails mapRawDetails(TransactionEntity entity) {
+        if (entity.getSubjectLines() == null) {
+            return null;
+        }
+
         List<String> details = new ArrayList<>();
         List<String> extraDetails = new ArrayList<>();
 
