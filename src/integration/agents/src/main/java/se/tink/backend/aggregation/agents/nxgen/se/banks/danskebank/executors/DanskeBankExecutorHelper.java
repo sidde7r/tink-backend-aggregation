@@ -2,11 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors;
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -40,6 +43,8 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class DanskeBankExecutorHelper {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final DanskeBankSEApiClient apiClient;
     private final String deviceId;
@@ -73,8 +78,12 @@ public class DanskeBankExecutorHelper {
 
         // Case when we get a dueDate from the user and bank sends another date since the user's
         // date is not valid.
-        if (transfer.getDueDate() != null
-                && !paymentDateResponse.isTransferDateSameAsBookingDate(transfer.getDueDate())) {
+        if (paymentDateResponse.isTransferDateSameAsBookingDate(
+                paymentDateRequest.getBookingDate())) {
+            logger.error(
+                    "Transfer Date is {} and booking date from Danskebank is {}",
+                    paymentDateRequest.getBookingDate(),
+                    paymentDateResponse.getBookingDate());
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY)
                     .setInternalStatus(InternalStatus.INVALID_DUE_DATE.toString())
