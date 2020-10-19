@@ -8,10 +8,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -22,15 +20,14 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants.PollStatus;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.utils.RangeRegex;
 import se.tink.libraries.i18n.Catalog;
 
 public class PostbankAuthenticationController implements TypedAuthenticator {
-    private static final String OTP_VALUE_FIELD_KEY = "otpValue";
-    private static final String CHOSEN_SCA_METHOD = "chosenScaMethod";
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final PostbankAuthenticator authenticator;
@@ -51,105 +48,98 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
+        validateReceivedCredentials(credentials);
+        String username = credentials.getField(Field.Key.USERNAME);
+        String password = credentials.getField(Field.Key.PASSWORD);
+
+        AuthorisationResponse initValues = authenticator.init(username, password);
+
+        List<ScaMethodEntity> scaMethods = getOnlySupportedScaMethods(initValues.getScaMethods());
+        ScaMethodEntity chosenScaMethod = initValues.getChosenScaMethodEntity();
+
+        // End process if auto-selected method is not supported
+        if (scaMethods.isEmpty() || (chosenScaMethod != null && !isSupported(chosenScaMethod))) {
+            throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
+        }
+
+        // Select SCA method when user has more than one device.
+        if (chosenScaMethod == null && CollectionUtils.isNotEmpty(scaMethods)) {
+            chosenScaMethod = collectScaMethod(scaMethods);
+            initValues =
+                    authenticator.selectScaMethod(
+                            chosenScaMethod.getAuthenticationMethodId(),
+                            username,
+                            initValues.getLinksEntity().getScaStatusEntity().getHref());
+        }
+
+        if (chosenScaMethod != null && initValues.getChallengeDataEntity() != null) {
+            // SMS_OTP or CHIP_OTP is selected, embedded approach till the end
+            initValues =
+                    authenticator.authoriseWithOtp(
+                            collectOtp(initValues),
+                            username,
+                            initValues.getLinksEntity().getAuthoriseTransactionEntity().getHref());
+
+            switch (initValues.getScaStatus()) {
+                case PollStatus.FINALISED:
+                    break;
+                case PollStatus.FAILED:
+                    throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+                default:
+                    throw LoginError.NOT_SUPPORTED.exception();
+            }
+        } else {
+            // PUSH_OTP is selected, need to switch to decoupled
+            poll(username, initValues.getLinksEntity().getScaStatusEntity().getHref());
+        }
+    }
+
+    private void validateReceivedCredentials(Credentials credentials) {
         NotImplementedException.throwIf(
                 !Objects.equals(credentials.getType(), getType()),
                 String.format(
                         "Authentication method not implemented for CredentialsType: %s",
                         credentials.getType()));
-        String username = credentials.getField(Field.Key.USERNAME);
-        String password = credentials.getField(Field.Key.PASSWORD);
-
-        if (!Strings.isNullOrEmpty(username) && !Strings.isNullOrEmpty(password)) {
-            AuthorisationResponse initValues = authenticator.init(username, password);
-            credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-            List<ScaMethodEntity> scaMethods = initValues.getScaMethods();
-            ScaMethodEntity chosenScaMethod = initValues.getChosenScaMethodEntity();
-
-            // Select SCA method when user has more than one device.
-            if (chosenScaMethod == null && CollectionUtils.isNotEmpty(scaMethods)) {
-                Map<String, String> supplementalInformation =
-                        supplementalInformationHelper.askSupplementalInformation(
-                                getChosenScaMethod(scaMethods));
-
-                int index = Integer.parseInt(supplementalInformation.get(CHOSEN_SCA_METHOD)) - 1;
-                chosenScaMethod = scaMethods.get(index);
-                initValues =
-                        authenticator.selectScaMethod(
-                                chosenScaMethod.getAuthenticationMethodId(),
-                                username,
-                                initValues.getLinksEntity().getScaStatusEntity().getHref());
-            }
-
-            if (chosenScaMethod != null && initValues.getChallengeDataEntity() != null) {
-                // SMS_OTP or CHIP_OTP is selected
-                Map<String, String> supplementalInformation =
-                        supplementalInformationHelper.askSupplementalInformation(
-                                getOtpField(
-                                        initValues
-                                                .getChosenScaMethodEntity()
-                                                .getAuthenticationType()));
-                initValues =
-                        authenticator.authenticateWithOtp(
-                                supplementalInformation.get(OTP_VALUE_FIELD_KEY),
-                                username,
-                                initValues
-                                        .getLinksEntity()
-                                        .getAuthoriseTransactionEntity()
-                                        .getHref());
-
-                switch (initValues.getScaStatus()) {
-                    case PollStatus.FINALISED:
-                        break;
-                    case PollStatus.FAILED:
-                        throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
-                    default:
-                        throw LoginError.NOT_SUPPORTED.exception();
-                }
-            } else {
-                // PUSH_OTP is selected
-                poll(username, initValues.getLinksEntity().getScaStatusEntity().getHref());
-            }
-        } else {
+        if (Strings.isNullOrEmpty(credentials.getField(Field.Key.USERNAME))
+                || Strings.isNullOrEmpty(credentials.getField(Field.Key.PASSWORD))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
 
-    private Field getChosenScaMethod(List<ScaMethodEntity> scaMethods) {
-        int maxNumber = scaMethods.size();
-        int length = Integer.toString(maxNumber).length();
-        String description =
-                IntStream.range(0, maxNumber)
-                        .mapToObj(
-                                i -> String.format("(%d) %s", i + 1, scaMethods.get(i).toString()))
-                        .collect(Collectors.joining(";\n"));
-        String regexForRangePattern = RangeRegex.regexForRange(1, maxNumber);
-
-        return Field.builder()
-                .description(String.format("Select from 1 to %d", maxNumber))
-                .helpText("Please select SCA method" + "\n" + catalog.getString(description))
-                .name(CHOSEN_SCA_METHOD)
-                .numeric(true)
-                .minLength(1)
-                .maxLength(length)
-                .pattern(regexForRangePattern)
-                .patternError("The chosen SCA method is not valid")
-                .build();
+    private List<ScaMethodEntity> getOnlySupportedScaMethods(List<ScaMethodEntity> scaMethods) {
+        return scaMethods.stream().filter(this::isSupported).collect(Collectors.toList());
     }
 
-    private Field getOtpField(String otpType) {
-        return Field.builder()
-                .description(catalog.getString("Verification code"))
-                .helpText(otpType)
-                .name(OTP_VALUE_FIELD_KEY)
-                .minLength(1)
-                .build();
+    private boolean isSupported(ScaMethodEntity scaMethod) {
+        return !scaMethod.getAuthenticationType().equalsIgnoreCase("CHIP_OTP");
+    }
+
+    private ScaMethodEntity collectScaMethod(List<ScaMethodEntity> scaMethods) {
+        Map<String, String> supplementalInformation =
+                supplementalInformationHelper.askSupplementalInformation(
+                        CommonFields.Selection.build(
+                                catalog,
+                                scaMethods.stream()
+                                        .map(ScaMethodEntity::getName)
+                                        .collect(Collectors.toList())));
+        int index =
+                Integer.parseInt(supplementalInformation.get(CommonFields.Selection.getFieldKey()))
+                        - 1;
+        return scaMethods.get(index);
+    }
+
+    private String collectOtp(AuthorisationResponse authResponse) {
+        String scaMethodName = authResponse.getChosenScaMethodEntity().getName();
+        return supplementalInformationHelper
+                .askSupplementalInformation(GermanFields.Tan.build(catalog, scaMethodName))
+                .get(GermanFields.Tan.getFieldKey());
     }
 
     private void poll(String username, String url) throws ThirdPartyAppException {
         for (int i = 0; i < PollStatus.MAX_POLL_ATTEMPTS; i++) {
             Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
 
-            AuthorisationResponse response = authenticator.checkStatus(username, url);
+            AuthorisationResponse response = authenticator.checkAuthorisationStatus(username, url);
             switch (response.getScaStatus()) {
                 case PollStatus.FINALISED:
                     return;

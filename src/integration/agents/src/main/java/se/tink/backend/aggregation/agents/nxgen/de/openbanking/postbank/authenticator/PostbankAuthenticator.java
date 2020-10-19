@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authent
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
@@ -42,18 +40,17 @@ public final class PostbankAuthenticator implements AutoAuthenticator {
         return postbankApiClient.updateAuthorisationForScaMethod(new URL(url), username, methodId);
     }
 
-    AuthorisationResponse authenticateWithOtp(String otp, String username, String url)
+    AuthorisationResponse authoriseWithOtp(String otp, String username, String url)
             throws AuthenticationException, AuthorizationException {
         return postbankApiClient.updateAuthorisationForOtp(new URL(url), username, otp);
     }
 
-    AuthorisationResponse checkStatus(String username, String url) {
+    AuthorisationResponse checkAuthorisationStatus(String username, String url) {
         return postbankApiClient.getAuthorisation(new URL(url), username);
     }
 
     @Override
-    public void autoAuthenticate()
-            throws SessionException, BankServiceException, AuthorizationException {
+    public void autoAuthenticate() {
         throw SessionError.SESSION_EXPIRED.exception();
     }
 }
