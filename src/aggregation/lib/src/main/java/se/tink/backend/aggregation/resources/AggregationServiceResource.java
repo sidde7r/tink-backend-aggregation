@@ -124,11 +124,18 @@ public class AggregationServiceResource implements AggregationService {
 
         // If the caller don't set any refreshable items, we won't do a refresh
         if (Objects.isNull(itemsToRefresh) || itemsToRefresh.isEmpty()) {
+            logger.warn(
+                    "Provided Refreshable items are empty for credentialsId: {}",
+                    request.getCredentials().getId());
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
 
         // If the caller don't set any account type refreshable item, we don't do a refresh
         if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
+            logger.warn(
+                    "No accounts to refresh for credentialsId: {} because of refreshableItems provided: {}",
+                    request.getCredentials().getId(),
+                    itemsToRefresh);
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
         agentWorker.execute(
