@@ -115,7 +115,7 @@ public class AccountEntityMapper {
 
     public Optional<TransactionalAccount> toUnknownAccount(AccountEntity accountEntity) {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.OTHER)
+                .withType(TransactionalAccountType.CHECKING)
                 .withoutFlags()
                 .withBalance(
                         BalanceModule.builder()
