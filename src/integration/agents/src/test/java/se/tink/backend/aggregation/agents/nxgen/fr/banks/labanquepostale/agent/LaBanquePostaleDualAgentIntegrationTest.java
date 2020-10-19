@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale;
+package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.DualAgentIntegrationTest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.LaBanquePostaleConstants;
 
 @Ignore
 public class LaBanquePostaleDualAgentIntegrationTest {
