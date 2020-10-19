@@ -98,11 +98,8 @@ public class AutoAuthenticationProgressiveController
         if (!Objects.equals(manualAuthenticator.getType(), credentials.getType())) {
             credentials.setType(manualAuthenticator.getType());
         }
-        try {
-            return manualAuthenticator.authenticationSteps();
-        } finally {
-            credentials.setType(CredentialsTypes.PASSWORD);
-        }
+
+        return manualAuthenticator.authenticationSteps();
     }
 
     private Iterable<AuthenticationStep> auto(Credentials credentials)
