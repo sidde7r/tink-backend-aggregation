@@ -96,7 +96,7 @@ public class AccountEntityMapper {
     public CreditCardAccount toCreditCardAccount(
             DanskeBankConfiguration configuration, AccountEntity accountEntity) {
         return CreditCardAccount.builder(
-                        getCreditCardUniqueIdentifier(accountEntity),
+                        getUniqueIdentifier(accountEntity),
                         ExactCurrencyAmount.of(
                                 accountEntity.getBalance(), accountEntity.getCurrency()),
                         calculateAvailableCredit(accountEntity))
@@ -113,7 +113,7 @@ public class AccountEntityMapper {
                 .build();
     }
 
-    protected String getCreditCardUniqueIdentifier(AccountEntity accountEntity) {
+    protected String getUniqueIdentifier(AccountEntity accountEntity) {
         return accountEntity.getAccountNoInt();
     }
 
@@ -164,9 +164,9 @@ public class AccountEntityMapper {
                 .build();
     }
 
-    protected IdModule buildIdModule(AccountEntity accountEntity) {
+    private IdModule buildIdModule(AccountEntity accountEntity) {
         return IdModule.builder()
-                .withUniqueIdentifier(accountEntity.getAccountNoInt())
+                .withUniqueIdentifier(getUniqueIdentifier(accountEntity))
                 .withAccountNumber(accountEntity.getAccountNoExt())
                 .withAccountName(accountEntity.getAccountName())
                 .addIdentifier(
@@ -176,7 +176,7 @@ public class AccountEntityMapper {
                 .build();
     }
 
-    private AccountIdentifier.Type getAccountIdentifierType(String marketCode) {
+    protected AccountIdentifier.Type getAccountIdentifierType(String marketCode) {
         return Optional.ofNullable(AccountIdentifier.Type.fromScheme(marketCode.toLowerCase()))
                 .orElse(AccountIdentifier.Type.COUNTRY_SPECIFIC);
     }
