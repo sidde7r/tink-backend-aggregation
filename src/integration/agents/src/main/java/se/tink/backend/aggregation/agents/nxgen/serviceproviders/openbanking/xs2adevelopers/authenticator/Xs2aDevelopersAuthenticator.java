@@ -36,7 +36,7 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        AccessEntity accessEntity = new AccessEntity(FormValues.ALL_ACCOUNTS);
+        AccessEntity accessEntity = getAccessEntity();
         PostConsentBody postConsentBody =
                 new PostConsentBody(
                         accessEntity,
@@ -87,5 +87,9 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
 
     public void invalidateToken() {
         persistentStorage.remove(StorageKeys.OAUTH_TOKEN);
+    }
+
+    protected AccessEntity getAccessEntity() {
+        return new AccessEntity(FormValues.ALL_ACCOUNTS);
     }
 }
