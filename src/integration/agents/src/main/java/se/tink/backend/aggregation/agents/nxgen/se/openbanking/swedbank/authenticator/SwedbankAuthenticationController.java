@@ -140,6 +140,8 @@ public class SwedbankAuthenticationController
                 return BankIdStatus.WAITING;
             case AuthStatus.FINALIZED:
                 return finalizeBankid(authenticationStatusResponse);
+            case AuthStatus.FAILED:
+                return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
         }
