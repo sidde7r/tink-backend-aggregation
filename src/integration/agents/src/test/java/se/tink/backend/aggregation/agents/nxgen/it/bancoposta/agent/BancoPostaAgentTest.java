@@ -9,11 +9,13 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 
 public class BancoPostaAgentTest {
+    private static final String ACCOUNT_CODE = "accountcode";
 
     private enum Arg implements ArgumentManagerEnum {
         USERNAME,
         PASSWORD,
-        ACCESS_PIN;
+        ACCESS_PIN,
+        ACCOUNT_CODE;
 
         @Override
         public boolean isOptional() {
@@ -40,9 +42,10 @@ public class BancoPostaAgentTest {
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                         .addCredentialField(Field.Key.ACCESS_PIN, manager.get(Arg.ACCESS_PIN))
+                        .addCredentialField(ACCOUNT_CODE, manager.get(Arg.ACCOUNT_CODE))
                         .expectLoggedIn(false)
-                        .saveCredentialsAfter(true)
-                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .loadCredentialsBefore(true)
                         .setFinancialInstitutionId("bancoposta")
                         .setAppId("tink");
     }

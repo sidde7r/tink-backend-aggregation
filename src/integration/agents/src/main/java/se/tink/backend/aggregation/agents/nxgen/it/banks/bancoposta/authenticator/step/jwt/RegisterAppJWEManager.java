@@ -12,28 +12,28 @@ public class RegisterAppJWEManager {
 
     private final BancoPostaStorage storage;
 
-    public String genRegisterAppJWE() {
+    public String genRegisterAppJWE(String userPin) {
         return new JWE.Builder()
                 .setJWEHeaderWithKeyId(storage.getAppId())
-                .setJwtClaimsSet(buildClaims())
+                .setJwtClaimsSet(buildClaims(userPin))
                 .setRSAEnrypter(storage.getPubServerKey())
                 .build();
     }
 
-    private JWTClaimsSet buildClaims() {
+    private JWTClaimsSet buildClaims(String userPin) {
         return new JWEClaims.Builder()
                 .setDefaultValues()
                 .setOtpSpecClaims(storage.getOtpSecretKey(), storage.getAppId())
-                .setData(getDataClaims())
+                .setData(getDataClaims(userPin))
                 .build();
     }
 
-    private Map<String, String> getDataClaims() {
+    private Map<String, String> getDataClaims(String userPin) {
         Map<String, String> data = new HashMap<>();
         data.put(Claims.REGISTER_TOKEN, storage.getRegisterToken());
         data.put(Claims.IDP_ACCESS_TOKEN, storage.getRegistrationSessionToken());
         if (storage.isUserPinSetRequired()) {
-            data.put(Claims.USER_PIN, storage.getUserPin());
+            data.put(Claims.USER_PIN, userPin);
         }
         return data;
     }
