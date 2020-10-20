@@ -2,44 +2,21 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authent
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ChallengeDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.LinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethodEntity;
+import lombok.Getter;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ChallengeData;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.Links;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class AuthorisationResponse {
 
-    @JsonProperty("challengeData")
-    private ChallengeDataEntity challengeDataEntity;
-
-    @JsonProperty("chosenScaMethod")
-    private ScaMethodEntity chosenScaMethodEntity;
-
-    private String scaStatus;
-
-    private List<ScaMethodEntity> scaMethods;
-
     @JsonProperty("_links")
-    private LinksEntity linksEntity;
+    private Links links;
 
-    public LinksEntity getLinksEntity() {
-        return linksEntity;
-    }
-
-    public String getScaStatus() {
-        return scaStatus;
-    }
-
-    public List<ScaMethodEntity> getScaMethods() {
-        return scaMethods;
-    }
-
-    public ChallengeDataEntity getChallengeDataEntity() {
-        return challengeDataEntity;
-    }
-
-    public ScaMethodEntity getChosenScaMethodEntity() {
-        return chosenScaMethodEntity;
-    }
+    private ChallengeData challengeData;
+    private ScaMethod chosenScaMethod;
+    private String scaStatus;
+    private List<ScaMethod> scaMethods;
 }

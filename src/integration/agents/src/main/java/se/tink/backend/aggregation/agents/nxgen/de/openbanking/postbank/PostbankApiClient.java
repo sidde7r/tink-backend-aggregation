@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.PsuDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.PsuData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.StartAuthorisationRequest;
@@ -55,8 +55,7 @@ public class PostbankApiClient extends DeutscheBankApiClient {
         PostbankCryptoUtils encryptedPassword = new PostbankCryptoUtils();
 
         StartAuthorisationRequest startAuthorisationRequest =
-                new StartAuthorisationRequest(
-                        new PsuDataEntity(encryptedPassword.createJWT(password)));
+                new StartAuthorisationRequest(new PsuData(encryptedPassword.createJWT(password)));
 
         try {
             return createRequest(url)
