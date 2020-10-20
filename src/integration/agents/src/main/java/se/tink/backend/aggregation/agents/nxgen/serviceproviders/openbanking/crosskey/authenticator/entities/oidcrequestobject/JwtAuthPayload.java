@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.oidcrequestobject;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtPayload;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -9,9 +10,14 @@ public class JwtAuthPayload implements JwtPayload {
     private String scope;
     private IdTokenClaim claims;
     private String iss;
+
+    @JsonProperty("redirect_uri")
     private String redirectUri;
+
     private String state;
     private String nonce;
+
+    @JsonProperty("client_id")
     private String clientId;
 
     public JwtAuthPayload(
