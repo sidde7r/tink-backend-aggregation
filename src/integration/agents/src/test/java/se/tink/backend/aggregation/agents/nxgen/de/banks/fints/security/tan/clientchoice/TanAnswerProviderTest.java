@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.SneakyThrows;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.Catalog;
 
@@ -24,7 +25,7 @@ public class TanAnswerProviderTest {
         TanAnswerProvider tanAnswerProvider = new TanAnswerProvider(helper, catalog);
 
         // when
-        String tanAnswer = tanAnswerProvider.getTanAnswer();
+        String tanAnswer = tanAnswerProvider.getTanAnswer("dummyTanMedium");
 
         // then
         assertThat(tanAnswer).isEqualTo("User TAN answer");
@@ -32,7 +33,7 @@ public class TanAnswerProviderTest {
 
     private Map<String, String> getSimulatedUserAnswer() {
         HashMap<String, String> answer = new HashMap<>();
-        answer.put("generatedTAN", "User TAN answer");
+        answer.put(GermanFields.Tan.getFieldKey(), "User TAN answer");
         return answer;
     }
 }

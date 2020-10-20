@@ -19,7 +19,8 @@ public class CommonFields {
                 new LocalizableParametrizedKey("Select from 1 to {0}");
         private static final LocalizableKey PATTERN_ERROR_MESSAGE =
                 new LocalizableKey("The value you entered is not valid.");
-
+        private static final LocalizableKey DEFAULT_DESCRIPTION =
+                new LocalizableKey("Authentication method index");
         private static final String SELECTABLE_OPTION_FORMAT = "(%d) %s";
 
         public static String getFieldKey() {
@@ -32,10 +33,6 @@ public class CommonFields {
 
         public static Field build(
                 Catalog catalog, List<String> options, LocalizableKey description) {
-
-            if (description == null) {
-                description = new LocalizableKey("Authentication method index");
-            }
 
             int maxNumber = options.size();
             String helpText =
@@ -50,7 +47,9 @@ public class CommonFields {
 
             return Field.builder()
                     .name(FIELD_KEY)
-                    .description(catalog.getString(description))
+                    .description(
+                            catalog.getString(
+                                    description != null ? description : DEFAULT_DESCRIPTION))
                     .hint(catalog.getString(HINT_FORMAT, maxNumber))
                     .helpText(helpText)
                     .numeric(true)

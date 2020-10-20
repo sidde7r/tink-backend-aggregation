@@ -32,7 +32,7 @@ public class FinTsRequestProcessor {
         HITAN hitan = responseWithChallenge.findSegmentThrowable(HITAN.class);
 
         String taskReference = hitan.getTaskReference();
-        String tanAnswer = tanAnswerProvider.getTanAnswer();
+        String tanAnswer = tanAnswerProvider.getTanAnswer(dialogContext.getChosenTanMedium());
         updateTanContext(taskReference, tanAnswer);
 
         FinTsRequest request = challengeSolvedRequest();

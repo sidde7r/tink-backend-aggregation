@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.i18n.Catalog;
 
 public class TanAnswerProvider {
-    private static final String GENERATED_TAN_KEY = "generatedTAN";
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Catalog catalog;
 
@@ -18,16 +17,16 @@ public class TanAnswerProvider {
         this.catalog = catalog;
     }
 
-    public String getTanAnswer() {
+    public String getTanAnswer(String tanMedium) {
         Map<String, String> supplementalInformation;
         try {
             supplementalInformation =
                     supplementalInformationHelper.askSupplementalInformation(
-                            GermanFields.Tan.build(catalog, GENERATED_TAN_KEY));
+                            GermanFields.Tan.build(catalog, tanMedium));
         } catch (SupplementalInfoException e) {
             throw new ClientAnswerException("Could not get TAN Answer", e);
         }
 
-        return supplementalInformation.get(GENERATED_TAN_KEY);
+        return supplementalInformation.get(GermanFields.Tan.getFieldKey());
     }
 }

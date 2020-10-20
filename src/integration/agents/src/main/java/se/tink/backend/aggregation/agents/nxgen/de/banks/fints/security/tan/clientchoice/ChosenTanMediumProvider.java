@@ -12,7 +12,6 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class ChosenTanMediumProvider {
-    private static final String TAN_MEDIUM_KEY = "tanMedium";
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Catalog catalog;
 
@@ -32,8 +31,8 @@ public class ChosenTanMediumProvider {
         } catch (SupplementalInfoException e) {
             throw new ClientAnswerException("Could not get Tan Medium selection", e);
         }
-
-        int index = Integer.parseInt(supplementalInformation.get(TAN_MEDIUM_KEY));
+        String fieldKey = CommonFields.Selection.getFieldKey();
+        int index = Integer.parseInt(supplementalInformation.get(fieldKey)) - 1;
         return tanMediumList.get(index);
     }
 
