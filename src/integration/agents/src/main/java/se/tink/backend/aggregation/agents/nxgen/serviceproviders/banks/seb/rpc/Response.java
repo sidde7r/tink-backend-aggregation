@@ -175,4 +175,9 @@ public class Response {
     public List<LoanEntity> getBlancoLoans() {
         return payload.getBlancoLoans();
     }
+
+    @JsonIgnore
+    public String getHolderNameBusiness() {
+        return payload.getHolderNameBusiness();
+    }
 }

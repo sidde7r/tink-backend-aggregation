@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class TransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final SebApiClient apiClient;
-    private final SebSessionStorage sessionStorage;
+    private final SebSessionStorage sebSessionStorage;
     private final SebBaseConfiguration sebBaseConfiguration;
 
     public TransactionalAccountFetcher(
@@ -27,24 +27,28 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
             final SebSessionStorage sessionStorage,
             final SebBaseConfiguration sebConfiguration) {
         this.apiClient = Objects.requireNonNull(apiClient);
-        this.sessionStorage = Objects.requireNonNull(sessionStorage);
+        this.sebSessionStorage = Objects.requireNonNull(sessionStorage);
         this.sebBaseConfiguration = sebConfiguration;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        final String customerNumber = sessionStorage.getCustomerNumber();
         final Response response =
-                apiClient.fetchAccounts(customerNumber, ServiceInputValues.DEFAULT_ACCOUNT_TYPE);
+                apiClient.fetchAccounts(
+                        sebSessionStorage.getCustomerNumber(),
+                        ServiceInputValues.DEFAULT_ACCOUNT_TYPE);
         final List<AccountEntity> accountEntities =
                 sebBaseConfiguration.getAccountEntities(response).orElseGet(ArrayList::new);
+        if (sebBaseConfiguration.isBusinessAgent()) {
+            sebSessionStorage.putAccountHolderNameBusiness(response.getHolderNameBusiness());
+        }
         AccountTypeMapper mapper =
                 sebBaseConfiguration.isBusinessAgent()
                         ? SebConstants.BUSINESS_ACCOUNT_TYPE_MAPPER
                         : SebConstants.ACCOUNT_TYPE_MAPPER;
         return accountEntities.stream()
                 .filter(e -> e.isTransactionalAccount(mapper))
-                .map(account -> account.toTinkAccount(customerNumber, mapper))
+                .map(account -> account.toTinkAccount(mapper, sebSessionStorage))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
