@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 /**
- * https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1077806532/Domestic+Payment+Message+Formats+-+v3.1.2#DomesticPaymentMessageFormats-v3.1.2-ISO20022
+ * https://developer.hsbc.com/assets/docs/HSBC%20Open%20Banking%20TPP%20Implementation%20Guide%20(v3.1).pdf
  */
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -34,5 +34,9 @@ public class RemittanceInformation {
 
     public String getUnstructured() {
         return unstructured;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 }

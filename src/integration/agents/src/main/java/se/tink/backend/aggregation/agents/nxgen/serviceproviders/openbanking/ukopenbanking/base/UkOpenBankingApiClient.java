@@ -266,11 +266,20 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 || NATIONWIDE_ORG_ID.equals(aisConfig.getOrganisationId())
                 || RBS_ORG_ID.equals(aisConfig.getOrganisationId())) {
             return createPs256SignatureWithoutB64Header(payloadClaims);
-        } else if (HSBC_ORG_ID.equals(aisConfig.getOrganisationId())) {
+        } else if (isHSBCFamily()) {
             return createHsbcFamilyHeader(payloadClaims);
         } else {
             return createPs256SignatureWithB64Header(payloadClaims);
         }
+    }
+
+    /**
+     * HSBC and First Direct is under the same platform
+     *
+     * @return whether the bank is HSBC or First Direct
+     */
+    public boolean isHSBCFamily() {
+        return HSBC_ORG_ID.equals(aisConfig.getOrganisationId());
     }
 
     private String createPs256SignatureWithB64Header(Map<String, Object> payloadClaims) {

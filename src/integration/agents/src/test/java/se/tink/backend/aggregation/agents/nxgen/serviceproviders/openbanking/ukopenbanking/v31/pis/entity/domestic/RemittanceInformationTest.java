@@ -21,6 +21,6 @@ public class RemittanceInformationTest {
         // Assert
         Assert.assertTrue(
                 serializedRemittanceInformation.contains(unstructedRemittanceInformation));
-        Assert.assertFalse(serializedRemittanceInformation.contains("reference"));
+        Assert.assertFalse(serializedRemittanceInformation.contains("Reference"));
     }
 }

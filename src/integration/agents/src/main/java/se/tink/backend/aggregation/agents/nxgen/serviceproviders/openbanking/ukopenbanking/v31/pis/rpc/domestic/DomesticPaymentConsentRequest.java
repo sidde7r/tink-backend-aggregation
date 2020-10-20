@@ -20,4 +20,8 @@ public class DomesticPaymentConsentRequest {
         risk = new Risk();
         data = new DomesticPaymentConsentRequestData(payment);
     }
+
+    public DomesticPaymentConsentRequestData getData() {
+        return this.data;
+    }
 }

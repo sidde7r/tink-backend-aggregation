@@ -16,4 +16,8 @@ public class DomesticPaymentConsentRequestData {
     public DomesticPaymentConsentRequestData(Payment payment) {
         this.initiation = new Initiation(payment);
     }
+
+    public Initiation getInitiation() {
+        return this.initiation;
+    }
 }
