@@ -1,17 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.entities;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 
 @JsonObject
 public class InstructedAmountEntity {
     private String currency;
-    private double amount;
+    private BigDecimal amount;
 
     public static InstructedAmountEntity of(PaymentRequest paymentRequest) {
         return new Builder()
-                .withAmount(paymentRequest.getPayment().getAmount().getValue())
-                .withCurrency(paymentRequest.getPayment().getAmount().getCurrency())
+                .withAmount(paymentRequest.getPayment().getExactCurrencyAmount().getExactValue())
+                .withCurrency(paymentRequest.getPayment().getCurrency())
                 .build();
     }
 
@@ -26,20 +27,20 @@ public class InstructedAmountEntity {
         return currency;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
     public static class Builder {
         private String currency;
-        private double amount;
+        private BigDecimal amount;
 
         public Builder withCurrency(String currency) {
             this.currency = currency;
             return this;
         }
 
-        public Builder withAmount(double amount) {
+        public Builder withAmount(BigDecimal amount) {
             this.amount = amount;
             return this;
         }
