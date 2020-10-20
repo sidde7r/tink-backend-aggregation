@@ -135,6 +135,7 @@ public class AggregationControllerAggregationClientImpl
     @Override
     public Response updateTransactionsAsynchronously(
             HostConfiguration hostConfiguration, UpdateTransactionsRequest request) {
+        log.info(".updateTransactionsAsynchronously request: {}", request.toString());
         return requestExecuter(
                 () ->
                         getProcessService(hostConfiguration)

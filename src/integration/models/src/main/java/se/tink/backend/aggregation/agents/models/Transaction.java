@@ -15,17 +15,6 @@ import se.tink.libraries.uuid.UUIDUtils;
 public class Transaction implements Comparable<Transaction>, Cloneable {
     // TODO: Find out if we can add ExactCurrencyAmount in this model
 
-    public static class Fields {
-        public static final String AccountId = "accountId";
-        public static final String Amount = "amount";
-        public static final String Date = "date";
-        public static final String Description = "description";
-        public static final String Id = "id";
-        public static final String Payload = "payload";
-        public static final String Tags = "tags";
-        public static final String Type = "type";
-    }
-
     private String accountId;
     private double amount;
     private String credentialsId;
@@ -226,8 +215,13 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
                 .add("credentialsId", credentialsId)
                 .add("accountId", accountId)
                 .add("date", getDate())
-                .add("amount", getAmount())
-                .add("description", getDescription())
+                .add("payload", payload)
+                .add("payloadSerialized", payloadSerialized)
+                .add("pending", pending)
+                .add("timestamp", timestamp)
+                .add("type", type)
+                .add("userId", userId)
+                .add("upcoming", upcoming)
                 .toString();
     }
 }
