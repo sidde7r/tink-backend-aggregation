@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -25,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-@AgentCapabilities
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, INVESTMENTS})
 public class BancoPostaAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,

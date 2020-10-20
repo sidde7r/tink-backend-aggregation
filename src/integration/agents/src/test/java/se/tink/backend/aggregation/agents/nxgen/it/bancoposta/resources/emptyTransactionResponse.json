@@ -1,0 +1,30 @@
+{
+    "header": {
+        "command-result": "0",
+        "clientId": "75d20ad6-94f4-47ba-88a3-79bea47fa2a8",
+        "command-result-description": "",
+        "requestId": "",
+        "requestid": "cc624779-d6cd-4580-931d-028c9eaee0b6:node-3",
+        "command-result-details": "",
+        "command-request-version": "v1",
+        "command-request-service": "bancoposta",
+        "command-request-command": "ricercaListaMovimentiConto",
+        "command-result-reason": "",
+        "status": "COMPLETED"
+    },
+    "body": {
+        "saldoH24": true,
+        "iban": "dummyIban",
+        "presenzaPrenotate": false,
+        "movimenti": [
+        ],
+        "saldo": {
+            "saldoDisponibile": 370,
+            "saldoContabile": 370,
+            "segnoSaldoContabile": "-",
+            "segnoSaldoDisponibile": "-",
+            "dataSaldo": "29/09/2020"
+        },
+        "bic": "BPPIITRRXXX"
+    }
+}

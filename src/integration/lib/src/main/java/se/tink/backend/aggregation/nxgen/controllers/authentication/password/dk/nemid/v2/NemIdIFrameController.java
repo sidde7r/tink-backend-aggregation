@@ -79,7 +79,7 @@ public class NemIdIFrameController {
         }
     }
 
-    public void initNemIdIFrame(Credentials credentials, WebDriver driver) {
+    private void initNemIdIFrame(Credentials credentials, WebDriver driver) {
         instantiateIFrameWithNemIdForm(driver);
         log.info("{} iframe is initialized", NEM_ID_PREFIX);
 
@@ -94,14 +94,14 @@ public class NemIdIFrameController {
         credentials.setStatusPayload(catalog.getString(UserMessage.VERIFYING_CREDS));
     }
 
-    public void validateResponse(Credentials credentials, WebDriver driver) {
+    private void validateResponse(Credentials credentials, WebDriver driver) {
         validateCredentials(driver);
         log.info("{} Provided credentials are valid.", NEM_ID_PREFIX);
 
         credentials.setStatusPayload(catalog.getString(UserMessage.VALID_CREDS));
     }
 
-    public String waitFor2ndFactorAndGetToken(WebDriver driver, long askForNemIdStartTime) {
+    private String waitFor2ndFactorAndGetToken(WebDriver driver, long askForNemIdStartTime) {
         String nemIdToken = verifyOtpAndTryToGetNemIdToken(driver);
 
         log.info(

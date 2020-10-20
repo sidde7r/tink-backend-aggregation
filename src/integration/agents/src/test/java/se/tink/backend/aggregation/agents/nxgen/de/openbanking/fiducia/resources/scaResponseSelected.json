@@ -1,0 +1,16 @@
+{
+  "_links": {
+    "authoriseTransaction": {
+      "href": "/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id"
+    }
+  },
+  "challengeData": {
+    "additionalInformation": "Ihre TAN wurde an Ihre App 'Google Pixel 2' gesendet."
+  },
+  "chosenScaMethod": {
+    "authenticationMethodId": "944",
+    "authenticationType": "PUSH_OTP",
+    "name": "SecureGo"
+  },
+  "scaStatus": "started"
+}

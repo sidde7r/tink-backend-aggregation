@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.CreditCardFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.IdentifierFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.PartyFixtures;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -32,7 +32,7 @@ public class CreditCardAccountMapperTest {
 
     private CreditCardAccountMapper mapper;
     private CreditCardBalanceMapper balanceMapper;
-    private IdentifierMapper identifierMapper;
+    private DefaultIdentifierMapper identifierMapper;
 
     @Before
     public void setUp() {
@@ -42,7 +42,7 @@ public class CreditCardAccountMapperTest {
         when(balanceMapper.getAvailableCredit(anyCollection()))
                 .thenReturn(ExactCurrencyAmount.of(1d, "GBP"));
 
-        identifierMapper = mock(IdentifierMapper.class);
+        identifierMapper = mock(DefaultIdentifierMapper.class);
         when(identifierMapper.mapIdentifier(any())).thenCallRealMethod();
         when(identifierMapper.getCreditCardIdentifier(anyCollection()))
                 .thenReturn(IdentifierFixtures.panIdentifier());

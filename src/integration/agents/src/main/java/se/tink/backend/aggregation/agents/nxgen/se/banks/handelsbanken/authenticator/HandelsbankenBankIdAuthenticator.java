@@ -75,12 +75,12 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
             case DONE:
                 AuthorizeResponse authorize = client.authorize(authenticate);
 
+                new BankidAuthenticationValidator(credentials, authorize).validate();
+
                 // If SSN is given, check that it matches the logged in user
                 if (!Strings.isNullOrEmpty(this.givenSsn)) {
                     checkIdentity(this.givenSsn, authorize.getMandates());
                 }
-
-                new BankidAuthenticationValidator(credentials, authorize).validate();
 
                 ApplicationEntryPointResponse applicationEntryPoint =
                         client.applicationEntryPoint(authorize);

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;

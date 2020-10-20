@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Optional;
 import lombok.SneakyThrows;
@@ -19,6 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaAp
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.Urls.SavingAccUrl;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.BancoPostaStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.BancoPostaSavingTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.SavingAccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.SavingAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.fetcher.rpc.SavingTransactionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -26,10 +30,41 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BancoPostaSavingTransactionalAccountFetcherTest {
     private BancoPostaSavingTransactionalAccountFetcher objUnderTest;
     private TinkHttpClient httpClient;
+
+    private static final String SAVING_ACCOUNTS_RESPONSE_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/bancoposta/resources/savingAccountResponse.json";
+
+    private static final String EMPTY_SAVING_ACCOUNTS_RESPONSE_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/bancoposta/resources/emptySavingAccountResponse.json";
+
+    private static final String SAVING_ACCOUNTS_DETAILS_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/bancoposta/resources/savingAccountDetails.json";
+
+    private static final String SAVING_TRANSACTIONS_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/bancoposta/resources/savingAccountTransactionResponse.json";
+
+    private static final SavingAccountResponse SAVING_ACCOUNTS_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    new File(SAVING_ACCOUNTS_RESPONSE_FILE_PATH), SavingAccountResponse.class);
+
+    private static final SavingAccountResponse EMPTY_SAVING_ACCOUNTS_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    new File(EMPTY_SAVING_ACCOUNTS_RESPONSE_FILE_PATH),
+                    SavingAccountResponse.class);
+
+    private static final SavingAccountDetailsResponse SAVING_ACCOUNTS_DETAILS =
+            SerializationUtils.deserializeFromString(
+                    new File(SAVING_ACCOUNTS_DETAILS_FILE_PATH),
+                    SavingAccountDetailsResponse.class);
+
+    private static final SavingTransactionResponse SAVING_TRANSACTIONS =
+            SerializationUtils.deserializeFromString(
+                    new File(SAVING_TRANSACTIONS_FILE_PATH), SavingTransactionResponse.class);
 
     @Before
     public void init() {
@@ -48,13 +83,13 @@ public class BancoPostaSavingTransactionalAccountFetcherTest {
                 FetcherTestHelper.mockRequestBuilder(
                         SavingAccUrl.FETCH_SAVING_ACCOUNTS, httpClient);
         when(fetchAccountMockRequestBuilder.post(any(), any()))
-                .thenReturn(FetcherTestData.getSavingAccountsResponse());
+                .thenReturn(SAVING_ACCOUNTS_RESPONSE);
 
         RequestBuilder fetchAccountDetailsMockRequestBuilder =
                 FetcherTestHelper.mockRequestBuilder(
                         SavingAccUrl.FETCH_SAVING_ACCOUNTS_DETAILS, httpClient);
         when(fetchAccountDetailsMockRequestBuilder.post(any(), any()))
-                .thenReturn(FetcherTestData.getSavingAccountsDetailsResponse());
+                .thenReturn(SAVING_ACCOUNTS_DETAILS);
         // when
 
         Collection<TransactionalAccount> accounts = objUnderTest.fetchAccounts();
@@ -78,7 +113,7 @@ public class BancoPostaSavingTransactionalAccountFetcherTest {
                 FetcherTestHelper.mockRequestBuilder(
                         SavingAccUrl.FETCH_SAVING_ACCOUNTS, httpClient);
         when(fetchAccountMockRequestBuilder.post(any(), any()))
-                .thenReturn(FetcherTestData.getEmptySavingAccountsResponse());
+                .thenReturn(EMPTY_SAVING_ACCOUNTS_RESPONSE);
         // when
 
         Collection<TransactionalAccount> accounts = objUnderTest.fetchAccounts();
@@ -96,8 +131,7 @@ public class BancoPostaSavingTransactionalAccountFetcherTest {
         RequestBuilder fetchTransactionMockRequestBuilder =
                 FetcherTestHelper.mockRequestBuilder(
                         SavingAccUrl.FETCH_SAVING_TRANSACTIONS, httpClient);
-        when(fetchTransactionMockRequestBuilder.post(any(), any()))
-                .thenReturn(FetcherTestData.getSavingTransactionsResponse());
+        when(fetchTransactionMockRequestBuilder.post(any(), any())).thenReturn(SAVING_TRANSACTIONS);
 
         Account account = mock(Account.class);
         when(account.getExactBalance()).thenReturn(ExactCurrencyAmount.of("0", "EUR"));

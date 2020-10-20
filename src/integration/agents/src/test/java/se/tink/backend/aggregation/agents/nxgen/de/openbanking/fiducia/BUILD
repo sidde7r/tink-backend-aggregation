@@ -2,11 +2,12 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "fiducia",
-    srcs = glob(["**/*.java"]),
-    data = ["//:agent_test_data"],
-    tags = [
-        "external",
-        "manual",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["agent/*.java"],
+    ),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fiducia/resources",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -16,9 +17,8 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
+        "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",

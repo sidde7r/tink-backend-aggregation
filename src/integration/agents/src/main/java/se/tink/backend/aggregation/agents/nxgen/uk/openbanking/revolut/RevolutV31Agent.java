@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.revolut.RevolutConstants.Urls.V31;
@@ -84,7 +84,7 @@ public final class RevolutV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected UkOpenBankingAis makeAis() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
-        IdentifierMapper identifierMapper = new IdentifierMapper(valueExtractor);
+        DefaultIdentifierMapper identifierMapper = new DefaultIdentifierMapper(valueExtractor);
 
         return new UkOpenBankingV31Ais(
                 aisConfig,

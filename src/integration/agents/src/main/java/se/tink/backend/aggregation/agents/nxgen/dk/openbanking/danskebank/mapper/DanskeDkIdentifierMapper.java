@@ -10,11 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank.DanskeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountIdentifierEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @Slf4j
-public class DanskeDkIdentifierMapper extends IdentifierMapper {
+public class DanskeDkIdentifierMapper extends DefaultIdentifierMapper {
 
     public DanskeDkIdentifierMapper(PrioritizedValueExtractor valueExtractor) {
         super(valueExtractor);

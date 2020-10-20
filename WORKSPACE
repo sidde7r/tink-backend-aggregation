@@ -21,7 +21,7 @@ bazel_skylib_workspace()
 # Usually this should be set to the version of Bazel used for CI
 load("@bazel_skylib//lib:versions.bzl", "versions")
 
-versions.check("1.2.1", "3.0.0")
+versions.check("1.2.1", "3.1.0")
 
 # rules_pkg
 http_archive(
@@ -1293,3 +1293,13 @@ maven_install(
 load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
 
 com_salesforce_servicelibs_grpc_testing_contrib_pin()
+
+git_repository(
+    name = "bazel_sonarqube",
+    commit = "56537ff1cf4e6c28fba2b06e0f20d1f4e186645e",
+    remote = "git@github.com:Zetten/bazel-sonarqube.git",
+)
+
+load("@bazel_sonarqube//:repositories.bzl", "bazel_sonarqube_repositories")
+
+bazel_sonarqube_repositories()

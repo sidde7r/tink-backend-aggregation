@@ -202,4 +202,10 @@ public class Payload {
         Preconditions.checkNotNull(vodb);
         return vodb.investmentInstruments;
     }
+
+    @JsonIgnore
+    public String getHolderNameBusiness() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.businessAccountInfo.get(0).getHolderName();
+    }
 }

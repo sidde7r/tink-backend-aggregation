@@ -86,4 +86,7 @@ class VODB {
 
     @JsonProperty("PCBW173")
     public List<InvestmentInstrumnentEntity> investmentInstruments;
+
+    @JsonProperty("PCBW4421")
+    public List<BusinessAccountEntity> businessAccountInfo;
 }

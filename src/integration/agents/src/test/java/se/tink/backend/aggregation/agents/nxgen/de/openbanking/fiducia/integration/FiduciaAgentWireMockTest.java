@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.integration;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -11,25 +12,39 @@ import se.tink.libraries.enums.MarketCode;
 
 public class FiduciaAgentWireMockTest {
 
-    @Test
-    public void test() throws Exception {
-        // given
-        final String wireMockFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fiducia/integration/resources/fiducia_mock_log.aap";
-        final String contractFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fiducia/integration/resources/agent-contract.json";
+    private static final String BASE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fiducia/integration/resources/";
 
-        final AgentsServiceConfiguration configuration =
-                AgentsServiceConfigurationReader.read(
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fiducia/integration/resources/configuration.yml");
+    private static String contractFilePath;
+
+    private static AgentsServiceConfiguration configuration;
+
+    @BeforeClass
+    public static void setup() throws Exception {
+        contractFilePath = BASE_PATH + "agent-contract.json";
+        configuration = AgentsServiceConfigurationReader.read(BASE_PATH + "configuration.yml");
+    }
+
+    @Test
+    public void testOneScaMethod() throws Exception {
+        wiremockTest(BASE_PATH + "fiducia_mock_log.aap");
+    }
+
+    @Test
+    public void testScaMethodSelection() throws Exception {
+        wiremockTest(BASE_PATH + "fiducia_with_sca_method_selection_mock_log.aap");
+    }
+
+    private void wiremockTest(String wiremockFilePath) throws Exception {
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.builder(
-                                MarketCode.DE, "de-vrbank-raiba-muc-sued-ob", wireMockFilePath)
+                                MarketCode.DE, "de-vrbank-raiba-muc-sued-ob", wiremockFilePath)
                         .addCredentialField("psu-id", "dummy_psu_id")
                         .addCredentialField("password", "dummy_password")
                         .withConfigurationFile(configuration)
-                        .addCallbackData("otpinput", "dummy_otp_code")
+                        .addCallbackData("tanField", "dummy_otp_code")
+                        .addCallbackData("selectAuthMethodField", "2")
                         .withAgentModule(new FiduciaWireMockTestModule())
                         .build();
 

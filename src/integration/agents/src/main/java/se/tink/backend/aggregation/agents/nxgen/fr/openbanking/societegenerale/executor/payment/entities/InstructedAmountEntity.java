@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,12 +15,12 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 @Builder
 public class InstructedAmountEntity {
     private String currency;
-    private double amount;
+    private BigDecimal amount;
 
     public static InstructedAmountEntity of(PaymentRequest paymentRequest) {
         return InstructedAmountEntity.builder()
-                .amount(paymentRequest.getPayment().getAmount().getValue())
-                .currency(paymentRequest.getPayment().getAmount().getCurrency())
+                .amount(paymentRequest.getPayment().getExactCurrencyAmount().getExactValue())
+                .currency(paymentRequest.getPayment().getCurrency())
                 .build();
     }
 }

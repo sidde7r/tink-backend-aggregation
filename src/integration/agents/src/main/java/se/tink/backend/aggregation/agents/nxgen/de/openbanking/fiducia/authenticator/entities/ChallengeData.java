@@ -5,11 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class ChosenScaMethod {
+public class ChallengeData {
 
-    private String name;
-
-    private String authenticationType;
-
-    private String authenticationMethodId;
+    private String additionalInformation;
 }

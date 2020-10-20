@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardAccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.SantanderConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -70,7 +70,7 @@ public final class SantanderV31Agent extends UkOpenBankingBaseAgent {
         CreditCardAccountMapper creditCardAccountMapper =
                 new CreditCardAccountMapper(
                         new SantanderCreditCardBalanceMapper(valueExtractor),
-                        new IdentifierMapper(valueExtractor));
+                        new DefaultIdentifierMapper(valueExtractor));
 
         return new UkOpenBankingV31Ais(
                 aisConfig, persistentStorage, creditCardAccountMapper, localDateTimeSource);

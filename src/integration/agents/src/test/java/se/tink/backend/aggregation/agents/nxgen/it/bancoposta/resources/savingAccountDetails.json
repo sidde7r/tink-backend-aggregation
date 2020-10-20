@@ -1,0 +1,35 @@
+{
+    "header": {
+        "command-result": "0",
+        "clientId": "3786256d-d177-40c1-b0ad-5395ffde614f",
+        "command-result-description": "",
+        "requestId": "",
+        "requestid": "f0be1897-2cb7-46b4-97f1-ba6f11537d3c:node-2",
+        "command-result-details": "",
+        "command-request-version": "v2",
+        "command-request-service": "bancoposta",
+        "command-request-command": "listaMovimentiLibrettoH24",
+        "command-result-reason": "",
+        "status": "COMPLETED"
+    },
+    "body": {
+        "listaMovimentoRisparmioPostale": [
+            {
+                "segno": "A",
+                "descrizione": "ACCREDITO GIRO CONTO ALTRO INTERMEDIARIO",
+                "divisa": "USD",
+                "dataValuta": "04/02/2020",
+                "dataContabile": "04/02/2020",
+                "descrizioneEstesa": "ACCREDITO GIRO CONTO ALTRO INT",
+                "importo": 500,
+                "causale": "BO79"
+            }
+        ],
+        "statoSemaforoBfp": "standard",
+        "saldo": {
+            "saldoDisponibile": 500,
+            "saldoContabile": 1000
+        },
+        "statoSemaforoDr": "standard"
+    }
+}

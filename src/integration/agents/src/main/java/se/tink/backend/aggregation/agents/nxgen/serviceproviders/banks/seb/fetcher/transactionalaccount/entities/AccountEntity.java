@@ -11,6 +11,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebPaymentAccountCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebSessionStorage;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -87,11 +88,11 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private String getHolderName() {
-        // For business accounts, KHAV is empty while KTOBEN_TXT is the company name
-        return !Strings.isNullOrEmpty(holderName)
-                ? StringUtils.firstLetterUppercaseFormatting(holderName)
-                : accountName;
+    private String getHolderName(String companyName) {
+        if (!Strings.isNullOrEmpty(holderName)) {
+            return StringUtils.firstLetterUppercaseFormatting(holderName);
+        }
+        return !Strings.isNullOrEmpty(companyName) ? companyName : accountName;
     }
 
     @JsonIgnore
@@ -124,7 +125,7 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(
-            String customerId, AccountTypeMapper mapper) {
+            AccountTypeMapper mapper, SebSessionStorage sebSessionStorage) {
         final Optional<AccountTypes> tinkAccountType = mapper.translate(accountType);
         Preconditions.checkState(tinkAccountType.isPresent());
         Preconditions.checkNotNull(accountNumber);
@@ -149,8 +150,9 @@ public class AccountEntity {
                 .withBalance(getBalanceModule())
                 .withId(idModule)
                 .setApiIdentifier(accountNumber)
-                .addHolderName(getHolderName())
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_CUSTOMER_ID, customerId)
+                .addHolderName(getHolderName(sebSessionStorage.getHolderNameBusiness()))
+                .putInTemporaryStorage(
+                        StorageKeys.ACCOUNT_CUSTOMER_ID, sebSessionStorage.getCustomerNumber())
                 .canWithdrawCash(
                         SebPaymentAccountCapabilities.canWithdrawCash(accountType, accountTypeName))
                 .canPlaceFunds(

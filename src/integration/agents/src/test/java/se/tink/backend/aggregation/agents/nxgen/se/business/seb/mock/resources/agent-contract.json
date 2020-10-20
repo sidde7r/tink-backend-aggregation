@@ -5,23 +5,23 @@
             "accountExclusion": "NONE",
             "exactAvailableCredit": {
                 "currencyCode": "SEK",
-                "exactValue": 49950.19,
+                "exactValue": 132989.18,
                 "scale": 2,
-                "unscaledValue": 4995019,
-                "doubleValue": 49950.19
+                "unscaledValue": 13298918,
+                "doubleValue": 132989.18
             },
             "exactBalance": {
                 "currencyCode": "SEK",
-                "exactValue": 49950.19,
+                "exactValue": -66867.82,
                 "scale": 2,
-                "unscaledValue": 4995019,
-                "doubleValue": 49950.19
+                "unscaledValue": -6686782,
+                "doubleValue": -66867.82
             },
             "currencyCode": "SEK",
             "bankId": "22222222222",
             "excluded": false,
             "favored": false,
-            "name": "Paradime Ab",
+            "name": "Företagskonto",
             "ownership": 1.0,
             "type": "CHECKING",
             "userModifiedExcluded": false,
@@ -29,20 +29,20 @@
             "userModifiedType": false,
             "identifiers": "[]",
             "closed": false,
-            "holderName": "PARADIME AB",
+            "holderName": "Redovisning i Hovås AB",
             "accountHolder": {
                 "accountId": null,
                 "type": "BUSINESS",
                 "identities": [
                     {
-                        "name": "PARADIME AB",
+                        "name": "Redovisning i Hovås AB",
                         "role": null
                     }
                 ]
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "availableCredit": 49950.19,
-            "balance": 49950.19
+            "availableCredit": 132989.18,
+            "balance": -66867.82
         }
     ],
     "transactions": [

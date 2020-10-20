@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.Access;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.ChosenScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.OtpCodeBody;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.PsuData;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.AuthorizeConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentStatus;
@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.SelectScaMethodRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.AuthorizePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.CreatePaymentResponse;
@@ -26,18 +27,18 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@AllArgsConstructor
 public class FiduciaApiClient {
 
     private static final String CONSENTS_ENDPOINT = "/v1/consents";
     private static final String CONSENT_ENDPOINT = "/v1/consents/{consentId}";
     private static final String CONSENT_AUTHORIZATIONS_ENDPOINT =
             "/v1/consents/{consentId}/authorisations";
-    private static final String AUTHORIZE_WITH_OTP_ENDPOINT =
-            "/v1/consents/{consentId}/authorisations/{authorisationId}";
     private static final String ACCOUNTS_ENDPOINT = "/v1/accounts";
     private static final String BALANCES_ENDPOINT = "/v1/accounts/{accountId}/balances";
     private static final String TRANSACTIONS_ENDPOINT = "/v1/accounts/{accountId}/transactions";
@@ -49,23 +50,15 @@ public class FiduciaApiClient {
 
     private static final String EMPTY_BODY = "";
 
+    private static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
+
     private static final String ACCOUNT_ID = "accountId";
     private static final String CONSENT_ID = "consentId";
     private static final String PAYMENT_ID = "paymentId";
-    private static final String AUTHORISATION_ID = "authorisationId";
 
     private final PersistentStorage persistentStorage;
     private final String serverUrl;
     private final FiduciaRequestBuilder fiduciaRequestBuilder;
-
-    FiduciaApiClient(
-            PersistentStorage persistentStorage,
-            String serverUrl,
-            FiduciaRequestBuilder fiduciaRequestBuilder) {
-        this.persistentStorage = persistentStorage;
-        this.serverUrl = serverUrl;
-        this.fiduciaRequestBuilder = fiduciaRequestBuilder;
-    }
 
     public String createConsent() {
         CreateConsentRequest createConsentRequest =
@@ -85,19 +78,6 @@ public class FiduciaApiClient {
                 .getConsentId();
     }
 
-    public ChosenScaMethod authorizeConsent(String consentId, String password) {
-        AuthorizeConsentRequest authorizeConsentRequest =
-                new AuthorizeConsentRequest(new PsuData(password));
-
-        return fiduciaRequestBuilder
-                .createRequest(
-                        createUrl(CONSENT_AUTHORIZATIONS_ENDPOINT).parameter(CONSENT_ID, consentId),
-                        SerializationUtils.serializeToString(authorizeConsentRequest))
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .post(ScaResponse.class, authorizeConsentRequest)
-                .getChosenScaMethod();
-    }
-
     public ConsentStatus getConsentStatus(String consentId) {
         return fiduciaRequestBuilder
                 .createRequest(
@@ -106,28 +86,48 @@ public class FiduciaApiClient {
                 .getConsentStatus();
     }
 
-    public AuthorizationResponse getAuthorizationId(String consentId) {
-        return fiduciaRequestBuilder
-                .createRequest(
-                        createUrl(CONSENT_AUTHORIZATIONS_ENDPOINT).parameter(CONSENT_ID, consentId),
-                        EMPTY_BODY)
-                .get(AuthorizationResponse.class);
+    public ScaResponse authorizeConsent(String consentId, String password) {
+        AuthorizeConsentRequest authorizeConsentRequest =
+                new AuthorizeConsentRequest(new PsuData(password));
+        try {
+            return fiduciaRequestBuilder
+                    .createRequest(
+                            createUrl(CONSENT_AUTHORIZATIONS_ENDPOINT)
+                                    .parameter(CONSENT_ID, consentId),
+                            SerializationUtils.serializeToString(authorizeConsentRequest))
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .post(ScaResponse.class, authorizeConsentRequest);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw e;
+        }
     }
 
-    public void authorizeWithOtpCode(
-            String consentId, AuthorizationResponse authorizationResponse, String otpCode) {
-        OtpCodeBody otpCodeBody = new OtpCodeBody(otpCode);
+    public ScaResponse selectAuthMethod(String urlPath, String scaMethodId) {
+        SelectScaMethodRequest request = new SelectScaMethodRequest(scaMethodId);
 
-        fiduciaRequestBuilder
-                .createRequest(
-                        createUrl(AUTHORIZE_WITH_OTP_ENDPOINT)
-                                .parameter(CONSENT_ID, consentId)
-                                .parameter(
-                                        AUTHORISATION_ID,
-                                        authorizationResponse.getAuthorisationIds().get(0)),
-                        SerializationUtils.serializeToString(otpCodeBody))
+        return fiduciaRequestBuilder
+                .createRequest(createUrl(urlPath), SerializationUtils.serializeToString(request))
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .put(ScaStatusResponse.class, otpCodeBody);
+                .put(ScaResponse.class, request);
+    }
+
+    public ScaStatusResponse authorizeWithOtpCode(String urlPath, String otpCode) {
+        OtpCodeBody otpCodeBody = new OtpCodeBody(otpCode);
+        try {
+            return fiduciaRequestBuilder
+                    .createRequest(
+                            createUrl(urlPath), SerializationUtils.serializeToString(otpCodeBody))
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .put(ScaStatusResponse.class, otpCodeBody);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            }
+            throw e;
+        }
     }
 
     public GetAccountsResponse getAccounts() {
@@ -223,6 +223,6 @@ public class FiduciaApiClient {
     }
 
     private URL createUrl(String path) {
-        return new URL(String.format("%s%s", serverUrl, path));
+        return new URL(serverUrl + path);
     }
 }
