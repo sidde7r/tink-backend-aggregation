@@ -2,21 +2,24 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.cli
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.exception.ClientAnswerException;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.utils.RangeRegex;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class ChosenTanMediumProvider {
     private static final String TAN_MEDIUM_KEY = "tanMedium";
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final Catalog catalog;
 
-    public ChosenTanMediumProvider(SupplementalInformationHelper supplementalInformationHelper) {
+    public ChosenTanMediumProvider(
+            SupplementalInformationHelper supplementalInformationHelper, Catalog catalog) {
         this.supplementalInformationHelper = supplementalInformationHelper;
+        this.catalog = catalog;
     }
 
     public String getTanMedium(FinTsDialogContext context) {
@@ -35,24 +38,7 @@ public class ChosenTanMediumProvider {
     }
 
     private Field getFieldForGeneratedTan(List<String> tanMediumList) {
-        int maxNumber = tanMediumList.size() - 1;
-        int length = Integer.toString(maxNumber).length();
-        String description =
-                IntStream.range(0, tanMediumList.size())
-                        .mapToObj(i -> String.format("(%d) %s", i, tanMediumList.get(i)))
-                        .collect(Collectors.joining("\n"));
-        String regexForRangePattern = RangeRegex.regexForRange(0, maxNumber);
-
-        return Field.builder()
-                .description("Choose TAN Medium you want to use")
-                .helpText("TAN Mediums:\n" + description)
-                .name(TAN_MEDIUM_KEY)
-                .numeric(true)
-                .minLength(1)
-                .maxLength(length)
-                .hint(String.format("Select from 0 to %d", maxNumber))
-                .pattern(regexForRangePattern)
-                .patternError("Invalid selection")
-                .build();
+        return CommonFields.Selection.build(
+                catalog, tanMediumList, new LocalizableKey("Choose TAN Medium you want to use"));
     }
 }

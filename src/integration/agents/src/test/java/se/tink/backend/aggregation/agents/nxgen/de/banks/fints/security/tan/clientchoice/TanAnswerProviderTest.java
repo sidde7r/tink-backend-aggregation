@@ -10,16 +10,18 @@ import java.util.Map;
 import lombok.SneakyThrows;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.libraries.i18n.Catalog;
 
 public class TanAnswerProviderTest {
     private static SupplementalInformationHelper helper = mock(SupplementalInformationHelper.class);
+    private static Catalog catalog = Catalog.getCatalog("EN_US");
 
     @SneakyThrows
     @Test
     public void shouldReturnTanAnswerOfUserChoice() {
         // given
         when(helper.askSupplementalInformation(any())).thenReturn(getSimulatedUserAnswer());
-        TanAnswerProvider tanAnswerProvider = new TanAnswerProvider(helper);
+        TanAnswerProvider tanAnswerProvider = new TanAnswerProvider(helper, catalog);
 
         // when
         String tanAnswer = tanAnswerProvider.getTanAnswer();

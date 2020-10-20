@@ -13,9 +13,11 @@ import lombok.SneakyThrows;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.libraries.i18n.Catalog;
 
 public class ChosenTanMediumProviderTest {
     private static SupplementalInformationHelper helper = mock(SupplementalInformationHelper.class);
+    private static Catalog catalog = Catalog.getCatalog("EN_US");
     private static FinTsDialogContext context = mock(FinTsDialogContext.class);
 
     @SneakyThrows
@@ -24,7 +26,7 @@ public class ChosenTanMediumProviderTest {
         // given
         when(context.getTanMediumList()).thenReturn(tanMediumOptions());
         when(helper.askSupplementalInformation(any())).thenReturn(getSimulatedUserAnswer());
-        ChosenTanMediumProvider tanMediumProvider = new ChosenTanMediumProvider(helper);
+        ChosenTanMediumProvider tanMediumProvider = new ChosenTanMediumProvider(helper, catalog);
 
         // when
         String tanMedium = tanMediumProvider.getTanMedium(context);
