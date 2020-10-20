@@ -67,6 +67,11 @@ public class UpdateTransactionsRequest {
                 .add("credentials", credentials)
                 .add("userTriggered", userTriggered)
                 .add("transactions", transactions)
+                .add("topic", topic)
+                .add("requestType", requestType)
+                .add("aggregationId", aggregationId)
+                .add("operationId", operationId)
+                .add("market", market)
                 .toString();
     }
 
