@@ -53,7 +53,7 @@ public final class CommerzbankAgent extends NextGenerationAgent
                 request,
                 systemUpdater,
                 new CommerzbankPhotoTanAuthenticator(
-                        persistentStorage, apiClient, supplementalRequester),
+                        persistentStorage, apiClient, supplementalRequester, catalog),
                 new CommerzbankAutoAuthenticator(credentials, persistentStorage, apiClient));
     }
 

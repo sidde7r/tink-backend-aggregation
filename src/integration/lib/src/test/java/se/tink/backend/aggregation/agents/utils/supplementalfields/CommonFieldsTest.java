@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.libraries.i18n.Catalog;
@@ -48,5 +49,21 @@ public class CommonFieldsTest {
         verify(catalog, times(2)).getString(any(LocalizableKey.class));
         verify(catalog).getString(any(LocalizableParametrizedKey.class), any());
         verifyNoMoreInteractions(catalog);
+    }
+
+    @Test
+    public void shouldReturnProperDescriptionOfSelectionField() {
+        // given
+        Catalog catalog = mock(Catalog.class);
+        when(catalog.getString(any(LocalizableKey.class)))
+                .thenAnswer(i -> ((LocalizableKey) i.getArguments()[0]).get());
+
+        // when
+        Field result =
+                CommonFields.Selection.build(
+                        catalog, Collections.emptyList(), new LocalizableKey("descriptionToCheck"));
+
+        // then
+        assertThat(result.getDescription()).isEqualTo("descriptionToCheck");
     }
 }

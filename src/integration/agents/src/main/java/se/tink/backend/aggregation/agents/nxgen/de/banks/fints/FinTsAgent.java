@@ -66,7 +66,8 @@ public final class FinTsAgent extends NextGenerationAgent
         this.dialogContext = new FinTsDialogContext(configuration, secretsConfiguration);
 
         TanAnswerProvider tanAnswerProvider =
-                new TanAnswerProvider(componentProvider.getSupplementalInformationHelper());
+                new TanAnswerProvider(
+                        componentProvider.getSupplementalInformationHelper(), catalog);
         FinTsRequestSender requestSender =
                 new FinTsRequestSender(
                         componentProvider.getTinkHttpClient(),
@@ -79,7 +80,7 @@ public final class FinTsAgent extends NextGenerationAgent
                         requestProcessor,
                         dialogContext,
                         new ChosenTanMediumProvider(
-                                componentProvider.getSupplementalInformationHelper()),
+                                componentProvider.getSupplementalInformationHelper(), catalog),
                         new FinTsAccountTypeMapper(),
                         new ChosenSecurityFunctionProvider(supplementalInformationHelper, catalog));
         this.transactionClient = new TransactionClient(requestProcessor, dialogContext);

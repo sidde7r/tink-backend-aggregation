@@ -125,7 +125,7 @@ public class FinTsRequestProcessorTest {
 
     private TanAnswerProvider getTanAnswerProvider() {
         TanAnswerProvider answerProvider = mock(TanAnswerProvider.class);
-        when(answerProvider.getTanAnswer()).thenReturn("answer");
+        when(answerProvider.getTanAnswer("dummyTanMedium")).thenReturn("answer");
         return answerProvider;
     }
 
