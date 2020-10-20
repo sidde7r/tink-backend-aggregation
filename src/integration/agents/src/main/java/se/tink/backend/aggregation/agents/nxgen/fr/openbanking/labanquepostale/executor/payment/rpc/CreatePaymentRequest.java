@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -73,9 +72,7 @@ public class CreatePaymentRequest {
 
         ExactCurrencyAmount amount =
                 ExactCurrencyAmount.of(
-                        BigDecimal.valueOf(
-                                Double.valueOf(instructedAmount.getAmount() * 100).longValue(), 2),
-                        instructedAmount.getCurrency());
+                        instructedAmount.getAmount(), instructedAmount.getCurrency());
 
         return new PaymentResponse(
                 new Payment.Builder()
