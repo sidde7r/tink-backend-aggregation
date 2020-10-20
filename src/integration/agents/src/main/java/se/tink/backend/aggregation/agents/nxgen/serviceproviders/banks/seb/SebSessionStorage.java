@@ -58,6 +58,10 @@ public class SebSessionStorage {
         sessionStorage.put(StorageKeys.CUSTOMER_NUMBER, companyNumber);
     }
 
+    public void putAccountHolderNameBusiness(String holderName) {
+        sessionStorage.put(StorageKeys.HOLDER_NAME, holderName);
+    }
+
     public void putCardHandle(String uniqueId, String handle) {
         if (Strings.isNullOrEmpty(uniqueId)) {
             throw new IllegalStateException("Did not get card uniqueId");
@@ -82,6 +86,10 @@ public class SebSessionStorage {
 
     private String getSSN() {
         return sessionStorage.get(StorageKeys.SSN);
+    }
+
+    public String getHolderNameBusiness() {
+        return sessionStorage.get(StorageKeys.HOLDER_NAME);
     }
 
     public IdentityData getIdentityData() {
