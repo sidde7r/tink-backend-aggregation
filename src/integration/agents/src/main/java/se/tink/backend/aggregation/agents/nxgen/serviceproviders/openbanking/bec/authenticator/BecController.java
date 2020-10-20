@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator;
 
 import com.google.common.base.Strings;
-import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -40,9 +40,8 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-
         if (Strings.isNullOrEmpty(persistentStorage.get(StorageKeys.CONSENT_ID))
-                || !authenticator.getApprovedConsent()) {
+                || !authenticator.isStoredConsentValid()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
@@ -54,22 +53,21 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
 
     @Override
     public ThirdPartyAppResponse<String> collect(String reference) {
-
-        this.supplementalInformationHelper
-                .waitForSupplementalInformation(
+        Optional<Map<String, String>> supplementalInfo =
+                supplementalInformationHelper.waitForSupplementalInformation(
                         strongAuthenticationState.getSupplementalKey(),
                         ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                        TimeUnit.MINUTES)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "No supplemental info found in api response"));
+                        TimeUnit.MINUTES);
 
-        while (!authenticator.getApprovedConsent()) {
-            Uninterruptibles.sleepUninterruptibly(1000, TimeUnit.MILLISECONDS);
+        ThirdPartyAppStatus result;
+        if (!supplementalInfo.isPresent()) {
+            result = ThirdPartyAppStatus.TIMED_OUT;
+        } else if (authenticator.isStoredConsentValid()) {
+            result = ThirdPartyAppStatus.DONE;
+        } else {
+            result = ThirdPartyAppStatus.AUTHENTICATION_ERROR;
         }
-
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+        return ThirdPartyAppResponseImpl.create(result);
     }
 
     @Override
