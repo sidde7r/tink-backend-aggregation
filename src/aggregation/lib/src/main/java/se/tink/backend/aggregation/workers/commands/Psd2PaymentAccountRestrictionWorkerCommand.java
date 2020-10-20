@@ -154,8 +154,10 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                 restrictedAccountIds);
 
         controllerWrapper.restrictAccounts(
-                RestrictAccountsRequest.of(
-                        credentials.getUserId(), credentials.getId(), restrictedAccountIds));
+                new RestrictAccountsRequest()
+                        .setUserId(credentials.getUserId())
+                        .setCredentialsId(credentials.getId())
+                        .setAccountIds(restrictedAccountIds));
     }
 
     @Override
