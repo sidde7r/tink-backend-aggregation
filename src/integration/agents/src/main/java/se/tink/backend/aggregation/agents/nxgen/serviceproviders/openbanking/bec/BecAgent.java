@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
@@ -55,6 +56,7 @@ public final class BecAgent extends NextGenerationAgent
 
         final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
 
+        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         client.setEidasProxy(eidasProxyConfiguration);
     }
 
@@ -68,7 +70,7 @@ public final class BecAgent extends NextGenerationAgent
                 new BecController(
                         supplementalInformationHelper,
                         persistentStorage,
-                        new BecAuthenticator(apiClient, sessionStorage),
+                        new BecAuthenticator(apiClient),
                         strongAuthenticationState);
 
         return new AutoAuthenticationController(
