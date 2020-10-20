@@ -3,52 +3,50 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class SwedbankAgentPaymentTest {
 
-    private final ArgumentManager<Arg> creditorDebtorManager = new ArgumentManager<>(Arg.values());
-    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
-            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
+    private final ArgumentManager<SsnArgumentEnum> ssnManager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
+    private final ArgumentManager<ToAccountFromAccountArgumentEnum> toFromManager =
+            new ArgumentManager<>(ToAccountFromAccountArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
-        creditorDebtorManager.before();
-        loadBeforeSaveAfterManager.before();
+        ssnManager.before();
+        toFromManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("se", "se-swedbank-ob")
+                        .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("swedbank")
                         .setAppId("tink")
-                        .loadCredentialsBefore(
-                                Boolean.parseBoolean(
-                                        loadBeforeSaveAfterManager.get(
-                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
-                        .saveCredentialsAfter(
-                                Boolean.parseBoolean(
-                                        loadBeforeSaveAfterManager.get(
-                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test
     public void testPayments() throws Exception {
-
         builder.build().testGenericPayment(createListMockedPayment(1));
     }
 
@@ -57,41 +55,39 @@ public class SwedbankAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT))
+            doReturn(Type.SE).when(creditor).getAccountIdentifierType();
+            doReturn(toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT))
                     .when(creditor)
                     .getAccountNumber();
-            doReturn(creditorDebtorManager.get(Arg.CREDITOR_NAME)).when(creditor).getName();
-
             Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT)).when(debtor).getAccountNumber();
+            doReturn(Type.SE).when(debtor).getAccountIdentifierType();
+            doReturn(toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT))
+                    .when(debtor)
+                    .getAccountNumber();
 
             Amount amount = Amount.inSEK(3);
-            LocalDate executionDate = LocalDate.now();
+
             String currency = "SEK";
+
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
+            remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+            remittanceInformation.setValue("tinTest");
 
             listOfMockedPayments.add(
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
                             .withAmount(amount)
-                            .withExecutionDate(executionDate)
                             .withCurrency(currency)
+                            .withRemittanceInformation(remittanceInformation)
                             .build());
         }
 
         return listOfMockedPayments;
     }
 
-    private enum Arg implements ArgumentManagerEnum {
-        DEBTOR_ACCOUNT, // Domestic Swedish account number
-        CREDITOR_ACCOUNT, // Domestic Swedish account number
-        CREDITOR_NAME; // Domestic Swedish account number
-
-        @Override
-        public boolean isOptional() {
-            return false;
-        }
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 }
