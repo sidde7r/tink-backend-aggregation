@@ -12,13 +12,14 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.VerifyOtpResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.utils.SpankkiAuthUtils;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.entities.StatusEntity;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsInitResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class SpankkiSmsOtpAuthenticator implements SmsOtpAuthenticator<String> {
+public class SpankkiSmsOtpAuthenticator implements SmsOtpAuthenticator<Void> {
 
     private SpankkiApiClient apiClient;
     private PersistentStorage persistentStorage;
@@ -34,11 +35,12 @@ public class SpankkiSmsOtpAuthenticator implements SmsOtpAuthenticator<String> {
     }
 
     @Override
-    public String init(String username) throws AuthenticationException, AuthorizationException {
+    public SmsInitResult<Void> init(String username)
+            throws AuthenticationException, AuthorizationException {
         final String phonenumber = apiClient.getPhonenumber().getPhonenumber();
         try {
             apiClient.receiveOtp(phonenumber);
-            return phonenumber;
+            return new SmsInitResult<>(true);
         } catch (HttpResponseException e) {
             final StatusEntity status =
                     e.getResponse().getBody(UserPasswordLoginResponse.class).getStatus();
@@ -53,7 +55,7 @@ public class SpankkiSmsOtpAuthenticator implements SmsOtpAuthenticator<String> {
     }
 
     @Override
-    public void authenticate(String otp, String username)
+    public void authenticate(String otp, String username, Void token)
             throws AuthenticationException, AuthorizationException {
         final SpankkiEncapClient encapClient =
                 new SpankkiEncapClient(
@@ -78,5 +80,10 @@ public class SpankkiSmsOtpAuthenticator implements SmsOtpAuthenticator<String> {
             // Save device
             encapClient.saveDevice();
         }
+    }
+
+    @Override
+    public void postAuthentication() {
+        // nothing
     }
 }

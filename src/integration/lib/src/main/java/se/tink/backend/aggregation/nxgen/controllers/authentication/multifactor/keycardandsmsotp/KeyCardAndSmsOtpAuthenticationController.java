@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycardandsmsotp;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -16,18 +19,21 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoErro
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsInitResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.i18n.Catalog;
 
-public class KeyCardAndSmsOtpAuthenticationController implements MultiFactorAuthenticator {
+public class KeyCardAndSmsOtpAuthenticationController<T> implements MultiFactorAuthenticator {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String KEYCARD_VALUE_FIELD_KEY = "keyCardValue";
     private static final String OTP_VALUE_FIELD_KEY = "otpValue";
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final KeyCardAuthenticator keyCarduthenticator;
-    private final SmsOtpAuthenticator<String> smsOtpAuthenticator;
+    private final SmsOtpAuthenticator<T> smsOtpAuthenticator;
     private final int keyCardValueLength;
     private final int otpValueLength;
 
@@ -36,7 +42,7 @@ public class KeyCardAndSmsOtpAuthenticationController implements MultiFactorAuth
             SupplementalInformationHelper supplementalInformationHelper,
             KeyCardAuthenticator keyCarduthenticator,
             int keyCardValueLength,
-            SmsOtpAuthenticator<String> smsOtpAuthenticator,
+            SmsOtpAuthenticator<T> smsOtpAuthenticator,
             int otpValueLength) {
         this.catalog = catalog;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -123,13 +129,20 @@ public class KeyCardAndSmsOtpAuthenticationController implements MultiFactorAuth
             throws AuthenticationException, AuthorizationException {
 
         final String username = credentials.getField(Field.Key.USERNAME);
-        smsOtpAuthenticator.init(username);
+        SmsInitResult<T> smsInitResult = smsOtpAuthenticator.init(username);
 
-        final Map<String, String> supplementalInformation =
-                supplementalInformationHelper.askSupplementalInformation(getOtpField());
+        if (smsInitResult.isRequired()) {
+            final Map<String, String> supplementalInformation =
+                    supplementalInformationHelper.askSupplementalInformation(getOtpField());
 
-        smsOtpAuthenticator.authenticate(
-                supplementalInformation.get(OTP_VALUE_FIELD_KEY), username);
+            smsOtpAuthenticator.authenticate(
+                    supplementalInformation.get(OTP_VALUE_FIELD_KEY),
+                    username,
+                    smsInitResult.getToken());
+        } else {
+            LOGGER.info("Skipping SMS authentication");
+        }
+        smsOtpAuthenticator.postAuthentication();
     }
 
     private Field getOtpField() {

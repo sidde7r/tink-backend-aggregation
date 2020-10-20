@@ -5,9 +5,9 @@ import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class Oauth2Request extends AbstractForm {
     public Oauth2Request(String scope, String username, String password) {
-        this.put("grant_type", AktiaConstants.HttpParameters.OAUTH2_GRANT_TYPE);
         this.put("scope", scope);
         this.put("username", username);
+        this.put("grant_type", AktiaConstants.HttpParameters.OAUTH2_GRANT_TYPE);
         this.put("password", password);
     }
 }

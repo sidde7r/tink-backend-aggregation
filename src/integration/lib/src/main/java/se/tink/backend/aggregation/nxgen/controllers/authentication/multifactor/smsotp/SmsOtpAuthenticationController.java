@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -20,6 +23,8 @@ import se.tink.libraries.i18n.Catalog;
 
 public class SmsOtpAuthenticationController<T>
         implements TypedAuthenticator, AuthenticationControllerType {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String OTP_VALUE_FIELD_KEY = "otpValue";
 
     private final Catalog catalog;
@@ -61,12 +66,20 @@ public class SmsOtpAuthenticationController<T>
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        T initValues = authenticator.init(username);
+        SmsInitResult<T> smsInitResult = authenticator.init(username);
 
-        Map<String, String> supplementalInformation =
-                supplementalInformationHelper.askSupplementalInformation(getOtpField());
+        if (smsInitResult.isRequired()) {
+            Map<String, String> supplementalInformation =
+                    supplementalInformationHelper.askSupplementalInformation(getOtpField());
 
-        authenticator.authenticate(supplementalInformation.get(OTP_VALUE_FIELD_KEY), initValues);
+            authenticator.authenticate(
+                    supplementalInformation.get(OTP_VALUE_FIELD_KEY),
+                    username,
+                    smsInitResult.getToken());
+        } else {
+            LOGGER.info("Skipping SMS authentication");
+        }
+        authenticator.postAuthentication();
     }
 
     private Field getOtpField() {
