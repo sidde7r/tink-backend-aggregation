@@ -25,6 +25,7 @@ java_library(
         "//src/libraries/giro_validation",
         "//src/libraries/strings",
         "//third_party:lombok_libs",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
