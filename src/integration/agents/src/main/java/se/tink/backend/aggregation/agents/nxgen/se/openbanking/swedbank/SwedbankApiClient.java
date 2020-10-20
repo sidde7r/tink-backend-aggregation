@@ -392,21 +392,33 @@ public final class SwedbankApiClient {
                         SerializationUtils.serializeToString(createPaymentRequest));
     }
 
-    public GetPaymentResponse getPayment(String paymentId) {
+    public GetPaymentResponse getPayment(
+            String paymentId, SwedbankPaymentType swedbankPaymentType) {
         return getPaymentRequestBuilder(
-                        Urls.GET_PAYMENT.parameter(UrlParameters.PAYMENT_ID, paymentId))
+                        Urls.GET_PAYMENT
+                                .parameter(
+                                        UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString())
+                                .parameter(UrlParameters.PAYMENT_ID, paymentId))
                 .get(GetPaymentResponse.class);
     }
 
-    public GetPaymentStatusResponse getPaymentStatus(String paymentId) {
+    public GetPaymentStatusResponse getPaymentStatus(
+            String paymentId, SwedbankPaymentType swedbankPaymentType) {
         return getPaymentRequestBuilder(
-                        Urls.GET_PAYMENT_STATUS.parameter(UrlParameters.PAYMENT_ID, paymentId))
+                        Urls.GET_PAYMENT_STATUS
+                                .parameter(
+                                        UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString())
+                                .parameter(UrlParameters.PAYMENT_ID, paymentId))
                 .get(GetPaymentStatusResponse.class);
     }
 
-    public PaymentAuthorisationResponse startPaymentAuthorisation(String paymentId, String state) {
+    public PaymentAuthorisationResponse startPaymentAuthorisation(
+            String paymentId, SwedbankPaymentType swedbankPaymentType, String state) {
         return getPaymentAuthorizationRequestBuilder(
-                        Urls.INITIATE_PAYMENT_AUTH.parameter(UrlParameters.PAYMENT_ID, paymentId),
+                        Urls.INITIATE_PAYMENT_AUTH
+                                .parameter(
+                                        UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString())
+                                .parameter(UrlParameters.PAYMENT_ID, paymentId),
                         state)
                 .post(PaymentAuthorisationResponse.class);
     }

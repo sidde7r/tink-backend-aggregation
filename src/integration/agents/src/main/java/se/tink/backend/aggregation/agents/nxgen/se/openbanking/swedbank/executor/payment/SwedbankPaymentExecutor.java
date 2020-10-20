@@ -80,11 +80,15 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
-                .getPayment(paymentRequest.getPayment().getUniqueId())
+                .getPayment(
+                        paymentRequest.getPayment().getUniqueId(),
+                        SwedbankPaymentType.SeDomesticCreditTransfers)
                 .toTinkPaymentResponse(
                         paymentRequest.getPayment(),
                         apiClient
-                                .getPaymentStatus(paymentRequest.getPayment().getUniqueId())
+                                .getPaymentStatus(
+                                        paymentRequest.getPayment().getUniqueId(),
+                                        SwedbankPaymentType.SeDomesticCreditTransfers)
                                 .getTransactionStatus());
     }
 
@@ -95,12 +99,16 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         String state = strongAuthenticationState.getState();
 
         PaymentAuthorisationResponse paymentAuthorisationResponse =
-                apiClient.startPaymentAuthorisation(payment.getUniqueId(), state);
+                apiClient.startPaymentAuthorisation(
+                        payment.getUniqueId(),
+                        SwedbankPaymentType.SeDomesticCreditTransfers,
+                        state);
         paymentAuthenticator.openThirdPartyApp(
                 paymentAuthorisationResponse.getAuthorizationUrl(), state);
 
         GetPaymentStatusResponse getPaymentStatusResponse =
-                apiClient.getPaymentStatus(payment.getUniqueId());
+                apiClient.getPaymentStatus(
+                        payment.getUniqueId(), SwedbankPaymentType.SeDomesticCreditTransfers);
 
         payment.setStatus(
                 SwedbankPaymentStatus.fromString(getPaymentStatusResponse.getTransactionStatus())

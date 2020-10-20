@@ -43,11 +43,12 @@ public final class SwedbankConstants {
         public static final String ACCOUNT_TRANSACTIONS = "/v3/accounts/{account-id}/transactions";
         public static final String CONSENTS = "/v3/consents";
         public static final String CONSENT_STATUS = CONSENTS + "/{consent-id}/status";
-        public static final String INITIATE_PAYMENT = "/v2/payments/{paymentType}";
-        public static final String GET_PAYMENT = "/v2/payments/{paymentId}";
-        public static final String GET_PAYMENT_STATUS = "/v2/payments/{paymentId}/status";
+        public static final String INITIATE_PAYMENT = "/v3/payments/{paymentType}";
+        public static final String GET_PAYMENT = "/v3/payments/{paymentType}/{paymentId}";
+        public static final String GET_PAYMENT_STATUS =
+                "/v3/payments/{paymentType}/{paymentId}/status";
         public static final String INITIATE_PAYMENT_AUTH =
-                "/v2/payments/{paymentId}/authorisations";
+                "/v3/payments/{paymentType}/{paymentId}/authorisations";
     }
 
     public static class UrlParameters {
