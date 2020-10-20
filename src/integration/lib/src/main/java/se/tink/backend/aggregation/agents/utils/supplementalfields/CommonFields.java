@@ -14,8 +14,7 @@ public class CommonFields {
 
     public static class Selection {
         private static final String FIELD_KEY = "selectAuthMethodField";
-        private static final LocalizableKey DESCRIPTION =
-                new LocalizableKey("Authentication method index");
+
         private static final LocalizableParametrizedKey HINT_FORMAT =
                 new LocalizableParametrizedKey("Select from 1 to {0}");
         private static final LocalizableKey PATTERN_ERROR_MESSAGE =
@@ -28,6 +27,16 @@ public class CommonFields {
         }
 
         public static Field build(Catalog catalog, List<String> options) {
+            return build(catalog, options, null);
+        }
+
+        public static Field build(
+                Catalog catalog, List<String> options, LocalizableKey description) {
+
+            if (description == null) {
+                description = new LocalizableKey("Authentication method index");
+            }
+
             int maxNumber = options.size();
             String helpText =
                     IntStream.range(0, maxNumber)
@@ -41,7 +50,7 @@ public class CommonFields {
 
             return Field.builder()
                     .name(FIELD_KEY)
-                    .description(catalog.getString(DESCRIPTION))
+                    .description(catalog.getString(description))
                     .hint(catalog.getString(HINT_FORMAT, maxNumber))
                     .helpText(helpText)
                     .numeric(true)
@@ -53,7 +62,7 @@ public class CommonFields {
         }
     }
 
-    static class Information {
+    public static class Information {
         public static Field build(
                 String fieldKey, String description, String value, String helpText) {
             return Field.builder()
