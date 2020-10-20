@@ -4,6 +4,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataPaymentAccountCapabilities;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
@@ -68,6 +69,7 @@ public class BankdataAccountEntity {
                         BankdataPaymentAccountCapabilities.canPlaceFunds(name, accountType, this))
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                .setHolderName(new HolderName(getAccountOwner()))
                 .build();
     }
 
