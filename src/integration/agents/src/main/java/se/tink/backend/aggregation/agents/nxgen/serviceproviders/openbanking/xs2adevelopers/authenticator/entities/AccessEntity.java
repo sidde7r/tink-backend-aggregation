@@ -17,7 +17,9 @@ public class AccessEntity {
         this.allPsd2 = allPsd2;
     }
 
-    public AccessEntity(List<AccessInfoEntity> accounts) {
-        this.accounts = accounts;
+    public AccessEntity(List<AccessInfoEntity> accessInfoEntities) {
+        this.accounts = accessInfoEntities;
+        this.balances = accessInfoEntities;
+        this.transactions = accessInfoEntities;
     }
 }
