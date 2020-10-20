@@ -30,6 +30,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",

@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.Er
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.MetaDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.rpc.ResultEntity;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.i18n.Catalog;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CommerzbankPhotoTanAuthenticatorTest {
@@ -57,6 +58,7 @@ public class CommerzbankPhotoTanAuthenticatorTest {
     private PersistentStorage persistentStorage;
     private CommerzbankApiClient apiClient;
     private SupplementalRequester supplementalRequester;
+    private Catalog catalog;
 
     private Credentials credentials;
 
@@ -65,10 +67,11 @@ public class CommerzbankPhotoTanAuthenticatorTest {
         persistentStorage = mock(PersistentStorage.class);
         apiClient = mock(CommerzbankApiClient.class);
         supplementalRequester = mock(SupplementalRequester.class);
+        catalog = Catalog.getCatalog("EN_US");
 
         authenticator =
                 new CommerzbankPhotoTanAuthenticator(
-                        persistentStorage, apiClient, supplementalRequester);
+                        persistentStorage, apiClient, supplementalRequester, catalog);
 
         credentials = mock(Credentials.class);
         given(credentials.getField(Key.USERNAME)).willReturn(USERNAME);
@@ -288,7 +291,12 @@ public class CommerzbankPhotoTanAuthenticatorTest {
         int numOfAttempts = 3;
         authenticator =
                 new CommerzbankPhotoTanAuthenticator(
-                        persistentStorage, apiClient, supplementalRequester, 10, numOfAttempts);
+                        persistentStorage,
+                        apiClient,
+                        supplementalRequester,
+                        10,
+                        numOfAttempts,
+                        catalog);
         // and
         given(apiClient.approveSca(PROCESS_CONTEXT_ID))
                 .willReturn(getApprovalResponse(APPROVAL_STATUS_FAIL));

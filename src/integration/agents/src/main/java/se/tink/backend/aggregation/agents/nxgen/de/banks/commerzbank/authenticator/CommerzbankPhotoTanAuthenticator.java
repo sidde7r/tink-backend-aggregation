@@ -35,8 +35,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticat
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ErrorEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ErrorMessageEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -47,17 +49,32 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
     private static final long SLEEP_TIME = 3_000L;
     private static final int RETRY_ATTEMPTS = 60;
 
+    private static final LocalizableKey FIELD_DESCRIPTION = new LocalizableKey("TAN");
+    private static final LocalizableKey FIELD_NAME = new LocalizableKey("tanCode");
+    private static final LocalizableKey FIELD_HELPTEXT =
+            new LocalizableKey("Please open PhotoTAN application and confirm the order");
+    private static final LocalizableKey FIELD_VALUE =
+            new LocalizableKey("waiting for confirmation");
+
     private final PersistentStorage persistentStorage;
     private final CommerzbankApiClient apiClient;
     private final SupplementalRequester supplementalRequester;
     private final long sleepTime;
     private final int retryAttempts;
+    private final Catalog catalog;
 
     public CommerzbankPhotoTanAuthenticator(
             final PersistentStorage persistentStorage,
             final CommerzbankApiClient apiClient,
-            final SupplementalRequester supplementalRequester) {
-        this(persistentStorage, apiClient, supplementalRequester, SLEEP_TIME, RETRY_ATTEMPTS);
+            final SupplementalRequester supplementalRequester,
+            final Catalog catalog) {
+        this(
+                persistentStorage,
+                apiClient,
+                supplementalRequester,
+                SLEEP_TIME,
+                RETRY_ATTEMPTS,
+                catalog);
     }
 
     @Override
@@ -116,12 +133,11 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
 
     private void displayPrompt(Credentials credentials) {
         Field field =
-                Field.builder()
-                        .immutable(true)
-                        .description("Please open PhotoTAN application and confirm the order")
-                        .value("waiting for confirmation")
-                        .name("name")
-                        .build();
+                CommonFields.Information.build(
+                        catalog.getString(FIELD_NAME),
+                        catalog.getString(FIELD_DESCRIPTION),
+                        catalog.getString(FIELD_VALUE),
+                        catalog.getString(FIELD_HELPTEXT));
 
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(Collections.singletonList(field)));
