@@ -64,7 +64,7 @@ public final class PostbankAuthenticator implements AutoAuthenticator {
         try {
             ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
             return StatusValues.VALID.equalsIgnoreCase(consentStatus.getConsentStatus());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return false;
         }
     }
