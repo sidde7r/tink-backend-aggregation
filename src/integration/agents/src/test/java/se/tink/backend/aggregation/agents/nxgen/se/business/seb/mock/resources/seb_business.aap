@@ -204,7 +204,113 @@ Strict-Transport-Security: ***
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{"d":{"__type":"SEB_CS.SEBCSService","ServiceInput":null,"UserCredentials":null,"ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":131},"MiddlewareReport":{"HttpServer":"A3","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20083111:09:17.9275820"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW4401":[{"ROW_ID":1,"KUND_NR_PERSORG":5590592548,"KONTO_NR":"22222222222","KTOSLAG_TXT":"FÖRETAGSKONTO","BOKF_SALDO":49950.19,"DISP_BEL":49950.19,"KTOBEN_TXT":"PARADIME AB","KREDBEL":0.00,"KHAV":"","BETFL":"1","INSFL":"1","UTTFL":"1","KTOSLAG_KOD":2,"KTOUTDR_UTSKR":"N","INSGAR_TXT":"JA","BGCNR":"0006379838"},{"ROW_ID":2,"KUND_NR_PERSORG":5590592548,"KONTO_NR":"22222222222","KTOSLAG_TXT":"ENKLA SPARKTO FÖRETAG","BOKF_SALDO":0.00,"DISP_BEL":0.00,"KTOBEN_TXT":"PARADIME AB","KREDBEL":0.00,"KHAV":"","BETFL":"0","INSFL":"1","UTTFL":"1","KTOSLAG_KOD":12,"KTOUTDR_UTSKR":"N","INSGAR_TXT":"JA","BGCNR":""}],"PCBW4402":[],"PCBW4403":[],"PCBW4404":{"ROW_ID":1,"SUM_BOKF_SALDO":49950.19,"SUM_BOKF_SALDO_VAL":0.00,"SUM_DISP_BEL_SEK":49950.19,"SUM_DISP_BEL_VAL":0.00,"SUM_KREDITER_SEK_KTO":0.00,"SUM_KREDITER_VAL_KTO":0.00,"SUM_OVERTRAS_SEK_KTO":0.00,"SUM_OVERTRAS_VAL_KTO":0.00},"PCBW440Z":null,"PCBWP011":[],"PCBW4421":[{"ROW_ID":1,"KUND_NR_PERSORG":"5590592548","VALUTAKOD":"SEK","KONTO_NR":"22222222222","KTOBEN_TXT":"PARADIME AB","BGCNR":"0006379838","NAMN":"Paradime AB"}]}}}
+{
+  "d": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInfo": {
+      "SEBCS_Service": "",
+      "minusL": "",
+      "Type": "WantToWorkHere-Call us",
+      "SMMVersion": 0,
+      "Timestamp": null,
+      "SubId": 0,
+      "CSBusinessObject": "",
+      "VersionStamp": "",
+      "SMMName": "",
+      "ClientType": "",
+      "PreviousElapseTime": 0,
+      "PreviousElapseTimeSpecified": false,
+      "CodePage": "",
+      "Accounting": {
+        "CorrelationID": null,
+        "Language": "",
+        "CountryCode": null,
+        "Channel": null,
+        "InvoiceHint": "",
+        "Brand": "",
+        "ParentReqId": null,
+        "CurrentReqId": null,
+        "ZipOptions": null,
+        "Saml": null
+      },
+      "TimeoutMillis": 0,
+      "TimeoutMillisSpecified": false
+    },
+    "ServiceInput": null,
+    "UserCredentials": null,
+    "ResultInfo": {
+      "GatewayReturnCode": 0,
+      "GatewayReturnCodeText": "",
+      "Message": null,
+      "HostReturnCode": 0,
+      "HostReturnCodeText": "",
+      "ResponseTimes": {
+        "QueueTime": 0,
+        "ExecuteTime": 0,
+        "HostTime": 0,
+        "GateWayTime": 0,
+        "HTTPServerTime": 96
+      },
+      "MiddlewareReport": {
+        "HttpServer": "A3",
+        "TGWInstance": null,
+        "IMS": null,
+        "AS400": null
+      },
+      "CurrentTic": "20101910:23:12.1132317"
+    },
+    "VODB": {
+      "DBZV170": null,
+      "DBZV160": null,
+      "PCBW4401": [
+        {
+          "ROW_ID": 1,
+          "KUND_NR_PERSORG": 22222222222,
+          "KONTO_NR": "22222222222",
+          "KTOSLAG_TXT": "FÖRETAGSKONTO",
+          "BOKF_SALDO": 33132.18,
+          "DISP_BEL": 132989.18,
+          "KTOBEN_TXT": "",
+          "KREDBEL": 100000.00,
+          "KHAV": "",
+          "BETFL": "1",
+          "INSFL": "1",
+          "UTTFL": "1",
+          "KTOSLAG_KOD": 2,
+          "KTOUTDR_UTSKR": "J",
+          "INSGAR_TXT": "JA",
+          "BGCNR": "0006363113"
+        }
+      ],
+      "PCBW4402": [],
+      "PCBW4403": [],
+      "PCBW4404": {
+        "ROW_ID": 1,
+        "SUM_BOKF_SALDO": 33132.31,
+        "SUM_BOKF_SALDO_VAL": 0.00,
+        "SUM_DISP_BEL_SEK": 132989.31,
+        "SUM_DISP_BEL_VAL": 0.00,
+        "SUM_KREDITER_SEK_KTO": 0.00,
+        "SUM_KREDITER_VAL_KTO": 0.00,
+        "SUM_OVERTRAS_SEK_KTO": 0.00,
+        "SUM_OVERTRAS_VAL_KTO": 0.00
+      },
+      "PCBW440Z": null,
+      "PCBWP011": [],
+      "PCBW4421": [
+        {
+          "ROW_ID": 1,
+          "KUND_NR_PERSORG": "5568092653",
+          "VALUTAKOD": "SEK",
+          "KONTO_NR": "22222222222",
+          "KTOBEN_TXT": "FÖRETAGSKONTO",
+          "BGCNR": "0006363113",
+          "NAMN": "Redovisning i Hovås AB"
+        }
+      ]
+    }
+  }
+}
 
 REQUEST 9
 POST https://msme.seb.se/ServiceFactory/PC_BANK/PC_BankLista01Rorelse_ftg03.asmx/Execute
