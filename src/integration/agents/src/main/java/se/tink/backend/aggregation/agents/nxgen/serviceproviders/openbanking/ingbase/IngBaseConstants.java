@@ -98,12 +98,17 @@ public final class IngBaseConstants {
     }
 
     public static class ErrorMessages {
+        public static final String UNKNOWN_ERROR = "Error unknown";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find Token!";
         public static final String MISSING_CLIENT_ID = "Cannot find client id!";
         public static final String INVALID_GRANT_ERROR = "invalid_grant";
         public static final ImmutableList<Integer> ERROR_CODES =
                 ImmutableList.of(HttpStatus.SC_NOT_FOUND, HttpStatus.SC_BAD_GATEWAY);
+    }
+
+    public static class ErrorCodes {
+        public static final String NOT_FOUND = "NOT_FOUND";
     }
 
     static class HttpClient {

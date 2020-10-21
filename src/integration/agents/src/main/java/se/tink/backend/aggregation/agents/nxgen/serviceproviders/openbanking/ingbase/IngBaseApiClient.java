@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryKeys;
@@ -28,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.MarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -42,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheC
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
@@ -93,11 +97,20 @@ public class IngBaseApiClient {
     }
 
     public FetchAccountsResponse fetchAccounts() {
-        return buildRequestWithSignature(
-                        Urls.ACCOUNTS, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
-                .addBearerToken(getTokenFromSession())
-                .type(MediaType.APPLICATION_JSON)
-                .get(FetchAccountsResponse.class);
+        try {
+            return buildRequestWithSignature(
+                            Urls.ACCOUNTS, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
+                    .addBearerToken(getTokenFromSession())
+                    .type(MediaType.APPLICATION_JSON)
+                    .get(FetchAccountsResponse.class);
+        } catch (HttpResponseException e) {
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if (errorResponse.getErrorCode().equals(ErrorCodes.NOT_FOUND)) {
+                clearToken();
+                throw AuthorizationError.UNAUTHORIZED.exception();
+            }
+            throw e;
+        }
     }
 
     public FetchBalancesResponse fetchBalances(final AccountEntity account) {
@@ -292,6 +305,10 @@ public class IngBaseApiClient {
 
     private void setClientIdToSession(final String clientId) {
         persistentStorage.put(StorageKeys.CLIENT_ID, clientId, false);
+    }
+
+    private void clearToken() {
+        persistentStorage.remove(StorageKeys.TOKEN);
     }
 
     private OAuth2Token getTokenFromSession() {
