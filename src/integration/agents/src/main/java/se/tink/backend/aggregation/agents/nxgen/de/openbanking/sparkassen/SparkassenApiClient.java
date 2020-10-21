@@ -108,7 +108,6 @@ public class SparkassenApiClient {
     public FinalizeAuthorizationResponse finalizeAuthorization(
             String consentId, String authorizationId, String otp) {
         try {
-
             return createRequest(
                             Urls.FINALIZE_AUTHORIZATION
                                     .parameter(PathVariables.CONSENT_ID, consentId)
