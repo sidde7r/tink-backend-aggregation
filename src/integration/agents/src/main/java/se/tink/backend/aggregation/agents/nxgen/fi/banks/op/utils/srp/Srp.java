@@ -43,19 +43,15 @@ public class Srp {
         this.A = this.srp6Routines.computePublicClientValue(this.N, this.g, this.a);
     }
 
-    public static Srp withStaticPrivateValue(BigInteger privateValue) {
+    static Srp withStaticPrivateValue(BigInteger privateValue) {
         return new Srp(privateValue);
-    }
-
-    public static Srp withRandomPrivateValue() {
-        return new Srp(null);
     }
 
     private MessageDigest getDigestInstance() {
         try {
             return MessageDigest.getInstance(HASH_FUNCTION);
         } catch (NoSuchAlgorithmException e) {
-            return null;
+            throw new IllegalStateException(e);
         }
     }
 
@@ -120,7 +116,7 @@ public class Srp {
         return result;
     }
 
-    public ClientEvidenceMessageResponse calculateClientEvidenceMessage(
+    ClientEvidenceMessageResponse calculateClientEvidenceMessage(
             String serverPublicValueAsHex, String saltAsHex, String userId, String password) {
         BigInteger B = new BigInteger(EncodingUtils.decodeHexString(serverPublicValueAsHex));
         byte[] salt = EncodingUtils.decodeHexString(saltAsHex);
