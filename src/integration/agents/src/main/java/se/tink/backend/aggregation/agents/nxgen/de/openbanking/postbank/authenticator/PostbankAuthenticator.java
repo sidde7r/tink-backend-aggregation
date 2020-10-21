@@ -1,56 +1,71 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StatusValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
+@AllArgsConstructor
 public final class PostbankAuthenticator implements AutoAuthenticator {
 
-    private final PostbankApiClient postbankApiClient;
+    private final PostbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
 
-    public PostbankAuthenticator(PostbankApiClient apiClient, PersistentStorage persistentStorage) {
-        this.postbankApiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-    }
-
-    public AuthorisationResponse init(String username, String password)
+    AuthorisationResponse init(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        ConsentResponse consentsResponse = postbankApiClient.getConsents(username);
+        ConsentResponse consentsResponse = apiClient.getConsents(username);
         persistentStorage.put(StorageKeys.CONSENT_ID, consentsResponse.getConsentId());
 
-        return postbankApiClient.startAuthorisation(
+        return apiClient.startAuthorisation(
                 new URL(
                         consentsResponse
-                                .getLinksEntity()
-                                .getStartAuthorisationWithEncryptedPsuAuthenticationEntity()
+                                .getLinks()
+                                .getStartAuthorisationWithEncryptedPsuAuthentication()
                                 .getHref()),
                 username,
                 password);
     }
 
     AuthorisationResponse selectScaMethod(String methodId, String username, String url) {
-        return postbankApiClient.updateAuthorisationForScaMethod(new URL(url), username, methodId);
+        return apiClient.updateAuthorisationForScaMethod(new URL(url), username, methodId);
     }
 
     AuthorisationResponse authoriseWithOtp(String otp, String username, String url)
             throws AuthenticationException, AuthorizationException {
-        return postbankApiClient.updateAuthorisationForOtp(new URL(url), username, otp);
+        return apiClient.updateAuthorisationForOtp(new URL(url), username, otp);
     }
 
     AuthorisationResponse checkAuthorisationStatus(String username, String url) {
-        return postbankApiClient.getAuthorisation(new URL(url), username);
+        return apiClient.getAuthorisation(new URL(url), username);
     }
 
     @Override
     public void autoAuthenticate() {
-        throw SessionError.SESSION_EXPIRED.exception();
+        if (!isStoredConsentValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    private boolean isStoredConsentValid() {
+        if (persistentStorage.get(StorageKeys.CONSENT_ID) == null) {
+            return false;
+        }
+        try {
+            ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
+            return StatusValues.VALID.equalsIgnoreCase(consentStatus.getConsentStatus());
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 }
