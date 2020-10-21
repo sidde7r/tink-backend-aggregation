@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.node.ContainerNode;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class PropertiesEntity {
 
-    private List<Entry> entry;
+    // it changed from array to an object, as it is generally not used and we dont want to delete it
+    // lets keep in as ContainerNode so it wont cause parsing exception
+    private ContainerNode entry;
 
     @JsonObject
     public static class Entry {
