@@ -56,6 +56,7 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
                             .setCredentialsId(credentials.getId())
                             .setAccountTypes(restrictedAccountTypes));
         } catch (RuntimeException e) {
+            // don't fail refresh if sending information about restricted accounts failed
             log.warn("Execution of DataFetchingRestrictionWorkerCommand failed", e);
         }
         return AgentWorkerCommandResult.CONTINUE;
