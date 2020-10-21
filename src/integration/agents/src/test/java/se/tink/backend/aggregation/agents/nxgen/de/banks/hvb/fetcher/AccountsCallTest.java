@@ -58,7 +58,7 @@ public class AccountsCallTest {
 
     private String expectedBody() {
         return "params=%5B%7B%22platform%22%3A%22iPhone%22%2C%22osVersion%22%3A%2213.5.1%22%2C%22"
-                + "appVersion%22%3A%224.2.3%22%2C%22reb%22%3A%22"
+                + "appVersion%22%3A%224.2.7%22%2C%22reb%22%3A%22"
                 + givenDirectBankingNumber()
                 + "%22%7D%5D";
     }

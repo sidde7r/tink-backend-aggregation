@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -84,6 +85,8 @@ public class MastercardAgreementEntity {
                                 .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                                 .canWithdrawCash(AccountCapabilities.Answer.YES)
                                 .canPlaceFunds(AccountCapabilities.Answer.From(canDeposit))
+                                .setHolderName(
+                                        new HolderName(mastercardEntity.getAgreementAccountOwner()))
                                 .build());
     }
 

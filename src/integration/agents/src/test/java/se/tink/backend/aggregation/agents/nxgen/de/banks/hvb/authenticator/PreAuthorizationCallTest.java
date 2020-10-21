@@ -72,7 +72,7 @@ public class PreAuthorizationCallTest {
                                 ACCEPT,
                                 singletonList(
                                         "text/javascript, text/html, application/xml, text/xml, */*")),
-                        entry("x-wl-app-version", singletonList("4.2.3")),
+                        entry("x-wl-app-version", singletonList("4.2.7")),
                         entry("AvantiPIN", singletonList(givenPin())),
                         entry(
                                 "AvantiSec",
@@ -100,7 +100,7 @@ public class PreAuthorizationCallTest {
                 .setIp("127.0.0.1")
                 .setIpMsite("127.0.0.1")
                 .setPlatform("Avanti")
-                .setWlVersion("4.2.3")
+                .setWlVersion("4.2.7")
                 .setEnvironment("HV")
                 .setApplicationSessionId(givenApplicationSessionId())
                 .setHttpAccept("*")
