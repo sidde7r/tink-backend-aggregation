@@ -169,6 +169,9 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+        UkOpenBankingV31PisUtils.validateRemittanceWithProviderOrThrow(
+                credentials.getProviderName(),
+                paymentRequest.getPayment().getRemittanceInformation());
         return authenticateAndCreatePisConsent(paymentRequest);
     }
 

@@ -36,7 +36,9 @@ public class UkOpenBankingV31Pis implements UkOpenBankingPis {
 
         DomesticPaymentConsentRequest consentRequest =
                 new DomesticPaymentConsentRequest(paymentRequest.getPayment());
-
+        if (apiClient.isHSBCFamily()) {
+            consentRequest.getData().getInitiation().setReferenceForHSBCFamily();
+        }
         DomesticPaymentConsentResponse consentResponse =
                 apiClient.createDomesticPaymentConsent(
                         ukOpenBankingPisConfig,
