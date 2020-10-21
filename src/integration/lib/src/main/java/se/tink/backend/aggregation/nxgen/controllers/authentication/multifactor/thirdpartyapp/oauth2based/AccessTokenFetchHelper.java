@@ -25,6 +25,10 @@ public class AccessTokenFetchHelper<T extends OAuth2TokenBase> {
 
         validateToken(token);
 
+        credentials.setSessionExpiryDate(
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                        token, tokenLifeTime.getLifetime(), tokenLifeTime.getUnit()));
+
         return token;
     }
 
