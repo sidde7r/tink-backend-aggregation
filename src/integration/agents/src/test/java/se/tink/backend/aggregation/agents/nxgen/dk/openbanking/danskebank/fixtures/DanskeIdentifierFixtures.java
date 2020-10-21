@@ -10,7 +10,7 @@ public class DanskeIdentifierFixtures {
     private static final String IBAN_IDENTIFIER =
             "{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"DK1145005678123455\"}";
     private static final String SHORT_IBAN_IDENTIFIER =
-            "{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"DK11450056781234\"}";
+            "{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"DK11452356781234\"}";
     private static final String DANSKE_IBAN_IDENTIFIER =
             "{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"DK9830003161123456\"}";
     private static final String SHORT_DANSKE_IBAN_IDENTIFIER =
@@ -20,7 +20,9 @@ public class DanskeIdentifierFixtures {
     private static final String SHORT_DANSKE_BBAN_IDENTIFIER =
             "{\"SchemeName\":\"DK.DanskeBank.AccountNumber\",\"Identification\":\"3098316112\"}";
     private static final String PAN_IDENTIFIER =
-            "{ \"Identification\": \"************5004\", \"Name\": \"MR MYSZO-JELEN\", \"SchemeName\": \"UK.OBIE.PAN\" }";
+            "{ \"Identification\": \"1212345678905004\", \"Name\": \"MR MYSZO-JELEN\", \"SchemeName\": \"UK.OBIE.PAN\" }";
+    private static final String SHORT_PAN_IDENTIFIER =
+            "{ \"Identification\": \"905004\", \"Name\": \"MR MYSZO-JELEN\", \"SchemeName\": \"UK.OBIE.PAN\" }";
 
     public static AccountIdentifierEntity bbanIdentifier() {
         return SerializationUtils.deserializeFromString(
@@ -55,5 +57,10 @@ public class DanskeIdentifierFixtures {
     public static AccountIdentifierEntity panIdentifier() {
         return SerializationUtils.deserializeFromString(
                 PAN_IDENTIFIER, AccountIdentifierEntity.class);
+    }
+
+    public static AccountIdentifierEntity shortPanIdentifier() {
+        return SerializationUtils.deserializeFromString(
+                SHORT_PAN_IDENTIFIER, AccountIdentifierEntity.class);
     }
 }

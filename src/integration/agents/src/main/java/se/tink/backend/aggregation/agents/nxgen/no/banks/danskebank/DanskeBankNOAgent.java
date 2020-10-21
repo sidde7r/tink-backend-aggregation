@@ -10,6 +10,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator.DanskeBankNOBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.mapper.NoAccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
@@ -31,7 +32,12 @@ import se.tink.libraries.selenium.WebDriverHelper;
 public final class DanskeBankNOAgent extends DanskeBankAgent {
     public DanskeBankNOAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new DanskeBankNOConfiguration());
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                new DanskeBankNOConfiguration(),
+                new NoAccountEntityMapper());
     }
 
     @Override

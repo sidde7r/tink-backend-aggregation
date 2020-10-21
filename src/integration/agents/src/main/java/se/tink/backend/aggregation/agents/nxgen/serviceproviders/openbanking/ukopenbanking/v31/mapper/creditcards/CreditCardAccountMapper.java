@@ -52,7 +52,7 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
                         .withInferredAccountFlags()
                         .withId(
                                 IdModule.builder()
-                                        .withUniqueIdentifier(cardIdentifier.getIdentification())
+                                        .withUniqueIdentifier(getUniqueIdentifier(cardIdentifier))
                                         .withAccountNumber(cardIdentifier.getIdentification())
                                         .withAccountName(displayName)
                                         .addIdentifier(
@@ -64,7 +64,11 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
         return Optional.of(builder.build());
     }
 
-    protected String pickDisplayName(
+    protected String getUniqueIdentifier(AccountIdentifierEntity cardIdentifier) {
+        return cardIdentifier.getIdentification();
+    }
+
+    private String pickDisplayName(
             AccountEntity account, AccountIdentifierEntity cardPrimaryAccountNumber) {
         return ObjectUtils.firstNonNull(
                 account.getNickname(),
@@ -72,7 +76,7 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
                 cardPrimaryAccountNumber.getIdentification());
     }
 
-    protected Collection<String> collectHolders(
+    private Collection<String> collectHolders(
             AccountIdentifierEntity primaryIdentifier, Collection<IdentityDataV31Entity> parties) {
         return Stream.ofAll(parties)
                 .map(IdentityDataV31Entity::getName)

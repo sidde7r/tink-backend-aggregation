@@ -46,32 +46,10 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
 
         AccountIdentifierEntity primaryIdentifier =
                 identifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        accountIdentifiers,
-                        UkOpenBankingApiDefinitions.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
+                        accountIdentifiers, getAllowedTransactionalAccountIdentifiers());
         String accountNumber = primaryIdentifier.getIdentification();
-        String uniqueIdentifier =
-                isRevolutAccount(account)
-                        ? account.getAccountId()
-                        : accountNumber; // todo get rid of revolut specific logic
+        String uniqueIdentifier = getUniqueIdentifier(account, primaryIdentifier);
 
-        return buildTransactionalAccount(
-                account,
-                balances,
-                parties,
-                accountIdentifiers,
-                primaryIdentifier,
-                accountNumber,
-                uniqueIdentifier);
-    }
-
-    protected Optional<TransactionalAccount> buildTransactionalAccount(
-            AccountEntity account,
-            Collection<AccountBalanceEntity> balances,
-            Collection<IdentityDataV31Entity> parties,
-            List<AccountIdentifierEntity> accountIdentifiers,
-            AccountIdentifierEntity primaryIdentifier,
-            String accountNumber,
-            String uniqueIdentifier) {
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
                         .withType(mapType(account))
@@ -93,6 +71,18 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
         collectHolders(primaryIdentifier, parties).forEach(builder::addHolderName);
 
         return builder.build();
+    }
+
+    protected String getUniqueIdentifier(
+            AccountEntity account, AccountIdentifierEntity primaryIdentifier) {
+        return isRevolutAccount(account)
+                ? account.getAccountId()
+                : primaryIdentifier.getIdentification();
+    }
+
+    protected List<UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code>
+            getAllowedTransactionalAccountIdentifiers() {
+        return UkOpenBankingApiDefinitions.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS;
     }
 
     private BalanceModule buildBalanceModule(Collection<AccountBalanceEntity> balances) {
