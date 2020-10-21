@@ -16,25 +16,18 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.Dev
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
     private final AktiaApiClient apiClient;
     private final EncapClient encapClient;
-    private final AktiaAuthenticationFlow aktiaAuthenticationFlow;
     private final Credentials credentials;
     private String username;
     private OAuth2Token registrationToken;
 
     public AktiaKeyCardAuthenticator(
-            AktiaApiClient apiClient,
-            EncapClient encapClient,
-            final Storage instanceStorage,
-            Credentials credentials) {
+            AktiaApiClient apiClient, EncapClient encapClient, Credentials credentials) {
         this.apiClient = apiClient;
         this.encapClient = encapClient;
-        this.aktiaAuthenticationFlow =
-                new AktiaAuthenticationFlow(apiClient, encapClient, instanceStorage);
         this.credentials = credentials;
     }
 
@@ -65,7 +58,6 @@ public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
         String activationCode = otpResponse.getDeviceActivationCode();
 
         try {
-
             encapClient.registerDevice(username, activationCode);
             DeviceAuthenticationResponse authenticationResponse =
                     encapClient.authenticateDevice(AuthenticationMethod.DEVICE);
@@ -76,8 +68,6 @@ public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
-            // Authenticate after registration.
-            aktiaAuthenticationFlow.authenticate();
         } finally {
             // Save device
             encapClient.saveDevice();

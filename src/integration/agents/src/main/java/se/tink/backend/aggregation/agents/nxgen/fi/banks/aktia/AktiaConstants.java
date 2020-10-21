@@ -18,7 +18,7 @@ public class AktiaConstants {
         public static final String BASIC_AUTH_PASSWORD = "zvn5vHAXlL2W99epdEejBVypJJujBVVgRBSU5hb4";
 
         public static final String USER_AGENT =
-                "MobileBank/2.5.1 (com.aktia.mobilebank; build 207; iOS 12.4.0)";
+                "MobileBank/2.10.0 (com.aktia.mobilebank; build 267; iOS 12.4.0)";
     }
 
     public static class Oauth2Scopes {
@@ -57,8 +57,15 @@ public class AktiaConstants {
                 new URL(GATEWAY_BASE + "//avainregistration/initiate");
         public static final URL REGISTRATION_COMPLETE =
                 new URL(GATEWAY_BASE + "//avainregistration/complete");
+        public static final URL AVAIN_INFO = new URL(GATEWAY_BASE + "//avain/avain-info");
         public static final URL AUTHENTICATION_INIT =
                 new URL(GATEWAY_BASE + "//avain/login/mobile/initiate");
+        public static final URL GET_PHONE_NUMBER =
+                new URL(GATEWAY_BASE + "//avain/login/getPhoneNumber");
+        public static final URL INITIATE_CHALLENGE =
+                new URL(GATEWAY_BASE + "//avain/login/initiateChallenge");
+        public static final URL VERIFY_CHALLENGE =
+                new URL(GATEWAY_BASE + "//avain/login/verifyChallenge");
 
         private static final String API_BASE = GATEWAY_BASE + "/mgw";
 
@@ -77,10 +84,11 @@ public class AktiaConstants {
 
     public static class Avain {
         public static final String SOFTWARE_NAME = "Avain";
-        public static final String SOFTWARE_VERSION = "2.5.1";
+        public static final String SOFTWARE_VERSION = "2.10.0";
         public static final String PUSH_NOTIFICATION_TOKEN = "dummy-token";
         public static final String CONSENT = "AVAIN_TERMS";
         public static final String AUTHENTICATION_ID_TYPE = "com.evry.sam.appcontext";
+        public static final String CHALLENGE_TYPE = "SMS_ONBOARDING";
     }
 
     public static final TypeMapper<AccountTypes> TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER =

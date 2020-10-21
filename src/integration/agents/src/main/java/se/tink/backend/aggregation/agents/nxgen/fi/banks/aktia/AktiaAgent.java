@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.In
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.AktiaAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.AktiaEncapConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.AktiaKeyCardAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.AktiaSmsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.entities.UserAccountInfo;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.AktiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
@@ -24,7 +25,7 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycardandsmsotp.KeyCardAndSmsOtpAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -75,11 +76,13 @@ public final class AktiaAgent extends NextGenerationAgent
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new KeyCardAuthenticationController(
+                new KeyCardAndSmsOtpAuthenticationController<>(
                         catalog,
                         supplementalInformationHelper,
-                        new AktiaKeyCardAuthenticator(
-                                apiClient, encapClient, instanceStorage, credentials)),
+                        new AktiaKeyCardAuthenticator(apiClient, encapClient, credentials),
+                        6,
+                        new AktiaSmsAuthenticator(apiClient, encapClient, instanceStorage),
+                        6),
                 new AktiaAutoAuthenticator(apiClient, encapClient, instanceStorage));
     }
 

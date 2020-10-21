@@ -7,15 +7,22 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationInitResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.InfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.InitiateChallengeRequest;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.InitiateChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.LoginDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.Oauth2Request;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.PhoneNumberResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationCompleteRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationOtpResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.VerifyChallengeRequest;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.VerifyChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.entities.AccountSummaryListEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.rpc.AccountsSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -130,6 +137,40 @@ public class AktiaApiClient {
         authenticationInitResponse.setLoginStatus(loginStatus);
 
         return authenticationInitResponse;
+    }
+
+    public InfoResponse getAvainInfo(OAuth2Token token) {
+        return httpClient
+                .request(AktiaConstants.Url.AVAIN_INFO)
+                .accept(MediaType.WILDCARD)
+                .addBearerToken(token)
+                .get(InfoResponse.class);
+    }
+
+    public PhoneNumberResponse getPhoneInfo(OAuth2Token token) {
+        return httpClient
+                .request(AktiaConstants.Url.GET_PHONE_NUMBER)
+                .accept(MediaType.WILDCARD)
+                .addBearerToken(token)
+                .get(PhoneNumberResponse.class);
+    }
+
+    public InitiateChallengeResponse initiateChallenge(OAuth2Token token) {
+        return httpClient
+                .request(Url.INITIATE_CHALLENGE)
+                .body(new InitiateChallengeRequest(), MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.WILDCARD)
+                .addBearerToken(token)
+                .post(InitiateChallengeResponse.class);
+    }
+
+    public VerifyChallengeResponse verifyChallenge(OAuth2Token token, String code) {
+        return httpClient
+                .request(Url.VERIFY_CHALLENGE)
+                .body(new VerifyChallengeRequest(code), MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.WILDCARD)
+                .addBearerToken(token)
+                .post(VerifyChallengeResponse.class);
     }
 
     public Optional<String> getAuthenticationId(OAuth2Token token) {
