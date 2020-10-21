@@ -3,13 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetch
 import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.xml.DateEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.xml.EntryEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.xml.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.xml.TransactionDetailsEntity;
@@ -55,7 +58,7 @@ public class TransactionMapper {
                 .setPending(!TransactionMapper.isBooked(entryEntity))
                 .setAmount(isDebit(entryEntity) ? amount.negate() : amount)
                 .setDescription(getDescription(entryEntity))
-                .setDate(LocalDate.parse(entryEntity.getValueDate().getDate()))
+                .setDate(getDate(entryEntity))
                 .build();
     }
 
@@ -93,5 +96,14 @@ public class TransactionMapper {
         } else {
             return beneficiary;
         }
+    }
+
+    private static LocalDate getDate(EntryEntity entryEntity) {
+        return Stream.of(entryEntity.getValueDate(), entryEntity.getBookingDate())
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(DateEntity::getDate)
+                .map(LocalDate::parse)
+                .orElse(null);
     }
 }
