@@ -48,6 +48,9 @@ class AuthenticatorTestData {
     static final LoginException LOGIN_EXCEPTION =
             new LoginException(LoginError.INCORRECT_CREDENTIALS);
 
+    static final LoginException LOGIN_EXCEPTION_INCORRECT_CHALLENGE =
+            new LoginException(LoginError.INCORRECT_CHALLENGE_RESPONSE);
+
     static final SupplementalInfoException SUPPLEMENTAL_INFO_EXCEPTION =
             new SupplementalInfoException(SupplementalInfoError.NO_VALID_CODE);
 

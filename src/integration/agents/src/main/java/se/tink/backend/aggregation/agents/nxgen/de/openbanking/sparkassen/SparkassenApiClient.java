@@ -88,7 +88,7 @@ public class SparkassenApiClient {
                             new InitAuthorizationRequest(new PsuDataEntity(password)));
         } catch (HttpResponseException e) {
             if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
             throw e;
         }
@@ -107,11 +107,21 @@ public class SparkassenApiClient {
 
     public FinalizeAuthorizationResponse finalizeAuthorization(
             String consentId, String authorizationId, String otp) {
-        return createRequest(
-                        Urls.FINALIZE_AUTHORIZATION
-                                .parameter(PathVariables.CONSENT_ID, consentId)
-                                .parameter(PathVariables.AUTHORIZATION_ID, authorizationId))
-                .put(FinalizeAuthorizationResponse.class, new FinalizeAuthorizationRequest(otp));
+        try {
+
+            return createRequest(
+                            Urls.FINALIZE_AUTHORIZATION
+                                    .parameter(PathVariables.CONSENT_ID, consentId)
+                                    .parameter(PathVariables.AUTHORIZATION_ID, authorizationId))
+                    .put(
+                            FinalizeAuthorizationResponse.class,
+                            new FinalizeAuthorizationRequest(otp));
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
+            }
+            throw e;
+        }
     }
 
     public ConsentStatusResponse getConsentStatus(String consentId) {
