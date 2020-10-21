@@ -32,6 +32,10 @@ public class DeutscheKnownErrorsFilter extends Filter {
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
 
+        if (!response.hasBody()) {
+            return response;
+        }
+
         ErrorResponse errorResponse = getBodyAsExpectedType(response);
         if (errorResponse != null) {
             List<String> errorTextsInResponse =
@@ -50,6 +54,7 @@ public class DeutscheKnownErrorsFilter extends Filter {
     }
 
     private ErrorResponse getBodyAsExpectedType(HttpResponse response) {
+
         try {
             return response.getBody(ErrorResponse.class);
         } catch (RuntimeException e) {
