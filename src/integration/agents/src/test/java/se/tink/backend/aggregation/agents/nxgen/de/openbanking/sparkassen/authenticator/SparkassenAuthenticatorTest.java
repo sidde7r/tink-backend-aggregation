@@ -124,6 +124,22 @@ public class SparkassenAuthenticatorTest {
         assertThat(throwable).isNull();
     }
 
+    @Test
+    public void shouldThrowSessionExceptionWhenCheckingConsentValidtyThrowsException() {
+        // given
+        persistentStorage.saveConsentId(TEST_CONSENT_ID);
+        when(apiClient.getConsentStatus(TEST_CONSENT_ID))
+                .thenThrow(new IllegalStateException("Whatever"));
+
+        // when
+        Throwable throwable = catchThrowable(() -> authenticator.autoAuthenticate());
+
+        // then
+        verify(apiClient).getConsentStatus(any());
+        verifyNoMoreInteractions(apiClient);
+        assertThat(throwable).isInstanceOf(SessionException.class);
+    }
+
     private Object[] possibleWrongCredentialTypes() {
         return new Object[] {
             CredentialsTypes.MOBILE_BANKID,
