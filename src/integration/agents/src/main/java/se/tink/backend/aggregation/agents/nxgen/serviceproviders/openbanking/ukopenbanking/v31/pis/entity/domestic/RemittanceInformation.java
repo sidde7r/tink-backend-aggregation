@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 /**
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
  */
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
+@Setter
 public class RemittanceInformation {
     @JsonInclude(Include.NON_NULL)
     private String unstructured;
@@ -34,9 +36,5 @@ public class RemittanceInformation {
 
     public String getUnstructured() {
         return unstructured;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
     }
 }

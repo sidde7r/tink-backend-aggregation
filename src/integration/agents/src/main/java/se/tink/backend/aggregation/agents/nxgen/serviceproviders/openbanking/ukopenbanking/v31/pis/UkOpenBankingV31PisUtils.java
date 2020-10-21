@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis;
 
+import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
@@ -34,8 +35,7 @@ public class UkOpenBankingV31PisUtils {
 
     private static boolean isRemittanceInformationValueInvalid(
             RemittanceInformation remittanceInformation) {
-        return remittanceInformation.getValue() == null
-                || remittanceInformation.getValue().length() > 18
-                || remittanceInformation.getValue().length() < 1;
+        return Strings.isNullOrEmpty(remittanceInformation.getValue())
+                || remittanceInformation.getValue().length() > 18;
     }
 }
