@@ -3,15 +3,21 @@ set -euo pipefail
 
 export SONAR_SCANNER_VERSION=4.5.0.2216
 export SONAR_SCANNER_HOME=/cache/sonar-scanner-$SONAR_SCANNER_VERSION-linux
+export SONAR_ARCHIVE=/cache/sonar-scanner.zip
 
-if [ ! -d "$SONAR_SCANNER_HOME" ]; then
+if [ ! -d "$SONAR_ARCHIVE" ]; then
+  echo "Downloading sonar-scanner..."
   curl -sSLo /cache/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
   SONAR_SCANNER_SHA256SUM="ae6bc36f997604657c8fde1486eda4257c280c01c0dd59dc01a86a1af2d8dc8d"
   echo "${SONAR_SCANNER_SHA256SUM} /cache/sonar-scanner.zip" | sha256sum -c
-  unzip /cache/sonar-scanner.zip -d /cache/
-  rm /cache/sonar-scanner.zip
+else
+  echo "Using cached sonar-scanner..."
 fi
 
+rm -rf $SONAR_SCANNER_HOME
+mkdir -p $SONAR_SCANNER_HOME
+
+unzip "$SONAR_ARCHIVE" -d /cache/
 export PATH=$SONAR_SCANNER_HOME/bin:$PATH
 export SONAR_SCANNER_OPTS="-server"
 
