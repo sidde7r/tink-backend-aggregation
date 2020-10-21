@@ -182,7 +182,7 @@ public class SamlinkConstants {
     public static class Header {
         public static final String CLIENT_VERSION = "Client-Version";
         public static final String VALUE_CLIENT_VERSION_V1 = "1.3.9";
-        public static final String VALUE_CLIENT_VERSION_V2 = "1.4.12";
+        public static final String VALUE_CLIENT_VERSION_V2 = "2.3.2";
 
         public static final String VALUE_ACCEPT_V1 = "application/vnd.vepa.mobile.api-v1+json";
         public static final String VALUE_ACCEPT_V2 = "application/vnd.vepa.mobile.api-v2+json";
