@@ -2,13 +2,13 @@
 REQUEST 1
 POST https://my.hypovereinsbank.de:443/mfp/api/registration/v1/self
 Accept-Encoding: br, gzip, deflat
-User-Agent: HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+User-Agent: HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
 Accept-Language: en-SE;q=1,en-SE;q=1,en
 Connection: keep-alive
 Accept: */*
 Content-Type: application/json
 
-{"signedRegistrationData":{"payload":"eyJhcHBsaWNhdGlvbiI6eyJpZCI6ImRlLnVuaWNyZWRpdC5hcHB0YW4iLCJjbGllbnRQbGF0Zm9ybSI6ImlvcyIsInZlcnNpb24iOiI0LjIuMyJ9LCJkZXZpY2UiOnsiaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtMDAwMC0wMDAwMDAwMDAwMDAiLCJwbGF0Zm9ybSI6ImlvcyAxMy41LjEiLCJoYXJkd2FyZSI6ImlQaG9uZSJ9LCJhdHRyaWJ1dGVzIjp7InNka19wcm90b2NvbF92ZXJzaW9uIjoxfX0=","signature":"hDq2XlDBowmOLapJ_w4-osQVohdMLc8LlTy27eDh3Wz3lqd_TkIqZIM2XtXEPLl17C-4Trj76QIOgc4FvCTVOQ==","header":"eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJuIjoiQU1LY3A3RDZiSnFaNmtwYXdnUSt6dTkreEpFcTFkQ0NIbFQyTHpzZjJCYkpTSnZmVHdVR05MMWJ2NVZCZWFodHhPdkl1aFhyM3ZZMEUyRVpBa1JpWVZjPSIsImUiOiJBUUFCIn19"}}
+{"signedRegistrationData":{"payload":"eyJhcHBsaWNhdGlvbiI6eyJpZCI6ImRlLnVuaWNyZWRpdC5hcHB0YW4iLCJjbGllbnRQbGF0Zm9ybSI6ImlvcyIsInZlcnNpb24iOiI0LjIuNyJ9LCJkZXZpY2UiOnsiaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtMDAwMC0wMDAwMDAwMDAwMDAiLCJwbGF0Zm9ybSI6ImlvcyAxMy41LjEiLCJoYXJkd2FyZSI6ImlQaG9uZSJ9LCJhdHRyaWJ1dGVzIjp7InNka19wcm90b2NvbF92ZXJzaW9uIjoxfX0=","header":"eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJuIjoiQU1LY3A3RDZiSnFaNmtwYXdnUSt6dTkreEpFcTFkQ0NIbFQyTHpzZjJCYkpTSnZmVHdVR05MMWJ2NVZCZWFodHhPdkl1aFhyM3ZZMEUyRVpBa1JpWVZjPSIsImUiOiJBUUFCIn19"}}
 
 RESPONSE 1
 201
@@ -38,16 +38,16 @@ Transfer-Encoding: chunked
 REQUEST 2
 POST https://my.hypovereinsbank.de:443/mfp/api/preauth/v1/preauthorize
 Accept-Encoding: br, gzip, deflat
-User-Agent: HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+User-Agent: HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
 Accept-Language: en-SE;q=1,en-SE;q=1,en
 Connection: keep-alive
 Accept: text/javascript, text/html, application/xml, text/xml, */*
 Content-Type: application/json
-x-wl-app-version: 4.2.3
+x-wl-app-version: 4.2.7
 AvantiPIN: pass
 AvantiSec: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-{"scope":"RegisteredClient UCAuthenticatedUser","challengeResponse":{"UCUserAvantiLoginSC":{"uid":"1122334455","pin":"pass","checkType":"login","ip":"127.0.0.1","ipMsite":"127.0.0.1","platform":"Avanti","wlVersion":"4.2.3","environment":"HV","applicationSessionId":"00000000","httpAccept":"*","httpAcceptEncoding":"*","httpAcceptLanguage":"*","httpReferrer":"*","userAgent":"Mozilla","operatingSystem":"ios","osVersion":"13.5.1"}},"client_id":"98908de5-a160-423e-8c6b-68f5bc063e99"}
+{"scope":"RegisteredClient UCAuthenticatedUser","challengeResponse":{"UCUserAvantiLoginSC":{"uid":"1122334455","pin":"pass","checkType":"login","ip":"127.0.0.1","ipMsite":"127.0.0.1","platform":"Avanti","wlVersion":"4.2.7","environment":"HV","applicationSessionId":"00000000","httpAccept":"*","httpAcceptEncoding":"*","httpAcceptLanguage":"*","httpReferrer":"*","userAgent":"Mozilla","operatingSystem":"ios","osVersion":"13.5.1"}},"client_id":"98908de5-a160-423e-8c6b-68f5bc063e99"}
 
 RESPONSE 2
 200
@@ -72,7 +72,7 @@ Transfer-Encoding: chunked
 REQUEST 3
 GET https://my.hypovereinsbank.de:443/mfp/api/az/v1/authorization?scope=RegisteredClient+UCAuthenticatedUser&response_type=code&redirect_uri=https%3A%2F%2Fmfpredirecturi&client_id=98908de5-a160-423e-8c6b-68f5bc063e99
 Accept-Encoding: br, gzip, deflat
-User-Agent: HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+User-Agent: HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
 Accept-Language: en-SE;q=1,en-SE;q=1,en
 Connection: keep-alive
 Accept: text/javascript, text/html, application/xml, text/xml, */*
@@ -99,13 +99,13 @@ Connection: Keep-Alive
 REQUEST 4
 POST https://my.hypovereinsbank.de:443/mfp/api/az/v1/token
 Accept-Encoding: br, gzip, deflat
-User-Agent: HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+User-Agent: HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
 Accept-Language: en-SE;q=1,en-SE;q=1,en
 Connection: keep-alive
 Accept: */*
 Content-Type: application/x-www-form-urlencoded
 
-client_assertion=eyJhbGciOiJSUzI1NiIsImp3ayI6eyJraWQiOiI5ODkwOGRlNS1hMTYwLTQyM2UtOGM2Yi02OGY1YmMwNjNlOTkiLCJrdHkiOiJSU0EiLCJuIjoiQU1LY3A3RDZiSnFaNmtwYXdnUSt6dTkreEpFcTFkQ0NIbFQyTHpzZjJCYkpTSnZmVHdVR05MMWJ2NVZCZWFodHhPdkl1aFhyM3ZZMEUyRVpBa1JpWVZjPSIsImUiOiJBUUFCIn19.eyJpc3MiOiJkZS51bmljcmVkaXQuYXBwdGFuJGlvcyQ0LjIuMyIsImF1ZCI6IihudWxsKWF6L3YxL3Rva2VuIiwiaWF0Ijo3MDI4NjQwMDAwMDAsImV4cCI6NzAyODY0MzAwMDAwLCJqdGkiOiItMzE0OTk0NzY3Nzg2NjEyMTIwNCIsInN1YiI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSJ9.SJLFivTSh-wbTrl-1q0yMaxrsnoukLMRISxgsPEbOCf5yNKWwGNNdiCp0XZ7KlvQSmyHa_K1A0nBCInUZuQfBg%3D%3D&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&code=-3149947677866121204&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fmfpredirecturi
+client_assertion=eyJhbGciOiJSUzI1NiIsImp3ayI6eyJraWQiOiI5ODkwOGRlNS1hMTYwLTQyM2UtOGM2Yi02OGY1YmMwNjNlOTkiLCJrdHkiOiJSU0EiLCJuIjoiQU1LY3A3RDZiSnFaNmtwYXdnUSt6dTkreEpFcTFkQ0NIbFQyTHpzZjJCYkpTSnZmVHdVR05MMWJ2NVZCZWFodHhPdkl1aFhyM3ZZMEUyRVpBa1JpWVZjPSIsImUiOiJBUUFCIn19.eyJpc3MiOiJkZS51bmljcmVkaXQuYXBwdGFuJGlvcyQ0LjIuNyIsImF1ZCI6IihudWxsKWF6L3YxL3Rva2VuIiwiaWF0Ijo3MDI4NjQwMDAwMDAsImV4cCI6NzAyODY0MzAwMDAwLCJqdGkiOiItMzE0OTk0NzY3Nzg2NjEyMTIwNCIsInN1YiI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSJ9.k6PbB6jSpr8iWORF-OCyKjUrVP4NX2rKwUADBfB4ob6glQVpeytkrngSqAJXEobI_6W7tqT-9HcE2aqbazaREA%3D%3D&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&code=-3149947677866121204&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fmfpredirecturi
 
 RESPONSE 4
 200
@@ -130,13 +130,13 @@ Transfer-Encoding: chunked
 REQUEST 5
 POST https://my.hypovereinsbank.de:443/mfp/api/adapters/UC_MBX_GL_BE_FACADE_NJ/accounts_fetchAllAccounts
 Accept-Encoding: br, gzip, deflat
-User-Agent: HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+User-Agent: HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
 Accept-Language: en-SE;q=1,en-SE;q=1,en
 Connection: keep-alive
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJlIjoiQVFBQiIsImtpZCI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsIm4iOiJBTTBEZDd4QWR2NkgteWdMN3I4cUNMZEUtM0kya2s0NXpnWnREZF9xczhmdm5ZZmRpcVRTVjRfMnQ2T0dHOENWNUNlNDFQTXBJd21MNDEwWDlJWm52aHhvWWlGY01TYU9lSXFvZS1ySkEwdVp1dzJySGhYWjNXVkNlS2V6UlZjQ09Zc1FOLW1RSzBtZno1XzNvLWV2MFVZd1hrU093QkJsMUVocUl3VkR3T2llZzJKTUdsMEVYc1BaZmtOWkktSFU0b01paS1Uck5MelJXa01tTHZtMDloTDV6b3NVTkExNXZlQ0twaDJXcG1TbTJTNjFuRGhIN2dMRW95bURuVEVqUFk1QW9oMmluSS0zNlJHWVZNVVViTzQ2Q3JOVVl1SW9iT2lYbEx6QklodUlDcGZWZHhUX3g3c3RLWDVDOUJmTVRCNEdrT0hQNWNVdjdOejFkRGhJUHU4PSJ9fQ.eyJpc3MiOiJjb20uaWJtLm1mcCIsInN1YiI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsImF1ZCI6ImNvbS5pYm0ubWZwIiwiZXhwIjoxNTg2NTI3NjMyOTE0LCJzY29wZSI6IlJlZ2lzdGVyZWRDbGllbnQgVUNBdXRoZW50aWNhdGVkVXNlciJ9.Jh5_V1bTH0NvLtsSRF5hmPirMRGHMKA1o_4U2xtkbM01QNFoRwRp8G7fjL5_c8iOqWkZr0UK9eQREB93JWuZubJxcQqwVoU-ZcIuB-TL6d60fuaPRShNlvwxK3EpASOWk-8lnmUB1eDakaqiBaKOq6-XDTdCjsBqovHw3gEealoZc2RRQRW7lE9W_JYx8Va7k7ol3edctHd7HHWYEGU_OJYgk5kWS1uM6LJOKAlBoAIQ-LCn0EmuaJsMg9nR_gf_cJwiaM4hAKrvbq1VSmBiarQJ6LC_u_ASFbEwFBpzGJuSDZbZD65IId_0w34FQyxKFOjlmloo1CRgP7HlT-qUFw
 Content-Type: application/x-www-form-urlencoded
 
-params=%5B%7B%22platform%22%3A%22iPhone%22%2C%22osVersion%22%3A%2213.5.1%22%2C%22appVersion%22%3A%224.2.3%22%2C%22reb%22%3A%221122334455%22%7D%5D
+params=%5B%7B%22platform%22%3A%22iPhone%22%2C%22osVersion%22%3A%2213.5.1%22%2C%22appVersion%22%3A%224.2.7%22%2C%22reb%22%3A%221122334455%22%7D%5D
 
 RESPONSE 5
 200
@@ -161,7 +161,7 @@ Transfer-Encoding: chunked
 REQUEST 6
 POST https://my.hypovereinsbank.de:443/mfp/api/adapters/UC_MBX_GL_BE_FACADE_NJ/accounts_requestCurrentAccountTransactionList
 Accept-Encoding: br, gzip, deflat
-User-Agent: HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+User-Agent: HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
 Accept-Language: en-SE;q=1,en-SE;q=1,en
 Connection: keep-alive
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJlIjoiQVFBQiIsImtpZCI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsIm4iOiJBTTBEZDd4QWR2NkgteWdMN3I4cUNMZEUtM0kya2s0NXpnWnREZF9xczhmdm5ZZmRpcVRTVjRfMnQ2T0dHOENWNUNlNDFQTXBJd21MNDEwWDlJWm52aHhvWWlGY01TYU9lSXFvZS1ySkEwdVp1dzJySGhYWjNXVkNlS2V6UlZjQ09Zc1FOLW1RSzBtZno1XzNvLWV2MFVZd1hrU093QkJsMUVocUl3VkR3T2llZzJKTUdsMEVYc1BaZmtOWkktSFU0b01paS1Uck5MelJXa01tTHZtMDloTDV6b3NVTkExNXZlQ0twaDJXcG1TbTJTNjFuRGhIN2dMRW95bURuVEVqUFk1QW9oMmluSS0zNlJHWVZNVVViTzQ2Q3JOVVl1SW9iT2lYbEx6QklodUlDcGZWZHhUX3g3c3RLWDVDOUJmTVRCNEdrT0hQNWNVdjdOejFkRGhJUHU4PSJ9fQ.eyJpc3MiOiJjb20uaWJtLm1mcCIsInN1YiI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsImF1ZCI6ImNvbS5pYm0ubWZwIiwiZXhwIjoxNTg2NTI3NjMyOTE0LCJzY29wZSI6IlJlZ2lzdGVyZWRDbGllbnQgVUNBdXRoZW50aWNhdGVkVXNlciJ9.Jh5_V1bTH0NvLtsSRF5hmPirMRGHMKA1o_4U2xtkbM01QNFoRwRp8G7fjL5_c8iOqWkZr0UK9eQREB93JWuZubJxcQqwVoU-ZcIuB-TL6d60fuaPRShNlvwxK3EpASOWk-8lnmUB1eDakaqiBaKOq6-XDTdCjsBqovHw3gEealoZc2RRQRW7lE9W_JYx8Va7k7ol3edctHd7HHWYEGU_OJYgk5kWS1uM6LJOKAlBoAIQ-LCn0EmuaJsMg9nR_gf_cJwiaM4hAKrvbq1VSmBiarQJ6LC_u_ASFbEwFBpzGJuSDZbZD65IId_0w34FQyxKFOjlmloo1CRgP7HlT-qUFw
@@ -193,7 +193,7 @@ Transfer-Encoding: chunked
 REQUEST 7
 POST https://my.hypovereinsbank.de:443/mfp/api/adapters/UC_MBX_GL_BE_FACADE_NJ/accounts_requestCurrentAccountTransactionList
 Accept-Encoding: br, gzip, deflat
-User-Agent: HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+User-Agent: HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
 Accept-Language: en-SE;q=1,en-SE;q=1,en
 Connection: keep-alive
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJlIjoiQVFBQiIsImtpZCI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsIm4iOiJBTTBEZDd4QWR2NkgteWdMN3I4cUNMZEUtM0kya2s0NXpnWnREZF9xczhmdm5ZZmRpcVRTVjRfMnQ2T0dHOENWNUNlNDFQTXBJd21MNDEwWDlJWm52aHhvWWlGY01TYU9lSXFvZS1ySkEwdVp1dzJySGhYWjNXVkNlS2V6UlZjQ09Zc1FOLW1RSzBtZno1XzNvLWV2MFVZd1hrU093QkJsMUVocUl3VkR3T2llZzJKTUdsMEVYc1BaZmtOWkktSFU0b01paS1Uck5MelJXa01tTHZtMDloTDV6b3NVTkExNXZlQ0twaDJXcG1TbTJTNjFuRGhIN2dMRW95bURuVEVqUFk1QW9oMmluSS0zNlJHWVZNVVViTzQ2Q3JOVVl1SW9iT2lYbEx6QklodUlDcGZWZHhUX3g3c3RLWDVDOUJmTVRCNEdrT0hQNWNVdjdOejFkRGhJUHU4PSJ9fQ.eyJpc3MiOiJjb20uaWJtLm1mcCIsInN1YiI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsImF1ZCI6ImNvbS5pYm0ubWZwIiwiZXhwIjoxNTg2NTI3NjMyOTE0LCJzY29wZSI6IlJlZ2lzdGVyZWRDbGllbnQgVUNBdXRoZW50aWNhdGVkVXNlciJ9.Jh5_V1bTH0NvLtsSRF5hmPirMRGHMKA1o_4U2xtkbM01QNFoRwRp8G7fjL5_c8iOqWkZr0UK9eQREB93JWuZubJxcQqwVoU-ZcIuB-TL6d60fuaPRShNlvwxK3EpASOWk-8lnmUB1eDakaqiBaKOq6-XDTdCjsBqovHw3gEealoZc2RRQRW7lE9W_JYx8Va7k7ol3edctHd7HHWYEGU_OJYgk5kWS1uM6LJOKAlBoAIQ-LCn0EmuaJsMg9nR_gf_cJwiaM4hAKrvbq1VSmBiarQJ6LC_u_ASFbEwFBpzGJuSDZbZD65IId_0w34FQyxKFOjlmloo1CRgP7HlT-qUFw

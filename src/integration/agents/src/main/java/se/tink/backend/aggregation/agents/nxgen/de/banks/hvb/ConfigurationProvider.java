@@ -28,8 +28,8 @@ public class ConfigurationProvider {
         headers.putSingle(ACCEPT_ENCODING, "br, gzip, deflat");
         headers.putSingle(
                 USER_AGENT,
-                "HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 "
-                        + "(iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.3 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z");
+                "HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 "
+                        + "(iPhone; iOS 13.5.1; Scale/3.00),HVB Banking/4.2.7 (iPhone; iOS 13.5.1; Scale/3.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z");
         headers.putSingle(ACCEPT_LANGUAGE, "en-SE;q=1,en-SE;q=1,en");
         headers.putSingle("Connection", "keep-alive");
         return headers;
