@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -24,7 +25,6 @@ public class CreditAgricoleBaseAuthenticatorTest {
     private CreditAgricoleBaseApiClient apiClient;
     private PersistentStorage persistentStorage;
     private AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration;
-    private CreditAgricoleBaseConfiguration configuration;
 
     private CreditAgricoleBaseAuthenticator creditAgricoleBaseAuthenticator;
 
@@ -32,7 +32,7 @@ public class CreditAgricoleBaseAuthenticatorTest {
     public void init() {
         apiClient = mock(CreditAgricoleBaseApiClient.class);
         persistentStorage = mock(PersistentStorage.class);
-        configuration = mock(CreditAgricoleBaseConfiguration.class);
+        CreditAgricoleBaseConfiguration configuration = mock(CreditAgricoleBaseConfiguration.class);
         String clientId = "clientId";
         String redirectUrl = "redirectUrl";
         String authorizeUrl = "authorizeUrl";
@@ -42,11 +42,13 @@ public class CreditAgricoleBaseAuthenticatorTest {
                         .setRedirectUrl(redirectUrl)
                         .build();
         when(configuration.getClientId()).thenReturn(clientId);
-        when(configuration.getAuthorizeUrl()).thenReturn(authorizeUrl);
+        CreditAgricoleBranchConfiguration branchConfiguration =
+                mock(CreditAgricoleBranchConfiguration.class);
+        when(branchConfiguration.getAuthorizeUrl()).thenReturn(authorizeUrl);
 
         creditAgricoleBaseAuthenticator =
                 new CreditAgricoleBaseAuthenticator(
-                        apiClient, persistentStorage, agentConfiguration);
+                        apiClient, persistentStorage, agentConfiguration, branchConfiguration);
     }
 
     @Test

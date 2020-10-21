@@ -32,11 +32,13 @@ import org.mockito.ArgumentCaptor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.PutConsentsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -66,8 +68,10 @@ public class CreditAgricoleBaseApiClientTest {
 
     @Before
     public void setUp() throws Exception {
-        final CreditAgricoleBaseConfiguration creditAgricoleBaseConfigurationMock =
-                getConfigurationMock();
+        final AgentConfiguration<CreditAgricoleBaseConfiguration>
+                creditAgricoleBaseConfigurationMock = getConfigurationMock();
+        final CreditAgricoleBranchConfiguration creditAgricoleBranchConfigurationMock =
+                getBranchConfigurationMock();
 
         httpClientMock = mock(TinkHttpClient.class);
         creditAgricoleStorageMock = createCreditAgricoleStorageMock();
@@ -77,7 +81,7 @@ public class CreditAgricoleBaseApiClientTest {
                         httpClientMock,
                         creditAgricoleStorageMock,
                         creditAgricoleBaseConfigurationMock,
-                        REDIRECT_URL);
+                        creditAgricoleBranchConfigurationMock);
     }
 
     @Test
@@ -342,15 +346,27 @@ public class CreditAgricoleBaseApiClientTest {
         return requestBuilderMock;
     }
 
-    private static CreditAgricoleBaseConfiguration getConfigurationMock() {
+    private static AgentConfiguration<CreditAgricoleBaseConfiguration> getConfigurationMock() {
         final CreditAgricoleBaseConfiguration creditAgricoleBaseConfigurationMock =
                 mock(CreditAgricoleBaseConfiguration.class);
 
         when(creditAgricoleBaseConfigurationMock.getClientId()).thenReturn(CLIENT_ID);
-        when(creditAgricoleBaseConfigurationMock.getBaseUrl()).thenReturn(BASE_URL);
-        when(creditAgricoleBaseConfigurationMock.getPsuIpAddress()).thenReturn(PSU_IP_ADDR);
 
-        return creditAgricoleBaseConfigurationMock;
+        AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration =
+                mock(AgentConfiguration.class);
+        when(agentConfiguration.getProviderSpecificConfiguration())
+                .thenReturn(creditAgricoleBaseConfigurationMock);
+        when(agentConfiguration.getRedirectUrl()).thenReturn(REDIRECT_URL);
+
+        return agentConfiguration;
+    }
+
+    private CreditAgricoleBranchConfiguration getBranchConfigurationMock() {
+        final CreditAgricoleBranchConfiguration creditAgricoleBranchConfigurationMock =
+                mock(CreditAgricoleBranchConfiguration.class);
+
+        when(creditAgricoleBranchConfigurationMock.getBaseUrl()).thenReturn(BASE_URL);
+        return creditAgricoleBranchConfigurationMock;
     }
 
     private static CreditAgricoleStorage createCreditAgricoleStorageMock() {

@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.payment.CreditAgricolePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseTransactionalAccountFetcher;
@@ -49,11 +50,14 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
     private final AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration;
     private final CreditAgricoleBaseConfiguration creditAgricoleConfiguration;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final CreditAgricoleBranchConfiguration branchConfiguration;
 
     public CreditAgricoleBaseAgent(
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
-
+        final String[] payload =
+                request.getProvider().getPayload().split("\\s+"); // one or more whitespace
+        this.branchConfiguration = new CreditAgricoleBranchConfiguration(payload[0], payload[1]);
         final CreditAgricoleStorage creditAgricoleStorage =
                 new CreditAgricoleStorage(this.persistentStorage);
 
@@ -64,12 +68,11 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                 new CreditAgricoleBaseApiClient(
                         this.client,
                         creditAgricoleStorage,
-                        this.creditAgricoleConfiguration,
-                        this.agentConfiguration.getRedirectUrl());
+                        this.agentConfiguration,
+                        branchConfiguration);
 
         final CreditAgricoleBaseMessageSignInterceptor creditAgricoleBaseMessageSignInterceptor =
-                new CreditAgricoleBaseMessageSignInterceptor(
-                        this.creditAgricoleConfiguration, qsealcSigner);
+                new CreditAgricoleBaseMessageSignInterceptor(this.agentConfiguration, qsealcSigner);
         this.client.setMessageSignInterceptor(creditAgricoleBaseMessageSignInterceptor);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -122,7 +125,10 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new CreditAgricoleBaseAuthenticator(
-                                apiClient, persistentStorage, agentConfiguration),
+                                apiClient,
+                                persistentStorage,
+                                agentConfiguration,
+                                branchConfiguration),
                         credentials,
                         strongAuthenticationState);
 
@@ -169,7 +175,10 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
         FrOpenBankingPaymentExecutor paymentExecutor =
                 new FrOpenBankingPaymentExecutor(
                         new CreditAgricolePaymentApiClient(
-                                client, sessionStorage, creditAgricoleConfiguration),
+                                client,
+                                sessionStorage,
+                                creditAgricoleConfiguration,
+                                branchConfiguration),
                         agentConfiguration.getRedirectUrl(),
                         sessionStorage,
                         strongAuthenticationState,
