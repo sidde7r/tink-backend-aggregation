@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 
 public class N26AuthenticationControllerTest {
 
+    private static final String SUPPLEMENTAL_KEY = "supplementalKey";
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     private static final String CAUSE_SESSION_EXPIRED = "Cause: SessionError.SESSION_EXPIRED";
     private static final String QWAC =
@@ -168,10 +169,9 @@ public class N26AuthenticationControllerTest {
     @Test
     public void shouldReturnThirdPartyAuthErrorWhenCallbackDataIsMissing() {
         // given
-        String supplementalKey = "supplementalKey";
-        when(strongAuthenticationState.getSupplementalKey()).thenReturn(supplementalKey);
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn(SUPPLEMENTAL_KEY);
         when(supplementalInformationHelper.waitForSupplementalInformation(
-                        eq(supplementalKey), anyLong(), any(TimeUnit.class)))
+                        eq(SUPPLEMENTAL_KEY), anyLong(), any(TimeUnit.class)))
                 .thenReturn(Optional.of(Collections.emptyMap()));
 
         // when
@@ -186,10 +186,9 @@ public class N26AuthenticationControllerTest {
     @Test
     public void shouldReturnThirdPartyTimedOutWhenNoCallbackData() {
         // given
-        String supplementalKey = "supplementalKey";
-        when(strongAuthenticationState.getSupplementalKey()).thenReturn(supplementalKey);
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn(SUPPLEMENTAL_KEY);
         when(supplementalInformationHelper.waitForSupplementalInformation(
-                        eq(supplementalKey), anyLong(), any(TimeUnit.class)))
+                        eq(SUPPLEMENTAL_KEY), anyLong(), any(TimeUnit.class)))
                 .thenReturn(Optional.empty());
 
         // when
@@ -224,11 +223,10 @@ public class N26AuthenticationControllerTest {
     @SneakyThrows
     private void shouldStoreAccessToken(String tokenIdKey) {
         // given
-        String supplementalKey = "supplementalKey";
-        when(strongAuthenticationState.getSupplementalKey()).thenReturn(supplementalKey);
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn(SUPPLEMENTAL_KEY);
         Map<String, String> callbackData = Maps.newHashMap(tokenIdKey, ACCESS_TOKEN);
         when(supplementalInformationHelper.waitForSupplementalInformation(
-                        eq(supplementalKey), anyLong(), any(TimeUnit.class)))
+                        eq(SUPPLEMENTAL_KEY), anyLong(), any(TimeUnit.class)))
                 .thenReturn(Optional.of(callbackData));
 
         // when
