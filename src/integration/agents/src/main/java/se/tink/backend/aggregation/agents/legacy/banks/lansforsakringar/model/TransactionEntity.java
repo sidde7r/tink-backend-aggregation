@@ -11,6 +11,7 @@ import se.tink.libraries.date.DateUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
+
     @JsonIgnore
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
