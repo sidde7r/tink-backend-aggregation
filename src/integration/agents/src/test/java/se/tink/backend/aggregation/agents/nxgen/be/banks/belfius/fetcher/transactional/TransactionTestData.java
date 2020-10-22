@@ -1,21 +1,82 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional;
 
+import org.junit.Ignore;
+
+@Ignore
 public class TransactionTestData {
 
-    static String maestroTransactionString1 =
+    public static String transaction =
             "{"
-                    + "\"lb_Date\": {\"text\": \"22/02/2018\"},"
-                    + "\"lb_AccountOppositeSide\": {\"text\": \"\"},"
+                    + "\"lb_Date\": {\"text\": \"22/10/2020\"},"
+                    + "\"lb_AccountOppositeSide\": {\"text\": \"sample account opposite side\"},"
                     + "\"mlb_SplitAllowed\": {\"text\": \"Y\"},"
-                    + "\"mlb_TransferAllowed\": {\"text\": \"N\"},"
-                    + "\"lb_Pending\": {\"text\": \"N\"},"
+                    + "\"mlb_TransferAllowed\": {\"text\": \"Y\"},"
+                    + "\"lb_Pending\": {\"text\": \"Y\"},"
                     + "\"lb_Amount\": {\"text\": \"-10,00 EUR\"},"
-                    + "\"lb_NameOppositeSide\": {\"text\": \"\"},"
-                    + "\"lb_Communication\": {\"text\": \"\"},"
-                    + "\"lb_Description\": {\"text\": \"MAESTRO-BETALING 21/02-MERCHANT NAME PLACE BE \\n10,00 EUR KAART NR 1234 1234 1234 1234 - LASTNAME     \\nFIRSTNAME                                               \\nREF. : 123456789 VAL. 22-02\\n\"}"
+                    + "\"lb_NameOppositeSide\": {\"text\": \"sample name opposite side\"},"
+                    + "\"lb_Communication\": {\"text\": \"sample communication\"},"
+                    + "\"lb_Description\": {\"text\": \"sample description\"}"
                     + "}";
 
-    static String maestroTransactionString2 =
+    public static String notPendingTransaction =
+            "{"
+                    + "\"lb_Date\": {\"text\": \"22/10/2020\"},"
+                    + "\"lb_AccountOppositeSide\": {\"text\": \"sample account opposite side\"},"
+                    + "\"mlb_SplitAllowed\": {\"text\": \"Y\"},"
+                    + "\"mlb_TransferAllowed\": {\"text\": \"Y\"},"
+                    + "\"lb_Pending\": {\"text\": \"N\"},"
+                    + "\"lb_Amount\": {\"text\": \"-10,00 EUR\"},"
+                    + "\"lb_NameOppositeSide\": {\"text\": \"sample name opposite side\"},"
+                    + "\"lb_Communication\": {\"text\": \"sample communication\"},"
+                    + "\"lb_Description\": {\"text\": \"sample description\"}"
+                    + "}";
+
+    public static String nullAmountTransaction =
+            "{"
+                    + "\"lb_Date\": {\"text\": \"22/10/2020\"},"
+                    + "\"lb_AccountOppositeSide\": {\"text\": \"sample account opposite side\"},"
+                    + "\"mlb_SplitAllowed\": {\"text\": \"Y\"},"
+                    + "\"mlb_TransferAllowed\": {\"text\": \"Y\"},"
+                    + "\"lb_Pending\": {\"text\": \"N\"},"
+                    + "\"lb_NameOppositeSide\": {\"text\": \"sample name opposite side\"},"
+                    + "\"lb_Communication\": {\"text\": \"sample communication\"},"
+                    + "\"lb_Description\": {\"text\": \"sample description\"}"
+                    + "}";
+
+    public static String nullNameOppositeSide =
+            "{"
+                    + "\"lb_Date\": {\"text\": \"22/10/2020\"},"
+                    + "\"lb_AccountOppositeSide\": {\"text\": \"sample account opposite side\"},"
+                    + "\"mlb_SplitAllowed\": {\"text\": \"Y\"},"
+                    + "\"mlb_TransferAllowed\": {\"text\": \"Y\"},"
+                    + "\"lb_Pending\": {\"text\": \"Y\"},"
+                    + "\"lb_Amount\": {\"text\": \"-10,00 EUR\"},"
+                    + "\"lb_Communication\": {\"text\": \"sample communication\"},"
+                    + "\"lb_Description\": {\"text\": \"sample description\"}"
+                    + "}";
+
+    public static String nullNameOppositeAndCommunicationSide =
+            "{"
+                    + "\"lb_Date\": {\"text\": \"22/10/2020\"},"
+                    + "\"lb_AccountOppositeSide\": {\"text\": \"sample account opposite side\"},"
+                    + "\"mlb_SplitAllowed\": {\"text\": \"Y\"},"
+                    + "\"mlb_TransferAllowed\": {\"text\": \"Y\"},"
+                    + "\"lb_Pending\": {\"text\": \"Y\"},"
+                    + "\"lb_Amount\": {\"text\": \"-10,00 EUR\"},"
+                    + "\"lb_Description\": {\"text\": \"sample description\"}"
+                    + "}";
+
+    public static String nullNameOppositeAndCommunicationAndDescriptionSide =
+            "{"
+                    + "\"lb_Date\": {\"text\": \"22/10/2020\"},"
+                    + "\"lb_AccountOppositeSide\": {\"text\": \"sample account opposite side\"},"
+                    + "\"mlb_SplitAllowed\": {\"text\": \"Y\"},"
+                    + "\"mlb_TransferAllowed\": {\"text\": \"Y\"},"
+                    + "\"lb_Pending\": {\"text\": \"Y\"},"
+                    + "\"lb_Amount\": {\"text\": \"-10,00 EUR\"}"
+                    + "}";
+
+    public static String maestroTransactionString2 =
             "{"
                     + "\"lb_Date\": {\"text\": \"20/02/2018\"},"
                     + "\"lb_AccountOppositeSide\": {\"text\": \"\"},"
@@ -28,7 +89,7 @@ public class TransactionTestData {
                     + "\"lb_Description\": {\"text\": \"MAESTRO-BETALING 19/02-MERCHANT NAME BE 15,00   \\nEUR KAART NR 1234 1234 1234 1234 - LASTNAME FIRSTNAME   \\nREF. : 123456789 VAL. 20-02                       \\n\"}"
                     + "}";
 
-    static String transactionString =
+    public static String transactionString =
             "{"
                     + "\"lb_Date\": {\"text\": \"12/03/2014\"},"
                     + "\"lb_AccountOppositeSide\": {\"text\": \"BE12 1234 1234 1234\"},"

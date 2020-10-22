@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
@@ -9,29 +12,49 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BelfiusLoginErrorsTest {
 
-    @Test(expected = LoginException.class)
+    @Test
     public void shouldHandleNotSubscribedToMobile() throws LoginException {
+        // given
         PrepareLoginResponse prepareLoginResponse =
                 SerializationUtils.deserializeFromString(
                         BelfiusLoginErrorData.NOT_ENABLED_MOBILE_BANKING,
                         PrepareLoginResponse.class);
         MessageResponse.validate(prepareLoginResponse);
-        prepareLoginResponse.validate();
+
+        // when
+        Throwable t = catchThrowable(prepareLoginResponse::validate);
+
+        // then
+        assertThat(t)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.REGISTER_DEVICE_ERROR");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldHandleSessionDoesNotExists() {
+        // given
         LoginResponse loginResponse =
                 SerializationUtils.deserializeFromString(
                         BelfiusLoginErrorData.SESSION_DOES_NOT_EXISTS, LoginResponse.class);
-        MessageResponse.validate(loginResponse);
+
+        // when
+        Throwable t = catchThrowable(() -> MessageResponse.validate(loginResponse));
+
+        // then
+        assertThat(t).isInstanceOf(IllegalStateException.class).hasMessage("");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldHandleUnknownSession() {
+        // given
         LoginResponse loginResponse =
                 SerializationUtils.deserializeFromString(
                         BelfiusLoginErrorData.UNKNOWN_SESSION, LoginResponse.class);
-        MessageResponse.validate(loginResponse);
+
+        // when
+        Throwable t = catchThrowable(() -> MessageResponse.validate(loginResponse));
+
+        // then
+        assertThat(t).isInstanceOf(IllegalStateException.class).hasMessage("");
     }
 }

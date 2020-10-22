@@ -64,17 +64,16 @@ public class BelfiusTransaction {
     public Transaction toTinkTransaction() {
         Optional<ExactCurrencyAmount> amount = BelfiusStringUtils.parseStringToAmount(this.amount);
 
-        if (!amount.isPresent()) {
-            return null;
-        }
-
-        return Transaction.builder()
-                .setPending(isPending())
-                .setAmount(amount.get())
-                .setDescription(getDescription())
-                .setRawDetails(getRawDetails())
-                .setDate(this.date)
-                .build();
+        return amount.map(
+                        exactCurrencyAmount ->
+                                Transaction.builder()
+                                        .setPending(isPending())
+                                        .setAmount(exactCurrencyAmount)
+                                        .setDescription(getDescription())
+                                        .setRawDetails(getRawDetails())
+                                        .setDate(this.date)
+                                        .build())
+                .orElse(null);
     }
 
     private String getDescription() {
