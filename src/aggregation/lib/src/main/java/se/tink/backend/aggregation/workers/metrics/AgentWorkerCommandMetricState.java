@@ -22,6 +22,7 @@ public class AgentWorkerCommandMetricState {
     private final MetricRegistry metricRegistry;
     private final Provider provider;
     private final Credentials credentials;
+    private MetricId.MetricLabels defaultLabels;
     private MetricsCommand command;
     private CredentialsRequestType requestType;
 
@@ -37,12 +38,19 @@ public class AgentWorkerCommandMetricState {
         this.credentials = credentials;
         this.metricRegistry = metricRegistry;
         this.requestType = requestType;
+        this.defaultLabels = MetricId.MetricLabels.createEmpty();
     }
 
     public AgentWorkerCommandMetricState init(MetricsCommand command) {
         this.command = command;
 
         return this;
+    }
+
+    public AgentWorkerCommandMetricState init(
+            MetricsCommand command, MetricId.MetricLabels labels) {
+        defaultLabels = labels;
+        return init(command);
     }
 
     private boolean isInitiated() {
@@ -152,6 +160,7 @@ public class AgentWorkerCommandMetricState {
                 this,
                 metricRegistry,
                 MetricId.newId(command.getMetricName())
+                        .label(defaultLabels)
                         .label(action)
                         .label("provider_type", provider.getMetricTypeName())
                         .label("market", provider.getMarket())

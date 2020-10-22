@@ -8,9 +8,11 @@ spec:
 
   - alert: LoginSuccessRateBelow90WithAttemptLimitSE
     expr: |
-      # Successful/Cancelled attempts above 90%
+      # Successful/Cancelled attempts < 90% and >= 80%
       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) < 0.90)
+      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test"}[60m])) by (action,className,provider)
+              / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) >= 0.80)
       # At least this many attempts.
       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) > 10
     for: 5m
@@ -23,31 +25,15 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last hour.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
-
-  - alert: LoginSuccessRateBelow90Above80WithAttemptLimitSE
-    expr: |
-      # Successful/Cancelled/Unavailable attempts between 90 and 80%
-      (ratio:tink_agent_login_successrate_se:delta60m < 0.90 and ratio:tink_agent_login_successrate_se:delta60m >= 0.80)
-      # At least this many attempts.
-      and sum:tink_agent_login_total_se:delta60m > 10
-    for: 5m
-    labels:
-      severity: urgent
-      priority: P4
-      who: integration-thundercats
-    annotations:
-      description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-        https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
-      summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-        the last hour.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   - alert: LoginSuccessRateBelow80WithAttemptLimitSE
     expr: |
-      # Successful/Cancelled attempts above 80%
+      # Successful/Cancelled attempts < 80% and >= 70%
       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) < 0.80)
+      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test"}[60m])) by (action,className,provider)
+              / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) >= 0.70)
       # At least this many attempts.
       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) > 10
     for: 5m
@@ -60,13 +46,15 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Login success rate is below 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last hour.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   - alert: LoginSuccessRateBelow70WithAttemptLimitSE
     expr: |
-      # Successful/Cancelled attempts above 70%
+      # Successful/Cancelled attempts < 70% and >= 60%
       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) < 0.70)
+      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test"}[60m])) by (action,className,provider)
+              / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) >= 0.60)
       # At least this many attempts.
       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) > 10
     for: 5m
@@ -79,11 +67,11 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Login success rate is below 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last hour.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   - alert: LoginSuccessRateBelow60WithAttemptLimitSE
     expr: |
-      # Successful/Cancelled attempts above 60%
+      # Successful/Cancelled attempts below 60%
       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) < 0.60)
       # At least this many attempts.
@@ -98,13 +86,15 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Login success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last hour.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   - alert: RefreshSuccessRateBelow90WithAttemptLimitSE
     expr: |
-      # Successful attempts above 90%
+      # Successful attempts < 90% and >= 80%
       (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
           / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) < 0.90)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
+              / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) >= 0.80)
       # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) > 40
     for: 5m
@@ -117,13 +107,15 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   - alert: RefreshSuccessRateBelow80WithAttemptLimitSE
     expr: |
-      # Successful attempts above 80%
+      # Successful attempts < 80% and >= 70%
       (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
           / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) < 0.80)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
+              / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) >= 0.70)
       # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) > 40
     for: 5m
@@ -136,13 +128,15 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Refresh success rate is below 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   - alert: RefreshSuccessRateBelow70WithAttemptLimitSE
     expr: |
-      # Successful attempts above 70%
+      # Successful attempts < 70% and >= 60%
       (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
           / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) < 0.70)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
+              / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) >= 0.60)
       # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) > 40
     for: 5m
@@ -155,11 +149,11 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Refresh success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   - alert: RefreshSuccessRateBelow60WithAttemptLimitSE
     expr: |
-      # Successful attempts above 60%
+      # Successful attempts below 60%
       (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
           / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) < 0.60)
       # At least this many attempts.
@@ -174,7 +168,7 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Refresh success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   ### Bank side failures
   - alert: BankServerUnavailableForLoginSE
@@ -194,7 +188,7 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
         the last 30 minutes.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   - alert: BankServerUnavailableForRefreshSE
     expr: |
@@ -213,7 +207,7 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
         the last 30 minutes.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   ### Provider level fails
   - alert: HighProviderErrorRatioSE
@@ -234,7 +228,7 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Provider <{ $labels.provider }> has failed over 50%
         of its operations the past 60 minutes
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
+      tags: {{ .Values.thundercatsTags }}
 
   ### Agent level login failures
   - alert: HighProviderFailedLoginRatioSE
@@ -257,12 +251,4 @@ spec:
         https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Agent <{ $labels.className }> has failed over 20%
         of its login attempts the past 60 minutes.
-      tags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
-
-### Precomputations
-  - record: ratio:tink_agent_login_successrate_se:delta60m
-    expr: sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test"}[60m])) by (action,className,provider)
-      / sum:tink_agent_login_total_se:delta60m
-
-  - record: sum:tink_agent_login_total_se:delta60m
-    expr: sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider)
+      tags: {{ .Values.thundercatsTags }}

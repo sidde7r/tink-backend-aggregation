@@ -16,13 +16,23 @@ public class TransactionFetchRetryFilter extends AbstractRandomRetryFilter {
     // Retrying after a moment seems to help.
     @Override
     protected boolean shouldRetry(HttpResponse response) {
-        if (response.getStatus() != 400) {
-            return false;
-        } else {
-            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+        if (response.getStatus() == 503) {
+            return true;
+        } else if (response.getStatus() == 400 && response.hasBody()) {
+            ErrorResponse errorResponse = getBodyAsExpectedType(response);
             return errorResponse != null
                     && errorResponse.getTppMessages().stream()
                             .anyMatch(ErrorEntity.PARAMETER_NOT_CONSISTENT::equals);
+        } else {
+            return false;
+        }
+    }
+
+    private ErrorResponse getBodyAsExpectedType(HttpResponse response) {
+        try {
+            return response.getBody(ErrorResponse.class);
+        } catch (RuntimeException e) {
+            return null;
         }
     }
 }

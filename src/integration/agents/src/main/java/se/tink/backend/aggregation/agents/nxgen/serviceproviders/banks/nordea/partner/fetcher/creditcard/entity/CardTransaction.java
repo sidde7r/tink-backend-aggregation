@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
@@ -71,7 +72,9 @@ public class CardTransaction {
                         .setDate(getDate())
                         .setDescription(title)
                         .setPending(!booked)
-                        .setPayload(TransactionPayloadTypes.EXTERNAL_ID, transactionId);
+                        .setPayload(
+                                TransactionPayloadTypes.DETAILS,
+                                NordeaPartnerUtils.getTransactionDetails(transactionId));
         if (hasExchangeRateInfo()) {
             builder.setPayload(TransactionPayloadTypes.EXCHANGE_RATE, exchangeRate.toPlainString());
             builder.setPayload(TransactionPayloadTypes.LOCAL_CURRENCY, originalCurrency);

@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.MONZO_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.NATIONWIDE_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.RBS_ORG_ID;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.RFC_2253_DN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TINK_UKOPENBANKING_ORGID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.UKOB_TAN;
 
@@ -258,19 +259,27 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     private String createPs256Signature(Map<String, Object> payloadClaims) {
-        // Monzo does not work with B64 header hence creating signature with out B64 for now.
         // Refer : https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1112670669/W007
         // remove this check once this wavier times out
-        // Monzo organization ID check
         if (MONZO_ORG_ID.equals(aisConfig.getOrganisationId())
                 || DANSKEBANK_ORG_ID.equals(aisConfig.getOrganisationId())
-                || HSBC_ORG_ID.equals(aisConfig.getOrganisationId())
                 || NATIONWIDE_ORG_ID.equals(aisConfig.getOrganisationId())
                 || RBS_ORG_ID.equals(aisConfig.getOrganisationId())) {
             return createPs256SignatureWithoutB64Header(payloadClaims);
+        } else if (isHSBCFamily()) {
+            return createHsbcFamilyHeader(payloadClaims);
         } else {
             return createPs256SignatureWithB64Header(payloadClaims);
         }
+    }
+
+    /**
+     * HSBC and First Direct is under the same platform
+     *
+     * @return whether the bank is HSBC or First Direct
+     */
+    public boolean isHSBCFamily() {
+        return HSBC_ORG_ID.equals(aisConfig.getOrganisationId());
     }
 
     private String createPs256SignatureWithB64Header(Map<String, Object> payloadClaims) {
@@ -299,6 +308,18 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 HEADERS.ISS,
                 String.format(
                         "%s/%s", TINK_UKOPENBANKING_ORGID, softwareStatement.getSoftwareId()));
+        jwtHeaders.put(HEADERS.TAN, UKOB_TAN);
+        jwtHeaders.put(HEADERS.CRIT, Arrays.asList(HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
+
+        return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
+    }
+
+    private String createHsbcFamilyHeader(Map<String, Object> payloadClaims) {
+
+        Map<String, Object> jwtHeaders = new LinkedHashMap<>();
+
+        jwtHeaders.put(HEADERS.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
+        jwtHeaders.put(HEADERS.ISS, RFC_2253_DN);
         jwtHeaders.put(HEADERS.TAN, UKOB_TAN);
         jwtHeaders.put(HEADERS.CRIT, Arrays.asList(HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
 

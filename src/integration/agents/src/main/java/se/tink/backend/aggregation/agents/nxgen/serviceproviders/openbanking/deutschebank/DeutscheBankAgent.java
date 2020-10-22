@@ -45,6 +45,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         client.setEidasProxy(configuration.getEidasProxy());
+        client.addFilter(new DeutscheKnownErrorsFilter());
     }
 
     protected abstract DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues);

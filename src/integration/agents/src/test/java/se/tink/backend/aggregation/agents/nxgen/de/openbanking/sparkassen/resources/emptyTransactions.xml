@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.052.001.02" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:camt.052.001.02 camt.052.001.02.xsd">
+    <BkToCstmrAcctRpt>
+        <GrpHdr>
+            <MsgId>camt52_20200205090407__ONLINEBA</MsgId>
+            <CreDtTm>2020-02-05T09:04:07+01:00</CreDtTm>
+            <MsgPgntn>
+                <PgNb>1</PgNb>
+                <LastPgInd>true</LastPgInd>
+            </MsgPgntn>
+        </GrpHdr>
+        <Rpt>
+            <Id>camt052_ONLINEBA</Id>
+            <ElctrncSeqNb>00000</ElctrncSeqNb>
+            <CreDtTm>2020-02-05T09:04:07+01:00</CreDtTm>
+            <Acct>
+                <Id>
+                    <IBAN>DE05999999990000001003</IBAN>
+                </Id>
+                <Ccy>EUR</Ccy>
+                <Svcr>
+                    <FinInstnId>
+                        <BIC>ASDFGHJK</BIC>
+                        <Nm>SUPER NAME</Nm>
+                        <Othr>
+                            <Id>DE 123456789</Id>
+                            <Issr>UmsStId</Issr>
+                        </Othr>
+                    </FinInstnId>
+                </Svcr>
+            </Acct>
+            <Bal>
+                <Tp>
+                    <CdOrPrtry>
+                        <Cd>PRCD</Cd>
+                    </CdOrPrtry>
+                </Tp>
+                <Amt Ccy="EUR">112.44</Amt>
+                <CdtDbtInd>CRDT</CdtDbtInd>
+                <Dt>
+                    <Dt>2019-11-08</Dt>
+                </Dt>
+            </Bal>
+            <Bal>
+                <Tp>
+                    <CdOrPrtry>
+                        <Cd>CLBD</Cd>
+                    </CdOrPrtry>
+                </Tp>
+                <Amt Ccy="EUR">4323.49</Amt>
+                <CdtDbtInd>CRDT</CdtDbtInd>
+                <Dt>
+                    <Dt>2020-02-04</Dt>
+                </Dt>
+            </Bal>
+        </Rpt>
+    </BkToCstmrAcctRpt>
+</Document>

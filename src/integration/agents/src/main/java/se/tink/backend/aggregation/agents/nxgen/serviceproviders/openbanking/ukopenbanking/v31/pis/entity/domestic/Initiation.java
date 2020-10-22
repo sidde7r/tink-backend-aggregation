@@ -65,4 +65,10 @@ public class Initiation {
     public String getInstructionIdentification() {
         return instructionIdentification;
     }
+
+    @JsonIgnore
+    public void setReferenceForHSBCFamily() {
+        // HSBC has special requirement on reference
+        this.remittanceInformation.setReference(remittanceInformation.getUnstructured());
+    }
 }

@@ -13,6 +13,7 @@ junit_test(
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/models",
+        "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/mapper",
         "//src/libraries/serialization",

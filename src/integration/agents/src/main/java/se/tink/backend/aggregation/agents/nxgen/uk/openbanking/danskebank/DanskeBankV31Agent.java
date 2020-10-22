@@ -83,7 +83,7 @@ public final class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         DanskeBankAuthenticator authenticator = new DanskeBankAuthenticator(apiClient);
-        return createOpenIdFlowWithAuthenticator(authenticator, aisConfig.getAppToAppURL());
+        return createOpenIdFlowWithAuthenticator(authenticator, null);
     }
 
     @Override

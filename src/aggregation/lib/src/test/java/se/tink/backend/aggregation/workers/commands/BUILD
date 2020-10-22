@@ -39,6 +39,7 @@ junit_test(
         "//src/libraries/i18n",
         "//src/libraries/pair",
         "//src/libraries/serialization",
+        "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "@com_google_http_client_google_http_client",

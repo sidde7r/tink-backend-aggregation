@@ -3,16 +3,14 @@ package se.tink.backend.aggregation.workers.commands;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -51,12 +49,16 @@ public class LoginAgentWorkerCommandTest {
     @Before
     public void init() {
         credentials = mock(Credentials.class);
+        Provider provider = mock(Provider.class);
+        when(provider.getName()).thenReturn("a-b-c");
         credentialsRequest = mock(CredentialsRequest.class);
+        when(credentialsRequest.getProvider()).thenReturn(provider);
         when(credentialsRequest.getCredentials()).thenReturn(credentials);
         context = mock(AgentWorkerCommandContext.class);
         when(context.getRequest()).thenReturn(credentialsRequest);
         state = mock(LoginAgentWorkerCommandState.class);
         metrics = mock(AgentWorkerCommandMetricState.class);
+        when(metrics.init(any(), any())).thenReturn(metrics);
         when(metrics.init(any())).thenReturn(metrics);
 
         metricAction = mock(MetricAction.class);

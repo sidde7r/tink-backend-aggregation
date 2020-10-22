@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import com.google.common.collect.ImmutableMap;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.context = context;
         this.statusUpdater = context;
         this.state = state;
-        this.metrics = metrics.init(this);
         this.credentials = request.getCredentials();
         this.user = request.getUser();
         this.supplementalInformationController =
@@ -96,6 +96,11 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                                 context, request.getCredentials()));
         this.loginAgentEventProducer = loginAgentEventProducer;
         this.startTime = System.nanoTime();
+        this.metrics =
+                metrics.init(
+                        this,
+                        MetricId.MetricLabels.from(
+                                ImmutableMap.of("provider", request.getProvider().getName())));
     }
 
     @Override

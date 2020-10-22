@@ -50,7 +50,7 @@ public class Xs2aDevelopersTransactionDateFromFetcher<A extends Account>
 
     private boolean isConsentTimeoutException(HttpResponseException ex) {
         ErrorResponse errorResponse = ex.getResponse().getBody(ErrorResponse.class);
-        if (errorResponse == null) {
+        if (errorResponse == null || errorResponse.getTppMessages() == null) {
             return false;
         }
         return errorResponse.getTppMessages().stream()

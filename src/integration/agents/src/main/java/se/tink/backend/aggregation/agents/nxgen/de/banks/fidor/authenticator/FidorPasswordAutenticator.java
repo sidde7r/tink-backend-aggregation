@@ -98,6 +98,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
                     "{} Selenium could not find element",
                     FidorConstants.LOGGING.AUTHENTICATION_ERROR,
                     e);
+            throw LoginError.DEFAULT_MESSAGE.exception();
         }
 
         emailField.sendKeys(username);

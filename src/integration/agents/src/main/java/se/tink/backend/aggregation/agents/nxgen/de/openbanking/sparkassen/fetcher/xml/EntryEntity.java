@@ -34,6 +34,10 @@ public class EntryEntity {
         return status;
     }
 
+    public DateEntity getBookingDate() {
+        return bookingDate;
+    }
+
     public DateEntity getValueDate() {
         return valueDate;
     }
