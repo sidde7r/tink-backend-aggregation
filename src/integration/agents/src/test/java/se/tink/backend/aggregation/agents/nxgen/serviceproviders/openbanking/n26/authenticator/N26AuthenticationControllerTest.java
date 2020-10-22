@@ -20,7 +20,6 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Maps;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Configuration;
@@ -167,8 +166,7 @@ public class N26AuthenticationControllerTest {
     }
 
     @Test
-    @SneakyThrows
-    public void shouldThrowExceptionWhenCallbackDataIsMissing() {
+    public void shouldReturnThirdPartyAuthErrorWhenCallbackDataIsMissing() {
         // given
         String supplementalKey = "supplementalKey";
         when(strongAuthenticationState.getSupplementalKey()).thenReturn(supplementalKey);
@@ -176,11 +174,31 @@ public class N26AuthenticationControllerTest {
                         eq(supplementalKey), anyLong(), any(TimeUnit.class)))
                 .thenReturn(Optional.of(Collections.emptyMap()));
 
+        // when
+        ThirdPartyAppResponse<String> response = authenticationController.collect(null);
+
         // then
-        Assertions.assertThatExceptionOfType(AuthorizationException.class)
-                .isThrownBy(() -> authenticationController.collect(null))
-                .withNoCause()
-                .withMessage("callbackData didn't contain tokenId");
+        assertThat(response)
+                .isEqualToComparingFieldByField(
+                        ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.AUTHENTICATION_ERROR));
+    }
+
+    @Test
+    public void shouldReturnThirdPartyTimedOutWhenNoCallbackData() {
+        // given
+        String supplementalKey = "supplementalKey";
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn(supplementalKey);
+        when(supplementalInformationHelper.waitForSupplementalInformation(
+                        eq(supplementalKey), anyLong(), any(TimeUnit.class)))
+                .thenReturn(Optional.empty());
+
+        // when
+        ThirdPartyAppResponse<String> response = authenticationController.collect(null);
+
+        // then
+        assertThat(response)
+                .isEqualToComparingFieldByField(
+                        ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.TIMED_OUT));
     }
 
     @Test
