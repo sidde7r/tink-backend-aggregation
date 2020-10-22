@@ -72,7 +72,11 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
             throws SessionException, LoginException, BankServiceException, AuthorizationException {
         String consentId = persistentStorage.getConsentId();
 
-        if (Strings.isNullOrEmpty(consentId) || !isConsentValid(consentId)) {
+        try {
+            if (Strings.isNullOrEmpty(consentId) || !isConsentValid(consentId)) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+        } catch (RuntimeException e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

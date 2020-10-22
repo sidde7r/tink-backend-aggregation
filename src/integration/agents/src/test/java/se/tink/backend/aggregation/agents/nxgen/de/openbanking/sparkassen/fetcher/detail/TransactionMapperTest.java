@@ -57,7 +57,7 @@ public class TransactionMapperTest {
     }
 
     @Test
-    public void shouldTransformToTinkTransactionCorrectlyWithNegativeAmount() {
+    public void shouldTransformToTinkTransactionCorrectlyWithNegativeAmountAndNoValueDate() {
         // given
         EntryEntity entryEntity = getExampleEntryEntity(false);
 
@@ -71,7 +71,7 @@ public class TransactionMapperTest {
         assertThat(transaction.getDescription()).isEqualTo("CREDITOR002");
         assertThat(transaction.getDate()).hasYear(2019);
         assertThat(transaction.getDate()).hasMonth(11);
-        assertThat(transaction.getDate()).hasDayOfMonth(12);
+        assertThat(transaction.getDate()).hasDayOfMonth(23);
     }
 
     @Test
