@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
             List<AccountTypes> restrictedAccountTypes =
                     dfRestrictions.stream()
                             .map(this::mapToAccountType)
+                            .filter(Objects::nonNull)
                             .collect(Collectors.toList());
             if (hasCheckingRestriction(dfRestrictions)) {
                 restrictedAccountTypes.add(AccountTypes.OTHER);
