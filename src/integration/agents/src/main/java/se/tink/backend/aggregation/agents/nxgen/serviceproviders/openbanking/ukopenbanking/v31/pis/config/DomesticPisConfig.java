@@ -70,7 +70,9 @@ public class DomesticPisConfig implements UKPisConfig {
                         consentId,
                         endToEndIdentification,
                         instructionIdentification);
-
+        if (client.isHSBCFamily()) {
+            request.getData().getInitiation().setReferenceForHSBCFamily();
+        }
         return client.executeDomesticPayment(pisConfig, request, DomesticPaymentResponse.class)
                 .toTinkPaymentResponse();
     }

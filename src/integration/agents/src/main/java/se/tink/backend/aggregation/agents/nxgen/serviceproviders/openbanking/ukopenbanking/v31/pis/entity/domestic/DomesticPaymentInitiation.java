@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -58,5 +59,11 @@ public class DomesticPaymentInitiation {
         this.debtorAccount =
                 Objects.isNull(payment.getDebtor()) ? null : new DebtorAccount(payment.getDebtor());
         this.instructedAmount = new InstructedAmount(payment.getExactCurrencyAmountFromField());
+    }
+
+    @JsonIgnore
+    public void setReferenceForHSBCFamily() {
+        // HSBC has special requirement on reference
+        this.remittanceInformation.setReference(remittanceInformation.getUnstructured());
     }
 }
