@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbApiClient;
@@ -130,7 +131,7 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
                                 "Error code C302. This error occurs when you have switched mobile networks, for example,"
                                         + " if you have just been abroad. Restart your phone and try again."));
             default:
-                throw new IllegalStateException(
+                throw LoginError.DEFAULT_MESSAGE.exception(
                         String.format(
                                 "could not initiate bankid, user message: %s, error message: %s",
                                 collectChallengeResponse.getMessage().getUserMessage(),
@@ -143,7 +144,7 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         String errorCode;
         Matcher matcher = BANKID_ERROR_PATTERN.matcher(userMessage);
         if (!matcher.find()) {
-            throw new IllegalStateException(
+            throw LoginError.DEFAULT_MESSAGE.exception(
                     String.format(
                             "could not initiate bankid, user message: %s, error message: %s",
                             collectChallengeResponse.getMessage().getUserMessage(),
@@ -165,7 +166,12 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
 
     private void verifyInitiateBankIdResponse(InitiateBankIdResponse initiateBankIdResponse) {
         if (!initiateBankIdResponse.isSuccess()) {
-            throw new IllegalStateException(
+            if (initiateBankIdResponse.getStatus().isUserError()
+                    && DnbConstants.Messages.USER_ID_BLOCKED.equalsIgnoreCase(
+                            initiateBankIdResponse.getMessage().getErrorMessage())) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            }
+            throw LoginError.DEFAULT_MESSAGE.exception(
                     String.format(
                             "error msg: %s, user msg: %s",
                             initiateBankIdResponse.getMessage().getErrorMessage(),
@@ -175,7 +181,7 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
 
     private void verifyInstrumentInfoResponse(InstrumentInfoResponse instrumentInfoResponse) {
         if (!instrumentInfoResponse.isSuccess()) {
-            throw new IllegalStateException("Could not fetch instrument info");
+            throw LoginError.DEFAULT_MESSAGE.exception("Could not fetch instrument info");
         }
     }
 
@@ -190,7 +196,7 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
                 throw BankIdError.USER_VALIDATION_ERROR.exception();
             }
 
-            throw new IllegalStateException("Could not authenticate");
+            throw LoginError.DEFAULT_MESSAGE.exception();
         }
     }
 
@@ -218,7 +224,7 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
             return BankIdStatus.FAILED_UNKNOWN;
         }
 
-        throw new IllegalStateException(
+        throw LoginError.DEFAULT_MESSAGE.exception(
                 String.format(
                         "user message: %s, error message: %s",
                         collectBankId.getMessage().getUserMessage(),

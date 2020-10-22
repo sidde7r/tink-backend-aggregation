@@ -129,6 +129,8 @@ public final class DnbConstants {
 
         public static final String SSN_FORMAT_ERROR =
                 "ukjent brukeridentitet eller feil format på brukeridentitet";
+        public static final String USER_ID_BLOCKED =
+                "Din bruker-ID er sperret. Kontakt oss for mer informasjon.";
     }
 
     public static class CardStatus {
