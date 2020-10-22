@@ -11,6 +11,8 @@ final class DanskeBankConstants {
                     "https://obp-api.danskebank.com/open-banking/v3.1/pisp";
             public static final String WELL_KNOWN_URL =
                     "https://obp-auth.danskebank.com/open-banking/private/.well-known/openid-configuration";
+            public static final String BUSINESS_WELL_KNOWN_URL =
+                    "https://obp-auth.danskebank.com/open-banking/business/.well-known/openid-configuration";
         }
     }
 }
