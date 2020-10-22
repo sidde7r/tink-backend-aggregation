@@ -60,11 +60,13 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
 
         if (!Strings.isNullOrEmpty(apiKey)) {
             ClientInfo clientInfoUsingApiKey = getClientInfoUsingApiKey(apiKey, appId);
-            if (!clientInfoUsingApiKey.getClusterId().equalsIgnoreCase(clusterId.getId())) {
+            if (clusterId.isValidId()
+                    && !clientInfoUsingApiKey.getClusterId().equalsIgnoreCase(clusterId.getId())) {
                 logger.error(
                         "The apiKey: {} & appId: {} has inconsistent clusterid configured in database.",
                         apiKey,
                         appId);
+                throw new WebApplicationException(Response.Status.BAD_REQUEST);
             }
             return clientInfoUsingApiKey;
         }
