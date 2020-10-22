@@ -14,6 +14,7 @@ java_library(
         "//src/integration/transfer:rpc",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",
+        "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",
     ],
 )

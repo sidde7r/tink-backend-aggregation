@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCom
 import se.tink.backend.aggregation.workers.commands.ClearSensitivePayloadOnForceAuthenticateCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.DataFetchingRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
@@ -297,6 +298,7 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper,
                             false));
+            commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
@@ -442,6 +444,7 @@ public class AgentWorkerOperationFactory {
                         accountInformationServiceEventsProducer,
                         controllerWrapper,
                         false));
+        commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
@@ -594,6 +597,7 @@ public class AgentWorkerOperationFactory {
                                 accountInformationServiceEventsProducer,
                                 controllerWrapper,
                                 false));
+                commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
                 commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
                 commands.addAll(
                         createOrderedRefreshableItemsCommands(
@@ -661,6 +665,7 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper,
                             false));
+            commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.addAll(
                     createOrderedRefreshableItemsCommands(
@@ -1343,6 +1348,7 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper,
                             false));
+            commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             // If this is an optIn request we request the caller do supply supplemental information
             // with the
             // accounts they want to whitelist.
