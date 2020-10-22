@@ -986,3 +986,130 @@ msgstr "Nummer Ihrer Bankkarte"
 
 msgid "There was a problem connecting to the bank."
 msgstr "Es gab ein Problem die Verbindung zu der Bank aufzubauen."
+
+msgid "PIN"
+msgstr "PIN"
+
+msgid "Username"
+msgstr "Nutzername"
+
+msgid "Phone number"
+msgstr "Telefonnummer"
+
+msgid ""
+"Use the same username and password as you would in the bank's mobile app."
+msgstr "Verwenden Sie das gleiche Passwort wie in der App Ihrer Bank."
+
+msgid ""
+"Use the same username and password as you would in the card issuer's mobile "
+"app."
+msgstr "Verwenden Sie die gleichen Zugangsdaten wie in der App Ihres Kartenherausgebers."
+
+msgid ""
+"We currently only support photo TAN with QR code scanning, which is not "
+"available for your user."
+msgstr "Wir unterstützen zu Zeit photoTAN nur mit QR code. Dies scheint nicht verfügbar sein."
+
+msgid "Scan the QR code with the photoTAN app."
+msgstr "Scannen Sie den QR-Code mit der photoTAN-App."
+
+msgid "TAN"
+msgstr "TAN"
+
+msgid "Enter the TAN from the photoTAN app."
+msgstr "Geben Sie die TAN aus der photoTAN-App ein."
+
+msgid "Unknown error"
+msgstr "Unbekannter Fehler"
+
+msgid ""
+"You have reached the maximum number of mobile device registrations. Please "
+"check if you can unregister some devices using the bank's web portal, or "
+"contact the bank."
+msgstr "Sie haben die maximale Anzahl an Gerätregistrationen erreicht. Bitte prüfen Sie ob Sie im Portal Ihrer Bank ein anderes Gerät abmelden können."
+
+msgid ""
+"Your password has changed. Please enter the latest password in all other "
+"devices."
+msgstr "Ihr Passwort wurde geändert. Bitte geben Sie ihr jetziges Passwort auf allen Geräten ein."
+
+msgid "The consent has been expired. "
+msgstr "Der Consent ist abgelaufen"
+
+msgid "Code"
+msgstr "Code"
+
+msgid "Error message: "
+msgstr "Fehlermeldung: "
+
+msgid ""
+"Another authentication attempt was initiated while authenticating. Please "
+"try again."
+msgstr "Ein anderer Authentifizierungsversuch wurde während der laufenden Authentifizierung gestartet. Bitte versuchen Sie es erneut."
+
+msgid "Your session has been terminated by the bank."
+msgstr "Ihre Sitzung wurde von der Bank beendet."
+
+msgid "Please ensure that you have entered the correct mobile number"
+msgstr "Bitte überprüfen Sie die eingegebene Telefonnummer"
+
+msgid "Source and destination account must not be the same."
+msgstr "Ausgangs- und Zielkonto müssen unterschiedlich sein."
+
+msgid "The code you entered is not valid"
+msgstr "Der eingegebene Code ist ungültig"
+
+msgid "Enter the code you received from the bank"
+msgstr "Geben Sie den Code ein, den Sie von der Bank erhalten haben"
+
+msgid ""
+"Your chosen PIN code is locked. The PIN code must be changed in your Netbank "
+"before you can log on."
+msgstr "Die gewählte PIN ist gesperrt. Der PIN Code muss im Portal Ihrer Bank geändert werden, bevor Sie sich einloggen können."
+
+msgid "There aren't any Authentication methods available."
+msgstr "Es sind keine Authentifizierungsmethoden verfügbar."
+
+msgid "SMS Code"
+msgstr "SMS Code"
+
+msgid "Activation code is incorrect. Please try again."
+msgstr "Der Aktivierungscode ist ungültig. Bitte versuchen Sie es erneut."
+
+msgid "Activation timed out. Please try again."
+msgstr "Die Zeit für die Aktivierung ist abgelaufen. Bitter versuchen Sie es erneut."
+
+msgid "Authentication was cancelled. Please try again."
+msgstr "Die Authentifizierung wurde abgebrochen. Bitte versuchen Sie es erneut."
+
+msgid "The activation code you entered is not valid."
+msgstr "Der eingegebene Aktivierungscode ist ungültig."
+
+msgid "Verifying credentials"
+msgstr "Zugangsdaten werden verifiziert"
+
+msgid "Credentials are valid"
+msgstr "Die Zugangsdaten sind gültig"
+
+msgid "Startcode"
+msgstr "Startcode"
+
+#, java-format
+msgid "Select from 1 to {0}"
+msgstr "Wählen Sie zwischen 1 und {0}"
+
+#, java-format
+msgid ""
+"Insert your girocard into the TAN-generator and press \"TAN\". Enter the "
+"startcode and press \"OK\"."
+msgstr "Stecken Sie Ihre Girokarte in den TAN-Generator und drücken Sie die Taste “TAN”. Geben Sie den Startcode ein und drücken Sie die Taste “OK”."
+
+#, java-format
+msgid "Confirm by entering the generated TAN for \"{0}\"."
+msgstr "Bitte bestätigen Sie Ihren Auftrag mit der generierten TAN für \"{0}\""
+
+msgid "Confirm by entering the generated TAN."
+msgstr "Bitte bestätigen Sie Ihren Auftrag mit der TAN von Ihrem TAN-Generator."
+
+msgid "The value you entered is not valid."
+msgstr "Der eigegebene Wert ist ungültig."
