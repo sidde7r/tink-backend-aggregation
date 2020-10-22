@@ -57,8 +57,7 @@ public class TransactionsResponse extends JsfUpdateResponse {
     private boolean hasNoTransactions() {
         if (getTransactionRows().getLength() == 1) {
             final Node row = getTransactionRows().item(0);
-            return evaluateXPath(row, "td[contains(@class,'sinMov')]", Boolean.class)
-                    .booleanValue();
+            return evaluateXPath(row, "td[contains(@class,'sinMov')]", Boolean.class);
         }
         return false;
     }
@@ -76,7 +75,8 @@ public class TransactionsResponse extends JsfUpdateResponse {
                 evaluateXPath(row, "td[2]/table/tr[1]/td", NodeList.class);
         if (null == transactionCells || transactionCells.getLength() != 4) {
             throw new IllegalStateException(
-                    "Transaction should have 4 cells, but has " + transactionCells.getLength());
+                    "Transaction should have 4 cells, but has "
+                            + (transactionCells == null ? 0 : transactionCells.getLength()));
         }
 
         final String description = transactionCells.item(0).getTextContent().trim();
