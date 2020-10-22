@@ -153,7 +153,7 @@ git_repository(
 # To be used only by //src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework
 git_repository(
     name = "tink_backend_for_agents_framework",
-    commit = "28697c7825eb3513634ad2b9ee9f7541a225ec7f",
+    commit = "b569ad7af323bdb56fa980e50c50dd297227bc89",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1595000000 +0000",
 )
@@ -626,15 +626,15 @@ pinned_maven_install()
 
 # Agents Platform
 
-load("@tink_backend//src/agents-platform:deps.bzl", "agent_platform_deps", "lombok_deps")
+load("@tink_backend_for_agents_framework//src/agents-platform:deps.bzl", "agent_platform_deps", "lombok_deps")
 
-lombok_deps("@tink_backend//src/agents-platform:lombok_maven_install.json")
+lombok_deps("@tink_backend_for_agents_framework//src/agents-platform:lombok_maven_install.json")
 
 load("@lombok_maven//:defs.bzl", pin_lombok = "pinned_maven_install")
 
 pin_lombok()
 
-agent_platform_deps("@tink_backend//src/agents-platform:agent_platform_maven_install.json", GRPC_JAVA_VERSION)
+agent_platform_deps("@tink_backend_for_agents_framework//src/agents-platform:agent_platform_maven_install.json", GRPC_JAVA_VERSION)
 
 load("@agents_platform_maven//:defs.bzl", pin_agent_platform = "pinned_maven_install")
 
