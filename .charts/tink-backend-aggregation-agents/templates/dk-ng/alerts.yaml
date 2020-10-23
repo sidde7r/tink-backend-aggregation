@@ -32,7 +32,7 @@ spec:
             {{ .Values.grafanaLink }}
         summary: Login success rate for all authentication types with unknown errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: SplitLoginSuccessRatesBelow60WithUnhandledErrorsAndAttemptLimitDK_NG
       expr: |
@@ -48,7 +48,7 @@ spec:
             {{ .Values.grafanaLink }}
         summary: Login success rate for one of login type with unknown errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: AllLoginSuccessRatesBelow60WithKnownErrorsAndAttemptLimitDK_NG
       expr: |
@@ -64,7 +64,7 @@ spec:
             {{ .Values.grafanaLink }}
         summary: Login success rate for all authentication types with known errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: SplitLoginSuccessRatesBelow60WithKnownErrorsAndAttemptLimitDK_NG
       expr: |
@@ -80,7 +80,7 @@ spec:
             {{ .Values.grafanaLink }}
         summary: Login success rate for one of login type with known errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: AllLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitDK_NG
       expr: |
@@ -96,7 +96,7 @@ spec:
             {{ .Values.grafanaLink }}
         summary: Login success rate for all authentication types with bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: SplitLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitDK_NG
       expr: |
@@ -112,7 +112,7 @@ spec:
             {{ .Values.grafanaLink }}
         summary: Login success rate for one of login type with bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: AllLoginSuccessRatesBelow60WithAllErrorsAndAttemptLimitDK_NG
       expr: |
@@ -128,7 +128,7 @@ spec:
             {{ .Values.grafanaLink }}
         summary: Login success rate for all authentication types with all errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: SplitLoginSuccessRatesBelow60WithAllErrorsAndAttemptLimitDK_NG
       expr: |
@@ -144,7 +144,7 @@ spec:
             {{ .Values.grafanaLink }}
         summary: Login success rate for one of login type with all errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: AllLoginSuccessRatesBelow60WithAgentErrorsAndAttemptLimitDK_NG
       expr: |
@@ -160,7 +160,7 @@ spec:
             {{ .Values.grafanaLink }}
         summary: Login success rate for all authentication types with agent errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: SplitLoginSuccessRatesBelow60WithAgentErrorsAndAttemptLimitDK_NG
       expr: |
@@ -176,7 +176,7 @@ spec:
             {{ .Values.grafanaLink }}
         summary: Login success rate for one of login type with agent errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: AgentRefreshesBelow60DueToBankServerErrorWithRateLimitDK_NG
       expr: |
@@ -192,7 +192,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 60% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: AgentRefreshesBelow60DueToAgentErrorsWithRateLimitDK_NG
       expr: |
@@ -208,7 +208,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 60% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"
 
     - alert: AgentRefreshesBelow60DueToAllErrorsWithRateLimitDK_NG
       expr: |
@@ -224,4 +224,4 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 60% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: "{{ .Values.teletubbiesTags }}"

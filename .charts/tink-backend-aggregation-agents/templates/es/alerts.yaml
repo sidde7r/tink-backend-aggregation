@@ -22,7 +22,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
-        tags: {{ .Values.fluffyTags }}
+        tags: "{{ .Values.fluffyTags }}"
 
     - alert: RefreshSuccessRateLowWithAttemptLimitES
       expr: |
@@ -40,4 +40,4 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
-        tags: {{ .Values.fluffyTags }}
+        tags: "{{ .Values.fluffyTags }}"

@@ -21,7 +21,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 70% ( <{ $value }> ) the last hour.
-        tags: {{ .Values.minionsTags }}
+        tags: "{{ .Values.minionsTags }}"
 
     - alert: RefreshSuccessRateLowWithAttemptLimitBE
       expr: |
@@ -38,4 +38,4 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh success rate is below 90% ( <{ $value }> ) the last hour.
-        tags: {{ .Values.minionsTags }}
+        tags: "{{ .Values.minionsTags }}"
