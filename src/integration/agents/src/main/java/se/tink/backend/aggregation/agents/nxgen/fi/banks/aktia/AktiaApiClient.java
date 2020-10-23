@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.Url;
@@ -29,16 +26,12 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.entities.AccountSummaryListEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.rpc.AccountsSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class AktiaApiClient {
-
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final TinkHttpClient httpClient;
     private OAuth2Token accessToken;
@@ -57,13 +50,6 @@ public class AktiaApiClient {
         Oauth2Request requestBody =
                 new Oauth2Request(
                         AktiaConstants.Oauth2Scopes.REGISTRATION_INIT, username, password);
-
-        // temporary debug logs
-        LOGGER.info(
-                "Got username length {} hash {}", username.length(), Hash.sha256AsHex(username));
-        LOGGER.info(
-                "Got password length {} hash {}", password.length(), Hash.sha256AsHex(password));
-        LOGGER.info("Serialized form hash: {}", Hash.sha256AsHex(requestBody.getBodyValue()));
 
         try {
             HttpResponse response =
