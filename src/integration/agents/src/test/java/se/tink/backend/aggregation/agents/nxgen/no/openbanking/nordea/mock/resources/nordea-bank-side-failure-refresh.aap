@@ -1,0 +1,47 @@
+REQUEST 1
+POST https://open.nordea.com/personal/v5/authorize
+Content-Type: application/json
+
+{"country":"NO","scope":["ACCOUNTS_BALANCES","ACCOUNTS_BASIC","ACCOUNTS_DETAILS","ACCOUNTS_TRANSACTIONS","CARDS_INFORMATION","CARDS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","max_tx_history":12,"account_list":["ALL"],"skip_account_selection":true}
+
+RESPONSE 1
+500
+Content-Type: application/json;charset=utf-8
+
+{"group_header":{"message_identification":"dca6559fadda2c53","creation_date_time":"2020-10-22T02:14:37.824Z","http_code":500},"error":{"request":{"url":"/v4/accounts/NO60391573991-NOK/transactions"},"failures":[{"code":"error.server","description":"Unexpected error happened while processing the request."}]}}
+
+REQUEST 2
+POST https://open.nordea.com/personal/v5/authorize
+Content-Type: application/json
+
+{"country":"NO","scope":["ACCOUNTS_BALANCES","ACCOUNTS_BASIC","ACCOUNTS_DETAILS","ACCOUNTS_TRANSACTIONS","CARDS_INFORMATION","CARDS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","max_tx_history":12,"account_list":["ALL"],"skip_account_selection":true}
+
+RESPONSE 2
+500
+Content-Type: application/json;charset=utf-8
+
+{"group_header":{"message_identification":"dca6559fadda2c53","creation_date_time":"2020-10-22T02:14:37.824Z","http_code":500},"error":{"request":{"url":"/v4/accounts/NO60391573991-NOK/transactions"},"failures":[{"code":"error.server","description":"Unexpected error happened while processing the request."}]}}
+
+REQUEST 3
+POST https://open.nordea.com/personal/v5/authorize
+Content-Type: application/json
+
+{"country":"NO","scope":["ACCOUNTS_BALANCES","ACCOUNTS_BASIC","ACCOUNTS_DETAILS","ACCOUNTS_TRANSACTIONS","CARDS_INFORMATION","CARDS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","max_tx_history":12,"account_list":["ALL"],"skip_account_selection":true}
+
+RESPONSE 3
+500
+Content-Type: application/json;charset=utf-8
+
+{"group_header":{"message_identification":"dca6559fadda2c53","creation_date_time":"2020-10-22T02:14:37.824Z","http_code":500},"error":{"request":{"url":"/v4/accounts/NO60391573991-NOK/transactions"},"failures":[{"code":"error.server","description":"Unexpected error happened while processing the request."}]}}
+
+REQUEST 4
+POST https://open.nordea.com/personal/v5/authorize
+Content-Type: application/json
+
+{"country":"NO","scope":["ACCOUNTS_BALANCES","ACCOUNTS_BASIC","ACCOUNTS_DETAILS","ACCOUNTS_TRANSACTIONS","CARDS_INFORMATION","CARDS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","max_tx_history":12,"account_list":["ALL"],"skip_account_selection":true}
+
+RESPONSE 4
+500
+Content-Type: application/json;charset=utf-8
+
+{"group_header":{"message_identification":"dca6559fadda2c53","creation_date_time":"2020-10-22T02:14:37.824Z","http_code":500},"error":{"request":{"url":"/v4/accounts/NO60391573991-NOK/transactions"},"failures":[{"code":"error.server","description":"Unexpected error happened while processing the request."}]}}

@@ -11,7 +11,7 @@ public class NordeaErrorResponse extends NordeaBaseResponse {
 
     @JsonIgnore
     public boolean isBankSideFailure() {
-        return error.isBankSideFailure();
+        return error != null && error.isBankSideFailure();
     }
 
     @JsonIgnore
