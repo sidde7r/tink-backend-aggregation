@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HEADERS_TO_SIGN;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.QueryValues;
@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
+@RequiredArgsConstructor
 public class SparebankApiClient {
 
     private final TinkHttpClient client;
@@ -48,19 +49,6 @@ public class SparebankApiClient {
     private final EidasProxyConfiguration eidasProxyConfiguration;
     private final EidasIdentity eidasIdentity;
     private final SparebankApiConfiguration apiConfiguration;
-
-    public SparebankApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity,
-            SparebankApiConfiguration apiConfiguration) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.eidasIdentity = eidasIdentity;
-        this.apiConfiguration = apiConfiguration;
-    }
 
     public void setPsuId(String psuId) {
         sessionStorage.put(StorageKeys.PSU_ID, psuId);
@@ -175,7 +163,12 @@ public class SparebankApiClient {
         headers.put(HeaderKeys.X_REQUEST_ID, requestId);
         headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, apiConfiguration.getQsealcBase64());
-        headers.put(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
+
+        // if this condition is correct is currently a mistery while auto auth is not implemented.
+        // Added info about that in ticket ITE-1648
+        if (apiConfiguration.isManual()) {
+            headers.put(HeaderKeys.PSU_IP_ADDRESS, apiConfiguration.getUserIp());
+        }
 
         digest.ifPresent(digestString -> headers.put(HeaderKeys.DIGEST, digestString));
         getSessionId().ifPresent(sessionId -> headers.put(HeaderKeys.TPP_SESSION_ID, sessionId));

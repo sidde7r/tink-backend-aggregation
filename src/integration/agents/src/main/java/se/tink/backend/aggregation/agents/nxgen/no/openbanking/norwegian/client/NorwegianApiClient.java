@@ -48,12 +48,14 @@ public class NorwegianApiClient {
     private final String redirectUrl;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
+    private final String userIp;
 
     public NorwegianApiClient(
             final TinkHttpClient client,
             final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
-            final AgentConfiguration<NorwegianConfiguration> agentConfiguration) {
+            final AgentConfiguration<NorwegianConfiguration> agentConfiguration,
+            final String userIp) {
         this.client = Objects.requireNonNull(client);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
@@ -61,6 +63,7 @@ public class NorwegianApiClient {
         this.norwegianConfiguration =
                 Objects.requireNonNull(agentConfiguration.getProviderSpecificConfiguration());
         this.redirectUrl = Objects.requireNonNull(agentConfiguration.getRedirectUrl());
+        this.userIp = userIp;
     }
 
     private String getAuthorizationString() {
@@ -200,7 +203,7 @@ public class NorwegianApiClient {
         }
         return request.header(HeaderKeys.DATE, formatDateHeader())
                 .header(HeaderKeys.PSU_ID, psuId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP)
+                .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
                 .header(HeaderKeys.PSU_IP_PORT, HeaderValues.PSU_PORT)
                 .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                 .header(HeaderKeys.REGION_ID, HeaderValues.REGION_ID)

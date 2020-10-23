@@ -78,6 +78,8 @@ public final class SparebankAgent extends NextGenerationAgent
                     .certificateIssuerDN(CertificateUtils.getCertificateIssuerDN(qsealcBase64))
                     .certificateSerialNumberInHex(
                             CertificateUtils.getSerialNumber(qsealcBase64, 16))
+                    .userIp(userIp)
+                    .isManual(request.isManual())
                     .build();
         } catch (CertificateException e) {
             throw new IllegalStateException(

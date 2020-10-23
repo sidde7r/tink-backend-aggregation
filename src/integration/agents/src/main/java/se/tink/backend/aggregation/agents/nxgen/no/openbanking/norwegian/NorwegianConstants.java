@@ -103,7 +103,6 @@ public class NorwegianConstants {
         public static final String PSU_DEVICE_ID = "Tink";
         public static final String PSU_USER_AGENT = "Tink";
         public static final String REGION_ID = "NO";
-        public static final String PSU_IP = "0.0.0.0";
         public static final String PSU_PORT = "0000";
     }
 }
