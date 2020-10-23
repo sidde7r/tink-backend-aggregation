@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea;
 
 public class NordeaNoConstants {
     public static final String PRODUCT_CODE = "productCode";
+    public static final String CAN_FETCH_TRANSACTION = "canFetchTransactions";
 
     public static class QueryParamKeys {
         public static final String CLIENT_ID = "client_id";
