@@ -172,7 +172,6 @@ public abstract class BecConstants {
     }
 
     public static class HeaderValues {
-        public static final String PSU_IP = "34.240.159.190";
         public static final String SHA_256 = "SHA-256=";
         public static final String SIGNATURE_HEADER =
                 "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";

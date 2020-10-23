@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.ApiService;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderKeys;
@@ -47,22 +48,16 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@RequiredArgsConstructor
 public final class BecApiClient {
     private final TinkHttpClient client;
-    private final String baseUrl;
     private final PersistentStorage persistentStorage;
+    private final BecApiConfiguration apiConfiguration;
     private String state;
     private BecConfiguration becConfiguration;
     private String redirectUrl;
     private AgentsServiceConfiguration config;
     private EidasIdentity eidasIdentity;
-
-    public BecApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, String baseUrl) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.baseUrl = baseUrl;
-    }
 
     public void setConfiguration(
             AgentConfiguration<BecConfiguration> agentConfiguration,
@@ -76,17 +71,17 @@ public final class BecApiClient {
 
     private Map<String, Object> getHeaders(String requestId, String digest) {
         String tppRedirectUrl = new URL(redirectUrl).queryParam(QueryKeys.STATE, state).toString();
-
         Map<String, Object> headers = new HashMap<>();
         headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
         headers.put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
-        headers.put(HeaderKeys.PSU_IP, HeaderValues.PSU_IP);
         headers.put(HeaderKeys.X_REQUEST_ID, requestId);
         headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.DIGEST, digest);
         headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, becConfiguration.getQsealCertificate());
-
+        if (apiConfiguration.isManual()) {
+            headers.put(HeaderKeys.PSU_IP, apiConfiguration.getUserIp());
+        }
         return headers;
     }
 
@@ -140,7 +135,7 @@ public final class BecApiClient {
 
         ConsentResponse response =
                 createRequest(
-                                new URL(baseUrl.concat(ApiService.GET_CONSENT)),
+                                new URL(apiConfiguration.getUrl().concat(ApiService.GET_CONSENT)),
                                 SerializationUtils.serializeToString(body))
                         .body(body)
                         .post(ConsentResponse.class);
@@ -150,7 +145,7 @@ public final class BecApiClient {
 
     public ConsentResponse getConsentStatus() {
         return createRequest(
-                        new URL(baseUrl.concat(ApiService.GET_CONSENT_STATUS))
+                        new URL(apiConfiguration.getUrl().concat(ApiService.GET_CONSENT_STATUS))
                                 .parameter(
                                         StorageKeys.CONSENT_ID,
                                         persistentStorage.get(StorageKeys.CONSENT_ID)))
@@ -168,13 +163,13 @@ public final class BecApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        return createRequest(new URL(baseUrl.concat(ApiService.GET_ACCOUNTS)))
+        return createRequest(new URL(apiConfiguration.getUrl().concat(ApiService.GET_ACCOUNTS)))
                 .get(GetAccountsResponse.class);
     }
 
     public BalancesResponse getBalances(AccountEntity account) {
         return createRequest(
-                        new URL(baseUrl.concat(ApiService.GET_BALANCES))
+                        new URL(apiConfiguration.getUrl().concat(ApiService.GET_BALANCES))
                                 .parameter(IdTags.ACCOUNT_ID, account.getResourceId()))
                 .get(BalancesResponse.class);
     }
@@ -182,7 +177,7 @@ public final class BecApiClient {
     public PaginatorResponse getTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
         final URL url =
-                new URL(baseUrl.concat(ApiService.GET_TRANSACTIONS))
+                new URL(apiConfiguration.getUrl().concat(ApiService.GET_TRANSACTIONS))
                         .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());
 
         return createRequest(url)
@@ -198,7 +193,7 @@ public final class BecApiClient {
         this.state = state;
 
         return createPisRequest(
-                        new URL(baseUrl.concat(ApiService.CREATE_PAYMENT))
+                        new URL(apiConfiguration.getUrl().concat(ApiService.CREATE_PAYMENT))
                                 .parameter(
                                         IdTags.PAYMENT_TYPE,
                                         PaymentProducts.DOMESTIC_CREDIT_TRANSFER),
@@ -208,7 +203,7 @@ public final class BecApiClient {
 
     public GetPaymentResponse getPayment(String paymentId) {
         return createPisRequest(
-                        new URL(baseUrl.concat(ApiService.GET_PAYMENT))
+                        new URL(apiConfiguration.getUrl().concat(ApiService.GET_PAYMENT))
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
                 .get(GetPaymentResponse.class);
     }

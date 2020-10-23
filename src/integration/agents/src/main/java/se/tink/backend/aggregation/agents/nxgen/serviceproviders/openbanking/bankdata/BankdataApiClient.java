@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.QueryValues;
@@ -52,30 +52,17 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.payment.enums.PaymentType;
 
+@RequiredArgsConstructor
 public class BankdataApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
-    private final String baseUrl;
-    private final String baseAuthUrl;
+    private final BankdataApiConfiguration apiConfiguration;
 
     private BankdataConfiguration configuration;
     private String redirectUrl;
     private String clientId;
-
-    public BankdataApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage,
-            String baseUrl,
-            String baseAuthUrl) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
-        this.baseUrl = baseUrl;
-        this.baseAuthUrl = baseAuthUrl;
-    }
 
     protected void setConfiguration(
             AgentConfiguration<BankdataConfiguration> agentConfiguration,
@@ -98,7 +85,7 @@ public class BankdataApiClient {
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         sessionStorage.put(StorageKeys.CONSENT_ID, consentId);
-        URL url = new URL(baseAuthUrl + Endpoints.AUTHORIZE);
+        URL url = new URL(apiConfiguration.getBaseAuthUrl() + Endpoints.AUTHORIZE);
 
         return createRequest(url)
                 .queryParam(QueryKeys.RESPONSE_TYPE, BankdataConstants.QueryValues.CODE)
@@ -127,7 +114,7 @@ public class BankdataApiClient {
     public void authorizeConsent(String consentId) {
         final String requestId = UUID.randomUUID().toString();
         final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
-        URL url = new URL(baseUrl + Endpoints.AUTHORIZE_CONSENT);
+        URL url = new URL(apiConfiguration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
 
         client.request(url.parameter(IdTags.CONSENT_ID, consentId))
                 .addBearerToken(getOauthToken())
@@ -139,7 +126,7 @@ public class BankdataApiClient {
 
     public AccountResponse fetchAccounts() {
         final String requestId = UUID.randomUUID().toString();
-        URL url = new URL(baseUrl + Endpoints.ACCOUNTS);
+        URL url = new URL(apiConfiguration.getBaseUrl() + Endpoints.ACCOUNTS);
 
         final AccountResponse accountsWithoutBalances =
                 createRequestInSession(url)
@@ -160,7 +147,11 @@ public class BankdataApiClient {
 
     private AccountEntity fetchBalances(final AccountEntity accountEntity) {
         final String requestId = UUID.randomUUID().toString();
-        final URL url = new URL(baseUrl + Endpoints.AIS_PRODUCT + accountEntity.getBalancesLink());
+        final URL url =
+                new URL(
+                        apiConfiguration.getBaseUrl()
+                                + Endpoints.AIS_PRODUCT
+                                + accountEntity.getBalancesLink());
 
         final List<BalanceEntity> balances =
                 client.request(url)
@@ -181,7 +172,7 @@ public class BankdataApiClient {
         final String requestId = UUID.randomUUID().toString();
         final URL fullUrl =
                 new URL(
-                        baseUrl
+                        apiConfiguration.getBaseUrl()
                                 + Endpoints.AIS_PRODUCT
                                 + account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL));
 
@@ -203,7 +194,11 @@ public class BankdataApiClient {
 
     public TransactionResponse fetchNextTransactions(String nextTransactionsPath) {
         final String requestId = UUID.randomUUID().toString();
-        final URL fullUrl = new URL(baseUrl + Endpoints.AIS_PRODUCT + nextTransactionsPath);
+        final URL fullUrl =
+                new URL(
+                        apiConfiguration.getBaseUrl()
+                                + Endpoints.AIS_PRODUCT
+                                + nextTransactionsPath);
 
         return createRequestInSession(fullUrl)
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
@@ -216,7 +211,7 @@ public class BankdataApiClient {
             CreatePaymentRequest paymentRequest, PaymentType type) throws PaymentException {
         final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
-        URL url = new URL(baseUrl + productType);
+        URL url = new URL(apiConfiguration.getBaseUrl() + productType);
 
         try {
             CreatePaymentResponse response =
@@ -235,7 +230,7 @@ public class BankdataApiClient {
         final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
         URL url =
-                new URL(baseUrl + productType + Endpoints.PAYMENT_ID)
+                new URL(apiConfiguration.getBaseUrl() + productType + Endpoints.PAYMENT_ID)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
         String paymentProduct = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
@@ -248,7 +243,7 @@ public class BankdataApiClient {
 
     public PaymentStatusResponse getPaymentStatus(String paymentProduct, String paymentId) {
         URL url =
-                new URL(baseUrl + Endpoints.GET_PAYMENT_STATUS)
+                new URL(apiConfiguration.getBaseUrl() + Endpoints.GET_PAYMENT_STATUS)
                         .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
@@ -271,17 +266,22 @@ public class BankdataApiClient {
         final OAuth2Token authToken = getPaymentInitialToken();
         final String requestId = UUID.randomUUID().toString();
 
-        return createRequest(url)
-                .addBearerToken(authToken)
-                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
+        RequestBuilder requestBuilder =
+                createRequest(url)
+                        .addBearerToken(authToken)
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                        .header(HeaderKeys.X_REQUEST_ID, requestId);
+
+        if (apiConfiguration.isManual()) {
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, apiConfiguration.getUserIp());
+        }
+        return requestBuilder;
     }
 
     private AuthorizePaymentResponse authorizePayment(String paymentId, PaymentType type) {
         String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
         URL url =
-                new URL(baseUrl + productType + Endpoints.AUTHORIZE_PAYMENT)
+                new URL(apiConfiguration.getBaseUrl() + productType + Endpoints.AUTHORIZE_PAYMENT)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
         return createPaymentRequestInSession(url).post(AuthorizePaymentResponse.class, "{}");
@@ -292,7 +292,7 @@ public class BankdataApiClient {
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
 
-        return new URL(baseAuthUrl + Endpoints.AUTHORIZE)
+        return new URL(apiConfiguration.getBaseAuthUrl() + Endpoints.AUTHORIZE)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.SCOPE, QueryValues.PIS_SCOPE + paymentId)
@@ -305,7 +305,7 @@ public class BankdataApiClient {
     private void getTokenWithClientCredentials() {
         final InitialTokenRequest request =
                 new InitialTokenRequest(FormValues.CLIENT_CREDENTIALS, FormValues.SCOPE, clientId);
-        URL url = new URL(baseAuthUrl + Endpoints.TOKEN);
+        URL url = new URL(apiConfiguration.getBaseAuthUrl() + Endpoints.TOKEN);
 
         TokenResponse response =
                 client.request(url)
@@ -321,7 +321,7 @@ public class BankdataApiClient {
         getTokenWithClientCredentials();
         final ConsentRequest consentRequest = new ConsentRequest();
         final String requestId = UUID.randomUUID().toString();
-        URL url = new URL(baseUrl + Endpoints.CONSENT);
+        URL url = new URL(apiConfiguration.getBaseUrl() + Endpoints.CONSENT);
 
         ConsentResponse response =
                 client.request(url)
@@ -363,7 +363,7 @@ public class BankdataApiClient {
     }
 
     private OAuth2Token getTokenResponse(TokenRequest tokenRequest) {
-        URL url = new URL(baseAuthUrl + Endpoints.TOKEN);
+        URL url = new URL(apiConfiguration.getBaseAuthUrl() + Endpoints.TOKEN);
 
         return client.request(url)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
