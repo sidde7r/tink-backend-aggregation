@@ -91,10 +91,10 @@ public class TransactionalAccountTransactionFetcherTest {
     @Test
     public void shouldNotFetchTransactionsIfNoPermissionOnAccountToDoSo() {
         // given
-
         TransactionalAccount mockAccount = mock(TransactionalAccount.class);
         given(mockAccount.getFromTemporaryStorage("canFetchTransactions", Boolean.class))
                 .willReturn(Optional.of(Boolean.FALSE));
+
         // when
         TransactionKeyPaginatorResponse<String> transactionsFor =
                 fetcher.getTransactionsFor(mockAccount, null);
