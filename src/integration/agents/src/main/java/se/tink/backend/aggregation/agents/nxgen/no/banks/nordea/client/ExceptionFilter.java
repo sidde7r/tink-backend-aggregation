@@ -26,12 +26,12 @@ public class ExceptionFilter extends Filter {
         ErrorResponse body = null;
         try {
             body = httpResponse.getBody(ErrorResponse.class);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // Could not parse as ErrorResponse.class or some other error during it, skip trying.
             return;
         }
 
-        if (body.getHttpStatus() == 400 && INVALID_GRANT.equals(body.getError())) {
+        if (body != null && body.getHttpStatus() == 400 && INVALID_GRANT.equals(body.getError())) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
