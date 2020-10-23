@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 
 import com.google.common.collect.ImmutableMap;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
@@ -37,10 +37,10 @@ public class NordeaSEConstants {
                     .put(FormParams.CLIENT_ID, FormParams.CLIENT_ID_VALUE)
                     .build();
 
-    public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAP =
-            TypeMapper.<Instrument.Type>builder()
-                    .put(Instrument.Type.FUND, "FUND")
-                    .put(Instrument.Type.STOCK, "EQUITY")
+    public static final TypeMapper<InstrumentType> INSTRUMENT_TYPE_MAP =
+            TypeMapper.<InstrumentType>builder()
+                    .put(InstrumentType.FUND, "FUND")
+                    .put(InstrumentType.STOCK, "EQUITY")
                     .ignoreKeys("CASH", "OTHER")
                     .build();
 

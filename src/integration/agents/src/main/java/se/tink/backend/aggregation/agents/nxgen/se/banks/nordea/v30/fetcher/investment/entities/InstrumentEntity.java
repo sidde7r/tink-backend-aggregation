@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 
 @JsonObject
@@ -29,7 +29,7 @@ public class InstrumentEntity {
             double marketValue, double profitLoss, double quantity, double avgPurchasePrice) {
 
         return InstrumentModule.builder()
-                .withType(InstrumentType.FUND)
+                .withType(NordeaSEConstants.INSTRUMENT_TYPE_MAP.translate(rawType).get())
                 .withId(InstrumentIdModule.of(isin, getMarket(), instrumentName, id))
                 .withMarketPrice(price)
                 .withMarketValue(marketValue)
