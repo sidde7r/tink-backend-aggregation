@@ -137,7 +137,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         // Abort if there is no optIn accounts matched from supplemental info
         // The main reason is due to unexpected supplemental info back
         if (optInAccounts == null || optInAccounts.isEmpty()) {
-            log.info("Total 0 of optInAccounts.");
+            log.error("Empty accounts matched.");
             statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
