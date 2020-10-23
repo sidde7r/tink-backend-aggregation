@@ -1293,3 +1293,13 @@ maven_install(
 load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
 
 com_salesforce_servicelibs_grpc_testing_contrib_pin()
+
+git_repository(
+    name = "bazel_sonarqube",
+    commit = "56537ff1cf4e6c28fba2b06e0f20d1f4e186645e",
+    remote = "git@github.com:Zetten/bazel-sonarqube.git",
+)
+
+load("@bazel_sonarqube//:repositories.bzl", "bazel_sonarqube_repositories")
+
+bazel_sonarqube_repositories()
