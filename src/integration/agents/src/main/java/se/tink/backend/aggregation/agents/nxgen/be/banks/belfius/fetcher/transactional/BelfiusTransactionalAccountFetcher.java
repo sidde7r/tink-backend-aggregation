@@ -40,14 +40,6 @@ public class BelfiusTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-
-        // apiClient.toSignCounters();
-
-        // apiClient.entitySelectWithMenuAccess();
-        // apiClient.hybridMapping();
-        // apiClient.documentSign();
-        // apiClient.getFeedStructure();
-
         List<TransactionalAccount> transactionalAccounts =
                 fetchTransactionalAccountPairedWithBelfiusProduct().stream()
                         .map(pair -> pair.first)
@@ -56,7 +48,7 @@ public class BelfiusTransactionalAccountFetcher
         return transactionalAccounts;
     }
 
-    public List<Pair<TransactionalAccount, BelfiusProduct>>
+    private List<Pair<TransactionalAccount, BelfiusProduct>>
             fetchTransactionalAccountPairedWithBelfiusProduct() {
         return this.apiClient.fetchProducts().stream()
                 .filter(entry -> entry.getValue().isTransactionalAccount())

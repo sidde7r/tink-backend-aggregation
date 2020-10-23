@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.Ignore;
 
+@Ignore
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BelfiusLoginTestData {
     public static final String GOOD_LOGIN_RESPONSE =
