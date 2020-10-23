@@ -8,7 +8,7 @@ import se.tink.libraries.amount.Amount;
 public class AmountEntityTest {
 
     @Test
-    public void dummy() {
+    public void toTinkAmount() {
         // given
         double amount = 1234.5678;
         double expectedAmount = 1234.56;
