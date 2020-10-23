@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 
 import javax.annotation.Nullable;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Urls;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.IdentificationEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.RegistrationResultEntity;
@@ -28,7 +28,7 @@ public class EncapClient {
     private final EncapMessageUtils messageUtils;
 
     public EncapClient(
-            AgentContext context,
+            CompositeAgentContext context,
             CredentialsRequest request,
             SignatureKeyPair signatureKeyPair,
             PersistentStorage persistentStorage,
