@@ -53,10 +53,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         String names = Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(","));
-        logger.info(
-                "Requesting supplemental information {} for fields: {}",
-                credentials.getSupplementalInformation(),
-                names);
+        logger.info("Requesting for fields: {}", names);
         String supplementalInformation =
                 Optional.ofNullable(
                                 Strings.emptyToNull(

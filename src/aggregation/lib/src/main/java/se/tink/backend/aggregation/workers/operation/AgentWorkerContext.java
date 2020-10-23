@@ -515,12 +515,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setRequestType(request.getType());
         updateCredentialsStatusRequest.setOperationId(request.getOperationId());
         logger.info(
-                "refreshId: {} - Incoming RequestType is {}, outgoing {}, supplemental info {} of existing credentials, supplemental info {} of updating credentials",
+                "refreshId: {} - Incoming RequestType is {}, outgoing {}",
                 refreshId.orElse("null"),
                 request.getType(),
-                updateCredentialsStatusRequest.getRequestType(),
-                credentials.getSupplementalInformation(),
-                coreCredentials.getSupplementalInformation());
+                updateCredentialsStatusRequest.getRequestType());
 
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
