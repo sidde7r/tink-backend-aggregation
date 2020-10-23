@@ -25,7 +25,7 @@ public class AmountEntity {
     }
 
     public Amount toTinkAmount() {
-        return Amount.valueOf(currency, Double.valueOf(getParsedAmount() * 100).longValue(), 2);
+        return Amount.valueOf(currency, (Double.valueOf(getParsedAmount() * 100)).longValue(), 2);
     }
 
     @JsonIgnore
