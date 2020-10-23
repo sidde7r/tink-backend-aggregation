@@ -76,6 +76,7 @@ public final class AktiaAgent extends NextGenerationAgent
             TinkHttpClient client, AgentsServiceConfiguration agentsServiceConfiguration) {
         client.setUserAgent(AktiaConstants.HttpHeaders.USER_AGENT);
         client.disableAggregatorHeader();
+        client.disableSignatureRequestHeader();
         final MultiIpGateway gateway =
                 new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
         gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
