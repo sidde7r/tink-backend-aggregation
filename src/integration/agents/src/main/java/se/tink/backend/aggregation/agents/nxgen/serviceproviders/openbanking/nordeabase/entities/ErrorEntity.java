@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -19,7 +21,8 @@ public class ErrorEntity {
 
     @JsonIgnore
     public boolean isBankSideFailure() {
-        return failures.stream().anyMatch(FailuresEntity::isBankSideFailure);
+        return Optional.ofNullable(failures).orElse(Collections.emptyList()).stream()
+                .anyMatch(FailuresEntity::isBankSideFailure);
     }
 
     @JsonIgnore

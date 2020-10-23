@@ -1,0 +1,12 @@
+agentsServiceConfiguration:
+  integrations:
+    d8b65f2eedf349679d00252e1e4f6875:
+      tink:
+        clientId: zxcv
+        clientSecret: asdf
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        scopes:
+          - AIS
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

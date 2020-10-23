@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideFailureFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.util.SignatureUtil;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -78,6 +79,7 @@ public class NordeaBaseApiClient implements TokenInterface {
         this.persistentStorage = persistentStorage;
 
         this.client.addFilter(new BankSideFailureFilter());
+        this.client.addFilter(new BankSideRetryFilter());
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         this.qsealcSigner = qsealcSigner;
         this.corporate = corporate;

@@ -12,20 +12,27 @@ public class BankSideFailureFilter extends Filter {
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
+        HttpResponse response = nextFilter(httpRequest);
 
+        if (isBankSideFailure(response)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+        return response;
+    }
+
+    public static boolean isBankSideFailure(HttpResponse response) {
+        if (response.getStatus() == 500 && response.hasBody()) {
+            NordeaErrorResponse nordeaErrorResponse = getBodyAsExpectedType(response);
+            return nordeaErrorResponse != null && nordeaErrorResponse.isBankSideFailure();
+        }
+        return false;
+    }
+
+    private static NordeaErrorResponse getBodyAsExpectedType(HttpResponse response) {
         try {
-
-            return nextFilter(httpRequest);
-
-        } catch (HttpResponseException e) {
-
-            if (e.getResponse().hasBody()) {
-                if (e.getResponse().getBody(NordeaErrorResponse.class).isBankSideFailure()) {
-                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
-                }
-            }
-
-            throw e;
+            return response.getBody(NordeaErrorResponse.class);
+        } catch (RuntimeException e) {
+            return null;
         }
     }
 }
