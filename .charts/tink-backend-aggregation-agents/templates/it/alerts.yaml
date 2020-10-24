@@ -18,8 +18,8 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
         tags: {{ .Values.teletubbiesTags }}
@@ -36,8 +36,8 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
         tags: {{ .Values.teletubbiesTags }}
@@ -55,8 +55,8 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
         summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
@@ -73,8 +73,8 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
@@ -93,8 +93,8 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
         summary: Provider <{ $labels.provider }> has failed over 50%
           of its operations the past 60 minutes
         tags: {{ .Values.teletubbiesTags }}
@@ -115,8 +115,8 @@ spec:
         description: To learn more check out the metric `tink_agent_login_total`. This
           alert never triggers on agents that did less than 10 operations in the
           past 60 minutes.
-          https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+          {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
         summary: Agent <{ $labels.className }> has failed over 20%
           of its login attempts the past 60 minutes.
         tags: {{ .Values.teletubbiesTags }}
