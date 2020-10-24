@@ -27,12 +27,12 @@ spec:
       labels:
         severity: ping
         who: integration-teletubbies
-        annotations:
-          description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-            https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+      annotations:
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate for all authentication types with unknown errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: SplitLoginSuccessRatesBelow60WithUnhandledErrorsAndAttemptLimitDK_NG
       expr: |
@@ -43,12 +43,12 @@ spec:
       labels:
         severity: ping
         who: integration-teletubbies
-        annotations:
-          description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-            https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+      annotations:
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate for one of login type with unknown errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: AllLoginSuccessRatesBelow60WithKnownErrorsAndAttemptLimitDK_NG
       expr: |
@@ -59,12 +59,12 @@ spec:
       labels:
         severity: ping
         who: integration-teletubbies
-        annotations:
-          description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-            https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+      annotations:
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate for all authentication types with known errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: SplitLoginSuccessRatesBelow60WithKnownErrorsAndAttemptLimitDK_NG
       expr: |
@@ -75,12 +75,12 @@ spec:
       labels:
         severity: ping
         who: integration-teletubbies
-        annotations:
-          description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-            https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+      annotations:
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate for one of login type with known errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: AllLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitDK_NG
       expr: |
@@ -91,12 +91,12 @@ spec:
       labels:
         severity: ping
         who: integration-teletubbies
-        annotations:
-          description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-            https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+      annotations:
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate for all authentication types with bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: SplitLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitDK_NG
       expr: |
@@ -107,12 +107,12 @@ spec:
       labels:
         severity: ping
         who: integration-teletubbies
-        annotations:
-          description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-            https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+      annotations:
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate for one of login type with bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: AllLoginSuccessRatesBelow60WithAllErrorsAndAttemptLimitDK_NG
       expr: |
@@ -123,12 +123,12 @@ spec:
       labels:
         severity: ping
         who: integration-teletubbies
-        annotations:
-          description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-            https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+      annotations:
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate for all authentication types with all errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: SplitLoginSuccessRatesBelow60WithAllErrorsAndAttemptLimitDK_NG
       expr: |
@@ -139,12 +139,12 @@ spec:
       labels:
         severity: ping
         who: integration-teletubbies
-        annotations:
-          description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-            https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+      annotations:
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate for one of login type with all errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: AllLoginSuccessRatesBelow60WithAgentErrorsAndAttemptLimitDK_NG
       expr: |
@@ -155,12 +155,12 @@ spec:
       labels:
         severity: ping
         who: integration-teletubbies
-        annotations:
-          description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-            https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+      annotations:
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate for all authentication types with agent errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: SplitLoginSuccessRatesBelow60WithAgentErrorsAndAttemptLimitDK_NG
       expr: |
@@ -171,12 +171,12 @@ spec:
       labels:
         severity: ping
         who: integration-teletubbies
-        annotations:
-          description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
-            https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+      annotations:
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+          https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate for one of login type with agent errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow60DueToBankServerErrorWithRateLimitDK_NG
       expr: |
@@ -192,7 +192,7 @@ spec:
           https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh unavailable rate is below 60% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow60DueToAgentErrorsWithRateLimitDK_NG
       expr: |
@@ -208,7 +208,7 @@ spec:
           https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh unavailable rate is below 60% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow60DueToAllErrorsWithRateLimitDK_NG
       expr: |
@@ -224,4 +224,4 @@ spec:
           https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh unavailable rate is below 60% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}

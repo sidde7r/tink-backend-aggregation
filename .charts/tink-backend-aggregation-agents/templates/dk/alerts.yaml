@@ -22,7 +22,7 @@ spec:
           https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: RefreshSuccessRateLowWithAttemptLimitDK
       expr: |
@@ -40,7 +40,7 @@ spec:
           https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     ### Bank side failures
     - alert: BankServerUnavailableForLoginDK
@@ -59,7 +59,7 @@ spec:
           https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     - alert: BankServerUnavailableForRefreshDK
       expr: |
@@ -77,7 +77,7 @@ spec:
           https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     ### Provider level fails
     - alert: HighProviderErrorRatioDK
@@ -97,7 +97,7 @@ spec:
           https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Provider <{ $labels.provider }> has failed over 50%
           of its operations the past 60 minutes
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
 
     ### Agent level login failures
     - alert: HighProviderFailedLoginRatioDK
@@ -119,4 +119,4 @@ spec:
           https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Agent <{ $labels.className }> has failed over 20%
           of its login attempts the past 60 minutes.
-        tags: "{{ .Values.teletubbiesTags }}"
+        tags: {{ .Values.teletubbiesTags }}
