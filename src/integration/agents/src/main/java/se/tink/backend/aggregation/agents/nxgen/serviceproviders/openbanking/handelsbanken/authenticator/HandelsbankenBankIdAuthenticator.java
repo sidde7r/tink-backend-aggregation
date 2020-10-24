@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Errors;
@@ -135,14 +136,22 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
 
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
-        logger.info("Refreshing access token");
-        TokenResponse response = apiClient.getRefreshToken(refreshToken);
+        try {
+            logger.info("Refreshing access token");
+            final TokenResponse response = apiClient.getRefreshToken(refreshToken);
 
-        return Optional.of(
-                OAuth2Token.create(
-                        HandelsbankenBaseConstants.QueryKeys.BEARER,
-                        response.getAccessToken(),
-                        refreshToken,
-                        response.getExpiresIn()));
+            return Optional.of(
+                    OAuth2Token.create(
+                            HandelsbankenBaseConstants.QueryKeys.BEARER,
+                            response.getAccessToken(),
+                            refreshToken,
+                            response.getExpiresIn()));
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                logger.info("Refresh token expired, throwing session expired exception");
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+        }
+        return Optional.empty();
     }
 }
