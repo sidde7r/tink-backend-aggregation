@@ -4,12 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.interfaces.RSAPublicKey;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.security.Token;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JyskeSecurityHelper {
 
     public static RSAPublicKey convertToPublicKey(byte[] publicKey) {
