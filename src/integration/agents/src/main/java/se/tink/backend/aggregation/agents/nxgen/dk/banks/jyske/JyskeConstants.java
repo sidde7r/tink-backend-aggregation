@@ -1,14 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske;
 
-import com.google.common.base.Charsets;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JyskeConstants {
 
     public static final String INTEGRATION_NAME = "jyskebank-dk";
-    public static final Charset CHARSET = Charsets.UTF_8;
+    public static final Charset CHARSET = StandardCharsets.UTF_8;
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Url {
         private static final String BANKDATA_BASE_URL = "https://mobil.bankdata.dk/mobilbank";
         private static final String SERVICE_BASE_URL =
@@ -36,6 +40,7 @@ public final class JyskeConstants {
         }
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Header {
         public static final String APP_ID_KEY = "x-app-id";
         public static final String APP_ID_VALUE = "ios_phone_jyskemobilbank";
@@ -54,6 +59,7 @@ public final class JyskeConstants {
         public static final String PERSONALID_KEY = "x-personalId";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Crypto {
         public static final String RSA_LABEL = "jbprodver001";
         public static final String CERT_TYPE = "X.509";
@@ -64,6 +70,7 @@ public final class JyskeConstants {
                 "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoahwTZuZhJxmSDdOQeTIfNpohuipfQS4ttaypknG7lOX4Y+bQf8xYpQx6C2fs4hR+W6KupEJBuxb2a8ENoEbxnXsbLv9YtDTmNQbNJ14ED+iRXqzgatmMtZs3RxQiK2qJ0InVjTSnNwHS3WAOhplp74TeCiEpoAsAlyzT7VPUEQIDAQAB";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Storage {
         public static final String TOKEN = "token";
         public static final String INSTALL_ID = "installId";
@@ -74,11 +81,13 @@ public final class JyskeConstants {
         public static final String KEYCARD_CHALLENGE_ENTITY = "keycardChallengeEntity";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ErrorMessages {
         public static final String BANK_UNAVAILABLE_DURING_MIDNIGHT =
                 "mobilbanken er lukket hverdage og ";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class TimeoutFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
