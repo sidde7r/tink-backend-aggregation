@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -13,10 +14,10 @@ public class TokenResponse {
     @JsonProperty("expires_in")
     private String expiresIn;
 
+    private String metadata;
+
     @JsonProperty("token_type")
     private String tokenType;
-
-    private String state;
 
     private String scope;
 
@@ -34,12 +35,13 @@ public class TokenResponse {
         return Long.parseLong(expiresIn);
     }
 
-    public String getTokenType() {
-        return tokenType;
+    @JsonIgnore
+    public String getConsentId() {
+        return metadata.replace("a:consentId", "").trim();
     }
 
-    public String getState() {
-        return state;
+    public String getTokenType() {
+        return tokenType;
     }
 
     public String getScope() {
