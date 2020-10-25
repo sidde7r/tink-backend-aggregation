@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator;
 
-import com.google.common.base.Strings;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
@@ -77,8 +74,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         .build();
 
         final TokenResponse tokenResponse = apiClient.exchangeAuthorizationCode(request);
-        final String consentId = getConsentId(tokenResponse.getScope());
-        persistentStorage.put(StorageKey.CONSENT_ID, consentId);
+        persistentStorage.put(StorageKey.CONSENT_ID, tokenResponse.getConsentId());
 
         return tokenResponse.toOauthToken();
     }
@@ -86,6 +82,8 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(final String refreshToken)
             throws SessionException, BankServiceException {
+
+        apiClient.checkConsentStatus();
 
         final Form request =
                 Form.builder()
@@ -103,26 +101,4 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(final OAuth2Token accessToken) {}
-
-    private String getConsentId(String scope) {
-        String consentId = null;
-        final String[] words = scope.split(" ");
-        for (String word : words) {
-            if (word.contains("_")) {
-                String parts[] = word.split("_");
-                if (isUuid(parts[0])) {
-                    consentId = parts[0];
-                    break;
-                }
-            }
-        }
-        if (Strings.isNullOrEmpty(consentId)) {
-            throw BankServiceError.CONSENT_INVALID.exception("Missing consent ID.");
-        }
-        return consentId;
-    }
-
-    static boolean isUuid(String uuid) {
-        return uuid.matches(RabobankConstants.UUID_PATTERN);
-    }
 }
