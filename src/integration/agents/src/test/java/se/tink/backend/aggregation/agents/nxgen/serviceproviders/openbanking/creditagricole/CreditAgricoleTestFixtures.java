@@ -16,7 +16,7 @@ public final class CreditAgricoleTestFixtures {
     public static final String REDIRECT_URL = "http://redirect-url";
     public static final String BASE_URL = "http://base-url";
     public static final String AUTH_CODE = "DUMMY_AUTH_CODE";
-    public static final String PSU_IP_ADDR = "0.0.0.0";
+    public static final String PSU_IP_ADDR = "127.0.0.1";
     public static final String ACCOUNT_ID = "DUMMY_ACCOUNT_ID";
     public static final String STRING_DATE = "2020-05-28";
     public static final LocalDate DATE = LocalDate.parse(STRING_DATE);

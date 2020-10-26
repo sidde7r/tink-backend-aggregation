@@ -2,14 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import com.google.common.collect.ImmutableList;
 import java.nio.charset.StandardCharsets;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
@@ -29,7 +33,7 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
                     CreditAgricoleBaseConstants.HeaderKeys.AUTHORIZATION,
                     CreditAgricoleBaseConstants.HeaderKeys.X_REQUEST_ID);
 
-    private final CreditAgricoleBaseConfiguration configuration;
+    private final AgentConfiguration<CreditAgricoleBaseConfiguration> configuration;
     private final QsealcSigner qsealcSigner;
 
     @Override
@@ -40,6 +44,7 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
                         UUID.randomUUID().toString());
     }
 
+    @SneakyThrows
     @Override
     protected void getSignatureAndAddAsHeader(HttpRequest request) {
         List<String> serializedHeaders = new ArrayList<>();
@@ -65,10 +70,11 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
         request.getHeaders().add(CreditAgricoleBaseConstants.HeaderKeys.SIGNATURE, signature);
     }
 
-    private String formSignature(String signatureBase64Sha, String headers) {
+    private String formSignature(String signatureBase64Sha, String headers)
+            throws CertificateException {
         return String.format(
                 CreditAgricoleBaseConstants.Formats.SIGNATURE_STRING_FORMAT,
-                configuration.getClientSigningCertificateSerialNumber(),
+                CertificateUtils.getSerialNumber(configuration.getQsealc(), 16),
                 CreditAgricoleBaseConstants.SignatureValues.RSA_SHA256,
                 headers,
                 signatureBase64Sha);

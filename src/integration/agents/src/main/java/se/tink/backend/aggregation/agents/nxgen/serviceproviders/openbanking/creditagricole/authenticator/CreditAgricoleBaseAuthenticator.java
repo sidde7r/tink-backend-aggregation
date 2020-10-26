@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator;
 
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -12,22 +14,13 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@RequiredArgsConstructor
 public class CreditAgricoleBaseAuthenticator implements OAuth2Authenticator {
 
     private final CreditAgricoleBaseApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final CreditAgricoleBaseConfiguration configuration;
-    private final String redirecUrl;
-
-    public CreditAgricoleBaseAuthenticator(
-            CreditAgricoleBaseApiClient apiClient,
-            PersistentStorage persistentStorage,
-            AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
-        this.redirecUrl = agentConfiguration.getRedirectUrl();
-    }
+    private final AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration;
+    private final CreditAgricoleBranchConfiguration branchConfiguration;
 
     @Override
     public URL buildAuthorizeUrl(String state) {
@@ -52,10 +45,10 @@ public class CreditAgricoleBaseAuthenticator implements OAuth2Authenticator {
     }
 
     private URL getAuthorizeUrl(final String state) {
-        final String clientId = configuration.getClientId();
-        final String redirectUri = redirecUrl;
+        final String clientId = agentConfiguration.getProviderSpecificConfiguration().getClientId();
+        final String redirectUri = agentConfiguration.getRedirectUrl();
 
-        return new URL(configuration.getAuthorizeUrl())
+        return new URL(branchConfiguration.getAuthorizeUrl())
                 .queryParam(CreditAgricoleBaseConstants.QueryKeys.CLIENT_ID, clientId)
                 .queryParam(
                         CreditAgricoleBaseConstants.QueryKeys.RESPONSE_TYPE,

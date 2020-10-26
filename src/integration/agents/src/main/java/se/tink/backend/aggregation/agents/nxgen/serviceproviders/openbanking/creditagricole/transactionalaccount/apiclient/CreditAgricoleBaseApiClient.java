@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.PutConsentsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -33,8 +35,8 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
 
     private final TinkHttpClient client;
     private final CreditAgricoleStorage creditAgricoleStorage;
-    private final CreditAgricoleBaseConfiguration configuration;
-    private final String redirectUrl;
+    private final AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration;
+    private final CreditAgricoleBranchConfiguration branchConfiguration;
 
     public TokenResponse getToken(final String code) {
         final TokenRequest request = createAuthTokenRequest(code);
@@ -88,7 +90,8 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
 
     @Override
     public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
-        return getTrustedBeneficiaries(new URL(configuration.getBaseUrl() + BASE_PATH + path));
+        return getTrustedBeneficiaries(
+                new URL(branchConfiguration.getBaseUrl() + BASE_PATH + path));
     }
 
     private Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(URL url) {
@@ -108,12 +111,12 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
     private RequestBuilder createPutRequest() {
         return createRequest(
                 new URL(
-                        configuration.getBaseUrl()
+                        branchConfiguration.getBaseUrl()
                                 + CreditAgricoleBaseConstants.ApiServices.CONSENTS));
     }
 
     private RequestBuilder createGetRequest(String path) {
-        return createGetRequest(new URL(configuration.getBaseUrl() + path));
+        return createGetRequest(new URL(branchConfiguration.getBaseUrl() + path));
     }
 
     private RequestBuilder createGetRequest(URL url) {
@@ -125,7 +128,7 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
                 .header(CreditAgricoleBaseConstants.HeaderKeys.AUTHORIZATION, getBearerAuthHeader())
                 .header(
                         CreditAgricoleBaseConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        configuration.getPsuIpAddress());
+                        CreditAgricoleBaseConstants.HeaderValues.PSU_IP_ADDRESS);
     }
 
     private TokenRequest createAuthTokenRequest(String authCode) {
@@ -133,8 +136,8 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
                 .scope(CreditAgricoleBaseConstants.QueryValues.SCOPE)
                 .grantType(CreditAgricoleBaseConstants.QueryValues.GRANT_TYPE)
                 .code(authCode)
-                .redirectUri(redirectUrl)
-                .clientId(configuration.getClientId())
+                .redirectUri(agentConfiguration.getRedirectUrl())
+                .clientId(agentConfiguration.getProviderSpecificConfiguration().getClientId())
                 .build();
     }
 
@@ -143,14 +146,15 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
                 .scope(CreditAgricoleBaseConstants.QueryValues.SCOPE)
                 .grantType(CreditAgricoleBaseConstants.QueryValues.REFRESH_TOKEN)
                 .refreshToken(refreshToken)
-                .redirectUri(redirectUrl)
-                .clientId(configuration.getClientId())
+                .redirectUri(agentConfiguration.getRedirectUrl())
+                .clientId(agentConfiguration.getProviderSpecificConfiguration().getClientId())
                 .build();
     }
 
     private TokenResponse sendTokenRequest(TokenRequest tokenRequest) {
         return client.request(
-                        configuration.getBaseUrl() + CreditAgricoleBaseConstants.ApiServices.TOKEN)
+                        branchConfiguration.getBaseUrl()
+                                + CreditAgricoleBaseConstants.ApiServices.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(
@@ -170,7 +174,7 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
 
     private URL constructTransactionsURL(String id, LocalDate dateFrom, LocalDate dateTo) {
         return new URL(
-                        configuration.getBaseUrl()
+                        branchConfiguration.getBaseUrl()
                                 + CreditAgricoleBaseConstants.ApiServices.TRANSACTIONS)
                 .parameter(CreditAgricoleBaseConstants.IdTags.ACCOUNT_ID, id)
                 .queryParam(CreditAgricoleBaseConstants.QueryKeys.DATE_FROM, dateFrom.toString())

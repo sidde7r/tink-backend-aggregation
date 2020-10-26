@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
@@ -33,7 +34,8 @@ public class CreditAgricolePaymentApiClient implements FrOpenBankingPaymentApiCl
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final CreditAgricoleBaseConfiguration configuration;
+    private final CreditAgricoleBaseConfiguration creditAgricoleConfiguration;
+    private final CreditAgricoleBranchConfiguration branchConfiguration;
 
     @Override
     public void fetchToken() {
@@ -59,10 +61,10 @@ public class CreditAgricolePaymentApiClient implements FrOpenBankingPaymentApiCl
                 new TokenRequest.TokenRequestBuilder()
                         .scope(SCOPE)
                         .grantType(GRANT_TYPE)
-                        .clientId(configuration.getClientId())
+                        .clientId(creditAgricoleConfiguration.getClientId())
                         .build();
 
-        return client.request(configuration.getBaseUrl() + ApiServices.TOKEN)
+        return client.request(branchConfiguration.getBaseUrl() + ApiServices.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.CORRELATION_ID, UUID.randomUUID().toString())
@@ -91,7 +93,7 @@ public class CreditAgricolePaymentApiClient implements FrOpenBankingPaymentApiCl
     }
 
     private URL createUrl(String path) {
-        return new URL(configuration.getBaseUrl() + path);
+        return new URL(branchConfiguration.getBaseUrl() + path);
     }
 
     private RequestBuilder createRequest(URL url) {
