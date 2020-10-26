@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Configuration;
@@ -83,9 +82,25 @@ public class N26AuthenticationController
     @Override
     public ThirdPartyAppResponse<String> collect(String reference)
             throws AuthenticationException, AuthorizationException {
-        Map<String, String> callbackData = new CaseInsensitiveMap<>(getCallbackData());
-        processCallbackData(callbackData);
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+        Optional<Map<String, String>> maybeCallbackData =
+                supplementalInformationHelper.waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(),
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES);
+
+        ThirdPartyAppStatus result;
+        if (!maybeCallbackData.isPresent()) {
+            result = ThirdPartyAppStatus.TIMED_OUT;
+        } else {
+            Map<String, String> callbackData = new CaseInsensitiveMap<>(maybeCallbackData.get());
+            if (callbackData.containsKey(TOKEN_ID)) {
+                storage.storeAccessToken(callbackData.get(TOKEN_ID));
+                result = ThirdPartyAppStatus.DONE;
+            } else {
+                result = ThirdPartyAppStatus.AUTHENTICATION_ERROR;
+            }
+        }
+        return ThirdPartyAppResponseImpl.create(result);
     }
 
     @Override
@@ -96,27 +111,6 @@ public class N26AuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private Map<String, String> getCallbackData() throws AuthorizationException {
-        return supplementalInformationHelper
-                .waitForSupplementalInformation(
-                        strongAuthenticationState.getSupplementalKey(),
-                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                        TimeUnit.MINUTES)
-                .orElseThrow(
-                        () ->
-                                AuthorizationError.UNAUTHORIZED.exception(
-                                        "callbackData wasn't received"));
-    }
-
-    private void processCallbackData(Map<String, String> callbackData)
-            throws AuthorizationException {
-        if (!callbackData.containsKey(TOKEN_ID)) {
-            throw AuthorizationError.UNAUTHORIZED.exception("callbackData didn't contain tokenId");
-        }
-
-        storage.storeAccessToken(callbackData.get(TOKEN_ID));
     }
 
     private URL buildAuthorizeUrl() {

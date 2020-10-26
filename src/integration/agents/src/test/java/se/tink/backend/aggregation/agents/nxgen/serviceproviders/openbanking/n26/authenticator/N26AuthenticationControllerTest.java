@@ -20,7 +20,6 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Maps;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Configuration;
@@ -40,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 
 public class N26AuthenticationControllerTest {
 
+    private static final String SUPPLEMENTAL_KEY = "supplementalKey";
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     private static final String CAUSE_SESSION_EXPIRED = "Cause: SessionError.SESSION_EXPIRED";
     private static final String QWAC =
@@ -167,20 +167,37 @@ public class N26AuthenticationControllerTest {
     }
 
     @Test
-    @SneakyThrows
-    public void shouldThrowExceptionWhenCallbackDataIsMissing() {
+    public void shouldReturnThirdPartyAuthErrorWhenCallbackDataIsMissing() {
         // given
-        String supplementalKey = "supplementalKey";
-        when(strongAuthenticationState.getSupplementalKey()).thenReturn(supplementalKey);
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn(SUPPLEMENTAL_KEY);
         when(supplementalInformationHelper.waitForSupplementalInformation(
-                        eq(supplementalKey), anyLong(), any(TimeUnit.class)))
+                        eq(SUPPLEMENTAL_KEY), anyLong(), any(TimeUnit.class)))
                 .thenReturn(Optional.of(Collections.emptyMap()));
 
+        // when
+        ThirdPartyAppResponse<String> response = authenticationController.collect(null);
+
         // then
-        Assertions.assertThatExceptionOfType(AuthorizationException.class)
-                .isThrownBy(() -> authenticationController.collect(null))
-                .withNoCause()
-                .withMessage("callbackData didn't contain tokenId");
+        assertThat(response)
+                .isEqualToComparingFieldByField(
+                        ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.AUTHENTICATION_ERROR));
+    }
+
+    @Test
+    public void shouldReturnThirdPartyTimedOutWhenNoCallbackData() {
+        // given
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn(SUPPLEMENTAL_KEY);
+        when(supplementalInformationHelper.waitForSupplementalInformation(
+                        eq(SUPPLEMENTAL_KEY), anyLong(), any(TimeUnit.class)))
+                .thenReturn(Optional.empty());
+
+        // when
+        ThirdPartyAppResponse<String> response = authenticationController.collect(null);
+
+        // then
+        assertThat(response)
+                .isEqualToComparingFieldByField(
+                        ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.TIMED_OUT));
     }
 
     @Test
@@ -206,11 +223,10 @@ public class N26AuthenticationControllerTest {
     @SneakyThrows
     private void shouldStoreAccessToken(String tokenIdKey) {
         // given
-        String supplementalKey = "supplementalKey";
-        when(strongAuthenticationState.getSupplementalKey()).thenReturn(supplementalKey);
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn(SUPPLEMENTAL_KEY);
         Map<String, String> callbackData = Maps.newHashMap(tokenIdKey, ACCESS_TOKEN);
         when(supplementalInformationHelper.waitForSupplementalInformation(
-                        eq(supplementalKey), anyLong(), any(TimeUnit.class)))
+                        eq(SUPPLEMENTAL_KEY), anyLong(), any(TimeUnit.class)))
                 .thenReturn(Optional.of(callbackData));
 
         // when
