@@ -16,11 +16,10 @@ public class DnbErrorsFilter extends Filter {
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
 
-        if (!response.hasBody()) {
-            return response;
+        if (response.hasBody()) {
+            handleNoAccessError(response);
         }
 
-        handleNoAccessError(response);
         return response;
     }
 

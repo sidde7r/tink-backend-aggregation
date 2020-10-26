@@ -6,6 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import org.apache.commons.io.FileUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +22,9 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class DnbErrorsFilterTest {
+
+    private static final String RESOURCES_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/dnb/resources";
 
     private DnbErrorsFilter dnbErrorsFilter;
     private HttpRequest httpRequest;
@@ -78,18 +84,11 @@ public class DnbErrorsFilterTest {
     }
 
     private String getNoAccessExceptionBody() {
-        return "<html>\n"
-                + "<head>\n"
-                + "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"1;URL=/gen/security/no_access?ref=/segp/apps/nbp/konto/integration/accounts/transactions?request.preventCache=12345\">\n"
-                + "<style type=\"text/css\">\n"
-                + "#websealError {\n"
-                + "\tdisplay:none;\n"
-                + "}\n"
-                + "</style>\n"
-                + "</head>\n"
-                + "<body>\n"
-                + "<div id=\"websealError\">no_access</div>\n"
-                + "</body>\n"
-                + "</html>";
+        try {
+            return FileUtils.readFileToString(
+                    Paths.get(RESOURCES_PATH, "noAccessResponse.html").toFile(), "UTF-8");
+        } catch (IOException e) {
+            return null;
+        }
     }
 }
