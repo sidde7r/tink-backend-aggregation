@@ -36,6 +36,6 @@ public class FiduciaTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        return apiClient.getTransactions(account, key);
+        return key == null ? apiClient.getTransactions(account) : apiClient.getTransactions(key);
     }
 }

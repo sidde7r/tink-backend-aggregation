@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
-import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.QueryParamsKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.QueryParamsValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.Access;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.OtpCodeBody;
@@ -148,21 +149,21 @@ public class FiduciaApiClient {
                 .get(GetBalancesResponse.class);
     }
 
-    public TransactionKeyPaginatorResponse<String> getTransactions(
-            TransactionalAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactions(TransactionalAccount account) {
         URL url =
-                Optional.ofNullable(key)
-                        .map(this::createUrl)
-                        .orElse(
-                                createUrl(TRANSACTIONS_ENDPOINT)
-                                        .parameter(ACCOUNT_ID, account.getApiIdentifier()));
-
+                createUrl(TRANSACTIONS_ENDPOINT).parameter(ACCOUNT_ID, account.getApiIdentifier());
         String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
-
         return fiduciaRequestBuilder
                 .createRequestInSession(url, consentId, EMPTY_BODY)
-                .queryParam("bookingStatus", "booked")
-                .queryParam("dateFrom", "2015-01-01")
+                .queryParam(QueryParamsKeys.BOOKING_STATUS, QueryParamsValues.BOOKING_STATUS)
+                .queryParam(QueryParamsKeys.DATE_FROM, QueryParamsValues.DATE_FROM)
+                .get(GetTransactionsResponse.class);
+    }
+
+    public TransactionKeyPaginatorResponse<String> getTransactions(String continuationPath) {
+        String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        return fiduciaRequestBuilder
+                .createRequestInSession(createUrl(continuationPath), consentId, EMPTY_BODY)
                 .get(GetTransactionsResponse.class);
     }
 
