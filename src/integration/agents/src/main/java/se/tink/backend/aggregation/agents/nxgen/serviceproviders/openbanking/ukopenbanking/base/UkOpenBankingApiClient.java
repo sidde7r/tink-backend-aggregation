@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants.ACCOUNT_PERMISSIONS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.DANSKEBANK_ORG_ID;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.GENERAL_STANDARD_ISS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.HSBC_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.MONZO_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.NATIONWIDE_ORG_ID;
@@ -306,8 +307,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         jwtHeaders.put(HEADERS.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
         jwtHeaders.put(
                 HEADERS.ISS,
-                String.format(
-                        "%s/%s", TINK_UKOPENBANKING_ORGID, softwareStatement.getSoftwareId()));
+                String.format("%s/%s", TINK_UKOPENBANKING_ORGID, GENERAL_STANDARD_ISS));
         jwtHeaders.put(HEADERS.TAN, UKOB_TAN);
         jwtHeaders.put(HEADERS.CRIT, Arrays.asList(HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
 
