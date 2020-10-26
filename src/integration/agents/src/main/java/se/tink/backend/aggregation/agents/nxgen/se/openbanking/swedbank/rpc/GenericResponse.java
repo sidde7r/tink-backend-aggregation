@@ -50,4 +50,13 @@ public class GenericResponse {
                         tppMessage ->
                                 ErrorCodes.WRONG_USER_ID.equalsIgnoreCase(tppMessage.getText()));
     }
+
+    @JsonIgnore
+    public boolean loginInterrupted() {
+        return getTppMessages().stream()
+                .anyMatch(
+                        tppMessage ->
+                                ErrorCodes.LOGIN_SESSION_INTERRUPTED.equalsIgnoreCase(
+                                        tppMessage.getText()));
+    }
 }

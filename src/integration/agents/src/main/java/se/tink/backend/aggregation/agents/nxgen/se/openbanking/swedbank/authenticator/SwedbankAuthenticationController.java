@@ -129,6 +129,8 @@ public class SwedbankAuthenticationController
                     && genericResponse.isKycError()) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception(
                         EndUserMessage.MUST_ANSWER_KYC.getKey());
+            } else if (genericResponse.loginInterrupted()) {
+                return BankIdStatus.INTERRUPTED;
             } else {
                 return BankIdStatus.FAILED_UNKNOWN;
             }
