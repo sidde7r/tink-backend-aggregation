@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-09-30 10:05+0000\n"
-"PO-Revision-Date: 2020-09-30 10:05+0000\n"
+"POT-Creation-Date: 2020-10-26 11:23+0000\n"
+"PO-Revision-Date: 2020-10-26 11:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -10,6 +10,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Choose TAN Medium you want to use"
+msgstr "Wählen Sie das TAN-Medium, das Sie verwenden möchten"
+
+msgid "tanCode"
+msgstr "tanCode"
+
+msgid "Please open PhotoTAN application and confirm the order"
+msgstr "Bitte öffnen Sie die PhotoTAN-App und bestätigen Sie den Auftrag"
+
+msgid "waiting for confirmation"
+msgstr "warten auf Bestätigung"
 
 msgid "Input the code from your code card"
 msgstr "Geben Sie den Code von der Codekarte ein."
@@ -19,6 +31,9 @@ msgstr "Schlüsselkartenindex"
 
 msgid "Key card code"
 msgstr "Schlüsselkartencode"
+
+msgid "Verification code"
+msgstr "Bestätigungscode"
 
 msgid "SMS code"
 msgstr "SMS-Code"
@@ -30,11 +45,25 @@ msgid "You need to activate your BankID in the Handelsbanken app."
 msgstr "Sie müssen Ihre BankID in der Handelsbanken-App aktivieren."
 
 msgid ""
+"To be able to refresh your accounts you need to update your customer info in "
+"the ICA bank app."
+msgstr ""
+"Um Ihre Konten aktualisieren zu können, müssen Sie Ihre Kundendaten in der "
+"ICA-Bank-App aktualisieren."
+
+msgid ""
 "If the e-invoice has been modified in the ICA Banken app, please refresh you "
 "credentials."
 msgstr ""
 "Wenn die E-Rechnung in der ICA Banken-App bearbeitet wurde, dann "
 "aktualisieren Sie bitte Ihre Anmeldedaten."
+
+msgid ""
+"Another BankId authentication was initiated while signing the transfer. "
+"Please try again."
+msgstr ""
+"Eine weitere BankId-Authentifizierung wurde bei der Unterzeichnung der "
+"Überweisung eingeleitet. Bitte erneut versuchen."
 
 msgid "Unsupported transfer type"
 msgstr "Überweisungsart wird nicht unterstützt"
@@ -108,6 +137,9 @@ msgstr "Überweisungsprüfung erfolglos."
 
 msgid "Transfer execution failed."
 msgstr "Überweisungsausführung erfolglos."
+
+msgid "Activation code"
+msgstr "Aktivierungscode"
 
 msgid ""
 "Have you received a new mobile phone, made changes to your mobile "
@@ -315,9 +347,42 @@ msgstr ""
 msgid "Wrong challenge response input - Will retry login."
 msgstr "Falsche Eingabe für Challenge-Code - Login erneut versuchen."
 
+msgid "Download Nordea Codes"
+msgstr "Nordea-Codes herunterladen"
+
+msgid "You need to download the Nordea Codes app in order to continue."
+msgstr "Sie müssen das Nordea Codes App herunterladen, um fortzufahren."
+
+msgid "Upgrade Nordea Codes"
+msgstr "Nordea-Codes upgraden"
+
+msgid "You need to upgrade the Nordea Codes app in order to continue."
+msgstr ""
+"Sie müssen das Nordea Codes App aktualisieren, um fortfahren zu können."
+
+msgid "Authentication cancelled by the Codes app. Please try again."
+msgstr ""
+"Authentifizierung durch die Codes-App aufgehoben. Bitte erneut versuchen."
+
+msgid "Authentication timed out."
+msgstr "Die Authentifizierung ist abgelaufen."
+
+msgid "Another client is already trying to sign in."
+msgstr "Ein anderer Kunde versucht bereits, sich anzumelden."
+
 msgid "You need to change your password at S-Pankki before you can login."
 msgstr ""
 "Sie müssen Ihr Passwort bei S-Pankki ändern, bevor Sie sich einloggen können."
+
+msgid ""
+"Your current password has expired and you have to create a new one. You can "
+"do this in Ålandsbanken's app if you have a registered device, if not, "
+"please contact Ålandsbanken at: 0204 292 910."
+msgstr ""
+"Ihr aktuelles Passwort ist abgelaufen und Sie müssen ein neues Passwort "
+"erstellen. Wenn Sie ein registriertes Gerät besitzen, können Sie dies in der "
+"App von Ålandsbanken tun, falls nicht, wenden Sie sich bitte an Ålandsbanken "
+"unter 0204 292 910."
 
 msgid "Login is blocked. Contact your bank's customer service."
 msgstr "Login ist gesperrt Kontaktieren Sie den Kundendienst Ihrer Bank."
@@ -434,6 +499,10 @@ msgstr ""
 "Aus Sicherheitsgründen wurden Sie ausgeloggt. Bitte loggen Sie sich erneut "
 "ein um fortzufahren."
 
+msgid "There is already an active session on this account. Please try again."
+msgstr ""
+"In diesem Konto gibt es bereits eine aktive Sitzung. Bitte erneut versuchen."
+
 msgid "You have not entered a valid code. Please try again"
 msgstr ""
 "Sie haben keinen gültigen Code eingegeben. Bitte versuchen Sie es erneut."
@@ -492,6 +561,16 @@ msgid "There is an error with your mobile operator. Please try again later."
 msgstr ""
 "Es ist ein Fehler bei Ihrem Mobilfunkanbieter aufgetreten. Bitte versuchen "
 "Sie es später erneut."
+
+msgid ""
+"Your device could not be registered. This could be due to restrictions in "
+"the number of devices your bank allows you to register. Please try again "
+"later or reach out to your bank."
+msgstr ""
+"Ihr Gerät konnte nicht registriert werden. Dies könnte auf Beschränkungen in "
+"der Anzahl der Geräte zurückzuführen sein, die Ihre Bank Ihnen zur "
+"Registrierung erlaubt. Bitte später erneut versuchen oder Ihre Bank "
+"kontaktieren."
 
 msgid "The bank service is offline, please try again later."
 msgstr "Der Bankservice ist offline. Bitte versuchen Sie es später erneut."
@@ -588,6 +667,9 @@ msgstr "Ungültiges Empfängerkonto"
 msgid "The payment date is not a business day"
 msgstr "Das Zahlungsdatum liegt nicht an einem Werktag"
 
+msgid "The payment date is too soon or not a business day"
+msgstr "Das Zahlungsdatum ist zu früh oder kein Werktag"
+
 msgid "The destination message is not valid"
 msgstr "Die Zielnachricht ist nicht gültig"
 
@@ -678,6 +760,27 @@ msgstr "Zahlung konnte nicht erstellt werden"
 msgid "Could not update payment"
 msgstr "Zahlungsmethode konnte nicht aktualisiert werden"
 
+msgid "It's not possible to modify this payment"
+msgstr "Diese Zahlung kann nicht geändert werden"
+
+msgid "It's not possible to modify the amount of this payment"
+msgstr "Der Betrag dieser Zahlung kann nicht geändert werden"
+
+msgid "It's not possible to modify the destination of this payment"
+msgstr "Der Empfänger dieser Zahlung kann nicht geändert werden"
+
+msgid "It's not possible to modify the source account of this payment"
+msgstr "Das Ursprungskonto dieser Zahlung kann nicht geändert werden"
+
+msgid "It's not possible to modify the payment date of this payment"
+msgstr "Das Zahlungsdatum dieser Zahlung kann nicht geändert werden"
+
+msgid "It's not possible to modify OCR/message of this payment"
+msgstr "Die OCR/Nachricht dieser Zahlung kann nicht geändert werden"
+
+msgid "It's not possible to modify the source message of this payment"
+msgstr "Die Quellnachricht dieser Zahlung kann nicht geändert werden"
+
 msgid "Missing message type"
 msgstr "Fehlende Nachrichtenart"
 
@@ -690,6 +793,12 @@ msgstr "Die Nachrichtenlänge überschreitet {0} Buchstaben."
 
 msgid "Could not get recipient name from user"
 msgstr "Empfängername wurde vom Nutzer nicht bekanntgegeben"
+
+msgid "Could not save new recipient"
+msgstr "Konnte neuen Empfänger nicht speichern"
+
+msgid "Check that the information is correct"
+msgstr "Überprüfen Sie, ob die Informationen korrekt sind"
 
 msgid "N/A"
 msgstr "K/A"
@@ -728,6 +837,15 @@ msgstr ""
 "das Standard-Login."
 
 msgid ""
+"You need to confirm your BankID to Skandiabanken. You do it by logging in "
+"with the Skandiabanken app once to confirm that the BankID is yours. You may "
+"then continue using BankID here."
+msgstr ""
+"Sie müssen Ihre BankID an Skandiabanken bestätigen. Melden Sie sich dazu "
+"einmal mit der Skandiabanken-App an und bestätigen Sie, dass die BankID "
+"Ihnen gehört. Danach können Sie die BankID hier weiter verwenden."
+
+msgid ""
 "Could not login to Skandiabanken. Unfortunately we don't support "
 "Skandiabanken for customers under the age of 18 years."
 msgstr ""
@@ -761,6 +879,18 @@ msgid ""
 msgstr ""
 "Falsche persönliche Nummer oder Dienstcode. Bitte versuchen Sie es erneut "
 "oder sehen Sie sich Ihren Dienstcode in Hembanken in Mobila tjänster an."
+
+msgid ""
+"We encountered problems signing the payment/transfer with your bank. Please "
+"log in to your bank app and validate the payment/transfer."
+msgstr ""
+"Wir hatten Probleme bei der Unterzeichnung der Zahlung/Überweisung mit Ihrer "
+"Bank. Bitte loggen Sie sich in Ihre Bank-App ein und bestätigen Sie die "
+"Zahlung/Überweisung."
+
+msgid "Failed to sign using BankID, please try again later"
+msgstr ""
+"Unterzeichnung mit BankID fehlgeschlagen. Bitte später erneut versuchen"
 
 msgid "Failed to sign payment using BankID"
 msgstr "Zahlung konnte nicht mit BankID unterzeichnet werden"
@@ -924,6 +1054,53 @@ msgstr ""
 "für mittlere Solvenz, 40-69 für hohe Solvenz und 70-100 für sehr hohe "
 "Solvenz steht."
 
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"were two transactions deducted from your account the same day with the same "
+"amount and description. It could be someone with bad intentions that has "
+"charged you twice but it could of course also been you buying the same thing "
+"twice the same day."
+msgstr ""
+"Jeden Tag scannen wir alle Ihre Transaktionen, um Abweichungen von Ihrem "
+"normalen Verhalten und Dinge zu finden, auf die Sie besonders achten müssen. "
+"In diesem Fall stellten wir fest, dass am selben Tag zwei Transaktionen mit "
+"demselben Betrag und derselben Beschreibung von Ihrem Konto abgebucht "
+"wurden. Es könnte jemand mit bösen Absichten sein, der Ihnen zweimal etwas "
+"in Rechnung gestellt hat, aber es könnte natürlich auch sein, dass Sie am "
+"selben Tag zweimal dasselbe gekauft haben."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual large expense on your account."
+msgstr ""
+"Jeden Tag scannen wir alle Ihre Transaktionen, um Abweichungen von Ihrem "
+"normalen Verhalten und Dinge zu finden, auf die Sie besonders achten müssen. "
+"In diesem Fall stellten wir fest, dass auf Ihrem Konto eine ungewöhnlich "
+"hohe Ausgabe zu verzeichnen war."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual large cash withdrawal on your account."
+msgstr ""
+"Jeden Tag scannen wir alle Ihre Transaktionen, um Abweichungen von Ihrem "
+"normalen Verhalten und Dinge zu finden, auf die Sie besonders achten müssen. "
+"In diesem Fall stellten wir eine ungewöhnlich hohe Bargeldabhebung auf Ihrem "
+"Konto fest."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual high activity on one of you accounts with more transactions "
+"than usual."
+msgstr ""
+"Jeden Tag scannen wir alle Ihre Transaktionen, um Abweichungen von Ihrem "
+"normalen Verhalten und Dinge zu finden, auf die Sie besonders achten müssen. "
+"In diesem Fall stellten wir eine ungewöhnlich hohe Aktivität auf einem Ihrer "
+"Konten mit mehr Transaktionen als gewöhnlich fest."
+
 msgid "Source"
 msgstr "Quelle"
 
@@ -939,6 +1116,13 @@ msgid ""
 msgstr ""
 "Wir haben derzeit technische Probleme mit {0}. Bitte versuchen Sie es später "
 "erneut."
+
+msgid ""
+"Invalid credentials status. Update the credentials before retrying the "
+"operation."
+msgstr ""
+"Status ungültige Anmeldeinformationen. Aktualisieren Sie die Anmeldedaten, "
+"bevor Sie den Vorgang erneut versuchen."
 
 msgid "BankID session already in progress, please try again."
 msgstr "Die BankID-Sitzung läuft bereits. Bitte versuchen Sie es erneut."
@@ -984,31 +1168,276 @@ msgstr "Karten ID"
 msgid "Number of your bank card"
 msgstr "Nummer Ihrer Bankkarte"
 
-msgid "There was a problem connecting to the bank."
-msgstr "Es gab ein Problem die Verbindung zu der Bank aufzubauen."
-
 msgid "PIN"
 msgstr "PIN"
 
 msgid "Username"
-msgstr "Nutzername"
+msgstr "Benutzername"
 
 msgid "Phone number"
 msgstr "Telefonnummer"
 
 msgid ""
 "Use the same username and password as you would in the bank's mobile app."
-msgstr "Verwenden Sie das gleiche Passwort wie in der App Ihrer Bank."
+msgstr ""
+"Benutze denselben Benutzernamen und dasselbe Passwort wie in der mobilen App "
+"der Bank."
+
+msgid "Mobile BankID"
+msgstr "Mobile BankID"
 
 msgid ""
 "Use the same username and password as you would in the card issuer's mobile "
 "app."
-msgstr "Verwenden Sie die gleichen Zugangsdaten wie in der App Ihres Kartenherausgebers."
+msgstr ""
+"Verwenden Sie denselben Benutzernamen und dasselbe Passwort wie in der "
+"mobilen App des Kartenausstellers."
+
+msgid ""
+"To connect your broker, you need to identify yourself using Mobile BankID."
+msgstr ""
+"Um sich mit Ihrer Broker zu verbinden, müssen Sie sich mit Mobile BankID "
+"identifizieren."
+
+msgid "YYYYMMDDNNNN"
+msgstr "JJJJJMMTTNNNN"
+
+msgid "Social security number"
+msgstr "Sozialversicherungsnummer"
+
+msgid "Please enter a valid social security number."
+msgstr "Bitte geben Sie eine gültige Sozialversicherungsnummer ein."
+
+msgid ""
+"To connect your credit card, you need to identify yourself using Mobile "
+"BankID."
+msgstr ""
+"Um Ihre Kreditkarte zu verknüpfen, müssen Sie sich mit Mobile BankID "
+"identifizieren."
+
+msgid ""
+"To connect your bank, you need to identify yourself using Mobile BankID."
+msgstr ""
+"Um sich mit Ihrer Bank zu verbinden, müssen Sie sich mit Mobile BankID "
+"identifizieren."
+
+msgid ""
+"You use the same 4-digit PIN as when you log in at the service provider's "
+"web site."
+msgstr ""
+"Sie verwenden die gleiche 4-stellige PIN wie bei der Anmeldung auf der "
+"Webseite des Dienstanbieters."
+
+msgid "Please enter 4 digits"
+msgstr "Bitte vier Ziffern eingeben"
+
+msgid ""
+"You use the same 4-digit service code as for the bank's mobile app. You also "
+"need access to your token generator to create a screen code."
+msgstr ""
+"Sie verwenden den gleichen 4-stelligen Servicecode wie für die mobile App "
+"der Bank. Sie benötigen auch Zugang zu Ihrem Token-Generator, um einen "
+"Bildschirmcode zu erstellen."
+
+msgid "Token generator"
+msgstr "Token-Generator"
+
+msgid ""
+"You use your social security number and PIN in the same way as when you log "
+"in to the bank's mobile app."
+msgstr ""
+"Sie verwenden Ihre Sozialversicherungsnummer und PIN auf die gleiche Weise "
+"wie beim Anmelden in der mobilen App der Bank."
+
+msgid ""
+"You use your card reader and personal code the same way as you would in the "
+"bank's mobile app."
+msgstr ""
+"Sie verwenden Ihren Kartenleser und Ihren persönlichen Code auf dieselbe "
+"Weise wie in der mobilen App der Bank."
+
+msgid "Card reader"
+msgstr "Kartenleser"
+
+msgid ""
+"Use the same code that you use in the bank's mobile app after you log in "
+"with Bank ID once. If you forgot your code, you can choose a new one in the "
+"bank's mobile app. By filling in this, transactions can be downloaded "
+"automatically in the background, so you do not need to use Bank ID every "
+"time."
+msgstr ""
+"Verwenden Sie den gleichen Code, den Sie in der mobilen App der Bank "
+"verwenden, nachdem Sie sich einmal mit der Bank-ID angemeldet haben. Wenn "
+"Sie Ihren Code vergessen haben, können Sie in der mobilen App der Bank einen "
+"neuen Code festlegen. Wenn Sie dies ausfüllen, können Transaktionen "
+"automatisch im Hintergrund heruntergeladen werden, so dass Sie nicht jedes "
+"Mal die Bank-ID verwenden müssen."
+
+msgid ""
+"Use the same username and password as you would in the broker's mobile app."
+msgstr ""
+"Verwenden Sie denselben Benutzernamen und dasselbe Passwort wie in der "
+"mobilen App des Brokers."
+
+msgid ""
+"You use Mobile BankID the same way as in the bank's mobile app. If you have "
+"a personal code for simplified login, we recommend using it instead of "
+"Mobile BankID."
+msgstr ""
+"Sie verwenden Mobile BankID auf dieselbe Weise wie in der mobilen App der "
+"Bank. Wenn Sie einen persönlichen Code für eine vereinfachte Anmeldung "
+"haben, empfehlen wir, diesen anstelle von Mobile BankID zu verwenden."
+
+msgid ""
+"1. Insert your card into the card reader and press (M1)\n"
+"2. 'CHALLENGE?' is displayed.Enter []"
+msgstr ""
+"1. Führen Sie Ihre Karte in den Kartenleser ein und drücken Sie (M1)\n"
+"2. ‚HERAUSFORDERUNG?‘ wird angezeigt. [] eingeben"
+
+msgid ""
+"3. 'PIN?' is displayed.\n"
+"Enter your PIN and press (OK)\n"
+"4. The e-signature is displayed.\n"
+"Enter the e-signature"
+msgstr ""
+"3. ‚PIN?‘ wird angezeigt.\n"
+"Geben Sie Ihre PIN ein und drücken Sie (OK)\n"
+"4. Die E-Signatur wird angezeigt.\n"
+"E-Signatur eingeben"
+
+msgid "Challenge"
+msgstr "Herausforderung"
+
+msgid "Input"
+msgstr "Eingabe"
+
+msgid ""
+"Incorrect login credentials. You have one more attempt before your account "
+"will be locked."
+msgstr ""
+"Falsche Anmeldedaten. Sie haben noch einen weiteren Versuch, bevor Ihr Konto "
+"gesperrt wird."
+
+msgid "Cannot schedule future transfers."
+msgstr "Kann keine zukünftigen Überweisungen einrichten."
+
+msgid ""
+"Another client is already trying to sign in. \n"
+"Please close the Codes app and try again."
+msgstr ""
+"Ein anderer Kunde versucht bereits, sich anzumelden. \n"
+"Bitte die Codes-App schließen und erneut versuchen."
+
+msgid ""
+"To be able to refresh your accounts you need to update your customer info in "
+"your bank app."
+msgstr ""
+"Um Ihre Konten aktualisieren zu können, müssen Sie Ihre Kundendaten in Ihrer "
+"Bank-App aktualisieren."
+
+msgid ""
+"Message from bank: You have used the service too many times today, please "
+"try again tomorrow."
+msgstr ""
+"Nachricht von der Bank: Sie haben den Dienst heute zu oft genutzt, bitte "
+"versuchen Sie es morgen erneut."
+
+msgid "Code app authentication timed out."
+msgstr "Die Code-App-Authentifizierung ist abgelaufen."
+
+msgid "Code app authentication was rejected by user."
+msgstr "Die Code-App-Authentifizierung wurde vom Benutzer abgelehnt."
+
+msgid ""
+"Because of repeated attempts the authentication request has been cancelled. "
+"Please try again later."
+msgstr ""
+"Aufgrund von wiederholten Versuchen wurde die Authentifizierungsanfrage "
+"abgebrochen. Bitte später erneut versuchen."
+
+msgid "You do not have access to mobile banking. Please contact your bank."
+msgstr ""
+"Sie haben keinen Zugang zum Mobile Banking. Bitte kontaktieren Sie Ihre Bank."
+
+msgid "The bank service is offline; please try again later."
+msgstr "Der Bankservice ist offline. Bitte später erneut versuchen."
+
+msgid "The bank service has temporarily failed; please try again later."
+msgstr ""
+"Der Bankservice ist vorübergehend ausgefallen. Bitte später erneut versuchen."
+
+msgid ""
+"The maximum allowed number of requests to the bank service has been "
+"exceeded; please try again later."
+msgstr ""
+"Die maximal zulässige Anzahl von Anfragen an den Bankservice wurde "
+"überschritten. Bitte später erneut versuchen."
+
+msgid "Authenticating with Mobile BankID timed out. Have you opened the app?"
+msgstr ""
+"Die Authentifizierung mit Mobile BankID ist abgelaufen. Ist die App geöffnet?"
+
+msgid ""
+"To continue using this app you must answer some questions from your bank. "
+"Please log in with your bank's app or website."
+msgstr ""
+"Um diese App weiterhin nutzen zu können, müssen Sie einige Fragen Ihrer Bank "
+"beantworten. Bitte melden Sie sich mit der App oder Webseite Ihrer Bank an."
+
+msgid "Download Caixadirecta"
+msgstr "Caixadirecta herunterladen"
+
+msgid "You need to download the Caixadirecta app in order to continue."
+msgstr "Sie müssen die Caixadirecta-App herunterladen, um fortzufahren."
+
+msgid ""
+"Please enter this code into your token generator and write the generated "
+"response code here."
+msgstr ""
+"Bitte geben Sie diesen Code in Ihren Token-Generator ein und schreiben Sie "
+"den generierten Antwortcode hier ein."
+
+msgid "Security Token"
+msgstr "Sicherheits-Token"
+
+msgid ""
+"Start your code generator and write your PIN code. When APPLI is shown on "
+"the display press the key labeled 1 on your generator. Write the response "
+"code shown on the display in the field below."
+msgstr ""
+"Starten Sie Ihren Code-Generator und vermerken Sie Ihren PIN-Code. Wenn "
+"APPLI angezeigt wird, drücken Sie die Taste mit der Bezeichnung 1 auf Ihrem "
+"Generator. Schreiben Sie den angezeigten Antwortcode in das Feld unten."
+
+msgid ""
+"The consent given to us to access your data has been revoked by the bank. "
+msgstr ""
+"Die uns erteilte Einwilligung zum Zugriff auf Ihre Daten wurde von der Bank "
+"widerrufen. "
+
+msgid ""
+"You were automatically logged out because you logged in to another channel; "
+"Logout is done for your security."
+msgstr ""
+"Sie wurden automatisch abgemeldet, weil Sie sich über einen anderen Kanal "
+"angemeldet haben. Die Abmeldung erfolgt zu Ihrer Sicherheit."
+
+msgid ""
+"Your BankID was not issued by the bank you are trying to authenticate with. "
+"This is not allowed by the bank. Please contact the bank to resolve this "
+"issue."
+msgstr ""
+"Ihre BankID wurde nicht von der Bank ausgestellt, bei der Sie sich "
+"authentifizieren möchten. Dies ist von der Bank nicht erlaubt. Bitte wenden "
+"Sie sich an die Bank, um dieses Problem zu lösen."
 
 msgid ""
 "We currently only support photo TAN with QR code scanning, which is not "
 "available for your user."
-msgstr "Wir unterstützen zu Zeit photoTAN nur mit QR code. Dies scheint nicht verfügbar sein."
+msgstr ""
+"Wir unterstützen derzeit nur Foto-TAN mit QR-Code-Scannen, was für Ihren "
+"Benutzer nicht verfügbar ist."
 
 msgid "Scan the QR code with the photoTAN app."
 msgstr "Scannen Sie den QR-Code mit der photoTAN-App."
@@ -1026,18 +1455,181 @@ msgid ""
 "You have reached the maximum number of mobile device registrations. Please "
 "check if you can unregister some devices using the bank's web portal, or "
 "contact the bank."
-msgstr "Sie haben die maximale Anzahl an Gerätregistrationen erreicht. Bitte prüfen Sie ob Sie im Portal Ihrer Bank ein anderes Gerät abmelden können."
+msgstr ""
+"Sie haben die maximale Anzahl von Registrierungen für mobile Geräte "
+"erreicht. Bitte prüfen Sie, ob Sie die Registrierung einiger Geräte über das "
+"Webportal der Bank rückgängig machen können, oder kontaktieren Sie die Bank."
+
+msgid "You have reached maximum number of tries. Please try again later"
+msgstr ""
+"Sie haben die maximale Anzahl von Versuchen erreicht. Bitte später erneut "
+"versuchen"
 
 msgid ""
 "Your password has changed. Please enter the latest password in all other "
 "devices."
-msgstr "Ihr Passwort wurde geändert. Bitte geben Sie ihr jetziges Passwort auf allen Geräten ein."
+msgstr ""
+"Ihr Passwort hat sich geändert. Bitte geben Sie bei allen anderen Geräten "
+"das neueste Passwort ein."
 
 msgid "The consent has been expired. "
-msgstr "Der Consent ist abgelaufen"
+msgstr "Die Einwilligung ist abgelaufen. "
+
+msgid "The consent is invalid. "
+msgstr "Die Einwilligung ist ungültig. "
+
+msgid "The consent has been revoked by the user. "
+msgstr "Die Einwilligung ist vom Nutzer widerrufen worden. "
+
+msgid "The consent has been revoked by the bank. "
+msgstr "Die Einwilligung ist von der Bank widerrufen worden. "
+
+msgid "Recipient accounts missing from accounts ledger"
+msgstr "Empfängerkonten fehlen im Kontobuch"
+
+msgid "Transfer rejected by the Bank"
+msgstr "Überweisung von der Bank abgelehnt"
+
+msgid "Could not validate the destination account."
+msgstr "Das Zielkonto konnte nicht validiert werden."
+
+msgid "Could not validate the date you entered for the payment."
+msgstr ""
+"Das von Ihnen eingegebene Datum für die Zahlung konnte nicht bestätigt "
+"werden."
+
+msgid "Could not execute payment due to insufficient funds."
+msgstr "Konnte die Zahlung aufgrund unzureichenden Guthabens nicht ausführen."
+
+msgid "Could not validate the account, you are trying to pay from."
+msgstr "Für Zahlung ausgewähltes Konto konnte nicht validiert werden."
+
+msgid "The reference you provided for the payment is not valid."
+msgstr ""
+"Die Referenz, die Sie für die Zahlung angegeben haben, ist nicht gültig."
+
+msgid "Payment authentication failed."
+msgstr "Zahlungsauthentifizierung fehlgeschlagen."
+
+msgid "Payment authorization failed."
+msgstr "Zahlungsautorisierung fehlgeschlagen."
+
+msgid "Payment validation failed."
+msgstr "Zahlungsvalidierung fehlgeschlagen."
+
+msgid "Payment failed."
+msgstr "Zahlung fehlgeschlagen."
+
+msgid "CodigoAlfa"
+msgstr "CodigoAlfa"
+
+msgid "CodigoFamilia"
+msgstr "CodigoFamilia"
+
+msgid "CodigoSubFamilia"
+msgstr "CodigoSubFamilia"
+
+msgid "Codigo"
+msgstr "Codigo"
+
+msgid "Valor"
+msgstr "Valor"
+
+msgid "CodigoMoeda"
+msgstr "CodigoMoeda"
+
+msgid "DescricaoTitulo"
+msgstr "DescricaoTitulo"
+
+msgid "NumeroOperacao"
+msgstr "NumeroOperacao"
+
+msgid "Nome"
+msgstr "Nome"
+
+msgid "ValorLimite"
+msgstr "ValorLimite"
+
+msgid "DataInicio"
+msgstr "DataInicio"
+
+msgid "DataFim"
+msgstr "DataFim"
+
+msgid "uuid"
+msgstr "uuid"
+
+msgid "MontanteTransaccao"
+msgstr "MontanteTransaccao"
+
+msgid "DataTransaccao"
+msgstr "DataTransaccao"
+
+msgid "DescricaoTransaccao"
+msgstr "DescricaoTransaccao"
+
+msgid "saldoContabilisticoConta"
+msgstr "saldoContabilisticoConta"
+
+msgid "dataMovimento"
+msgstr "datenMovimento"
+
+msgid "descricao"
+msgstr "descricao"
+
+msgid "valorMoedaConta"
+msgstr "valorMoedaConta"
+
+msgid "moedaOperacao"
+msgstr "moedaOperacao"
+
+msgid "NIP"
+msgstr "NIP"
+
+msgid "ContaFormatada"
+msgstr "ContaFormatada"
+
+msgid "ClienteContaId"
+msgstr "ClienteContaId"
+
+msgid "Moeda"
+msgstr "Moeda"
+
+msgid "nuc"
+msgstr "nuc"
+
+msgid "tipo"
+msgstr "tipo"
+
+msgid "ordem"
+msgstr "ordem"
+
+msgid "Id"
+msgstr "Id"
+
+msgid "UUID"
+msgstr "UUID"
+
+msgid "TokenDefinition"
+msgstr "TokenDefinition"
+
+msgid "mobilePhoneNumber"
+msgstr "mobilePhoneNumber"
+
+msgid "processedOn"
+msgstr "processedOn"
+
+msgid "replywith"
+msgstr "replywith"
 
 msgid "Code"
 msgstr "Code"
+
+msgid "versionToken"
+msgstr "versionToken"
+
+msgid "Could not initiate login session."
+msgstr "Konnte keine Anmeldesitzung starten."
 
 msgid "Error message: "
 msgstr "Fehlermeldung: "
@@ -1045,71 +1637,276 @@ msgstr "Fehlermeldung: "
 msgid ""
 "Another authentication attempt was initiated while authenticating. Please "
 "try again."
-msgstr "Ein anderer Authentifizierungsversuch wurde während der laufenden Authentifizierung gestartet. Bitte versuchen Sie es erneut."
+msgstr ""
+"Während der Authentifizierung wurde ein weiterer Authentifizierungsversuch "
+"gestartet. Bitte erneut versuchen."
 
 msgid "Your session has been terminated by the bank."
 msgstr "Ihre Sitzung wurde von der Bank beendet."
 
 msgid "Please ensure that you have entered the correct mobile number"
-msgstr "Bitte überprüfen Sie die eingegebene Telefonnummer"
+msgstr ""
+"Bitte stellen Sie sicher, dass Sie die richtige Mobiltelefonnummer "
+"eingegeben haben"
 
 msgid "Source and destination account must not be the same."
-msgstr "Ausgangs- und Zielkonto müssen unterschiedlich sein."
+msgstr "Quell- und Zielkonto dürfen nicht identisch sein."
+
+msgid "Invalid username type"
+msgstr "Ungültiger Benutzername-Typ"
+
+msgid "The transfer amount, less than 1 SEK is not supported."
+msgstr "Der Überweisungsbetrag, weniger als 1 SEK, wird nicht unterstützt."
+
+msgid "This type of payment is unavailable for you"
+msgstr "Diese Art der Zahlung ist für Sie nicht verfügbar"
 
 msgid "The code you entered is not valid"
-msgstr "Der eingegebene Code ist ungültig"
+msgstr "Der eingegebene Code ist nicht gültig"
 
 msgid "Enter the code you received from the bank"
-msgstr "Geben Sie den Code ein, den Sie von der Bank erhalten haben"
+msgstr "Geben Sie den Code ein, den Sie von der Bank erhalten haben."
+
+msgid "Failed to read user input"
+msgstr "Lesen der Benutzereingabe fehlgeschlagen"
+
+msgid ""
+"The first time you use your BankId, you need to accept the terms and "
+"conditions. Please login to the Länsförsäkringar with your moible BankId to "
+"do this"
+msgstr ""
+"Wenn Sie Ihre BankId zum ersten Mal verwenden, müssen Sie die Bedingungen "
+"und Konditionen akzeptieren. Bitte loggen Sie sich dazu mit Ihrer BankId auf "
+"dem Länsförsäkringar ein"
+
+msgid ""
+"We currently only support push PhotoTAN method, which is not available for "
+"your user."
+msgstr ""
+"Wir unterstützen derzeit nur das Push-Foto-PhotoTAN-Verfahren, was für Ihren "
+"Benutzer nicht verfügbar ist."
+
+msgid "Authenticating with Mobile BankID timed out. Please try again."
+msgstr ""
+"Die Authentifizierung mit Mobile BankID ist abgelaufen. Bitte erneut "
+"versuchen."
+
+msgid ""
+"Your existing credentials have been invalidated, Please delete this "
+"credentials and create a new one."
+msgstr ""
+"Ihre bestehenden Anmeldedaten wurden ungültig gemacht. Bitte löschen Sie "
+"diese Anmeldedaten und erstellen Sie neue."
+
+msgid "Password change is required."
+msgstr "Passwortänderung erforderlich."
+
+msgid "User must accept terms in other channel."
+msgstr ""
+"Der Benutzer muss Nutzungsbedingungen auf einem anderen Kanal akzeptieren."
+
+msgid ""
+"In order to add new recipients you need to activate Mobile BankID for "
+"extended use. You can find more information on how to extend your Mobile "
+"BankID in your Internet bank."
+msgstr ""
+"Um neue Empfänger hinzufügen zu können, müssen Sie Mobile BankID für die "
+"erweiterte Nutzung aktivieren. Weitere Informationen zur Erweiterung Ihrer "
+"Mobile BankID finden Sie in Ihrer Internetbank."
+
+msgid "Could not save new recipient, check that the information is correct"
+msgstr ""
+"Konnte den neuen Empfänger nicht speichern, überprüfen Sie, ob die "
+"Informationen korrekt sind"
+
+msgid "The payment was rejected by the bank."
+msgstr "Die Zahlung wurde von der Bank abgelehnt."
+
+msgid "The payment was cancelled by the user."
+msgstr "Die Zahlung wurde durch den Nutzer storniert."
+
+msgid "An error occurred when confirming the payment."
+msgstr "Bei der Bestätigung der Zahlung ist ein Fehler aufgetreten."
+
+msgid "An error occurred while confirming the payment."
+msgstr "Bei der Bestätigung der Zahlung ist ein Fehler aufgetreten."
+
+msgid "Authenticating with NemID Code App timed out. Please try again."
+msgstr ""
+"Die Authentifizierung mit der NemID Code App ist abgelaufen. Bitte erneut "
+"versuchen."
+
+msgid "Authentication rejected by the user."
+msgstr "Authentifizierung durch den Benutzer abgelehnt."
+
+msgid "NemID Code App is not registered option to use. Contact bank support."
+msgstr ""
+"NemID Code App ist nicht als Option registriert. Kontaktieren Sie den "
+"Kundendienst der Bank."
 
 msgid ""
 "Your chosen PIN code is locked. The PIN code must be changed in your Netbank "
 "before you can log on."
-msgstr "Die gewählte PIN ist gesperrt. Der PIN Code muss im Portal Ihrer Bank geändert werden, bevor Sie sich einloggen können."
+msgstr ""
+"Ihr gewählter PIN-Code ist gesperrt. Der PIN-Code muss in Ihrer Netbank "
+"geändert werden, bevor Sie sich anmelden können."
+
+msgid "Something went wrong during login process."
+msgstr "Bei der Anmeldung ist etwas schief gelaufen."
+
+msgid "User is not authorized to create the payment"
+msgstr "Der Benutzer ist nicht berechtigt, die Zahlung zu erstellen"
+
+msgid "There was a problem connecting to the bank."
+msgstr "Es gab ein Problem die Verbindung zu der Bank aufzubauen."
+
+msgid ""
+"The payment could not be made because an identical payment is already "
+"registered"
+msgstr ""
+"Die Zahlung konnte nicht durchgeführt werden, weil bereits eine identische "
+"Zahlung registriert ist"
+
+msgid ""
+"Message from SEB - SEB needs you to verify your BankID before you can "
+"continue using the service. Visit www.seb.se or open the SEB app to verify "
+"your BankID. Note that you must be a customer of SEB to be able to use the "
+"service."
+msgstr ""
+"Nachricht von SEB - SEB verlangt von Ihnen, dass Sie Ihre BankID "
+"verifizieren, bevor Sie den Dienst weiter nutzen können. Besuchen Sie www."
+"seb.se oder öffnen Sie die SEB-App, um Ihre BankID zu verifizieren. Beachten "
+"Sie, dass Sie ein Kunde von SEB sein müssen, um den Dienst nutzen zu können."
+
+msgid ""
+"Message from Handelsbanken - Handelsbanken needs you to verify your BankID "
+"before you can continue using the service. Visit www.handelsbanken.se or "
+"open the Handelsbanken app to verify your BankID. Note that you must be a "
+"customer of Handelsbanken to be able to use the service."
+msgstr ""
+"Nachricht von Handelsbanken - Die Handelsbanken müssen Ihre BankID "
+"verifizieren, bevor Sie den Dienst weiter nutzen können. Besuchen Sie www."
+"handelsbanken.se oder öffnen Sie die Handelsbanken-App, um Ihre BankID zu "
+"verifizieren. Beachten Sie, dass Sie ein Kunde der Handelsbanken sein "
+"müssen, um den Dienst nutzen zu können."
 
 msgid "There aren't any Authentication methods available."
-msgstr "Es sind keine Authentifizierungsmethoden verfügbar."
+msgstr "Keine Authentifizierungsmethoden verfügbar."
+
+msgid "Second factor is not registered option to use. Contact bank support."
+msgstr ""
+"Die Zwei-Faktor-Authentisierung ist nicht als Option registriert. "
+"Kontaktieren Sie den Kundendienst der Bank."
+
+msgid "Please check if reference number matches with SIM message"
+msgstr ""
+"Bitte prüfen Sie, ob die Referenznummer mit der SIM-Nachricht übereinstimmt"
+
+msgid "Reference words are missing from login page"
+msgstr "Auf der Anmeldeseite fehlen Referenzwörter"
+
+msgid ""
+"To be able to refresh your accounts you need to answer some questions from "
+"your bank. Please log in to your bank's app or internet bank."
+msgstr ""
+"Um Ihre Konten aktualisieren zu können, müssen Sie einige Fragen Ihrer Bank "
+"beantworten. Bitte loggen Sie sich in die App Ihrer Bank oder im Internet "
+"ein."
 
 msgid "SMS Code"
-msgstr "SMS Code"
+msgstr "SMS-Code"
+
+msgid "Enter 6 digits code from SMS"
+msgstr "6-stelligen Code aus SMS eingeben"
+
+msgid "SMS OTP"
+msgstr "SMS OTP"
+
+msgid "Enter 4 digits code from SMS"
+msgstr "4-stelligen Code aus SMS eingeben"
+
+msgid "account number"
+msgstr "Kontonummer"
+
+msgid "Enter 4 digit account number, can be found in aggreement"
+msgstr "4-stellige Kontonummer eingeben, zu finden in der Vereinbarung"
+
+msgid ""
+"Please check if given reference code matches with presented one for Bank ID"
+msgstr ""
+"Bitte prüfen Sie, ob der angegebene Referenzcode mit dem für die Bank-ID "
+"vorgelegten Code übereinstimmt"
+
+msgid "Currently only Mobile BankID login method is supported"
+msgstr "Derzeit wird nur die Mobile BankID-Anmeldemethode unterstützt"
 
 msgid "Activation code is incorrect. Please try again."
-msgstr "Der Aktivierungscode ist ungültig. Bitte versuchen Sie es erneut."
+msgstr "Der Aktivierungscode ist falsch. Bitte erneut versuchen."
 
 msgid "Activation timed out. Please try again."
-msgstr "Die Zeit für die Aktivierung ist abgelaufen. Bitter versuchen Sie es erneut."
+msgstr "Die Aktivierung ist abgelaufen. Bitte erneut versuchen."
+
+msgid ""
+"Continue by clicking update when you have verified the reference and signed "
+"with Mobile BankID."
+msgstr ""
+"Fahren Sie fort, indem Sie auf Aktualisieren klicken, wenn Sie die Referenz "
+"überprüft und mit Mobile BankID unterschrieben haben."
 
 msgid "Authentication was cancelled. Please try again."
-msgstr "Die Authentifizierung wurde abgebrochen. Bitte versuchen Sie es erneut."
+msgstr "Die Authentifizierung wurde angebrochen. Bitte erneut versuchen."
+
+msgid "Authentication error."
+msgstr "Authentifizierungsfehler."
+
+#, java-format
+msgid "Please enter code {0} from key card number {1}"
+msgstr "Bitte geben Sie den Code {0} von der Schlüsselkartennummer {1} ein"
+
+msgid "Please open the NemId app and confirm login"
+msgstr "Bitte öffnen Sie die NemId-App und bestätigen Sie die Anmeldung"
 
 msgid "The activation code you entered is not valid."
-msgstr "Der eingegebene Aktivierungscode ist ungültig."
+msgstr "Der von Ihnen eingegebene Aktivierungscode ist nicht gültig."
+
+msgid ""
+"Please open the NemId app and confirm login. Then click the \"Submit\" button"
+msgstr ""
+"Bitte öffnen Sie die NemId-App und bestätigen Sie die Anmeldung. Klicken Sie "
+"dann auf die Schaltfläche „Senden“"
+
+msgid "NemId authentication process initialized"
+msgstr "NemId-Authentifizierungsprozess initialisiert"
 
 msgid "Verifying credentials"
-msgstr "Zugangsdaten werden verifiziert"
+msgstr "Überprüfung der Anmeldeinformationen"
 
 msgid "Credentials are valid"
-msgstr "Die Zugangsdaten sind gültig"
+msgstr "Anmeldeinformationen sind gültig"
 
 msgid "Startcode"
 msgstr "Startcode"
 
-#, java-format
-msgid "Select from 1 to {0}"
-msgstr "Wählen Sie zwischen 1 und {0}"
+msgid "Authentication method index"
+msgstr "Index der Authentifizierungsmethode"
 
 #, java-format
+msgid "Select from 1 to {0}"
+msgstr "Wählen Sie von 1 bis {0}"
+
 msgid ""
 "Insert your girocard into the TAN-generator and press \"TAN\". Enter the "
 "startcode and press \"OK\"."
-msgstr "Stecken Sie Ihre Girokarte in den TAN-Generator und drücken Sie die Taste “TAN”. Geben Sie den Startcode ein und drücken Sie die Taste “OK”."
+msgstr ""
+"Führen Sie Ihre Girokarte in den TAN-Generator ein und drücken Sie „TAN“. "
+"Geben Sie den Startcode ein und drücken Sie „OK“."
 
 #, java-format
 msgid "Confirm by entering the generated TAN for \"{0}\"."
-msgstr "Bitte bestätigen Sie Ihren Auftrag mit der generierten TAN für \"{0}\""
+msgstr "Bestätigen Sie durch Eingabe der generierten TAN für „{0}“."
 
 msgid "Confirm by entering the generated TAN."
-msgstr "Bitte bestätigen Sie Ihren Auftrag mit der TAN von Ihrem TAN-Generator."
+msgstr "Bestätigen Sie durch Eingabe der generierten TAN."
 
 msgid "The value you entered is not valid."
-msgstr "Der eigegebene Wert ist ungültig."
+msgstr "Der eingegebene Wert ist nicht gültig."
