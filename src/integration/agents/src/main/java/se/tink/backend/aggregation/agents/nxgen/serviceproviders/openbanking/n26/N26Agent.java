@@ -57,7 +57,8 @@ public final class N26Agent extends NextGenerationAgent
                         getAgentConfig(),
                         supplementalInformationHelper,
                         strongAuthenticationState,
-                        storage);
+                        storage,
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

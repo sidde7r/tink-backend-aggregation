@@ -48,6 +48,7 @@ import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -225,7 +226,7 @@ public final class NewAgentTestContext extends AgentContext {
                         + " ("
                         + statusPayload
                         + ") - statusFromProvider: "
-                        + String.valueOf(statusFromProvider));
+                        + statusFromProvider);
 
         credential.setStatus(status);
         credential.setStatusPayload(statusPayload);
@@ -415,13 +416,13 @@ public final class NewAgentTestContext extends AgentContext {
                     "availableBalance",
                     String.valueOf(
                             Optional.ofNullable(account.getAvailableBalance())
-                                    .map(a -> a.getExactValue())
+                                    .map(ExactCurrencyAmount::getExactValue)
                                     .orElse(null)));
             row.put(
                     "creditLimit",
                     String.valueOf(
                             Optional.ofNullable(account.getCreditLimit())
-                                    .map(a -> a.getExactValue())
+                                    .map(ExactCurrencyAmount::getExactValue)
                                     .orElse(null)));
         }
         CliPrintUtils.printTable(0, "account", Lists.newArrayList(row));
@@ -544,6 +545,16 @@ public final class NewAgentTestContext extends AgentContext {
         }
     }
 
+    private void printCredentialsInfo() {
+        Map<String, String> row = new LinkedHashMap<>();
+        String sessionExpiry =
+                Optional.ofNullable(credential.getSessionExpiryDate())
+                        .map(dateFormat::format)
+                        .orElse("");
+        row.put("sessionExpiry", sessionExpiry);
+        CliPrintUtils.printTable(0, "credentials", Lists.newArrayList(row));
+    }
+
     public void printCollectedData() {
         accountDataCache
                 .getProcessedAccountData()
@@ -558,6 +569,7 @@ public final class NewAgentTestContext extends AgentContext {
 
         printIdentityData();
         printTransfers();
+        printCredentialsInfo();
     }
 
     public CredentialDataDao dumpCollectedData() {
@@ -565,13 +577,12 @@ public final class NewAgentTestContext extends AgentContext {
         accountDataCache
                 .getProcessedAccountData()
                 .forEach(
-                        accountData -> {
-                            accountDataList.add(
-                                    new AccountDataDao(
-                                            accountData.getAccount(),
-                                            accountData.getTransactions(),
-                                            accountData.getTransferDestinationPatterns()));
-                        });
+                        accountData ->
+                                accountDataList.add(
+                                        new AccountDataDao(
+                                                accountData.getAccount(),
+                                                accountData.getTransactions(),
+                                                accountData.getTransferDestinationPatterns())));
         return new CredentialDataDao(accountDataList, transfers, identityData);
     }
 

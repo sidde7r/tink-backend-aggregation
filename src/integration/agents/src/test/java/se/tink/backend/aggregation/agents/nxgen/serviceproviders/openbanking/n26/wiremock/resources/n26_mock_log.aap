@@ -14,21 +14,20 @@ Content-Type: application/json
 {"tokenRequest":{"id":"DUMMY_TOKEN_ID","requestPayload":{"redirectUrl":"https://127.0.0.1:7357/api/v1/thirdparty/callback","to":{"id":"DUMMY_MEMBER_ID","alias":{"type":"EIDAS","value":"PSDSE-FINA-44059","realmId":"DUMMY_REALM_ID"}},"accessBody":{"type":["ACCOUNTS","BALANCES","TRANSACTIONS","STANDING_ORDERS","TRANSFER_DESTINATIONS"]},"callbackState":"00000000-0000-4000-0000-000000000000"}}}
 
 REQUEST 2
-GET https://api.token.io/accounts
+GET https://api.token.io/tokens/DUMMY_ACCESS_TOKEN
 Authorization: Basic DUMMY_API_KEY
 Content-Type: application/json
 Accept: application/json
 X-Aggregator: Tink Testing
-on-behalf-of: DUMMY_ACCESS_TOKEN
 
 RESPONSE 2
 200
 Content-Type: application/json
 
-{"accounts":[{"id":"DUMMY_ID","name":"Main Account","bankId":"n26","accountFeatures":{"supportsInformation":true,"supportsSendPayment":true,"supportsReceivePayment":true},"accountDetails":{"identifier":"DUMMY_ACCOUNT_ID","type":"CHECKING","status":"active","providerAccountDetails":{"nextGenPsd2AccountDetails":{"iban":"DE62500105177853469928"}}}}]}
+{"token":{"id":"***MASKED***","payload":{"version":"1.0","refId":"refId","issuer":{"id":"issuerId","alias":{"type":"DOMAIN","value":"token.io"}},"from":{"id":"fromId"},"to":{"id":"***MASKED***","alias":{"type":"***MASKED***","value":"***MASKED***","realmId":"***MASKED***"}},"expiresAtMs":"1602869683503","access":{"resources":[{"account":{"accountId":"accountAccountId"}},{"balance":{"accountId":"balanceAccountId"}},{"transactions":{"accountId":"transactionsAccountId"}},{"standingOrders":{"accountId":"standingOrdersAccountId"}},{"transferDestinations":{"accountId":"transferDestinationsAccountId"}}]},"tokenRequestId":"tokenRequestId"},"payloadSignatures":[{"action":"ENDORSED","signature":{"memberId":"memberId","keyId":"keyId","signature":"signature"}},{"action":"ENDORSED","signature":{"memberId":"memberId","keyId":"keyId-9csS-DHKg","signature":"signature-qsYiQDg"}}],"tokenRequestId":"tokenRequestId"}}
 
 REQUEST 3
-GET https://api.token.io/accounts/DUMMY_ID/balance
+GET https://api.token.io/accounts
 Authorization: Basic DUMMY_API_KEY
 Content-Type: application/json
 Accept: application/json
@@ -39,10 +38,10 @@ RESPONSE 3
 200
 Content-Type: application/json
 
-{"balance":{"accountId":"DUMMY_ID","current":{"currency":"EUR","value":"100.00"},"available":{"currency":"EUR","value":"100.00"},"updatedAtMs":"1593462516560"},"status":"SUCCESSFUL_REQUEST"}
+{"accounts":[{"id":"DUMMY_ID","name":"Main Account","bankId":"n26","accountFeatures":{"supportsInformation":true,"supportsSendPayment":true,"supportsReceivePayment":true},"accountDetails":{"identifier":"DUMMY_ACCOUNT_ID","type":"CHECKING","status":"active","providerAccountDetails":{"nextGenPsd2AccountDetails":{"iban":"DE62500105177853469928"}}}}]}
 
 REQUEST 4
-GET https://api.token.io/accounts/DUMMY_ID/transactions?page.limit=50
+GET https://api.token.io/accounts/DUMMY_ID/balance
 Authorization: Basic DUMMY_API_KEY
 Content-Type: application/json
 Accept: application/json
@@ -53,10 +52,10 @@ RESPONSE 4
 200
 Content-Type: application/json
 
-{"transactions":[{"id":"TRANSACTION_ID_2","type":"DEBIT","status":"SUCCESS","amount":{"currency":"EUR","value":"-50.00"},"description":"IKEA","createdAtMs":"1593440053000","providerTransactionDetails":{"nextGenPsd2TransactionDetails":{"debtorAccount":{"iban":"DE62500105177853469928"}}}},{"id":"TRANSACTION_ID_1","type":"CREDIT","status":"SUCCESS","amount":{"currency":"EUR","value":"150.00"},"description":"From Savings to Main Account","createdAtMs":"1593439984418","providerTransactionDetails":{"nextGenPsd2TransactionDetails":{"debtorName":"From Savings to Main Account"}}}],"offset":"DUMMY_OFFSET_1","status":"SUCCESSFUL_REQUEST"}
+{"balance":{"accountId":"DUMMY_ID","current":{"currency":"EUR","value":"100.00"},"available":{"currency":"EUR","value":"100.00"},"updatedAtMs":"1593462516560"},"status":"SUCCESSFUL_REQUEST"}
 
 REQUEST 5
-GET https://api.token.io/accounts/DUMMY_ID/transactions?page.limit=50&page.offset=DUMMY_OFFSET_1
+GET https://api.token.io/accounts/DUMMY_ID/transactions?page.limit=50
 Authorization: Basic DUMMY_API_KEY
 Content-Type: application/json
 Accept: application/json
@@ -64,6 +63,20 @@ X-Aggregator: Tink Testing
 on-behalf-of: DUMMY_ACCESS_TOKEN
 
 RESPONSE 5
+200
+Content-Type: application/json
+
+{"transactions":[{"id":"TRANSACTION_ID_2","type":"DEBIT","status":"SUCCESS","amount":{"currency":"EUR","value":"-50.00"},"description":"IKEA","createdAtMs":"1593440053000","providerTransactionDetails":{"nextGenPsd2TransactionDetails":{"debtorAccount":{"iban":"DE62500105177853469928"}}}},{"id":"TRANSACTION_ID_1","type":"CREDIT","status":"SUCCESS","amount":{"currency":"EUR","value":"150.00"},"description":"From Savings to Main Account","createdAtMs":"1593439984418","providerTransactionDetails":{"nextGenPsd2TransactionDetails":{"debtorName":"From Savings to Main Account"}}}],"offset":"DUMMY_OFFSET_1","status":"SUCCESSFUL_REQUEST"}
+
+REQUEST 6
+GET https://api.token.io/accounts/DUMMY_ID/transactions?page.limit=50&page.offset=DUMMY_OFFSET_1
+Authorization: Basic DUMMY_API_KEY
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+on-behalf-of: DUMMY_ACCESS_TOKEN
+
+RESPONSE 6
 200
 Content-Type: application/json
 
