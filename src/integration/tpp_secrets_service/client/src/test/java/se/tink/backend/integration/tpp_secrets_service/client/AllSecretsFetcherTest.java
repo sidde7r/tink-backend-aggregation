@@ -21,6 +21,7 @@ public class AllSecretsFetcherTest {
     private String financialInstitutionId;
     private String appId;
     private String clusterId;
+    private String providerId;
 
     @Rule public ExpectedException exceptionRule = ExpectedException.none();
 
@@ -32,6 +33,7 @@ public class AllSecretsFetcherTest {
         financialInstitutionId = "financialInstitutionId";
         appId = "appId";
         clusterId = "clusterId";
+        providerId = "providerId";
     }
 
     @Test
@@ -42,7 +44,8 @@ public class AllSecretsFetcherTest {
 
         // when
         Optional<SecretsEntityCore> resp =
-                allSecretsFetcher.getAllSecrets(financialInstitutionId, appId, clusterId);
+                allSecretsFetcher.getAllSecrets(
+                        financialInstitutionId, appId, clusterId, providerId);
 
         // then
         Assert.assertFalse(resp.isPresent());
@@ -56,7 +59,8 @@ public class AllSecretsFetcherTest {
 
         // when
         Optional<SecretsEntityCore> resp =
-                allSecretsFetcher.getAllSecrets(financialInstitutionId, appId, clusterId);
+                allSecretsFetcher.getAllSecrets(
+                        financialInstitutionId, appId, clusterId, providerId);
 
         // then
         Assert.assertFalse(resp.isPresent());
@@ -70,7 +74,8 @@ public class AllSecretsFetcherTest {
 
         // when
         Optional<SecretsEntityCore> resp =
-                allSecretsFetcher.getAllSecrets(financialInstitutionId, appId, clusterId);
+                allSecretsFetcher.getAllSecrets(
+                        financialInstitutionId, appId, clusterId, providerId);
 
         // then
         Assert.assertFalse(resp.isPresent());
@@ -86,7 +91,8 @@ public class AllSecretsFetcherTest {
 
         // when
         Optional<SecretsEntityCore> resp =
-                allSecretsFetcher.getAllSecrets(financialInstitutionId, appId, clusterId);
+                allSecretsFetcher.getAllSecrets(
+                        financialInstitutionId, appId, clusterId, providerId);
 
         // then, expected exception is thrown
     }

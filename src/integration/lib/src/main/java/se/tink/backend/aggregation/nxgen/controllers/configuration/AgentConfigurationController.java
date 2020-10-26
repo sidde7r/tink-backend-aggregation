@@ -43,6 +43,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private final IntegrationsConfiguration integrationsConfiguration;
     private final boolean tppSecretsServiceEnabled;
     private final String financialInstitutionId;
+    private final String providerId;
     private final String appId;
     private final String clusterId;
     private final String redirectUrl;
@@ -64,6 +65,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         clusterId = null;
         appId = null;
         financialInstitutionId = null;
+        providerId = null;
         tppSecretsServiceEnabled = false;
         integrationsConfiguration = null;
         tppSecretsServiceClient = null;
@@ -83,6 +85,8 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         Preconditions.checkNotNull(
                 Strings.emptyToNull(provider.getFinancialInstitutionId()),
                 "financialInstitutionId cannot be empty/null.");
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(provider.getName()), "providerId cannot be empty/null.");
         Preconditions.checkNotNull(
                 provider.getAccessType(), "provider.getAccessType() cannot be null.");
         Preconditions.checkNotNull(provider.getType(), "provider.getType() cannot be null.");
@@ -106,6 +110,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         }
         this.integrationsConfiguration = integrationsConfiguration;
         this.financialInstitutionId = provider.getFinancialInstitutionId();
+        this.providerId = provider.getName();
         this.appId = appId;
         this.clusterId = clusterId;
         this.redirectUrl = redirectUrl;
@@ -144,7 +149,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             try {
                 Optional<SecretsEntityCore> allSecretsOpt =
                         tppSecretsServiceClient.getAllSecrets(
-                                financialInstitutionId, appId, clusterId);
+                                financialInstitutionId, appId, clusterId, providerId);
 
                 // TODO: Remove if once Access team confirms there are no null appIds around.
                 if (!allSecretsOpt.isPresent()) {
