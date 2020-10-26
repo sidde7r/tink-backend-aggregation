@@ -39,3 +39,6 @@ alias(
     name = "formatjson",
     actual = "//tools/format:format-json-diff",
 )
+
+# Workaround for annoying "no such target '//:.bazelproject'" error in recent plugin versions
+exports_files([".bazelproject"])
