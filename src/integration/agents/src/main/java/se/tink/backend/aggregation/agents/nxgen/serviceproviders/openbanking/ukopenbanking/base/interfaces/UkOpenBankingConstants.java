@@ -73,6 +73,14 @@ public interface UkOpenBankingConstants {
             public static final String PAYMENT_STATUS = "/domestic-payments/{paymentId}";
         }
 
+        public static class DomesticScheduled {
+            public static final String PAYMENT_CONSENT = "/domestic-scheduled-payment-consents";
+            public static final String PAYMENT_CONSENT_STATUS =
+                    "/domestic-scheduled-payment-consents/{consentId}";
+            public static final String PAYMENT = "/domestic-scheduled-payments";
+            public static final String PAYMENT_STATUS = "/domestic-scheduled-payments/{paymentId}";
+        }
+
         public static class International {
             public static final String PAYMENT_CONSENT = "/international-payment-consents";
             public static final String PAYMENT_CONSENT_STATUS =

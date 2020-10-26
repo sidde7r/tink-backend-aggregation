@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis;
 
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.AuthorizeRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
@@ -14,32 +13,15 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@RequiredArgsConstructor
 public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
+
     private final UkOpenBankingApiClient apiClient;
+    private final UkOpenbankingPaymentHelper paymentHelper;
     private final SoftwareStatementAssertion softwareStatement;
     private final ClientInfo clientInfo;
-    private final UkOpenBankingPis ukOpenBankingPis;
     private PaymentResponse paymentResponse;
     private final PaymentRequest paymentRequest;
-
-    private String intentId;
-
-    public UkOpenBankingPisAuthenticator(
-            UkOpenBankingApiClient apiClient,
-            SoftwareStatementAssertion softwareStatement,
-            ClientInfo clientInfo,
-            UkOpenBankingPis ukOpenBankingPis,
-            PaymentRequest paymentRequest) {
-        this.apiClient = apiClient;
-        this.softwareStatement = softwareStatement;
-        this.clientInfo = clientInfo;
-        this.ukOpenBankingPis = ukOpenBankingPis;
-        this.paymentRequest = paymentRequest;
-    }
-
-    public Optional<String> getIntentId() {
-        return Optional.ofNullable(intentId);
-    }
 
     public PaymentResponse getPaymentResponse() {
         return paymentResponse;
@@ -48,9 +30,8 @@ public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
     @Override
     public URL decorateAuthorizeUrl(
             URL authorizeUrl, String state, String nonce, String callbackUri) {
-
-        paymentResponse = ukOpenBankingPis.setupPaymentOrderConsent(apiClient, paymentRequest);
-        intentId = paymentResponse.getStorage().get("consentId");
+        paymentResponse = paymentHelper.createConsent(paymentRequest);
+        String intentId = paymentResponse.getStorage().get("consentId");
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 

@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.LocalKeySignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingModule;
@@ -38,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final UkOpenBankingPisConfig pisConfig;
     private final LocalDateTimeSource localDateTimeSource;
     private final RandomValueGenerator randomValueGenerator;
 
@@ -55,8 +53,12 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
 
     @Inject
     public HsbcV31Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, false);
-        pisConfig = new UkOpenBankingV31PisConfiguration(V313.PERSONAL_PIS_API_URL);
+        super(
+                componentProvider,
+                jwtSigner,
+                aisConfig,
+                new UkOpenBankingV31PisConfiguration(V313.PERSONAL_PIS_API_URL),
+                false);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
@@ -75,7 +77,6 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
     public Optional<PaymentController> constructPaymentController() {
         UKOpenbankingV31Executor paymentExecutor =
                 new UKOpenbankingV31Executor(
-                        pisConfig,
                         softwareStatement,
                         providerConfiguration,
                         apiClient,

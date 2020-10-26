@@ -55,10 +55,16 @@ public class DomesticPaymentInitiation {
                 RemittanceInformation.ofUnstructured(unstructuredRemittanceInformation);
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;
-        this.creditorAccount = new CreditorAccount(payment.getCreditor());
+        this.creditorAccount =
+                Objects.nonNull(payment.getCreditor())
+                        ? new CreditorAccount(payment.getCreditor())
+                        : null;
         this.debtorAccount =
                 Objects.isNull(payment.getDebtor()) ? null : new DebtorAccount(payment.getDebtor());
-        this.instructedAmount = new InstructedAmount(payment.getExactCurrencyAmountFromField());
+        this.instructedAmount =
+                Objects.nonNull(payment.getExactCurrencyAmountFromField())
+                        ? new InstructedAmount(payment.getExactCurrencyAmountFromField())
+                        : null;
     }
 
     @JsonIgnore
