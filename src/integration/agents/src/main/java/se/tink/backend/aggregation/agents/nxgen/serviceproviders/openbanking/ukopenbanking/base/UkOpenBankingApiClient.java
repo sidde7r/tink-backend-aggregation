@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants.ACCOUNT_PERMISSIONS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.BARCLAYS_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.DANSKEBANK_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.GENERAL_STANDARD_ISS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.HSBC_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.MONZO_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.NATIONWIDE_ORG_ID;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.NATWEST_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.RBS_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.RFC_2253_DN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TINK_UKOPENBANKING_ORGID;
@@ -66,7 +68,13 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private final UkOpenBankingAisConfig aisConfig;
     private static final List<String> POST_BASE64_GROUP =
             Arrays.asList(
-                    DANSKEBANK_ORG_ID, MONZO_ORG_ID, NATIONWIDE_ORG_ID, ULSTER_ORG_ID, RBS_ORG_ID);
+                    DANSKEBANK_ORG_ID,
+                    MONZO_ORG_ID,
+                    NATIONWIDE_ORG_ID,
+                    ULSTER_ORG_ID,
+                    RBS_ORG_ID,
+                    NATWEST_ORG_ID,
+                    BARCLAYS_ORG_ID);
 
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
