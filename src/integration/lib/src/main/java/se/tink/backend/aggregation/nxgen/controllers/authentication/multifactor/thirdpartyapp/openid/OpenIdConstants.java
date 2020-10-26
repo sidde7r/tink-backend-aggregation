@@ -11,6 +11,7 @@ public class OpenIdConstants {
     public static final String HSBC_ORG_ID = "00158000016i44JAAQ";
     public static final String NATIONWIDE_ORG_ID = "0015800000jf8aKAAQ";
     public static final String RBS_ORG_ID = "0015800000jfwB4AAI";
+    public static final String ULSTER_ORG_ID = "0015800000jfxrpAAA";
     public static final String RFC_2253_DN =
             "CN=00158000016i44IAAQ, OID.2.5.4.97=PSDSE-FINA-44059, O=Tink AB, C=GB";
     public static final String GENERAL_STANDARD_ISS = "1f1YEdOMw6AphlVC6k2JQR";
