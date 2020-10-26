@@ -10,6 +10,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.RFC_2253_DN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TINK_UKOPENBANKING_ORGID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.UKOB_TAN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ULSTER_ORG_ID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
@@ -63,6 +64,9 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private final PersistentStorage persistentStorage;
     private final RandomValueGenerator randomValueGenerator;
     private final UkOpenBankingAisConfig aisConfig;
+    private static final List<String> POST_BASE64_GROUP =
+            Arrays.asList(
+                    DANSKEBANK_ORG_ID, MONZO_ORG_ID, NATIONWIDE_ORG_ID, ULSTER_ORG_ID, RBS_ORG_ID);
 
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
@@ -262,10 +266,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private String createPs256Signature(Map<String, Object> payloadClaims) {
         // Refer : https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1112670669/W007
         // remove this check once this wavier times out
-        if (MONZO_ORG_ID.equals(aisConfig.getOrganisationId())
-                || DANSKEBANK_ORG_ID.equals(aisConfig.getOrganisationId())
-                || NATIONWIDE_ORG_ID.equals(aisConfig.getOrganisationId())
-                || RBS_ORG_ID.equals(aisConfig.getOrganisationId())) {
+        if (POST_BASE64_GROUP.contains(aisConfig.getOrganisationId())) {
             return createPs256SignatureWithoutB64Header(payloadClaims);
         } else if (isHSBCFamily()) {
             return createHsbcFamilyHeader(payloadClaims);
