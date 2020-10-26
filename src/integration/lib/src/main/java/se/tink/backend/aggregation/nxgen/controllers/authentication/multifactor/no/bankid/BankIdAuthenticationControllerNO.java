@@ -147,7 +147,8 @@ public class BankIdAuthenticationControllerNO
         } catch (InterruptedException e) {
             executor.shutdownNow();
             Thread.currentThread().interrupt();
-            throw LoginError.DEFAULT_MESSAGE.exception(e);
+            logger.error("[BankID] Interrupted exception happened", e);
+            throw LoginError.DEFAULT_MESSAGE.exception();
         } catch (ExecutionException e) {
             handlePossibleBankIDException(e);
         }
@@ -157,6 +158,7 @@ public class BankIdAuthenticationControllerNO
         if (e.getCause() instanceof BankIdException) {
             throw (BankIdException) e.getCause();
         } else {
+            logger.error("[BankID] Other error occurred while polling bankID", e);
             throw LoginError.DEFAULT_MESSAGE.exception();
         }
     }
