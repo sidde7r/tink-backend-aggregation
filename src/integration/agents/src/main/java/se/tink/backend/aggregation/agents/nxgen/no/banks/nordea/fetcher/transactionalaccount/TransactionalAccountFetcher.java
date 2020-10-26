@@ -50,6 +50,9 @@ public class TransactionalAccountFetcher
                 .addHolderName(accountEntity.getOwner())
                 .putInTemporaryStorage(
                         NordeaNoConstants.PRODUCT_CODE, accountEntity.getProductCode())
+                .putInTemporaryStorage(
+                        NordeaNoConstants.CAN_FETCH_TRANSACTION,
+                        accountEntity.getPermissions().getCanViewTransactions())
                 .build();
     }
 

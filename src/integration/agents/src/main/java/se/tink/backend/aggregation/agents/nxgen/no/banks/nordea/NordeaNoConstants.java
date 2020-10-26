@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea;
 
 public class NordeaNoConstants {
     public static final String PRODUCT_CODE = "productCode";
+    public static final String CAN_FETCH_TRANSACTION = "canFetchTransactions";
 
     public static class QueryParamKeys {
         public static final String CLIENT_ID = "client_id";
@@ -160,8 +161,8 @@ public class NordeaNoConstants {
     }
 
     public static class RetryFilter {
-        public static final int NUM_TIMEOUT_RETRIES = 10;
-        public static final int RETRY_SLEEP_MILLISECONDS = 10000;
+        public static final int NUM_TIMEOUT_RETRIES = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 5000;
     }
 
     public static class ErrorCode {

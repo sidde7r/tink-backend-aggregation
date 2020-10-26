@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount;
 
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.CAN_FETCH_TRANSACTION;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.PRODUCT_CODE;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,15 @@ public class TransactionalAccountTransactionFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        return fetchTransactions(account, key, 1);
+        return canViewTransactionsOnAccount(account)
+                ? fetchTransactions(account, key, 1)
+                : TransactionKeyPaginatorResponseImpl.createEmpty();
+    }
+
+    private boolean canViewTransactionsOnAccount(TransactionalAccount account) {
+        Optional<Boolean> canFetchTransactions =
+                account.getFromTemporaryStorage(CAN_FETCH_TRANSACTION, Boolean.class);
+        return canFetchTransactions.isPresent() && Boolean.TRUE.equals(canFetchTransactions.get());
     }
 
     private TransactionKeyPaginatorResponse<String> fetchTransactions(

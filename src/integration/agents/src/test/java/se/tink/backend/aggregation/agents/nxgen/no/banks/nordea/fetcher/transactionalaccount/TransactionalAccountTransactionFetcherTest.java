@@ -3,12 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transac
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.io.File;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Optional;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.FetcherClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -36,17 +39,24 @@ public class TransactionalAccountTransactionFetcherTest {
             SerializationUtils.deserializeFromString(
                     new File(SECOND_PAGE_FILE_PATH), TransactionsResponse.class);
 
+    private FetcherClient fetcherClient;
+
+    private TransactionalAccountTransactionFetcher fetcher;
+
+    @Before
+    public void setup() {
+        fetcherClient = mock(FetcherClient.class);
+        fetcher = new TransactionalAccountTransactionFetcher(fetcherClient);
+    }
+
     @Test
     public void shouldParseTransactionsCorrectly() {
         // given
         TransactionalAccount account = getAccountForTests();
-        FetcherClient fetcherClient = mock(FetcherClient.class);
         given(fetcherClient.fetchAccountTransactions(API_IDENTIFIER, PRODUCT_CODE, null))
                 .willReturn(FIRST_PAGE_RESPONSE);
         given(fetcherClient.fetchAccountTransactions(API_IDENTIFIER, PRODUCT_CODE, "3"))
                 .willReturn(SECOND_PAGE_RESPONSE);
-        TransactionalAccountTransactionFetcher fetcher =
-                new TransactionalAccountTransactionFetcher(fetcherClient);
 
         // when
         TransactionKeyPaginatorResponse<String> firstPageOfTransactions =
@@ -78,10 +88,28 @@ public class TransactionalAccountTransactionFetcherTest {
                 LocalDate.of(2020, 7, 1));
     }
 
+    @Test
+    public void shouldNotFetchTransactionsIfNoPermissionOnAccountToDoSo() {
+        // given
+        TransactionalAccount mockAccount = mock(TransactionalAccount.class);
+        given(mockAccount.getFromTemporaryStorage("canFetchTransactions", Boolean.class))
+                .willReturn(Optional.of(Boolean.FALSE));
+
+        // when
+        TransactionKeyPaginatorResponse<String> transactionsFor =
+                fetcher.getTransactionsFor(mockAccount, null);
+
+        // then
+        assertThat(transactionsFor.getTinkTransactions()).isEmpty();
+        verifyNoMoreInteractions(fetcherClient);
+    }
+
     private TransactionalAccount getAccountForTests() {
         TransactionalAccount mockAccount = mock(TransactionalAccount.class);
         given(mockAccount.getApiIdentifier()).willReturn(API_IDENTIFIER);
         given(mockAccount.getFromTemporaryStorage("productCode")).willReturn(PRODUCT_CODE);
+        given(mockAccount.getFromTemporaryStorage("canFetchTransactions", Boolean.class))
+                .willReturn(Optional.of(Boolean.TRUE));
         given(mockAccount.getExactBalance()).willReturn(ExactCurrencyAmount.of(0.0, "NOK"));
         return mockAccount;
     }
