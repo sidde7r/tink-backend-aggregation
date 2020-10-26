@@ -8,11 +8,11 @@ spec:
 
     - alert: LoginSuccessRateLowWithAttemptLimitBE
       expr: |
-        # Successful/Cancelled attempts above 70%
+        # Successful/Cancelled attempts above 75%
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="BE", provider_type!="test"}[60m])) by (action,className,provider)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE", provider_type!="test"}[60m])) by (action,className,provider) < 0.70)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE", provider_type!="test"}[60m])) by (action,className,provider) < 0.75)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE", provider_type!="test"}[60m])) by (action,className,provider) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE", provider_type!="test"}[60m])) by (action,className,provider) > 10
       for: 5m
       labels:
         severity: urgent
@@ -20,16 +20,16 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate is below 70% ( <{ $value }> ) the last hour.
+        summary: Login success rate is below 75% ( <{ $value }> ) the last hour.
         tags: {{ .Values.minionsTags }}
 
     - alert: RefreshSuccessRateLowWithAttemptLimitBE
       expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="BE", provider_type!="test"}[60m])) by (className,provider)
-            / sum(increase(tink_agent_refresh_total{market="BE", provider_type!="test"}[60m])) by (className,provider) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="BE", provider_type!="test"}[30m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="BE", provider_type!="test"}[30m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="BE", provider_type!="test"}[60m])) by (className,provider) > 10
+        and sum(increase(tink_agent_refresh_total{market="BE", provider_type!="test"}[30m])) by (className,provider) > 10
       for: 5m
       labels:
         severity: urgent
@@ -37,5 +37,6 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Refresh success rate is below 90% ( <{ $value }> ) the last hour.
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last 30 minutes.
         tags: {{ .Values.minionsTags }}

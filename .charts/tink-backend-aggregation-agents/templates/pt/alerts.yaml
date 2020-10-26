@@ -30,7 +30,7 @@ spec:
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="PT", provider_type!="test"}[30m])) by (className,provider)
             / sum(increase(tink_agent_refresh_total{market="PT", provider_type!="test"}[30m])) by (className,provider) < 0.90)
         # At least this many attempts.
-          and sum(increase(tink_agent_refresh_total{market="PT", provider_type!="test"}[30m])) by (className,provider) > 50
+          and sum(increase(tink_agent_refresh_total{market="PT", provider_type!="test"}[30m])) by (className,provider) > 30
       for: 5m
       labels:
         severity: urgent
