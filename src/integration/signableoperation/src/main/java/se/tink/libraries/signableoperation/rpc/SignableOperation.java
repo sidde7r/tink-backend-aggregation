@@ -35,6 +35,12 @@ public class SignableOperation {
     // decide if internalStatus is helpful
     private String internalStatus;
 
+    // Every aggregation operation has a unique correlationId, also saved in its events in BQ
+    // adding correlationId to Signable operation will provide us a way to co-relate Transfer event
+    // to each aggregation event, helping us tracing the root-cause of failed transfers,
+    // which don't reach to transferAgentWorkerCommand
+    private String correlationId;
+
     public SignableOperation() {}
 
     public SignableOperation(Transfer transfer) {
@@ -177,6 +183,14 @@ public class SignableOperation {
 
     public void setInternalStatus(String internalStatus) {
         this.internalStatus = internalStatus;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
     }
 
     public enum StatusDetailsKey {

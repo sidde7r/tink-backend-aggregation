@@ -289,7 +289,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         } else {
             signableOperation.setStatusMessage(statusMessage);
         }
-
+        signableOperation.setCorrelationId(getCorrelationId());
         updateSignableOperation(signableOperation);
     }
 
