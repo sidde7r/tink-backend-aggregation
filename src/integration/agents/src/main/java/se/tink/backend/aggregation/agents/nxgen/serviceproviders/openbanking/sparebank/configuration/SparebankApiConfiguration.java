@@ -12,4 +12,6 @@ public class SparebankApiConfiguration {
     private String qsealcBase64;
     private String certificateSerialNumberInHex;
     private String certificateIssuerDN;
+    private String userIp;
+    private boolean isManual;
 }

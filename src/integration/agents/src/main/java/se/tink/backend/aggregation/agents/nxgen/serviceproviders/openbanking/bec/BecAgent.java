@@ -43,10 +43,7 @@ public final class BecAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        String url = request.getProvider().getPayload().split(",")[1];
-
-        apiClient = new BecApiClient(client, persistentStorage, url);
-
+        apiClient = new BecApiClient(client, persistentStorage, getApiConfigurration());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         super.setConfiguration(agentsServiceConfiguration);
@@ -58,6 +55,15 @@ public final class BecAgent extends NextGenerationAgent
 
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         client.setEidasProxy(eidasProxyConfiguration);
+    }
+
+    private BecApiConfiguration getApiConfigurration() {
+        String url = request.getProvider().getPayload().split(",")[1];
+        return BecApiConfiguration.builder()
+                .url(url)
+                .userIp(userIp)
+                .isManual(request.isManual())
+                .build();
     }
 
     private AgentConfiguration<BecConfiguration> getAgentConfiguration() {

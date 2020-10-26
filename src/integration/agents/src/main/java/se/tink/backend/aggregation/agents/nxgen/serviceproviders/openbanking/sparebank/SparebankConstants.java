@@ -92,10 +92,6 @@ public final class SparebankConstants {
         public static final String ACCEPT = "accept";
     }
 
-    public static class HeaderValues {
-        public static final String PSU_IP_ADDRESS = "127.0.0.1";
-    }
-
     public static class FormKeys {
         public static final String GRANT_TYPE = "grant_type";
         public static final String CLIENT_ID = "client_id";

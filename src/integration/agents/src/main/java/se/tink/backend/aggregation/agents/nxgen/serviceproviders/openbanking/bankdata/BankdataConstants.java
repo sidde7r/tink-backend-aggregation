@@ -120,10 +120,6 @@ public final class BankdataConstants {
         public static final String IBAN = "iban";
     }
 
-    public static class HeaderValues {
-        public static final String PSU_IP_ADDRESS = "127.0.0.1";
-    }
-
     public static class PaymentRequests {
         public static final String IDENTIFICATION = "endToEndIdentification";
     }

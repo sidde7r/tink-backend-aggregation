@@ -61,7 +61,7 @@ public final class NorwegianAgent extends NextGenerationAgent
 
         this.apiClient =
                 new NorwegianApiClient(
-                        client, sessionStorage, persistentStorage, agentConfiguration);
+                        client, sessionStorage, persistentStorage, agentConfiguration, userIp);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.creditCardRefreshController = getCreditCardRefreshController();

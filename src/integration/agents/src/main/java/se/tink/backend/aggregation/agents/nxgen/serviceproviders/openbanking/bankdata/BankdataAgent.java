@@ -32,8 +32,6 @@ public abstract class BankdataAgent extends NextGenerationAgent
 
     private final BankdataApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final String baseUrl;
-    private final String baseAuthUrl;
 
     public BankdataAgent(
             CredentialsRequest request,
@@ -43,12 +41,19 @@ public abstract class BankdataAgent extends NextGenerationAgent
             String baseAuthUrl) {
         super(request, context, signatureKeyPair);
 
-        this.baseUrl = baseUrl;
-        this.baseAuthUrl = baseAuthUrl;
+        BankdataApiConfiguration apiConfiguration = getApiConfiguration(baseUrl, baseAuthUrl);
         apiClient =
-                new BankdataApiClient(
-                        client, sessionStorage, persistentStorage, baseUrl, baseAuthUrl);
+                new BankdataApiClient(client, sessionStorage, persistentStorage, apiConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    private BankdataApiConfiguration getApiConfiguration(String baseUrl, String baseAuthUrl) {
+        return BankdataApiConfiguration.builder()
+                .baseUrl(baseUrl)
+                .baseAuthUrl(baseAuthUrl)
+                .userIp(userIp)
+                .isManual(request.isManual())
+                .build();
     }
 
     @Override
