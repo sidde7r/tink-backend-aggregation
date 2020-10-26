@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
@@ -18,12 +17,9 @@ import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfigurati
 @JsonObject
 public class ErstebankConfiguration implements BerlinGroupConfiguration {
 
-    @JsonProperty private String apiKey;
-    @JsonProperty @Secret private String oauthBaseUrl;
-    @JsonProperty @Secret private String baseUrl;
+    @JsonProperty @Secret private String apiKey;
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @JsonProperty @Secret private String psuIpAddress;
 
     @Override
     public String getClientId() {
@@ -45,19 +41,11 @@ public class ErstebankConfiguration implements BerlinGroupConfiguration {
 
     @Override
     public String getBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(baseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
-
-        return baseUrl;
+        throw new UnsupportedOperationException("Not a secret");
     }
 
     @Override
     public String getPsuIpAddress() {
-        if (Objects.nonNull(psuIpAddress)) {
-            return psuIpAddress;
-        }
-
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {

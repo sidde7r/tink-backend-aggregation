@@ -4,13 +4,14 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
 public class BawagConfiguration implements ClientConfiguration {
 
-    private String keystorePath;
-    private String keystorePassword;
+    @SensitiveSecret private String keystorePath;
+    @SensitiveSecret private String keystorePassword;
 
     public String getKeystorePath() {
         Preconditions.checkNotNull(
