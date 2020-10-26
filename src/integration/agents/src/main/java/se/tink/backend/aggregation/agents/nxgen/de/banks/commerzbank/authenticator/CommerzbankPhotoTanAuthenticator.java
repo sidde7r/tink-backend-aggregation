@@ -50,7 +50,7 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
     private static final int RETRY_ATTEMPTS = 60;
 
     private static final LocalizableKey FIELD_DESCRIPTION = new LocalizableKey("TAN");
-    private static final LocalizableKey FIELD_NAME = new LocalizableKey("tanCode");
+    private static final String FIELD_NAME = "tanCode";
     private static final LocalizableKey FIELD_HELPTEXT =
             new LocalizableKey("Please open PhotoTAN application and confirm the order");
     private static final LocalizableKey FIELD_VALUE =
@@ -134,7 +134,7 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
     private void displayPrompt(Credentials credentials) {
         Field field =
                 CommonFields.Information.build(
-                        catalog.getString(FIELD_NAME),
+                        FIELD_NAME,
                         catalog.getString(FIELD_DESCRIPTION),
                         catalog.getString(FIELD_VALUE),
                         catalog.getString(FIELD_HELPTEXT));
