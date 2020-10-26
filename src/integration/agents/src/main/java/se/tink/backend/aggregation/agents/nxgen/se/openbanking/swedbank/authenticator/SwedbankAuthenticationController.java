@@ -134,6 +134,10 @@ public class SwedbankAuthenticationController
             }
         }
 
+        if (authenticationStatusResponse.loginCanceled()) {
+            return BankIdStatus.CANCELLED;
+        }
+
         switch (authenticationStatusResponse.getScaStatus().toLowerCase()) {
             case AuthStatus.RECEIVED:
             case AuthStatus.STARTED:

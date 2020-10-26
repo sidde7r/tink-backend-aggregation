@@ -187,6 +187,7 @@ public final class SwedbankConstants {
         public static final String REFRESH_TOKEN_EXPIRED = "Provided refresh_token expired";
         public static final String WRONG_USER_ID = "Wrong UserId parameter";
         public static final String MISSING_BANK_AGREEMENT = "MISSING_BANK_AGREEMENT";
+        public static final String USER_CANCEL = "USER_CANCEL";
     }
 
     public enum HeadersToSign {
