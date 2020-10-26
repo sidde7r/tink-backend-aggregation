@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 
 /** This agent is not ready for production. Its for test and documentation of the flow. */
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
@@ -44,6 +45,7 @@ public final class SwedbankAgent extends NextGenerationAgent
     public SwedbankAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
         client.addFilter(new SwedbankConsentLimitFilter());
+        client.addFilter(new BankServiceInternalErrorFilter());
         apiClient =
                 new SwedbankApiClient(
                         client,
