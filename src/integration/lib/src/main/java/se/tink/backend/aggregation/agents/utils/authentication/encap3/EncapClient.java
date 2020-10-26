@@ -1,9 +1,14 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 
+import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Urls;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.IdentificationEntity;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.RegistrationEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.RegistrationResultEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.enums.AuthenticationMethod;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.DeviceAuthenticationResponse;
@@ -21,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@Slf4j
 public class EncapClient {
     private final TinkHttpClient httpClient;
     private final EncapStorage storage;
@@ -70,9 +76,7 @@ public class EncapClient {
         String registrationMessage = messageUtils.buildRegistrationMessage();
         RegistrationResponse registrationResponse =
                 messageUtils.encryptAndSend(registrationMessage, RegistrationResponse.class);
-        if (!registrationResponse.isValid()) {
-            throw new IllegalStateException("ActivationResponse is not valid.");
-        }
+        logAndThrowErrorIfRegistrationResponseIsInvalid(registrationResponse);
 
         RegistrationResultEntity registrationResultEntity = registrationResponse.getResult();
         storeRegistrationResult(registrationResultEntity);
@@ -92,6 +96,27 @@ public class EncapClient {
                 messageUtils.encryptSoapAndSend(Urls.SOAP_ACTIVATION, activateDeviceBody);
 
         return createDeviceRegistrationResponse(activateDeviceSoapResponse);
+    }
+
+    private void logAndThrowErrorIfRegistrationResponseIsInvalid(
+            RegistrationResponse registrationResponse) {
+        // (Wiski) delete this logging logic after getting some more information about these errors
+        if (!registrationResponse.isValid()) {
+            Optional<RegistrationResultEntity> optionalResult =
+                    Optional.ofNullable(registrationResponse.getResult());
+            Optional<RegistrationEntity> optionalRegistration =
+                    optionalResult.map(RegistrationResultEntity::getRegistration);
+            Optional<List<String>> optionalAllowedMethods =
+                    optionalRegistration.map(RegistrationEntity::getAllowedAuthMethods);
+            log.error(
+                    "ActivationResponse is not valid.\nCode: {}\nOutdated: {}\nHas result: {}\nHasRegistration: {}\nAllowed methods: {}",
+                    registrationResponse.getCode(),
+                    registrationResponse.isOutdated(),
+                    optionalResult.isPresent(),
+                    optionalRegistration.isPresent(),
+                    optionalAllowedMethods.orElse(null));
+            throw LoginError.REGISTER_DEVICE_ERROR.exception();
+        }
     }
 
     public DeviceAuthenticationResponse authenticateDevice(
