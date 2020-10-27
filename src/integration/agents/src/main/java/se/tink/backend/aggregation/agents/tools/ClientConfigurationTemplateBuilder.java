@@ -28,11 +28,13 @@ public class ClientConfigurationTemplateBuilder {
     private static final String PRETTY_PRINTING_INDENT_PADDING =
             new String(new char[NUM_SPACES_INDENT]).replace((char) 0, ' ');
     private static final String FIN_IDS_KEY = "finId";
+    private static final String PROVIDER_NAME_KEY = "providerName";
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_EXAMPLES = "examples";
     private final boolean includeDescriptions;
     private final boolean includeExamples;
     private final String financialInstitutionId;
+    private final String providerName;
     private final ClientConfigurationMetaInfoHandler clientConfigurationMetaInfoHandler;
 
     public ClientConfigurationTemplateBuilder(
@@ -40,6 +42,7 @@ public class ClientConfigurationTemplateBuilder {
         this.includeDescriptions = includeDescriptions;
         this.includeExamples = includeExamples;
         this.financialInstitutionId = provider.getFinancialInstitutionId();
+        this.providerName = provider.getName();
         this.clientConfigurationMetaInfoHandler = new ClientConfigurationMetaInfoHandler(provider);
         Preconditions.checkNotNull(
                 Strings.emptyToNull(this.financialInstitutionId),
@@ -109,6 +112,10 @@ public class ClientConfigurationTemplateBuilder {
         JsonArray jsonFinancialInstitutionIdsArray = new JsonArray();
         jsonConfigurationTemplate.add(FIN_IDS_KEY, jsonFinancialInstitutionIdsArray);
         jsonFinancialInstitutionIdsArray.add(new JsonPrimitive(financialInstitutionId));
+
+        JsonArray jsonProviderNamesArray = new JsonArray();
+        jsonConfigurationTemplate.add(PROVIDER_NAME_KEY, jsonProviderNamesArray);
+        jsonFinancialInstitutionIdsArray.add(new JsonPrimitive(providerName));
 
         Map<String, String> fieldsDescriptionsAndExamples =
                 readFieldsDescriptionsAndExamples(clientConfigurationClassForProvider);

@@ -21,12 +21,13 @@ public class ClientConfigurationJsonSchemaBuilder {
     private static final int NUM_SPACES_INDENT = 10;
     private static final String PRETTY_PRINTING_INDENT_PADDING =
             new String(new char[NUM_SPACES_INDENT]).replace((char) 0, ' ');
-    private static final String KEY_FIN_ID = "financialInstitutionId";
     private static final String KEY_SECRETS = "secrets";
     private static final String KEY_ENCRYPTED_SECRETS = "encryptedSecrets";
     private static final String KEY_PROPERTIES = "properties";
+    private static final String PROVIDER_NAME_KEY = "providerName";
 
     private final String financialInstitutionId;
+    private final String providerName;
     private final ClientConfigurationMetaInfoHandler clientConfigurationMetaInfoHandler;
 
     private Set<String> secretsFieldName = new HashSet<>();
@@ -34,6 +35,7 @@ public class ClientConfigurationJsonSchemaBuilder {
 
     public ClientConfigurationJsonSchemaBuilder(Provider provider) {
         this.financialInstitutionId = provider.getFinancialInstitutionId();
+        this.providerName = provider.getName();
         this.clientConfigurationMetaInfoHandler = new ClientConfigurationMetaInfoHandler(provider);
         Preconditions.checkNotNull(
                 Strings.emptyToNull(this.financialInstitutionId),
@@ -64,6 +66,9 @@ public class ClientConfigurationJsonSchemaBuilder {
             Iterator<String> fieldNames = flatSchemaFromConf.fieldNames();
             ObjectNode finalNode = mapper.createObjectNode();
             finalNode.put("id", this.financialInstitutionId);
+            // TPA-730: switch id with providerName when it is finished, inform console about that.
+            finalNode.put(PROVIDER_NAME_KEY, this.providerName);
+
             JsonNode propertiesNode = null;
 
             // put fields other than properties to finalNode
