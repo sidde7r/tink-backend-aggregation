@@ -53,7 +53,7 @@ public class DanskeBankLoanFetcher implements AccountFetcher<LoanAccount> {
                     .stream()
                     .map(this::toLoanAccount)
                     .collect(Collectors.toList());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.warn(
                     DanskeBankConstants.LogTags.LOAN_ACCOUNT
                             + " - Failed to fetch loans "

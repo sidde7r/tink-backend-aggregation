@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
+import java.util.Objects;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -47,6 +48,11 @@ public class RemittanceInformation {
         RemittanceInformation otherRemittanceInformation = (RemittanceInformation) other;
         return this.isOfType(otherRemittanceInformation.getType())
                 && this.value.equals(otherRemittanceInformation.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, value);
     }
 
     @Override

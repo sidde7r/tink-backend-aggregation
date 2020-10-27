@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.models.fraud;
 
+import java.util.Objects;
+
 public class FraudCompanyDirector {
 
     private String name;
@@ -29,5 +31,10 @@ public class FraudCompanyDirector {
         FraudCompanyDirector director = (FraudCompanyDirector) obj;
         return (director.getName().equals(this.getName())
                 && director.getRole().equals(this.getRole()));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, role);
     }
 }
