@@ -155,7 +155,7 @@ public abstract class AccountIdentifier {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof AccountIdentifier)) {
+        if (!(obj instanceof AccountIdentifier)) {
             return false;
         }
 
@@ -166,6 +166,11 @@ public abstract class AccountIdentifier {
         }
 
         return Objects.equal(getIdentifier(), id.getIdentifier());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getIdentifier());
     }
 
     public String toUriAsString() {

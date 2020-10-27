@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.Swedbank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.EndUserMessage;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
@@ -129,9 +130,15 @@ public class SwedbankAuthenticationController
                     && genericResponse.isKycError()) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception(
                         EndUserMessage.MUST_ANSWER_KYC.getKey());
+            } else if (genericResponse.loginInterrupted()) {
+                return BankIdStatus.INTERRUPTED;
             } else {
                 return BankIdStatus.FAILED_UNKNOWN;
             }
+        }
+
+        if (authenticationStatusResponse.loginCanceled()) {
+            return BankIdStatus.CANCELLED;
         }
 
         switch (authenticationStatusResponse.getScaStatus().toLowerCase()) {
@@ -181,6 +188,8 @@ public class SwedbankAuthenticationController
     public AuthenticationResponse refreshAutostartToken()
             throws BankIdException, BankServiceException, AuthorizationException,
                     AuthenticationException {
+        Uninterruptibles.sleepUninterruptibly(
+                TimeValues.SLEEP_TIME_MILLISECONDS, TimeUnit.MILLISECONDS);
         return init(ssn);
     }
 
@@ -198,7 +207,16 @@ public class SwedbankAuthenticationController
         ConsentResponse initConsent = authenticator.getConsentForAllAccounts();
         authenticator.useConsent(initConsent);
 
-        ConsentResponse consentResponseIbanList = authenticator.getConsentForIbanList();
+        ConsentResponse consentResponseIbanList;
+        try {
+            consentResponseIbanList = authenticator.getConsentForIbanList();
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(GenericResponse.class).isKycError()) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                        EndUserMessage.MUST_ANSWER_KYC.getKey());
+            }
+            throw e;
+        }
         authenticator.useConsent(consentResponseIbanList);
 
         if (consentResponseIbanList.getConsentStatus().equalsIgnoreCase(ConsentStatus.VALID)) {

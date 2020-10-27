@@ -95,7 +95,7 @@ public class Amount extends Number {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof Amount)) {
+        if (!(obj instanceof Amount)) {
             return false;
         }
 
@@ -106,6 +106,11 @@ public class Amount extends Number {
         }
 
         return Objects.equals(this.value, other.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currency, value);
     }
 
     @Override

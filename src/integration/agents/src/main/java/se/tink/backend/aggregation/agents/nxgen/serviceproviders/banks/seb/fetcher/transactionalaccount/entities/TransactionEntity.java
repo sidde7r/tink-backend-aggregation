@@ -181,7 +181,7 @@ public class TransactionEntity {
                                 TransactionPayloadTypes.EXCHANGE_RATE,
                                 String.valueOf(exchangeRate));
             } else {
-                logger.error("Could not parse foreign transaction: " + additionalInformation);
+                logger.error("Could not parse foreign transaction: {}", additionalInformation);
             }
         }
 

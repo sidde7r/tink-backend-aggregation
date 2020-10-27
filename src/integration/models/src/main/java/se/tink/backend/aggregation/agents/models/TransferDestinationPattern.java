@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.models;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -102,13 +103,18 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof TransferDestinationPattern)) {
+        if (!(obj instanceof TransferDestinationPattern)) {
             return false;
         }
 
         TransferDestinationPattern other = (TransferDestinationPattern) obj;
 
         return this.compareTo(other) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, pattern, name);
     }
 
     @Override

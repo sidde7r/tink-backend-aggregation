@@ -15,9 +15,9 @@ public class DomesticScheduledPaymentConsentRequestData {
 
     private String readRefundAccount = "Yes";
 
-    private DomesticScheduledPaymentConsentInitiation initiation;
+    private DomesticScheduledPaymentInitiation initiation;
 
     public DomesticScheduledPaymentConsentRequestData(Payment payment) {
-        this.initiation = new DomesticScheduledPaymentConsentInitiation(payment);
+        this.initiation = new DomesticScheduledPaymentInitiation(payment, payment.getUniqueId());
     }
 }
