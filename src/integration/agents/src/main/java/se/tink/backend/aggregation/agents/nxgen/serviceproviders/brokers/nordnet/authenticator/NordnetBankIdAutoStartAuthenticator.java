@@ -127,8 +127,6 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
     }
 
     private InitBankIdResponse initBankId() {
-        String requestBody = Form.builder().put(FormKeys.SSN, ssn).build().serialize();
-
         RequestBuilder requestBuilder =
                 apiClient
                         .createBasicRequest(new URL(Urls.BANKID_START))
@@ -136,8 +134,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
                         .header(HeaderKeys.NTAG, ntag)
-                        .header(HeaderKeys.REFERER, HeaderValues.REFERER)
-                        .body(requestBody);
+                        .header(HeaderKeys.REFERER, HeaderValues.REFERER);
 
         try {
             return apiClient.post(requestBuilder, InitBankIdResponse.class);

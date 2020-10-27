@@ -177,8 +177,6 @@ User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit
 ntag: 8A83DC013C2CA873E63D4278655F3E
 Referer: https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
 
-national_registration_number=199901010000
-
 RESPONSE 6
 200
 Date: Thu, 03 Sep 2020 10:16:32 GMT
