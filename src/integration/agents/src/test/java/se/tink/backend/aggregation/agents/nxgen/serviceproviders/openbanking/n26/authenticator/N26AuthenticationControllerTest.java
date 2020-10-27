@@ -10,8 +10,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +22,7 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Maps;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Configuration;
@@ -36,6 +39,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class N26AuthenticationControllerTest {
 
@@ -52,6 +60,9 @@ public class N26AuthenticationControllerTest {
     private StrongAuthenticationState strongAuthenticationState;
     private N26Storage storage;
 
+    private static final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26/resources/";
+
     @Before
     public void setup() {
         apiClient = mock(N26ApiClient.class);
@@ -65,7 +76,8 @@ public class N26AuthenticationControllerTest {
                         configuration,
                         supplementalInformationHelper,
                         strongAuthenticationState,
-                        storage);
+                        storage,
+                        new Credentials());
     }
 
     @Test
@@ -220,6 +232,72 @@ public class N26AuthenticationControllerTest {
         assertThat(appPayload.getAndroid().getIntent()).isEqualTo(finalAuthUrl);
     }
 
+    @Test
+    public void shouldSetSessionExpiryAfterCollect() {
+        // given
+        Date date = new Date(1602869683503L);
+
+        TinkHttpClient tinkHttpClient = mockHttpClient();
+        Credentials credentials = new Credentials();
+
+        createAuthenticationController(tinkHttpClient, credentials);
+
+        // when
+        authenticationController.collect("reference");
+
+        // then
+        assertThat(credentials.getSessionExpiryDate()).isEqualTo(date);
+    }
+
+    private void createAuthenticationController(
+            TinkHttpClient tinkHttpClient, Credentials credentials) {
+        N26Configuration n26Configuration =
+                new N26Configuration("apiKey", "memberId", "realmId", "redirectUrl");
+        AgentConfiguration<N26Configuration> configuration =
+                new AgentConfiguration.Builder<N26Configuration>()
+                        .setProviderSpecificConfiguration(n26Configuration)
+                        .build();
+
+        N26Storage storage = new N26Storage(new PersistentStorage());
+        N26ApiClient apiClient = new N26ApiClient(tinkHttpClient, configuration, storage);
+        String supplementalKey = "supplementalKey";
+
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn(supplementalKey);
+        Map<String, String> callbackData = Maps.newHashMap("tokenId", ACCESS_TOKEN);
+        when(supplementalInformationHelper.waitForSupplementalInformation(
+                        eq(supplementalKey), anyLong(), any(TimeUnit.class)))
+                .thenReturn(Optional.of(callbackData));
+
+        authenticationController =
+                new N26AuthenticationController(
+                        apiClient,
+                        configuration,
+                        supplementalInformationHelper,
+                        strongAuthenticationState,
+                        storage,
+                        credentials);
+    }
+
+    private TinkHttpClient mockHttpClient() {
+        TinkHttpClient tinkHttpClient = mock(TinkHttpClient.class);
+        RequestBuilder requestBuilder = mockBaseRequestBuilderCalls(tinkHttpClient);
+        when(requestBuilder.get(any()))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                new File(TEST_DATA_PATH + "token_details_response.json"),
+                                TokenDetailsResponse.class));
+        return tinkHttpClient;
+    }
+
+    private RequestBuilder mockBaseRequestBuilderCalls(TinkHttpClient tinkHttpClient) {
+        RequestBuilder requestBuilder = mock(RequestBuilder.class);
+        when(tinkHttpClient.request(any(URL.class))).thenReturn(requestBuilder);
+        when(requestBuilder.header(any(), any())).thenReturn(requestBuilder);
+        when(requestBuilder.type(anyString())).thenReturn(requestBuilder);
+        when(requestBuilder.accept(anyString())).thenReturn(requestBuilder);
+        return requestBuilder;
+    }
+
     @SneakyThrows
     private void shouldStoreAccessToken(String tokenIdKey) {
         // given
@@ -228,6 +306,8 @@ public class N26AuthenticationControllerTest {
         when(supplementalInformationHelper.waitForSupplementalInformation(
                         eq(SUPPLEMENTAL_KEY), anyLong(), any(TimeUnit.class)))
                 .thenReturn(Optional.of(callbackData));
+        when(apiClient.tokenDetails(null))
+                .thenReturn(createTokenDetailsResponse(System.currentTimeMillis()));
 
         // when
         ThirdPartyAppResponse<String> response = authenticationController.collect(null);

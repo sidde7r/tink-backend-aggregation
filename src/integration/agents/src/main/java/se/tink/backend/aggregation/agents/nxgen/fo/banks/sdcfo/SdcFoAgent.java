@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.fo.banks.sdcfo.SdcFoConstants.Secret;
 import se.tink.backend.aggregation.agents.nxgen.fo.banks.sdcfo.parser.SdcFoTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustPinnedCertificateStrategy;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
@@ -48,6 +50,8 @@ public final class SdcFoAgent extends SdcAgent
                 new SdcFoTransactionParser());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        this.client.loadTrustMaterial(
+                null, TrustPinnedCertificateStrategy.forCertificate(Secret.PUBLIC_CERT));
     }
 
     @Override

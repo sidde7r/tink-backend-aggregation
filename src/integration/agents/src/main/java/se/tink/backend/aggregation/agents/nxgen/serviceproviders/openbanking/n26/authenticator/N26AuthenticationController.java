@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -55,6 +57,7 @@ public class N26AuthenticationController
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
     private final N26Storage storage;
+    private final Credentials credentials;
 
     @Override
     public void autoAuthenticate()
@@ -96,6 +99,11 @@ public class N26AuthenticationController
             if (callbackData.containsKey(TOKEN_ID)) {
                 storage.storeAccessToken(callbackData.get(TOKEN_ID));
                 result = ThirdPartyAppStatus.DONE;
+
+                final TokenDetailsResponse accessTokenDetails = getAccessTokenDetails();
+                long expiryAtMsValue = retrieveExpiryAtMsValue(accessTokenDetails);
+                storage.storeAccessTokenExpiryDate(expiryAtMsValue);
+                credentials.setSessionExpiryDate(new Date(expiryAtMsValue));
             } else {
                 result = ThirdPartyAppStatus.AUTHENTICATION_ERROR;
             }
