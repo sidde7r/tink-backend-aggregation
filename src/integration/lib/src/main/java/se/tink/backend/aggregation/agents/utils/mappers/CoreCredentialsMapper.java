@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.mappers;
 
+import java.time.LocalDate;
 import org.assertj.core.util.VisibleForTesting;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -24,6 +25,12 @@ public class CoreCredentialsMapper {
                 new ModelMapper()
                         .createTypeMap(
                                 Credentials.class, se.tink.backend.agents.rpc.Credentials.class)
+                        .addMappings(
+                                mapper ->
+                                        mapper.skip(
+                                                (credentials, o) ->
+                                                        credentials.setSessionExpiryDate(
+                                                                (LocalDate) o)))
                         .addMappings(
                                 mapper ->
                                         mapper.skip(
