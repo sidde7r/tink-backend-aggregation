@@ -41,11 +41,17 @@ public final class SdcAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        apiClient = new SdcApiClient(client, persistentStorage, request.getCredentials());
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 
-        apiClient.setConfiguration(
-                getAgentConfiguration(), agentsServiceConfiguration.getEidasProxy());
+        apiClient =
+                new SdcApiClient(
+                        client,
+                        new SdcUrlProvider(),
+                        persistentStorage,
+                        getAgentConfiguration().getProviderSpecificConfiguration(),
+                        getAgentConfiguration().getRedirectUrl());
+
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected AgentConfiguration<SdcConfiguration> getAgentConfiguration() {

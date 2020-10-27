@@ -1,36 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SdcConstants {
 
     private SdcConstants() {
         throw new AssertionError();
-    }
-
-    public static class ErrorMessages {
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-    }
-
-    public static class Urls {
-
-        public static final String BASE_AUTH_URL = "https://auth.sdc.dk";
-        public static final String BASE_API_URL = "https://api-proxy.sdc.dk/api/psd2";
-
-        public static final URL AUTHORIZATION = new URL(BASE_AUTH_URL + Endpoints.AUTHORIZATION);
-        public static final URL TOKEN = new URL(BASE_AUTH_URL + Endpoints.TOKEN);
-        public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
-        public static final URL BALANCES = new URL(BASE_API_URL + Endpoints.BALANCES);
-        public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
-    }
-
-    private static class Endpoints {
-        public static final String AUTHORIZATION = "/Account/Login";
-        public static final String TOKEN = "/Token";
-        public static final String ACCOUNTS = "/v1/accounts";
-        public static final String BALANCES = "/v1/accounts/{account-id}/balances";
-        public static final String TRANSACTIONS = "/v1/accounts/{account-id}/transactions";
     }
 
     public static class PathParameters {
