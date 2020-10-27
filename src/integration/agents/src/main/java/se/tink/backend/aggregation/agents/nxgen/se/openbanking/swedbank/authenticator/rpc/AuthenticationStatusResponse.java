@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Lists;
 import java.util.List;
-import java.util.Optional;
+import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.entities.TppMessagesEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -24,7 +23,7 @@ public class AuthenticationStatusResponse {
 
     @JsonIgnore
     public boolean loginCanceled() {
-        return Optional.ofNullable(tppMessages).orElseGet(Lists::newArrayList).stream()
+        return ListUtils.emptyIfNull(tppMessages).stream()
                 .anyMatch(
                         tppMessage ->
                                 ErrorCodes.USER_CANCEL.equalsIgnoreCase(tppMessage.getCode()));
