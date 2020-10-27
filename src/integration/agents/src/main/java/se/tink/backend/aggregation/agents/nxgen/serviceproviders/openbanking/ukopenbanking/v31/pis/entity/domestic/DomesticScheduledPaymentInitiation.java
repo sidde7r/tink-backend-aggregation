@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.ZoneOffset;
@@ -17,9 +18,15 @@ import se.tink.libraries.payment.rpc.Payment;
 @Data
 public class DomesticScheduledPaymentInitiation {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private SupplementaryData supplementaryData;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<String> localInstrument;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private DebtorAccount debtorAccount;
+
     private RemittanceInformation remittanceInformation;
     private String instructionIdentification;
     private CreditorAccount creditorAccount;

@@ -28,7 +28,7 @@ public class DomesticScheduledPaymentConsentResponseData {
     private String consentId;
     private String permission;
     private String readRefundAccount;
-    private DomesticScheduledPaymentConsentInitiation initiation;
+    private DomesticScheduledPaymentInitiation initiation;
 
     public PaymentResponse toTinkPaymentResponse() {
         final RemittanceInformation remittanceInformation = new RemittanceInformation();
@@ -55,13 +55,13 @@ public class DomesticScheduledPaymentConsentResponseData {
         return new PaymentResponse(payment, storage);
     }
 
-    private static Debtor getDebtor(DomesticScheduledPaymentConsentInitiation initiation) {
+    private static Debtor getDebtor(DomesticScheduledPaymentInitiation initiation) {
         return Objects.isNull(initiation.getDebtorAccount())
                 ? null
                 : initiation.getDebtorAccount().toDebtor();
     }
 
-    private static LocalDate getDate(DomesticScheduledPaymentConsentInitiation initiation) {
+    private static LocalDate getDate(DomesticScheduledPaymentInitiation initiation) {
         return LocalDate.parse(initiation.getRequestedExecutionDateTime(), ISO_OFFSET_DATE_TIME);
     }
 }
