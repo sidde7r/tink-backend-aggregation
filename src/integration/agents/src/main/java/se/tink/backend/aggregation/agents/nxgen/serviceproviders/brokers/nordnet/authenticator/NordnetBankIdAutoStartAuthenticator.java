@@ -8,6 +8,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -81,6 +82,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
         if (response.getBody(String.class).contains(InitLogin.AUTHENTICATED)) {
             getNtag(response);
             fetchOauth2Token(getCode());
+            checkIdentity();
 
             return BankIdStatus.DONE;
         }
@@ -285,6 +287,13 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
         return code;
+    }
+
+    private void checkIdentity() throws LoginException {
+        final FetchIdentityDataResponse identityData = apiClient.fetchIdentityData();
+        if (!ssn.equalsIgnoreCase(identityData.getIdentityData().getSsn())) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
     }
 
     private void getNtag(HttpResponse response) {
