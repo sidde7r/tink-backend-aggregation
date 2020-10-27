@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis;
 
 import com.google.common.base.Strings;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -19,13 +20,8 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants.Step;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UkOpenBankingPisAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Pis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.DomesticPisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.InternationalPisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.UKPisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.helper.UkOpenbankingV31PaymentHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.FundsConfirmationResponse;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -49,34 +45,27 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.payment.enums.PaymentType;
-import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePaymentExecutor {
     private static Logger log = LoggerFactory.getLogger(UKOpenbankingV31Executor.class);
 
-    private final UkOpenBankingPisConfig pisConfig;
     private final SoftwareStatementAssertion softwareStatement;
     private final ClientInfo clientInfo;
     private final UkOpenBankingApiClient apiClient;
-    private final UkOpenBankingPis ukOpenBankingPis;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Credentials credentials;
     private final URL appToAppRedirectURL;
     private final StrongAuthenticationState strongAuthenticationState;
     private final RandomValueGenerator randomValueGenerator;
+    private final UkOpenbankingV31PaymentHelper ukOpenbankingV31ExecutorHelper;
 
     public UKOpenbankingV31Executor(
-            UkOpenBankingPisConfig pisConfig,
             SoftwareStatementAssertion softwareStatement,
             ClientInfo clientInfo,
             UkOpenBankingApiClient apiClient,
@@ -86,7 +75,6 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             RandomValueGenerator randomValueGenerator) {
 
         this(
-                pisConfig,
                 softwareStatement,
                 clientInfo,
                 apiClient,
@@ -98,7 +86,6 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     }
 
     public UKOpenbankingV31Executor(
-            UkOpenBankingPisConfig pisConfig,
             SoftwareStatementAssertion softwareStatement,
             ClientInfo clientInfo,
             UkOpenBankingApiClient apiClient,
@@ -107,64 +94,16 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             StrongAuthenticationState strongAuthenticationState,
             RandomValueGenerator randomValueGenerator,
             URL appToAppRedirectURL) {
-        this.pisConfig = pisConfig;
         this.softwareStatement = softwareStatement;
         this.clientInfo = clientInfo;
         this.apiClient = apiClient;
-        this.ukOpenBankingPis = new UkOpenBankingV31Pis(pisConfig, randomValueGenerator);
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.credentials = credentials;
         this.appToAppRedirectURL = appToAppRedirectURL;
         this.strongAuthenticationState = strongAuthenticationState;
         this.randomValueGenerator = randomValueGenerator;
-    }
-
-    private UKPisConfig getConfig(Payment payment) {
-
-        // TODO: add all possible permutations
-        GenericTypeMapper<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
-                mapper =
-                        GenericTypeMapper
-                                .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
-                                        genericBuilder()
-                                .put(
-                                        PaymentType.DOMESTIC,
-                                        new Pair<>(null, AccountIdentifier.Type.SORT_CODE),
-                                        new Pair<>(
-                                                AccountIdentifier.Type.SORT_CODE,
-                                                AccountIdentifier.Type.SORT_CODE),
-                                        new Pair<>(
-                                                AccountIdentifier.Type.PAYM_PHONE_NUMBER,
-                                                AccountIdentifier.Type.PAYM_PHONE_NUMBER),
-                                        new Pair<>(
-                                                AccountIdentifier.Type.IBAN,
-                                                AccountIdentifier.Type.IBAN),
-                                        new Pair<>(null, AccountIdentifier.Type.IBAN))
-                                .build();
-
-        PaymentType type =
-                mapper.translate(payment.getCreditorAndDebtorAccountType())
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format(
-                                                        "Cannot map Identifiers, first: %s second: %s",
-                                                        payment.getCreditorAndDebtorAccountType()
-                                                                .first
-                                                                .toString(),
-                                                        payment.getCreditorAndDebtorAccountType()
-                                                                .second
-                                                                .toString())));
-
-        switch (type) {
-            case DOMESTIC:
-                return new DomesticPisConfig(apiClient, pisConfig);
-            case SEPA:
-            case INTERNATIONAL:
-                return new InternationalPisConfig(apiClient, pisConfig);
-            default:
-                throw new IllegalStateException(String.format("Unknown type: %s", type));
-        }
+        this.ukOpenbankingV31ExecutorHelper =
+                new UkOpenbankingV31PaymentHelper(this.apiClient, Clock.systemUTC());
     }
 
     @Override
@@ -180,7 +119,11 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
         UkOpenBankingPisAuthenticator paymentAuthenticator =
                 new UkOpenBankingPisAuthenticator(
-                        apiClient, softwareStatement, clientInfo, ukOpenBankingPis, paymentRequest);
+                        apiClient,
+                        ukOpenbankingV31ExecutorHelper,
+                        softwareStatement,
+                        clientInfo,
+                        paymentRequest);
 
         // Do not use the real PersistentStorage because we don't want to overwrite the AIS auth
         // token.
@@ -261,8 +204,9 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
-        return getConfig(paymentRequest.getPayment()).fetchPayment(paymentRequest);
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+        return ukOpenbankingV31ExecutorHelper.fetchPaymentIfAlreadyExecutedOrGetConsent(
+                paymentRequest);
     }
 
     @Override
@@ -312,13 +256,12 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         }
     }
 
-    private PaymentMultiStepResponse authorized(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
-
+    private PaymentMultiStepResponse authorized(PaymentMultiStepRequest paymentMultiStepRequest) {
         String step =
                 Optional.of(
-                                getConfig(paymentMultiStepRequest.getPayment())
-                                        .fetchPayment(paymentMultiStepRequest))
+                                ukOpenbankingV31ExecutorHelper
+                                        .fetchPaymentIfAlreadyExecutedOrGetConsent(
+                                                paymentMultiStepRequest))
                         .map(p -> p.getPayment().getStatus())
                         .filter(s -> s == PaymentStatus.PENDING)
                         .map(s -> UkOpenBankingV31Constants.Step.SUFFICIENT_FUNDS)
@@ -330,11 +273,11 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     private PaymentMultiStepResponse sufficientFunds(
             PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentException {
 
-        FundsConfirmationResponse response =
-                getConfig(paymentMultiStepRequest.getPayment())
-                        .fetchFundsConfirmation(paymentMultiStepRequest);
+        final Optional<FundsConfirmationResponse> maybeFundsConfirmation =
+                ukOpenbankingV31ExecutorHelper.fetchFundsConfirmation(paymentMultiStepRequest);
 
-        if (!response.isFundsAvailable()) {
+        if (maybeFundsConfirmation.isPresent()
+                && !maybeFundsConfirmation.get().isFundsAvailable()) {
             throw new InsufficientFundsException(
                     "Insufficient funds", "", new IllegalStateException("Insufficient funds"));
         }
@@ -356,11 +299,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         String instructionIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
 
         PaymentResponse paymentResponse =
-                getConfig(paymentMultiStepRequest.getPayment())
-                        .executePayment(
-                                paymentMultiStepRequest,
-                                endToEndIdentification,
-                                instructionIdentification);
+                ukOpenbankingV31ExecutorHelper.executePayment(
+                        paymentMultiStepRequest, endToEndIdentification, instructionIdentification);
 
         // Should be handled on a higher level than here, but don't want to pollute the
         // payment controller with TransferExecutionException usage. Ticket PAY2-188 will
@@ -387,8 +327,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
-            throws PaymentException {
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         throw new NotImplementedException(
                 "fetchMultiple not yet implemented for " + this.getClass().getName());
     }

@@ -66,6 +66,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private final PersistentStorage persistentStorage;
     private final RandomValueGenerator randomValueGenerator;
     private final UkOpenBankingAisConfig aisConfig;
+    private final UkOpenBankingPisConfig pisConfig;
     private static final List<String> POST_BASE64_GROUP =
             Arrays.asList(
                     DANSKEBANK_ORG_ID,
@@ -85,7 +86,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             URL wellKnownURL,
             RandomValueGenerator randomValueGenerator,
             PersistentStorage persistentStorage,
-            UkOpenBankingAisConfig aisConfig) {
+            UkOpenBankingAisConfig aisConfig,
+            UkOpenBankingPisConfig pisConfig) {
         super(
                 httpClient,
                 signer,
@@ -97,6 +99,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         this.persistentStorage = persistentStorage;
         this.randomValueGenerator = randomValueGenerator;
         this.aisConfig = aisConfig;
+        this.pisConfig = pisConfig;
         addFilter(new ServiceUnavailableBankServiceErrorFilter());
         addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
     }
@@ -334,61 +337,71 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
     }
 
-    public <T> T createDomesticPaymentConsent(
-            UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
+    public <T> T createDomesticPaymentConsent(Object request, Class<T> responseType) {
         return createPisRequestWithJwsHeader(pisConfig.createDomesticPaymentConsentURL(), request)
                 .post(responseType, request);
     }
 
-    public <T> T getDomesticPaymentConsent(
-            UkOpenBankingPisConfig pisConfig, String consentId, Class<T> responseType) {
+    public <T> T getDomesticPaymentConsent(String consentId, Class<T> responseType) {
         return createPisRequest(pisConfig.getDomesticPaymentConsentURL(consentId))
                 .get(responseType);
     }
 
-    public <T> T executeDomesticPayment(
-            UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
+    public <T> T executeDomesticPayment(Object request, Class<T> responseType) {
         return createPisRequestWithJwsHeader(pisConfig.createDomesticPaymentURL(), request)
                 .post(responseType, request);
     }
 
-    public <T> T getDomesticFundsConfirmation(
-            UkOpenBankingPisConfig pisConfig, String consentId, Class<T> responseType) {
+    public <T> T getDomesticFundsConfirmation(String consentId, Class<T> responseType) {
         return createPisRequest(pisConfig.getDomesticFundsConfirmationURL(consentId))
                 .get(responseType);
     }
 
-    public <T> T getDomesticPayment(
-            UkOpenBankingPisConfig pisConfig, String paymentId, Class<T> responseType) {
+    public <T> T getDomesticPayment(String paymentId, Class<T> responseType) {
         return createPisRequest(pisConfig.getDomesticPayment(paymentId)).get(responseType);
     }
 
-    public <T> T createInternationalPaymentConsent(
-            UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
+    public <T> T createDomesticScheduledPaymentConsent(Object request, Class<T> responseType) {
+        return createPisRequestWithJwsHeader(
+                        pisConfig.createDomesticScheduledPaymentConsentURL(), request)
+                .post(responseType, request);
+    }
+
+    public <T> T getDomesticScheduledPaymentConsent(String consentId, Class<T> responseType) {
+        return createPisRequest(pisConfig.getDomesticScheduledPaymentConsentURL(consentId))
+                .get(responseType);
+    }
+
+    public <T> T executeDomesticScheduledPayment(Object request, Class<T> responseType) {
+        return createPisRequestWithJwsHeader(pisConfig.createDomesticScheduledPaymentURL(), request)
+                .post(responseType, request);
+    }
+
+    public <T> T getDomesticScheduledPayment(String paymentId, Class<T> responseType) {
+        return createPisRequest(pisConfig.getDomesticScheduledPayment(paymentId)).get(responseType);
+    }
+
+    public <T> T createInternationalPaymentConsent(Object request, Class<T> responseType) {
         return createPisRequest(pisConfig.createInternationalPaymentConsentURL())
                 .post(responseType, request);
     }
 
-    public <T> T getInternationalPaymentConsent(
-            UkOpenBankingPisConfig pisConfig, String consentId, Class<T> responseType) {
+    public <T> T getInternationalPaymentConsent(String consentId, Class<T> responseType) {
         return createPisRequest(pisConfig.getInternationalPaymentConsentURL(consentId))
                 .get(responseType);
     }
 
-    public <T> T getInternationalPayment(
-            UkOpenBankingPisConfig pisConfig, String consentId, Class<T> responseType) {
-        return createPisRequest(pisConfig.getInternationalPayment(consentId))
-                .post(responseType, consentId);
+    public <T> T getInternationalPayment(String paymentId, Class<T> responseType) {
+        return createPisRequest(pisConfig.getInternationalPayment(paymentId))
+                .post(responseType, paymentId);
     }
 
-    public <T> T getInternationalFundsConfirmation(
-            UkOpenBankingPisConfig pisConfig, String consentId, Class<T> responseType) {
+    public <T> T getInternationalFundsConfirmation(String consentId, Class<T> responseType) {
         return createPisRequest(pisConfig.getInternationalFundsConfirmationURL(consentId))
                 .get(responseType);
     }
 
-    public <T> T executeInternationalPayment(
-            UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
+    public <T> T executeInternationalPayment(Object request, Class<T> responseType) {
         return createPisRequest(pisConfig.createInternationalPaymentURL())
                 .post(responseType, request);
     }

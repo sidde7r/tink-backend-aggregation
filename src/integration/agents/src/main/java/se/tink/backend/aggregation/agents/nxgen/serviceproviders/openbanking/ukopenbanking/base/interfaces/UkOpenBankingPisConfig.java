@@ -1,13 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public interface UkOpenBankingPisConfig {
-
-    URL createPaymentsURL();
-
-    URL createPaymentSubmissionURL();
 
     URL createDomesticPaymentConsentURL();
 
@@ -19,6 +14,14 @@ public interface UkOpenBankingPisConfig {
 
     URL getDomesticPayment(String domesticPaymentId);
 
+    URL createDomesticScheduledPaymentConsentURL();
+
+    URL getDomesticScheduledPaymentConsentURL(String consentId);
+
+    URL createDomesticScheduledPaymentURL();
+
+    URL getDomesticScheduledPayment(String paymentId);
+
     URL createInternationalPaymentConsentURL();
 
     URL getInternationalFundsConfirmationURL(String consentId);
@@ -28,6 +31,4 @@ public interface UkOpenBankingPisConfig {
     URL createInternationalPaymentURL();
 
     URL getInternationalPayment(String internationalPaymentId);
-
-    <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType();
 }

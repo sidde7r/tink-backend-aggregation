@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.LocalKeySignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingModule;
@@ -36,7 +35,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final UkOpenBankingPisConfig pisConfig;
 
     static {
         aisConfig =
@@ -51,8 +49,12 @@ public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     @Inject
     public BarclaysV31BusinessAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, true);
-        pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
+        super(
+                componentProvider,
+                jwtSigner,
+                aisConfig,
+                new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL),
+                true);
     }
 
     @Override
@@ -71,7 +73,6 @@ public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
     public Optional<PaymentController> constructPaymentController() {
         UKOpenbankingV31Executor ukOpenbankingV31Executor =
                 new UKOpenbankingV31Executor(
-                        pisConfig,
                         softwareStatement,
                         providerConfiguration,
                         apiClient,

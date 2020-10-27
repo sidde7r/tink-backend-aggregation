@@ -1,40 +1,34 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.time.ZoneOffset;
 import java.util.Objects;
+import lombok.Data;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.payment.rpc.Creditor;
-import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
-public class Initiation {
+@Data
+public class DomesticScheduledPaymentConsentInitiation {
 
     private String instructionIdentification;
     private String endToEndIdentification;
+    private String requestedExecutionDateTime;
     private InstructedAmount instructedAmount;
-    /**  {@link DebtorAccount} is not mandatory so added the null support. */
-    @JsonInclude(Include.NON_NULL)
     private DebtorAccount debtorAccount;
-
     private CreditorAccount creditorAccount;
     private RemittanceInformation remittanceInformation;
 
-    // Used in serialization unit tests
-    protected Initiation() {}
-
-    public Initiation(Payment payment) {
-
-        // TODO: What to use here?
+    DomesticScheduledPaymentConsentInitiation(Payment payment) {
         this.instructionIdentification = payment.getUniqueId();
         this.endToEndIdentification = payment.getUniqueIdForUKOPenBanking();
-
+        this.requestedExecutionDateTime =
+                ISO_OFFSET_DATE_TIME.format(
+                        payment.getExecutionDate().atStartOfDay(ZoneOffset.UTC));
         this.instructedAmount =
                 Objects.nonNull(payment.getExactCurrencyAmountFromField())
                         ? new InstructedAmount(payment.getExactCurrencyAmountFromField())
@@ -50,34 +44,5 @@ public class Initiation {
                         ? RemittanceInformation.ofUnstructured(
                                 payment.getRemittanceInformation().getValue())
                         : null;
-    }
-
-    public ExactCurrencyAmount toTinkAmount() {
-        return instructedAmount.toTinkAmount();
-    }
-
-    @JsonIgnore
-    public Debtor getDebtor() {
-        return Objects.isNull(debtorAccount) ? null : debtorAccount.toDebtor();
-    }
-
-    @JsonIgnore
-    public Creditor getCreditor() {
-        return creditorAccount.toCreditor();
-    }
-
-    @JsonIgnore
-    public String getUnstructuredRemittanceInformation() {
-        return remittanceInformation.getUnstructured();
-    }
-
-    public String getInstructionIdentification() {
-        return instructionIdentification;
-    }
-
-    @JsonIgnore
-    public void setReferenceForHSBCFamily() {
-        // HSBC has special requirement on reference
-        this.remittanceInformation.setReference(remittanceInformation.getUnstructured());
     }
 }
