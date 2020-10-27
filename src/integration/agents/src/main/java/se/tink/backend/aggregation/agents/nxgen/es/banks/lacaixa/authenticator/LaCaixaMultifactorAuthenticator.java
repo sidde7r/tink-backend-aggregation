@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.AuthenticationParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.TemporaryStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.Pin1ScaEntity;
@@ -35,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.Usernam
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
@@ -47,6 +50,8 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Storage authStorage;
     private final LogMasker logMasker;
+    private final PersistentStorage persistentStorage;
+
     private final List<AuthenticationStep> authenticationSteps;
     private final AuthenticationStep otpStep;
     private final AuthenticationStep codeCardStep;
@@ -60,7 +65,9 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
             SupplementalInformationFormer supplementalInformationFormer,
             SupplementalInformationHelper supplementalInformationHelper,
             Storage authStorage,
+            PersistentStorage persistentStorage,
             LogMasker logMasker) {
+
         this.apiClient = apiClient;
         this.credentialsRequest = credentialsRequest;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -68,8 +75,9 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
         this.logMasker = logMasker;
 
         this.otpStep = new OtpStep(this::processOtp, supplementalInformationFormer);
+        this.persistentStorage = persistentStorage;
         this.codeCardStep = new CodeCardStep(catalog, authStorage);
-        this.appStep = new AutomaticAuthenticationStep(this::waitForAppSign, "caixabankSign");
+        this.appStep = new AutomaticAuthenticationStep(this::handleAppSca, "caixabankSign");
         this.finalizeStep =
                 new AutomaticAuthenticationStep(this::finalizeEnrolment, "finalizeEnrolment");
         authenticationSteps =
@@ -91,7 +99,8 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
-        return request.isCreate();
+        return request.isCreate()
+                || persistentStorage.containsKey(LaCaixaConstants.PersistentStorage.SCA_UNFINISHED);
     }
 
     private AuthenticationStepResponse login(String username, String password)
@@ -119,6 +128,7 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
 
         // ask for SCA
         LOG.info("Initiating enrolment");
+        persistentStorage.put(LaCaixaConstants.PersistentStorage.SCA_UNFINISHED, true);
         final ScaResponse response = apiClient.initiateEnrolment();
         return handleScaResponse(response);
     }
@@ -170,10 +180,12 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
         final String code = Strings.nullToEmpty(authStorage.get(TemporaryStorage.ENROLMENT_CODE));
         logMasker.addNewSensitiveValuesToMasker(Collections.singleton(code));
         apiClient.finalizeEnrolment(code);
+
+        persistentStorage.remove(LaCaixaConstants.PersistentStorage.SCA_UNFINISHED);
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 
-    private AuthenticationStepResponse waitForAppSign() {
+    private AuthenticationStepResponse handleAppSca() {
         LOG.info("Waiting for app signature");
         apiClient.initiateAuthSignature();
 
@@ -181,20 +193,27 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(new URL(AuthenticationParams.SIGNING_URL)));
 
-        // poll
-        final Retryer<Boolean> signPoller =
-                RetryerBuilder.<Boolean>newBuilder()
-                        .retryIfResult(result -> !result.booleanValue())
-                        .withWaitStrategy(WaitStrategies.fixedWait(2, TimeUnit.SECONDS))
-                        .withStopStrategy(StopStrategies.stopAfterAttempt(90))
-                        .build();
-        try {
-            signPoller.call(() -> apiClient.verifyAuthSignature().isOperationSigned());
-        } catch (ExecutionException | RetryException e) {
-            e.printStackTrace();
-        }
+        waitForAppSign();
 
         authStorage.put(TemporaryStorage.ENROLMENT_CODE, "");
         return AuthenticationStepResponse.executeStepWithId(finalizeStep.getIdentifier());
+    }
+
+    private void waitForAppSign() {
+        // poll
+        final Retryer<Boolean> signPoller =
+                RetryerBuilder.<Boolean>newBuilder()
+                        .retryIfResult(isOperationSigned -> !isOperationSigned)
+                        .withWaitStrategy(WaitStrategies.fixedWait(2, TimeUnit.SECONDS))
+                        .withStopStrategy(StopStrategies.stopAfterAttempt(90))
+                        .build();
+
+        try {
+            signPoller.call(() -> apiClient.verifyAuthSignature().isOperationSigned());
+        } catch (RetryException e) {
+            throw ThirdPartyAppError.TIMED_OUT.exception("Caixa Sign SCA timed out.");
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
