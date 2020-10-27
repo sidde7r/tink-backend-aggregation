@@ -1,0 +1,242 @@
+
+REQUEST 1
+GET https://ob.hsbc.co.uk/.well-known/openid-configuration
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 00158000016i44JAAQ
+
+RESPONSE 1
+200
+Content-Type: application/json
+Content-Length: 1224
+Connection: keep-alive
+Date: Mon, 26 Oct 2020 19:59:36 GMT
+Last-Modified: Thu, 15 Oct 2020 03:01:17 GMT
+ETag: ***
+x-amz-server-side-encryption: ***
+x-amz-version-id: ***
+Accept-Ranges: bytes
+Server: AmazonS3
+X-Cache: ***
+Via: 1.1 cf2a58a1ade01b9796df7d87fe311e64.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: ***
+X-Amz-Cf-Id: ***
+Age: 84413
+
+{
+
+  "version": 1.0,
+
+  "issuer": "https://api.ob.hsbc.co.uk",
+
+  "authorization_endpoint": "https://ob.hsbc.co.uk/obie/open-banking/v1.1/oauth2/authorize",
+
+  "registration_endpoint": "https://api.ob.hsbc.co.uk/obie/open-banking/v3.2/oauth2/register",
+
+  "token_endpoint": "https://api.ob.hsbc.co.uk/obie/open-banking/v1.1/oauth2/token",
+
+  "jwks_uri": "https://ob.hsbc.co.uk/jwks/public.jwks",
+
+  "scopes_supported": ["accounts", "payments", "openid", "fundsconfirmations"],
+
+  "claims_supported": ["sub","iss","auth_time","acr","openbanking_intent_id"],
+
+  "response_types_supported": ["code id_token"],
+
+  "grant_types_supported": ["authorization_code", "client_credentials", "refresh_token"],
+
+  "subject_types_supported": ["pairwise"],
+
+  "id_token_signing_alg_values_supported": ["PS256"],
+
+  "request_object_signing_alg_values_supported": ["***MASKED***"],
+
+  "token_endpoint_auth_methods_supported": ["***MASKED***", "tls_client_auth"],
+
+  "claims_parameter_supported": true,
+
+  "request_parameter_supported": true,
+
+  "request_uri_parameter_supported": false,
+
+  "token_endpoint_auth_signing_alg_values_supported": ["***MASKED***"],
+
+  "acr_values_supported": ["urn:openbanking:psd2:sca"],
+
+  "tls_client_certificate_bound_access_tokens": true
+
+}
+
+REQUEST 2
+POST https://api.ob.hsbc.co.uk/obie/open-banking/v1.1/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 00158000016i44JAAQ
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+RESPONSE 2
+200
+Server: nginx
+Date: Tue, 27 Oct 2020 19:26:29 GMT
+Content-Type: application/json
+Content-Length: 104
+Connection: keep-alive
+x-amzn-RequestId: ***
+x-amz-apigw-id: ***
+X-Amzn-Trace-Id: ***
+X-XSS-Protection: ***
+X-Frame-Options: ***
+X-Content-Type-Options: ***
+Strict-Transport-Security: ***
+
+{"access_token":"zIHiq5tk6B23djH9n995lst0BGM","token_type":"Bearer","expires_in":299,"scope":"payments"}
+
+REQUEST 3
+POST https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp/domestic-payment-consents
+Accept: application/json
+Content-Type: application/json
+x-idempotency-key: 0000000000000000
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 00158000016i44JAAQ
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"InstructionIdentification":"1f9ad8b9fa094ff5872bd7fca6d3e52a","EndToEndIdentification":"1f9ad8b9fa094ff5872bd7fca6d3e52","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345612345678","Name":"Test Recipient","SecondaryIdentification":"Test Recipient"},"RemittanceInformation":{"Unstructured":"UNSTRUCTURED","Reference":"UNSTRUCTURED"}}}}
+
+RESPONSE 3
+201
+Server: nginx
+Date: Tue, 27 Oct 2020 19:26:30 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 830
+Connection: keep-alive
+x-amzn-RequestId: ***
+x-amz-apigw-id: ***
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-Amzn-Trace-Id: ***
+x-jws-signature: ***
+X-XSS-Protection: ***
+X-Frame-Options: ***
+X-Content-Type-Options: ***
+Strict-Transport-Security: ***
+
+{"Data":{"ConsentId":"2a39d8be-61fd-4327-849d-c9a856da0ee1","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-10-27T19:26:29+00:00","CreationDateTime":"2020-10-27T19:26:29+00:00","Initiation":{"InstructionIdentification":"1f9ad8b9fa094ff5872bd7fca6d3e52a","EndToEndIdentification":"1f9ad8b9fa094ff5872bd7fca6d3e52","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345612345678","Name":"Test Recipient","SecondaryIdentification":"Test Recipient"},"RemittanceInformation":{"Reference":"UNSTRUCTURED","Unstructured":"UNSTRUCTURED"}}},"Links":{"Self":"https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp/domestic-payment-consents/2a39d8be-61fd-4327-849d-c9a856da0ee1"},"Meta":{"TotalPages":1},"Risk":{"PaymentContextCode":"Other"}}
+
+REQUEST 4
+GET https://ob.hsbc.co.uk/jwks/public.jwks
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 00158000016i44JAAQ
+
+RESPONSE 4
+200
+Content-Type: binary/octet-stream
+Content-Length: 5432
+Connection: keep-alive
+Last-Modified: Wed, 23 Sep 2020 10:39:33 GMT
+x-amz-server-side-encryption: ***
+x-amz-version-id: ***
+Accept-Ranges: bytes
+Server: AmazonS3
+Date: Tue, 27 Oct 2020 16:38:40 GMT
+ETag: ***
+X-Cache: ***
+Via: 1.1 cf2a58a1ade01b9796df7d87fe311e64.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: ***
+X-Amz-Cf-Id: ***
+Age: 77683
+
+{
+
+	"keys" : [{
+
+			"kty" : "RSA",
+
+			"x5t#S256" : "N9ma6qWKxCnw3WlJi8-sjy6-K-0zZllYAKZYWYQBCac",
+
+			"e" : "AQAB",
+
+			"use" : "sig",
+
+			"kid" : "external",
+
+			"x5c" : ["MIIGXzCCBUegAwIBAgIQC9gB6Oun1vt7she1GImF\/zANBgkqhkiG9w0BAQsFADBNMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMScwJQYDVQQDEx5EaWdpQ2VydCBTSEEyIFNlY3VyZSBTZXJ2ZXIgQ0EwHhcNMjAwMTIwMDAwMDAwWhcNMjAwOTI2MTIwMDAwWjCBlzELMAkGA1UEBhMCR0IxDzANBgNVBAcTBkxvbmRvbjEvMC0GA1UEChMmSFNCQyBHcm91cCBNYW5hZ2VtZW50IFNlcnZpY2VzIExpbWl0ZWQxGTAXBgNVBAsTEEhEUyBPcGVuIEJhbmtpbmcxKzApBgNVBAMTIlBTRDItRXh0ZXJuYWwtU2lnbmF0dXJlLmhzYmMuY28udWswggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCUZllOaY7S7Ml8WTw6UfqpRRFTnN\/5wA6UruvE4hpi+0ena0r6\/NOYUvysGKCHbGGjIlxfbulOk1vG3isEu5Jd7oQq9rLA1Dycr5tsTEmf3d5LAnrxf5UKe7VmvFPqbimomh251gOcN0Gb3hJyKCFsspYMDYD+eYXEumn9L3UL6PzdzN2LCvkuuPfqfMfF8ttheDbzv+I0EV630RPN3nHTVjOXPgvTvK5STKKv1z5qUGA9M83A8NGtY7XgICMoc\/bd2We5gUtBu3RrvOJsdsE0l4wqju4HqfCyPzAavBFhipfymcxPebhnQ++nhbWbQ6NPqS95NVcOCRAOdzRNZuppAgMBAAGjggLuMIIC6jAfBgNVHSMEGDAWgBQPgGEcgjFh1S8o541GOLQs4cbZ4jAdBgNVHQ4EFgQUoyXF9vfBfUV1641lfcljK+RZVOUwLQYDVR0RBCYwJIIiUFNEMi1FeHRlcm5hbC1TaWduYXR1cmUuaHNiYy5jby51azAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMGsGA1UdHwRkMGIwL6AtoCuGKWh0dHA6Ly9jcmwzLmRpZ2ljZXJ0LmNvbS9zc2NhLXNoYTItZzYuY3JsMC+gLaArhilodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vc3NjYS1zaGEyLWc2LmNybDBMBgNVHSAERTBDMDcGCWCGSAGG\/WwBATAqMCgGCCsGAQUFBwIBFhxodHRwczovL3d3dy5kaWdpY2VydC5jb20vQ1BTMAgGBmeBDAECAjB8BggrBgEFBQcBAQRwMG4wJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBGBggrBgEFBQcwAoY6aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0U0hBMlNlY3VyZVNlcnZlckNBLmNydDAJBgNVHRMEAjAAMIIBBAYKKwYBBAHWeQIEAgSB9QSB8gDwAHcApLkJkLQYWBSHuxOizGdwCjw1mAT5G9+443fNDsgN3BAAAAFvwwL8uwAABAMASDBGAiEAhvsrEmj6p1XrK9vinMfOHLuC3rKOq5QshRXDakP1Vo8CIQDrdunYFLP0mpJPwz4AcPP9KwCP9lUw6x7uqF7WB1LPYwB1AF6nc\/nfVsDntTZIfdBJ4DJ6kZoMhKESEoQYdZaBcUVYAAABb8MC\/GYAAAQDAEYwRAIgZ7Rgk3\/LeNnJuHymSbB0j8RM86r\/By8rQ7ZLIrbMELwCIGIXrLCtJqoOXHpUFYyZktms22fdmgtoIYumdSt1fYAfMA0GCSqGSIb3DQEBCwUAA4IBAQAHL1sC8cnIQG+wQpRo3V02\/ZSRLNbFI1g++Y0pgQfu1xqHaJVDB9ZYF8EeBTD7abt22d6XNjJ6qm5b1CJyeoA9fK\/b3QycGNP8CF3P+EUxdaVE6pfnQbbare80nO97iA3ZJrztaI6rJQgNhDtN8IA5fvsjxbgivuIt7MKS0tkDfFyquE3WUb7q4Is8G4J1tR2Po9z3JPkukKTe3ulke2DiFMTvZDtZRaRbgtKUBVBaABkhA1eBcqK6DdW\/xBd54cmyGFrVQT123o9BYvqATPaDwGWZtKbRSlfPbo7qDyzXj\/IQDvooBqwOHEc6SQ+cTn09KW1Ql34fXSwBfPcF1i\/G"],
+
+			"n" : "lGZZTmmO0uzJfFk8OlH6qUURU5zf-cAOlK7rxOIaYvtHp2tK-vzTmFL8rBigh2xhoyJcX27pTpNbxt4rBLuSXe6EKvaywNQ8nK-bbExJn93eSwJ68X-VCnu1ZrxT6m4pqJodudYDnDdBm94ScighbLKWDA2A_nmFxLpp_S91C-j83czdiwr5Lrj36nzHxfLbYXg287_iNBFet9ETzd5x01Yzlz4L07yuUkyir9c-alBgPTPNwPDRrWO14CAjKHP23dlnuYFLQbt0a7zibHbBNJeMKo7uB6nwsj8wGrwRYYqX8pnMT3m4Z0Pvp4W1m0OjT6kveTVXDgkQDnc0TWbqaQ"
+
+		},
+
+    {
+
+      "kty":"RSA",
+
+      "x5t#S256":"p3jNjMc8wp-RPUSeF3fijWi_MBqLtBbMo6hG3sisYP8",
+
+      "e":"AQAB",
+
+      "use":"sig",
+
+      "kid":"external_2",
+
+      "x5c":["MIIGRDCCBSygAwIBAgIQCiOzHKd69QfMSJjD5mJATzANBgkqhkiG9w0BAQsFADBNMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMScwJQYDVQQDEx5EaWdpQ2VydCBTSEEyIFNlY3VyZSBTZXJ2ZXIgQ0EwHhcNMjAwOTA3MDAwMDAwWhcNMjEwOTI2MTIwMDAwWjB8MQswCQYDVQQGEwJHQjEPMA0GA1UEBxMGTG9uZG9uMS8wLQYDVQQKEyZIU0JDIEdyb3VwIE1hbmFnZW1lbnQgU2VydmljZXMgTGltaXRlZDErMCkGA1UEAxMiUFNEMi1FeHRlcm5hbC1TaWduYXR1cmUuaHNiYy5jby51azCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANn4jbJX8WqSK86Ikk7CL9MPeKrLGXH6lsz96cPBIjuL4cgJpFgXtucswe6kX71+H45cygWLlZHHgylkEB28c5PjYqGIfqF1U0aOBRcVJr+WDU2xOCscFfv4S2nNfK7uPJWkEjnF7lEdbriYtIfhVYyyVz9m3qlHdLohL51uoh3pEIW1t\/giif5KOnGjqV7uSRONF9g7jpfHAO20gIOVVnt\/f8cnmZZqWfQ5bmPToiYGFjdQyCUkccHI5zfl1v2mSuE8y79IFc6Fpqa2qWJc8YNiVRgW9GDRl6Z6IA5P6TQqGrAGXqq4Ufa5O9eS6kRd3G3cQww5A225CyD1yOQPonsCAwEAAaOCAu8wggLrMB8GA1UdIwQYMBaAFA+AYRyCMWHVLyjnjUY4tCzhxtniMB0GA1UdDgQWBBRQE1KCFHl8GeNUV2DAMlPMOfW0\/zAtBgNVHREEJjAkgiJQU0QyLUV4dGVybmFsLVNpZ25hdHVyZS5oc2JjLmNvLnVrMA4GA1UdDwEB\/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwawYDVR0fBGQwYjAvoC2gK4YpaHR0cDovL2NybDMuZGlnaWNlcnQuY29tL3NzY2Etc2hhMi1nNi5jcmwwL6AtoCuGKWh0dHA6Ly9jcmw0LmRpZ2ljZXJ0LmNvbS9zc2NhLXNoYTItZzYuY3JsMEwGA1UdIARFMEMwNwYJYIZIAYb9bAEBMCowKAYIKwYBBQUHAgEWHGh0dHBzOi8vd3d3LmRpZ2ljZXJ0LmNvbS9DUFMwCAYGZ4EMAQICMHwGCCsGAQUFBwEBBHAwbjAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29tMEYGCCsGAQUFBzAChjpodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vRGlnaUNlcnRTSEEyU2VjdXJlU2VydmVyQ0EuY3J0MAkGA1UdEwQCMAAwggEFBgorBgEEAdZ5AgQCBIH2BIHzAPEAdwB9PvL4j\/+IVWgkwsDKnlKJeSvFDngJfy5ql2iZfiLw1wAAAXRqdRttAAAEAwBIMEYCIQDGIwENa8EsKkrcTRzHZhK5MndUkUCiBq38KRabotoYBwIhAJZFOGOVT2P0tQGY8Jh+msa6Nqp\/5EPQ7lmMnwhQcwAJAHYAXNxDkv7mq0VEsV6a1FbmEDf71fpH3KFzlLJe5vbHDsoAAAF0anUbIwAABAMARzBFAiBszLnf5sh8AEKuLIL\/RpXIWXAkNNEkUI1fQR\/9hnT1WQIhAJb0hoTS\/vyKhfciARXtkuxm56xt2tHL7L9QDu8DZwlpMA0GCSqGSIb3DQEBCwUAA4IBAQBhnm\/++Pp+44E785H\/+TW7+jgpnDkQnz8jgI42Fd12JbtXW+IF9jARJnudxgKgOanS1iXrvrE6GhR91NRR+hG4qtiUTD9QM3X43Tk+4uTjjaVsaxtdxrOuzLqhdNBDg\/WQ7+RXT\/M9LmQHwXcb902JXBT1fOQK7MFOeIeCWvkDJxvO8gnyR4HiwXYhVZ\/kbpdXI0B04A+t6CTN7X+HWZOcljv6dz5uJv5P6oXgep+LMD2jPgssFBP\/UqOpTLHJZePum3IhjKSDqT3CvzpQfOUxc+bFQ7f+933xbIw0Z7km1I2g9oY2y9aIx46RtN8NGhe2Mc3OfKeXWCoyyaYttVd0"],
+
+      "n":"2fiNslfxapIrzoiSTsIv0w94qssZcfqWzP3pw8EiO4vhyAmkWBe25yzB7qRfvX4fjlzKBYuVkceDKWQQHbxzk-NioYh-oXVTRo4FFxUmv5YNTbE4KxwV-_hLac18ru48laQSOcXuUR1uuJi0h-FVjLJXP2beqUd0uiEvnW6iHekQhbW3-CKJ_ko6caOpXu5JE40X2DuOl8cA7bSAg5VWe39_xyeZlmpZ9DluY9OiJgYWN1DIJSRxwcjnN-XW_aZK4TzLv0gVzoWmprapYlzxg2JVGBb0YNGXpnogDk_pNCoasAZeqrhR9rk715LqRF3cbdxDDDkDbbkLIPXI5A-iew"}
+
+	]
+
+}
+
+REQUEST 5
+POST https://api.ob.hsbc.co.uk/obie/open-banking/v1.1/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 00158000016i44JAAQ
+
+grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK&code=DUMMY_AUTH_CODE
+
+RESPONSE 5
+200
+Server: nginx
+Date: Tue, 27 Oct 2020 19:29:01 GMT
+Content-Type: application/json
+Content-Length: 987
+Connection: keep-alive
+x-amzn-RequestId: ***
+x-amz-apigw-id: ***
+X-Amzn-Trace-Id: ***
+X-XSS-Protection: ***
+X-Frame-Options: ***
+X-Content-Type-Options: ***
+Strict-Transport-Security: ***
+
+{"access_token":"HATFzcuGm7VRw0SU9PER9zmZquY","token_type":"Bearer","expires_in":299,"scope":"openid payments","id_token":"eyJraWQiOiJleHRlcm5hbF8yIiwidHlwIjoiSldUIiwiYWxnIjoi***MASKED***YifQ.eyJhdF9oYXNoIjoiMGx3angzcHZNbnMyNFJaVGdZNEtIUSIsImFjciI6InVybjpvcGVuYmFua2luZzpwc2QyOnNjYSIsImF1ZCI6Im***MASKED***IsInN1YiI6IjJhMzlkOGJlLTYxZmQtNDMyNy04NDlkLWM5YTg1NmRhMGVlMSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6IjJhMzlkOGJlLTYxZmQtNDMyNy04NDlkLWM5YTg1NmRhMGVlMSIsImF1dGhfdGltZSI6MTYwMzgyNjkzNSwiaXNzIjoiaHR0cHM6XC9cL2FwaS5vYi5oc2JjLmNvLnVrIiwiZXhwIjoxNjAzODI3MjQxLCJpYXQiOjE2MDM4MjY5NDEsIm5vbmNlIjoiYzFmNDdkYmIzYzM4MjI4MCJ9.JAmAdaWprhkb-9RHn99gLTN5Ps8t0xm7DOts71t-knFLxPMpnX20uicsKpk5agw1Zg2F-x2YIw7wkEc6zUscZMQv9H6NHQIUorBWZHbZB3uKui9c0IYTRexyLgKAmcokv0qRmP98nKCZ_qq3Jh4JoSPJU89gQBtoKCf4Z-bs0TFMggoayNe1feZM1zbcFAmq_z6lIyR-Ww_0VW1lB9YpRwQkSvsAmXKpRDD2nHJYWTACI3D83o8FhVkaKu2eBYboCcEu7JwxtOEbWB3vNXIFEP2Vh2M5TBVCFPP9nCSHgH_QfhHy-6LU4f99QOBh8F3o5AEdthyeMJ4FHbmE8RSZFA"}
+
+REQUEST 6
+POST https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp/domestic-payments
+Accept: application/json
+Content-Type: application/json
+x-idempotency-key: 0000000000000000
+x-jws-signature: RkFLRV9TSUdOQVRVUkUK
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 00158000016i44JAAQ
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"2a39d8be-61fd-4327-849d-c9a856da0ee1","Initiation":{"RemittanceInformation":{"Unstructured":"UNSTRUCTURED","Reference":"UNSTRUCTURED"},"EndToEndIdentification":"1f9ad8b9fa094ff5872bd7fca6d3e52","InstructionIdentification":"1f9ad8b9fa094ff5872bd7fca6d3e52a","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345612345678","Name":"Test Recipient","SecondaryIdentification":"Test Recipient"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
+
+RESPONSE 6
+201
+Server: nginx
+Date: Tue, 27 Oct 2020 19:29:03 GMT
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+x-amzn-RequestId: ***
+x-amz-apigw-id: ***
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-Amzn-Trace-Id: ***
+x-jws-signature: ***
+X-XSS-Protection: ***
+X-Frame-Options: ***
+X-Content-Type-Options: ***
+Strict-Transport-Security: ***
+
+{"Data":{"DomesticPaymentId":"6dle25kvp8vl6okw4s0kkq1lgguyb7qzww8u","ConsentId":"2a39d8be-61fd-4327-849d-c9a856da0ee1","CreationDateTime":"2020-10-27T19:29:03+00:00","Status":"AcceptedSettlementCompleted","StatusUpdateDateTime":"2020-10-27T19:29:03+00:00","Initiation":{"InstructionIdentification":"1f9ad8b9fa094ff5872bd7fca6d3e52a","EndToEndIdentification":"1f9ad8b9fa094ff5872bd7fca6d3e52","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345612345678","Name":"Test Recipient","SecondaryIdentification":"Test Recipient"},"CreditorPostalAddress":{},"RemittanceInformation":{"Unstructured":"UNSTRUCTURED","Reference":"UNSTRUCTURED"}},"Debtor":{"Name":"Joe Doe"}},"Links":{"Self":"https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp/domestic-payments/6dle25kvp8vl6okw4s0kkq1lgguyb7qzww8u"},"Meta":{}}
