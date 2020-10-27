@@ -16,30 +16,37 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.Catalog;
 
 public class UbiAuthenticator extends CbiGlobeAuthenticator {
 
     private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
 
     public UbiAuthenticator(
             CbiGlobeApiClient apiClient,
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
             CbiGlobeConfiguration configuration,
-            SupplementalRequester supplementalRequester) {
+            SupplementalRequester supplementalRequester,
+            Catalog catalog) {
         super(apiClient, strongAuthenticationState, userState, configuration);
 
         this.supplementalRequester = supplementalRequester;
+        this.catalog = catalog;
     }
 
     @Override
     protected List<AuthenticationStep> getManualAuthenticationSteps() {
         if (manualAuthenticationSteps.isEmpty()) {
-            manualAuthenticationSteps.add(new UbiAuthenticationMethodChoiceStep());
+            manualAuthenticationSteps.add(new UbiAuthenticationMethodChoiceStep(catalog));
 
             manualAuthenticationSteps.add(
                     new UbiUsernamePasswordAuthenticationStep(
-                            consentManager, strongAuthenticationState, supplementalRequester));
+                            consentManager,
+                            strongAuthenticationState,
+                            supplementalRequester,
+                            catalog));
 
             manualAuthenticationSteps.add(
                     new CbiThirdPartyAppAuthenticationStep(

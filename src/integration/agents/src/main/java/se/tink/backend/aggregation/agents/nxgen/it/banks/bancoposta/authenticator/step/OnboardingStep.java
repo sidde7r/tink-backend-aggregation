@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 
 @AllArgsConstructor
 @Slf4j
@@ -31,6 +32,9 @@ public class OnboardingStep implements AuthenticationStep {
 
     private static final String OTP_NAME = "otpOnboarding";
     private static final String ACCOUNT_CODE = "accountcode";
+    private static final LocalizableKey DESCRIPTION = new LocalizableKey("SMS Code");
+    private static final LocalizableKey HELPTEXT =
+            new LocalizableKey("Enter 4 digits code from SMS");
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -81,11 +85,11 @@ public class OnboardingStep implements AuthenticationStep {
         return Field.builder()
                 .name(OTP_NAME)
                 .immutable(true)
-                .description(catalog.getString("SMS OTP"))
+                .description(catalog.getString(DESCRIPTION))
                 .numeric(true)
                 .minLength(4)
                 .maxLength(4)
-                .helpText(catalog.getString("Enter 4 digits code from SMS"))
+                .helpText(catalog.getString(HELPTEXT))
                 .build();
     }
 

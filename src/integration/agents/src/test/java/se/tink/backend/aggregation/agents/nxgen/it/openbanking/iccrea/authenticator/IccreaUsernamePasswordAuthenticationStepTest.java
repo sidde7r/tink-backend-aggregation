@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,22 +25,28 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ScaMethodEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class IccreaUsernamePasswordAuthenticationStepTest {
 
     private IccreaUsernamePasswordAuthenticationStep step;
     private ConsentManager consentManager;
     private StrongAuthenticationState strongAuthenticationState;
+    private Catalog catalog;
 
     @Before
     public void init() {
         consentManager = Mockito.mock(ConsentManager.class);
         strongAuthenticationState = Mockito.mock(StrongAuthenticationState.class);
+        catalog = Mockito.mock(Catalog.class);
+        when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
         step =
                 new IccreaUsernamePasswordAuthenticationStep(
                         consentManager,
                         strongAuthenticationState,
-                        Mockito.mock(SupplementalRequester.class));
+                        Mockito.mock(SupplementalRequester.class),
+                        catalog);
     }
 
     @Test

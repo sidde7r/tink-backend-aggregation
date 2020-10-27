@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-20 12:04+0200\n"
+"POT-Creation-Date: 2020-10-26 18:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1537,4 +1537,28 @@ msgid "Please open PhotoTAN application and confirm the order"
 msgstr ""
 
 msgid "waiting for confirmation"
+msgstr ""
+
+msgid "Please open the bank application and confirm the order."
+msgstr ""
+
+msgid "You will be asked for confirmation two times."
+msgstr ""
+
+msgid "Do you have bank app installed?"
+msgstr ""
+
+msgid "The value you entered is not valid"
+msgstr ""
+
+msgid "description"
+msgstr ""
+
+msgid "Waiting for bank consent"
+msgstr ""
+
+#, java-format
+msgid ""
+"Message from the bank: {0} Follow the instructions and continue by clicking "
+"update."
 msgstr ""
