@@ -15,10 +15,13 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authentica
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class IccreaUsernamePasswordAuthenticationStep implements AuthenticationStep {
@@ -26,14 +29,23 @@ public class IccreaUsernamePasswordAuthenticationStep implements AuthenticationS
     private final ConsentManager consentManager;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
+
+    private static final LocalizableKey DESCRIPTION =
+            new LocalizableKey("Please open the bank application and confirm the order.");
+    private static final String FIELD_NAME = "name";
+    private static final LocalizableKey VALUE =
+            new LocalizableKey("You will be asked for confirmation two times.");
 
     IccreaUsernamePasswordAuthenticationStep(
             ConsentManager consentManager,
             StrongAuthenticationState strongAuthenticationState,
-            SupplementalRequester supplementalRequester) {
+            SupplementalRequester supplementalRequester,
+            Catalog catalog) {
         this.consentManager = consentManager;
         this.strongAuthenticationState = strongAuthenticationState;
         this.supplementalRequester = supplementalRequester;
+        this.catalog = catalog;
     }
 
     @Override
@@ -89,12 +101,8 @@ public class IccreaUsernamePasswordAuthenticationStep implements AuthenticationS
 
     private void displayPrompt(Credentials credentials) {
         Field field =
-                Field.builder()
-                        .immutable(true)
-                        .description("Please open the bank application and confirm the order.")
-                        .value("You will be asked for confirmation two times.")
-                        .name("name")
-                        .build();
+                CommonFields.Information.build(
+                        FIELD_NAME, catalog.getString(DESCRIPTION), catalog.getString(VALUE), "");
 
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(Collections.singletonList(field)));

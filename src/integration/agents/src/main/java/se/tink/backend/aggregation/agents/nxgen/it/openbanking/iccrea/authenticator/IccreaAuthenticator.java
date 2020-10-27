@@ -8,20 +8,24 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.libraries.i18n.Catalog;
 
 public class IccreaAuthenticator extends CbiGlobeAuthenticator {
 
     private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
 
     public IccreaAuthenticator(
             CbiGlobeApiClient apiClient,
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
             CbiGlobeConfiguration configuration,
-            SupplementalRequester supplementalRequester) {
+            SupplementalRequester supplementalRequester,
+            Catalog catalog) {
         super(apiClient, strongAuthenticationState, userState, configuration);
 
         this.supplementalRequester = supplementalRequester;
+        this.catalog = catalog;
     }
 
     @Override
@@ -29,7 +33,10 @@ public class IccreaAuthenticator extends CbiGlobeAuthenticator {
         if (manualAuthenticationSteps.isEmpty()) {
             manualAuthenticationSteps.add(
                     new IccreaUsernamePasswordAuthenticationStep(
-                            consentManager, strongAuthenticationState, supplementalRequester));
+                            consentManager,
+                            strongAuthenticationState,
+                            supplementalRequester,
+                            catalog));
         }
 
         return manualAuthenticationSteps;

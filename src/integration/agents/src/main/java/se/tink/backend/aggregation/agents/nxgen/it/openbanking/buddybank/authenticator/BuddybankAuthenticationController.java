@@ -15,24 +15,38 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.rpc.BuddybankCreateConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n.LocalizableParametrizedKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BuddybankAuthenticationController implements Authenticator {
     private final BuddybankAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
+    private static final LocalizableKey DESCRIPTION = new LocalizableKey("description");
+    private static final String FIELD_KEY = "name";
+    private static final LocalizableKey VALUE = new LocalizableKey("Waiting for bank consent");
+    private static final LocalizableParametrizedKey HELP_TEXT =
+            new LocalizableParametrizedKey(
+                    "Message from the bank: {0} Follow the instructions and continue by clicking update.");
+
     private static final long SLEEP_TIME = 10L;
     private static final int RETRY_ATTEMPTS = 60;
 
     public BuddybankAuthenticationController(
             BuddybankAuthenticator authenticator,
             StrongAuthenticationState strongAuthenticationState,
-            SupplementalRequester supplementalRequester) {
+            SupplementalRequester supplementalRequester,
+            Catalog catalog) {
         this.authenticator = authenticator;
         this.strongAuthenticationState = strongAuthenticationState;
         this.supplementalRequester = supplementalRequester;
+        this.catalog = catalog;
     }
 
     @Override
@@ -44,17 +58,13 @@ public class BuddybankAuthenticationController implements Authenticator {
     }
 
     private void displayVerificationCode(Credentials credentials, String psuMessage) {
+
         Field field =
-                Field.builder()
-                        .immutable(true)
-                        .description("Status")
-                        .value("Waiting for bank consent")
-                        .name("name")
-                        .helpText(
-                                String.format(
-                                        "Message from the bank: %s Follow the instructions and continue by clicking update.",
-                                        psuMessage))
-                        .build();
+                CommonFields.Information.build(
+                        FIELD_KEY,
+                        catalog.getString(DESCRIPTION),
+                        catalog.getString(VALUE),
+                        catalog.getString(HELP_TEXT, psuMessage));
 
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(Collections.singletonList(field)));

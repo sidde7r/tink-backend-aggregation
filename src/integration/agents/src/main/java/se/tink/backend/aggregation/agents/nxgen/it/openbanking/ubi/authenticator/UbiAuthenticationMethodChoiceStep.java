@@ -10,10 +10,24 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementIn
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class UbiAuthenticationMethodChoiceStep implements AuthenticationStep {
+    private final Catalog catalog;
 
-    private static final String IS_APP_INSTALLED = "IS_APP_INSTALLED";
+    private static final LocalizableKey DESCRIPTION =
+            new LocalizableKey("Do you have bank app installed?");
+    private static final String FIELD_NAME = "IS_APP_INSTALLED";
+    private static final LocalizableKey HELPTEXT =
+            new LocalizableKey("The value you entered is not valid");
+    private static final String PATTERN = "y|Y|n|N";
+    private static final LocalizableKey PATTERN_ERROR_MSG =
+            new LocalizableKey("The value you entered is not valid");
+
+    public UbiAuthenticationMethodChoiceStep(Catalog catalog) {
+        this.catalog = catalog;
+    }
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -25,7 +39,7 @@ public class UbiAuthenticationMethodChoiceStep implements AuthenticationStep {
                             .build());
         }
 
-        String chosenMethod = request.getUserInputs().get(IS_APP_INSTALLED);
+        String chosenMethod = request.getUserInputs().get(FIELD_NAME);
         if (shouldUseRedirectFlow(chosenMethod)) {
             return AuthenticationStepResponse.executeStepWithId(
                     CbiThirdPartyAppAuthenticationStep.getStepIdentifier(ConsentType.ACCOUNT));
@@ -37,13 +51,13 @@ public class UbiAuthenticationMethodChoiceStep implements AuthenticationStep {
 
     private Field buildMethodsField() {
         return Field.builder()
-                .description("Do you have bank app installed?")
-                .helpText("Type Y if you have or N if you don't have")
-                .name(IS_APP_INSTALLED)
+                .description(catalog.getString(DESCRIPTION))
+                .helpText(catalog.getString(HELPTEXT))
+                .name(FIELD_NAME)
                 .minLength(1)
                 .maxLength(1)
-                .pattern("y|Y|n|N")
-                .patternError("The value you entered is not valid")
+                .pattern(PATTERN)
+                .patternError(catalog.getString(PATTERN_ERROR_MSG))
                 .build();
     }
 

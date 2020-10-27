@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 
 @AllArgsConstructor
 @Slf4j
@@ -23,6 +24,9 @@ public class SyncWalletStep implements AuthenticationStep {
     private final BancoPostaApiClient apiClient;
     private final Catalog catalog;
     private static final String OTP_NAME = "otpSync";
+    private static final LocalizableKey DESCRIPTION = new LocalizableKey("SMS Code");
+    private static final LocalizableKey HELPTEXT =
+            new LocalizableKey("Enter 6 digits code from SMS");
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -50,11 +54,11 @@ public class SyncWalletStep implements AuthenticationStep {
         return Field.builder()
                 .name(OTP_NAME)
                 .immutable(true)
-                .description(catalog.getString("SMS Code"))
+                .description(catalog.getString(DESCRIPTION))
                 .numeric(true)
                 .minLength(6)
                 .maxLength(6)
-                .helpText(catalog.getString("Enter 6 digits code from SMS"))
+                .helpText(catalog.getString(HELPTEXT))
                 .build();
     }
 
