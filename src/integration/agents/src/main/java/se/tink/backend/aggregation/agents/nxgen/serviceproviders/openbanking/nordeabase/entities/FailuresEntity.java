@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticati
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 
@@ -61,6 +62,11 @@ public class FailuresEntity {
     @JsonIgnore
     public boolean isBankSideFailure() {
         return "error.server".equalsIgnoreCase(code);
+    }
+
+    @JsonIgnore
+    public boolean isConsentNotFound() {
+        return NordeaBaseConstants.ErrorMessages.CONSENT_NOT_FOUND.equalsIgnoreCase(description);
     }
 
     @JsonIgnore

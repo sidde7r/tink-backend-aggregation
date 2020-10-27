@@ -69,6 +69,7 @@ public class NordeaBaseApiClient implements TokenInterface {
     protected String redirectUrl;
     private QsealcSigner qsealcSigner;
     private boolean corporate;
+    private GetAccountsResponse cachedAccounts;
 
     public NordeaBaseApiClient(
             TinkHttpClient client,
@@ -181,12 +182,16 @@ public class NordeaBaseApiClient implements TokenInterface {
     }
 
     public GetAccountsResponse getAccounts() {
-        return requestRefreshableGet(
-                createRequestInSession(
-                        corporate ? Urls.GET_CORPORATE_ACCOUNTS : Urls.GET_ACCOUNTS,
-                        HttpMethod.GET,
-                        null),
-                GetAccountsResponse.class);
+        if (cachedAccounts == null) {
+            cachedAccounts =
+                    requestRefreshableGet(
+                            createRequestInSession(
+                                    corporate ? Urls.GET_CORPORATE_ACCOUNTS : Urls.GET_ACCOUNTS,
+                                    HttpMethod.GET,
+                                    null),
+                            GetAccountsResponse.class);
+        }
+        return cachedAccounts;
     }
 
     public GetTransactionsResponse getCorporateTransactions(

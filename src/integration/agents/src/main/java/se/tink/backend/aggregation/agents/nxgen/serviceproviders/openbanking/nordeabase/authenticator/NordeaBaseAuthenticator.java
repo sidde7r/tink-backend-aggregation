@@ -2,18 +2,23 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import com.google.common.base.Strings;
 import java.util.Map;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public abstract class NordeaBaseAuthenticator implements OAuth2Authenticator {
@@ -42,8 +47,39 @@ public abstract class NordeaBaseAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
-        OAuth2Token token = apiClient.refreshToken(refreshToken);
-        return token;
+
+        OAuth2Token oAuth2Token = apiClient.refreshToken(refreshToken);
+
+        apiClient.storeToken(oAuth2Token);
+        validateConsentValidOrThrow();
+
+        return oAuth2Token;
+    }
+
+    /**
+     * We can successfully refresh the access token even if the consent has expired. Nordea does not
+     * provide an endpoint for checking consent status, so we have to try to fetch accounts to tell
+     * if the consent is still valid.
+     *
+     * @throws SessionException if 403 response with error description "Consent not found."
+     * @throws HttpResponseException for all other errors when fetching accounts
+     */
+    private void validateConsentValidOrThrow() {
+        try {
+            apiClient.getAccounts();
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            if (response.getStatus() != HttpStatus.SC_FORBIDDEN || !response.hasBody()) {
+                throw e;
+            }
+
+            NordeaErrorResponse errorResponse = response.getBody(NordeaErrorResponse.class);
+            if (errorResponse.isConsentNotFound()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
+            throw e;
+        }
     }
 
     @Override
