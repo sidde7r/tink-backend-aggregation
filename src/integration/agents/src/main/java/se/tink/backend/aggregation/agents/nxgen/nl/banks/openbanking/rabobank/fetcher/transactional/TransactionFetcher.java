@@ -18,8 +18,6 @@ public final class TransactionFetcher implements TransactionDatePaginator<Transa
     public PaginatorResponse getTransactionsFor(
             final TransactionalAccount account, final Date fromDate, final Date toDate) {
 
-        apiClient.checkConsentStatus();
-
         return apiClient.getTransactions(account, fromDate, toDate, false);
     }
 }
