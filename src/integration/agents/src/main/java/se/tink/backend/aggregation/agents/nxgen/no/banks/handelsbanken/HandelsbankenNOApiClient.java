@@ -181,7 +181,8 @@ public class HandelsbankenNOApiClient {
                 .header(
                         HandelsbankenNOConstants.Header.EVRY_TOKEN,
                         sessionStorage.get(Tags.ACCESS_TOKEN))
-                .post(SecondLoginResponse.class);
+                .post(SecondLoginResponse.class)
+                .throwErrorIfAgreementIsInactive();
     }
 
     public HttpResponse sendSms(SendSmsRequest sendSmsRequest) {
