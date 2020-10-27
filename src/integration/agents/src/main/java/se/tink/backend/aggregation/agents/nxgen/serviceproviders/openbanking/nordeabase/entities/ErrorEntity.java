@@ -26,6 +26,12 @@ public class ErrorEntity {
     }
 
     @JsonIgnore
+    public boolean isConsentNotFound() {
+        return Optional.ofNullable(failures).orElse(Collections.emptyList()).stream()
+                .anyMatch(FailuresEntity::isConsentNotFound);
+    }
+
+    @JsonIgnore
     public void parseAndThrowPis(Throwable cause) throws PaymentException {
         if ("ExternalError".equals(type)) {
             if (failures.isEmpty()) {

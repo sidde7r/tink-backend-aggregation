@@ -15,6 +15,11 @@ public class NordeaErrorResponse extends NordeaBaseResponse {
     }
 
     @JsonIgnore
+    public boolean isConsentNotFound() {
+        return error != null && error.isConsentNotFound();
+    }
+
+    @JsonIgnore
     public void checkPisError(Throwable cause) throws PaymentException {
         if (error != null) {
             error.parseAndThrowPis(cause);
