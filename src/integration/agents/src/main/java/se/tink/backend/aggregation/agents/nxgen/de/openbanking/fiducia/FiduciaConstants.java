@@ -38,6 +38,16 @@ public final class FiduciaConstants {
         public static final String PSU_IP_ADDRESS = "psu-ip-address";
     }
 
+    public static class QueryParamsKeys {
+        public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String DATE_FROM = "dateFrom";
+    }
+
+    public static class QueryParamsValues {
+        public static final String BOOKING_STATUS = "booked";
+        public static final String DATE_FROM = "1970-01-01";
+    }
+
     public static class FormValues {
         public static final String FREQUENCY_PER_DAY = "4";
         public static final String TRUE = "true";

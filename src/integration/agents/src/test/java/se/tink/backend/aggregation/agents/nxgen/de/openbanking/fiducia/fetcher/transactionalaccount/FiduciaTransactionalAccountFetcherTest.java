@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.LinkDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.TransactionsEntity;
@@ -39,6 +39,7 @@ public class FiduciaTransactionalAccountFetcherTest {
     private static final String IBAN_2 = "DE22P03058016041005737885632";
     private static final String CURRENCY = "EUR";
     private static final String OWNER_NAME = "dummyOwnerName";
+    private static final String SECOND_PAGE_PATH = "SomeAwesomePath";
 
     private FiduciaApiClient apiClient;
 
@@ -50,7 +51,9 @@ public class FiduciaTransactionalAccountFetcherTest {
 
         when(apiClient.getBalances(ACCOUNT_ID)).thenReturn(getBalancesResponse());
         when(apiClient.getBalances(ACCOUNT_ID_2)).thenReturn(getBalancesResponse());
-        when(apiClient.getTransactions(any(), any())).thenReturn(getTransactions());
+        when(apiClient.getTransactions(any(TransactionalAccount.class)))
+                .thenReturn(getTransactionsFirstPage());
+        when(apiClient.getTransactions(SECOND_PAGE_PATH)).thenReturn(getTransactionsLastPage());
     }
 
     @Test
@@ -64,9 +67,9 @@ public class FiduciaTransactionalAccountFetcherTest {
 
         // then
         assertEquals(2, accounts.size());
-        verify(apiClient, times(1)).getAccounts();
-        verify(apiClient, times(1)).getBalances(ACCOUNT_ID);
-        verify(apiClient, times(1)).getBalances(ACCOUNT_ID_2);
+        verify(apiClient).getAccounts();
+        verify(apiClient).getBalances(ACCOUNT_ID);
+        verify(apiClient).getBalances(ACCOUNT_ID_2);
     }
 
     @Test
@@ -74,22 +77,7 @@ public class FiduciaTransactionalAccountFetcherTest {
         // given
         FiduciaTransactionalAccountFetcher fetcher =
                 new FiduciaTransactionalAccountFetcher(apiClient);
-        TransactionalAccount account =
-                TransactionalAccount.nxBuilder()
-                        .withType(TransactionalAccountType.CHECKING)
-                        .withInferredAccountFlags()
-                        .withBalance(
-                                BalanceModule.of(new ExactCurrencyAmount(BigDecimal.TEN, CURRENCY)))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier(IBAN)
-                                        .withAccountNumber(IBAN)
-                                        .withAccountName(IBAN)
-                                        .addIdentifier(new IbanIdentifier(IBAN))
-                                        .build())
-                        .setApiIdentifier(ACCOUNT_ID)
-                        .build()
-                        .get();
+        TransactionalAccount account = getTestAccount();
 
         // when
         GetTransactionsResponse transactions =
@@ -97,7 +85,23 @@ public class FiduciaTransactionalAccountFetcherTest {
 
         // then
         assertEquals(1, transactions.getTinkTransactions().size());
-        verify(apiClient, times(1)).getTransactions(account, null);
+        verify(apiClient).getTransactions(account);
+    }
+
+    @Test
+    public void getTransactionsForShouldReturnTransactionsForSecondPage() {
+        // given
+        FiduciaTransactionalAccountFetcher fetcher =
+                new FiduciaTransactionalAccountFetcher(apiClient);
+        TransactionalAccount account = getTestAccount();
+
+        // when
+        GetTransactionsResponse transactions =
+                (GetTransactionsResponse) fetcher.getTransactionsFor(account, SECOND_PAGE_PATH);
+
+        // then
+        assertEquals(1, transactions.getTinkTransactions().size());
+        verify(apiClient).getTransactions(SECOND_PAGE_PATH);
     }
 
     private GetAccountsResponse getAccountsResponse() {
@@ -119,14 +123,42 @@ public class FiduciaTransactionalAccountFetcherTest {
                                                 .setAmount(BigDecimal.valueOf(10.0)))));
     }
 
-    private GetTransactionsResponse getTransactions() {
+    private GetTransactionsResponse getTransactionsFirstPage() {
         return new GetTransactionsResponse(
                 new TransactionsEntity(
-                        new LinksEntity(),
+                        new LinksEntity(null, new LinkDetailsEntity(SECOND_PAGE_PATH)),
                         Collections.singletonList(
                                 new TransactionEntity(
                                         new Date(),
                                         "to own account",
                                         new AmountEntity(CURRENCY, BigDecimal.valueOf(10.0))))));
+    }
+
+    private GetTransactionsResponse getTransactionsLastPage() {
+        return new GetTransactionsResponse(
+                new TransactionsEntity(
+                        new LinksEntity(null, null),
+                        Collections.singletonList(
+                                new TransactionEntity(
+                                        new Date(),
+                                        "to own account",
+                                        new AmountEntity(CURRENCY, BigDecimal.valueOf(10.0))))));
+    }
+
+    private TransactionalAccount getTestAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withInferredAccountFlags()
+                .withBalance(BalanceModule.of(new ExactCurrencyAmount(BigDecimal.TEN, CURRENCY)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(IBAN)
+                                .withAccountNumber(IBAN)
+                                .withAccountName(IBAN)
+                                .addIdentifier(new IbanIdentifier(IBAN))
+                                .build())
+                .setApiIdentifier(ACCOUNT_ID)
+                .build()
+                .get();
     }
 }
