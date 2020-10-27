@@ -52,8 +52,7 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
     public void autoAuthenticate() throws SessionException {
         String deviceId = persistentStorage.getDeviceId();
         if (Strings.isNullOrEmpty(deviceId)) throw SessionError.SESSION_EXPIRED.exception();
-        String cardNumber =
-                ArgentaCardNumber.formatCardNumber(credentials.getField(Field.Key.USERNAME));
+        String cardNumber = credentials.getField(Field.Key.USERNAME);
 
         ValidateAuthResponse validateAuthResponse =
                 signInWithRegisteredDevice(cardNumber, deviceId);
