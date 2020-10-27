@@ -59,4 +59,12 @@ public class GenericResponse {
                                 ErrorCodes.LOGIN_SESSION_INTERRUPTED.equalsIgnoreCase(
                                         tppMessage.getText()));
     }
+
+    @JsonIgnore
+    public boolean hasEmptyUserId() {
+        return getTppMessages().stream()
+                .anyMatch(
+                        tppMessage ->
+                                ErrorCodes.EMPTY_USER_ID.equalsIgnoreCase(tppMessage.getText()));
+    }
 }

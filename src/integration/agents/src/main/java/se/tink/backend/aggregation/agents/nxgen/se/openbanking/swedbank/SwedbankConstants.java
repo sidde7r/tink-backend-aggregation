@@ -189,6 +189,7 @@ public final class SwedbankConstants {
         public static final String MISSING_BANK_AGREEMENT = "MISSING_BANK_AGREEMENT";
         public static final String USER_CANCEL = "USER_CANCEL";
         public static final String LOGIN_SESSION_INTERRUPTED = "Other login session is ongoing";
+        public static final String EMPTY_USER_ID = "Mandatory header value is empty: PSU-ID";
     }
 
     public enum HeadersToSign {

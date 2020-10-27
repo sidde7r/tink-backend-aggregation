@@ -65,8 +65,7 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
             return apiClient.authenticate(ssn);
         } catch (HttpResponseException e) {
             GenericResponse response = e.getResponse().getBody(GenericResponse.class);
-            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
-                    && response.hasWrongUserId()) {
+            if (response.hasEmptyUserId() || response.hasWrongUserId()) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
             throw e;
