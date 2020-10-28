@@ -40,7 +40,7 @@ public class OpBankAuthenticationChallengerTest {
         client = mock(OpBankApiClient.class);
         AgentContext context = mock(AgentContext.class);
         SupplementalInformationController supplementalInformationController =
-                new SupplementalInformationControllerImpl(context, credentials);
+                new SupplementalInformationControllerImpl(context, credentials, null);
         authenticationChallenger =
                 new OpKeyCardAuthenticator(client, persistentStorage, credentials, sessionStorage);
 

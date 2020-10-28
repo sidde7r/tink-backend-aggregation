@@ -73,7 +73,9 @@ public final class HandelsbankenFIAgent
                             bankClient,
                             handelsbankenPersistentStorage,
                             new SupplementalInformationControllerImpl(
-                                    this.supplementalRequester, this.credentials),
+                                    this.supplementalRequester,
+                                    this.credentials,
+                                    strongAuthenticationState.getState()),
                             handelsbankenConfiguration,
                             new HandelsbankenAutoAuthenticator(
                                     bankClient,
