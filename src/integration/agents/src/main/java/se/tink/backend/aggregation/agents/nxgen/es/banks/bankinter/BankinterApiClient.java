@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter;
 
 import com.google.api.client.http.HttpStatusCodes;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
+import javax.ws.rs.core.MediaType;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormKeys;
@@ -21,11 +25,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import javax.ws.rs.core.MediaType;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
 
 public final class BankinterApiClient {
 
