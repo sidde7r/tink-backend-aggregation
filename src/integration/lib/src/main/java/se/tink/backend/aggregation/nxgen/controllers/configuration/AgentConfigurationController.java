@@ -90,7 +90,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         Preconditions.checkNotNull(
                 provider.getAccessType(), "provider.getAccessType() cannot be null.");
         Preconditions.checkNotNull(provider.getType(), "provider.getType() cannot be null.");
-        Preconditions.checkNotNull(provider.getName(), "provider.getName() cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
 
