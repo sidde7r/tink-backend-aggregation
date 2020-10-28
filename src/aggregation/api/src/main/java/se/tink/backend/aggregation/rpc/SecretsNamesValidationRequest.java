@@ -4,6 +4,7 @@ import java.util.Set;
 
 public final class SecretsNamesValidationRequest {
     private String financialInstitutionId;
+    private String providerId;
     private Set<String> secretsNames;
     private Set<String> excludedSecretsNames;
     private Set<String> sensitiveSecretsNames;
@@ -15,6 +16,7 @@ public final class SecretsNamesValidationRequest {
 
     public SecretsNamesValidationRequest(
             String financialInstitutionId,
+            String providerId,
             Set<String> secretsNames,
             Set<String> excludedSecretsNames,
             Set<String> sensitiveSecretsNames,
@@ -22,6 +24,7 @@ public final class SecretsNamesValidationRequest {
             Set<String> agentConfigParamNames,
             Set<String> excludedAgentConfigParamNames) {
         this.financialInstitutionId = financialInstitutionId;
+        this.providerId = providerId;
         this.secretsNames = secretsNames;
         this.excludedSecretsNames = excludedSecretsNames;
         this.sensitiveSecretsNames = sensitiveSecretsNames;
@@ -32,6 +35,10 @@ public final class SecretsNamesValidationRequest {
 
     public String getFinancialInstitutionId() {
         return financialInstitutionId;
+    }
+
+    public String getProviderId() {
+        return providerId;
     }
 
     public Set<String> getSecretsNames() {

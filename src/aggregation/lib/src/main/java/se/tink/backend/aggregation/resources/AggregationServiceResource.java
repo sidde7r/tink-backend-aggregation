@@ -296,10 +296,11 @@ public class AggregationServiceResource implements AggregationService {
         Preconditions.checkNotNull(request, "SecretsNamesValidationRequest cannot be null.");
 
         String financialInstitutionId = request.getFinancialInstitutionId();
+        String providerId = request.getProviderId();
 
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(financialInstitutionId),
-                "FinancialInstitutionId in SecretsNamesValidationRequest cannot be empty/null.");
+        Preconditions.checkArgument(
+                Strings.isNullOrEmpty(financialInstitutionId) == Strings.isNullOrEmpty(providerId),
+                "The request must either contain fiid or providerId.");
         Preconditions.checkNotNull(
                 request.getSecretsNames(),
                 "SecretsNames in SecretsNamesValidationRequest cannot be null.");
