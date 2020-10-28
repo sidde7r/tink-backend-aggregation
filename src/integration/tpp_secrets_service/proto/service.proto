@@ -5,6 +5,8 @@ option java_package = "se.tink.backend.secretservice.grpc";
 option java_outer_classname = "Protos";
 option go_package = "proto";
 
+import "google/protobuf/empty.proto";
+
 service InternalCertificateService {
     rpc GetQwacCertificateWithEncryptedPrivateKey (QwacCertificateRequest) returns (CertificateResponse) {}
     rpc GetQsealcCertificateWithEncryptedPrivateKey (QsealcCertificateRequest) returns (CertificateResponse) {}
@@ -14,6 +16,8 @@ service InternalCertificateService {
 service ExternalCertificateService {
     rpc GetUploadKey (PublicKeyRequest) returns (PublicKeyResponse) {}
     rpc ConvertEncryptedPrivateKey (ConvertEncryptedPrivateKeyRequest) returns (ConvertEncryptedPrivateKeyResponse) {}
+    rpc DeleteAesKey (DeleteAesKeyRequest) returns (google.protobuf.Empty){}
+    rpc Ping(PingMessage) returns (PingMessage) {}
 }
 
 service InternalSecretsService {
@@ -23,6 +27,7 @@ service InternalSecretsService {
 
 service ExternalSecretsService {
     rpc GetUploadKey (PublicKeyRequest) returns (PublicKeyResponse) {}
+    rpc InvalidateCachedSecrets (InvalidateCachedSecretsRequest) returns (InvalidateCachedSecretsResponse) {}
 }
 
 enum CertType {
@@ -39,11 +44,23 @@ message EncryptedTppSecret {
     string key = 1;
     string value = 2;
 }
+
+message InvalidateCachedSecretsRequest {
+    string appId = 1;
+    string financialInstitutionId = 2;
+    string clusterId = 3;
+    string certId = 4;
+    string providerId = 5;
+}
+
+message InvalidateCachedSecretsResponse {}
+
 message GetSecretsRequest {
     string appId = 1;
     string financialInstitutionId = 2;
     string clusterId = 3;
-    string providerId = 4;
+    string certId = 4;
+    string providerId = 5;
 }
 
 message GetAllSecretsResponse {
@@ -102,6 +119,12 @@ message ConvertEncryptedPrivateKeyRequest {
 
 message ConvertEncryptedPrivateKeyResponse {
     string encryptedPrivateKey = 1;
+}
+
+message DeleteAesKeyRequest {
+    string appId = 1;
+    string certId = 2;
+    CertType certType = 3;
 }
 
 message PingMessage {

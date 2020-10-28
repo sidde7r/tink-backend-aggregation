@@ -39,7 +39,7 @@ public class OpBankSessionHandlerTest {
 
         AgentContext context = new AgentTestContext(null);
         SupplementalInformationController supplementalInformationController =
-                new SupplementalInformationControllerImpl(context, credentials);
+                new SupplementalInformationControllerImpl(context, credentials, null);
         bankClient =
                 new OpBankApiClient(
                         new LegacyTinkHttpClient(

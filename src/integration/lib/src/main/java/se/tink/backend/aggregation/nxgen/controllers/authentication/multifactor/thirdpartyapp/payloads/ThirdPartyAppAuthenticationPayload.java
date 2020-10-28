@@ -11,6 +11,7 @@ public class ThirdPartyAppAuthenticationPayload {
     private String downloadMessage;
     private String upgradeTitle;
     private String upgradeMessage;
+    private String state;
 
     public static ThirdPartyAppAuthenticationPayload of(URL url) {
         Preconditions.checkNotNull(url, "URL must not be null.");
@@ -86,6 +87,14 @@ public class ThirdPartyAppAuthenticationPayload {
 
     public void setDesktop(Desktop desktop) {
         this.desktop = desktop;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public static class Ios {

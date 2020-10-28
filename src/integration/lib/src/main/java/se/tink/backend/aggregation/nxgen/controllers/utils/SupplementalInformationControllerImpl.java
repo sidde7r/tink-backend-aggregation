@@ -27,11 +27,13 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
+    private final String appUriId;
 
     public SupplementalInformationControllerImpl(
-            SupplementalRequester supplementalRequester, Credentials credentials) {
+            SupplementalRequester supplementalRequester, Credentials credentials, String appUriId) {
         this.supplementalRequester = supplementalRequester;
         this.credentials = credentials;
+        this.appUriId = appUriId;
     }
 
     @Override
@@ -86,6 +88,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     public void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload) {
         Preconditions.checkNotNull(payload);
 
+        payload.setState(appUriId);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(payload));
         credentials.setStatus(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
 

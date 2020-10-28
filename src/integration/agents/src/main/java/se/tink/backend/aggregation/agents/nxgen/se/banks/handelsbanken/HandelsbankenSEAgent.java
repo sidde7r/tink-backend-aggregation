@@ -138,7 +138,9 @@ public final class HandelsbankenSEAgent
                             bankClient,
                             handelsbankenPersistentStorage,
                             new SupplementalInformationControllerImpl(
-                                    supplementalRequester, credentials),
+                                    supplementalRequester,
+                                    credentials,
+                                    strongAuthenticationState.getState()),
                             handelsbankenConfiguration,
                             autoAuthenticator),
                     autoAuthenticator),

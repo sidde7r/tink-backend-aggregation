@@ -197,7 +197,7 @@ public class OpBankAuthenticatorTest {
         credentials.setType(CredentialsTypes.PASSWORD);
         AgentContext context = new AgentTestContext(credentials);
         SupplementalInformationController supplementalInformationController =
-                new SupplementalInformationControllerImpl(context, credentials);
+                new SupplementalInformationControllerImpl(context, credentials, null);
 
         OpBankApiClient bankClient =
                 spy(
