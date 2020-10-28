@@ -97,7 +97,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         //  get empty or null appIds.
         // Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
         if (Strings.emptyToNull(appId) == null) {
-            log.warn("appId cannot be empty/null for clusterId : " + clusterId);
+            log.warn("appId cannot be empty/null for clusterId: {}", clusterId);
         }
 
         this.tppSecretsServiceEnabled = tppSecretsServiceClient.isEnabled();
@@ -180,13 +180,12 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                 Preconditions.checkNotNull(
                         e.getStatus(), "Status cannot be null for StatusRuntimeException: " + e);
                 if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
-                    log.info("Could not find secrets" + getSecretsServiceParamsString());
+                    log.info("Could not find secrets {}", getSecretsServiceParamsString());
                 } else {
                     log.error(
-                            "StatusRuntimeException when trying to retrieve secrets"
-                                    + getSecretsServiceParamsString()
-                                    + "with Status: "
-                                    + e.getStatus(),
+                            "StatusRuntimeException when trying to retrieve secrets {} with Status: {}",
+                            getSecretsServiceParamsString(),
+                            e.getStatus(),
                             e);
                     throw e;
                 }
@@ -317,9 +316,9 @@ public final class AgentConfigurationController implements AgentConfigurationCon
 
         if (isOpenBankingAgent) {
             log.warn(
-                    "Trying to read information from k8s for an OB agent: "
-                            + clientConfigClass.toString()
-                            + ". Consider uploading the configuration to ESS instead.");
+                    "Trying to read information from k8s for an OB agent: {}. "
+                            + "Consider uploading the configuration to ESS instead.",
+                    clientConfigClass);
         }
 
         Object clientConfigurationAsObject =
@@ -343,9 +342,9 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             String integrationName, Class<T> clientConfigClass) {
         if (isOpenBankingAgent) {
             log.warn(
-                    "Trying to read information from k8s for an OB agent: "
-                            + clientConfigClass.toString()
-                            + ". Consider uploading the configuration to ESS instead.");
+                    "Trying to read information from k8s for an OB agent: {}. "
+                            + "Consider uploading the configuration to ESS instead.",
+                    clientConfigClass);
         }
 
         Object clientConfigurationAsObject =
@@ -369,16 +368,15 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             String integrationName, Class<T> clientConfigClass) {
         if (isOpenBankingAgent) {
             log.warn(
-                    "Trying to read information from k8s for an OB agent: "
-                            + clientConfigClass.toString()
-                            + ". Consider uploading the configuration to ESS instead.");
+                    "Trying to read information from k8s for an OB agent: {}. "
+                            + "Consider uploading the configuration to ESS instead.",
+                    clientConfigClass);
         }
 
         Optional<Object> clientConfigurationAsObject =
                 integrationsConfiguration.getIntegration(integrationName);
 
-        clientConfigurationAsObject.ifPresent(
-                clientConfiguration -> extractSensitiveValues(clientConfiguration));
+        clientConfigurationAsObject.ifPresent(this::extractSensitiveValues);
 
         return clientConfigurationAsObject.map(
                 clientConfiguration ->
