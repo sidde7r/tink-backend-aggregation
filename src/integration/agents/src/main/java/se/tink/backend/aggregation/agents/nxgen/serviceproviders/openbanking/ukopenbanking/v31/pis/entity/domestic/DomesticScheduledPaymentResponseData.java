@@ -38,7 +38,9 @@ public class DomesticScheduledPaymentResponseData {
                         .withCreditor(initiation.getCreditorAccount().toCreditor())
                         .withExactCurrencyAmount(initiation.getInstructedAmount().toTinkAmount())
                         .withDebtor(getDebtor(initiation))
-                        .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))
+                        .withStatus(
+                                UkOpenBankingV31Constants.scheduledPaymentStatusToPaymentStatus(
+                                        status))
                         .withExecutionDate(getDate(initiation))
                         .build();
 
