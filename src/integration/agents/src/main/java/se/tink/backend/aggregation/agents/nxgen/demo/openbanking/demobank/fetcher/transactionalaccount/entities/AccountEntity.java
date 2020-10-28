@@ -142,8 +142,14 @@ public class AccountEntity {
         } else return TransactionalAccountType.SAVINGS;
     }
 
+    @JsonIgnore
     public boolean isNotCreditCard() {
         return !accountType.equalsIgnoreCase(AccountTypes.CREDIT_CARD);
+    }
+
+    @JsonIgnore
+    public boolean isCreditCard() {
+        return accountType.equalsIgnoreCase(AccountTypes.CREDIT_CARD);
     }
 
     @JsonIgnore
