@@ -42,6 +42,14 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
                     .put(PaymentStatus.PAID, "AcceptedSettlementCompleted")
                     .build();
 
+    private static final TypeMapper<PaymentStatus> SCHEDULED_PAYMENT_STATUS_MAPPER =
+            TypeMapper.<PaymentStatus>builder()
+                    .put(PaymentStatus.PENDING, "InitiationPending")
+                    .put(PaymentStatus.SIGNED, "InitiationCompleted")
+                    .put(PaymentStatus.REJECTED, "InitiationFailed")
+                    .put(PaymentStatus.CANCELLED, "Cancelled")
+                    .build();
+
     private UkOpenBankingV31Constants() {}
 
     public static PaymentStatus toPaymentStatus(String consentStatus) {
@@ -52,6 +60,18 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
                         () ->
                                 new IllegalStateException(
                                         String.format("%s unknown paymentstatus!", consentStatus)));
+    }
+
+    public static PaymentStatus scheduledPaymentStatusToPaymentStatus(
+            String scheduledPaymentStatus) {
+        return SCHEDULED_PAYMENT_STATUS_MAPPER
+                .translate(scheduledPaymentStatus)
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        String.format(
+                                                "%s unknown payment status!",
+                                                scheduledPaymentStatus)));
     }
 
     public static AccountIdentifier toAccountIdentifier(String schemeName, String identification) {
