@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 @Data
+@NoArgsConstructor
 public class DomesticScheduledPaymentInitiation {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
