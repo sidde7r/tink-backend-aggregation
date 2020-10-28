@@ -259,8 +259,7 @@ public class NemIdIFrameController {
             throw LoginError.INCORRECT_CREDENTIALS.exception(
                     new LocalizableKey(ENTER_ACTIVATION_PASSWORD));
         } else {
-            throw new IllegalStateException(
-                    String.format(NEM_ID_PREFIX + " Unknown login error '%s'.", errorText));
+            throw new IllegalStateException(NEM_ID_PREFIX + " Unknown login error: " + errorText);
         }
     }
 

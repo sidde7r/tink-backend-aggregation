@@ -277,8 +277,7 @@ public class NemIdIFrameControllerTest {
         // then
         assertThat(throwable)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage(
-                        "[NemId] Unknown login error '--- WRONG CREDENTIALS UNKNOWN ERROR ---'.");
+                .hasMessage("[NemId] Unknown login error: --- WRONG CREDENTIALS UNKNOWN ERROR ---");
     }
 
     @Test
