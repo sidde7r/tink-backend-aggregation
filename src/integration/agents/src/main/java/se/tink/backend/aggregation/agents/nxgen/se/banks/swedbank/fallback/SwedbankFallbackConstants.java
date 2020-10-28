@@ -15,6 +15,7 @@ public class SwedbankFallbackConstants {
         public static final String DATE_PATTERN = "EEE, dd MMM yyyy k:m:s zzz";
         public static final String DIGEST_PREFIX = "SHA-256=";
         public static final String CLIENT_NAME = "Tink/1.0";
+        public static final String DSID = "dsid";
     }
 
     public static class ErrorMessage {

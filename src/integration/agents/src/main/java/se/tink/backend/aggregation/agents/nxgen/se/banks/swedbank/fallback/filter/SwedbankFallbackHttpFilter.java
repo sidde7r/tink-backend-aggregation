@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -26,16 +27,19 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SwedbankFallbackHttpFilter extends Filter {
 
+    private final RandomValueGenerator randomValueGenerator;
     private final SwedbankPsd2Configuration configuration;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final EidasIdentity eidasIdentity;
     private final String qSealcBase64;
 
     public SwedbankFallbackHttpFilter(
+            RandomValueGenerator randomValueGenerator,
             SwedbankPsd2Configuration configuration,
             AgentsServiceConfiguration agentsServiceConfiguration,
             EidasIdentity eidasIdentity,
             String qSealc) {
+        this.randomValueGenerator = randomValueGenerator;
         this.configuration = configuration;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
         this.eidasIdentity = eidasIdentity;
@@ -78,6 +82,7 @@ public class SwedbankFallbackHttpFilter extends Filter {
             request.getHeaders().add(header.getKey(), header.getValue());
         }
         request.getHeaders().add(Keys.SIGNATURE, signature);
+        request.getHeaders().add(Headers.DSID, generateDSID());
     }
 
     private Map<String, Object> getHeaders(String digest) {
@@ -100,5 +105,9 @@ public class SwedbankFallbackHttpFilter extends Filter {
             throw BankServiceError.BANK_SIDE_FAILURE.exception(
                     "Http status: " + response.getStatus() + ", body: " + error);
         }
+    }
+
+    private String generateDSID() {
+        return randomValueGenerator.generateRandomBase64UrlEncoded(6);
     }
 }

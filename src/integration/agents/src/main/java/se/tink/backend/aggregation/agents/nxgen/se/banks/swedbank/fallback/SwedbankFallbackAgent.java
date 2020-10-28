@@ -56,6 +56,10 @@ public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         client.addFilter(
                 new SwedbankFallbackHttpFilter(
-                        psd2Configuration, agentsServiceConfiguration, getEidasIdentity(), qSealc));
+                        componentProvider.getRandomValueGenerator(),
+                        psd2Configuration,
+                        agentsServiceConfiguration,
+                        getEidasIdentity(),
+                        qSealc));
     }
 }

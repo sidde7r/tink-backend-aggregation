@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import javax.ws.rs.core.Cookie;
 import lombok.Getter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -115,11 +114,6 @@ public class SwedbankDefaultApiClient {
         this.host = configuration.getHost();
     }
 
-    private String generateDSID() {
-        Base64 base64 = new Base64(100, null, true);
-        return base64.encodeAsString(componentProvider.getRandomValueGenerator().secureRandom(6));
-    }
-
     protected <T> T makeGetRequest(URL url, Class<T> responseClass, boolean retry) {
         return makeRequest(url, null, responseClass, Method.GET, retry);
     }
@@ -198,7 +192,7 @@ public class SwedbankDefaultApiClient {
 
     private <T> T executeRequest(
             URL url, Method method, Object requestObject, Class<T> responseClass) {
-        RequestBuilder requestBuilder = buildAbstractRequest(url);
+        RequestBuilder requestBuilder = client.request(url);
         switch (method) {
             case GET:
                 return requestBuilder.get(responseClass);
@@ -212,17 +206,6 @@ public class SwedbankDefaultApiClient {
                 log.warn("SwedbankDefaultApiClient: Invalid method - Method:[{}]", method);
                 throw new IllegalStateException();
         }
-    }
-
-    private RequestBuilder buildAbstractRequest(URL url) {
-        String dsid = generateDSID();
-
-        return client.request(url)
-                .header(
-                        SwedbankBaseConstants.Headers.AUTHORIZATION_KEY,
-                        SwedbankBaseConstants.generateAuthorization(configuration, username))
-                .queryParam(SwedbankBaseConstants.Url.DSID_KEY, dsid)
-                .cookie(new Cookie(SwedbankBaseConstants.Url.DSID_KEY, dsid));
     }
 
     public InitBankIdResponse initBankId() {
