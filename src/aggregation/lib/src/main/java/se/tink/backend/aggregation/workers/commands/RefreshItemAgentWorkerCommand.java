@@ -93,7 +93,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             RefreshEventProducer refreshEventProducer) {
         this.context = context;
         this.item = item;
-        this.metrics = metrics.init(this);
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.dataTrackerEventProducer = dataTrackerEventProducer;
         this.refreshEventProducer = refreshEventProducer;
@@ -102,6 +101,9 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         this.provider = request.getProvider().getName();
         this.market = request.getProvider().getMarket();
         this.dataFetchingRestrictions = request.getDataFetchingRestrictions();
+        this.metrics =
+                metrics.init(
+                        this, MetricId.MetricLabels.from(ImmutableMap.of("provider", provider)));
     }
 
     public RefreshableItem getRefreshableItem() {
