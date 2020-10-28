@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
@@ -136,8 +137,7 @@ public class BankIdAuthenticationControllerNO
                 SerializationUtils.serializeToString(Lists.newArrayList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        supplementalRequester.requestSupplementalInformation(
-                credentials, 90, TimeUnit.SECONDS, true);
+        supplementalRequester.requestSupplementalInformation(credentials, true);
     }
 
     private void stopPolling(Future<?> future) throws BankIdException, LoginException {
@@ -150,13 +150,18 @@ public class BankIdAuthenticationControllerNO
             logger.error("[BankID] Interrupted exception happened", e);
             throw LoginError.DEFAULT_MESSAGE.exception();
         } catch (ExecutionException e) {
-            handlePossibleBankIDException(e);
+            throwKnownExceptionOrDefault(e);
         }
     }
 
-    private void handlePossibleBankIDException(ExecutionException e) {
-        if (e.getCause() instanceof BankIdException) {
-            throw (BankIdException) e.getCause();
+    private void throwKnownExceptionOrDefault(ExecutionException e) {
+        Throwable cause = e.getCause();
+        if (cause instanceof BankIdException) {
+            throw (BankIdException) cause;
+        } else if (cause instanceof LoginException) {
+            throw (LoginException) cause;
+        } else if (cause instanceof SupplementalInfoException) {
+            throw (SupplementalInfoException) cause;
         } else {
             logger.error("[BankID] Other error occurred while polling bankID", e);
             throw LoginError.DEFAULT_MESSAGE.exception();
