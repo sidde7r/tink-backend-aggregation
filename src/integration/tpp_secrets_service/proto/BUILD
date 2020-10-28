@@ -6,6 +6,9 @@ proto_library(
         "service.proto",
     ]),
     visibility = ["//visibility:public"],
+    deps = [
+        "@com_google_protobuf//:empty_proto",
+    ],
 )
 
 java_proto_library(
