@@ -20,15 +20,6 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
         this.doUpdateCredential = true;
     }
 
-    public DecryptCredentialsWorkerCommand(
-            AgentWorkerCommandContext context,
-            CredentialsCrypto credentialsCrypto,
-            boolean doUpdateCredential) {
-        this.context = context;
-        this.credentialsCrypto = credentialsCrypto;
-        this.doUpdateCredential = doUpdateCredential;
-    }
-
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
         CredentialsRequest request = context.getRequest();
