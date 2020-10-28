@@ -20,6 +20,11 @@ public class NordeaErrorResponse extends NordeaBaseResponse {
     }
 
     @JsonIgnore
+    public boolean isFetchCertificateFailure() {
+        return error != null && error.isFetchCertificateFailure();
+    }
+
+    @JsonIgnore
     public void checkPisError(Throwable cause) throws PaymentException {
         if (error != null) {
             error.parseAndThrowPis(cause);

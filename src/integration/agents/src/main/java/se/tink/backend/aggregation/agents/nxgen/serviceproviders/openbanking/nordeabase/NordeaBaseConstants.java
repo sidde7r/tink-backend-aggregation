@@ -165,6 +165,8 @@ public final class NordeaBaseConstants {
                 "No PaymentType found for your AccountIdentifiers pair ";
         public static final String TOKEN_EXPIRED = "Bearer token is not valid anymore";
         public static final String CONSENT_NOT_FOUND = "Consent not found.";
+        public static final String CERTIFICATE_FETCH_FAILED =
+                "Not possible to fetch your certificate. Please try later on.";
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be null";
         public static final String EMPTY_CONFIGURATION =

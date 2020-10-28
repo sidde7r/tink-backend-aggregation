@@ -70,6 +70,12 @@ public class FailuresEntity {
     }
 
     @JsonIgnore
+    public boolean isFetchCertificateFailure() {
+        return NordeaBaseConstants.ErrorMessages.CERTIFICATE_FETCH_FAILED.equalsIgnoreCase(
+                description);
+    }
+
+    @JsonIgnore
     @Override
     public String toString() {
         return "FailuresEntity[code : "
