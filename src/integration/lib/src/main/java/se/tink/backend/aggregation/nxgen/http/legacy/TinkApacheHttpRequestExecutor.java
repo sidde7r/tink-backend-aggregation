@@ -247,6 +247,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                     "eb750ea914794abb8e2a70977b936f35",
                     "cdadab612b3246d3965aa9247482824e");
 
+    private DefaultRequestLoggingAdapter requestLoggingAdapter;
+
     private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
     private boolean shouldAddRequestSignature = true;
@@ -286,6 +288,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         this.shouldUseEidasProxy = true;
     }
 
+    public void setRequestLoggingAdapter(DefaultRequestLoggingAdapter requestLoggingAdapter) {
+        this.requestLoggingAdapter = requestLoggingAdapter;
+    }
+
     @Override
     public HttpResponse execute(HttpRequest request, HttpClientConnection conn, HttpContext context)
             throws IOException, HttpException {
@@ -298,39 +304,22 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         if (isHttpProxyRequest(request) && (!shouldUseEidasProxy)) {
             addProxyAuthorizationHeader(request);
         } else if (shouldUseEidasProxy) {
-            request.addHeader(EIDAS_CLUSTER_ID_HEADER, eidasIdentity.getClusterId());
-            request.addHeader(EIDAS_APPID_HEADER, eidasIdentity.getAppId());
-            request.addHeader(EIDAS_CERTID_HEADER, eidasIdentity.getCertId());
-            request.addHeader(EIDAS_PROXY_REQUESTER, eidasIdentity.getRequester());
+            addEidasProxyHeaders(request);
         } else if (shouldAddRequestSignature) {
-
-            // For RE request, try to add authentication header with corresponding QSealC cert.
-            // * If eidasIdentity is null (for legacy agent), fallback to use self signed cert.
-            // * If QSealC cert can't be found or other exceptions, fallback as well and log the
-            // error.
-            // Roll out this for oxford users now.
-            if (eidasIdentity != null && eidasIdentity.getAppId() != null) {
-                try {
-                    if (!DISALLOWED_APPIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getAppId())
-                            && ALLOWED_CLUSTERIDS_FOR_QSEALCSIGN.contains(
-                                    eidasIdentity.getClusterId())) {
-                        addQsealcSignatureByGetingWholeJwsToken(request);
-                    }
-                } catch (Exception e) {
-                    log.warn(
-                            "Error occurred in QSealC signing, appId {} certId {} clusterId {}",
-                            eidasIdentity.getAppId(),
-                            eidasIdentity.getCertId(),
-                            eidasIdentity.getClusterId(),
-                            e);
-                    addRequestSignature(request);
-                }
-            } else {
-                addRequestSignature(request);
-            }
+            addQsealcOrRequestSignature(request);
         }
 
+        if (!isHttpProxyRequest(request)) {
+            log(request);
+        }
         return super.execute(request, conn, context);
+    }
+
+    private void addEidasProxyHeaders(HttpRequest request) {
+        request.addHeader(EIDAS_CLUSTER_ID_HEADER, eidasIdentity.getClusterId());
+        request.addHeader(EIDAS_APPID_HEADER, eidasIdentity.getAppId());
+        request.addHeader(EIDAS_CERTID_HEADER, eidasIdentity.getCertId());
+        request.addHeader(EIDAS_PROXY_REQUESTER, eidasIdentity.getRequester());
     }
 
     private boolean isHttpProxyRequest(HttpRequest request) {
@@ -374,6 +363,33 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                 cookieHeaders.stream().map(Header::getValue).collect(Collectors.joining("; "));
 
         request.addHeader("Cookie", cookieValue);
+    }
+
+    private void addQsealcOrRequestSignature(HttpRequest request) {
+        // For RE request, try to add authentication header with corresponding QSealC cert.
+        // * If eidasIdentity is null (for legacy agent), fallback to use self signed cert.
+        // * If QSealC cert can't be found or other exceptions, fallback as well and log the
+        // error.
+        // Roll out this for oxford users now.
+        if (eidasIdentity != null && eidasIdentity.getAppId() != null) {
+            try {
+                if (!DISALLOWED_APPIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getAppId())
+                        && ALLOWED_CLUSTERIDS_FOR_QSEALCSIGN.contains(
+                                eidasIdentity.getClusterId())) {
+                    addQsealcSignatureByGetingWholeJwsToken(request);
+                }
+            } catch (Exception e) {
+                log.warn(
+                        "Error occurred in QSealC signing, appId {} certId {} clusterId {}",
+                        eidasIdentity.getAppId(),
+                        eidasIdentity.getCertId(),
+                        eidasIdentity.getClusterId(),
+                        e);
+                addRequestSignature(request);
+            }
+        } else {
+            addRequestSignature(request);
+        }
     }
 
     private void addQsealcSignatureByGetingWholeJwsToken(HttpRequest request) {
@@ -489,5 +505,16 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         byte[] headerBytes = sortedHeaders.getBytes(StandardCharsets.UTF_8);
         byte[] digest = Hash.sha256(headerBytes);
         return Optional.of(EncodingUtils.encodeAsBase64String(digest));
+    }
+
+    /**
+     * Request is logged in executor instead of filter to print all outgoing headers
+     *
+     * @param httpRequest
+     */
+    private void log(HttpRequest httpRequest) {
+        if (requestLoggingAdapter != null) {
+            requestLoggingAdapter.logRequest(httpRequest);
+        }
     }
 }
