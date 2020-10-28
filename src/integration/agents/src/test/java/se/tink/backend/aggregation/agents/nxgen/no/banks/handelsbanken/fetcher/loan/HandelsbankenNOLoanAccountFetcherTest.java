@@ -40,6 +40,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     private static final String ACCOUNT_DESCRIPTION = "Lån annuitet";
     private static final String MORTGAGE_ACCOUNT_DESCRIPTION = "Bolig eiendomskreditt ann";
     private static final String MORTGAGE_ACCOUNT_DESCRIPTION2 = "Fast 7 år annu ek";
+    private static final String MORTGAGE_ACCOUNT_DESCRIPTION3 = "Fast 5 år annu ek";
     private static final String REPAYMENT_PLAN = "repayment_plan";
     private static final String TYPE = "loan";
     private static final String CAPABILITIES = "capabilities";
@@ -113,6 +114,9 @@ public class HandelsbankenNOLoanAccountFetcherTest {
                                                 getLinks(getLinkEntity())),
                                         getLoanAccountEntity(
                                                 MORTGAGE_ACCOUNT_DESCRIPTION2,
+                                                getLinks(getLinkEntity())),
+                                        getLoanAccountEntity(
+                                                MORTGAGE_ACCOUNT_DESCRIPTION3,
                                                 getLinks(getLinkEntity())))));
 
         when(handelsbankenNOApiClient.fetchLoanDetails(REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH))
@@ -139,22 +143,26 @@ public class HandelsbankenNOLoanAccountFetcherTest {
                                 INTEREST_RATE,
                                 INSTALMENT,
                                 INITIAL_BALANCE,
-                                MORTGAGE_ACCOUNT_DESCRIPTION2));
+                                MORTGAGE_ACCOUNT_DESCRIPTION2),
+                        getLoanAccount(
+                                LoanDetails.Type.MORTGAGE,
+                                INTEREST_RATE,
+                                INSTALMENT,
+                                INITIAL_BALANCE,
+                                MORTGAGE_ACCOUNT_DESCRIPTION3));
 
         // When
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
-        int counter = 0;
-        for (LoanAccount loanAccount : result) {
-            assertThat(loanAccount)
+        for (int i = 0; i < result.size(); i++) {
+            assertThat(result.get(i))
                     .isEqualToIgnoringGivenFields(
-                            expected.get(counter), DETAILS, ID_MODULE, CAPABILITIES);
-            assertThat(loanAccount.getDetails())
-                    .isEqualToComparingFieldByField(expected.get(counter).getDetails());
-            assertThat(loanAccount.getIdModule())
-                    .isEqualToComparingFieldByField(expected.get(counter).getIdModule());
-            counter++;
+                            expected.get(i), DETAILS, ID_MODULE, CAPABILITIES);
+            assertThat(result.get(i).getDetails())
+                    .isEqualToComparingFieldByField(expected.get(i).getDetails());
+            assertThat(result.get(i).getIdModule())
+                    .isEqualToComparingFieldByField(expected.get(i).getIdModule());
         }
     }
 

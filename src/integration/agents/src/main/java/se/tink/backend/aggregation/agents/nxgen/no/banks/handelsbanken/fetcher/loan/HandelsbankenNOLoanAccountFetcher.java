@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan.entities.DetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan.entities.LoanAccountEntity;
@@ -29,10 +29,10 @@ public class HandelsbankenNOLoanAccountFetcher implements AccountFetcher<LoanAcc
     private static final String NOK_CURRENCY_CODE = "NOK";
     private final HandelsbankenNOApiClient handelsbankenNOApiClient;
 
-    private static final Map<String, LoanDetails.Type> LOANS_DESCRIPTIONS =
-            ImmutableMap.<String, LoanDetails.Type>builder()
-                    .put("bolig", LoanDetails.Type.MORTGAGE)
-                    .put("Fast 7 år annu ek", LoanDetails.Type.MORTGAGE)
+    private static final Map<Pattern, LoanDetails.Type> LOANS_DESCRIPTIONS =
+            ImmutableMap.<Pattern, LoanDetails.Type>builder()
+                    .put(Pattern.compile(".*bolig.*"), LoanDetails.Type.MORTGAGE)
+                    .put(Pattern.compile("fast \\d år annu ek"), LoanDetails.Type.MORTGAGE)
                     .build();
 
     public HandelsbankenNOLoanAccountFetcher(HandelsbankenNOApiClient handelsbankenNOApiClient) {
@@ -107,7 +107,7 @@ public class HandelsbankenNOLoanAccountFetcher implements AccountFetcher<LoanAcc
 
     private LoanDetails.Type getLoanType(String description) {
         return LOANS_DESCRIPTIONS.entrySet().stream()
-                .filter(entry -> StringUtils.containsIgnoreCase(description, entry.getKey()))
+                .filter(entry -> entry.getKey().matcher(description.toLowerCase()).matches())
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElse(LoanDetails.Type.DERIVE_FROM_NAME);

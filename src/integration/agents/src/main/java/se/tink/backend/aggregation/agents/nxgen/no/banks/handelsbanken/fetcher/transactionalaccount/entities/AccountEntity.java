@@ -2,9 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,54 +14,20 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Slf4j
+@Getter
 public class AccountEntity {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountEntity.class);
-
     private String id;
     private String accountNumber;
+    private String bban;
+    private String iban;
     private String customerRole;
-    private String type;
     private OwnerEntity owner;
+    private String displayName;
     private PropertiesEntity properties;
     private AccountBalanceEntity accountBalance;
     private RightsEntity rights;
     private HashMap<String, LinkEntity> links;
-
-    public String getId() {
-        return id;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public String getCustomerRole() {
-        return customerRole;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public OwnerEntity getOwner() {
-        return owner;
-    }
-
-    public PropertiesEntity getProperties() {
-        return properties;
-    }
-
-    public AccountBalanceEntity getAccountBalance() {
-        return accountBalance;
-    }
-
-    public RightsEntity getRights() {
-        return rights;
-    }
-
-    public HashMap<String, LinkEntity> getLinks() {
-        return links;
-    }
 
     private String getTransactionUrl() {
         return links.get(HandelsbankenNOConstants.Tags.TRANSACTIONS).getHref();
@@ -68,9 +35,9 @@ public class AccountEntity {
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
-        return HandelsbankenNOConstants.AccountType.SPENDING.equalsIgnoreCase(type)
-                || HandelsbankenNOConstants.AccountType.SAVING.equalsIgnoreCase(type)
-                || HandelsbankenNOConstants.AccountType.YOUTH_SAVING.equalsIgnoreCase(type);
+        return HandelsbankenNOConstants.AccountType.ACCOUNT_TYPE_MAPPER.isOneOf(
+                properties.getType(),
+                ImmutableList.of(AccountTypes.CHECKING, AccountTypes.SAVINGS));
     }
 
     @JsonIgnore
@@ -80,7 +47,7 @@ public class AccountEntity {
                         accountNumber,
                         getBalance(accountBalance.getAvailableBalance()))
                 .setAccountNumber(accountNumber)
-                .setName(properties.getAlias())
+                .setName(displayName)
                 .setHolderName(new HolderName(owner.getName()))
                 .setBankIdentifier(getTransactionUrl())
                 .build();
@@ -88,17 +55,15 @@ public class AccountEntity {
 
     @JsonIgnore
     private AccountTypes getTinkAccountType() {
-        switch (type.toLowerCase()) {
-            case HandelsbankenNOConstants.AccountType.SPENDING:
-                return AccountTypes.CHECKING;
-            case HandelsbankenNOConstants.AccountType.SAVING:
-            case HandelsbankenNOConstants.AccountType.YOUTH_SAVING:
-                return AccountTypes.SAVINGS;
-            default:
-                // This should never happen as we filter on checking and savings accounts
-                LOGGER.warn("Could not map account type [{}] to a Tink account type", type);
-                return AccountTypes.OTHER;
-        }
+        return HandelsbankenNOConstants.AccountType.ACCOUNT_TYPE_MAPPER
+                .translate(properties.getType())
+                .orElseGet(
+                        () -> {
+                            log.warn(
+                                    "Could not map account type [{}] to a Tink account type",
+                                    properties.getType());
+                            return AccountTypes.OTHER;
+                        });
     }
 
     @JsonIgnore
@@ -106,8 +71,7 @@ public class AccountEntity {
         String currency = properties.getCurrencyCode();
 
         if (Strings.isNullOrEmpty(currency)) {
-            LOGGER.warn("Handelsbanken Norway: No currency for account found. Defaulting to NOK.");
-
+            log.warn("Handelsbanken Norway: No currency for account found. Defaulting to NOK.");
             return ExactCurrencyAmount.of(balance, "NOK");
         }
 
