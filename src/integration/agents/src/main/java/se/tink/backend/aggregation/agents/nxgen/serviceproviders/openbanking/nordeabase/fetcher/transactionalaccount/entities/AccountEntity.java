@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -171,7 +171,7 @@ public class AccountEntity {
     }
 
     private String getBban() {
-        return Optional.ofNullable(accountNumbers).orElse(Collections.emptyList()).stream()
+        return ListUtils.emptyIfNull(accountNumbers).stream()
                 .filter(
                         acc ->
                                 StringUtils.equalsIgnoreCase(
@@ -188,7 +188,7 @@ public class AccountEntity {
     }
 
     public String getIban() {
-        return Optional.ofNullable(accountNumbers).orElse(Collections.emptyList()).stream()
+        return ListUtils.emptyIfNull(accountNumbers).stream()
                 .filter(
                         acc ->
                                 StringUtils.equalsIgnoreCase(

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -23,6 +24,7 @@ public class DemobankCreditCardFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return apiClient.fetchAccounts().stream()
+                .filter(AccountEntity::isCreditCard)
                 .map(
                         accountEntity ->
                                 accountEntity.toTinkCreditCardAccount(

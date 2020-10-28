@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.AccountTypes;
@@ -12,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -26,6 +29,8 @@ public class AccountEntity {
 
     @JsonProperty("availableBalance")
     private BigDecimal availableBalance;
+
+    private BigDecimal creditLimit;
 
     @JsonProperty("bookedBalance")
     private BigDecimal bookedBalance;
@@ -50,11 +55,7 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType())
                 .withPaymentAccountFlag()
-                .withBalance(
-                        BalanceModule.builder()
-                                .withBalance(getBalance())
-                                .setAvailableBalance(getAvailableBalance())
-                                .build())
+                .withBalance(getBalancesModule())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
@@ -73,6 +74,17 @@ public class AccountEntity {
                 .get();
     }
 
+    private BalanceModule getBalancesModule() {
+        BalanceBuilderStep balanceBuilder = BalanceModule.builder().withBalance(getBalance());
+        Optional.ofNullable(availableBalance)
+                .map(b -> ExactCurrencyAmount.of(b, currency))
+                .ifPresent(balanceBuilder::setAvailableBalance);
+        Optional.ofNullable(creditLimit)
+                .map(b -> ExactCurrencyAmount.of(b, currency))
+                .ifPresent(balanceBuilder::setCreditLimit);
+        return balanceBuilder.build();
+    }
+
     @JsonIgnore
     public CreditCardAccount toTinkCreditCardAccount(List<AccountHolder> accountHolders) {
         return CreditCardAccount.nxBuilder()
@@ -80,7 +92,7 @@ public class AccountEntity {
                         CreditCardModule.builder()
                                 .withCardNumber(accountNumber)
                                 .withBalance(getBalance())
-                                .withAvailableCredit(getAvailableBalance())
+                                .withAvailableCredit(getAvailableCredit())
                                 .withCardAlias(accountNumber)
                                 .build())
                 .withPaymentAccountFlag()
@@ -106,8 +118,16 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private ExactCurrencyAmount getAvailableBalance() {
-        return ExactCurrencyAmount.of(availableBalance, currency);
+    private ExactCurrencyAmount getAvailableCredit() {
+        BigDecimal availableCredit = BigDecimal.ZERO;
+        if (Objects.nonNull(creditLimit)) {
+            if (bookedBalance.compareTo(BigDecimal.ZERO) < 0) {
+                availableCredit = creditLimit.add(bookedBalance);
+            } else {
+                availableCredit = creditLimit;
+            }
+        }
+        return ExactCurrencyAmount.of(availableCredit, currency);
     }
 
     @JsonIgnore
@@ -122,8 +142,14 @@ public class AccountEntity {
         } else return TransactionalAccountType.SAVINGS;
     }
 
+    @JsonIgnore
     public boolean isNotCreditCard() {
         return !accountType.equalsIgnoreCase(AccountTypes.CREDIT_CARD);
+    }
+
+    @JsonIgnore
+    public boolean isCreditCard() {
+        return accountType.equalsIgnoreCase(AccountTypes.CREDIT_CARD);
     }
 
     @JsonIgnore

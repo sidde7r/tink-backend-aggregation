@@ -277,8 +277,7 @@ public class NemIdIFrameControllerTest {
         // then
         assertThat(throwable)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage(
-                        "[NemId] Unknown login error '--- WRONG CREDENTIALS UNKNOWN ERROR ---'.");
+                .hasMessage("[NemId] Unknown login error: --- WRONG CREDENTIALS UNKNOWN ERROR ---");
     }
 
     @Test
@@ -305,6 +304,20 @@ public class NemIdIFrameControllerTest {
                     .isInstanceOf(LoginException.class)
                     .hasMessage("[NemId]" + errorMsg);
         }
+    }
+
+    @Test
+    public void doLoginWithShouldFailWhenNemIdReturnKnownErrorForWhenUserNeedsASpecialPassword() {
+        // given
+        String errMessage = "Enter activation password.";
+        given(errorMessageMock.getText()).willReturn(errMessage);
+
+        // when
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
+
+        // then
+        assertThat(throwable).isInstanceOf(LoginException.class);
+        assertThat(((LoginException) throwable).getUserMessage().get()).isEqualTo(errMessage);
     }
 
     @Test
