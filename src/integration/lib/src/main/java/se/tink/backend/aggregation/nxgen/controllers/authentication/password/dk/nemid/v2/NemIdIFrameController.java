@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.ErrorPatterns.INCORRECT_CREDENTIALS_ERROR_PATTERNS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.Errors.ENTER_ACTIVATION_PASSWORD;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.Errors.INCORRECT_CREDENTIALS_ERROR_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.IFRAME;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_APP_BUTTON;
@@ -34,6 +35,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
@@ -253,10 +255,13 @@ public class NemIdIFrameController {
                 .map(p -> p.matcher(err))
                 .anyMatch(Matcher::matches)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception(NEM_ID_PREFIX + err);
+        } else if (ENTER_ACTIVATION_PASSWORD.equalsIgnoreCase(err)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(
+                    new LocalizableKey(ENTER_ACTIVATION_PASSWORD));
+        } else {
+            throw new IllegalStateException(
+                    String.format(NEM_ID_PREFIX + " Unknown login error '%s'.", errorText));
         }
-
-        throw new IllegalStateException(
-                String.format(NEM_ID_PREFIX + " Unknown login error '%s'.", errorText));
     }
 
     private void setUserName(WebDriver driver, String username) {

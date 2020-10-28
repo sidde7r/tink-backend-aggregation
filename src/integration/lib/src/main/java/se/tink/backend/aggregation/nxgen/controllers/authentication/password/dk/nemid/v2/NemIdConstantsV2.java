@@ -54,7 +54,7 @@ public class NemIdConstantsV2 {
         public static final String NEMID_INSTALL_ID = "NEMID_INSTALL_ID";
     }
 
-    static class ErrorPatterns {
+    static class Errors {
         static final ImmutableList<Pattern> INCORRECT_CREDENTIALS_ERROR_PATTERNS =
                 ImmutableList.<Pattern>builder()
                         .add(
@@ -62,6 +62,8 @@ public class NemIdConstantsV2 {
                                 Pattern.compile("^fejl i (bruger|adgangskode).*"),
                                 Pattern.compile("^indtast (bruger|adgangskode).*"))
                         .build();
+
+        static final String ENTER_ACTIVATION_PASSWORD = "Enter activation password.";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

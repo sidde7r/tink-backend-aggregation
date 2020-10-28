@@ -308,6 +308,20 @@ public class NemIdIFrameControllerTest {
     }
 
     @Test
+    public void doLoginWithShouldFailWhenNemIdReturnKnownErrorForWhenUserNeedsASpecialPassword() {
+        // given
+        String errMessage = "Enter activation password.";
+        given(errorMessageMock.getText()).willReturn(errMessage);
+
+        // when
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
+
+        // then
+        assertThat(throwable).isInstanceOf(LoginException.class);
+        assertThat(((LoginException) throwable).getUserMessage().get()).isEqualTo(errMessage);
+    }
+
+    @Test
     public void doLoginWithShouldFailWhenUserDoesNotAuthorizeNemIdRequestIn3rdPartyApp() {
         // given
         given(webdriverHelper.waitForElement(driver, OTP_ICON))
