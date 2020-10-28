@@ -33,7 +33,7 @@ public class ManualAuthenticateRequest extends CredentialsRequest {
 
     @Override
     public CredentialsRequestType getType() {
-        return CredentialsRequestType.REFRESH_INFORMATION;
+        return CredentialsRequestType.MANUAL_AUTHENTICATION;
     }
 
     public void setManual(boolean manual) {

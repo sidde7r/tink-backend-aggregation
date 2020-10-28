@@ -113,6 +113,11 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 metricRegistry.meter(MetricId.newId("accounts_refresh").label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
+
+        log.info(
+                "AgentWorkerCommandContext constructed. Request of type: {} has operationId set: {}",
+                request.getType().toString(),
+                String.valueOf(request.getOperationId() != null));
     }
 
     // TODO: We should do this some other way. This is a hack we can use for now.

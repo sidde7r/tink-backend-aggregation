@@ -55,9 +55,7 @@ public final class BankinterApiClient {
     }
 
     public void storeLoginCookies(Set<org.openqa.selenium.Cookie> cookies) {
-        cookies.stream()
-                .map(cookie -> convertCookie(cookie))
-                .forEach(cookie -> client.addCookie(cookie));
+        cookies.stream().map(this::convertCookie).forEach(client::addCookie);
     }
 
     public IdentityDataResponse fetchIdentityData() {
