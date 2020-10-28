@@ -327,10 +327,9 @@ public class AggregationServiceResource implements AggregationService {
                         .filter(
                                 prv ->
                                         Objects.equals(
-                                                financialInstitutionId,
-                                                prv.getFinancialInstitutionId()) || Objects.equals(
-                                        providerId,
-                                        prv.getName()))
+                                                        financialInstitutionId,
+                                                        prv.getFinancialInstitutionId())
+                                                || Objects.equals(providerId, prv.getName()))
                         .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
                         // Trying to get rid of possible sandbox providers if they exist.
                         .filter(prv -> !StringUtils.containsIgnoreCase(prv.getName(), "sandbox"))
