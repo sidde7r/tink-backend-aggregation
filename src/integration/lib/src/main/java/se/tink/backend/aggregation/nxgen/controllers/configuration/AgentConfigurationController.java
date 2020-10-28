@@ -39,6 +39,10 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private static final Logger log = LoggerFactory.getLogger(AgentConfigurationController.class);
     private static final ObjectMapper OBJECT_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    private static final String TRY_READ_FROM_K8_LOGGER_MSG =
+            "Trying to read information from k8s for an OB agent: {}. Consider uploading the configuration to ESS instead.";
+
     private final TppSecretsServiceClient tppSecretsServiceClient;
     private final IntegrationsConfiguration integrationsConfiguration;
     private final boolean tppSecretsServiceEnabled;
@@ -315,10 +319,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             String integrationName, String clientName, Class<T> clientConfigClass) {
 
         if (isOpenBankingAgent) {
-            log.warn(
-                    "Trying to read information from k8s for an OB agent: {}. "
-                            + "Consider uploading the configuration to ESS instead.",
-                    clientConfigClass);
+            log.warn(TRY_READ_FROM_K8_LOGGER_MSG, clientConfigClass);
         }
 
         Object clientConfigurationAsObject =
@@ -341,10 +342,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     public <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
             String integrationName, Class<T> clientConfigClass) {
         if (isOpenBankingAgent) {
-            log.warn(
-                    "Trying to read information from k8s for an OB agent: {}. "
-                            + "Consider uploading the configuration to ESS instead.",
-                    clientConfigClass);
+            log.warn(TRY_READ_FROM_K8_LOGGER_MSG, clientConfigClass);
         }
 
         Object clientConfigurationAsObject =
@@ -367,10 +365,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     public <T extends ClientConfiguration> Optional<T> getAgentConfigurationFromK8sAsOptional(
             String integrationName, Class<T> clientConfigClass) {
         if (isOpenBankingAgent) {
-            log.warn(
-                    "Trying to read information from k8s for an OB agent: {}. "
-                            + "Consider uploading the configuration to ESS instead.",
-                    clientConfigClass);
+            log.warn(TRY_READ_FROM_K8_LOGGER_MSG, clientConfigClass);
         }
 
         Optional<Object> clientConfigurationAsObject =
