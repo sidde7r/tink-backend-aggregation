@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.utils.authentication.encap3.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -63,5 +65,29 @@ public class IdentificationEntity {
     @JsonIgnore
     public int getClientSaltNextKeyId() {
         return clientSaltNextKeyId;
+    }
+
+    @Override
+    public String toString() {
+        return "IdentificationEntity{"
+                + "purpose="
+                + purpose
+                + ", authenticationWithoutPin="
+                + authenticationWithoutPin
+                + ", lastAttempt="
+                + lastAttempt
+                + ", totalAttempts="
+                + totalAttempts
+                + ", remainingAttempts="
+                + remainingAttempts
+                + ", allowedAuthMethods="
+                + Optional.ofNullable(allowedAuthMethods)
+                        .map(
+                                objects ->
+                                        objects.stream()
+                                                .map(String::valueOf)
+                                                .collect(Collectors.joining(", ")))
+                        .orElse(null)
+                + '}';
     }
 }

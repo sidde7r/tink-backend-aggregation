@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +7,6 @@ import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Urls;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.IdentificationEntity;
-import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.RegistrationEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.RegistrationResultEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.enums.AuthenticationMethod;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.DeviceAuthenticationResponse;
@@ -76,7 +74,10 @@ public class EncapClient {
         String registrationMessage = messageUtils.buildRegistrationMessage();
         RegistrationResponse registrationResponse =
                 messageUtils.encryptAndSend(registrationMessage, RegistrationResponse.class);
-        logAndThrowErrorIfRegistrationResponseIsInvalid(registrationResponse);
+        if (!registrationResponse.isValid()) {
+            log.error("RegistrationResponse is not valid.");
+            throw LoginError.REGISTER_DEVICE_ERROR.exception();
+        }
 
         RegistrationResultEntity registrationResultEntity = registrationResponse.getResult();
         storeRegistrationResult(registrationResultEntity);
@@ -98,27 +99,6 @@ public class EncapClient {
         return createDeviceRegistrationResponse(activateDeviceSoapResponse);
     }
 
-    private void logAndThrowErrorIfRegistrationResponseIsInvalid(
-            RegistrationResponse registrationResponse) {
-        // (Wiski) delete this logging logic after getting some more information about these errors
-        if (!registrationResponse.isValid()) {
-            Optional<RegistrationResultEntity> optionalResult =
-                    Optional.ofNullable(registrationResponse.getResult());
-            Optional<RegistrationEntity> optionalRegistration =
-                    optionalResult.map(RegistrationResultEntity::getRegistration);
-            Optional<List<String>> optionalAllowedMethods =
-                    optionalRegistration.map(RegistrationEntity::getAllowedAuthMethods);
-            log.error(
-                    "ActivationResponse is not valid.\nCode: {}\nOutdated: {}\nHas result: {}\nHasRegistration: {}\nAllowed methods: {}",
-                    registrationResponse.getCode(),
-                    registrationResponse.isOutdated(),
-                    optionalResult.isPresent(),
-                    optionalRegistration.isPresent(),
-                    optionalAllowedMethods.orElse(null));
-            throw LoginError.REGISTER_DEVICE_ERROR.exception();
-        }
-    }
-
     public DeviceAuthenticationResponse authenticateDevice(
             AuthenticationMethod authenticationMethod) {
         return authenticateDevice(authenticationMethod, null);
@@ -138,9 +118,7 @@ public class EncapClient {
         String identificationMessage = messageUtils.buildIdentificationMessage(authenticationId);
         IdentificationResponse identificationResponse =
                 messageUtils.encryptAndSend(identificationMessage, IdentificationResponse.class);
-        if (!identificationResponse.isValid()) {
-            throw new IllegalStateException("IdentificationResponse is not valid.");
-        }
+        logAndThrowErrorIfIdentificationResponseIsInvalid(identificationResponse);
 
         IdentificationEntity identificationEntity = identificationResponse.getResult();
         storeIdentificationResult(identificationEntity);
@@ -161,6 +139,19 @@ public class EncapClient {
                 messageUtils.encryptSoapAndSend(Urls.SOAP_AUTHENTICATION, authenticateDeviceBody);
 
         return createDeviceAuthenticationResponse(soapResponse);
+    }
+
+    private void logAndThrowErrorIfIdentificationResponseIsInvalid(
+            IdentificationResponse identificationResponse) {
+        // (Wiski) delete this logging logic after getting some more information about these errors
+        if (!identificationResponse.isValid()) {
+            log.error(
+                    "IdentificationResponse is not valid.\nCode: {}\nOutdated: {}\nResult: {}",
+                    identificationResponse.getCode(),
+                    identificationResponse.isOutdated(),
+                    Optional.ofNullable(identificationResponse.getResult()).orElse(null));
+            throw LoginError.DEFAULT_MESSAGE.exception();
+        }
     }
 
     public void saveDevice() {
