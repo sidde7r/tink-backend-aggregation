@@ -12,27 +12,6 @@ public final class SecretsNamesValidationRequest {
     private Set<String> agentConfigParamNames;
     private Set<String> excludedAgentConfigParamNames;
 
-    public SecretsNamesValidationRequest() {}
-
-    public SecretsNamesValidationRequest(
-            String financialInstitutionId,
-            String providerId,
-            Set<String> secretsNames,
-            Set<String> excludedSecretsNames,
-            Set<String> sensitiveSecretsNames,
-            Set<String> excludedSensitiveSecretsNames,
-            Set<String> agentConfigParamNames,
-            Set<String> excludedAgentConfigParamNames) {
-        this.financialInstitutionId = financialInstitutionId;
-        this.providerId = providerId;
-        this.secretsNames = secretsNames;
-        this.excludedSecretsNames = excludedSecretsNames;
-        this.sensitiveSecretsNames = sensitiveSecretsNames;
-        this.excludedSensitiveSecretsNames = excludedSensitiveSecretsNames;
-        this.agentConfigParamNames = agentConfigParamNames;
-        this.excludedAgentConfigParamNames = excludedAgentConfigParamNames;
-    }
-
     public String getFinancialInstitutionId() {
         return financialInstitutionId;
     }
@@ -63,5 +42,37 @@ public final class SecretsNamesValidationRequest {
 
     public Set<String> getExcludedAgentConfigParamNames() {
         return excludedAgentConfigParamNames;
+    }
+
+    public void setFinancialInstitutionId(String financialInstitutionId) {
+        this.financialInstitutionId = financialInstitutionId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    public void setSecretsNames(Set<String> secretsNames) {
+        this.secretsNames = secretsNames;
+    }
+
+    public void setExcludedSecretsNames(Set<String> excludedSecretsNames) {
+        this.excludedSecretsNames = excludedSecretsNames;
+    }
+
+    public void setSensitiveSecretsNames(Set<String> sensitiveSecretsNames) {
+        this.sensitiveSecretsNames = sensitiveSecretsNames;
+    }
+
+    public void setExcludedSensitiveSecretsNames(Set<String> excludedSensitiveSecretsNames) {
+        this.excludedSensitiveSecretsNames = excludedSensitiveSecretsNames;
+    }
+
+    public void setAgentConfigParamNames(Set<String> agentConfigParamNames) {
+        this.agentConfigParamNames = agentConfigParamNames;
+    }
+
+    public void setExcludedAgentConfigParamNames(Set<String> excludedAgentConfigParamNames) {
+        this.excludedAgentConfigParamNames = excludedAgentConfigParamNames;
     }
 }
