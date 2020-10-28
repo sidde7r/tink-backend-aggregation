@@ -95,7 +95,8 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         final String deepLinkUrl =
                 Optional.ofNullable(payload.getIos()).map(Ios::getDeepLinkUrl).orElse("<none>");
 
-        logger.info("Opening third party app with deep link URL {}", deepLinkUrl);
+        logger.info(
+                "Opening third party app with deep link URL {}, state {}", deepLinkUrl, appUriId);
 
         supplementalRequester.requestSupplementalInformation(credentials, false);
     }
