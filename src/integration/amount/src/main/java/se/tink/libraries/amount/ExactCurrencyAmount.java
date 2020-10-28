@@ -113,11 +113,7 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
 
     @Override
     public int compareTo(ExactCurrencyAmount other) {
-        return compareTo(other.value);
-    }
-
-    public int compareTo(BigDecimal other) {
-        return this.value.compareTo(other);
+        return value.compareTo(other.value);
     }
 
     @Override

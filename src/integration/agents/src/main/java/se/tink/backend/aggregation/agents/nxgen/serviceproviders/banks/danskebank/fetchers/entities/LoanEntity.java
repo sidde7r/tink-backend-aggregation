@@ -67,7 +67,7 @@ public class LoanEntity {
     private ExactCurrencyAmount getBalance() {
         ExactCurrencyAmount balance =
                 ExactCurrencyAmount.of(new BigDecimal(outstandingDebt), currencyCode);
-        if (balance.compareTo(BigDecimal.ZERO) == 0) {
+        if (balance.getExactValue().compareTo(BigDecimal.ZERO) == 0) {
             return balance;
         }
 
