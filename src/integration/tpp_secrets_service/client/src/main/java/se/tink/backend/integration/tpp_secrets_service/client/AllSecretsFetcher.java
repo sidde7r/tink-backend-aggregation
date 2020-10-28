@@ -76,10 +76,9 @@ class AllSecretsFetcher {
         Preconditions.checkNotNull(appId, "appId must not be null");
         Preconditions.checkNotNull(clusterId, "clusterId must not be null");
 
-        // only log providerId here and will transfer it to getAllSecrets later
-        log.info("providerId {} in getAllSecrets", providerId);
         return GetSecretsRequest.newBuilder()
                 .setFinancialInstitutionId(financialInstitutionId)
+                .setProviderId(providerId)
                 .setAppId(appId)
                 .setClusterId(clusterId)
                 .build();
