@@ -33,6 +33,8 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rp
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filters.ServerErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filters.ServerErrorRetryFilter;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -52,8 +54,10 @@ public class NordeaDkApiClient {
             PersistentStorage persistentStorage) {
         this.sessionStorage = sessionStorage;
         this.client = client;
-
         this.persistentStorage = persistentStorage;
+
+        this.client.addFilter(new ServerErrorFilter());
+        this.client.addFilter(new ServerErrorRetryFilter());
     }
 
     /**
