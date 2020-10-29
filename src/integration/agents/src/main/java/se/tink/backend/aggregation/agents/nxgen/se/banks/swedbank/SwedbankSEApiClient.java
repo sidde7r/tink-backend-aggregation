@@ -30,7 +30,7 @@ public class SwedbankSEApiClient extends SwedbankDefaultApiClient {
             SwedbankStorage swedbankStorage,
             AgentComponentProvider componentProvider) {
         super(client, configuration, username, swedbankStorage, componentProvider);
-        this.client.addFilter(new SwedbankSeHttpFilter());
+        this.client.addFilter(new SwedbankSeHttpFilter(configuration.getUserAgent()));
     }
 
     public LoanOverviewResponse loanOverview() {

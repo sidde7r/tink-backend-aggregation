@@ -47,9 +47,11 @@ public class SwedbankFallbackConstants {
             new ImmutableMap.Builder<String, ProfileParameters>()
                     .put(
                             "swedbank-fallback",
-                            new ProfileParameters("swedbank-fallback", "GPBwgAXfSWUdLoPV", false))
+                            new ProfileParameters(
+                                    "swedbank-fallback", "GPBwgAXfSWUdLoPV", false, null))
                     .put(
                             "savingsbank-fallback",
-                            new ProfileParameters("savingsbank-fallback", "GPBwgAXfSWUdLoPV", true))
+                            new ProfileParameters(
+                                    "savingsbank-fallback", "GPBwgAXfSWUdLoPV", true, null))
                     .build();
 }

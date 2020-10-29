@@ -110,7 +110,7 @@ public class SwedbankDefaultApiClient {
                                         .getCredentials()
                                         .getField(Key.CORPORATE_ID))
                         .orElse("");
-        ensureAuthorizationHeaderIsSet();
+        setupPersistentHeaders();
         this.host = configuration.getHost();
     }
 
@@ -487,14 +487,15 @@ public class SwedbankDefaultApiClient {
                 false);
     }
 
-    private void ensureAuthorizationHeaderIsSet() {
-        if (client.isPersistentHeaderPresent(SwedbankBaseConstants.Headers.AUTHORIZATION_KEY)) {
-            return;
-        }
-
+    private void setupPersistentHeaders() {
         client.addPersistentHeader(
                 SwedbankBaseConstants.Headers.AUTHORIZATION_KEY,
                 SwedbankBaseConstants.generateAuthorization(configuration, username));
+
+        final String userAgent = configuration.getUserAgent();
+        if (!Strings.isNullOrEmpty(userAgent)) {
+            client.setUserAgent(userAgent);
+        }
     }
 
     public List<BankProfile> getBankProfiles() {

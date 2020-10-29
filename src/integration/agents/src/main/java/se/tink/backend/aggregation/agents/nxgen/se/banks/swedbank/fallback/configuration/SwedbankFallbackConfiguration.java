@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.configuration;
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.SwedbankFallbackConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileParameters;
@@ -38,5 +39,11 @@ public class SwedbankFallbackConfiguration implements SwedbankConfiguration {
     @Override
     public boolean isSavingsBank() {
         return profileParameters.isSavingsBank();
+    }
+
+    @Override
+    @Nullable
+    public String getUserAgent() {
+        return null;
     }
 }
