@@ -106,7 +106,8 @@ public class NemIdIFrameControllerTest {
                         sleeper,
                         authenticator,
                         supplementalRequester,
-                        Catalog.getCatalog("en"));
+                        Catalog.getCatalog("en"),
+                        mock(StatusUpdater.class));
 
         initializeWebElements();
 

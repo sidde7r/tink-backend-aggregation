@@ -28,6 +28,7 @@ import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -49,17 +50,20 @@ public class NemIdIFrameController {
     private final NemIdParametersFetcher nemIdParametersFetcher;
     private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
+    private final StatusUpdater statusUpdater;
 
     public NemIdIFrameController(
             NemIdParametersFetcher nemIdParametersFetcher,
             SupplementalRequester supplementalRequester,
-            Catalog catalog) {
+            Catalog catalog,
+            StatusUpdater statusUpdater) {
         this(
                 new WebdriverHelper(),
                 new Sleeper(),
                 nemIdParametersFetcher,
                 supplementalRequester,
-                catalog);
+                catalog,
+                statusUpdater);
     }
 
     public String doLoginWith(Credentials credentials) throws AuthenticationException {
@@ -85,7 +89,7 @@ public class NemIdIFrameController {
         instantiateIFrameWithNemIdForm(driver);
         log.info("{} iframe is initialized", NEM_ID_PREFIX);
 
-        credentials.setStatusPayload(catalog.getString(UserMessage.NEM_ID_PROCESS_INIT));
+        updateStatusPayload(credentials, catalog.getString(UserMessage.NEM_ID_PROCESS_INIT));
     }
 
     public void login(Credentials credentials, WebDriver driver) {
@@ -93,14 +97,14 @@ public class NemIdIFrameController {
         setPassword(driver, credentials.getField(Field.Key.PASSWORD));
         clickLogin(driver);
 
-        credentials.setStatusPayload(catalog.getString(UserMessage.VERIFYING_CREDS));
+        updateStatusPayload(credentials, catalog.getString(UserMessage.VERIFYING_CREDS));
     }
 
     private void validateResponse(Credentials credentials, WebDriver driver) {
         validateCredentials(driver);
         log.info("{} Provided credentials are valid.", NEM_ID_PREFIX);
 
-        credentials.setStatusPayload(catalog.getString(UserMessage.VALID_CREDS));
+        updateStatusPayload(credentials, catalog.getString(UserMessage.VALID_CREDS));
     }
 
     private String waitFor2ndFactorAndGetToken(WebDriver driver, long askForNemIdStartTime) {
@@ -285,8 +289,8 @@ public class NemIdIFrameController {
     }
 
     private void displayPromptToOpenNemIdApp(Credentials credentials) {
-        credentials.setStatusPayload(
-                catalog.getString(UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON));
+        updateStatusPayload(
+                credentials, catalog.getString(UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON));
 
         Field field =
                 Field.builder()
@@ -331,5 +335,9 @@ public class NemIdIFrameController {
         }
 
         return hasOTPIconAppeared;
+    }
+
+    private void updateStatusPayload(final Credentials credentials, final String message) {
+        statusUpdater.updateStatus(credentials.getStatus(), message);
     }
 }
