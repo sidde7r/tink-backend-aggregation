@@ -278,8 +278,7 @@ public class HandelsbankenNOConstants {
         public static final Map<String, LoanDetails.Type> LOANS_DESCRIPTIONS =
                 ImmutableMap.<String, LoanDetails.Type>builder()
                         .put("bolig", LoanDetails.Type.MORTGAGE)
-                        .put("Fast 7 år annu ek", LoanDetails.Type.MORTGAGE)
-                        .put("Fast 5år annu ek", LoanDetails.Type.MORTGAGE)
+                        .put("år annu ek", LoanDetails.Type.MORTGAGE)
                         .build();
     }
 
