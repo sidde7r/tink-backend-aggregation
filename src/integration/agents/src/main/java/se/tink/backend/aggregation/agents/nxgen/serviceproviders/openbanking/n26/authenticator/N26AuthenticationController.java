@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.storage.N26Storage;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
@@ -58,6 +59,7 @@ public class N26AuthenticationController
     private final StrongAuthenticationState strongAuthenticationState;
     private final N26Storage storage;
     private final Credentials credentials;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Override
     public void autoAuthenticate()
@@ -140,12 +142,14 @@ public class N26AuthenticationController
                         n26Configuration.getRealmId());
         final ToEntity toEntity = new ToEntity(n26Configuration.getMemberId(), aliasEntity);
         final AccessBodyEntity accessBodyEntity = new AccessBodyEntity(Scope.AIS);
+        String refId = randomValueGenerator.generateRandomHexEncoded(9);
         final RequestPayload requestPayload =
                 new RequestPayload(
                         strongAuthenticationState.getState(),
                         toEntity,
                         accessBodyEntity,
-                        configuration.getRedirectUrl());
+                        configuration.getRedirectUrl(),
+                        refId);
         return new TokenRequest(requestPayload);
     }
 

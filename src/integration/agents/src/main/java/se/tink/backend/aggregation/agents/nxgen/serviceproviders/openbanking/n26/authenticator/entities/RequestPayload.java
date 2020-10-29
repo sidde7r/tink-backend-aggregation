@@ -18,13 +18,19 @@ public class RequestPayload {
     private AccessBodyEntity accessBody;
     private TransferBodyEntity transferBody;
     private String redirectUrl;
+    private String refId;
 
     public RequestPayload(
-            String callbackState, ToEntity to, AccessBodyEntity accessBody, String redirectUrl) {
+            String callbackState,
+            ToEntity to,
+            AccessBodyEntity accessBody,
+            String redirectUrl,
+            String refId) {
         this.callbackState = callbackState;
         this.to = to;
         this.accessBody = accessBody;
         this.redirectUrl = redirectUrl;
+        this.refId = refId;
     }
 
     public RequestPayload(
