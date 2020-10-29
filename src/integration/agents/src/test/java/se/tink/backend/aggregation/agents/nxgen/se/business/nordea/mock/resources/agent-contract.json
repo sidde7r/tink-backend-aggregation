@@ -880,5 +880,15 @@
             "type": "DEFAULT",
             "upcoming": false
         }
-    ]
+    ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FIRST_NAME",
+            "value" : null
+        }, {
+            "type" : "SURNAME",
+            "value" : null
+        } ],
+        "dateOfBirth" : null
+    }
 }
