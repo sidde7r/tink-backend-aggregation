@@ -9,8 +9,6 @@ public interface SwedbankConfiguration extends ClientConfiguration {
 
     String getApiKey();
 
-    String getBankId();
-
     String getName();
 
     boolean isSavingsBank();

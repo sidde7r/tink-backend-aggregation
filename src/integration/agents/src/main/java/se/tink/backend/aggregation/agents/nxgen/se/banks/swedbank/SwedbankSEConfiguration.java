@@ -25,15 +25,11 @@ public class SwedbankSEConfiguration implements SwedbankConfiguration {
     }
 
     @Override
-    public String getBankId() {
-        return null;
-    }
-
-    @Override
     public String getName() {
         return profileParameters.getName();
     }
 
+    @Override
     public boolean isSavingsBank() {
         return profileParameters.isSavingsBank();
     }

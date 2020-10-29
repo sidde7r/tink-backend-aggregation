@@ -27,11 +27,6 @@ public class SwedbankFallbackConfiguration implements SwedbankConfiguration {
     }
 
     @Override
-    public String getBankId() {
-        return null;
-    }
-
-    @Override
     public String getName() {
         return profileParameters.getName();
     }
