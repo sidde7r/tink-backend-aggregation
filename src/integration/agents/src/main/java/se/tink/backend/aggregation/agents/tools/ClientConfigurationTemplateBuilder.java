@@ -115,7 +115,7 @@ public class ClientConfigurationTemplateBuilder {
 
         JsonArray jsonProviderNamesArray = new JsonArray();
         jsonConfigurationTemplate.add(PROVIDER_NAME_KEY, jsonProviderNamesArray);
-        jsonFinancialInstitutionIdsArray.add(new JsonPrimitive(providerName));
+        jsonProviderNamesArray.add(new JsonPrimitive(providerName));
 
         Map<String, String> fieldsDescriptionsAndExamples =
                 readFieldsDescriptionsAndExamples(clientConfigurationClassForProvider);
