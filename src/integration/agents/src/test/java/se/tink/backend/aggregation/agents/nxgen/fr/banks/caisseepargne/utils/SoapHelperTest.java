@@ -338,7 +338,11 @@ public class SoapHelperTest {
         assertThat(checking.get().getAccountNumber()).isEqualTo(SHORT_ACC_NR);
         assertThat(checking.get().getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN);
         assertThat(checking.get().getHolderName().toString()).isEqualTo(FAKE_NAME);
-        assertThat(checking.get().getExactBalance().compareTo(BigDecimal.valueOf(0.64)))
+        assertThat(
+                        checking.get()
+                                .getExactBalance()
+                                .getExactValue()
+                                .compareTo(BigDecimal.valueOf(0.64)))
                 .isEqualTo(0);
     }
 
@@ -365,7 +369,11 @@ public class SoapHelperTest {
         assertThat(checking.get().getAccountNumber()).isEqualTo(SHORT_ACC_NR);
         assertThat(checking.get().getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN);
         assertThat(checking.get().getHolderName().toString()).isEqualTo(FAKE_NAME);
-        assertThat(checking.get().getExactBalance().compareTo(BigDecimal.valueOf(-59.23)))
+        assertThat(
+                        checking.get()
+                                .getExactBalance()
+                                .getExactValue()
+                                .compareTo(BigDecimal.valueOf(-59.23)))
                 .isEqualTo(0);
         Optional<TransactionalAccount> savings =
                 accounts.stream()
@@ -374,7 +382,12 @@ public class SoapHelperTest {
         assertThat(savings.isPresent()).isTrue();
         assertThat(savings.get().getHolderName().toString()).isEqualTo(FAKE_NAME);
         assertThat(savings.get().getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN_B);
-        assertThat(savings.get().getExactBalance().compareTo(BigDecimal.valueOf(10))).isEqualTo(0);
+        assertThat(
+                        savings.get()
+                                .getExactBalance()
+                                .getExactValue()
+                                .compareTo(BigDecimal.valueOf(10)))
+                .isEqualTo(0);
     }
 
     private String getIban(String fullAccountNumber) {

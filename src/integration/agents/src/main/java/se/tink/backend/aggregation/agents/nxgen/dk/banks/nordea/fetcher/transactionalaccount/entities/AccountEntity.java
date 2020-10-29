@@ -150,7 +150,7 @@ public class AccountEntity {
         }
 
         private boolean hasUsedAllOwnMoney() {
-            return getBookedBalance().compareTo(BigDecimal.ZERO) < 0;
+            return getBookedBalance().getExactValue().compareTo(BigDecimal.ZERO) < 0;
         }
 
         private ExactCurrencyAmount getAvailableCredit() {

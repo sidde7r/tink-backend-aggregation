@@ -1,5 +1,6 @@
 package se.tink.libraries.amount;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -106,5 +107,23 @@ public class ExactCurrencyAmountTest {
         assertThat(value3.getStringValue(Locale.UK)).isEqualTo("1.10");
         assertThat(value4.getStringValue(Locale.UK)).isEqualTo("100,000.00");
         assertThat(value5.getStringValue(Locale.UK)).isEqualTo("1.01");
+    }
+
+    @Test
+    public void compareTo() {
+        // given
+        ExactCurrencyAmount value1 = ExactCurrencyAmount.of(new BigDecimal("1"), "GBP");
+        ExactCurrencyAmount value2 = ExactCurrencyAmount.of(new BigDecimal("1"), "GBP");
+        ExactCurrencyAmount value3 = ExactCurrencyAmount.of(new BigDecimal("10"), "GBP");
+
+        // when
+        int result1 = value1.compareTo(value2);
+        int result2 = value1.compareTo(value3);
+        int result3 = value3.compareTo(value1);
+
+        // then
+        assertThat(result1).isZero();
+        assertThat(result2).isNegative();
+        assertThat(result3).isPositive();
     }
 }
