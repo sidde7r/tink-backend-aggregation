@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred;
 
+import java.net.SocketTimeoutException;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredConstants.Urls;
@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.rpc.CardListRes
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.storage.EdenredStorage;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -44,6 +45,8 @@ public class EdenredApiClient {
                     .post(AuthenticationResponse.class);
         } catch (HttpResponseException exception) {
             throw mapAuthenticationException(exception);
+        } catch (HttpClientException exception) {
+            throw mapClientException(exception);
         }
     }
 
@@ -59,7 +62,9 @@ public class EdenredApiClient {
         try {
             return requestProtected(Urls.SET_PIN).body(setPinRequest).post(SetPinResponse.class);
         } catch (HttpResponseException exception) {
-            throw mapException(exception);
+            throw mapResponseException(exception);
+        } catch (HttpClientException exception) {
+            throw mapClientException(exception);
         }
     }
 
@@ -78,6 +83,8 @@ public class EdenredApiClient {
                     .post(AuthenticationResponse.class);
         } catch (HttpResponseException exception) {
             throw mapAuthenticationException(exception);
+        } catch (HttpClientException exception) {
+            throw mapClientException(exception);
         }
     }
 
@@ -85,7 +92,9 @@ public class EdenredApiClient {
         try {
             return requestProtected(Urls.CARD_LIST).get(CardListResponse.class);
         } catch (HttpResponseException exception) {
-            throw mapException(exception);
+            throw mapResponseException(exception);
+        } catch (HttpClientException exception) {
+            throw mapClientException(exception);
         }
     }
 
@@ -94,7 +103,9 @@ public class EdenredApiClient {
             return requestProtected(Urls.TRANSACTIONS.parameter("id", String.valueOf(cardId)))
                     .get(TransactionsResponse.class);
         } catch (HttpResponseException exception) {
-            throw mapException(exception);
+            throw mapResponseException(exception);
+        } catch (HttpClientException exception) {
+            throw mapClientException(exception);
         }
     }
 
@@ -117,7 +128,17 @@ public class EdenredApiClient {
         }
     }
 
-    private BankServiceException mapException(HttpResponseException exception) {
-        return BankServiceError.BANK_SIDE_FAILURE.exception(exception);
+    private RuntimeException mapResponseException(HttpResponseException exception) {
+        if (exception.getResponse() != null && exception.getResponse().getStatus() >= 500) {
+            return BankServiceError.BANK_SIDE_FAILURE.exception(exception);
+        }
+        return exception;
+    }
+
+    private RuntimeException mapClientException(HttpClientException exception) {
+        if (exception.getCause() instanceof SocketTimeoutException) {
+            return BankServiceError.BANK_SIDE_FAILURE.exception(exception);
+        }
+        return exception;
     }
 }
