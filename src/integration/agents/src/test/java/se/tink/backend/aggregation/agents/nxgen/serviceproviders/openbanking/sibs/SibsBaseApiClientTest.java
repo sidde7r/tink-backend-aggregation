@@ -24,7 +24,7 @@ public class SibsBaseApiClientTest {
     @Before
     public void setUp() {
         SibsBaseApiClient apiSpy =
-                new SibsBaseApiClient(tinkHttpClient, mock(SibsUserState.class), false);
+                new SibsBaseApiClient(tinkHttpClient, mock(SibsUserState.class), ANY_STRING, false);
         sibsBaseApiClient = spy(apiSpy);
     }
 

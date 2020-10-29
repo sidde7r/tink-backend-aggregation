@@ -48,8 +48,8 @@ public class SibsBaseApiClient {
     private final String isPsuInvolved;
     private final SibsUserState userState;
     private final TinkHttpClient client;
-    private SibsConfiguration configuration;
     private String redirectUrl;
+    private String aspspCode;
     private static final Logger log = LoggerFactory.getLogger(SibsBaseApiClient.class);
 
     /*
@@ -63,16 +63,18 @@ public class SibsBaseApiClient {
      * - single - use code above to create date with correct pattern and add header (it won't be override)
      */
     public SibsBaseApiClient(
-            TinkHttpClient client, SibsUserState userState, boolean isRequestManual) {
+            TinkHttpClient client,
+            SibsUserState userState,
+            String aspspCode,
+            boolean isRequestManual) {
         this.client = client;
         this.userState = userState;
+        this.aspspCode = aspspCode;
         this.isPsuInvolved = String.valueOf(isRequestManual);
     }
 
     protected void setConfiguration(AgentConfiguration<SibsConfiguration> agentConfiguration) {
         Preconditions.checkNotNull(agentConfiguration);
-        this.configuration =
-                Preconditions.checkNotNull(agentConfiguration.getProviderSpecificConfiguration());
         this.redirectUrl = Preconditions.checkNotNull(agentConfiguration.getRedirectUrl());
     }
 
@@ -111,7 +113,7 @@ public class SibsBaseApiClient {
     }
 
     public TransactionKeyPaginatorResponse<String> getTransactionsForKey(String key) {
-        String baseUrl = configuration.getBaseUrl();
+        String baseUrl = SibsConstants.Urls.BASE_URL;
 
         return client.request(new URL(baseUrl + key))
                 .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
@@ -158,10 +160,8 @@ public class SibsBaseApiClient {
     }
 
     @VisibleForTesting
-    public URL createUrl(String path) {
-        String baseUrl = configuration.getBaseUrl();
-        return new URL(baseUrl + path)
-                .parameter(PathParameterKeys.ASPSP_CDE, configuration.getAspspCode());
+    public URL createUrl(String url) {
+        return new URL(url).parameter(PathParameterKeys.ASPSP_CDE, aspspCode);
     }
 
     public SibsPaymentInitiationResponse createPayment(
@@ -185,7 +185,7 @@ public class SibsBaseApiClient {
     }
 
     public SibsGetPaymentResponse getPayment(String uniqueId, SibsPaymentType sibsPaymentType) {
-        URL getPayment = createUrl(SibsConstants.Urls.GET_PAYMENT_REQUEST);
+        URL getPayment = createUrl(SibsConstants.Urls.PAYMENT_REQUEST);
         return client.request(
                         getPayment
                                 .parameter(
@@ -202,7 +202,7 @@ public class SibsBaseApiClient {
             SibsPaymentType sibsPaymentType,
             SibsPaymentUpdateRequest sibsPaymentUpdateRequest) {
 
-        URL updatePaymentUrl = createUrl(SibsConstants.Urls.UPDATE_PAYMENT_REQUEST);
+        URL updatePaymentUrl = createUrl(SibsConstants.Urls.PAYMENT_REQUEST);
 
         return client.request(
                         updatePaymentUrl
@@ -216,20 +216,9 @@ public class SibsBaseApiClient {
                 .put(SibsPaymentUpdateResponse.class, sibsPaymentUpdateRequest);
     }
 
-    public SibsPaymentUpdateResponse updatePaymentForPsuId(
-            String updatePsuIdUrl, SibsPaymentUpdateRequest sibsPaymentUpdateRequest) {
-        URL updatePaymentUrl = createUrl(updatePsuIdUrl);
-
-        return client.request(updatePaymentUrl)
-                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .put(SibsPaymentUpdateResponse.class, sibsPaymentUpdateRequest);
-    }
-
     public SibsCancelPaymentResponse cancelPayment(
             String uniqueId, SibsPaymentType sibsPaymentType) {
-        URL cancelPaymentUrl = createUrl(SibsConstants.Urls.DELETE_PAYMENT_REQUEST);
+        URL cancelPaymentUrl = createUrl(SibsConstants.Urls.PAYMENT_REQUEST);
 
         return client.request(
                         cancelPaymentUrl

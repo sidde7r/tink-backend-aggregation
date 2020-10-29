@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 public final class SibsConstants {
 
     private static final String API_VERSION = "v1-0-2";
-    private static final String ASPSP_CODE_WITH_VERSION = "/{aspsp-cde}/" + API_VERSION;
 
     private SibsConstants() {}
 
@@ -15,30 +14,30 @@ public final class SibsConstants {
     }
 
     public static class Urls {
-        public static final String ACCOUNTS = ASPSP_CODE_WITH_VERSION + "/accounts";
-        public static final String CREATE_CONSENT = ASPSP_CODE_WITH_VERSION + "/consents";
+        public static final String BASE_URL = "https://site1.sibsapimarket.com/sibs/apimarket";
+        private static final String BASE_URL_WITH_ASPSP_CODE_AND_VERSION =
+                BASE_URL + "/{aspsp-cde}/" + API_VERSION;
+        public static final String ACCOUNTS = BASE_URL_WITH_ASPSP_CODE_AND_VERSION + "/accounts";
+        static final String CREATE_CONSENT = BASE_URL_WITH_ASPSP_CODE_AND_VERSION + "/consents";
         public static final String CONSENT_STATUS =
-                ASPSP_CODE_WITH_VERSION + "/consents/{consent-id}/status";
-        public static final String ACCOUNT_BALANCES =
-                ASPSP_CODE_WITH_VERSION + "/accounts/{account-id}/balances";
+                BASE_URL_WITH_ASPSP_CODE_AND_VERSION + "/consents/{consent-id}/status";
+        static final String ACCOUNT_BALANCES =
+                BASE_URL_WITH_ASPSP_CODE_AND_VERSION + "/accounts/{account-id}/balances";
         public static final String ACCOUNT_TRANSACTIONS =
-                ASPSP_CODE_WITH_VERSION + "/accounts/{account-id}/transactions";
-        public static final String PAYMENT_INITIATION =
-                ASPSP_CODE_WITH_VERSION + "/payments/{payment-product}";
-        public static final String GET_PAYMENT_REQUEST =
-                ASPSP_CODE_WITH_VERSION + "/payments/{payment-product}/{payment-id}";
-        public static final String UPDATE_PAYMENT_REQUEST =
-                ASPSP_CODE_WITH_VERSION + "/payments/{payment-product}/{payment-id}";
-        public static final String DELETE_PAYMENT_REQUEST =
-                ASPSP_CODE_WITH_VERSION + "/payments/{payment-product}/{payment-id}";
-        public static final String GET_PAYMENT_STATUS_REQUEST =
-                ASPSP_CODE_WITH_VERSION + "/payments/{payment-product}/{payment-id}/status";
+                BASE_URL_WITH_ASPSP_CODE_AND_VERSION + "/accounts/{account-id}/transactions";
+        static final String PAYMENT_INITIATION =
+                BASE_URL_WITH_ASPSP_CODE_AND_VERSION + "/payments/{payment-product}";
+        static final String PAYMENT_REQUEST =
+                BASE_URL_WITH_ASPSP_CODE_AND_VERSION + "/payments/{payment-product}/{payment-id}";
+        static final String GET_PAYMENT_STATUS_REQUEST =
+                BASE_URL_WITH_ASPSP_CODE_AND_VERSION
+                        + "/payments/{payment-product}/{payment-id}/status";
     }
 
     public static class QueryKeys {
         public static final String STATE = "state";
         public static final String WITH_BALANCE = "withBalance";
-        public static final String PSU_INVOLVED = "psuInvolved";
+        static final String PSU_INVOLVED = "psuInvolved";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";
         public static final String TPP_REDIRECT_PREFERRED = "tppRedirectPreferred";
