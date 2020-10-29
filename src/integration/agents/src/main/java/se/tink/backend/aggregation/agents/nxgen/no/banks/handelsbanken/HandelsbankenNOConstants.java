@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken;
 
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -109,15 +114,15 @@ public class HandelsbankenNOConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class UrlParameters {
-        public static final String HB_NETBANK_HOST = "https://nettbank.handelsbanken.no";
-        public static final String CUSTOMER_PORTAL_HOST = "https://customerportal.edb.com";
-        public static final String INVESTOR_HOST = "https://investor.vps.no";
-        public static final String AKSJER_HOST = "https://aksjer.handelsbanken.no";
+        static final String HB_NETBANK_HOST = "https://nettbank.handelsbanken.no";
+        static final String CUSTOMER_PORTAL_HOST = "https://customerportal.edb.com";
+        static final String INVESTOR_HOST = "https://investor.vps.no";
+        static final String AKSJER_HOST = "https://aksjer.handelsbanken.no";
         public static final String SESSION_1 = "e1s1";
         public static final String SESSION_2 = "e1s2";
-        public static final String DOB = "dateOfBirth";
-        public static final String ACCOUNT_NUMBER = "accountNumber";
-        public static final String CUSTOMER_ID = "customerId";
+        static final String DOB = "dateOfBirth";
+        static final String ACCOUNT_NUMBER = "accountNumber";
+        static final String CUSTOMER_ID = "customerId";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -185,19 +190,19 @@ public class HandelsbankenNOConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Header {
-        public static final String EVRY_TOKEN = "X-EVRY-CLIENT-ACCESSTOKEN";
+        static final String EVRY_TOKEN = "X-EVRY-CLIENT-ACCESSTOKEN";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Tags {
-        public static final String JSESSION_ID = "JSESSIONID";
+        static final String JSESSION_ID = "JSESSIONID";
         public static final String REFERENCE_WORD = "bidm_ref-word";
         public static final String NAME = "name";
         public static final String ACCESS_TOKEN = "accessToken";
         public static final String TRANSACTIONS = "transactions";
-        public static final String NONCE = "SECESB_NONCE";
-        public static final String SESSION_STAMP = "SECESB_SESSION_STAMP";
-        public static final String SESSION_STAMP_VALUE = "SECESB_SESSION_STAMP_VALUE";
+        static final String NONCE = "SECESB_NONCE";
+        static final String SESSION_STAMP = "SECESB_SESSION_STAMP";
+        static final String SESSION_STAMP_VALUE = "SECESB_SESSION_STAMP_VALUE";
         public static final String SAML_RESPONSE = "SAMLResponse";
         public static final String LOGIN_ERROR = "bidmob-login-error";
     }
@@ -255,9 +260,26 @@ public class HandelsbankenNOConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AccountType {
-        public static final String SAVING = "saving";
-        public static final String YOUTH_SAVING = "bsu";
-        public static final String SPENDING = "spending";
+        static final String SAVING = "saving";
+        static final String YOUTH_SAVING = "bsu";
+        static final String SPENDING = "spending";
+        static final String OTHER_ACCOUNT = "other";
+        static final String UNKNOWN = "unknown";
+
+        public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+                AccountTypeMapper.builder()
+                        .put(AccountTypes.SAVINGS, SAVING, YOUTH_SAVING)
+                        .put(AccountTypes.CHECKING, SPENDING, OTHER_ACCOUNT, UNKNOWN)
+                        .build();
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class LoanType {
+        public static final Map<String, LoanDetails.Type> LOANS_DESCRIPTIONS =
+                ImmutableMap.<String, LoanDetails.Type>builder()
+                        .put("bolig", LoanDetails.Type.MORTGAGE)
+                        .put("år annu ek", LoanDetails.Type.MORTGAGE)
+                        .build();
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -282,13 +304,13 @@ public class HandelsbankenNOConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class EncapConstants {
 
-        public static final String ENCAP_API_VERSION = "3.5.4";
+        static final String ENCAP_API_VERSION = "3.5.4";
 
-        public static final String CREDENTIALS_APP_NAME_FOR_EDB = "HANDELSBANKEN_SMBM";
+        static final String CREDENTIALS_APP_NAME_FOR_EDB = "HANDELSBANKEN_SMBM";
 
-        public static final String APP_ID = "com.evry.mobilbanken.handelsbanken";
+        static final String APP_ID = "com.evry.mobilbanken.handelsbanken";
 
-        public static final String RSA_PUB_KEY_STRING =
+        static final String RSA_PUB_KEY_STRING =
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv0zsNwsaDIgQ/6DKhpVeqdfRf"
                         + "8Xd6Bl+azzeTXA6jA7jzz65FmOWIKWDxj+NJDGvgbqYpawpLus1nYA/OzB9n82CGz/lFgx"
                         + "r//0JbASQP2QnCr19p0EXtwAHI1ctAFW3rxeR/+Y1Ji1Qa5h6pmuWggyC9TGNcrsrk8zRV"
