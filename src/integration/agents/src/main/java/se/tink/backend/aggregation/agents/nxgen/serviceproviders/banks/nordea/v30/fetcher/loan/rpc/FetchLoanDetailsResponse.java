@@ -106,7 +106,7 @@ public class FetchLoanDetailsResponse {
                 LoanModule.builder()
                         .withType(getLoanType())
                         .withBalance(getBalance())
-                        .withInterestRate(getInterestRate().get().doubleValue())
+                        .withInterestRate(getInterestRate().orElse(BigDecimal.ZERO).doubleValue())
                         .setAmortized(getPaid())
                         .setInitialBalance(getInitialBalance())
                         .setApplicants(getApplicants())

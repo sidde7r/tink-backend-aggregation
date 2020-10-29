@@ -66,7 +66,7 @@ public class PaymentEntity {
 
     @JsonIgnore
     public String getId() {
-        return Optional.ofNullable(id).get();
+        return id;
     }
 
     @JsonIgnore
