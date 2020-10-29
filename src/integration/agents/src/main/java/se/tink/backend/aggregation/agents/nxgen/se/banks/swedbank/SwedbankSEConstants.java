@@ -22,17 +22,11 @@ public class SwedbankSEConstants {
             new ImmutableMap.Builder<String, ProfileParameters>()
                     .put("swedbank", new ProfileParameters("swedbank", "HhJS3oGdParaOGix", false))
                     .put(
-                            "swedbank-youth",
-                            new ProfileParameters("swedbank-youth", "ap4TcWEoEGV42UVn", false))
-                    .put(
                             "swedbank-business",
                             new ProfileParameters("swedbank-business", "kZJM0pxnADgWCcHa", false))
                     .put(
                             "savingsbank",
                             new ProfileParameters("savingsbank", "CB2PGrGdDIJKcrRd", true))
-                    .put(
-                            "savingsbank-youth",
-                            new ProfileParameters("savingsbank-youth", "LFQP9KuzqNBJOosw", true))
                     .put(
                             "savingsbank-business",
                             new ProfileParameters("savingsbank-business", "3tw7Anux312vVqZv", true))
