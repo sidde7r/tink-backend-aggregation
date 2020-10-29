@@ -1,17 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc;
 
+import java.math.BigDecimal;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class VolumePriceEntity {
-    private double volume;
-    private double price;
-
-    public double getVolume() {
-        return volume;
-    }
-
-    public double getPrice() {
-        return price;
-    }
+    private BigDecimal volume;
+    private BigDecimal price;
 }

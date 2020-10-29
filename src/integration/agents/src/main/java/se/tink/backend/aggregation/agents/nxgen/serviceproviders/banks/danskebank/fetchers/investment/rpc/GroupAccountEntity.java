@@ -66,11 +66,11 @@ public class GroupAccountEntity {
 
     public Portfolio toTinkPortfolio(ListSecuritiesResponse response) {
         Portfolio portfolio = new Portfolio();
-        portfolio.setTotalValue(response.getMarketValue());
+        portfolio.setTotalValue(response.getMarketValue().doubleValue());
         portfolio.setRawType(type);
         portfolio.setType(getTinkPortfolioType());
         portfolio.setUniqueIdentifier(accountIdentifier);
-        portfolio.setTotalProfit(response.getPerformance());
+        portfolio.setTotalProfit(response.getPerformance().doubleValue());
         return portfolio;
     }
 

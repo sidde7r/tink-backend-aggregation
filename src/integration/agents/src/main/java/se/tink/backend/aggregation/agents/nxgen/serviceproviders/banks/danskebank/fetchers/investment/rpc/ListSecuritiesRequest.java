@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc;
 
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
 public class ListSecuritiesRequest {
     private final String custodyAccount;
 
@@ -9,9 +12,5 @@ public class ListSecuritiesRequest {
 
     public static ListSecuritiesRequest createFromCustodyAccount(String custodyAccount) {
         return new ListSecuritiesRequest(custodyAccount);
-    }
-
-    public String getCustodyAccount() {
-        return custodyAccount;
     }
 }
