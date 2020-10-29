@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ErrorResponseTest {
