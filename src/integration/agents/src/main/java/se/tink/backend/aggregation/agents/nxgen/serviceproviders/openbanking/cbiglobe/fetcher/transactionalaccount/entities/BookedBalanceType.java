@@ -10,8 +10,9 @@ import java.util.List;
 public enum BookedBalanceType {
     OPENING_BOOKED("openingBooked", 0),
     CLOSING_BOOKED("closingBooked", 1),
-    EXPECTED("expected", 2),
-    INTERIM_AVAILABLE("interimAvailable", 3);
+    AUTHORISED("authorised", 2),
+    EXPECTED("expected", 3),
+    INTERIM_AVAILABLE("interimAvailable", 4);
 
     static final List<String> SUPPORTED_TYPES =
             Arrays.stream(BookedBalanceType.values())
