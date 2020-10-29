@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileResponse;
+import se.tink.backend.aggregation.agents.utils.business.OrganisationNumberSeLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -36,6 +37,7 @@ public class SwedbankDefaultBankIdAuthenticator
 
     private final SwedbankDefaultApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final String organisationNumber;
 
     private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
     private String givenSsn;
@@ -43,9 +45,12 @@ public class SwedbankDefaultBankIdAuthenticator
     private int pollCount;
 
     public SwedbankDefaultBankIdAuthenticator(
-            SwedbankDefaultApiClient apiClient, SessionStorage sessionStorage) {
+            SwedbankDefaultApiClient apiClient,
+            SessionStorage sessionStorage,
+            String organisationNumber) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.organisationNumber = organisationNumber;
     }
 
     @Override
@@ -54,6 +59,8 @@ public class SwedbankDefaultBankIdAuthenticator
         this.previousStatus = null;
         this.givenSsn = ssn;
         this.pollCount = 0;
+
+        OrganisationNumberSeLogger.logIfUnknownOrgnumber(organisationNumber);
 
         InitBankIdResponse initBankIdResponse = refreshAutostartToken();
 
@@ -183,6 +190,8 @@ public class SwedbankDefaultBankIdAuthenticator
         if (!Strings.isNullOrEmpty(this.givenSsn)) {
             verifyIdentity(profileResponse);
         }
+
+        OrganisationNumberSeLogger.logIfUnknownOrgnumberForSuccessfulLogin(organisationNumber);
     }
 
     private void verifyIdentity(ProfileResponse profileResponse) {
