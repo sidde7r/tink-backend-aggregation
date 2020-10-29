@@ -140,6 +140,10 @@ public class LaCaixaConstants {
         public static final String ENROLMENT_CODE = "enrolmentCode";
     }
 
+    public static class PersistentStorage {
+        public static final String SCA_UNFINISHED = "scaUnfinished";
+    }
+
     public static class StatusCodes {
         public static final int INCORRECT_USERNAME_PASSWORD = 409; // Conflict
     }

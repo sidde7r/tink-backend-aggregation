@@ -85,6 +85,7 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
                         supplementalInformationFormer,
                         componentProvider.getSupplementalInformationHelper(),
                         new TemporaryStorage(),
+                        persistentStorage,
                         context.getLogMasker());
 
         LaCaixaInvestmentFetcher investmentFetcher = new LaCaixaInvestmentFetcher(apiClient);
