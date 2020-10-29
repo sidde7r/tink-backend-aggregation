@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.storage.N26Storage;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -77,7 +78,8 @@ public class N26AuthenticationControllerTest {
                         supplementalInformationHelper,
                         strongAuthenticationState,
                         storage,
-                        new Credentials());
+                        new Credentials(),
+                        new MockRandomValueGenerator());
     }
 
     @Test
@@ -275,7 +277,8 @@ public class N26AuthenticationControllerTest {
                         supplementalInformationHelper,
                         strongAuthenticationState,
                         storage,
-                        credentials);
+                        credentials,
+                        new MockRandomValueGenerator());
     }
 
     private TinkHttpClient mockHttpClient() {

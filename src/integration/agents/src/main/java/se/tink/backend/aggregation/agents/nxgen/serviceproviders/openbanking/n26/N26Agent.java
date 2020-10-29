@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -39,6 +40,7 @@ public final class N26Agent extends NextGenerationAgent
     private final N26ApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public N26Agent(AgentComponentProvider componentProvider) {
@@ -47,6 +49,7 @@ public final class N26Agent extends NextGenerationAgent
         this.apiClient = new N26ApiClient(client, getAgentConfig(), storage);
         this.transactionalAccountRefreshController = initTransactionalAccountFetcher();
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     @Override
@@ -58,7 +61,8 @@ public final class N26Agent extends NextGenerationAgent
                         supplementalInformationHelper,
                         strongAuthenticationState,
                         storage,
-                        credentials);
+                        credentials,
+                        randomValueGenerator);
 
         return new AutoAuthenticationController(
                 request,
