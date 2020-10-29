@@ -64,6 +64,16 @@ public class AccountEntityTest {
                 .isEqualByComparingTo(ExactCurrencyAmount.inEUR(3.00));
 
         // when
+        balances.add(givenAuthorisedBalance());
+        // then
+        assertThat(
+                        accountEntity
+                                .toTinkAccount(getBalancesResponse)
+                                .orElseThrow(IllegalArgumentException::new)
+                                .getExactBalance())
+                .isEqualByComparingTo(ExactCurrencyAmount.inEUR(2.50));
+
+        // when
         balances.add(givenClosingBookedBalance());
         // then
         assertThat(
@@ -173,6 +183,11 @@ public class AccountEntityTest {
     private BalanceEntity givenClosingBookedBalance() {
         AmountEntity amountEntity = new AmountEntity("EUR", "2.00");
         return new BalanceEntity(amountEntity, "closingBooked");
+    }
+
+    private BalanceEntity givenAuthorisedBalance() {
+        AmountEntity amountEntity = new AmountEntity("EUR", "2.50");
+        return new BalanceEntity(amountEntity, "authorised");
     }
 
     private BalanceEntity givenExpectedBalance() {
