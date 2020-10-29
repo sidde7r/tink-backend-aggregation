@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
+import java.util.List;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -29,6 +30,10 @@ public class AccountEntity {
     private RightsEntity rights;
     private HashMap<String, LinkEntity> links;
 
+    @JsonIgnore
+    private static final List<AccountTypes> TRANSACTIONAL_ACCOUNT_TYPES =
+            ImmutableList.of(AccountTypes.CHECKING, AccountTypes.SAVINGS);
+
     private String getTransactionUrl() {
         return links.get(HandelsbankenNOConstants.Tags.TRANSACTIONS).getHref();
     }
@@ -36,8 +41,7 @@ public class AccountEntity {
     @JsonIgnore
     public boolean isTransactionalAccount() {
         return HandelsbankenNOConstants.AccountType.ACCOUNT_TYPE_MAPPER.isOneOf(
-                properties.getType(),
-                ImmutableList.of(AccountTypes.CHECKING, AccountTypes.SAVINGS));
+                properties.getType(), TRANSACTIONAL_ACCOUNT_TYPES);
     }
 
     @JsonIgnore
@@ -57,13 +61,7 @@ public class AccountEntity {
     private AccountTypes getTinkAccountType() {
         return HandelsbankenNOConstants.AccountType.ACCOUNT_TYPE_MAPPER
                 .translate(properties.getType())
-                .orElseGet(
-                        () -> {
-                            log.warn(
-                                    "Could not map account type [{}] to a Tink account type",
-                                    properties.getType());
-                            return AccountTypes.OTHER;
-                        });
+                .orElse(AccountTypes.OTHER);
     }
 
     @JsonIgnore

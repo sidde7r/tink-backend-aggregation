@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan;
 
-import com.google.common.collect.ImmutableMap;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOApiClient;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan.entities.DetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan.entities.LoanAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.loan.entities.PaymentDetailEntity;
@@ -28,12 +28,6 @@ public class HandelsbankenNOLoanAccountFetcher implements AccountFetcher<LoanAcc
     private static final String REPAYMENT_PLAN_LINK_KEY = "repayment_plan";
     private static final String NOK_CURRENCY_CODE = "NOK";
     private final HandelsbankenNOApiClient handelsbankenNOApiClient;
-
-    private static final Map<Pattern, LoanDetails.Type> LOANS_DESCRIPTIONS =
-            ImmutableMap.<Pattern, LoanDetails.Type>builder()
-                    .put(Pattern.compile(".*bolig.*"), LoanDetails.Type.MORTGAGE)
-                    .put(Pattern.compile("fast \\d år annu ek"), LoanDetails.Type.MORTGAGE)
-                    .build();
 
     public HandelsbankenNOLoanAccountFetcher(HandelsbankenNOApiClient handelsbankenNOApiClient) {
         this.handelsbankenNOApiClient = handelsbankenNOApiClient;
@@ -106,8 +100,8 @@ public class HandelsbankenNOLoanAccountFetcher implements AccountFetcher<LoanAcc
     }
 
     private LoanDetails.Type getLoanType(String description) {
-        return LOANS_DESCRIPTIONS.entrySet().stream()
-                .filter(entry -> entry.getKey().matcher(description.toLowerCase()).matches())
+        return HandelsbankenNOConstants.LoanType.LOANS_DESCRIPTIONS.entrySet().stream()
+                .filter(entry -> StringUtils.containsIgnoreCase(description, entry.getKey()))
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElse(LoanDetails.Type.DERIVE_FROM_NAME);

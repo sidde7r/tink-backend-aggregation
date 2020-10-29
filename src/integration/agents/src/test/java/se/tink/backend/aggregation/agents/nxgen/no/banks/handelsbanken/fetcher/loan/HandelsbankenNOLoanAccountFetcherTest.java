@@ -40,7 +40,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     private static final String ACCOUNT_DESCRIPTION = "Lån annuitet";
     private static final String MORTGAGE_ACCOUNT_DESCRIPTION = "Bolig eiendomskreditt ann";
     private static final String MORTGAGE_ACCOUNT_DESCRIPTION2 = "Fast 7 år annu ek";
-    private static final String MORTGAGE_ACCOUNT_DESCRIPTION3 = "Fast 5 år annu ek";
+    private static final String MORTGAGE_ACCOUNT_DESCRIPTION3 = "Fast 5år annu ek";
     private static final String REPAYMENT_PLAN = "repayment_plan";
     private static final String TYPE = "loan";
     private static final String CAPABILITIES = "capabilities";
@@ -155,6 +155,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
+        assertThat(result.size()).isEqualTo(expected.size());
         for (int i = 0; i < result.size(); i++) {
             assertThat(result.get(i))
                     .isEqualToIgnoringGivenFields(
