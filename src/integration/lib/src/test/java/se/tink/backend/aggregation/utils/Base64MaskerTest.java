@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.utils.masker.StringMasker;
 
 public class Base64MaskerTest {
 
+    private static final String MASK = "\\*\\*HASHED:[-A-Za-z0-9+/=]{4}\\*\\*";
+    private static final Pattern MASK_PATTERN = Pattern.compile(MASK);
     private StringMasker masker;
 
     // Secrets with all possible alignments of 'length % 3'.
@@ -62,9 +64,9 @@ public class Base64MaskerTest {
             String maskedBase64Blob = masker.getMasked(Base64.encodeBase64String(blob.getBytes()));
 
             Assert.assertTrue(
-                    "FAILED: Did not mask secret", maskedBase64Blob.contains(StringMasker.MASK));
+                    "FAILED: Did not mask secret", MASK_PATTERN.matcher(maskedBase64Blob).find());
 
-            String[] splitBlob = maskedBase64Blob.split("\\*\\*\\*MASKED\\*\\*\\*");
+            String[] splitBlob = maskedBase64Blob.split(MASK);
 
             Assert.assertTrue(
                     "FAILED: Leaking secret start",
@@ -88,9 +90,9 @@ public class Base64MaskerTest {
                 masker.getMasked(Base64.encodeBase64String(TEXT_BEGINNING_SECRET.getBytes()));
 
         Assert.assertTrue(
-                "FAILED: Did not mask secret", maskedBase64Blob.contains(StringMasker.MASK));
+                "FAILED: Did not mask secret", MASK_PATTERN.matcher(maskedBase64Blob).find());
 
-        String[] splitBlob = maskedBase64Blob.split("\\*\\*\\*MASKED\\*\\*\\*");
+        String[] splitBlob = maskedBase64Blob.split(MASK);
         Assert.assertTrue(
                 "FAILED: Leaking secret",
                 !containsSecret(
@@ -104,9 +106,9 @@ public class Base64MaskerTest {
                 masker.getMasked(Base64.encodeBase64String(TEXT_ENDING_SECRET.getBytes()));
 
         Assert.assertTrue(
-                "FAILED: Did not mask secret", maskedBase64Blob.contains(StringMasker.MASK));
+                "FAILED: Did not mask secret", MASK_PATTERN.matcher(maskedBase64Blob).find());
 
-        String[] splitBlob = maskedBase64Blob.split("\\*\\*\\*MASKED\\*\\*\\*");
+        String[] splitBlob = maskedBase64Blob.split(MASK);
         Assert.assertTrue(
                 "FAILED: Leaking secret",
                 !containsSecret(
