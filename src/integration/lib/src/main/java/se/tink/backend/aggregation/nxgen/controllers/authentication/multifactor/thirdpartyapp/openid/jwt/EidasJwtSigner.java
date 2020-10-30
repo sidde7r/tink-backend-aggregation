@@ -19,6 +19,11 @@ import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 
+/**
+ * @deprecated please use {@link
+ *     se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.EidasJwtSigner}
+ */
+@Deprecated
 public class EidasJwtSigner implements JwtSigner {
 
     public static class EidasSigningKey {

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -6,17 +6,16 @@ import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.Payload;
-import com.nimbusds.jose.crypto.RSASSASigner;
-import java.security.interfaces.RSAPrivateKey;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import net.minidev.json.JSONObject;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.kid.KidProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner.Algorithm;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class TinkJwtSigner {
-
+    private final JWSSigner signer;
     private final JWSHeader headerClaims;
     private final JSONObject payloadClaims;
     private final boolean detachedPayload;
@@ -25,22 +24,22 @@ public class TinkJwtSigner {
         this.headerClaims = builder.headerClaims;
         this.payloadClaims = builder.payloadClaims;
         this.detachedPayload = builder.detachedPayload;
+        this.signer = builder.signer;
     }
 
-    public static Builder builder(SigningKeyIdProvider signingKeyProvider) {
-        return new Builder(signingKeyProvider);
+    public static Builder builder(KidProvider kidProvider, JWSSigner signer) {
+        return new Builder(kidProvider.get(), signer);
     }
 
-    public String sign(RSAPrivateKey privateKeyFromBytes) {
+    public String sign() {
         try {
             Payload payload =
                     new Payload(
                             Objects.requireNonNull(
-                                    SerializationUtils.serializeToString(payloadClaims)));
-            JWSObject signed = new JWSObject(headerClaims, payload);
-            JWSSigner signer = new RSASSASigner(privateKeyFromBytes);
-            signed.sign(signer);
-            return signed.serialize(detachedPayload);
+                                    SerializationUtils.serializeToString(this.payloadClaims)));
+            JWSObject signed = new JWSObject(this.headerClaims, payload);
+            signed.sign(this.signer);
+            return signed.serialize(this.detachedPayload);
         } catch (JOSEException e) {
             throw new IllegalStateException(
                     "Signing request has failed." + Arrays.toString(e.getStackTrace()));
@@ -48,14 +47,16 @@ public class TinkJwtSigner {
     }
 
     public static class Builder {
-        private final SigningKeyIdProvider signingKeyProvider;
+        private final String kidId;
+        private final JWSSigner signer;
         private Algorithm algorithm;
         private JWSHeader headerClaims;
         private JSONObject payloadClaims;
         private boolean detachedPayload;
 
-        public Builder(SigningKeyIdProvider signingKeyProvider) {
-            this.signingKeyProvider = signingKeyProvider;
+        public Builder(String kidId, JWSSigner signer) {
+            this.kidId = kidId;
+            this.signer = signer;
         }
 
         public Builder withAlgorithm(Algorithm algorithm) {
@@ -66,7 +67,7 @@ public class TinkJwtSigner {
         public Builder withHeaderClaims(Map<String, Object> headerClaims) {
             this.headerClaims =
                     new JWSHeader.Builder(JWSAlgorithm.parse(algorithm.toString()))
-                            .keyID(signingKeyProvider.get())
+                            .keyID(kidId)
                             .customParams(headerClaims)
                             .build();
             return this;
