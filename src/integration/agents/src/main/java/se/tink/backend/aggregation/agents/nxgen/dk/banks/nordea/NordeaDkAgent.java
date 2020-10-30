@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaNemIdAuthenticatorV2;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.NordeaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.NordeaCreditCardTransactionFetcher;
@@ -47,6 +48,7 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final StatusUpdater statusUpdater;
 
     @Inject
     public NordeaDkAgent(AgentComponentProvider agentComponentProvider) {
@@ -57,6 +59,7 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.investmentRefreshController = contructInvestmentRefreshController();
         this.loanRefreshController = constructLoanRefreshController();
+        statusUpdater = agentComponentProvider.getContext();
     }
 
     private InvestmentRefreshController contructInvestmentRefreshController() {
@@ -103,7 +106,12 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
         return new NordeaNemIdAuthenticatorV2(
-                nordeaClient, sessionStorage, persistentStorage, supplementalRequester, catalog);
+                nordeaClient,
+                sessionStorage,
+                persistentStorage,
+                supplementalRequester,
+                catalog,
+                statusUpdater);
     }
 
     @Override

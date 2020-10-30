@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.HttpClientParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.TimeoutRetryFilterParams;
@@ -56,6 +57,7 @@ public class BankdataAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final StatusUpdater statusUpdater;
 
     public BankdataAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -67,6 +69,8 @@ public class BankdataAgent extends NextGenerationAgent
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         loanRefreshController = constructLoanRefreshController();
+
+        statusUpdater = context;
     }
 
     private InvestmentRefreshController constructInvestmentRefreshController() {
@@ -95,14 +99,13 @@ public class BankdataAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-
         BankdataNemIdAuthenticator nemIdAuthenticator =
                 new BankdataNemIdAuthenticator(bankClient, persistentStorage);
 
         NemIdAuthenticationController nemidAuthenticationController =
                 new NemIdAuthenticationController(
                         new NemIdIFrameController(
-                                nemIdAuthenticator, supplementalRequester, catalog),
+                                nemIdAuthenticator, supplementalRequester, catalog, statusUpdater),
                         nemIdAuthenticator,
                         persistentStorage);
 

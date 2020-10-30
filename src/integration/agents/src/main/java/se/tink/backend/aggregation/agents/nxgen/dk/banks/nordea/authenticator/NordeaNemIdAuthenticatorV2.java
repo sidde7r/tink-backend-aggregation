@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -59,11 +60,13 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
             final SupplementalRequester supplementalRequester,
-            final Catalog catalog) {
+            final Catalog catalog,
+            final StatusUpdater statusUpdater) {
         this.bankClient = Objects.requireNonNull(bankClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
-        this.iFrameController = new NemIdIFrameController(this, supplementalRequester, catalog);
+        this.iFrameController =
+                new NemIdIFrameController(this, supplementalRequester, catalog, statusUpdater);
     }
 
     public void authenticate(final Credentials credentials) throws AuthenticationException {
