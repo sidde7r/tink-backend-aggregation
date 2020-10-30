@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.utils.masker.SensitiveValuesCollectionStringM
 
 public class LogMaskerTest {
 
-    private static final String MASK = "\\*\\*HASHED:[-A-Za-z0-9+/=]{4}\\*\\*";
+    private static final String MASK = "\\*\\*HASHED:[-A-Za-z0-9+/=]{2}\\*\\*";
 
     private Credentials credentials;
 
