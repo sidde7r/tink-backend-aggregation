@@ -9,5 +9,6 @@ java_library(
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
         "@tink_backend//src/libraries/strings",
+        "@tink_backend//src/libraries/uuid",
     ],
 )

@@ -93,7 +93,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.supplementalInformationController =
                 new SupplementalInformationControllerUsageMonitorProxy(
                         new SupplementalInformationControllerImpl(
-                                context, request.getCredentials(), request.getAppUriId()));
+                                context, request.getCredentials(), request.getState()));
         this.loginAgentEventProducer = loginAgentEventProducer;
         this.startTime = System.nanoTime();
         this.metrics =

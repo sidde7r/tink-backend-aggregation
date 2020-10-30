@@ -38,7 +38,7 @@ public final class IccreaAgent extends CbiGlobeAgent {
             authenticator =
                     new IccreaAuthenticator(
                             apiClient,
-                            new StrongAuthenticationState(request.getAppUriId()),
+                            new StrongAuthenticationState(request.getState()),
                             userState,
                             getAgentConfiguration().getProviderSpecificConfiguration(),
                             supplementalRequester,

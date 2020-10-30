@@ -18,6 +18,7 @@ public final class RefreshRequestModule extends AbstractModule {
     private final boolean requestFlagManual;
     private final boolean requestFlagCreate;
     private final boolean requestFlagUpdate;
+    private static final String VALID_V4_UUID = "00000000-0000-4000-0000-000000000000";
 
     public RefreshRequestModule(
             Set<RefreshableItem> refreshableItems, boolean manual, boolean create, boolean update) {
@@ -52,6 +53,7 @@ public final class RefreshRequestModule extends AbstractModule {
                         .forceAuthenticate(false)
                         .build();
         refreshInformationRequest.setItemsToRefresh(refreshableItems);
+        refreshInformationRequest.setAppUriId(VALID_V4_UUID);
         return refreshInformationRequest;
     }
 }
