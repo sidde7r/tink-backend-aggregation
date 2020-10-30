@@ -125,8 +125,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
       "CreditorAccount": {
         "SchemeName": "UK.OBIE.SortCodeAccountNumber",
         "Identification": "12345612345678",
-        "Name": "Test Recipient",
-        "SecondaryIdentification": "Test Recipient"
+        "Name": "Test Recipient"
       },
       "RemittanceInformation": {
         "Unstructured": "UNSTRUCTURED",
@@ -169,8 +168,7 @@ Strict-Transport-Security: ***
       "CreditorAccount": {
         "SchemeName": "UK.OBIE.SortCodeAccountNumber",
         "Identification": "12345612345678",
-        "Name": "Test Recipient",
-        "SecondaryIdentification": "Test Recipient"
+        "Name": "Test Recipient"
       },
       "RemittanceInformation": {
         "Reference": "UNSTRUCTURED",
@@ -291,8 +289,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
       "CreditorAccount": {
         "SchemeName": "UK.OBIE.SortCodeAccountNumber",
         "Identification": "12345612345678",
-        "Name": "Test Recipient",
-        "SecondaryIdentification": "Test Recipient"
+        "Name": "Test Recipient"
       },
       "InstructedAmount": {
         "Amount": "1.00",
@@ -335,8 +332,7 @@ Strict-Transport-Security: ***
       "CreditorAccount": {
         "SchemeName": "UK.OBIE.SortCodeAccountNumber",
         "Identification": "12345612345678",
-        "Name": "Test Recipient",
-        "SecondaryIdentification": "Test Recipient"
+        "Name": "Test Recipient"
       },
       "CreditorPostalAddress": {},
       "RemittanceInformation": {

@@ -21,8 +21,8 @@ public class DomesticPaymentApiClientWrapper implements ApiClientWrapper {
         final DomesticPaymentConsentRequest consentRequest =
                 new DomesticPaymentConsentRequest(paymentRequest.getPayment());
 
-        if (apiClient.isHSBCFamily()) {
-            consentRequest.getData().getInitiation().setReferenceForHSBCFamily();
+        if (apiClient.isAgentRequiringReference()) {
+            consentRequest.getData().getInitiation().setReferenceAsUnstructured();
         }
 
         final DomesticPaymentConsentResponse response =
@@ -68,8 +68,8 @@ public class DomesticPaymentApiClientWrapper implements ApiClientWrapper {
                         endToEndIdentification,
                         instructionIdentification);
 
-        if (apiClient.isHSBCFamily()) {
-            request.getData().getInitiation().setReferenceForHSBCFamily();
+        if (apiClient.isAgentRequiringReference()) {
+            request.getData().getInitiation().setReferenceAsUnstructured();
         }
 
         return apiClient

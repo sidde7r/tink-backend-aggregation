@@ -76,8 +76,8 @@ public class Initiation {
     }
 
     @JsonIgnore
-    public void setReferenceForHSBCFamily() {
-        // HSBC has special requirement on reference
+    public void setReferenceAsUnstructured() {
+        // HSBC and Monzo has requirements on reference
         this.remittanceInformation.setReference(remittanceInformation.getUnstructured());
     }
 }

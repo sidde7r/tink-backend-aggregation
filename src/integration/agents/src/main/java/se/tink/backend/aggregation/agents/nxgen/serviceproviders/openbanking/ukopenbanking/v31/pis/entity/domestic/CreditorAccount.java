@@ -13,7 +13,6 @@ public class CreditorAccount {
     private String schemeName;
     private String identification;
     private String name;
-    private String secondaryIdentification;
 
     // Used in serialization unit tests
     protected CreditorAccount() {}
@@ -28,7 +27,6 @@ public class CreditorAccount {
                 Strings.isNullOrEmpty(creditor.getName())
                         ? UkOpenBankingV31Constants.FormValues.PAYMENT_CREDITOR_DEFAULT_NAME
                         : creditor.getName();
-        this.secondaryIdentification = name;
     }
 
     public Creditor toCreditor() {
