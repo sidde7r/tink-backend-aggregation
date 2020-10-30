@@ -49,7 +49,6 @@ public class DemobankConstants {
         public static final String DATE_FROM = "from";
         public static final String DATE_TO = "to";
         public static final String REDIRECT_URI = "redirect_uri";
-        public static final String SCOPE = "scope";
 
         public static final String ACCOUNT_ID = "accountId";
         public static final String TICKET_ID = "ticketId";
