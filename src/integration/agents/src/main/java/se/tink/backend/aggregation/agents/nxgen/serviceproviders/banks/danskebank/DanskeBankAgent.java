@@ -65,7 +65,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                 new InvestmentRefreshController(
                         this.metricRefreshController,
                         this.updateController,
-                        new DanskeBankInvestmentFetcher(this.apiClient));
+                        new DanskeBankInvestmentFetcher(this.apiClient, configuration));
 
         // Fetches loans from the accounts endpoint
         this.loanRefreshController =
@@ -107,7 +107,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                 new InvestmentRefreshController(
                         this.metricRefreshController,
                         this.updateController,
-                        new DanskeBankInvestmentFetcher(this.apiClient));
+                        new DanskeBankInvestmentFetcher(this.apiClient, configuration));
 
         // Fetches loans from the accounts endpoint
         this.loanRefreshController =

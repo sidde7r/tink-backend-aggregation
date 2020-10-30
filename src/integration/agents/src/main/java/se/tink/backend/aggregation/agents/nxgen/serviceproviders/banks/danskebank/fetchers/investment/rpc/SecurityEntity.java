@@ -10,7 +10,9 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Market;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
@@ -35,7 +37,8 @@ public class SecurityEntity {
     private BigDecimal unrealizedProfitLossPct;
     private boolean fixedIncome;
 
-    public Optional<Instrument> toTinkInstrument(ListSecurityDetailsResponse securityDetails) {
+    public Optional<Instrument> toTinkInstrument(
+            ListSecurityDetailsResponse securityDetails, DanskeBankConfiguration configuration) {
         if (securityDetails == null) {
             return Optional.empty();
         }
@@ -54,7 +57,10 @@ public class SecurityEntity {
         instrument.setQuantity(quantity.doubleValue());
         instrument.setRawType(securityDetails.getSecurityTypeName());
         instrument.setType(getTinkInstrumentType(securityDetails));
-        instrument.setUniqueIdentifier(isin + securityDetails.getCurrencyCode());
+        instrument.setUniqueIdentifier(
+                configuration.getMarketCode().equals(Market.SE_MARKET)
+                        ? isin
+                        : isin + securityDetails.getCurrencyCode());
 
         return Optional.of(instrument);
     }

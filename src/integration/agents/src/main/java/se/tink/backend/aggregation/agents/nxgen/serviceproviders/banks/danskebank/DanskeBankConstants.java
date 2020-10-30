@@ -327,4 +327,8 @@ public class DanskeBankConstants {
     public static class Transfer {
         public static final int MAX_POLL_ATTEMPTS = 90;
     }
+
+    public static class Market {
+        public static final String SE_MARKET = "SE";
+    }
 }
