@@ -1,5 +1,15 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# Deliberately not failing if commit message linter fails. Simply informing the
-# developer.
-./.buildkite/check-commit-metadata.sh $(git show --format=format:%H HEAD)
+# Post-commit hook that warns of commits created with a malformed commit message.
+# Deliberately not failing on encountered errors, as the commit has already been
+# performed by the time this hook gets executed. So simply inform the developer.
+
+set -euo pipefail
+
+check_commit_format() {
+    ./.buildkite/check-commit-metadata.sh $(git show --format=format:%H HEAD)
+}
+
+echo "Checking commit metadata..."
+check_commit_format
+echo "... Commit metadata checked"
