@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -49,6 +50,46 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final AccountEntityMapper accountEntityMapper;
+
+    public DanskeBankAgent(
+            AgentComponentProvider agentComponentProvider,
+            DanskeBankConfiguration configuration,
+            AccountEntityMapper accountEntityMapper) {
+        super(agentComponentProvider);
+        this.apiClient = createApiClient(this.client, configuration);
+        this.configuration = configuration;
+        this.deviceId = Hash.sha1AsHex(this.credentials.getField(Field.Key.USERNAME) + "-TINK");
+        this.accountEntityMapper = accountEntityMapper;
+
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new DanskeBankInvestmentFetcher(this.apiClient));
+
+        // Fetches loans from the accounts endpoint
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new DanskeBankAccountLoanFetcher(
+                                this.credentials,
+                                this.apiClient,
+                                this.configuration,
+                                accountEntityMapper),
+                        createTransactionFetcherController());
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
+
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
+
+        // Must add the filter here because `configureHttpClient` is called before the agent
+        // constructor
+        // (from NextGenerationAgent constructor).
+        client.addFilter(new DanskeBankHttpFilter(configuration));
+        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+    }
 
     public DanskeBankAgent(
             CredentialsRequest request,
