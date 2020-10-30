@@ -77,9 +77,10 @@ public class BankIdAuthenticationControllerNO
         String dob = nationalId.substring(0, 6);
         String bankIdReference = authenticator.init(nationalId, dob, mobilenumber);
         handleBankIdReferenceAndPollBankIDStatus(credentials, bankIdReference);
+        authenticator.sendActivationCode();
     }
 
-    public void handleBankIdReferenceAndPollBankIDStatus(
+    private void handleBankIdReferenceAndPollBankIDStatus(
             Credentials credentials, String bankIdReference) {
         // This should be treated as temporary solution.
         // We should not be blocked by supplemental info.
