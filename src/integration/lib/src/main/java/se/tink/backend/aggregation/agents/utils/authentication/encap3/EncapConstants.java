@@ -22,6 +22,7 @@ public class EncapConstants {
         public static final String CLIENT_SALT_CURRENT_KEY_ID = "clientSaltCurrentKeyId";
         public static final String USERNAME = "username";
         public static final String SAM_USERID = "samUserId";
+        public static final String HW_KEY = "hwKey";
     }
 
     public static final class Urls {
@@ -58,6 +59,8 @@ public class EncapConstants {
     public static final class Message {
         public static final String APPLICATION_ID = "encap";
         public static final String HEX_APN_TOKEN = "";
+        public static final String REGISTRATION_KEY = "registrationId";
+        public static final String OPERATION_KEY = "operation";
         public static final String OPERATION_REGISTER = "REGISTER";
         public static final String OPERATION_IDENTIFY = "IDENTIFY";
         public static final String OPERATION_ACTIVATE = "ACTIVATE";
