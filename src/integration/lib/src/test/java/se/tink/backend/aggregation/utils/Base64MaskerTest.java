@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.utils.masker.StringMasker;
 
 public class Base64MaskerTest {
 
-    private static final String MASK = "\\*\\*HASHED:[-A-Za-z0-9+/=]{4}\\*\\*";
+    private static final String MASK = "\\*\\*HASHED:[-A-Za-z0-9+/=]{2}\\*\\*";
     private static final Pattern MASK_PATTERN = Pattern.compile(MASK);
     private StringMasker masker;
 

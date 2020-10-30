@@ -9,6 +9,14 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 
+/*
+ * This class is used in masking log files stored in s3.
+ * Instead of removing sensitive data it is replaced with SHA-256 hash converted to Base64 and shortened to 2 signs:
+ *   **HASHED:<<2 character long base64 encoded hash>>**
+ *
+ * The purpose of hashing secrets is to see if some values change during refreshes process or between them.
+ * This class does not take part in masking headers, only body.
+ * */
 public class StringMasker {
 
     private static final String MASK = "**HASHED:%s**";
@@ -69,8 +77,7 @@ public class StringMasker {
 
     private String hash(Pattern p) {
         String hash = Hash.sha256Base64(p.pattern().getBytes());
-        int noMoreThat4 = Math.min(hash.length(), 4);
-        return hash.substring(0, noMoreThat4);
+        return hash.substring(0, 2);
     }
 
     public void addValuesToMask(
