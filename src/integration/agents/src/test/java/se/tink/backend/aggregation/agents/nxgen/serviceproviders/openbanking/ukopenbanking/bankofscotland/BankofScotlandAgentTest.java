@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -15,7 +14,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
 public class BankofScotlandAgentTest {
 
     private final String SOURCE_IDENTIFIER = "";
@@ -27,7 +25,7 @@ public class BankofScotlandAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bankofscotland")
+                .setFinancialInstitutionId("d660f95b315a49d493952778ee23b509")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
@@ -40,7 +38,7 @@ public class BankofScotlandAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("bankofscotland")
+                        .setFinancialInstitutionId("d660f95b315a49d493952778ee23b509")
                         .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
