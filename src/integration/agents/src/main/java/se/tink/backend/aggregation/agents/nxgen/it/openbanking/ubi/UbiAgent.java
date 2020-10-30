@@ -25,7 +25,7 @@ public final class UbiAgent extends CbiGlobeAgent {
             authenticator =
                     new UbiAuthenticator(
                             apiClient,
-                            new StrongAuthenticationState(request.getAppUriId()),
+                            new StrongAuthenticationState(request.getState()),
                             userState,
                             getAgentConfiguration().getProviderSpecificConfiguration(),
                             supplementalRequester,

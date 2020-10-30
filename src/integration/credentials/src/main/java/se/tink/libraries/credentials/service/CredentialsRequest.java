@@ -15,6 +15,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.user.rpc.User;
+import se.tink.libraries.uuid.UUIDUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class CredentialsRequest {
@@ -160,6 +161,12 @@ public abstract class CredentialsRequest {
 
     public void setAppUriId(String appUriId) {
         this.appUriId = appUriId;
+    }
+
+    public String getState() {
+        if (appUriId != null) return appUriId;
+        appUriId = UUIDUtils.generateUuidWithTinkTag();
+        return appUriId;
     }
 
     public String getCallbackUri() {

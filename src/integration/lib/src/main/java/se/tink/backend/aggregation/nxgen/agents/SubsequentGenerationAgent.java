@@ -97,7 +97,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         this.appId = context.getAppId();
         this.strongAuthenticationState =
                 new StrongAuthenticationState(
-                        request.getAppUriId(), componentProvider.getRandomValueGenerator());
+                        request.getState(), componentProvider.getRandomValueGenerator());
 
         this.userIp = getOriginatingUserIpOrDefault();
     }

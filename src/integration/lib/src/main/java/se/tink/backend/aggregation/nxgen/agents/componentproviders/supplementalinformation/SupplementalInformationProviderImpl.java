@@ -22,7 +22,7 @@ public final class SupplementalInformationProviderImpl implements SupplementalIn
                 new SupplementalInformationControllerImpl(
                         supplementalRequester,
                         credentialsRequest.getCredentials(),
-                        credentialsRequest.getAppUriId());
+                        credentialsRequest.getState());
         this.supplementalInformationHelper =
                 new SupplementalInformationHelperImpl(
                         credentialsRequest.getProvider(), supplementalInformationController);

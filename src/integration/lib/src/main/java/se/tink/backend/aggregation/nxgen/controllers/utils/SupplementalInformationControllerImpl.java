@@ -27,13 +27,13 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
-    private final String appUriId;
+    private final String state;
 
     public SupplementalInformationControllerImpl(
-            SupplementalRequester supplementalRequester, Credentials credentials, String appUriId) {
+            SupplementalRequester supplementalRequester, Credentials credentials, String state) {
         this.supplementalRequester = supplementalRequester;
         this.credentials = credentials;
-        this.appUriId = appUriId;
+        this.state = state;
     }
 
     @Override
@@ -88,15 +88,14 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     public void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload) {
         Preconditions.checkNotNull(payload);
 
-        payload.setState(appUriId);
+        payload.setState(state);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(payload));
         credentials.setStatus(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
 
         final String deepLinkUrl =
                 Optional.ofNullable(payload.getIos()).map(Ios::getDeepLinkUrl).orElse("<none>");
 
-        logger.info(
-                "Opening third party app with deep link URL {}, state {}", deepLinkUrl, appUriId);
+        logger.info("Opening third party app with deep link URL {}, state {}", deepLinkUrl, state);
 
         supplementalRequester.requestSupplementalInformation(credentials, false);
     }

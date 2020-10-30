@@ -90,7 +90,7 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         temporaryStorage,
                         hmacMultiTokenStorage);
 
-        this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
+        this.strongAuthenticationState = new StrongAuthenticationState(request.getState());
 
         this.creditCardRefreshController = constructCreditCardController();
         client.addFilter(new AmexInvalidTokenFilter(hmacMultiTokenStorage));

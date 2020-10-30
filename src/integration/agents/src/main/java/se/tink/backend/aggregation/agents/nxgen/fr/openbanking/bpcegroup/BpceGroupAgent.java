@@ -96,7 +96,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         agentConfiguration.getProviderSpecificConfiguration(),
                         bpceGroupSignatureHeaderGenerator);
 
-        this.strongAuthenticationState = new StrongAuthenticationState(this.request.getAppUriId());
+        this.strongAuthenticationState = new StrongAuthenticationState(this.request.getState());
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
