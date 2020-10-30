@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
@@ -12,18 +13,24 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DemobankRedirectAuthenticator implements OAuth2Authenticator {
 
     private final DemobankApiClient apiClient;
+    private final PersistentStorage persistentStorage;
+    private final Credentials credentials;
     private final String callbackUri;
-    private final String scopes;
 
     public DemobankRedirectAuthenticator(
-            DemobankApiClient apiClient, String callbackUri, String scopes) {
+            DemobankApiClient apiClient,
+            PersistentStorage persistentStorage,
+            Credentials credentials,
+            String callbackUri) {
         this.apiClient = apiClient;
+        this.persistentStorage = persistentStorage;
+        this.credentials = credentials;
         this.callbackUri = callbackUri;
-        this.scopes = scopes;
     }
 
     @Override
@@ -33,8 +40,7 @@ public class DemobankRedirectAuthenticator implements OAuth2Authenticator {
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParamsValues.RESPONSE_TYPE)
                 .queryParam(QueryParams.CLIENT_ID, QueryParamsValues.CLIENT_ID)
                 .queryParam(QueryParams.STATE, state)
-                .queryParam(QueryParams.REDIRECT_URI, callbackUri)
-                .queryParam(QueryParams.SCOPE, scopes);
+                .queryParam(QueryParams.REDIRECT_URI, callbackUri);
     }
 
     @Override

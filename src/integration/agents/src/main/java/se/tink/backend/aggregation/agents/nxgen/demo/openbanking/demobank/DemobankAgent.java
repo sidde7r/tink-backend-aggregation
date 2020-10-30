@@ -25,21 +25,21 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankDecoupledAppAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockDkNemIdReAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMultiRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAndOtpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.filters.AuthenticationErrorFilter;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
@@ -59,7 +59,6 @@ public final class DemobankAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final String callbackUri;
-    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public DemobankAgent(AgentComponentProvider componentProvider) {
@@ -70,7 +69,6 @@ public final class DemobankAgent extends NextGenerationAgent
         creditCardRefreshController = constructCreditCardRefreshController();
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new AuthenticationErrorFilter());
-        randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     private String getCallbackUri() {
@@ -206,20 +204,24 @@ public final class DemobankAgent extends NextGenerationAgent
     }
 
     private Authenticator constructRedirectAuthenticator() {
-        DemobankMultiRedirectAuthenticator multiRedirectAuthenticator =
-                new DemobankMultiRedirectAuthenticator(
-                        apiClient,
-                        persistentStorage,
-                        callbackUri,
-                        supplementalInformationHelper,
-                        request,
-                        randomValueGenerator);
+        DemobankRedirectAuthenticator demobankRedirectAuthenticator =
+                new DemobankRedirectAuthenticator(
+                        apiClient, persistentStorage, credentials, callbackUri);
 
-        DemobankAutoAuthenticator autoAuthenticator =
-                new DemobankAutoAuthenticator(sessionStorage, apiClient);
+        final OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        demobankRedirectAuthenticator,
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
-                request, context, multiRedirectAuthenticator, autoAuthenticator);
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
