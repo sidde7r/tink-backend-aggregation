@@ -27,10 +27,6 @@ public class StrongAuthenticationState {
         this.state = generateState(appUriId);
     }
 
-    public StrongAuthenticationState() {
-        this(null);
-    }
-
     private String generateState(String appUriId) {
         if (Strings.isNullOrEmpty(appUriId)) {
             // Beware! Some financial institutes have limitations on

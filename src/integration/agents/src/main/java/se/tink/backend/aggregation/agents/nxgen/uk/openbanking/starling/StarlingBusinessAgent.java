@@ -42,7 +42,8 @@ public final class StarlingBusinessAgent extends SubsequentProgressiveGeneration
                         persistentStorage,
                         client,
                         starlingConfiguration.getAisConfiguration(),
-                        agentConfiguration.getRedirectUrl());
+                        agentConfiguration.getRedirectUrl(),
+                        strongAuthenticationState);
         apiClient = new StarlingApiClient(client, authenticator);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }

@@ -67,7 +67,11 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         redirectUrl = agentConfiguration.getRedirectUrl();
         authenticator =
                 new StarlingOAut2Authenticator(
-                        persistentStorage, client, aisConfiguration, redirectUrl);
+                        persistentStorage,
+                        client,
+                        aisConfiguration,
+                        redirectUrl,
+                        strongAuthenticationState);
         apiClient = new StarlingApiClient(client, authenticator);
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
         transactionalAccountRefreshController =
