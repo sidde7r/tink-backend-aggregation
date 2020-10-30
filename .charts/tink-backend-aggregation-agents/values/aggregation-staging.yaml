@@ -18,5 +18,5 @@ allErrorsRefresh: outcome=~"completed"
 
 allLoginActions: action=~"login-auto|login-manual|login-cron|is-logged-in|persist-login-session"
 
-obAgents: provider=~".*-ob"
-reAgents: provider!~".*-ob"
+obAgents: provider=~".*-ob|.*-oauth2"
+reAgents: provider!~".*-ob|.*-oauth2"
