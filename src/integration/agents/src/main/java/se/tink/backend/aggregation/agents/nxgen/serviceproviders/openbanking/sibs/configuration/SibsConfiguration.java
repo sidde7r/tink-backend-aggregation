@@ -7,15 +7,9 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @JsonObject
 public class SibsConfiguration implements ClientConfiguration {
 
-    @Secret private String baseUrl;
     @Secret private String clientId;
     @Secret private String clientSigningCertificate;
     @Secret private String clientSigningCertificateSerialNumber;
-    @Secret private String aspspCode;
-
-    public String getBaseUrl() {
-        return baseUrl;
-    }
 
     public String getClientId() {
         return clientId;
@@ -27,9 +21,5 @@ public class SibsConfiguration implements ClientConfiguration {
 
     public String getClientSigningCertificateSerialNumber() {
         return clientSigningCertificateSerialNumber;
-    }
-
-    public String getAspspCode() {
-        return aspspCode;
     }
 }

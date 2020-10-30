@@ -262,9 +262,6 @@ public class AktiaApiClientTest {
 
     private static AktiaConfiguration createAktiaConfigurationMock() {
         final AktiaConfiguration aktiaConfigurationMock = mock(AktiaConfiguration.class);
-
-        when(aktiaConfigurationMock.getAuthServerUrl()).thenReturn(AUTH_SERVER_URL);
-        when(aktiaConfigurationMock.getApiServerUrl()).thenReturn(API_SERVER_URL);
         when(aktiaConfigurationMock.getBasicAuthHeaderValue()).thenReturn(BASIC_AUTH_HEADER_VALUE);
 
         return aktiaConfigurationMock;

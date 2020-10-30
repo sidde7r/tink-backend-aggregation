@@ -153,11 +153,11 @@ public class AktiaApiClient {
     }
 
     private URL createAuthUrl() {
-        return new URL(aktiaConfiguration.getAuthServerUrl() + AUTH_TOKEN_PATH);
+        return new URL("https://mobile-auth.aktia.fi" + AUTH_TOKEN_PATH);
     }
 
     private URL createApiUrl(String path) {
-        return new URL(aktiaConfiguration.getApiServerUrl() + path);
+        return new URL("https://mobile-gateway.aktia.fi" + path);
     }
 
     private OAuth2Token getOAuth2Token() {

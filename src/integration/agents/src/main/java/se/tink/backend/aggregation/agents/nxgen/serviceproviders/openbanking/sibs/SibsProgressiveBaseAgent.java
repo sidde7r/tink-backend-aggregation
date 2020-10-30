@@ -63,7 +63,9 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                         request, context, configuration.getSignatureKeyPair()));
         userState = new SibsUserState(persistentStorage);
         setConfiguration(configuration);
-        apiClient = new SibsBaseApiClient(client, userState, request.isManual());
+        apiClient =
+                new SibsBaseApiClient(
+                        client, userState, request.getProvider().getPayload(), request.isManual());
         final AgentConfiguration<SibsConfiguration> agentConfiguration = getAgentConfiguration();
         final SibsConfiguration sibsConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
