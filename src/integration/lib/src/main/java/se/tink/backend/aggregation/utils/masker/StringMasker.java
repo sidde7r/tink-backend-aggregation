@@ -7,10 +7,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 
 public class StringMasker {
 
-    public static final String MASK = "***MASKED***";
+    private static final String MASK = "**HASHED:%s**";
     private static final Predicate<Pattern> NONE_WHITELISTED = (p -> true);
 
     private static final Comparator<Pattern> SENSITIVE_VALUES_SORTING_COMPARATOR =
@@ -59,10 +60,17 @@ public class StringMasker {
 
         String result = string;
         for (Pattern p : sensitiveValuesToMask) {
-            result = p.matcher(result).replaceAll(MASK);
+            String replacement = String.format(MASK, hash(p));
+            result = p.matcher(result).replaceAll(replacement);
         }
 
         return result;
+    }
+
+    private String hash(Pattern p) {
+        String hash = Hash.sha256Base64(p.pattern().getBytes());
+        int noMoreThat4 = Math.min(hash.length(), 4);
+        return hash.substring(0, noMoreThat4);
     }
 
     public void addValuesToMask(

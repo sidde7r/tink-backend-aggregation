@@ -10,6 +10,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.regex.Pattern;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,8 @@ import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.masker.SensitiveValuesCollectionStringMaskerBuilder;
 
 public class LogMaskerTest {
+
+    private static final String MASK = "\\*\\*HASHED:[-A-Za-z0-9+/=]{4}\\*\\*";
 
     private Credentials credentials;
 
@@ -48,10 +51,11 @@ public class LogMaskerTest {
 
         String maskedString1 = logMasker.mask("abcd1010abcd2020abcd");
 
-        Assert.assertEquals(
+        Assert.assertTrue(
                 "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd",
-                maskedString1);
+                Pattern.compile("abcd" + MASK + "abcd" + MASK + "abcd")
+                        .matcher(maskedString1)
+                        .find());
     }
 
     @Test
@@ -66,35 +70,39 @@ public class LogMaskerTest {
 
         String maskedString1 = logMasker.mask("abcd1111abcd1234abcd5678abcd0000");
 
-        Assert.assertEquals(
+        Assert.assertTrue(
                 "String not masked as expected.",
-                "abcd1111abcd1234abcd5678abcd***MASKED***",
-                maskedString1);
+                Pattern.compile("abcd1111abcd1234abcd5678abcd" + MASK)
+                        .matcher(maskedString1)
+                        .find());
 
         testSecretValuesSubject.onNext(Sets.newHashSet("1111", "1234"));
 
         String maskedString2 = logMasker.mask("abcd1111abcd1234abcd5678abcd0000");
 
-        Assert.assertEquals(
+        Assert.assertTrue(
                 "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd5678abcd***MASKED***",
-                maskedString2);
+                Pattern.compile("abcd" + MASK + "abcd" + MASK + "abcd5678abcd" + MASK)
+                        .matcher(maskedString2)
+                        .find());
 
         testSecretValuesSubject.onNext(Sets.newHashSet("5678"));
 
         String maskedString3 = logMasker.mask("abcd1111abcd1234abcd5678abcd0000");
 
-        Assert.assertEquals(
+        Assert.assertTrue(
                 "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd***MASKED***abcd***MASKED***",
-                maskedString3);
+                Pattern.compile("abcd" + MASK + "abcd" + MASK + "abcd" + MASK + "abcd" + MASK)
+                        .matcher(maskedString3)
+                        .find());
 
         String maskedString4 = logMasker.mask("abcd1111abcd2020abcd1010abcd0000");
 
-        Assert.assertEquals(
+        Assert.assertTrue(
                 "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd***MASKED***abcd***MASKED***",
-                maskedString4);
+                Pattern.compile("abcd" + MASK + "abcd" + MASK + "abcd" + MASK + "abcd" + MASK)
+                        .matcher(maskedString4)
+                        .find());
 
         testSecretValuesSubject.onComplete();
     }
@@ -110,10 +118,12 @@ public class LogMaskerTest {
 
         String unmasked = "true2225555falsealfgoiangoiandg555adlkga222";
         String masked = logMasker.mask(unmasked);
-        Assert.assertEquals(
+
+        Assert.assertTrue(
                 "Didn't mask sensitive values as expected.",
-                "true222***MASKED***falsealfgoiangoiandg555adlkga222",
-                masked);
+                Pattern.compile("true222" + MASK + "falsealfgoiangoiandg555adlkga222")
+                        .matcher(masked)
+                        .find());
     }
 
     @Test
@@ -129,19 +139,23 @@ public class LogMaskerTest {
 
         String unmasked = "abcd1111abcd2020abcd1010abcd0000";
         String maskedString1 = logMasker.mask(unmasked);
-        Assert.assertEquals(
+
+        Assert.assertTrue(
                 "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd***MASKED***abcd***MASKED***",
-                maskedString1);
+                Pattern.compile("abcd" + MASK + "abcd" + MASK + "abcd" + MASK + "abcd" + MASK)
+                        .matcher(maskedString1)
+                        .find());
 
         ImmutableSet<String> whitelistedValues = ImmutableSet.of("0000");
         logMasker.addAgentWhitelistedValues(whitelistedValues);
 
         String maskedString2 = logMasker.mask(unmasked);
-        Assert.assertEquals(
+
+        Assert.assertTrue(
                 "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd***MASKED***abcd0000",
-                maskedString2);
+                Pattern.compile("abcd" + MASK + "abcd" + MASK + "abcd" + MASK + "abcd0000")
+                        .matcher(maskedString2)
+                        .find());
     }
 
     private Credentials mockCredentials() {
