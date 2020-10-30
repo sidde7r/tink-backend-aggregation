@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 @Setter
 @JsonObject
+@EqualsAndHashCode
 public class BelfiusAuthenticationData {
 
     private String password;

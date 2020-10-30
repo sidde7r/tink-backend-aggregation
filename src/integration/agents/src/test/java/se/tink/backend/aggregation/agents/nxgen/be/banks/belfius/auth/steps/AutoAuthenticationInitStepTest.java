@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class AutoAuthenticationInitStepTest extends BaseStepTest {
+public class AutoAuthenticationInitStepTest extends BaseStep {
 
     @Test
     public void shouldStartFlowAndGenerateHashes() {
@@ -27,11 +27,11 @@ public class AutoAuthenticationInitStepTest extends BaseStepTest {
         BelfiusSignatureCreator signer = Mockito.mock(BelfiusSignatureCreator.class);
         AutoAuthenticationInitStep step =
                 new AutoAuthenticationInitStep(
-                        apiClient, signer, createBelfiusPersistedDataAccessorFactory());
+                        apiClient, signer, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder().build(),
+                        new BelfiusProcessState(),
                         new BelfiusAuthenticationData()
                                 .panNumber(PAN_NUMBER)
                                 .deviceToken(DEVICE_TOKEN));
@@ -63,7 +63,10 @@ public class AutoAuthenticationInitStepTest extends BaseStepTest {
 
         assertThat(nextStepResult.getAuthenticationProcessState()).isPresent();
         BelfiusProcessState processState =
-                nextStepResult.getAuthenticationProcessState().get().get(BelfiusProcessState.KEY);
+                createBelfiusDataAccessorFactory()
+                        .createBelfiusProcessStateAccessor(
+                                nextStepResult.getAuthenticationProcessState().get())
+                        .getBelfiusProcessState();
 
         assertThat(processState.getSessionId()).isEqualTo(SESSION_ID);
         assertThat(processState.getMachineId()).isEqualTo(MACHINE_ID);

@@ -153,7 +153,7 @@ git_repository(
 # To be used only by //src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework
 git_repository(
     name = "tink_backend_for_agents_framework",
-    commit = "b569ad7af323bdb56fa980e50c50dd297227bc89",
+    commit = "3653b9438eb8d7fd6aea27b10f1a8cfe22b71cad",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1595000000 +0000",
 )
@@ -639,6 +639,10 @@ agent_platform_deps("@tink_backend_for_agents_framework//src/agents-platform:age
 load("@agents_platform_maven//:defs.bzl", pin_agent_platform = "pinned_maven_install")
 
 pin_agent_platform()
+
+load("@tink_backend_for_agents_framework//src/libraries/cryptography:deps.bzl", "cryptography_lib_deps")
+
+cryptography_lib_deps("@tink_backend_for_agents_framework//src/libraries/cryptography:cryptography_lib_install.json")
 
 # This aims become the singular place for specifying the full collection of direct and transitive
 # dependencies of the aggregation service monolith jar. All aggregation code -- including agent code

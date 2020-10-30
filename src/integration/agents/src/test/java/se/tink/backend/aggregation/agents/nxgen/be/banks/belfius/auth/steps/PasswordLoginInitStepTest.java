@@ -15,17 +15,18 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class PasswordLoginInitStepTest extends BaseStepTest {
+public class PasswordLoginInitStepTest extends BaseStep {
 
     @Test
     public void shouldStartFlow() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
-        PasswordLoginInitStep step = new PasswordLoginInitStep(apiClient);
+        PasswordLoginInitStep step =
+                new PasswordLoginInitStep(apiClient, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder().machineId(MACHINE_ID).build(),
+                        new BelfiusProcessState().machineId(MACHINE_ID),
                         new BelfiusAuthenticationData());
 
         when(apiClient.openSession(MACHINE_ID))
@@ -47,7 +48,10 @@ public class PasswordLoginInitStepTest extends BaseStepTest {
 
         assertThat(nextStepResult.getAuthenticationProcessState()).isPresent();
         BelfiusProcessState processState =
-                nextStepResult.getAuthenticationProcessState().get().get(BelfiusProcessState.KEY);
+                createBelfiusDataAccessorFactory()
+                        .createBelfiusProcessStateAccessor(
+                                nextStepResult.getAuthenticationProcessState().get())
+                        .getBelfiusProcessState();
 
         assertThat(processState.getSessionId()).isEqualTo(SESSION_ID);
         assertThat(processState.getRequestCounterAggregated()).isEqualTo(1);

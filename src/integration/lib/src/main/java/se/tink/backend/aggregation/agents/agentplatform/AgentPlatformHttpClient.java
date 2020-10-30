@@ -6,8 +6,10 @@ import agents_platform_agents_framework.org.springframework.http.ResponseEntity;
 import agents_platform_agents_framework.org.springframework.util.LinkedMultiValueMap;
 import agents_platform_agents_framework.org.springframework.util.MultiValueMap;
 import lombok.var;
-import se.tink.backend.aggregation.agentsplatform.framework.http.HttpClient;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
@@ -16,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
  * implementation for the Spring RestTemplate in the future, when agents will be migrating to the
  * Agent Platform
  */
-public class AgentPlatformHttpClient implements HttpClient {
+public class AgentPlatformHttpClient implements AgentHttpClient {
 
     private final TinkHttpClient tinkHttpClient;
 
@@ -26,7 +28,7 @@ public class AgentPlatformHttpClient implements HttpClient {
 
     @Override
     public <T> ResponseEntity<T> exchange(RequestEntity<?> requestEntity, Class<T> responseType) {
-        var requestBuilder =
+        RequestBuilder requestBuilder =
                 tinkHttpClient
                         .request(requestEntity.getUrl().toString())
                         .body(requestEntity.getBody());
@@ -48,8 +50,16 @@ public class AgentPlatformHttpClient implements HttpClient {
     }
 
     private MultiValueMap<String, String> getResponseHeaders(HttpResponse response) {
-        var newHeaders = new LinkedMultiValueMap<String, String>();
+        LinkedMultiValueMap newHeaders = new LinkedMultiValueMap<String, String>();
         response.getHeaders().forEach(newHeaders::addAll);
         return newHeaders;
+    }
+
+    @Override
+    public <T> ResponseEntity<T> exchange(
+            RequestEntity<?> requestEntity,
+            Class<T> responseType,
+            AgentExtendedClientInfo extendedClientInfo) {
+        return exchange(requestEntity, responseType);
     }
 }

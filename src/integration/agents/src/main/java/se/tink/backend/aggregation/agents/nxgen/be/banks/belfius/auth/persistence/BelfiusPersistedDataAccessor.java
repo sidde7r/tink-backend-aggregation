@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentJsonRepresentationAuthenticationPersistedDataAccessor;
 
-public class BelfiusPersistedData
+public class BelfiusPersistedDataAccessor
         extends AgentJsonRepresentationAuthenticationPersistedDataAccessor<
                 BelfiusAuthenticationData> {
 
-    BelfiusPersistedData(
+    BelfiusPersistedDataAccessor(
             AgentAuthenticationPersistedData agentAuthenticationPersistedData,
             ObjectMapper objectMapper) {
         super(agentAuthenticationPersistedData, objectMapper, BelfiusAuthenticationData.class);

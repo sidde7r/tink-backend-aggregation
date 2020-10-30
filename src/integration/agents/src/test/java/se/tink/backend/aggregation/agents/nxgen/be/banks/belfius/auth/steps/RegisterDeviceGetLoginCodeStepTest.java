@@ -16,22 +16,18 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginDescriptionAgentField;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginInputAgentField;
 
-public class RegisterDeviceGetLoginCodeStepTest extends BaseStepTest {
+public class RegisterDeviceGetLoginCodeStepTest extends BaseStep {
 
     @Test
     public void shouldGetChallengeAndAskForLoginCode() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         RegisterDeviceGetLoginCodeStep step =
-                new RegisterDeviceGetLoginCodeStep(
-                        apiClient, createBelfiusPersistedDataAccessorFactory());
+                new RegisterDeviceGetLoginCodeStep(apiClient, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
-                                .sessionId(SESSION_ID)
-                                .machineId(MACHINE_ID)
-                                .build(),
+                        new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
                         new BelfiusAuthenticationData().panNumber(PAN_NUMBER));
 
         when(apiClient.prepareAuthentication(SESSION_ID, MACHINE_ID, "1", PAN_NUMBER))

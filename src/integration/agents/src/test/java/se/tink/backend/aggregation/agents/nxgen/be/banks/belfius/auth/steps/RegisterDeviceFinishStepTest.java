@@ -13,23 +13,21 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class RegisterDeviceFinishStepTest extends BaseStepTest {
+public class RegisterDeviceFinishStepTest extends BaseStep {
 
     @Test
     public void shouldSaveDeviceTokenAndCloseSession() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         RegisterDeviceFinishStep step =
-                new RegisterDeviceFinishStep(
-                        apiClient, createBelfiusPersistedDataAccessorFactory());
+                new RegisterDeviceFinishStep(apiClient, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
+                        new BelfiusProcessState()
                                 .sessionId(SESSION_ID)
                                 .machineId(MACHINE_ID)
-                                .deviceToken(DEVICE_TOKEN)
-                                .build(),
+                                .deviceToken(DEVICE_TOKEN),
                         new BelfiusAuthenticationData());
 
         // when
@@ -47,7 +45,7 @@ public class RegisterDeviceFinishStepTest extends BaseStepTest {
         verify(apiClient).closeSession(SESSION_ID, MACHINE_ID, "1");
 
         BelfiusAuthenticationData persistence =
-                createBelfiusPersistedDataAccessorFactory()
+                createBelfiusDataAccessorFactory()
                         .createBelfiusPersistedDataAccessor(
                                 nextStepResult.getAuthenticationPersistedData())
                         .getBelfiusAuthenticationData();

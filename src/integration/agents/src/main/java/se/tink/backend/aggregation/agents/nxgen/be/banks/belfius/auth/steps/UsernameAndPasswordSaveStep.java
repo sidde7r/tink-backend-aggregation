@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.steps;
 import lombok.AllArgsConstructor;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedData;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
@@ -18,12 +18,12 @@ public class UsernameAndPasswordSaveStep
         implements AgentAuthenticationProcessStep<
                 AgentUserInteractionAuthenticationProcessRequest> {
 
-    private final BelfiusPersistedDataAccessorFactory persistedDataAccessorFactory;
+    private final BelfiusDataAccessorFactory persistedDataAccessorFactory;
 
     @Override
     public AgentAuthenticationResult execute(
             AgentUserInteractionAuthenticationProcessRequest request) {
-        BelfiusPersistedData persistenceData =
+        BelfiusPersistedDataAccessor persistenceData =
                 persistedDataAccessorFactory.createBelfiusPersistedDataAccessor(
                         request.getAuthenticationPersistedData());
         BelfiusAuthenticationData authenticationData =

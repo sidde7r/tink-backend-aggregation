@@ -13,17 +13,17 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 
-public class UsernameAndPasswordSaveStepTest extends BaseStepTest {
+public class UsernameAndPasswordSaveStepTest extends BaseStep {
 
     @Test
     public void shouldSaveUsernameAndPassword() {
         // given
         UsernameAndPasswordSaveStep step =
-                new UsernameAndPasswordSaveStep(createBelfiusPersistedDataAccessorFactory());
+                new UsernameAndPasswordSaveStep(createBelfiusDataAccessorFactory());
 
         AgentUserInteractionAuthenticationProcessRequest request =
                 createAgentUserInteractionAuthenticationProcessRequest(
-                        BelfiusProcessState.builder().build(),
+                        new BelfiusProcessState(),
                         new BelfiusAuthenticationData(),
                         new AgentFieldValue(Key.PASSWORD.getFieldKey(), PASSWORD),
                         new AgentFieldValue(Key.USERNAME.getFieldKey(), PAN_NUMBER));
@@ -43,7 +43,7 @@ public class UsernameAndPasswordSaveStepTest extends BaseStepTest {
                                 ManualAuthenticationInitStep.class.getSimpleName()));
 
         BelfiusAuthenticationData persistence =
-                createBelfiusPersistedDataAccessorFactory()
+                createBelfiusDataAccessorFactory()
                         .createBelfiusPersistedDataAccessor(
                                 nextStepResult.getAuthenticationPersistedData())
                         .getBelfiusAuthenticationData();

@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonObject
 public class BelfiusProcessState {
-
-    public static final String KEY = BelfiusProcessState.class.getName();
 
     @Getter @Setter private String deviceToken;
     @Getter @Setter private String contractNumber;
@@ -36,5 +38,46 @@ public class BelfiusProcessState {
 
     public void resetRequestCounterServices() {
         requestCounterServices = 0;
+    }
+
+    public BelfiusProcessState deviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+        return this;
+    }
+
+    public BelfiusProcessState contractNumber(String contractNumber) {
+        this.contractNumber = contractNumber;
+        return this;
+    }
+
+    public BelfiusProcessState challenge(String challenge) {
+        this.challenge = challenge;
+        return this;
+    }
+
+    public BelfiusProcessState encryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
+        return this;
+    }
+
+    public BelfiusProcessState deviceTokenHashed(String deviceTokenHashed) {
+        this.deviceTokenHashed = deviceTokenHashed;
+        return this;
+    }
+
+    public BelfiusProcessState deviceTokenHashedIosComparison(
+            String deviceTokenHashedIosComparison) {
+        this.deviceTokenHashedIosComparison = deviceTokenHashedIosComparison;
+        return this;
+    }
+
+    public BelfiusProcessState sessionId(String sessionId) {
+        this.sessionId = sessionId;
+        return this;
+    }
+
+    public BelfiusProcessState machineId(String machineId) {
+        this.machineId = machineId;
+        return this;
     }
 }

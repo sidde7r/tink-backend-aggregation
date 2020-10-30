@@ -27,15 +27,19 @@ public class AgentPlatformAuthenticationService {
                         new AgentStartAuthenticationProcessRequest(
                                 persistentStorageService.readFromAgentPersistentStorage()));
         while (!handlingResult.isFinalResult()) {
-            handlingResult =
-                    executor.execute(handlingResult.getAgentAuthenticationNextRequest());
+            handlingResult = executor.execute(handlingResult.getAgentAuthenticationNextRequest());
         }
         checkForAuthenticationError(handlingResult);
     }
 
     private void checkForAuthenticationError(
             AgentAuthenticationResultHandlingResult handlingResult) {
-        handlingResult.getAuthenticationError().ifPresent((e) -> {throw e.exception();});
+        handlingResult
+                .getAuthenticationError()
+                .ifPresent(
+                        e -> {
+                            throw e.exception();
+                        });
     }
 
     private class AuthenticationExecutor {

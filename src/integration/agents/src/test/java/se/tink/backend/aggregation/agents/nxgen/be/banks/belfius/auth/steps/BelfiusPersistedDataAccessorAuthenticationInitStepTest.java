@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class BelfiusAuthenticationInitStepTest extends BaseStepTest {
+public class BelfiusPersistedDataAccessorAuthenticationInitStepTest extends BaseStep {
 
     private BelfiusAuthenticationInitStep step =
-            new BelfiusAuthenticationInitStep(createBelfiusPersistedDataAccessorFactory());
+            new BelfiusAuthenticationInitStep(createBelfiusDataAccessorFactory());
 
     @Test
     public void shouldStartManualAuthenticationWhenCredentialsAreAbsent() {
@@ -46,7 +46,7 @@ public class BelfiusAuthenticationInitStepTest extends BaseStepTest {
                         .panNumber("panNumber")
                         .deviceToken("deviceToken");
         AgentAuthenticationPersistedData persisted =
-                createBelfiusPersistedDataAccessorFactory()
+                createBelfiusDataAccessorFactory()
                         .createBelfiusPersistedDataAccessor(
                                 new AgentAuthenticationPersistedData(new HashMap<>()))
                         .storeBelfiusAuthenticationData(belfiusPersistence);

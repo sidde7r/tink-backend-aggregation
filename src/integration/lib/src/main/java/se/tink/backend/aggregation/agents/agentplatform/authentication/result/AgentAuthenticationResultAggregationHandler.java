@@ -14,9 +14,11 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResultVisitor;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAfterRemoteInteractionAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentRedirectAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentThirdPartyAppOpenAppAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 
@@ -58,6 +60,11 @@ public class AgentAuthenticationResultAggregationHandler
                                 AgentAuthenticationResultHandlingResult.authenticationFailed(
                                         new AgentAuthenticationError(
                                                 new NoUserInteractionResponseError())));
+    }
+
+    @Override
+    public void visit(AgentThirdPartyAppOpenAppAuthenticationResult arg) {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -104,6 +111,9 @@ public class AgentAuthenticationResultAggregationHandler
     public void visit(AgentProceedNextStepAuthenticationResult arg) {
         // no action is needed in case of automatic next step
     }
+
+    @Override
+    public void visit(AgentProceedNextStepAfterRemoteInteractionAuthenticationResult arg) {}
 
     public AgentAuthenticationResultHandlingResult handle(
             final AgentAuthenticationResult authenticationResult) {

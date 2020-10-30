@@ -15,20 +15,18 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderSignInputAgentField;
 
-public class RegisterDeviceSignStepTest extends BaseStepTest {
+public class RegisterDeviceSignStepTest extends BaseStep {
 
     @Test
     public void shouldRegisterDevice() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
-        RegisterDeviceSignStep step = new RegisterDeviceSignStep(apiClient);
+        RegisterDeviceSignStep step =
+                new RegisterDeviceSignStep(apiClient, createBelfiusDataAccessorFactory());
 
         AgentUserInteractionAuthenticationProcessRequest request =
                 createAgentUserInteractionAuthenticationProcessRequest(
-                        BelfiusProcessState.builder()
-                                .sessionId(SESSION_ID)
-                                .machineId(MACHINE_ID)
-                                .build(),
+                        new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
                         new BelfiusAuthenticationData(),
                         new AgentFieldValue(CardReaderSignInputAgentField.id(), CODE));
 

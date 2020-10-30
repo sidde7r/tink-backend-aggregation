@@ -4,9 +4,10 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessStateAccessor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedData;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.PrepareLoginResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
@@ -19,26 +20,28 @@ public class SoftLoginGetContactNumberAndChallegeStep
         implements AgentAuthenticationProcessStep<AgentProceedNextStepAuthenticationRequest> {
 
     @NonNull private final AgentPlatformBelfiusApiClient apiClient;
-    @NonNull private final BelfiusPersistedDataAccessorFactory persistedDataAccessorFactory;
+    @NonNull private final BelfiusDataAccessorFactory persistedDataAccessorFactory;
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
-        BelfiusPersistedData persistenceData =
+        BelfiusProcessStateAccessor processStateAccessor =
+                persistedDataAccessorFactory.createBelfiusProcessStateAccessor(
+                        request.getAuthenticationProcessState());
+        BelfiusPersistedDataAccessor persistedDataAccessor =
                 persistedDataAccessorFactory.createBelfiusPersistedDataAccessor(
                         request.getAuthenticationPersistedData());
-        BelfiusAuthenticationData authenticationData =
-                persistenceData.getBelfiusAuthenticationData();
-        BelfiusProcessState processState =
-                request.getAuthenticationProcessState().get(BelfiusProcessState.KEY);
+        BelfiusAuthenticationData persistenceData =
+                persistedDataAccessor.getBelfiusAuthenticationData();
+        BelfiusProcessState processState = processStateAccessor.getBelfiusProcessState();
 
-        PrepareLoginResponse response = prepareLogin(authenticationData, processState);
+        PrepareLoginResponse response = prepareLogin(persistenceData, processState);
         processState.setContractNumber(response.getContractNumber());
         processState.setChallenge(response.getChallenge());
 
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(SoftLoginStep.class.getSimpleName()),
-                request.getAuthenticationProcessState(),
-                persistenceData.storeBelfiusAuthenticationData(authenticationData));
+                processStateAccessor.storeBelfiusProcessState(processState),
+                persistedDataAccessor.storeBelfiusAuthenticationData(persistenceData));
     }
 
     private PrepareLoginResponse prepareLogin(

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth;
 
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.SessionOpenedResponse;
 
@@ -17,7 +18,9 @@ public class BelfiusSessionService {
     public void openSession(String machineId) {
         SessionOpenedResponse sessionOpenedResponse = apiClient.openSession(machineId);
         processState.setSessionId(sessionOpenedResponse.getSessionId());
-        processState.setMachineId(sessionOpenedResponse.getMachineIdentifier());
+        if (StringUtils.isNotBlank(sessionOpenedResponse.getMachineIdentifier())) {
+            processState.setMachineId(sessionOpenedResponse.getMachineIdentifier());
+        }
         apiClient.startFlow(
                 processState.getSessionId(),
                 processState.getMachineId(),

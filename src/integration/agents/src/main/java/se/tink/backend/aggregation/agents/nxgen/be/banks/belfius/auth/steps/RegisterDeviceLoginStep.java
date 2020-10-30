@@ -4,6 +4,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessStateAccessor;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.HumanInteractionDelaySimulator;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
@@ -18,13 +20,15 @@ public class RegisterDeviceLoginStep
                 AgentUserInteractionAuthenticationProcessRequest> {
 
     @NonNull private final AgentPlatformBelfiusApiClient apiClient;
+    @NonNull private final BelfiusDataAccessorFactory belfiusDataAccessorFactory;
 
     @Override
     public AgentAuthenticationResult execute(
             AgentUserInteractionAuthenticationProcessRequest request) {
-
-        BelfiusProcessState processState =
-                request.getAuthenticationProcessState().get(BelfiusProcessState.KEY);
+        BelfiusProcessStateAccessor processStateAccessor =
+                belfiusDataAccessorFactory.createBelfiusProcessStateAccessor(
+                        request.getAuthenticationProcessState());
+        BelfiusProcessState processState = processStateAccessor.getBelfiusProcessState();
 
         String code =
                 request.getUserInteractionData()
@@ -37,7 +41,7 @@ public class RegisterDeviceLoginStep
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(
                         RegisterDeviceGetSignCodeStep.class.getSimpleName()),
-                request.getAuthenticationProcessState(),
+                processStateAccessor.storeBelfiusProcessState(processState),
                 request.getAuthenticationPersistedData());
     }
 

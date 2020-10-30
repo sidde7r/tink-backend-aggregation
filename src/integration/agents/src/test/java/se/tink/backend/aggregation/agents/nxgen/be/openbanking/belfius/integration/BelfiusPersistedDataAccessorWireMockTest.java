@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.enums.MarketCode;
 
-public class BelfiusWireMockTest {
+public class BelfiusPersistedDataAccessorWireMockTest {
 
     private static final String CONFIGURATION_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/belfius/integration/resources/configuration.yml";

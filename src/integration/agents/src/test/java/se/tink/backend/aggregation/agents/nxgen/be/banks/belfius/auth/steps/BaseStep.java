@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 
 @Ignore
-public class BaseStepTest {
+public class BaseStep {
 
     public static final String DEVICE_TOKEN = "deviceToken";
     public static final String SESSION_ID = "sessionId";
@@ -35,15 +35,18 @@ public class BaseStepTest {
             createAgentProceedNextStepAuthenticationRequest(
                     BelfiusProcessState build1, BelfiusAuthenticationData build) {
         AgentAuthenticationPersistedData agentAuthenticationPersistedData =
-                createBelfiusPersistedDataAccessorFactory()
+                createBelfiusDataAccessorFactory()
                         .createBelfiusPersistedDataAccessor(
                                 new AgentAuthenticationPersistedData(new HashMap<>()))
                         .storeBelfiusAuthenticationData(build);
-        HashMap<String, Object> values = new HashMap<>();
-        values.put(BelfiusProcessState.KEY, build1);
+        AgentAuthenticationProcessState agentAuthenticationProcessState =
+                createBelfiusDataAccessorFactory()
+                        .createBelfiusProcessStateAccessor(
+                                new AgentAuthenticationProcessState(new HashMap<>()))
+                        .storeBelfiusProcessState(build1);
         return new AgentProceedNextStepAuthenticationRequest(
                 new AgentAuthenticationProcessStepIdentifier(""),
-                new AgentAuthenticationProcessState(values),
+                agentAuthenticationProcessState,
                 agentAuthenticationPersistedData);
     }
 
@@ -53,20 +56,23 @@ public class BaseStepTest {
                     BelfiusAuthenticationData build,
                     AgentFieldValue... agentFieldValues) {
         AgentAuthenticationPersistedData agentAuthenticationPersistedData =
-                createBelfiusPersistedDataAccessorFactory()
+                createBelfiusDataAccessorFactory()
                         .createBelfiusPersistedDataAccessor(
                                 new AgentAuthenticationPersistedData(new HashMap<>()))
                         .storeBelfiusAuthenticationData(build);
-        HashMap<String, Object> values = new HashMap<>();
-        values.put(BelfiusProcessState.KEY, build1);
+        AgentAuthenticationProcessState agentAuthenticationProcessState =
+                createBelfiusDataAccessorFactory()
+                        .createBelfiusProcessStateAccessor(
+                                new AgentAuthenticationProcessState(new HashMap<>()))
+                        .storeBelfiusProcessState(build1);
         return new AgentUserInteractionAuthenticationProcessRequest(
                 new AgentAuthenticationProcessStepIdentifier(""),
                 agentAuthenticationPersistedData,
-                new AgentAuthenticationProcessState(values),
+                agentAuthenticationProcessState,
                 Arrays.asList(agentFieldValues));
     }
 
-    protected BelfiusPersistedDataAccessorFactory createBelfiusPersistedDataAccessorFactory() {
-        return new BelfiusPersistedDataAccessorFactory(OBJECT_MAPPER_SINGLETON);
+    protected BelfiusDataAccessorFactory createBelfiusDataAccessorFactory() {
+        return new BelfiusDataAccessorFactory(OBJECT_MAPPER_SINGLETON);
     }
 }

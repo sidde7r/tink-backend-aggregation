@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessStateAccessor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusSessionService;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedData;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessor;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -21,40 +24,48 @@ public class IsDeviceRegisteredStep
         implements AgentAuthenticationProcessStep<AgentProceedNextStepAuthenticationRequest> {
 
     @NonNull private final AgentPlatformBelfiusApiClient apiClient;
-    @NonNull private final BelfiusPersistedDataAccessorFactory persistedDataAccessorFactory;
+    @NonNull private final BelfiusDataAccessorFactory dataAccessorFactory;
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
-        BelfiusPersistedData persistenceData =
-                persistedDataAccessorFactory.createBelfiusPersistedDataAccessor(
+        BelfiusProcessStateAccessor processStateAccessor =
+                dataAccessorFactory.createBelfiusProcessStateAccessor(
+                        request.getAuthenticationProcessState());
+        BelfiusPersistedDataAccessor belfiusPersistedDataAccessor =
+                dataAccessorFactory.createBelfiusPersistedDataAccessor(
                         request.getAuthenticationPersistedData());
-        BelfiusProcessState processState =
-                request.getAuthenticationProcessState().get(BelfiusProcessState.KEY);
+        BelfiusAuthenticationData persistence =
+                belfiusPersistedDataAccessor.getBelfiusAuthenticationData();
+        BelfiusProcessState processState = processStateAccessor.getBelfiusProcessState();
 
-        if (isDeviceRegistered(persistenceData.getBelfiusAuthenticationData(), processState)) {
-            return softLoginResult(request);
+        if (isDeviceRegistered(persistence, processState)) {
+            return softLoginResult(
+                    processStateAccessor.storeBelfiusProcessState(processState),
+                    belfiusPersistedDataAccessor.storeBelfiusAuthenticationData(persistence));
         }
-        return registerDeviceResult(request, persistenceData);
+        return registerDeviceResult(
+                processStateAccessor.storeBelfiusProcessState(processState),
+                belfiusPersistedDataAccessor.storeBelfiusAuthenticationData(persistence));
     }
 
     private AgentProceedNextStepAuthenticationResult softLoginResult(
-            AgentProceedNextStepAuthenticationRequest request) {
+            AgentAuthenticationProcessState processState,
+            AgentAuthenticationPersistedData persistedData) {
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(
                         SoftLoginInitStep.class.getSimpleName()),
-                request.getAuthenticationProcessState(),
-                request.getAuthenticationPersistedData());
+                processState,
+                persistedData);
     }
 
     private AgentProceedNextStepAuthenticationResult registerDeviceResult(
-            AgentProceedNextStepAuthenticationRequest request,
-            BelfiusPersistedData persistenceData) {
+            AgentAuthenticationProcessState processState,
+            AgentAuthenticationPersistedData persistedData) {
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(
                         RegisterDeviceStartStep.class.getSimpleName()),
-                request.getAuthenticationProcessState(),
-                persistenceData.storeBelfiusAuthenticationData(
-                        persistenceData.getBelfiusAuthenticationData()));
+                processState,
+                persistedData);
     }
 
     private boolean isDeviceRegistered(

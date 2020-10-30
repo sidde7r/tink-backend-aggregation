@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.framework.error.AuthenticationError;
 
-public class SoftLoginStepTest extends BaseStepTest {
+public class SoftLoginStepTest extends BaseStep {
 
     public static final String SIGNATURE = "signature";
 
@@ -30,15 +30,14 @@ public class SoftLoginStepTest extends BaseStepTest {
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         BelfiusSignatureCreator signer = Mockito.mock(BelfiusSignatureCreator.class);
         SoftLoginStep step =
-                new SoftLoginStep(apiClient, signer, createBelfiusPersistedDataAccessorFactory());
+                new SoftLoginStep(apiClient, signer, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
+                        new BelfiusProcessState()
                                 .sessionId(SESSION_ID)
                                 .machineId(MACHINE_ID)
-                                .challenge(CHALLENGE)
-                                .build(),
+                                .challenge(CHALLENGE),
                         new BelfiusAuthenticationData()
                                 .panNumber(PAN_NUMBER)
                                 .deviceToken(DEVICE_TOKEN));
@@ -75,7 +74,10 @@ public class SoftLoginStepTest extends BaseStepTest {
 
         assertThat(nextStepResult.getAuthenticationProcessState()).isPresent();
         BelfiusProcessState processState =
-                nextStepResult.getAuthenticationProcessState().get().get(BelfiusProcessState.KEY);
+                createBelfiusDataAccessorFactory()
+                        .createBelfiusProcessStateAccessor(
+                                nextStepResult.getAuthenticationProcessState().get())
+                        .getBelfiusProcessState();
 
         assertThat(processState.getDeviceTokenHashed()).isEqualTo(DEVICE_TOKEN_HASHED);
         assertThat(processState.getDeviceTokenHashedIosComparison())
@@ -88,15 +90,14 @@ public class SoftLoginStepTest extends BaseStepTest {
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         BelfiusSignatureCreator signer = Mockito.mock(BelfiusSignatureCreator.class);
         SoftLoginStep step =
-                new SoftLoginStep(apiClient, signer, createBelfiusPersistedDataAccessorFactory());
+                new SoftLoginStep(apiClient, signer, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
+                        new BelfiusProcessState()
                                 .sessionId(SESSION_ID)
                                 .machineId(MACHINE_ID)
-                                .challenge(CHALLENGE)
-                                .build(),
+                                .challenge(CHALLENGE),
                         new BelfiusAuthenticationData()
                                 .panNumber(PAN_NUMBER)
                                 .deviceToken(DEVICE_TOKEN));

@@ -13,20 +13,18 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class SoftLoginFinishStepTest extends BaseStepTest {
+public class SoftLoginFinishStepTest extends BaseStep {
 
     @Test
     public void shouldCloseSession() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
-        SoftLoginFinishStep step = new SoftLoginFinishStep(apiClient);
+        SoftLoginFinishStep step =
+                new SoftLoginFinishStep(apiClient, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
-                                .sessionId(SESSION_ID)
-                                .machineId(MACHINE_ID)
-                                .build(),
+                        new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
                         new BelfiusAuthenticationData());
 
         // when

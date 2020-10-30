@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.steps.AutoAuthenticationInitStep;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.steps.BelfiusAuthenticationInitStep;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.steps.IsDeviceRegisteredStep;
@@ -38,11 +38,11 @@ public class BefiusAuthenticationConfig {
     private final ObjectMapper objectMapper;
 
     public BelfiusAuthenticationInitStep belfiusAuthenticationInitStep() {
-        return new BelfiusAuthenticationInitStep(belfiusPersistedDataAccessorFactory());
+        return new BelfiusAuthenticationInitStep(belfiusDataAccessorFactory());
     }
 
     public IsDeviceRegisteredStep isDeviceRegisteredStep() {
-        return new IsDeviceRegisteredStep(apiClient, belfiusPersistedDataAccessorFactory());
+        return new IsDeviceRegisteredStep(apiClient, belfiusDataAccessorFactory());
     }
 
     public ManualAuthenticationInitStep manualAuthenticationInitStep() {
@@ -50,58 +50,56 @@ public class BefiusAuthenticationConfig {
     }
 
     public PasswordLoginEncryptStep passwordLoginEncryptStep() {
-        return new PasswordLoginEncryptStep(
-                apiClient, signer, belfiusPersistedDataAccessorFactory());
+        return new PasswordLoginEncryptStep(apiClient, signer, belfiusDataAccessorFactory());
     }
 
     public PasswordLoginInitStep passwordLoginInitStep() {
-        return new PasswordLoginInitStep(apiClient);
+        return new PasswordLoginInitStep(apiClient, belfiusDataAccessorFactory());
     }
 
     public PasswordLoginStep passwordLoginStep() {
-        return new PasswordLoginStep(apiClient, sessionStorage);
+        return new PasswordLoginStep(apiClient, sessionStorage, belfiusDataAccessorFactory());
     }
 
     public RegisterDeviceFinishStep registerDeviceFinishStep() {
-        return new RegisterDeviceFinishStep(apiClient, belfiusPersistedDataAccessorFactory());
+        return new RegisterDeviceFinishStep(apiClient, belfiusDataAccessorFactory());
     }
 
     public RegisterDeviceGetLoginCodeStep registerDeviceGetLoginCodeStep() {
-        return new RegisterDeviceGetLoginCodeStep(apiClient, belfiusPersistedDataAccessorFactory());
+        return new RegisterDeviceGetLoginCodeStep(apiClient, belfiusDataAccessorFactory());
     }
 
     public RegisterDeviceGetSignCodeStep registerDeviceGetSignCodeStep() {
-        return new RegisterDeviceGetSignCodeStep(apiClient);
+        return new RegisterDeviceGetSignCodeStep(apiClient, belfiusDataAccessorFactory());
     }
 
     public RegisterDeviceLoginStep registerDeviceLoginStep() {
-        return new RegisterDeviceLoginStep(apiClient);
+        return new RegisterDeviceLoginStep(apiClient, belfiusDataAccessorFactory());
     }
 
     public RegisterDeviceSignStep registerDeviceSignStep() {
-        return new RegisterDeviceSignStep(apiClient);
+        return new RegisterDeviceSignStep(apiClient, belfiusDataAccessorFactory());
     }
 
     public RegisterDeviceStartStep registerDeviceStartStep() {
-        return new RegisterDeviceStartStep(
-                apiClient, signer, belfiusPersistedDataAccessorFactory());
+        return new RegisterDeviceStartStep(apiClient, signer, belfiusDataAccessorFactory());
     }
 
     public SoftLoginFinishStep softLoginFinishStep() {
-        return new SoftLoginFinishStep(apiClient);
+        return new SoftLoginFinishStep(apiClient, belfiusDataAccessorFactory());
     }
 
     public SoftLoginGetContactNumberAndChallegeStep softLoginGetContactNumberAndChallegeStep() {
         return new SoftLoginGetContactNumberAndChallegeStep(
-                apiClient, belfiusPersistedDataAccessorFactory());
+                apiClient, belfiusDataAccessorFactory());
     }
 
     public SoftLoginInitStep softLoginInitStep() {
-        return new SoftLoginInitStep(apiClient);
+        return new SoftLoginInitStep(apiClient, belfiusDataAccessorFactory());
     }
 
     public SoftLoginStep softLoginStep() {
-        return new SoftLoginStep(apiClient, signer, belfiusPersistedDataAccessorFactory());
+        return new SoftLoginStep(apiClient, signer, belfiusDataAccessorFactory());
     }
 
     public UsernameAndPasswordGetStep usernameAndPasswordGetStep() {
@@ -109,12 +107,11 @@ public class BefiusAuthenticationConfig {
     }
 
     public UsernameAndPasswordSaveStep usernameAndPasswordSaveStep() {
-        return new UsernameAndPasswordSaveStep(belfiusPersistedDataAccessorFactory());
+        return new UsernameAndPasswordSaveStep(belfiusDataAccessorFactory());
     }
 
     public AutoAuthenticationInitStep autoAuthenticationInitStep() {
-        return new AutoAuthenticationInitStep(
-                apiClient, signer, belfiusPersistedDataAccessorFactory());
+        return new AutoAuthenticationInitStep(apiClient, signer, belfiusDataAccessorFactory());
     }
 
     public AgentAuthenticationProcess belfiusAuthProcess() {
@@ -149,7 +146,7 @@ public class BefiusAuthenticationConfig {
         };
     }
 
-    public BelfiusPersistedDataAccessorFactory belfiusPersistedDataAccessorFactory() {
-        return new BelfiusPersistedDataAccessorFactory(objectMapper);
+    public BelfiusDataAccessorFactory belfiusDataAccessorFactory() {
+        return new BelfiusDataAccessorFactory(objectMapper);
     }
 }

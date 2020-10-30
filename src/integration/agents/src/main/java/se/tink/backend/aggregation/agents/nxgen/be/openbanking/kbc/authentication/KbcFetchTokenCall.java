@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authenticatio
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchTokenCallAuthenticationParameters;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.oauth2.OAuth2RedirectFetchTokenCall;
-import se.tink.backend.aggregation.agentsplatform.framework.http.HttpClient;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 
 public class KbcFetchTokenCall extends OAuth2RedirectFetchTokenCall {
 
@@ -16,7 +16,7 @@ public class KbcFetchTokenCall extends OAuth2RedirectFetchTokenCall {
     private final KbcPersistedDataAccessorFactory persistedDataAccessorFactory;
 
     public KbcFetchTokenCall(
-            HttpClient httpClient,
+            AgentHttpClient httpClient,
             KbcConfiguration kbcConfiguration,
             URI redirectUrl,
             KbcPersistedDataAccessorFactory persistedDataAccessorFactory) {

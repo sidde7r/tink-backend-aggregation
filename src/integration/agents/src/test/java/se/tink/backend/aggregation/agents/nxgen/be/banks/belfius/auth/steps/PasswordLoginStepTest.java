@@ -16,24 +16,25 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
 
-public class PasswordLoginStepTest extends BaseStepTest {
+public class PasswordLoginStepTest extends BaseStep {
 
     @Test
     public void shouldReturnErrorWhenAuthenticationFailed() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         BelfiusSessionStorage sessionStorage = Mockito.mock(BelfiusSessionStorage.class);
-        PasswordLoginStep step = new PasswordLoginStep(apiClient, sessionStorage);
+        PasswordLoginStep step =
+                new PasswordLoginStep(
+                        apiClient, sessionStorage, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
+                        new BelfiusProcessState()
                                 .sessionId(SESSION_ID)
                                 .machineId(MACHINE_ID)
                                 .deviceTokenHashed(DEVICE_TOKEN_HASHED)
                                 .deviceTokenHashedIosComparison(DEVICE_TOKEN_HASHED_IOS_COMPARISON)
-                                .encryptedPassword(ENCRYPTED_PASSWORD)
-                                .build(),
+                                .encryptedPassword(ENCRYPTED_PASSWORD),
                         new BelfiusAuthenticationData());
 
         when(apiClient.loginPw(
@@ -62,17 +63,18 @@ public class PasswordLoginStepTest extends BaseStepTest {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         BelfiusSessionStorage sessionStorage = Mockito.mock(BelfiusSessionStorage.class);
-        PasswordLoginStep step = new PasswordLoginStep(apiClient, sessionStorage);
+        PasswordLoginStep step =
+                new PasswordLoginStep(
+                        apiClient, sessionStorage, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
+                        new BelfiusProcessState()
                                 .sessionId(SESSION_ID)
                                 .machineId(MACHINE_ID)
                                 .deviceTokenHashed(DEVICE_TOKEN_HASHED)
                                 .deviceTokenHashedIosComparison(DEVICE_TOKEN_HASHED_IOS_COMPARISON)
-                                .encryptedPassword(ENCRYPTED_PASSWORD)
-                                .build(),
+                                .encryptedPassword(ENCRYPTED_PASSWORD),
                         new BelfiusAuthenticationData());
 
         // when

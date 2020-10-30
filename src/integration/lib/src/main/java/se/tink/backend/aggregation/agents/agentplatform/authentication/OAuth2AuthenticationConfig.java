@@ -16,12 +16,12 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.oauth2.DefaultOAuth2RefreshTokenCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.oauth2.OAuth2AuthorizationSpecification;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.oauth2.OAuth2ErrorVerifier;
-import se.tink.backend.aggregation.agentsplatform.framework.http.HttpClient;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 
 public class OAuth2AuthenticationConfig {
 
     public RedirectAuthenticationProcess authenticationProcess(
-            HttpClient httpClient,
+            AgentHttpClient httpClient,
             OAuth2AuthorizationSpecification oAuth2AuthorizationSpecification) {
         return new RedirectAuthenticationProcess(
                 initialProcessStep(),

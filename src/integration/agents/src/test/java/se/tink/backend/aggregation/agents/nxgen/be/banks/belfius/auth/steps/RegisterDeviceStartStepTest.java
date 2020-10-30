@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class RegisterDeviceStartStepTest extends BaseStepTest {
+public class RegisterDeviceStartStepTest extends BaseStep {
 
     @Test
     public void shouldStartFlow() {
@@ -25,12 +25,11 @@ public class RegisterDeviceStartStepTest extends BaseStepTest {
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         BelfiusSignatureCreator signer = Mockito.mock(BelfiusSignatureCreator.class);
         RegisterDeviceStartStep step =
-                new RegisterDeviceStartStep(
-                        apiClient, signer, createBelfiusPersistedDataAccessorFactory());
+                new RegisterDeviceStartStep(apiClient, signer, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder().build(),
+                        new BelfiusProcessState(),
                         new BelfiusAuthenticationData().panNumber(PAN_NUMBER));
 
         when(apiClient.openSession("XXX"))
@@ -60,7 +59,10 @@ public class RegisterDeviceStartStepTest extends BaseStepTest {
 
         assertThat(nextStepResult.getAuthenticationProcessState()).isPresent();
         BelfiusProcessState processState =
-                nextStepResult.getAuthenticationProcessState().get().get(BelfiusProcessState.KEY);
+                createBelfiusDataAccessorFactory()
+                        .createBelfiusProcessStateAccessor(
+                                nextStepResult.getAuthenticationProcessState().get())
+                        .getBelfiusProcessState();
 
         assertThat(processState.getDeviceToken()).isNotEmpty();
     }

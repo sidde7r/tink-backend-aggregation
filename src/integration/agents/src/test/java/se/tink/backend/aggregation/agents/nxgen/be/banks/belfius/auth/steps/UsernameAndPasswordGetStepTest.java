@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
 
-public class UsernameAndPasswordGetStepTest extends BaseStepTest {
+public class UsernameAndPasswordGetStepTest extends BaseStep {
 
     @Test
     public void shouldAskForUsernameAndPassword() {
@@ -22,7 +22,7 @@ public class UsernameAndPasswordGetStepTest extends BaseStepTest {
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder().build(), new BelfiusAuthenticationData());
+                        new BelfiusProcessState(), new BelfiusAuthenticationData());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

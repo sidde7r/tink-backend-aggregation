@@ -15,18 +15,18 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class IsDeviceRegisteredStepTest extends BaseStepTest {
+public class IsDeviceRegisteredStepTest extends BaseStep {
 
     @Test
     public void shouldGotoRegisterDeviceStepWhenNoDeviceRegistered() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         IsDeviceRegisteredStep step =
-                new IsDeviceRegisteredStep(apiClient, createBelfiusPersistedDataAccessorFactory());
+                new IsDeviceRegisteredStep(apiClient, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder().build(), new BelfiusAuthenticationData());
+                        new BelfiusProcessState(), new BelfiusAuthenticationData());
 
         // when
         AgentAuthenticationResult result = step.execute(request);
@@ -46,14 +46,11 @@ public class IsDeviceRegisteredStepTest extends BaseStepTest {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         IsDeviceRegisteredStep step =
-                new IsDeviceRegisteredStep(apiClient, createBelfiusPersistedDataAccessorFactory());
+                new IsDeviceRegisteredStep(apiClient, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
-                                .sessionId(SESSION_ID)
-                                .machineId(MACHINE_ID)
-                                .build(),
+                        new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
                         new BelfiusAuthenticationData()
                                 .panNumber(PAN_NUMBER)
                                 .deviceToken(DEVICE_TOKEN));

@@ -29,7 +29,7 @@ public class BelfiusAgentPlatformStorageMigrator implements AgentPlatformStorage
         persistentStorage
                 .getOptional(BelfiusConstants.Storage.DEVICE_TOKEN)
                 .ifPresent(belfiusAuthenticationData::setDeviceToken);
-        return new BelfiusPersistedData(
+        return new BelfiusPersistedDataAccessor(
                         new AgentAuthenticationPersistedData(new HashMap<>()), objectMapper)
                 .storeBelfiusAuthenticationData(belfiusAuthenticationData);
     }

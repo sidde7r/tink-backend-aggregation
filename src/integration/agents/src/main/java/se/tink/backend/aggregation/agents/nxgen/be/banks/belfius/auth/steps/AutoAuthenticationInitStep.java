@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessStateAccessor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusSessionService;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.PrepareLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
@@ -22,26 +24,29 @@ public class AutoAuthenticationInitStep
 
     private final AgentPlatformBelfiusApiClient apiClient;
     private final BelfiusSignatureCreator signer;
-    private final BelfiusPersistedDataAccessorFactory persistedDataAccessorFactory;
+    private final BelfiusDataAccessorFactory dataAccessorFactory;
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
-        initProcessState(request);
+        BelfiusProcessStateAccessor processStateAccessor =
+                dataAccessorFactory.createBelfiusProcessStateAccessor(
+                        request.getAuthenticationProcessState());
+        BelfiusPersistedDataAccessor belfiusPersistedDataAccessor =
+                dataAccessorFactory.createBelfiusPersistedDataAccessor(
+                        request.getAuthenticationPersistedData());
+        BelfiusAuthenticationData persistence =
+                belfiusPersistedDataAccessor.getBelfiusAuthenticationData();
+        BelfiusProcessState processState = processStateAccessor.getBelfiusProcessState();
+        initProcessState(processState, belfiusPersistedDataAccessor.getBelfiusAuthenticationData());
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(
                         PasswordLoginEncryptStep.class.getSimpleName()),
-                request.getAuthenticationProcessState(),
-                request.getAuthenticationPersistedData());
+                processStateAccessor.storeBelfiusProcessState(processState),
+                belfiusPersistedDataAccessor.storeBelfiusAuthenticationData(persistence));
     }
 
-    private void initProcessState(AgentProceedNextStepAuthenticationRequest request) {
-        BelfiusAuthenticationData persistence =
-                persistedDataAccessorFactory
-                        .createBelfiusPersistedDataAccessor(
-                                request.getAuthenticationPersistedData())
-                        .getBelfiusAuthenticationData();
-        BelfiusProcessState processState =
-                request.getAuthenticationProcessState().get(BelfiusProcessState.KEY);
+    private void initProcessState(
+            BelfiusProcessState processState, BelfiusAuthenticationData persistence) {
         requestConfigIos();
         new BelfiusSessionService(apiClient, processState).openSession("XXX");
         prepareLogin(persistence, processState);

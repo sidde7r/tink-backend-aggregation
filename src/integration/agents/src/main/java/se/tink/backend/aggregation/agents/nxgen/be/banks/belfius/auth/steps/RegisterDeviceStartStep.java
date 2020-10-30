@@ -5,9 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessStateAccessor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedData;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.SessionOpenedResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusIdGenerationUtils;
@@ -24,35 +25,36 @@ public class RegisterDeviceStartStep
 
     @NonNull private final AgentPlatformBelfiusApiClient apiClient;
     @NonNull private final BelfiusSignatureCreator signer;
-    @NonNull private final BelfiusPersistedDataAccessorFactory persistedDataAccessorFactory;
+    @NonNull private final BelfiusDataAccessorFactory persistedDataAccessorFactory;
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
-        BelfiusPersistedData persistenceData =
+        BelfiusProcessStateAccessor processStateAccessor =
+                persistedDataAccessorFactory.createBelfiusProcessStateAccessor(
+                        request.getAuthenticationProcessState());
+        BelfiusPersistedDataAccessor persistedDataAccessor =
                 persistedDataAccessorFactory.createBelfiusPersistedDataAccessor(
                         request.getAuthenticationPersistedData());
-        BelfiusAuthenticationData authenticationData =
-                persistenceData.getBelfiusAuthenticationData();
+        BelfiusAuthenticationData persistenceData =
+                persistedDataAccessor.getBelfiusAuthenticationData();
+        BelfiusProcessState processState = processStateAccessor.getBelfiusProcessState();
 
-        initProcessState(request, authenticationData);
+        initProcessState(persistenceData, processState);
 
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(
                         RegisterDeviceGetLoginCodeStep.class.getSimpleName()),
-                request.getAuthenticationProcessState(),
-                persistenceData.storeBelfiusAuthenticationData(authenticationData));
+                processStateAccessor.storeBelfiusProcessState(processState),
+                persistedDataAccessor.storeBelfiusAuthenticationData(persistenceData));
     }
 
     private void initProcessState(
-            AgentProceedNextStepAuthenticationRequest request,
-            BelfiusAuthenticationData authenticationData) {
-        BelfiusProcessState processState =
-                request.getAuthenticationProcessState().get(BelfiusProcessState.KEY);
+            BelfiusAuthenticationData persistenceData, BelfiusProcessState processState) {
         processState.setDeviceToken(BelfiusIdGenerationUtils.generateDeviceToken());
         openSession(processState);
         startFlow(processState);
         bacProductList(processState);
-        sendIsDeviceRegistered(authenticationData, processState);
+        sendIsDeviceRegistered(persistenceData, processState);
     }
 
     private void sendIsDeviceRegistered(

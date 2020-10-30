@@ -12,12 +12,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentSimpleExternalApiCall;
 import se.tink.backend.aggregation.agentsplatform.framework.http.ExternalApiCallResult;
-import se.tink.backend.aggregation.agentsplatform.framework.http.HttpClient;
-import se.tink.backend.aggregation.agentsplatform.framework.http.SimpleExternalApiCall;
 
 public class KbcFetchConsentExternalApiCall
-        extends SimpleExternalApiCall<
+        extends AgentSimpleExternalApiCall<
                 KbcFetchConsentExternalApiCallParameters,
                 String,
                 ConsentBaseRequest,
@@ -25,14 +26,14 @@ public class KbcFetchConsentExternalApiCall
 
     private final String urlScheme;
 
-    public KbcFetchConsentExternalApiCall(HttpClient httpClient, String kbcUrlScheme) {
+    public KbcFetchConsentExternalApiCall(AgentHttpClient httpClient, String kbcUrlScheme) {
         super(httpClient, ConsentBaseResponse.class);
         urlScheme = kbcUrlScheme;
     }
 
     @Override
     protected RequestEntity<ConsentBaseRequest> prepareRequest(
-            KbcFetchConsentExternalApiCallParameters arg) {
+            KbcFetchConsentExternalApiCallParameters arg, AgentExtendedClientInfo clientInfo) {
         final List<String> ibanList = Collections.singletonList(arg.getIban());
         final AccessEntity accessEntity =
                 new AccessEntity.Builder()

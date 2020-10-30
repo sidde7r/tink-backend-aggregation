@@ -7,13 +7,13 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectRefreshTokenCallAuthenticationParameters;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.oauth2.OAuth2RefreshTokenCall;
-import se.tink.backend.aggregation.agentsplatform.framework.http.HttpClient;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 
 public class KbcRefreshTokenCall extends OAuth2RefreshTokenCall {
 
     private final KbcConfiguration kbcConfiguration;
 
-    public KbcRefreshTokenCall(HttpClient httpClient, KbcConfiguration kbcConfiguration) {
+    public KbcRefreshTokenCall(AgentHttpClient httpClient, KbcConfiguration kbcConfiguration) {
         super(httpClient);
         this.kbcConfiguration = kbcConfiguration;
     }

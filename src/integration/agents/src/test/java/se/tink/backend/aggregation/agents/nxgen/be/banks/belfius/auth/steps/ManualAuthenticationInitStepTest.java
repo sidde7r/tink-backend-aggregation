@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class ManualAuthenticationInitStepTest extends BaseStepTest {
+public class ManualAuthenticationInitStepTest extends BaseStep {
 
     @Test
     public void shouldFetchApplicationConfig() {
@@ -22,7 +22,7 @@ public class ManualAuthenticationInitStepTest extends BaseStepTest {
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder().build(), new BelfiusAuthenticationData());
+                        new BelfiusProcessState(), new BelfiusAuthenticationData());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

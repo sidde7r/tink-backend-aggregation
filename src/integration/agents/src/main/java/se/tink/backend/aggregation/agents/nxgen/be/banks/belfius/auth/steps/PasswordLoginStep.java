@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.LoginResponseStatus;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
@@ -19,11 +20,14 @@ public class PasswordLoginStep
 
     @NonNull private final AgentPlatformBelfiusApiClient apiClient;
     @NonNull private final BelfiusSessionStorage sessionStorage;
+    @NonNull private final BelfiusDataAccessorFactory dataAccessorFactory;
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
         BelfiusProcessState processState =
-                request.getAuthenticationProcessState().get(BelfiusProcessState.KEY);
+                dataAccessorFactory
+                        .createBelfiusProcessStateAccessor(request.getAuthenticationProcessState())
+                        .getBelfiusProcessState();
 
         LoginResponseStatus status = loginPw(processState).getStatus();
 

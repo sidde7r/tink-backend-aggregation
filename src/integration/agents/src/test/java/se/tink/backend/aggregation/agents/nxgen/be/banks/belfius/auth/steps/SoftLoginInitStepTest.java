@@ -15,17 +15,18 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class SoftLoginInitStepTest extends BaseStepTest {
+public class SoftLoginInitStepTest extends BaseStep {
 
     @Test
     public void shouldStartFlow() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
-        SoftLoginInitStep step = new SoftLoginInitStep(apiClient);
+        SoftLoginInitStep step =
+                new SoftLoginInitStep(apiClient, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder().machineId(MACHINE_ID).build(),
+                        new BelfiusProcessState().machineId(MACHINE_ID),
                         new BelfiusAuthenticationData());
 
         when(apiClient.openSession(MACHINE_ID))

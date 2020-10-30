@@ -18,20 +18,18 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginInputAgentField;
 
-public class RegisterDeviceLoginStepTest extends BaseStepTest {
+public class RegisterDeviceLoginStepTest extends BaseStep {
 
     @Test
     public void shouldAuthenticateWithCode() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
-        RegisterDeviceLoginStep step = new RegisterDeviceLoginStep(apiClient);
+        RegisterDeviceLoginStep step =
+                new RegisterDeviceLoginStep(apiClient, createBelfiusDataAccessorFactory());
 
         AgentUserInteractionAuthenticationProcessRequest request =
                 createAgentUserInteractionAuthenticationProcessRequest(
-                        BelfiusProcessState.builder()
-                                .sessionId(SESSION_ID)
-                                .machineId(MACHINE_ID)
-                                .build(),
+                        new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
                         new BelfiusAuthenticationData(),
                         new AgentFieldValue(CardReaderLoginInputAgentField.id(), CODE));
 

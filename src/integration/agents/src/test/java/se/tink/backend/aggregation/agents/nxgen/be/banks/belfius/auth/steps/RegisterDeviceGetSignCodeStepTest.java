@@ -21,21 +21,21 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderSignDescriptionAgentField;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderSignInputAgentField;
 
-public class RegisterDeviceGetSignCodeStepTest extends BaseStepTest {
+public class RegisterDeviceGetSignCodeStepTest extends BaseStep {
 
     @Test
     public void shouldGetChallengeAndAskForLoginSign() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
-        RegisterDeviceGetSignCodeStep step = new RegisterDeviceGetSignCodeStep(apiClient);
+        RegisterDeviceGetSignCodeStep step =
+                new RegisterDeviceGetSignCodeStep(apiClient, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
+                        new BelfiusProcessState()
                                 .sessionId(SESSION_ID)
                                 .machineId(MACHINE_ID)
-                                .deviceToken(DEVICE_TOKEN)
-                                .build(),
+                                .deviceToken(DEVICE_TOKEN),
                         new BelfiusAuthenticationData());
 
         when(apiClient.prepareDeviceRegistration(

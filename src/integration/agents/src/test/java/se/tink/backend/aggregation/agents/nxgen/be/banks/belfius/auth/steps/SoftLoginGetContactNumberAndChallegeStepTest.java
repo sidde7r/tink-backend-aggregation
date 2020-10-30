@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class SoftLoginGetContactNumberAndChallegeStepTest extends BaseStepTest {
+public class SoftLoginGetContactNumberAndChallegeStepTest extends BaseStep {
 
     @Test
     public void shouldGetContractNumberAndChallenge() {
@@ -22,14 +22,11 @@ public class SoftLoginGetContactNumberAndChallegeStepTest extends BaseStepTest {
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         SoftLoginGetContactNumberAndChallegeStep step =
                 new SoftLoginGetContactNumberAndChallegeStep(
-                        apiClient, createBelfiusPersistedDataAccessorFactory());
+                        apiClient, createBelfiusDataAccessorFactory());
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
-                                .sessionId(SESSION_ID)
-                                .machineId(MACHINE_ID)
-                                .build(),
+                        new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
                         new BelfiusAuthenticationData().panNumber(PAN_NUMBER));
 
         when(apiClient.prepareLogin(SESSION_ID, MACHINE_ID, "1", PAN_NUMBER))
@@ -57,7 +54,10 @@ public class SoftLoginGetContactNumberAndChallegeStepTest extends BaseStepTest {
                                 SoftLoginStep.class.getSimpleName()));
 
         BelfiusProcessState processState =
-                nextStepResult.getAuthenticationProcessState().get().get(BelfiusProcessState.KEY);
+                createBelfiusDataAccessorFactory()
+                        .createBelfiusProcessStateAccessor(
+                                nextStepResult.getAuthenticationProcessState().get())
+                        .getBelfiusProcessState();
         assertThat(processState.getChallenge()).isEqualTo(CHALLENGE);
         assertThat(processState.getContractNumber()).isEqualTo(CONTRACT_NUMBER);
     }

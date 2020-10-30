@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 
-public class PasswordLoginEncryptStepTest extends BaseStepTest {
+public class PasswordLoginEncryptStepTest extends BaseStep {
 
     @Test
     public void shouldEncryptPassword() {
@@ -24,26 +24,24 @@ public class PasswordLoginEncryptStepTest extends BaseStepTest {
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         BelfiusSignatureCreator signer = Mockito.mock(BelfiusSignatureCreator.class);
         PasswordLoginEncryptStep step =
-                new PasswordLoginEncryptStep(
-                        apiClient, signer, createBelfiusPersistedDataAccessorFactory());
-
+                new PasswordLoginEncryptStep(apiClient, signer, createBelfiusDataAccessorFactory());
+        BelfiusAuthenticationData persistenceData =
+                new BelfiusAuthenticationData()
+                        .deviceToken(DEVICE_TOKEN)
+                        .panNumber(PAN_NUMBER)
+                        .password(PASSWORD);
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        BelfiusProcessState.builder()
+                        new BelfiusProcessState()
                                 .contractNumber(CONTRACT_NUMBER)
                                 .sessionId(SESSION_ID)
-                                .machineId(MACHINE_ID)
-                                .build(),
-                        new BelfiusAuthenticationData()
-                                .deviceToken(DEVICE_TOKEN)
-                                .panNumber(PAN_NUMBER)
-                                .password(PASSWORD));
+                                .machineId(MACHINE_ID),
+                        persistenceData);
 
         when(apiClient.sendCardNumber(SESSION_ID, MACHINE_ID, "1", PAN_NUMBER))
                 .thenReturn(Mockito.mock(SendCardNumberResponse.class, a -> CHALLENGE));
 
-        when(signer.createSignaturePw(
-                        CHALLENGE, DEVICE_TOKEN, PAN_NUMBER, CONTRACT_NUMBER, PASSWORD))
+        when(signer.createSignaturePw(CHALLENGE, CONTRACT_NUMBER, persistenceData))
                 .thenReturn(ENCRYPTED_PASSWORD);
 
         when(signer.hash(any())).thenReturn(DEVICE_TOKEN_HASHED);
@@ -63,7 +61,10 @@ public class PasswordLoginEncryptStepTest extends BaseStepTest {
 
         assertThat(nextStepResult.getAuthenticationProcessState()).isPresent();
         BelfiusProcessState processState =
-                nextStepResult.getAuthenticationProcessState().get().get(BelfiusProcessState.KEY);
+                createBelfiusDataAccessorFactory()
+                        .createBelfiusProcessStateAccessor(
+                                nextStepResult.getAuthenticationProcessState().get())
+                        .getBelfiusProcessState();
 
         assertThat(processState.getEncryptedPassword()).isEqualTo(ENCRYPTED_PASSWORD);
     }
