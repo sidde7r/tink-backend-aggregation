@@ -117,7 +117,7 @@ public final class DemobankAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new DemobankSessionHandler(sessionStorage);
     }
 
     @Override
