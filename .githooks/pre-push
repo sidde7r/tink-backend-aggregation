@@ -1,36 +1,48 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Pre push hook that prevents pushing of commits that have malformatted code.
-set -e
+# Pre-push hook that prevents pushing of commits that have malformatted code.
+# Note that the check will build the formatting tool if it's not already built,
+# which may add a few seconds on outdated branches.
 
-handle_result()
-{
-    if [ $? -ne 0 ]; then
-        echo "-->"
-        echo "--> Java file(s) listed above are incorrectly formatted. Execute the following bazel command:"
-        echo "--> bazel run :format"
-        echo "--> You can also install the Intellij plugin google-java-format, configuring code style to AOSP:"
-        echo "--> IntelliJ IDEA -> Preferences -> Other Settings -> google-java-format"
-        echo "--> It is also recommended to enable 'Save actions' so that formatting is automatically done on save."
-        echo "-->"
+set -euo pipefail
+
+handle_commits_have_google_java_format_result() {
+    err=$?
+    if [[ "${err}" -ne 0 ]]; then
+        echo -e "-->"
+        echo -e "--> Java file(s) listed above are incorrectly formatted. Execute the following bazel command:"
+        echo -e "--> \033[1mbazel run :format\033[0m"
+        echo -e "--> You can also install the IntelliJ plugin \"google-java-format\", configuring code style to AOSP:"
+        echo -e "--> IntelliJ IDEA -> Preferences -> Other Settings -> google-java-format"
+        echo -e "--> IntelliJ IDEA -> Preferences -> Editor -> Code Style -> Java -> Import Layout:"
+        echo -e "--> import static all other; <blank line>; import all other"
+        echo -e "--> It is also possible to install the IntelliJ plugin \"Save Actions\" so that formatting can be performed automatically on save."
+        echo -e "-->\033[0m"
         exit 1
     fi
 }
 
-trap handle_result EXIT
+check_commits_have_google_java_format() {
+    trap handle_commits_have_google_java_format_result EXIT
 
-./bazel-wrapper build //tools/format:google-java-format 1>/dev/null
+    ./bazel-wrapper build //tools/format:google-java-format 1>/dev/null
 
-# Commit hash right before this branch diverged from master
-branch_point=$(git merge-base upstream/master HEAD)
+    # Commit hash right before this branch diverged from master
+    branch_point=$(git merge-base upstream/master HEAD)
 
-git_diff=$(git diff $branch_point HEAD --diff-filter='ACMR' --name-only)
+    git_diff=$(git diff $branch_point HEAD --diff-filter='ACMR' --name-only)
 
-if [ ! -z "$git_diff" ]; then
-  diffing_java_files=$(find $git_diff -type f -name "*.java")
+    if [ ! -z "$git_diff" ]; then
+        diffing_java_files=$(find $git_diff -type f -name "*.java")
 
-  if [ ! -z "$diffing_java_files" ]; then
-      echo $diffing_java_files | xargs -n500 bazel-bin/tools/format/google-java-format --aosp --dry-run --set-exit-if-changed
-  fi
-fi
+        if [ ! -z "$diffing_java_files" ]; then
+            echo $diffing_java_files | xargs -n500 bazel-bin/tools/format/google-java-format --aosp --dry-run --set-exit-if-changed
+        fi
+    fi
 
+    trap - EXIT
+}
+
+echo "Checking java formatting..."
+check_commits_have_google_java_format
+echo "... Formatting checked"
