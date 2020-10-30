@@ -65,7 +65,8 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
         this.bankClient = Objects.requireNonNull(bankClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
-        this.iFrameController = new NemIdIFrameController(this, supplementalRequester, catalog, statusUpdater);
+        this.iFrameController =
+                new NemIdIFrameController(this, supplementalRequester, catalog, statusUpdater);
     }
 
     public void authenticate(final Credentials credentials) throws AuthenticationException {
