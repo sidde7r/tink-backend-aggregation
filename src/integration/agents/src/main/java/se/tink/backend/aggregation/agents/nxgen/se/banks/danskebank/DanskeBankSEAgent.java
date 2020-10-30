@@ -10,11 +10,15 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.DanskeBankBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.DanskeBankExecutorHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment.DanskeBankSEPaymentExecutor;
@@ -24,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -34,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.enums.MarketCode;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -45,7 +51,7 @@ import se.tink.libraries.enums.MarketCode;
     TRANSFERS
 })
 public final class DanskeBankSEAgent extends DanskeBankAgent
-        implements RefreshTransferDestinationExecutor {
+        implements RefreshTransferDestinationExecutor, RefreshIdentityDataExecutor {
 
     private final TransferDestinationRefreshController transferDestinationRefreshController;
 
@@ -80,7 +86,8 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
                                 (DanskeBankSEApiClient) apiClient,
                                 deviceId,
                                 configuration,
-                                credentials),
+                                credentials,
+                                sessionStorage),
                         persistentStorage,
                         credentials),
                 new PasswordAuthenticationController(
@@ -114,5 +121,19 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
     private TransferDestinationRefreshController constructTransferDestinationController() {
         return new TransferDestinationRefreshController(
                 metricRefreshController, new DanskeBankSETransferDestinationFetcher());
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return sessionStorage
+                .get(Storage.IDENTITY_INFO, FinalizeAuthenticationResponse.class)
+                .map(
+                        user ->
+                                SeIdentityData.of(
+                                        user.getUserInfo().getFirstName(),
+                                        user.getUserInfo().getLastname(),
+                                        user.getUserId()))
+                .map(FetchIdentityDataResponse::new)
+                .orElseThrow(NoSuchElementException::new);
     }
 }
