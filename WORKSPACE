@@ -1294,10 +1294,11 @@ load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesfor
 
 com_salesforce_servicelibs_grpc_testing_contrib_pin()
 
-git_repository(
+http_archive(
     name = "bazel_sonarqube",
-    commit = "56537ff1cf4e6c28fba2b06e0f20d1f4e186645e",
-    remote = "git@github.com:Zetten/bazel-sonarqube.git",
+    sha256 = "53c8eb6ede402a6cc1e9d38bbf8b7285d13cc86e3b30875f2969582adc918afb",
+    strip_prefix = "bazel-sonarqube-56537ff1cf4e6c28fba2b06e0f20d1f4e186645e",
+    url = "https://github.com/Zetten/bazel-sonarqube/archive/56537ff1cf4e6c28fba2b06e0f20d1f4e186645e.tar.gz",
 )
 
 load("@bazel_sonarqube//:repositories.bzl", "bazel_sonarqube_repositories")
