@@ -139,7 +139,7 @@ Pragma: no-cache
 {"access_token":"eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w","expires_in":180,"token_type":"Bearer","id_token":"eyJ0dHlwIjoiaWRfdG9rZW4iLCJ2ZXIiOiIxLjAuMyIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoibmFzZi1pZC10b2tlbiJ9.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiYW1yIjoiYmFua2lkX3NlIiwiaXNzIjoiaHR0cHM6XC9cL2lkZW50aWZ5Lm5vcmRlYS5jb20iLCJjbGllbnRfaWQiOiJIamg3d3NtUFZvak1rUGlvQXZreSIsInNpZCI6IjA2Nzg5OGU0LWE5YjUtNDE3Mi05NjlkLTNlODcxMThjZDRkNCIsInVpZCI6IjE5ODQwMTE0MTkzNSIsImFjciI6IjIiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsImF1dGhfdGltZSI6MTYwMDI1NDI1OSwiY2FpZCI6IjEwMTM1OSIsImV4cCI6MTYwMDI1NDg1OSwiaWF0IjoxNjAwMjU0MjU5LCJqdGkiOiJlYjAyYTFiYS0zMzc0LTRlMGMtYWZjYi05YzVlOTdlOTNhNjMiLCJhdWlkIjoiMTUyNjQzIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJub25jZSI6IllrTzRmYTRPV1h5VGFzOEZWbm9kanBOMEh3IiwibnR0IjoiZXh0IiwiYXVkIjoiSGpoN3dzbVBWb2pNa1Bpb0F2a3kiLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5fQ.AtFcTCj8wDT7-cyjsKkb_SBXeDUB-pAwQwCvEWMsZWGl5TiJ9I2-dBk9yBr5DLvqKZ3xCyKOJaB6Xal_NWoAio4U0UYzQScFHUG0gyME3Bznv5IEmXTYLQ80iXa3q7W7x0HeqECMgynOCUwMkdc-CfvdmrYiEudk61eLQkpfiUQ5JblS4cXBAm4K96EZZWmaM1-LmaupUcz1Nvln8Y7HwhV_PQqrlUCnjnFemztSw3zfyYffu_t5W-NFUpBPqAzwM5G3QO1GWAuOkflzYIrm5r1MPcZIXM3JVpfdzE-WZnWEPKZi-ocQDzDhE2srj2LDzjnheq6vrnxI2oTNuxQ-Nw","refresh_token":"eyJ6aXAiOiJERUYiLCJ0dHlwIjoicmVmcmVzaF90b2tlbiIsInZlciI6IjMuMS4yIiwia2lkIjoibmFzZi1yZWZyZXNoLXRva2VuLWNyeXB0aW5nIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6IlJTQS1PQUVQLTI1NiJ9.et8AFJtkrSHN2zBwXp_9ssECWve_T91vpYi0toegxJZh74QqOyXl3zRe94WOtxfclor2zzeA28grGzgU5u98bu_079CP0wf_eGLt2WyQWy9sQhqp9pznF8H4We9QNEVCUth78xFewLt_mvepPkhjjBtoqsYAX9zKGDnXh0IYt0bd0QJXznbTLfH1WRmrorgmfehQyN1Z8AvMMOIHWjWLPHecx9K-sAuKpdoyKPcGBFpSEsfxXWOua3sYlszDRqrQYwvW_ORgktusEkJM6_DdDS2EKsEi37WCfqvWWq6--gh9Dc8mxncgdo5HV4d6zw3JvkbCycYh68vCS5N9cbBM3A.biF4LL4fvfZrNIjr.r_521ySZ883hJOA2iT0w-pjvkkuVn_Bw0nu3sTrpIXGH4S7oExudArjao4GsXgU53T-WNVyC9wygfR77ZwwKiN7_zaWquAd4N8V_7S161lO-RWaWA8pDSxfIGU5o2ErbdIBjyP8uoitgu7NDQNUKuSFE9KdBr6EqLKiL3H4bKTN7KFoykUjNEQvTJcOje2gct_vGR14Rh1cfUuizHr0nnNRDZhEpNQE_9iGwPebZXfI1_uReuTEKdOpdnIe-CDQouLWzGLggecWiIhB_l9g5slZFXwqPf3UJoKTA8KVk79wbvg3Vt-bnO38q5SpPIRcyZTpMYytI7xcyQA0kzxFheUa8WDQcqtViL2pxAOF_A0EVhRd8az15QSvZv_xHYKayT_Ot2SaBWzxk4wHjKFKrkO8Xzan6x63V4DSOm6WL5PGyG5SkicJjyrMylYtgm6zOq0XX--3c68fGWa73HxfH3JXlK0ZfQ20AVqJrOmF8NV205Jqpj7RkqXjmoWiPiyzCYtdkYT2GCS5d4RSB0sDmieqPdh1XbenXR3lyVSxwAggUVAlvfDjalSCkcj9yRTO1uihnAM5pTfthDDSNpnt-68K5xJsm3LPrMYlqfkjLR3L7G1E_Gg2welhviqb8wD3JOd_j1avSPQnZte17mSP43bJd5JmXkObAW1JrHxqWsPoztOs89eZYtH6k3eVN3UEO62IHeUCEgU7NQanqgGk054HyUuoNB0uadx23lR6hAwl7nU5oiYDX9s6fu5qx_4vsrVvQaJnpi82vwy9TPAUjkJwuoJwS4BRFKeO7bUbE8E201KmwWpBJlo5PdRm3gGDSCbT9VsTlCCtyubUhm7xnF9htebyg4Lm3ihmqiN3qQnpmM0M6IImoVoCrQzX1efEEa6vucVj0diEquQ0iE2n4ZmvKnEjDftZS_6voRH3AjiPTplEv8MU_rzQYRZhSHKaduIy9_b_D1qryOvYq5yhOLkmg3iqdMLO0SFHQ3xlB_TwCMxxf_UeumNzI1ObVuAzM8OOUB8ardB4qCDi4XIsqWfD0Ywm3CS6VcRK9f5NIt9mMgixDDBGBEONOqvUpsHdsd9KCjKxaVp3hvmBk-hHn5kSYBlaDu2o0ci6uedyYHFEiyv32b1MJP1UuCNz62_-SVJvCvDJ7vbtc-q_KewKDIRDTReyKxmtwWfxnQTMZTsLHBI_ndsXeIxC6l_Y8seiRx_V3NBSHvAA_dKlgjOJtdr__ReQw0jGgGZc.xTok92yZVdIB3XO7i3jzJw","scope":"ndf agreement openid offline_access","uh":"ce1271e0f5c5ab46280767afd20f508b48d45722d8856496b6be0346090b4cdbabf455db586fa1bd51d12e1a281e5cd319cbc62a80e97a08e122b1ac68b7f5e0"}
 
 REQUEST 5
-GET https://corporate.nordea.se/api/dbf/se/customerinfo-v2/customers/info
+GET https://corporate.nordea.se/api/dbf/se/customerinfo-v3/customers/self/info
 x-App-Country: SE
 x-App-Language: en_SE
 x-App-Version: 3.14.0.148
@@ -174,9 +174,33 @@ X-Frame-Options: DENY
 X-Global-Transaction-ID: c53680ad5f61f133115a5959
 strict-transport-security: max-age=31536000; includeSubDomains
 
-{"customer_id":"111111111112","segment":"corporate","loyalty_group":"","company_id":"111111111112","first_name":"LAZY LOADING AB","last_name":"","address":{"address_line1":"PIPPI LÅNGSTRUMPS GATA 30","city":"BROMMA","postal_code":"16870","country_code":"SE"},"employee":false,"us_resident":false}
+{"agreement_id":101359,"id":152643,"legacy_user_id":"C0147633","nem_id":null,"payment_signing_rule":"single_sign","poas":[194409],"signing_information":{"signing_limit":50000000},"ssn":"192012246676","status":"ACTIVE","technical_user_id":"C0147644","user_base_info":{"country_code":"SE","email_address":"santa@tomten.com","name":"SANTA CLAUS","phone_number":null}}
 
-11:04:19.517 [main] INFO  s.t.b.a.a.f.AgentIntegrationTest - Starting refresh.
+REQUEST 5a
+GET https://private.nordea.se/api/dbf/se/payments-v2/payments/?status=unconfirmed%2Cconfirmed%2Crejected%2Cinprogress
+Accept: application/json
+Content-Type: application/json
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 5a
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Wed, 30 Sep 2020 20:43:36 GMT
+X-Application-Context: ***
+X-Content-Type-Options: ***
+X-XSS-Protection: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: ***
+Content-Type: application/json
+X-Global-Transaction-ID: c2da75b45f74edf839205b0b
+strict-transport-security: ***
+
+{"errors":[],"results":[{"amount":2675.0,"credit_notes":[],"currency":"SEK","due":"2020-09-14","entry_date_time":"2020-06-04T09:58:31.394325Z","from":"9380619","from_currency":"SEK","has_confirmation":true,"id":"2020-06-04-11.59.27.341636:SEK:9380619","message":"1655920078425","own_message":"","permissions":{"confirm":false,"copy":true,"delete":false,"modify":{"amount":false,"due":false,"from":false,"message":false,"recurring_count":false,"recurring_interval":false,"recurring_lastday":false,"recurring_repeats":false,"to":false,"type":false}},"recipient_name":"SKATTEVERKET","status":"inprogress","to":"50501055","to_account_number_type":"BG","type":"bankgiro"},{"amount":23586.0,"credit_notes":[],"currency":"SEK","due":"2020-09-14","entry_date_time":"2020-08-05T15:15:53.72374Z","from":"9380619","from_currency":"SEK","has_confirmation":true,"id":"2020-08-05-17.16.00.165827:SEK:9380619","message":"1655920078425","own_message":"","permissions":{"confirm":false,"copy":true,"delete":false,"modify":{"amount":false,"due":false,"from":false,"message":false,"recurring_count":false,"recurring_interval":false,"recurring_lastday":false,"recurring_repeats":false,"to":false,"type":false}},"recipient_name":"SKATTEVERKET","status":"inprogress","to":"50501055","to_account_number_type":"BG","type":"bankgiro"},{"amount":936.0,"credit_notes":[],"currency":"SEK","due":"2020-10-05","entry_date_time":"2020-09-06T18:09:07.301749Z","from":"9380619","from_currency":"SEK","has_confirmation":true,"id":"2020-09-06-20.09.18.161797:SEK:9380619","message":"521696145528","own_message":"","permissions":{"confirm":false,"copy":true,"delete":true,"modify":{"amount":true,"due":true,"from":true,"message":true,"recurring_count":true,"recurring_interval":true,"recurring_lastday":true,"recurring_repeats":true,"to":true,"type":true}},"recipient_name":"3 (HI3G ACCESS AB)","status":"confirmed","to":"3199973","to_account_number_type":"BG","type":"bankgiro"}]}
 
 REQUEST 6
 GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/
@@ -208,7 +232,7 @@ strict-transport-security: max-age=31536000; includeSubDomains
 {"result":[{"account_id":"NAID-SE-SEK-33333333333","main_account_number":null,"display_account_number":"3333 33 33333","source_account_number":null,"iban":"SE1730000000033333333333","bic":"NDEASESS","registration_number":null,"country_code":"SE","product_code":"SE1150","product_name":"SPARKONTO FÖRETAG","nickname":"SPARKONTO FÖRETAG","product_type":"Sparkonton","category":"savings","account_status":"open","booked_balance":46868.50,"credit_limit":0.00,"available_balance":46868.50,"equivalent_balance":null,"currency":"SEK","equivalent_currency":null,"remaining_free_withdrawals":null,"latest_transaction_date":null,"statement_format":null,"maturity_due_date":null,"covered_by_deposit_guarantee":null,"roles":[{"name":"LA LA","role":"owner","current_user":true}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":false,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false,"require_4eye_signing":null,"require_physically_present_all_eye_signing":null},"interest_info":null,"flexi_deposit":null,"transaction_list_search_criteria":{"can_use_start_date":true,"min_start_date":"2019-06-16","can_use_end_date":true,"can_use_lowest_amount":true,"can_use_highest_amount":true,"can_use_free_text":true,"sort_by_list":["transaction_date_desc"]},"commission_rate":null,"deposit_limit_current_year":null,"source_system":"accounts_se_11digit","data_retrieved_from":"from_source_system"},{"account_id":"NAID-SE-SEK-4444444","main_account_number":null,"display_account_number":"44 44 44-4","source_account_number":null,"iban":"SE6195000099603404444444","bic":"NDEASESS","registration_number":null,"country_code":"SE","product_code":"SE0512","product_name":"PLUSGIROKONTO FTG","nickname":"PLUSGIROKONTO FTG","product_type":"Transaktionskonton","category":"transaction","account_status":"open","booked_balance":908386.30,"credit_limit":0.00,"available_balance":908386.30,"equivalent_balance":null,"currency":"SEK","equivalent_currency":null,"remaining_free_withdrawals":null,"latest_transaction_date":null,"statement_format":null,"maturity_due_date":null,"covered_by_deposit_guarantee":null,"roles":[{"name":"LA LA","role":"owner","current_user":true}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false,"require_4eye_signing":null,"require_physically_present_all_eye_signing":null},"interest_info":null,"flexi_deposit":null,"transaction_list_search_criteria":{"can_use_start_date":true,"min_start_date":"2019-06-16","can_use_end_date":true,"can_use_lowest_amount":true,"can_use_highest_amount":true,"can_use_free_text":true,"sort_by_list":["transaction_date_desc"]},"commission_rate":null,"deposit_limit_current_year":null,"source_system":"accounts_se_8digit","data_retrieved_from":"from_source_system"}],"sub_system_errors":[]}
 
 REQUEST 7
-GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-33333333333/transactions?start_date=2020-06-17&end_date=2020-09-17
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-33333333333/transactions?start_date=1992-01-10&end_date=1992-04-10
 Accept: application/json
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w
 Accept-Language: en-SE
@@ -235,8 +259,92 @@ strict-transport-security: max-age=31536000; includeSubDomains
 
 {"result":[],"total_size":null,"continuation_key":null,"sub_system_errors":[]}
 
+REQUEST 7a
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-33333333333/transactions?start_date=1991-10-09&end_date=1992-01-09
+Accept: application/json
+Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w
+Accept-Language: en-SE
+Referer: 	https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+
+RESPONSE 7a
+200
+X-Backside-Transport: OK OK,OK OK
+nnCoection: close
+Transfer-Encoding: chunked
+X-Nordea-App: ndf-accounts-service-common-3.2.6
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: no-referrer
+Date: Wed, 16 Sep 2020 11:04:19 GMT
+X-Global-Transaction-ID: c53680ad5f61f1331b7fd90c
+strict-transport-security: max-age=31536000; includeSubDomains
+
+{"result":[],"total_size":null,"continuation_key":null,"sub_system_errors":[]}
+
+REQUEST 7b
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-33333333333/transactions?start_date=1991-07-08&end_date=1991-10-08
+Accept: application/json
+Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w
+Accept-Language: en-SE
+Referer: 	https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+
+RESPONSE 7b
+200
+X-Backside-Transport: OK OK,OK OK
+nnCoection: close
+Transfer-Encoding: chunked
+X-Nordea-App: ndf-accounts-service-common-3.2.6
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: no-referrer
+Date: Wed, 16 Sep 2020 11:04:19 GMT
+X-Global-Transaction-ID: c53680ad5f61f1331b7fd90c
+strict-transport-security: max-age=31536000; includeSubDomains
+
+{"result":[],"total_size":null,"continuation_key":null,"sub_system_errors":[]}
+
+REQUEST 7c
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-33333333333/transactions?start_date=1991-04-07&end_date=1991-07-07
+Accept: application/json
+Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w
+Accept-Language: en-SE
+Referer: 	https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+
+RESPONSE 7c
+200
+X-Backside-Transport: OK OK,OK OK
+nnCoection: close
+Transfer-Encoding: chunked
+X-Nordea-App: ndf-accounts-service-common-3.2.6
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: no-referrer
+Date: Wed, 16 Sep 2020 11:04:19 GMT
+X-Global-Transaction-ID: c53680ad5f61f1331b7fd90c
+strict-transport-security: max-age=31536000; includeSubDomains
+
+{"result":[],"total_size":null,"continuation_key":null,"sub_system_errors":[]}
+
 REQUEST 8
-GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-4444444/transactions?start_date=2020-06-17&end_date=2020-09-17
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-4444444/transactions?start_date=1992-01-10&end_date=1992-04-10
 Accept: application/json
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w
 Accept-Language: en-SE
@@ -261,1193 +369,101 @@ Date: Wed, 16 Sep 2020 11:04:20 GMT
 X-Global-Transaction-ID: 2504d7535f61f134103bc483
 strict-transport-security: max-age=31536000; includeSubDomains
 
-{
-	"result": [
-		{
-			"transaction_id": "2020-09-14-00.13.17.035097086H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -23586.0,
-			"currency": "SEK",
-			"booking_date": "2020-09-14",
-			"interest_date": "2020-09-14",
-			"title": "dummyDescription",
-			"balance_after": 908386.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-09-14-19.07.13.634902086H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -9479.0,
-			"currency": "SEK",
-			"booking_date": "2020-09-14",
-			"interest_date": "2020-09-14",
-			"title": "dummyDescription",
-			"balance_after": 908386.3,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "UTLÄGG",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-09-14-00.13.17.035096086H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -2675.0,
-			"currency": "SEK",
-			"booking_date": "2020-09-14",
-			"interest_date": "2020-09-14",
-			"title": "dummyDescription",
-			"balance_after": 908386.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-09-08-00.36.01.000349082H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -31610.0,
-			"currency": "SEK",
-			"booking_date": "2020-09-08",
-			"interest_date": "2020-09-08",
-			"title": "dummyDescription",
-			"balance_after": 944126.3,
-			"to_account_number": "840114-1935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-09-07-00.11.06.024210081H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -936.0,
-			"currency": "SEK",
-			"booking_date": "2020-09-07",
-			"interest_date": "2020-09-07",
-			"title": "dummyDescription",
-			"balance_after": 975736.3,
-			"to_account_number": "319-9973",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "521605730923",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-08-17-00.11.37.030854066H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -122831.0,
-			"currency": "SEK",
-			"booking_date": "2020-08-17",
-			"interest_date": "2020-08-17",
-			"title": "dummyDescription",
-			"balance_after": 976672.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-08-17-00.11.37.030853066H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -23586.0,
-			"currency": "SEK",
-			"booking_date": "2020-08-17",
-			"interest_date": "2020-08-17",
-			"title": "dummyDescription",
-			"balance_after": 976672.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-08-17-00.11.37.030852066H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -2675.0,
-			"currency": "SEK",
-			"booking_date": "2020-08-17",
-			"interest_date": "2020-08-17",
-			"title": "dummyDescription",
-			"balance_after": 976672.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-08-06-00.31.55.000346059H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -31610.0,
-			"currency": "SEK",
-			"booking_date": "2020-08-06",
-			"interest_date": "2020-08-06",
-			"title": "dummyDescription",
-			"balance_after": 1125764.3,
-			"to_account_number": "840114-1935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-08-05-17.00.33.292565058H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -278.0,
-			"currency": "SEK",
-			"booking_date": "2020-08-05",
-			"interest_date": "2020-08-05",
-			"title": "dummyDescription",
-			"balance_after": 1157374.3,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-08-03-00.16.36.031007056H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -936.0,
-			"currency": "SEK",
-			"booking_date": "2020-08-03",
-			"interest_date": "2020-08-03",
-			"title": "dummyDescription",
-			"balance_after": 1157652.3,
-			"to_account_number": "319-9973",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "521515325020",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-07-15-08.06.59.000479043H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -999.0,
-			"currency": "SEK",
-			"booking_date": "2020-07-15",
-			"interest_date": "2020-07-15",
-			"title": "dummyDescription",
-			"balance_after": 1158588.3,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "APPLE DEV PR",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-07-13-00.14.20.037720041H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -18283.0,
-			"currency": "SEK",
-			"booking_date": "2020-07-13",
-			"interest_date": "2020-07-13",
-			"title": "dummyDescription",
-			"balance_after": 1159587.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-07-13-00.14.20.037719041H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -2675.0,
-			"currency": "SEK",
-			"booking_date": "2020-07-13",
-			"interest_date": "2020-07-13",
-			"title": "dummyDescription",
-			"balance_after": 1159587.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-07-10-00.33.02.000245040H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -31610.0,
-			"currency": "SEK",
-			"booking_date": "2020-07-10",
-			"interest_date": "2020-07-10",
-			"title": "dummyDescription",
-			"balance_after": 1180545.3,
-			"to_account_number": "840114-1935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-07-06-00.16.08.034133036H1009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -936.0,
-			"currency": "SEK",
-			"booking_date": "2020-07-06",
-			"interest_date": "2020-07-06",
-			"title": "dummyDescription",
-			"balance_after": 1212155.3,
-			"to_account_number": "319-9973",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "521424838121",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-03-30-10.41.28.324861111H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -1847.0,
-			"currency": "SEK",
-			"booking_date": "2020-03-30",
-			"interest_date": "2020-03-30",
-			"title": "dummyDescription",
-			"balance_after": 879703.3,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "UTLÄGG",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-03-12-00.17.25.027722099H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -23586.0,
-			"currency": "SEK",
-			"booking_date": "2020-03-12",
-			"interest_date": "2020-03-12",
-			"title": "dummyDescription",
-			"balance_after": 881550.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-03-12-00.17.25.027721099H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -4280.0,
-			"currency": "SEK",
-			"booking_date": "2020-03-12",
-			"interest_date": "2020-03-12",
-			"title": "dummyDescription",
-			"balance_after": 881550.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-03-09-00.16.34.100130096H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -936.0,
-			"currency": "SEK",
-			"booking_date": "2020-03-09",
-			"interest_date": "2020-03-09",
-			"title": "dummyDescription",
-			"balance_after": 941026.3,
-			"to_account_number": "319-9973",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "521061364225",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-02-13-00.38.59.000736079H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -31610.0,
-			"currency": "SEK",
-			"booking_date": "2020-02-13",
-			"interest_date": "2020-02-13",
-			"title": "dummyDescription",
-			"balance_after": 751462.3,
-			"to_account_number": "840114-1935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-02-12-22.34.16.619556079H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -1506.0,
-			"currency": "SEK",
-			"booking_date": "2020-02-13",
-			"interest_date": "2020-02-13",
-			"title": "dummyDescription",
-			"balance_after": 751462.3,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-02-13-14.52.32.002914079H2009380619  EK",
-			"has_details": true,
-			"booked": true,
-			"amount": 166406.0,
-			"currency": "SEK",
-			"booking_date": "2020-02-13",
-			"interest_date": "2020-02-13",
-			"title": "dummyDescription",
-			"balance_after": 751462.3,
-			"from_account_number": "85 61 81-3",
-			"from_account_name": "Stravito AB",
-			"message": "10",
-			"transaction_type": {
-				"transaction_code": "SE109",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-02-12-00.17.26.030778078H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -138637.0,
-			"currency": "SEK",
-			"booking_date": "2020-02-12",
-			"interest_date": "2020-02-12",
-			"title": "dummyDescription",
-			"balance_after": 618172.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-02-12-00.17.26.030777078H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -23586.0,
-			"currency": "SEK",
-			"booking_date": "2020-02-12",
-			"interest_date": "2020-02-12",
-			"title": "dummyDescription",
-			"balance_after": 618172.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-02-12-00.17.26.030776078H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -4280.0,
-			"currency": "SEK",
-			"booking_date": "2020-02-12",
-			"interest_date": "2020-02-12",
-			"title": "dummyDescription",
-			"balance_after": 618172.3,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "07800009380619000900000000120-02-0500H2   TR",
-			"has_details": true,
-			"booked": true,
-			"amount": -3.2,
-			"currency": "SEK",
-			"booking_date": "2020-02-05",
-			"interest_date": "2020-02-05",
-			"title": "dummyDescription",
-			"balance_after": 784675.3,
-			"to_account_number": "",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE931",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-02-03-00.17.33.032209071H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -120.0,
-			"currency": "SEK",
-			"booking_date": "2020-02-03",
-			"interest_date": "2020-02-03",
-			"title": "dummyDescription",
-			"balance_after": 785614.5,
-			"to_account_number": "5519-9533",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "620492793",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-01-22-08.06.54.000740063H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -450.0,
-			"currency": "SEK",
-			"booking_date": "2020-01-22",
-			"interest_date": "2020-01-22",
-			"title": "dummyDescription",
-			"balance_after": 785734.5,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "UTLÄGG",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-01-17-00.24.02.031976060H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -23628.0,
-			"currency": "SEK",
-			"booking_date": "2020-01-17",
-			"interest_date": "2020-01-17",
-			"title": "dummyDescription",
-			"balance_after": 786184.5,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-01-17-00.24.02.031975060H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -4280.0,
-			"currency": "SEK",
-			"booking_date": "2020-01-17",
-			"interest_date": "2020-01-17",
-			"title": "dummyDescription",
-			"balance_after": 786184.5,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-01-16-00.17.33.021912059H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -149.0,
-			"currency": "SEK",
-			"booking_date": "2020-01-16",
-			"interest_date": "2020-01-16",
-			"title": "dummyDescription",
-			"balance_after": 814092.5,
-			"to_account_number": "5519-9533",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "617481999",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-01-08-15.09.21.001466053H2009380619  EK",
-			"has_details": true,
-			"booked": true,
-			"amount": 220500.0,
-			"currency": "SEK",
-			"booking_date": "2020-01-08",
-			"interest_date": "2020-01-08",
-			"title": "dummyDescription",
-			"balance_after": 814241.5,
-			"from_account_number": "85 61 81-3",
-			"from_account_name": "Stravito AB",
-			"message": "9",
-			"transaction_type": {
-				"transaction_code": "SE109",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "05700009380619000200000000220-01-0700H2   TR",
-			"has_details": true,
-			"booked": true,
-			"amount": -1100.0,
-			"currency": "SEK",
-			"booking_date": "2020-01-07",
-			"interest_date": "2020-01-07",
-			"title": "dummyDescription",
-			"balance_after": 593741.5,
-			"to_account_number": "",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE931",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-01-07-00.21.31.036249052H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -865.0,
-			"currency": "SEK",
-			"booking_date": "2020-01-07",
-			"interest_date": "2020-01-07",
-			"title": "dummyDescription",
-			"balance_after": 593741.5,
-			"to_account_number": "319-9973",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "520879018221",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2020-01-02-00.45.27.000646050H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -31610.0,
-			"currency": "SEK",
-			"booking_date": "2020-01-02",
-			"interest_date": "2020-01-02",
-			"title": "dummyDescription",
-			"balance_after": 595706.5,
-			"to_account_number": "840114-1935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-11-12-00.17.41.026481142H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -94205.0,
-			"currency": "SEK",
-			"booking_date": "2019-11-12",
-			"interest_date": "2019-11-12",
-			"title": "dummyDescription",
-			"balance_after": 493170.5,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-11-12-00.17.41.026480142H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -4280.0,
-			"currency": "SEK",
-			"booking_date": "2019-11-12",
-			"interest_date": "2019-11-12",
-			"title": "dummyDescription",
-			"balance_after": 493170.5,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-11-05-00.33.54.000397147H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -35104.0,
-			"currency": "SEK",
-			"booking_date": "2019-11-05",
-			"interest_date": "2019-11-05",
-			"title": "dummyDescription",
-			"balance_after": 591655.5,
-			"to_account_number": "571 846 432",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-11-05-00.33.54.000398147H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -31568.0,
-			"currency": "SEK",
-			"booking_date": "2019-11-05",
-			"interest_date": "2019-11-05",
-			"title": "dummyDescription",
-			"balance_after": 591655.5,
-			"to_account_number": "840114-1935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-11-01-14.54.46.001452149H2009380619  EK",
-			"has_details": true,
-			"booked": true,
-			"amount": 206250.0,
-			"currency": "SEK",
-			"booking_date": "2019-11-01",
-			"interest_date": "2019-11-01",
-			"title": "dummyDescription",
-			"balance_after": 658327.5,
-			"from_account_number": "85 61 81-3",
-			"from_account_name": "Stravito AB",
-			"message": "6",
-			"transaction_type": {
-				"transaction_code": "SE109",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-10-16-00.05.59.527089161H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -5000.0,
-			"currency": "SEK",
-			"booking_date": "2019-10-16",
-			"interest_date": "2019-10-16",
-			"title": "dummyDescription",
-			"balance_after": 452077.5,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "FRISKVÅRD",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-10-14-00.17.31.036747163H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -23628.0,
-			"currency": "SEK",
-			"booking_date": "2019-10-14",
-			"interest_date": "2019-10-14",
-			"title": "dummyDescription",
-			"balance_after": 457077.5,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-10-14-00.17.31.036746163H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -4280.0,
-			"currency": "SEK",
-			"booking_date": "2019-10-14",
-			"interest_date": "2019-10-14",
-			"title": "dummyDescription",
-			"balance_after": 457077.5,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-10-09-14.53.58.000587166H2009380619  EK",
-			"has_details": true,
-			"booked": true,
-			"amount": 190000.0,
-			"currency": "SEK",
-			"booking_date": "2019-10-09",
-			"interest_date": "2019-10-09",
-			"title": "dummyDescription",
-			"balance_after": 484985.5,
-			"from_account_number": "85 61 81-3",
-			"from_account_name": "Stravito AB",
-			"message": "5",
-			"transaction_type": {
-				"transaction_code": "SE109",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-10-03-00.53.03.000498170H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -31568.0,
-			"currency": "SEK",
-			"booking_date": "2019-10-03",
-			"interest_date": "2019-10-03",
-			"title": "dummyDescription",
-			"balance_after": 294985.5,
-			"to_account_number": "840114-1935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-10-02-15.28.27.097207049H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -575.0,
-			"currency": "SEK",
-			"booking_date": "2019-10-02",
-			"interest_date": "2019-10-02",
-			"title": "dummyDescription",
-			"balance_after": 326553.5,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "UTLÄGG OKT",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-09-12-00.17.14.026394035H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -23628.0,
-			"currency": "SEK",
-			"booking_date": "2019-09-12",
-			"interest_date": "2019-09-12",
-			"title": "dummyDescription",
-			"balance_after": 327128.5,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-09-12-00.17.14.026393035H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -4280.0,
-			"currency": "SEK",
-			"booking_date": "2019-09-12",
-			"interest_date": "2019-09-12",
-			"title": "dummyDescription",
-			"balance_after": 327128.5,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-09-10-00.33.38.000380033H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -31568.0,
-			"currency": "SEK",
-			"booking_date": "2019-09-10",
-			"interest_date": "2019-09-10",
-			"title": "dummyDescription",
-			"balance_after": 355036.5,
-			"to_account_number": "840114-1935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "03400009380619001300000000119-09-0400H2   TR",
-			"has_details": true,
-			"booked": true,
-			"amount": -1.5,
-			"currency": "SEK",
-			"booking_date": "2019-09-04",
-			"interest_date": "2019-09-04",
-			"title": "dummyDescription",
-			"balance_after": 386604.5,
-			"to_account_number": "",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE931",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-08-30-03.50.15.047250026H2009380619  EK",
-			"has_details": true,
-			"booked": true,
-			"amount": 130000.0,
-			"currency": "SEK",
-			"booking_date": "2019-08-30",
-			"interest_date": "2019-08-30",
-			"title": "dummyDescription",
-			"balance_after": 386606.0,
-			"from_account_number": "85 61 81-3",
-			"from_account_name": "STRAVITO AB",
-			"message": "4",
-			"transaction_type": {
-				"transaction_code": "SE109",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-08-19-00.15.28.030504017H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -23628.0,
-			"currency": "SEK",
-			"booking_date": "2019-08-19",
-			"interest_date": "2019-08-19",
-			"title": "dummyDescription",
-			"balance_after": 256606.0,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-08-19-00.15.28.030503017H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -4280.0,
-			"currency": "SEK",
-			"booking_date": "2019-08-19",
-			"interest_date": "2019-08-19",
-			"title": "dummyDescription",
-			"balance_after": 256606.0,
-			"to_account_number": "5050-1055",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "1655920078425",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-08-19-09.21.02.677318017H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -365.0,
-			"currency": "SEK",
-			"booking_date": "2019-08-19",
-			"interest_date": "2019-08-19",
-			"title": "dummyDescription",
-			"balance_after": 256606.0,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "UTLÄGG",
-			"own_reference": "Utlägg lunch",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-08-06-00.50.05.000333008H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -31568.0,
-			"currency": "SEK",
-			"booking_date": "2019-08-06",
-			"interest_date": "2019-08-06",
-			"title": "dummyDescription",
-			"balance_after": 284879.0,
-			"to_account_number": "840114-1935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE514",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-08-06-16.46.31.688713008H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -2991.0,
-			"currency": "SEK",
-			"booking_date": "2019-08-06",
-			"interest_date": "2019-08-06",
-			"title": "dummyDescription",
-			"balance_after": 284879.0,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "UTLÄGG",
-			"own_reference": "Sony hörlurar",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-08-06-08.06.08.000543008H2009380619  ED",
-			"has_details": true,
-			"booked": true,
-			"amount": -465.0,
-			"currency": "SEK",
-			"booking_date": "2019-08-06",
-			"interest_date": "2019-08-06",
-			"title": "dummyDescription",
-			"balance_after": 284879.0,
-			"to_account_number": "3300  8401141935",
-			"to_account_name": "dummyaccount",
-			"to_account_country": "",
-			"message": "UTL 19-08-02",
-			"own_reference": "",
-			"transaction_type": {
-				"transaction_code": "SE528",
-				"transaction_code_text": "transaction_code_text"
-			}
-		},
-		{
-			"transaction_id": "2019-08-02-03.26.23.024103006H2009380619  EK",
-			"has_details": true,
-			"booked": true,
-			"amount": 180000.0,
-			"currency": "SEK",
-			"booking_date": "2019-08-02",
-			"interest_date": "2019-08-02",
-			"title": "dummyDescription",
-			"balance_after": 319903.0,
-			"from_account_number": "85 61 81-3",
-			"from_account_name": "STRAVITO AB",
-			"message": "3",
-			"transaction_type": {
-				"transaction_code": "SE109",
-				"transaction_code_text": "transaction_code_text"
-			}
-		}
-	],
-	"total_size": null,
-	"continuation_key": null,
-	"sub_system_errors": [
+{"result":[{"transaction_id":"2020-09-14-00.13.17.035097086H1009380619  ED","has_details":true,"booked":true,"amount":-23586.0,"currency":"SEK","booking_date":"2020-09-14","interest_date":"2020-09-14","title":"dummyDescription","balance_after":908386.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-09-14-19.07.13.634902086H1009380619  ED","has_details":true,"booked":true,"amount":-9479.0,"currency":"SEK","booking_date":"2020-09-14","interest_date":"2020-09-14","title":"dummyDescription","balance_after":908386.3,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"UTLÄGG","own_reference":"","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-09-14-00.13.17.035096086H1009380619  ED","has_details":true,"booked":true,"amount":-2675.0,"currency":"SEK","booking_date":"2020-09-14","interest_date":"2020-09-14","title":"dummyDescription","balance_after":908386.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-09-08-00.36.01.000349082H1009380619  ED","has_details":true,"booked":true,"amount":-31610.0,"currency":"SEK","booking_date":"2020-09-08","interest_date":"2020-09-08","title":"dummyDescription","balance_after":944126.3,"to_account_number":"840114-1935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-09-07-00.11.06.024210081H1009380619  ED","has_details":true,"booked":true,"amount":-936.0,"currency":"SEK","booking_date":"2020-09-07","interest_date":"2020-09-07","title":"dummyDescription","balance_after":975736.3,"to_account_number":"319-9973","to_account_name":"dummyaccount","to_account_country":"","message":"521605730923","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-08-17-00.11.37.030854066H1009380619  ED","has_details":true,"booked":true,"amount":-122831.0,"currency":"SEK","booking_date":"2020-08-17","interest_date":"2020-08-17","title":"dummyDescription","balance_after":976672.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-08-17-00.11.37.030853066H1009380619  ED","has_details":true,"booked":true,"amount":-23586.0,"currency":"SEK","booking_date":"2020-08-17","interest_date":"2020-08-17","title":"dummyDescription","balance_after":976672.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-08-17-00.11.37.030852066H1009380619  ED","has_details":true,"booked":true,"amount":-2675.0,"currency":"SEK","booking_date":"2020-08-17","interest_date":"2020-08-17","title":"dummyDescription","balance_after":976672.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-08-06-00.31.55.000346059H1009380619  ED","has_details":true,"booked":true,"amount":-31610.0,"currency":"SEK","booking_date":"2020-08-06","interest_date":"2020-08-06","title":"dummyDescription","balance_after":1125764.3,"to_account_number":"840114-1935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-08-05-17.00.33.292565058H1009380619  ED","has_details":true,"booked":true,"amount":-278.0,"currency":"SEK","booking_date":"2020-08-05","interest_date":"2020-08-05","title":"dummyDescription","balance_after":1157374.3,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-08-03-00.16.36.031007056H1009380619  ED","has_details":true,"booked":true,"amount":-936.0,"currency":"SEK","booking_date":"2020-08-03","interest_date":"2020-08-03","title":"dummyDescription","balance_after":1157652.3,"to_account_number":"319-9973","to_account_name":"dummyaccount","to_account_country":"","message":"521515325020","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-07-15-08.06.59.000479043H1009380619  ED","has_details":true,"booked":true,"amount":-999.0,"currency":"SEK","booking_date":"2020-07-15","interest_date":"2020-07-15","title":"dummyDescription","balance_after":1158588.3,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"APPLE DEV PR","own_reference":"","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-07-13-00.14.20.037720041H1009380619  ED","has_details":true,"booked":true,"amount":-18283.0,"currency":"SEK","booking_date":"2020-07-13","interest_date":"2020-07-13","title":"dummyDescription","balance_after":1159587.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-07-13-00.14.20.037719041H1009380619  ED","has_details":true,"booked":true,"amount":-2675.0,"currency":"SEK","booking_date":"2020-07-13","interest_date":"2020-07-13","title":"dummyDescription","balance_after":1159587.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-07-10-00.33.02.000245040H1009380619  ED","has_details":true,"booked":true,"amount":-31610.0,"currency":"SEK","booking_date":"2020-07-10","interest_date":"2020-07-10","title":"dummyDescription","balance_after":1180545.3,"to_account_number":"840114-1935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-07-06-00.16.08.034133036H1009380619  ED","has_details":true,"booked":true,"amount":-936.0,"currency":"SEK","booking_date":"2020-07-06","interest_date":"2020-07-06","title":"dummyDescription","balance_after":1212155.3,"to_account_number":"319-9973","to_account_name":"dummyaccount","to_account_country":"","message":"521424838121","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-03-30-10.41.28.324861111H2009380619  ED","has_details":true,"booked":true,"amount":-1847.0,"currency":"SEK","booking_date":"2020-03-30","interest_date":"2020-03-30","title":"dummyDescription","balance_after":879703.3,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"UTLÄGG","own_reference":"","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-03-12-00.17.25.027722099H2009380619  ED","has_details":true,"booked":true,"amount":-23586.0,"currency":"SEK","booking_date":"2020-03-12","interest_date":"2020-03-12","title":"dummyDescription","balance_after":881550.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-03-12-00.17.25.027721099H2009380619  ED","has_details":true,"booked":true,"amount":-4280.0,"currency":"SEK","booking_date":"2020-03-12","interest_date":"2020-03-12","title":"dummyDescription","balance_after":881550.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-03-09-00.16.34.100130096H2009380619  ED","has_details":true,"booked":true,"amount":-936.0,"currency":"SEK","booking_date":"2020-03-09","interest_date":"2020-03-09","title":"dummyDescription","balance_after":941026.3,"to_account_number":"319-9973","to_account_name":"dummyaccount","to_account_country":"","message":"521061364225","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-02-13-00.38.59.000736079H2009380619  ED","has_details":true,"booked":true,"amount":-31610.0,"currency":"SEK","booking_date":"2020-02-13","interest_date":"2020-02-13","title":"dummyDescription","balance_after":751462.3,"to_account_number":"840114-1935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-02-12-22.34.16.619556079H2009380619  ED","has_details":true,"booked":true,"amount":-1506.0,"currency":"SEK","booking_date":"2020-02-13","interest_date":"2020-02-13","title":"dummyDescription","balance_after":751462.3,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-02-13-14.52.32.002914079H2009380619  EK","has_details":true,"booked":true,"amount":166406.0,"currency":"SEK","booking_date":"2020-02-13","interest_date":"2020-02-13","title":"dummyDescription","balance_after":751462.3,"from_account_number":"85 61 81-3","from_account_name":"Stravito AB","message":"10","transaction_type":{"transaction_code":"SE109","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-02-12-00.17.26.030778078H2009380619  ED","has_details":true,"booked":true,"amount":-138637.0,"currency":"SEK","booking_date":"2020-02-12","interest_date":"2020-02-12","title":"dummyDescription","balance_after":618172.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-02-12-00.17.26.030777078H2009380619  ED","has_details":true,"booked":true,"amount":-23586.0,"currency":"SEK","booking_date":"2020-02-12","interest_date":"2020-02-12","title":"dummyDescription","balance_after":618172.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-02-12-00.17.26.030776078H2009380619  ED","has_details":true,"booked":true,"amount":-4280.0,"currency":"SEK","booking_date":"2020-02-12","interest_date":"2020-02-12","title":"dummyDescription","balance_after":618172.3,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"07800009380619000900000000120-02-0500H2   TR","has_details":true,"booked":true,"amount":-3.2,"currency":"SEK","booking_date":"2020-02-05","interest_date":"2020-02-05","title":"dummyDescription","balance_after":784675.3,"to_account_number":"","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE931","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-02-03-00.17.33.032209071H2009380619  ED","has_details":true,"booked":true,"amount":-120.0,"currency":"SEK","booking_date":"2020-02-03","interest_date":"2020-02-03","title":"dummyDescription","balance_after":785614.5,"to_account_number":"5519-9533","to_account_name":"dummyaccount","to_account_country":"","message":"620492793","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-01-22-08.06.54.000740063H2009380619  ED","has_details":true,"booked":true,"amount":-450.0,"currency":"SEK","booking_date":"2020-01-22","interest_date":"2020-01-22","title":"dummyDescription","balance_after":785734.5,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"UTLÄGG","own_reference":"","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-01-17-00.24.02.031976060H2009380619  ED","has_details":true,"booked":true,"amount":-23628.0,"currency":"SEK","booking_date":"2020-01-17","interest_date":"2020-01-17","title":"dummyDescription","balance_after":786184.5,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-01-17-00.24.02.031975060H2009380619  ED","has_details":true,"booked":true,"amount":-4280.0,"currency":"SEK","booking_date":"2020-01-17","interest_date":"2020-01-17","title":"dummyDescription","balance_after":786184.5,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-01-16-00.17.33.021912059H2009380619  ED","has_details":true,"booked":true,"amount":-149.0,"currency":"SEK","booking_date":"2020-01-16","interest_date":"2020-01-16","title":"dummyDescription","balance_after":814092.5,"to_account_number":"5519-9533","to_account_name":"dummyaccount","to_account_country":"","message":"617481999","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-01-08-15.09.21.001466053H2009380619  EK","has_details":true,"booked":true,"amount":220500.0,"currency":"SEK","booking_date":"2020-01-08","interest_date":"2020-01-08","title":"dummyDescription","balance_after":814241.5,"from_account_number":"85 61 81-3","from_account_name":"Stravito AB","message":"9","transaction_type":{"transaction_code":"SE109","transaction_code_text":"transaction_code_text"}},{"transaction_id":"05700009380619000200000000220-01-0700H2   TR","has_details":true,"booked":true,"amount":-1100.0,"currency":"SEK","booking_date":"2020-01-07","interest_date":"2020-01-07","title":"dummyDescription","balance_after":593741.5,"to_account_number":"","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE931","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-01-07-00.21.31.036249052H2009380619  ED","has_details":true,"booked":true,"amount":-865.0,"currency":"SEK","booking_date":"2020-01-07","interest_date":"2020-01-07","title":"dummyDescription","balance_after":593741.5,"to_account_number":"319-9973","to_account_name":"dummyaccount","to_account_country":"","message":"520879018221","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2020-01-02-00.45.27.000646050H2009380619  ED","has_details":true,"booked":true,"amount":-31610.0,"currency":"SEK","booking_date":"2020-01-02","interest_date":"2020-01-02","title":"dummyDescription","balance_after":595706.5,"to_account_number":"840114-1935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-11-12-00.17.41.026481142H2009380619  ED","has_details":true,"booked":true,"amount":-94205.0,"currency":"SEK","booking_date":"2019-11-12","interest_date":"2019-11-12","title":"dummyDescription","balance_after":493170.5,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-11-12-00.17.41.026480142H2009380619  ED","has_details":true,"booked":true,"amount":-4280.0,"currency":"SEK","booking_date":"2019-11-12","interest_date":"2019-11-12","title":"dummyDescription","balance_after":493170.5,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-11-05-00.33.54.000397147H2009380619  ED","has_details":true,"booked":true,"amount":-35104.0,"currency":"SEK","booking_date":"2019-11-05","interest_date":"2019-11-05","title":"dummyDescription","balance_after":591655.5,"to_account_number":"571 846 432","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-11-05-00.33.54.000398147H2009380619  ED","has_details":true,"booked":true,"amount":-31568.0,"currency":"SEK","booking_date":"2019-11-05","interest_date":"2019-11-05","title":"dummyDescription","balance_after":591655.5,"to_account_number":"840114-1935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-11-01-14.54.46.001452149H2009380619  EK","has_details":true,"booked":true,"amount":206250.0,"currency":"SEK","booking_date":"2019-11-01","interest_date":"2019-11-01","title":"dummyDescription","balance_after":658327.5,"from_account_number":"85 61 81-3","from_account_name":"Stravito AB","message":"6","transaction_type":{"transaction_code":"SE109","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-10-16-00.05.59.527089161H2009380619  ED","has_details":true,"booked":true,"amount":-5000.0,"currency":"SEK","booking_date":"2019-10-16","interest_date":"2019-10-16","title":"dummyDescription","balance_after":452077.5,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"FRISKVÅRD","own_reference":"","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-10-14-00.17.31.036747163H2009380619  ED","has_details":true,"booked":true,"amount":-23628.0,"currency":"SEK","booking_date":"2019-10-14","interest_date":"2019-10-14","title":"dummyDescription","balance_after":457077.5,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-10-14-00.17.31.036746163H2009380619  ED","has_details":true,"booked":true,"amount":-4280.0,"currency":"SEK","booking_date":"2019-10-14","interest_date":"2019-10-14","title":"dummyDescription","balance_after":457077.5,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-10-09-14.53.58.000587166H2009380619  EK","has_details":true,"booked":true,"amount":190000.0,"currency":"SEK","booking_date":"2019-10-09","interest_date":"2019-10-09","title":"dummyDescription","balance_after":484985.5,"from_account_number":"85 61 81-3","from_account_name":"Stravito AB","message":"5","transaction_type":{"transaction_code":"SE109","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-10-03-00.53.03.000498170H2009380619  ED","has_details":true,"booked":true,"amount":-31568.0,"currency":"SEK","booking_date":"2019-10-03","interest_date":"2019-10-03","title":"dummyDescription","balance_after":294985.5,"to_account_number":"840114-1935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-10-02-15.28.27.097207049H2009380619  ED","has_details":true,"booked":true,"amount":-575.0,"currency":"SEK","booking_date":"2019-10-02","interest_date":"2019-10-02","title":"dummyDescription","balance_after":326553.5,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"UTLÄGG OKT","own_reference":"","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-09-12-00.17.14.026394035H2009380619  ED","has_details":true,"booked":true,"amount":-23628.0,"currency":"SEK","booking_date":"2019-09-12","interest_date":"2019-09-12","title":"dummyDescription","balance_after":327128.5,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-09-12-00.17.14.026393035H2009380619  ED","has_details":true,"booked":true,"amount":-4280.0,"currency":"SEK","booking_date":"2019-09-12","interest_date":"2019-09-12","title":"dummyDescription","balance_after":327128.5,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-09-10-00.33.38.000380033H2009380619  ED","has_details":true,"booked":true,"amount":-31568.0,"currency":"SEK","booking_date":"2019-09-10","interest_date":"2019-09-10","title":"dummyDescription","balance_after":355036.5,"to_account_number":"840114-1935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"03400009380619001300000000119-09-0400H2   TR","has_details":true,"booked":true,"amount":-1.5,"currency":"SEK","booking_date":"2019-09-04","interest_date":"2019-09-04","title":"dummyDescription","balance_after":386604.5,"to_account_number":"","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE931","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-08-30-03.50.15.047250026H2009380619  EK","has_details":true,"booked":true,"amount":130000.0,"currency":"SEK","booking_date":"2019-08-30","interest_date":"2019-08-30","title":"dummyDescription","balance_after":386606.0,"from_account_number":"85 61 81-3","from_account_name":"STRAVITO AB","message":"4","transaction_type":{"transaction_code":"SE109","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-08-19-00.15.28.030504017H2009380619  ED","has_details":true,"booked":true,"amount":-23628.0,"currency":"SEK","booking_date":"2019-08-19","interest_date":"2019-08-19","title":"dummyDescription","balance_after":256606.0,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-08-19-00.15.28.030503017H2009380619  ED","has_details":true,"booked":true,"amount":-4280.0,"currency":"SEK","booking_date":"2019-08-19","interest_date":"2019-08-19","title":"dummyDescription","balance_after":256606.0,"to_account_number":"5050-1055","to_account_name":"dummyaccount","to_account_country":"","message":"1655920078425","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-08-19-09.21.02.677318017H2009380619  ED","has_details":true,"booked":true,"amount":-365.0,"currency":"SEK","booking_date":"2019-08-19","interest_date":"2019-08-19","title":"dummyDescription","balance_after":256606.0,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"UTLÄGG","own_reference":"Utlägg lunch","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-08-06-00.50.05.000333008H2009380619  ED","has_details":true,"booked":true,"amount":-31568.0,"currency":"SEK","booking_date":"2019-08-06","interest_date":"2019-08-06","title":"dummyDescription","balance_after":284879.0,"to_account_number":"840114-1935","to_account_name":"dummyaccount","to_account_country":"","message":"","own_reference":"","transaction_type":{"transaction_code":"SE514","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-08-06-16.46.31.688713008H2009380619  ED","has_details":true,"booked":true,"amount":-2991.0,"currency":"SEK","booking_date":"2019-08-06","interest_date":"2019-08-06","title":"dummyDescription","balance_after":284879.0,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"UTLÄGG","own_reference":"Sony hörlurar","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-08-06-08.06.08.000543008H2009380619  ED","has_details":true,"booked":true,"amount":-465.0,"currency":"SEK","booking_date":"2019-08-06","interest_date":"2019-08-06","title":"dummyDescription","balance_after":284879.0,"to_account_number":"3300  8401141935","to_account_name":"dummyaccount","to_account_country":"","message":"UTL 19-08-02","own_reference":"","transaction_type":{"transaction_code":"SE528","transaction_code_text":"transaction_code_text"}},{"transaction_id":"2019-08-02-03.26.23.024103006H2009380619  EK","has_details":true,"booked":true,"amount":180000.0,"currency":"SEK","booking_date":"2019-08-02","interest_date":"2019-08-02","title":"dummyDescription","balance_after":319903.0,"from_account_number":"85 61 81-3","from_account_name":"STRAVITO AB","message":"3","transaction_type":{"transaction_code":"SE109","transaction_code_text":"transaction_code_text"}}],"total_size":null,"continuation_key":null,"sub_system_errors":[]}
 
-	]
-}
-
-REQUEST 9
-GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-4444444/transactions?start_date=2020-03-16&end_date=2020-06-16
+REQUEST 8a
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-4444444/transactions?start_date=1991-07-08&end_date=1991-10-08
 Accept: application/json
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w
 Accept-Language: en-SE
 Referer: 	https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
 X-Aggregator: Tink Testing
 
-RESPONSE 9
+RESPONSE 8a
+200
+X-Backside-Transport: OK OK,OK OK
+nnCoection: close
+Transfer-Encoding: chunked
+X-Nordea-App: ndf-accounts-service-common-3.2.6
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: no-referrer
+Date: Wed, 16 Sep 2020 11:04:21 GMT
+X-Global-Transaction-ID: c53680ad5f61f1350ea1c201
+strict-transport-security: max-age=31536000; includeSubDomains
+
+{"result":[],"total_size":null,"continuation_key":null,"sub_system_errors":[]}
+
+REQUEST 8b
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-4444444/transactions?start_date=1991-04-07&end_date=1991-07-07
+Accept: application/json
+Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w
+Accept-Language: en-SE
+Referer: 	https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+
+RESPONSE 8b
+200
+X-Backside-Transport: OK OK,OK OK
+nnCoection: close
+Transfer-Encoding: chunked
+X-Nordea-App: ndf-accounts-service-common-3.2.6
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: no-referrer
+Date: Wed, 16 Sep 2020 11:04:21 GMT
+X-Global-Transaction-ID: c53680ad5f61f1350ea1c201
+strict-transport-security: max-age=31536000; includeSubDomains
+
+{"result":[],"total_size":null,"continuation_key":null,"sub_system_errors":[]}
+
+REQUEST 8c
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-4444444/transactions?start_date=1992-01-07&end_date=1992-04-07
+Accept: application/json
+Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w
+Accept-Language: en-SE
+Referer: 	https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+
+RESPONSE 8c
+200
+X-Backside-Transport: OK OK,OK OK
+nnCoection: close
+Transfer-Encoding: chunked
+X-Nordea-App: ndf-accounts-service-common-3.2.6
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: no-referrer
+Date: Wed, 16 Sep 2020 11:04:21 GMT
+X-Global-Transaction-ID: c53680ad5f61f1350ea1c201
+strict-transport-security: max-age=31536000; includeSubDomains
+
+{"result":[],"total_size":null,"continuation_key":null,"sub_system_errors":[]}
+
+REQUEST 8d
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-4444444/transactions?start_date=1991-10-09&end_date=1992-01-09
+Accept: application/json
+Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTYzNjY3MTU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJORENNU0UiLCJzaWQiOiIwNjc4OThlNC1hOWI1LTQxNzItOTY5ZC0zZTg3MTE4Y2Q0ZDQiLCJzc24iOiIxOTg0MDExNDE5MzUiLCJ1aWQiOiIxOTg0MDExNDE5MzUiLCJjcmlzcyI6Ik5vcmRlYSBDdXN0b21lciBDQTMgdjEgZm9yIEJhbmtJRCIsInNjb3BlIjpbIm5kZiIsImFncmVlbWVudCIsIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImNhaWQiOiIxMDEzNTkiLCJzZ20iOiJjb3Jwb3JhdGUiLCJleHAiOjE2MDAyNTQ0MzksImlhdCI6MTYwMDI1NDI1OSwianRpIjoiYmFjNmU5MTIyZjU2NGU0OTlmMzA4ZjE2NDg4MWE2NDciLCJncmFudHMiOnsiYWdyZWVtZW50IjoxMDEzNTl9LCJhdWlkIjoiMTUyNjQzIiwiYyI6IlNFIiwiY2giOiJORENNIiwiYWlzcyI6Im5vcmRpY19hYSIsImFkbCI6eyJwY2lkIjoiMS4yLjc1Mi43OC4xLjUiLCJiYW5raWRfdHlwZSI6Ik1PQklMRSJ9LCJhbCI6MiwiYW0iOiJiYW5raWRfc2UiLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJjcnZmIjoxNTczNTEzMjAwLCJuYmYiOjE2MDAyNTQyNDksImFpZCI6MTAxMzU5LCJjaWQiOiI1NTkyMDA3ODQyIn0.mva2H_ykgwLkJeoXiSYBBTzW-8Ql20Y_HKz5tzS4-NICJONsEGGxNUgMF53iGIS_nk7z_40pmTYZpgZYEZ5i6yRBvuoL45lEubS90oiYZjrUVosC1hVYr3I1vRSnUAZyfSGcCxE4MF1tQFzQV9c9e2PMO48HPJXwrhL5dAxpOhhCFYoRBVV5r2uG8NyqmwwwZlsEwExPITKlxKqSWv_-tDCY97NEq3CySk0L2gGj3p6pwReps1tRTxqfnd2n--HYN0SeZvtxyuYoAUeNJc4VArqKNmsI_WGofpliPfwhjzh7x5A2ykVFkt_2RcOipX8P01ym70Arcf9Q0kBEpWiV3w
+Accept-Language: en-SE
+Referer: 	https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+
+RESPONSE 8d
 200
 X-Backside-Transport: OK OK,OK OK
 nnCoection: close

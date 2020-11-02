@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 import java.time.format.DateTimeParseException;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.identitydata.rpc.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.identitydata.rpc.FetchIdentityDataResponse;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.NameElement;
 import se.tink.libraries.identitydata.NameElement.Type;
@@ -16,7 +16,7 @@ public class NordeaIdentityDataTest {
         final FetchIdentityDataResponse response =
                 SerializationUtils.deserializeFromString(
                         responseWithValidIdentityData, FetchIdentityDataResponse.class);
-        IdentityData id = response.toTinkIdentityData();
+        IdentityData id = response.toPrivateIdentityData();
         Assert.assertEquals(id.getNameElements().stream().count(), 2);
         final String firstName =
                 id.getNameElements().stream()
@@ -39,7 +39,7 @@ public class NordeaIdentityDataTest {
         final FetchIdentityDataResponse response =
                 SerializationUtils.deserializeFromString(
                         responseWithMissingPersonId, FetchIdentityDataResponse.class);
-        IdentityData id = response.toTinkIdentityData();
+        IdentityData id = response.toPrivateIdentityData();
         Assert.assertEquals(id.getNameElements().stream().count(), 2);
         final String firstName =
                 id.getNameElements().stream()
@@ -62,7 +62,7 @@ public class NordeaIdentityDataTest {
         final FetchIdentityDataResponse response =
                 SerializationUtils.deserializeFromString(
                         responseWithInvalidIdentityData, FetchIdentityDataResponse.class);
-        response.toTinkIdentityData();
+        response.toPrivateIdentityData();
     }
 
     // identity response object as it was seen 2020-01-29
