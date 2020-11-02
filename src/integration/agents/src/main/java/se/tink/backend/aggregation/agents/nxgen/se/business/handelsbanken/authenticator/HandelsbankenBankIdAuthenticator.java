@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Mandate;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
+import se.tink.backend.aggregation.agents.utils.business.OrganisationNumberSeLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
@@ -53,6 +54,8 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
     @Override
     public InitBankIdResponse init(String ssn) throws BankIdException, AuthorizationException {
         pollCount = 0;
+        OrganisationNumberSeLogger.logIfUnknownOrgnumber(organisationNumber);
+
         return refreshAutostartToken();
     }
 
@@ -71,12 +74,14 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
         switch (bankIdStatus) {
             case DONE:
                 AuthorizeResponse authorizeResponse = finishAuthorization(authenticate);
-
                 ApplicationEntryPointResponse applicationEntryPoint =
                         client.applicationEntryPoint(authorizeResponse);
-
                 persistentStorage.persist(authorizeResponse);
                 sessionStorage.persist(applicationEntryPoint);
+
+                OrganisationNumberSeLogger.logIfUnknownOrgnumberForSuccessfulLogin(
+                        organisationNumber);
+
                 break;
             case WAITING:
                 lastWaitingResult = authenticate.getResult();
