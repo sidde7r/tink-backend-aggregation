@@ -11,6 +11,12 @@ public class AssertFormRequest extends BaseRequest<AssertRequestData> {
         super(data, headers);
     }
 
+    public static AssertFormRequest createUCRAssertFormRequest(
+            String assertionId, String fch, String uid) {
+        AssertRequestData data = AssertRequestData.createUCRAssertData(assertionId, fch);
+        return new AssertFormRequest(data, createHeaders(uid));
+    }
+
     public static AssertFormRequest createCardNumberAssertFormRequest(
             String assertionId, String fch, String cardNumber, String uid) {
         AssertRequestData data =

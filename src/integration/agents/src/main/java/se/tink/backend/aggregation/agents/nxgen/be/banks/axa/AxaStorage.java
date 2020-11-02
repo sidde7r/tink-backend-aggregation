@@ -141,6 +141,11 @@ public class AxaStorage {
         return persistentStorage.get(HEADER_SESSION_ID);
     }
 
+    public void storeValuesFromUCRAssertFormResponse(AssertFormResponse response) {
+        sessionStorage.put(
+                ASSERTION_ID, response.getData().getControlFlow().get(0).getAssertionId());
+    }
+
     public void storeValuesFromCardNumberAssertFormResponse(AssertFormResponse response) {
         persistentStorage.put(UID, response.getData().getData().getJsonData().getGuid());
         sessionStorage.put(

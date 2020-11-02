@@ -66,6 +66,15 @@ public class AssertRequestData {
         return this;
     }
 
+    public static AssertRequestData createUCRAssertData(String assertionId, String fch) {
+        return new AssertRequestData()
+                .withAction("form")
+                .withAssertField("action")
+                .withAssertionId(assertionId)
+                .withFch(fch)
+                .withInput(new InputEntity().setAuthenticator("UCR"));
+    }
+
     public static AssertRequestData createCardNumberAssertData(
             String assertionId, String fch, String cardNumber) {
         return new AssertRequestData()

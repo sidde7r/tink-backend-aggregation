@@ -36,6 +36,11 @@ class AxaAuthenticatorRequestCreator {
         return new AnonymousInvokeRequest(data);
     }
 
+    AssertFormRequest createUCRAssertFormRequest() {
+        return AssertFormRequest.createUCRAssertFormRequest(
+                storage.getAssertionId(), storage.getFch(), storage.getUid());
+    }
+
     AssertFormRequest createCardNumberAssertFormRequest() {
         return AssertFormRequest.createCardNumberAssertFormRequest(
                 storage.getAssertionId(),

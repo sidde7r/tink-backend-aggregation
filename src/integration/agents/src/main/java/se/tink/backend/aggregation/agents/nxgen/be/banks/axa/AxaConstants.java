@@ -34,7 +34,7 @@ public final class AxaConstants {
     public static final ImmutableMap<String, Object> AUTH_HEADERS_JSON =
             ImmutableMap.<String, Object>builder()
                     .put(Headers.HOST, Url.HOST)
-                    .put(Headers.USER_AGENT, "axamobileiOS/2.32.4 (iPhone; iOS 13.3.1; Scale/2.00)")
+                    .put(Headers.USER_AGENT, "axamobileiOS/2.33.4 (iPhone; iOS 13.3.1; Scale/2.00)")
                     .put(Headers.CONTENT_TYPE, "application/json")
                     .put(
                             Headers.AUTHORIZATION,

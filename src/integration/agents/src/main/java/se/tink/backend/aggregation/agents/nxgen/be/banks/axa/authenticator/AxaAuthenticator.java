@@ -91,6 +91,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
         steps.add(
                 new AutomaticAuthenticationStep(
                         this::processAnonymousInvoke, "anonymousInvokeStep"));
+        steps.add(new AutomaticAuthenticationStep(this::processUCRAssertForm, "ucrAssertFormStep"));
         steps.add(
                 new AutomaticAuthenticationStep(
                         this::processCardNumberAssertForm, "cardNumberAssertFormStep"));
@@ -127,6 +128,14 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
         AnonymousInvokeResponse response = apiClient.anonymousInvoke(request);
         verifyWithStorageCleanup(response);
         storage.storeValues(response);
+        return AuthenticationStepResponse.executeNextStep();
+    }
+
+    private AuthenticationStepResponse processUCRAssertForm() {
+        AssertFormRequest request = requestCreator.createUCRAssertFormRequest();
+        AssertFormResponse response = apiClient.assertForm(request);
+        verifyWithStorageCleanup(response);
+        storage.storeValuesFromUCRAssertFormResponse(response);
         return AuthenticationStepResponse.executeNextStep();
     }
 
