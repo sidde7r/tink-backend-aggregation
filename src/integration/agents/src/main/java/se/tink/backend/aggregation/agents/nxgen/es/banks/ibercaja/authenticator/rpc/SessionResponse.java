@@ -36,6 +36,9 @@ public class SessionResponse {
     @JsonProperty("Telefono")
     private String phone;
 
+    @JsonProperty("TokenIdentity")
+    private String tokenIdentity;
+
     public String getName() {
         return name;
     }
@@ -69,5 +72,9 @@ public class SessionResponse {
 
     public String getNip() {
         return nip;
+    }
+
+    public String getTokenIdentity() {
+        return tokenIdentity;
     }
 }

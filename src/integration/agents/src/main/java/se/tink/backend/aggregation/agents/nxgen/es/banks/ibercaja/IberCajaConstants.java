@@ -45,7 +45,7 @@ public class IberCajaConstants {
         public static final String PLAYBACK_MODE_REAL = "Real";
         public static final String IS_SPECIALIST = "False";
         public static final String APP_ID = "IbercajaAppV2Piloto";
-        public static final String VERSION = "2.21.0";
+        public static final String VERSION = "2.25.0";
         public static final String CHANNEL_MOBILE = "MOV";
         public static final String DEVICE = "IOSP";
         public static final String ACCESS_CARD = "False";
@@ -63,6 +63,7 @@ public class IberCajaConstants {
         public static final String ACCESS_CARD = "AccesoTarjeta";
         public static final String NICI = "NICI";
         public static final String NIP = "nip";
+        public static final String TOKEN_IDENTITY = "TokenIdentity";
         public static final String CONTRACT = "contrato";
     }
 
@@ -83,8 +84,7 @@ public class IberCajaConstants {
     }
 
     public static class Storage {
-        public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
-        public static final String REFRESH_TOKEN = "REFRESH_TOKEN";
+
         public static final String TICKET = "TICKET";
         public static final String USERNAME = "USER";
         public static final String FULL_NAME = "FULL_NAME";
@@ -92,6 +92,7 @@ public class IberCajaConstants {
         public static final String NICI = "NICI";
         public static final String CONTRACT = "CONTRACT";
         public static final String NIP = "NIP";
+        public static final String TOKEN_IDENTITY = "TOKEN_IDENTITY";
     }
 
     public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =

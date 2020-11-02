@@ -13,11 +13,6 @@ public class IberCajaSessionStorage {
         this.sessionStorage = sessionStorage;
     }
 
-    public void saveLoginResponse(String accessToken, String refreshToken) {
-        sessionStorage.put(IberCajaConstants.Storage.ACCESS_TOKEN, accessToken);
-        sessionStorage.put(IberCajaConstants.Storage.REFRESH_TOKEN, refreshToken);
-    }
-
     public void saveUsername(String username) {
         sessionStorage.put(IberCajaConstants.Storage.USERNAME, username);
     }
@@ -56,6 +51,8 @@ public class IberCajaSessionStorage {
         // store NICI in the session storage to be masked in the logs
         // remove this if the NICI should not be considered as sensitive ifo
         sessionStorage.put(IberCajaConstants.Storage.NICI, sessionResponse.getNici());
+        sessionStorage.put(
+                IberCajaConstants.Storage.TOKEN_IDENTITY, sessionResponse.getTokenIdentity());
 
         sessionStorage.put(
                 IberCajaConstants.Storage.CONTRACT, sessionResponse.getContractInCourse());
@@ -68,5 +65,9 @@ public class IberCajaSessionStorage {
 
     public String getNip() {
         return sessionStorage.get(IberCajaConstants.Storage.NIP);
+    }
+
+    public String getTokenIdentity() {
+        return sessionStorage.get(IberCajaConstants.Storage.TOKEN_IDENTITY);
     }
 }
