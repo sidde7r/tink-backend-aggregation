@@ -73,6 +73,9 @@ public class TransactionEntity {
                 .setDescription(toTinkDescription())
                 .setAmount(transactionAmount.toAmount())
                 .setDate(date)
+                // IMPORTANT! Do not change the transaction payload without consulting the
+                // enrichment team! They have logic relying on the payload, changing it may cause
+                // disruptions with categorization and description cleanup.
                 .setPayload(TransactionPayloadTypes.DETAILS, transactionType)
                 .setPayload(
                         TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL, getCounterPartyAccount())
