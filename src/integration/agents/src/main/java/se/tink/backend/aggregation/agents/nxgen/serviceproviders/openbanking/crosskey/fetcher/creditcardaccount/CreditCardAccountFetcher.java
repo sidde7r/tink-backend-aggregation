@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.IdentificationType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.account.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.AmountEntity;
@@ -35,7 +36,8 @@ public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccoun
         final CrosskeyAccountBalancesResponse crosskeyAccountBalancesResponse =
                 apiClient.fetchAccountBalances(accountEntity.getAccountId());
 
-        final Optional<AccountDetailsEntity> accountDetails = accountEntity.resolveAccountDetails();
+        final Optional<AccountDetailsEntity> accountDetails =
+                accountEntity.getAccountDetails(IdentificationType.CREDIT_CARD);
         final AmountEntity amount =
                 crosskeyAccountBalancesResponse.getData().getInterimAvailableBalance().getAmount();
 
