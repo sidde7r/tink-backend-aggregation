@@ -45,6 +45,7 @@ public final class HttpLoggingConstants {
                     "server",
                     "signature",
                     "status",
+                    "strict-transport-security",
                     "tpp-nok-redirect-uri",
                     "tpp-redirect-uri",
                     "tpp-request-id",
@@ -54,11 +55,16 @@ public final class HttpLoggingConstants {
                     "vary",
                     "via",
                     "x-aggregator",
+                    "x-amz-apigw-id",
+                    "x-amzn-requestid",
+                    "x-amzn-trace-id",
+                    "x-content-type-options",
                     "x-correlation-id",
                     "x-fapi-financial-id",
                     "x-fapi-interaction-id",
                     "x-forwarded-for",
                     "x-forwarded-host",
+                    "x-frame-options",
                     "x-global-transaction-id",
                     "x-ibm-client-id",
                     "x-ing-reqid",
@@ -70,5 +76,6 @@ public final class HttpLoggingConstants {
                     "x-ratelimit-limit",
                     "x-ratelimit-remaining",
                     "x-request-id",
-                    "x-response-id");
+                    "x-response-id",
+                    "x-xss-protection");
 }
