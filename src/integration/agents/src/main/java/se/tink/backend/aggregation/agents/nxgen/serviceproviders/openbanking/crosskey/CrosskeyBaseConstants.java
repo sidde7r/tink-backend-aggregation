@@ -132,4 +132,9 @@ public abstract class CrosskeyBaseConstants {
     public static class RequestConstants {
         public static final String END_TO_END_IDENTIFICATION = "FRESCO.21302.GFX.20";
     }
+
+    public enum IdentificationType {
+        IBAN,
+        CREDIT_CARD
+    }
 }

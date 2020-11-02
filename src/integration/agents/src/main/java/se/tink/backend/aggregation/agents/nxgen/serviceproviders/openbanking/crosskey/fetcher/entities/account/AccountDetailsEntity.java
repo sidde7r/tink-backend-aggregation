@@ -29,4 +29,8 @@ public class AccountDetailsEntity {
     public boolean isIBAN() {
         return StringUtils.containsIgnoreCase(schemeName, "iban");
     }
+
+    public boolean isCreditCard() {
+        return StringUtils.containsIgnoreCase(schemeName, "creditcard");
+    }
 }

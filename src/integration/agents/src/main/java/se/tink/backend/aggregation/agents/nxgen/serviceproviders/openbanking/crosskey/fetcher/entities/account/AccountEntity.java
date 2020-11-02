@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.IdentificationType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -32,9 +33,13 @@ public class AccountEntity {
         return accountId;
     }
 
-    public Optional<AccountDetailsEntity> resolveAccountDetails() {
+    public Optional<AccountDetailsEntity> getAccountDetails(IdentificationType identificationType) {
         return Optional.ofNullable(account).orElse(Collections.emptyList()).stream()
-                .filter(AccountDetailsEntity::isIBAN)
+                .filter(
+                        accountDetailsEntity ->
+                                identificationType == IdentificationType.IBAN
+                                        ? accountDetailsEntity.isIBAN()
+                                        : accountDetailsEntity.isCreditCard())
                 .findFirst();
     }
 
