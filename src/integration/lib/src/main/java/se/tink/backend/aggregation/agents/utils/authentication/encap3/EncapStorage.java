@@ -31,6 +31,9 @@ public class EncapStorage {
     private String signingKeyPhrase;
     private String samUserId;
 
+    //
+    private String hwKey;
+
     public EncapStorage(PersistentStorage persistentStorage) {
         this.persistentStorage = persistentStorage;
         this.hasInitiated = false;
@@ -129,6 +132,7 @@ public class EncapStorage {
         storageStructure
                 .get(EncapConstants.Storage.SAM_USERID, String.class)
                 .ifPresent(v -> samUserId = v);
+        storageStructure.get(EncapConstants.Storage.HW_KEY, String.class).ifPresent(v -> hwKey = v);
 
         this.hasInitiated = true;
 
@@ -158,6 +162,7 @@ public class EncapStorage {
         storageStructure.put(EncapConstants.Storage.REGISTRATION_ID, registrationId);
         storageStructure.put(EncapConstants.Storage.SIGNING_KEY_PHRASE, signingKeyPhrase);
         storageStructure.put(EncapConstants.Storage.SAM_USERID, samUserId);
+        storageStructure.put(EncapConstants.Storage.HW_KEY, hwKey);
 
         persistentStorage.put(EncapConstants.Storage.PERSISTENT_STORAGE_KEY, storageStructure);
     }
@@ -214,6 +219,10 @@ public class EncapStorage {
         return samUserId;
     }
 
+    public String getHwKey() {
+        return hwKey;
+    }
+
     public void setClientSaltKeyId(int clientSaltKeyId) {
         this.clientSaltKeyId = Integer.toString(clientSaltKeyId);
     }
@@ -232,5 +241,9 @@ public class EncapStorage {
 
     public void setSamUserId(String samUserId) {
         this.samUserId = samUserId;
+    }
+
+    public void setHwKey(String hwKey) {
+        this.hwKey = hwKey;
     }
 }

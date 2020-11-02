@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConfi
 public class SpankkiEncapConfiguration implements EncapConfiguration {
     @Override
     public String getEncapApiVersion() {
-        return "3.5.3";
+        return "3.9.2";
     }
 
     @Override

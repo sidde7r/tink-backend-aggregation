@@ -120,15 +120,15 @@ public class NordeaSEConstants {
         public static final String FETCH_LOANS = "ca/loans-v1/loans/";
         public static final String FETCH_LOAN_DETAILS = "ca/loans-v1/loans/{loanId}";
         public static final String FETCH_IDENTITY_DATA = "se/customerinfo-v3/customers/self/info";
-        public static final String FETCH_PAYMENTS = "se/payments-v2/payments/";
-        public static final String FETCH_PAYMENTS_DETAILS = "se/payments-v2/payments/{paymentId}";
+        public static final String FETCH_PAYMENTS = "ca/payments-v2/payments/";
+        public static final String FETCH_PAYMENTS_DETAILS = "ca/payments-v2/payments/{paymentId}";
         public static final String FETCH_BENEFICIARIES = "ca/beneficiary-v1/beneficiaries";
-        public static final String CONFIRM_TRANSFER = "se/payments-v2/payments/confirm";
+        public static final String CONFIRM_TRANSFER = "ca/payments-v2/payments/confirm";
         public static final String SIGN_TRANSFER = "ca/signing-v1/signing/bankid_se/signature/";
         public static final String POLL_SIGN =
                 "ca/signing-v1/signing/bankid_se/signature/{orderRef}";
         public static final String COMPLETE_TRANSFER =
-                "se/payments-v2/payments/complete/{orderRef}";
+                "ca/payments-v2/payments/complete/{orderRef}";
         public static final String LOGOUT_BANKID = "ca/token-revocation-v1/token/revoke";
         public static final String ENROLL =
                 "ca/trusted-applications-v2/applications/{applicationId}/enrolments";

@@ -3,6 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticat
 import static se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.DEVICE_PROFILE;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +28,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.Identi
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapCryptoUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapMessageUtils;
+import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -129,10 +137,9 @@ public class SpankkiEncapClient {
 
         queryPairs.put("activationCode", activationCode);
         queryPairs.put("applicationId", EncapMessage.APPLICATION_ID);
-        populateDeviceInformation(queryPairs);
-        queryPairs.put("hexAPNToken", Message.HEX_APN_TOKEN);
+        populateDeviceInformation(queryPairs, false);
         populateMetaInformation(queryPairs);
-        queryPairs.put("operation", Message.OPERATION_REGISTER);
+        queryPairs.put(Message.OPERATION_KEY, Message.OPERATION_REGISTER);
 
         return EncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
     }
@@ -167,13 +174,14 @@ public class SpankkiEncapClient {
         Map<String, String> queryPairs = new HashMap<>();
 
         queryPairs.put("activatedAuthMethods", activatedMethodsRequest);
-        populateDeviceInformation(queryPairs);
+        populateDeviceInformation(queryPairs, true);
         populateMetaInformation(queryPairs);
-        queryPairs.put("operation", Message.OPERATION_ACTIVATE);
-        queryPairs.put("registrationId", storage.getRegistrationId());
-        queryPairs.put("saltHash1", storage.getSaltHash());
+        queryPairs.put(Message.OPERATION_KEY, Message.OPERATION_ACTIVATE);
+        queryPairs.put(Message.REGISTRATION_KEY, storage.getRegistrationId());
+        queryPairs.put("saltHash", storage.getSaltHash());
         queryPairs.put("signing.b64SigningCSR", configuration.getRsaPubKeyString());
         queryPairs.put("signing.b64SigningPubKey", configuration.getClientPrivateKeyString());
+        populateHwKeyProvide(queryPairs, registrationResultEntity.getB64OtpChallenge());
 
         return EncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
     }
@@ -181,13 +189,15 @@ public class SpankkiEncapClient {
     private String buildIdentificationMessage() {
         Map<String, String> queryPairs = new HashMap<>();
 
-        queryPairs.put("clientOnly", EncapMessage.CLIENT_ONLY);
-        queryPairs.put("clientSaltCurrentKeyId", storage.getClientSaltKeyId());
-        populateDeviceInformation(queryPairs);
-        populateMetaInformation(queryPairs);
-        queryPairs.put("operation", Message.OPERATION_IDENTIFY);
+        queryPairs.put(Message.REGISTRATION_KEY, storage.getRegistrationId());
+        queryPairs.put(Message.OPERATION_KEY, Message.OPERATION_IDENTIFY);
         queryPairs.put("purpose", Message.PURPOSE);
-        queryPairs.put("registrationId", storage.getRegistrationId());
+        populateMetaInformation(queryPairs);
+        queryPairs.put("clientOnly", EncapMessage.CLIENT_ONLY);
+        populateDeviceInformation(queryPairs, false);
+        queryPairs.put("applicationId", EncapMessage.APPLICATION_ID);
+        queryPairs.put("clientSaltCurrentKeyId", storage.getClientSaltKeyId());
+        queryPairs.put("enabledRiskParametersUpdated", String.valueOf(new Date().getTime()));
 
         return EncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
     }
@@ -201,18 +211,23 @@ public class SpankkiEncapClient {
         Map<String, String> queryPairs = new HashMap<>();
 
         queryPairs.put("b64ResponseCurrent", challengeResponse);
-        populateDeviceInformation(queryPairs);
-        queryPairs.put("hexAPNToken", Message.HEX_APN_TOKEN);
+        populateDeviceInformation(queryPairs, true);
         populateMetaInformation(queryPairs);
-        queryPairs.put("operation", Message.OPERATION_AUTHENTICATE);
-        queryPairs.put("registrationId", storage.getRegistrationId());
+        queryPairs.put(Message.OPERATION_KEY, Message.OPERATION_AUTHENTICATE);
+        queryPairs.put(Message.REGISTRATION_KEY, storage.getRegistrationId());
         queryPairs.put("saltHash1", storage.getSaltHash());
         queryPairs.put("usedAuthMethod", Message.DEVICE_PIN);
+        queryPairs.put("clientSaltCurrentKeyId", storage.getClientSaltKeyId());
+        populateHwKeySuccess(queryPairs, identificationEntity.getB64OtpChallenge());
 
         return EncapMessageUtils.getUrlEncodedQueryParams(queryPairs);
     }
 
-    private void populateDeviceInformation(Map<String, String> queryPairs) {
+    private void populateDeviceInformation(Map<String, String> queryPairs, boolean fullInfo) {
+        queryPairs.put("device.OperatingSystemType", DEVICE_PROFILE.getOs());
+        if (!fullInfo) {
+            return;
+        }
         queryPairs.put("device.ApplicationHash", buildApplicationHashAsB64String());
         queryPairs.put("device.DeviceHash", storage.getDeviceHash());
         queryPairs.put("device.DeviceManufacturer", DEVICE_PROFILE.getMake());
@@ -220,10 +235,34 @@ public class SpankkiEncapClient {
         queryPairs.put("device.DeviceName", DeviceInformation.NAME);
         queryPairs.put("device.DeviceUUID", storage.getDeviceUuid().toUpperCase());
         queryPairs.put("device.OperatingSystemName", DEVICE_PROFILE.getOs());
-        queryPairs.put("device.OperatingSystemType", DEVICE_PROFILE.getOs());
-        queryPairs.put("device.SignerHashes", DeviceInformation.SIGNER_HASHES);
+        queryPairs.put("device.IsSecureScreenLockEnabled", "true");
         queryPairs.put("device.SystemVersion", DEVICE_PROFILE.getOsVersion());
         queryPairs.put("device.UserInterfaceIdiom", DeviceInformation.USER_INTERFACE_IDIOM);
+    }
+
+    private void populateHwKeyProvide(Map<String, String> queryPairs, String otpChallenge) {
+        KeyPair keyPair = EllipticCurve.generateKeyPair("prime256v1");
+        byte[] signature =
+                EllipticCurve.signSha256(
+                        keyPair.getPrivate(), EncodingUtils.decodeBase64String(otpChallenge));
+        queryPairs.put("hwKey.status", "OK_KEY_PROVIDED");
+        queryPairs.put("hwKey.signatureAlgorithm", "SHA256withECDSA");
+        queryPairs.put(
+                "hwKey.publicKey",
+                EncodingUtils.encodeAsBase64String(keyPair.getPublic().getEncoded()));
+        queryPairs.put("hwKey.signature", EncodingUtils.encodeAsBase64String(signature));
+
+        storeHwKey(keyPair.getPrivate());
+    }
+
+    private void populateHwKeySuccess(Map<String, String> queryPairs, String otpChallenge) {
+        PrivateKey privateKey = readHwKey();
+        byte[] signature =
+                EllipticCurve.signSha256(
+                        privateKey, EncodingUtils.decodeBase64String(otpChallenge));
+        queryPairs.put("hwKey.status", "OK_SIGNED_SUCCESS");
+        queryPairs.put("hwKey.signatureAlgorithm", "SHA256withECDSA");
+        queryPairs.put("hwKey.signature", EncodingUtils.encodeAsBase64String(signature));
     }
 
     private void populateMetaInformation(Map<String, String> queryPairs) {
@@ -232,8 +271,8 @@ public class SpankkiEncapClient {
 
     // Implemented to imitate the app as much as possible, but it might be unnecessary
     private void pollEncap() {
-        int MAX_ATTEMPTS = 10;
-        for (int i = 0; i < MAX_ATTEMPTS; i++) {
+        int maxAttempts = 10;
+        for (int i = 0; i < maxAttempts; i++) {
             if (!apiClient.pollEncap().isPendingPerform()) {
                 return;
             }
@@ -267,5 +306,20 @@ public class SpankkiEncapClient {
         // Update storage with next keyId and key
         storage.setClientSaltKey(identificationEntity.getB64ClientSaltNextKey());
         storage.setClientSaltKeyId(identificationEntity.getClientSaltNextKeyId());
+    }
+
+    private void storeHwKey(PrivateKey privateKey) {
+        storage.setHwKey(EncodingUtils.encodeAsBase64String(privateKey.getEncoded()));
+    }
+
+    private PrivateKey readHwKey() {
+        String encodedPrivateKey = storage.getHwKey();
+        try {
+            KeyFactory keyFactory = KeyFactory.getInstance("EC");
+            return keyFactory.generatePrivate(
+                    new PKCS8EncodedKeySpec(EncodingUtils.decodeBase64String(encodedPrivateKey)));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new IllegalStateException("Cannot decode key", e);
+        }
     }
 }

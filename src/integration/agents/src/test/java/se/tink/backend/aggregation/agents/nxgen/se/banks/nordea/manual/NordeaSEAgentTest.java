@@ -15,7 +15,9 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaSEAgentTest {
@@ -86,7 +88,10 @@ public class NordeaSEAgentTest {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);
         transfer.setDueDate(c.getTime());
-        transfer.setDestinationMessage("Test msg");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("Test message");
+        transfer.setRemittanceInformation(remittanceInformation);
 
         builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                 .build()
@@ -107,7 +112,10 @@ public class NordeaSEAgentTest {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);
         transfer.setDueDate(c.getTime());
-        transfer.setDestinationMessage("Test msg");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("Test message");
+        transfer.setRemittanceInformation(remittanceInformation);
 
         builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                 .build()
@@ -125,7 +133,10 @@ public class NordeaSEAgentTest {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);
         transfer.setDueDate(c.getTime());
-        transfer.setDestinationMessage("Test msg"); // minimum length is 12
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("Test message"); // minimum length is 12
+        transfer.setRemittanceInformation(remittanceInformation);
 
         builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                 .build()
@@ -143,7 +154,10 @@ public class NordeaSEAgentTest {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);
         transfer.setDueDate(c.getTime());
-        transfer.setDestinationMessage(manager.get(Arg.OCR));
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.OCR);
+        remittanceInformation.setValue(manager.get(Arg.OCR));
+        transfer.setRemittanceInformation(remittanceInformation);
 
         builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                 .build()
