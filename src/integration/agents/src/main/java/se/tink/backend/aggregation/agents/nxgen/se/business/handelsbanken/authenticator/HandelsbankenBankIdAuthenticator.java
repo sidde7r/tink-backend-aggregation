@@ -4,8 +4,6 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -31,23 +29,25 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<InitBankIdResponse> {
     private static final Logger LOG =
             LoggerFactory.getLogger(HandelsbankenBankIdAuthenticator.class);
+
     private final HandelsbankenSEApiClient client;
-    private final Credentials credentials;
     private final HandelsbankenPersistentStorage persistentStorage;
     private final HandelsbankenSessionStorage sessionStorage;
+    private final String organisationNumber;
+
     private int pollCount;
     private String autoStartToken;
     private String lastWaitingResult;
 
     public HandelsbankenBankIdAuthenticator(
             HandelsbankenSEApiClient client,
-            Credentials credentials,
             HandelsbankenPersistentStorage persistentStorage,
-            HandelsbankenSessionStorage sessionStorage) {
+            HandelsbankenSessionStorage sessionStorage,
+            String organisationNumber) {
         this.client = client;
-        this.credentials = credentials;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
+        this.organisationNumber = organisationNumber;
     }
 
     @Override
@@ -120,9 +120,8 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
                 authorizeResponse.getMandates().stream()
                         .filter(
                                 mandate ->
-                                        credentials
-                                                .getField(Key.CORPORATE_ID)
-                                                .equalsIgnoreCase(mandate.getCustomerNumber()))
+                                        organisationNumber.equalsIgnoreCase(
+                                                mandate.getCustomerNumber()))
                         .findAny()
                         .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
 
@@ -136,7 +135,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
     private void validateOrganizationNumber(AuthorizeResponse authorizeResponse)
             throws AuthorizationException {
         final Mandate mandate = authorizeResponse.getMandates().get(0);
-        if (!mandate.getCustomerNumber().equalsIgnoreCase(credentials.getField(Key.CORPORATE_ID))) {
+        if (!organisationNumber.equalsIgnoreCase(mandate.getCustomerNumber())) {
             LOG.error("Organization number mismatch");
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
