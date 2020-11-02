@@ -6,6 +6,8 @@ The agent tests use a `AgentTestContext` which is configured to communicate with
 
 This service then prompts the developer for said information and hands it back to the `AgentTestContext`.
 
+For the Swedish market, it also provides a way to get a hold of a QR code for agents that uses autostart token. This can be used to open up bankid.
+
 ## Python 2/3 compatibility
 [Since Python 2's EOL has been set to 2020][python_eol], `agent_test_server` has been converted to be compatible with both Python 2 and 3 using [python_future].
  
@@ -60,6 +62,8 @@ Agent test server listening on 127.0.0.1:7357
 [pipenv]: https://github.com/pypa/pipenv
 [virtualenv]: https://help.dreamhost.com/hc/en-us/articles/115000695551-Installing-and-using-virtualenv-with-Python-3
 
+## How to get a hold of a QR code
+If you are testing an agent on the swedish market that uses autostart token, the agent test server also exposes a page that shows a QR code. Use this URL to get a QR code to scan: `https://127.0.0.1:7357/bankid`
 
 ## SSL certificate
 
