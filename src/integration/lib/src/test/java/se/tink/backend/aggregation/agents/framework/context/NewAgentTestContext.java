@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -458,11 +459,17 @@ public final class NewAgentTestContext extends AgentContext {
     private void printTransactions(List<Transaction> transactions) {
         List<Map<String, String>> table =
                 transactions.stream()
-                        .sorted(Comparator.comparing(Transaction::getDate))
+                        .sorted(
+                                Comparator.comparing(
+                                        Transaction::getDate,
+                                        Comparator.nullsLast(Comparator.reverseOrder())))
                         .map(
                                 transaction -> {
                                     Map<String, String> row = new LinkedHashMap<>();
-                                    row.put("date", dateFormat.format(transaction.getDate()));
+                                    if (!Objects.isNull(transaction.getDate())) {
+                                        row.put("date", dateFormat.format(transaction.getDate()));
+                                    }
+
                                     row.put("description", transaction.getDescription());
                                     row.put("amount", String.valueOf(transaction.getAmount()));
                                     return row;
