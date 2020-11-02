@@ -119,6 +119,18 @@ public class LoginExecutor {
                     .put(
                             SessionError.SESSION_ALREADY_ACTIVE,
                             LoginResult.SESSION_ERROR_SESSION_ALREADY_ACTIVE)
+                    .put(
+                            SessionError.CONSENT_EXPIRED,
+                            LoginResult.BANK_SERVICE_ERROR_CONSENT_EXPIRED)
+                    .put(
+                            SessionError.CONSENT_INVALID,
+                            LoginResult.BANK_SERVICE_ERROR_CONSENT_INVALID)
+                    .put(
+                            SessionError.CONSENT_REVOKED,
+                            LoginResult.BANK_SERVICE_ERROR_CONSENT_REVOKED)
+                    .put(
+                            SessionError.CONSENT_REVOKED_BY_USER,
+                            LoginResult.BANK_SERVICE_ERROR_CONSENT_REVOKED_BY_USER)
                     .build();
 
     private static final ImmutableMap<SupplementalInfoError, LoginResult>

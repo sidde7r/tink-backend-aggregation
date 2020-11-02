@@ -10,7 +10,13 @@ public enum SessionError implements AgentError {
                     "For safety reasons you have been logged out. Please login again to continue.")),
     SESSION_ALREADY_ACTIVE(
             new LocalizableKey(
-                    "There is already an active session on this account. Please try again."));
+                    "There is already an active session on this account. Please try again.")),
+    // These errors are duplicates from BankServiceError. They will be removed when all
+    // agents start to use these errors from SessionError
+    CONSENT_EXPIRED(new LocalizableKey("The consent has been expired. ")),
+    CONSENT_INVALID(new LocalizableKey("The consent is invalid. ")),
+    CONSENT_REVOKED_BY_USER(new LocalizableKey("The consent has been revoked by the user. ")),
+    CONSENT_REVOKED(new LocalizableKey("The consent has been revoked by the bank. "));
 
     private LocalizableKey userMessage;
 
