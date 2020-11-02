@@ -299,7 +299,7 @@ public class AggregationServiceResource implements AggregationService {
         String providerId = request.getProviderId();
 
         Preconditions.checkArgument(
-                Strings.isNullOrEmpty(financialInstitutionId) == Strings.isNullOrEmpty(providerId),
+                Strings.isNullOrEmpty(financialInstitutionId) ^ Strings.isNullOrEmpty(providerId),
                 "The request must either contain fiid or providerId.");
         Preconditions.checkNotNull(
                 request.getSecretsNames(),
