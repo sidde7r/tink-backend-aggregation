@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.utils;
 
 import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 
 public class StrongAuthenticationState {
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
+    private static final Logger log = LoggerFactory.getLogger(StrongAuthenticationState.class);
 
     private final String state;
     private final RandomValueGenerator randomValueGenerator;
@@ -33,6 +36,7 @@ public class StrongAuthenticationState {
 
     private String generateState(String appUriId) {
         if (Strings.isNullOrEmpty(appUriId)) {
+            log.warn("The appUriId should not be null or empty");
             // Beware! Some financial institutes have limitations on
             // the state parameter. Known limitations:
             // - SDC only allow UUID.
