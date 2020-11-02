@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -55,10 +56,15 @@ public class TransactionEntity {
     }
 
     public Transaction toTinkTransaction() {
-        return Transaction.builder()
-                .setAmount(amount.toExactCurrencyAmount())
-                .setDescription(description)
-                .setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))
-                .build();
+        Transaction.Builder txBuilder =
+                Transaction.builder()
+                        .setAmount(amount.toExactCurrencyAmount())
+                        .setDescription(description);
+
+        if (!Objects.isNull(date)) {
+            txBuilder.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        }
+
+        return txBuilder.build();
     }
 }

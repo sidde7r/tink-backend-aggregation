@@ -31,7 +31,6 @@
     "transactions": [
         {
             "amount": -4.0,
-            "date": 1583060400000,
             "description": "dummy_concepto",
             "internalPayload": {},
             "originalAmount": 0.0,
