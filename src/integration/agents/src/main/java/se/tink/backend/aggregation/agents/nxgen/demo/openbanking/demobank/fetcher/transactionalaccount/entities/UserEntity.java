@@ -20,6 +20,8 @@ public class UserEntity {
 
     @JsonProperty public String dateOfBirth;
 
+    @JsonProperty public boolean multiRedirect;
+
     public String getName() {
         return name;
     }
@@ -30,5 +32,9 @@ public class UserEntity {
 
     public LocalDate getDateOfBirth() {
         return dateOfBirth != null ? LocalDate.parse(dateOfBirth) : null;
+    }
+
+    public boolean isMultiRedirect() {
+        return multiRedirect;
     }
 }
