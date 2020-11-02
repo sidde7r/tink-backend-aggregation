@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -110,7 +111,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                     apiClient, supplementalInformationHelper),
             new BankIdAuthenticationController<>(
                     supplementalRequester,
-                    new SwedbankDefaultBankIdAuthenticator(apiClient, sessionStorage),
+                    new SwedbankDefaultBankIdAuthenticator(
+                            apiClient, sessionStorage, credentials.getField(Key.CORPORATE_ID)),
                     persistentStorage,
                     credentials)
         };

@@ -120,7 +120,6 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                 pollWaitCounter++;
                 return BankIdStatus.WAITING;
             case SparebankenSorConstants.BankIdStatus.COMPLETED:
-                continueActivation();
                 return BankIdStatus.DONE;
             case SparebankenSorConstants.BankIdStatus.ERROR:
                 // Sparebanken Sor keeps on polling until error status is returned even if user
@@ -146,7 +145,12 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         }
     }
 
-    private void continueActivation() throws SupplementalInfoException {
+    @Override
+    public void sendActivationCode() throws SupplementalInfoException {
+        continueActivation();
+    }
+
+    public void continueActivation() throws SupplementalInfoException {
         String evryToken = finalizeBankIdAuthentication();
         sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
         executeLogin(evryToken);
