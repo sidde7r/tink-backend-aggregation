@@ -8,9 +8,11 @@ spec:
 
   - alert: LoginSuccessRateBelow90WithAttemptLimitNL
     expr: |
-      # Successful/Cancelled attempts above 90%
+      # Successful/Cancelled attempts < 90% and >= 80%
       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) < 0.90)
+      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
+              / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) >= 0.80)
       # At least this many attempts.
       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) > 10
     for: 5m
@@ -27,9 +29,11 @@ spec:
 
   - alert: LoginSuccessRateBelow80WithAttemptLimitNL
     expr: |
-      # Successful/Cancelled attempts above 80%
+      # Successful/Cancelled attempts < 80% and >= 70%
       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) < 0.80)
+      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
+              / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) >= 0.70)
       # At least this many attempts.
       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) > 10
     for: 5m
@@ -46,9 +50,11 @@ spec:
 
   - alert: LoginSuccessRateBelow70WithAttemptLimitNL
     expr: |
-      # Successful/Cancelled attempts above 70%
+      # Successful/Cancelled attempts < 70% and >= 60%
       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) < 0.70)
+      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
+              / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) >= 0.60)
       # At least this many attempts.
       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) > 10
     for: 5m
@@ -84,9 +90,11 @@ spec:
 
   - alert: RefreshSuccessRateBelow90WithAttemptLimitNL
     expr: |
-      # Successful attempts above 90%
+      # Successful attempts < 90% and >= 80%
       (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider)
           / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider) < 0.90)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider)
+              / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider) >= 0.80)
       # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider) > 40
     for: 5m
@@ -103,9 +111,11 @@ spec:
 
   - alert: RefreshSuccessRateBelow80WithAttemptLimitNL
     expr: |
-      # Successful attempts above 80%
+      # Successful attempts < 80% and >= 70%
       (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider)
           / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider) < 0.80)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider)
+              / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider) >= 0.70)
       # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider) > 40
     for: 5m
@@ -122,9 +132,11 @@ spec:
 
   - alert: RefreshSuccessRateBelow70WithAttemptLimitNL
     expr: |
-      # Successful attempts above 70%
+      # Successful attempts < 70% and >= 60%
       (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider)
           / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider) < 0.70)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider)
+              / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider) >= 0.60)
       # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider) > 40
     for: 5m
