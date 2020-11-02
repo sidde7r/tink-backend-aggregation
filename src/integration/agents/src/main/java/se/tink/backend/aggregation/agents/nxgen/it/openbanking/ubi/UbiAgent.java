@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class UbiAgent extends CbiGlobeAgent {
@@ -25,7 +24,7 @@ public final class UbiAgent extends CbiGlobeAgent {
             authenticator =
                     new UbiAuthenticator(
                             apiClient,
-                            new StrongAuthenticationState(request.getState()),
+                            strongAuthenticationState,
                             userState,
                             getAgentConfiguration().getProviderSpecificConfiguration(),
                             supplementalRequester,

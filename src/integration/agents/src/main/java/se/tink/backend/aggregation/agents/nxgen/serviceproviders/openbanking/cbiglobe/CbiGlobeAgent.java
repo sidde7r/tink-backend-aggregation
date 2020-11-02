@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
@@ -104,7 +103,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
             authenticator =
                     new CbiGlobeAuthenticator(
                             apiClient,
-                            new StrongAuthenticationState(request.getState()),
+                            strongAuthenticationState,
                             userState,
                             getAgentConfiguration().getProviderSpecificConfiguration());
         }

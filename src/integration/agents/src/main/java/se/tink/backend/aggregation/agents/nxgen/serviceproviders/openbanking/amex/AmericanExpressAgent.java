@@ -38,7 +38,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.TokenLifeTime;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.steps.ThirdPartyAppAuthenticationStepCreator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -52,7 +51,6 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
         implements RefreshCreditCardAccountsExecutor {
 
     private final AmexApiClient amexApiClient;
-    private final StrongAuthenticationState strongAuthenticationState;
     private final CreditCardRefreshController creditCardRefreshController;
     private final ObjectMapper objectMapper;
     private final LocalDateTimeSource localDateTimeSource;
@@ -89,8 +87,6 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         this.objectMapper,
                         temporaryStorage,
                         hmacMultiTokenStorage);
-
-        this.strongAuthenticationState = new StrongAuthenticationState(request.getState());
 
         this.creditCardRefreshController = constructCreditCardController();
         client.addFilter(new AmexInvalidTokenFilter(hmacMultiTokenStorage));

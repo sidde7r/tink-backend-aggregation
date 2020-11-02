@@ -164,7 +164,18 @@ public abstract class CredentialsRequest {
     }
 
     public String getState() {
+        // Use `appUriId` as state or, if not set, generate a random one.
+        //
+        // The strong authentication state carries information to main
+        // regarding where to redirect the user.
+        // That is why we must prefer using the appUriId (which is random)
+        // as the state.
+        // Last resort is to randomize it ourselves.
         if (appUriId != null) return appUriId;
+        // Beware! Some financial institutes have limitations on
+        // the state parameter. Known limitations:
+        // - SDC only allow UUID.
+        // - Barclays only allow ^(?!\s)(a-zA-Z0-9-_){1,255})$
         appUriId = UUIDUtils.generateUuidWithTinkTag();
         return appUriId;
     }

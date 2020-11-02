@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
@@ -58,7 +57,6 @@ public final class BpceGroupAgent extends NextGenerationAgent
     private final BpceGroupApiClient bpceGroupApiClient;
     private final BpceGroupPaymentApiClient bpceGroupPaymentApiClient;
     private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
-    private final StrongAuthenticationState strongAuthenticationState;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
 
@@ -95,8 +93,6 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         sessionStorage,
                         agentConfiguration.getProviderSpecificConfiguration(),
                         bpceGroupSignatureHeaderGenerator);
-
-        this.strongAuthenticationState = new StrongAuthenticationState(this.request.getState());
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
