@@ -5,8 +5,6 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.ErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.LoginRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.rpc.CreditCardResponse;
@@ -46,14 +44,6 @@ public class IberCajaApiClient {
         } else {
             return sessionResponse;
         }
-    }
-
-    public LoginResponse login(LoginRequest loginRequest, String ticket, String user) {
-
-        return createRequest(IberCajaConstants.Urls.LOGIN)
-                .header(IberCajaConstants.Headers.USER, user)
-                .header(IberCajaConstants.Headers.TICKET, ticket)
-                .post(LoginResponse.class, loginRequest);
     }
 
     public FetchAccountResponse fetchAccountList() {
@@ -155,6 +145,9 @@ public class IberCajaApiClient {
                 .header(IberCajaConstants.Headers.TICKET, iberCajaSessionStorage.getTicket())
                 .header(IberCajaConstants.Headers.NICI, iberCajaSessionStorage.getNici())
                 .header(IberCajaConstants.Headers.NIP, iberCajaSessionStorage.getNip())
+                .header(
+                        IberCajaConstants.Headers.TOKEN_IDENTITY,
+                        iberCajaSessionStorage.getTokenIdentity())
                 .header(
                         IberCajaConstants.Headers.CONTRACT,
                         iberCajaSessionStorage.getContractInCourse());

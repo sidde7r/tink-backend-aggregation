@@ -5,8 +5,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaSessionStorage;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.LoginRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
@@ -37,15 +35,6 @@ public class IberCajaPasswordAuthenticator implements PasswordAuthenticator {
                                 IberCajaConstants.DefaultRequestParams.LAST_ACCESS));
 
         iberCajaSessionStorage.saveInitSessionResponse(sessionResponse);
-
-        LoginResponse loginResponse =
-                bankClient.login(
-                        new LoginRequest(sessionResponse.getNici()),
-                        sessionResponse.getTicket(),
-                        sessionResponse.getUser());
-
-        iberCajaSessionStorage.saveLoginResponse(
-                loginResponse.getAccessToken(), loginResponse.getRefreshToken());
         iberCajaSessionStorage.saveUsername(username);
     }
 }
