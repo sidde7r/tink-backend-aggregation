@@ -10,6 +10,7 @@ public class InputEntity {
 
     private String cardNbr;
     private String profileName;
+    private String authenticator;
 
     public InputEntity setCardNbr(String cardNbr) {
         this.cardNbr = cardNbr;
@@ -19,5 +20,22 @@ public class InputEntity {
     public InputEntity setProfileName(String profileName) {
         this.profileName = profileName;
         return this;
+    }
+
+    public InputEntity setAuthenticator(String authenticator) {
+        this.authenticator = authenticator;
+        return this;
+    }
+
+    public String getCardNbr() {
+        return cardNbr;
+    }
+
+    public String getProfileName() {
+        return profileName;
+    }
+
+    public String getAuthenticator() {
+        return authenticator;
     }
 }
