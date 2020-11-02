@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofscotland.BankOfScotlandConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 
 @AgentDependencyModulesForProductionMode(
@@ -46,11 +45,6 @@ public final class BankOfScotlandBusinessV31Agent extends UkOpenBankingBaseAgent
     public BankOfScotlandBusinessV31Agent(
             AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(componentProvider, jwtSigner, aisConfig, false);
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return super.constructAuthenticator(aisConfig);
     }
 
     @Override

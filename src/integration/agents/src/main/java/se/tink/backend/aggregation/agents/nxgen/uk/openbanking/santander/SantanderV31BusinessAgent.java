@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.SantanderConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
@@ -49,11 +48,6 @@ public class SantanderV31BusinessAgent extends UkOpenBankingBaseAgent {
     public SantanderV31BusinessAgent(
             AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(componentProvider, jwtSigner, aisConfig, true);
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return super.constructAuthenticator(aisConfig);
     }
 
     @Override

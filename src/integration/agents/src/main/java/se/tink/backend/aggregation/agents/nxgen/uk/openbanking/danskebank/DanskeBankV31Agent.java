@@ -25,11 +25,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.danskebank.DanskeBankConstants.Urls.V31;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.danskebank.authenticator.DanskeBankAuthenticator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
@@ -80,12 +78,6 @@ public final class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
                 localDateTimeSource,
                 creditCardAccountMapper,
                 UkOpenBankingV31Ais.defaultTransactionalAccountMapper());
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        DanskeBankAuthenticator authenticator = new DanskeBankAuthenticator(apiClient);
-        return createOpenIdFlowWithAuthenticator(authenticator, null);
     }
 
     @Override
