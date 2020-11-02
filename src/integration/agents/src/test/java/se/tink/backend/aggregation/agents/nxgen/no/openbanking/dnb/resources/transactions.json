@@ -1,0 +1,50 @@
+{
+    "account": {
+        "bban": "2132123131"
+    },
+    "links": {
+        "next": {
+            "href": "/v1/accounts/2132123131/transactions?dateFrom=2019-10-03&dateTo=2020-11-03&pageId=2020102000188458752240000001&bookingStatus=both"
+        }
+    },
+    "transactions": {
+        "booked": [
+            {
+                "additionalInformation": "Morsom  SDJKFH  VJJjaskfjjkhasdkjhjk",
+                "bookingDate": "2020-11-02",
+                "dnbTransactionDateTime": "2020-11-02T00:00:00",
+                "dnbTransactionType": "Morsom  SDJKFH",
+                "transactionAmount": {
+                    "amount": "-10.00",
+                    "currency": "NOK"
+                },
+                "transactionId": "0116_0018902323234862_0000001",
+                "valueDate": "2020-11-02"
+            },
+            {
+                "transactionDetails": "ZXCV Description 2",
+                "bookingDate": "2020-11-02",
+                "dnbTransactionDateTime": "2020-11-02T00:00:00",
+                "dnbTransactionType": "Over",
+                "transactionAmount": {
+                    "amount": "500.00",
+                    "currency": "NOK"
+                },
+                "transactionId": "0116_00188985232368_0000001",
+                "valueDate": "2020-11-02"
+            }
+        ],
+        "pending": [
+            {
+                "additionalInformation": "VISA ASDKFASF",
+                "bookingDate": "2020-11-03",
+                "transactionAmount": {
+                    "amount": "-378",
+                    "currency": "NOK"
+                },
+                "transactionId": "02112016123124244",
+                "valueDate": "2020-11-03"
+            }
+        ]
+    }
+}
