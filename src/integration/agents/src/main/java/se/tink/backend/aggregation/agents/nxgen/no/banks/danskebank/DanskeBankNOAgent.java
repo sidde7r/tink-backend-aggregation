@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import java.util.Collections;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator.DanskeBankNOBankIdAuthenticator;
@@ -21,14 +23,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.selenium.WebDriverHelper;
 
-@AgentCapabilities({
-    CHECKING_ACCOUNTS,
-    SAVINGS_ACCOUNTS,
-    CREDIT_CARDS,
-    INVESTMENTS,
-    LOANS,
-    MORTGAGE_AGGREGATION
-})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, MORTGAGE_AGGREGATION})
 public final class DanskeBankNOAgent extends DanskeBankAgent {
     public DanskeBankNOAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -62,5 +57,15 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
                 systemUpdater,
                 danskeBankNoBankIdAuthenticator,
                 danskeBankNoBankIdAuthenticator);
+    }
+    //    Investments are temporarly disabled for Norwegian Agents ITE-1676,
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return new FetchInvestmentAccountsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
     }
 }

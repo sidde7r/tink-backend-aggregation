@@ -2,18 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.common.base.Preconditions;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -47,10 +44,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS})
 public final class Sparebank1Agent extends NextGenerationAgent
-        implements RefreshInvestmentAccountsExecutor,
-                RefreshLoanAccountsExecutor,
+        implements RefreshLoanAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
@@ -166,15 +162,16 @@ public final class Sparebank1Agent extends NextGenerationAgent
                                 new Sparebank1CreditCardTransactionFetcher(apiClient))));
     }
 
-    @Override
-    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
-        return investmentRefreshController.fetchInvestmentAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchInvestmentTransactions() {
-        return investmentRefreshController.fetchInvestmentTransactions();
-    }
+    //    Investments are temporarly disabled for Norwegian Agents ITE-1676
+    //    @Override
+    //    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+    //        return investmentRefreshController.fetchInvestmentAccounts();
+    //    }
+    //
+    //    @Override
+    //    public FetchTransactionsResponse fetchInvestmentTransactions() {
+    //        return investmentRefreshController.fetchInvestmentTransactions();
+    //    }
 
     @Override
     public FetchLoanAccountsResponse fetchLoanAccounts() {
