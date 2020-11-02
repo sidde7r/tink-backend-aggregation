@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc;
 
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
 public class ListSecurityDetailsRequest {
     private final String securityId;
 
@@ -9,9 +12,5 @@ public class ListSecurityDetailsRequest {
 
     public static ListSecurityDetailsRequest createFromSecurityId(String securityId) {
         return new ListSecurityDetailsRequest(securityId);
-    }
-
-    public String getSecurityId() {
-        return securityId;
     }
 }

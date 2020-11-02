@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.InitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.PollResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String> {
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -35,16 +37,19 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
     private String dynamicBankIdJavascript;
     private String finalizePackage;
     private final Credentials credentials;
+    private final SessionStorage sessionStorage;
 
     public DanskeBankBankIdAuthenticator(
             DanskeBankSEApiClient apiClient,
             String deviceId,
             DanskeBankConfiguration configuration,
-            Credentials credentials) {
+            Credentials credentials,
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.deviceId = deviceId;
         this.configuration = (DanskeBankSEConfiguration) configuration;
         this.credentials = credentials;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -159,7 +164,10 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
         }
 
         // Get encrypted finalize package
-        return apiClient.finalizeAuthentication(
-                FinalizeAuthenticationRequest.createForBankId(finalizePackage));
+        FinalizeAuthenticationResponse finalizeAuthenticationResponse =
+                apiClient.finalizeAuthentication(
+                        FinalizeAuthenticationRequest.createForBankId(finalizePackage));
+        sessionStorage.put(Storage.IDENTITY_INFO, finalizeAuthenticationResponse);
+        return finalizeAuthenticationResponse;
     }
 }

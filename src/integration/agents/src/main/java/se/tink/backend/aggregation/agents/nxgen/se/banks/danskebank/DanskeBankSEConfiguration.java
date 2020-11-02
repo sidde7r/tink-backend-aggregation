@@ -97,7 +97,13 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
 
     @Override
     public List<String> getSavingsAccountTypes() {
-        return ImmutableList.<String>builder().add("2BP").add("2CF").add("2C2").add("2DC").build();
+        return ImmutableList.<String>builder()
+                .add("2BP")
+                .add("2CF")
+                .add("2C2")
+                .add("2DC")
+                .add("3CA")
+                .build();
     }
 
     @Override

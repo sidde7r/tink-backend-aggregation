@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.GroupAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.GroupEntity;
@@ -20,11 +21,14 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 
 public class DanskeBankInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final DanskeBankApiClient apiClient;
+    private final DanskeBankConfiguration configuration;
 
     private Collection<GroupAccountEntity> accounts;
 
-    public DanskeBankInvestmentFetcher(DanskeBankApiClient apiClient) {
+    public DanskeBankInvestmentFetcher(
+            DanskeBankApiClient apiClient, DanskeBankConfiguration configuration) {
         this.apiClient = apiClient;
+        this.configuration = configuration;
     }
 
     @Override
@@ -39,7 +43,8 @@ public class DanskeBankInvestmentFetcher implements AccountFetcher<InvestmentAcc
 
                             return custodyAccount.toInvestmentAccount(
                                     listSecurities.getMarketValueCurrency(),
-                                    createPortfolio(custodyAccount, listSecurities));
+                                    createPortfolio(custodyAccount, listSecurities),
+                                    configuration);
                         })
                 .collect(Collectors.toList());
     }
@@ -47,7 +52,7 @@ public class DanskeBankInvestmentFetcher implements AccountFetcher<InvestmentAcc
     // There is only one portfolio for each account
     private List<Portfolio> createPortfolio(
             GroupAccountEntity custodyAccount, ListSecuritiesResponse listSecurities) {
-        Portfolio portfolio = custodyAccount.toTinkPortfolio(listSecurities);
+        Portfolio portfolio = custodyAccount.toTinkPortfolio(listSecurities, configuration);
 
         List<Instrument> instruments = Lists.newArrayList();
         portfolio.setInstruments(instruments);
@@ -56,7 +61,9 @@ public class DanskeBankInvestmentFetcher implements AccountFetcher<InvestmentAcc
                 .filter(DanskeBankPredicates.NON_ZERO_QUANTITY)
                 .forEach(
                         security ->
-                                security.toTinkInstrument(fetchSecurityDetails(security.getId()))
+                                security.toTinkInstrument(
+                                                fetchSecurityDetails(security.getId()),
+                                                configuration)
                                         .ifPresent(instruments::add));
 
         return Collections.singletonList(portfolio);

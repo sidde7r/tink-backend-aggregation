@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -32,7 +33,8 @@ public final class DanskeBankPredicates {
     public static final Predicate<GroupEntity> GROUPS_WITH_ACCOUNTS =
             g -> !g.getAccounts().isEmpty();
 
-    public static final Predicate<SecurityEntity> NON_ZERO_QUANTITY = s -> s.getQuantity() != 0;
+    public static final Predicate<SecurityEntity> NON_ZERO_QUANTITY =
+            s -> !s.getQuantity().equals(BigDecimal.ZERO);
 
     public static final Predicate<GroupAccountEntity> NON_NULL_IDENTIFIER =
             ga -> ga.getDisplayAccountIdentifier() != null;

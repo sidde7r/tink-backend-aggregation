@@ -3,13 +3,19 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Market;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class SecurityEntity {
     @JsonIgnore
@@ -19,81 +25,42 @@ public class SecurityEntity {
     private String id;
     private String name;
     private String currency;
-    private double value;
+    private BigDecimal value;
 
     @JsonProperty("noOfSecurities")
-    private double quantity;
+    private BigDecimal quantity;
 
-    private double portfolioAllocation;
-    private double latestChangePercentage;
-    private double price;
-    private double unrealizedProfitLoss;
-    private double unrealizedProfitLossPct;
+    private BigDecimal portfolioAllocation;
+    private BigDecimal latestChangePercentage;
+    private BigDecimal price;
+    private BigDecimal unrealizedProfitLoss;
+    private BigDecimal unrealizedProfitLossPct;
     private boolean fixedIncome;
 
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public double getQuantity() {
-        return quantity;
-    }
-
-    public double getPortfolioAllocation() {
-        return portfolioAllocation;
-    }
-
-    public double getLatestChangePercentage() {
-        return latestChangePercentage;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public double getUnrealizedProfitLoss() {
-        return unrealizedProfitLoss;
-    }
-
-    public double getUnrealizedProfitLossPct() {
-        return unrealizedProfitLossPct;
-    }
-
-    public boolean isFixedIncome() {
-        return fixedIncome;
-    }
-
-    public Optional<Instrument> toTinkInstrument(ListSecurityDetailsResponse securityDetails) {
+    public Optional<Instrument> toTinkInstrument(
+            ListSecurityDetailsResponse securityDetails, DanskeBankConfiguration configuration) {
         if (securityDetails == null) {
             return Optional.empty();
         }
 
         Instrument instrument = new Instrument();
 
-        instrument.setAverageAcquisitionPrice((value + unrealizedProfitLoss) / quantity);
+        instrument.setAverageAcquisitionPrice(
+                value.add(unrealizedProfitLoss).divide(quantity, 4, RoundingMode.HALF_UP));
         instrument.setCurrency(currency);
         String isin = securityDetails.getIsin();
         instrument.setIsin(isin);
-        instrument.setMarketValue(value);
+        instrument.setMarketValue(value.doubleValue());
         instrument.setName(name);
-        instrument.setPrice(price);
-        instrument.setProfit(unrealizedProfitLoss);
-        instrument.setQuantity(quantity);
+        instrument.setPrice(price.doubleValue());
+        instrument.setProfit(unrealizedProfitLoss.doubleValue());
+        instrument.setQuantity(quantity.doubleValue());
         instrument.setRawType(securityDetails.getSecurityTypeName());
         instrument.setType(getTinkInstrumentType(securityDetails));
-        instrument.setUniqueIdentifier(isin + securityDetails.getCurrencyCode());
+        instrument.setUniqueIdentifier(
+                configuration.getMarketCode().equals(Market.SE_MARKET)
+                        ? isin
+                        : isin + securityDetails.getCurrencyCode());
 
         return Optional.of(instrument);
     }

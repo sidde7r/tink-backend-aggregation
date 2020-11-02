@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class InvestmentAccountsResponse {
     @JsonProperty("package")
@@ -13,22 +15,6 @@ public class InvestmentAccountsResponse {
     private CustodyAccountsEntity custodyAccounts;
     private CustomerProfileEntity customerProfile;
     private boolean disableInvestment;
-
-    public long getPack() {
-        return pack;
-    }
-
-    public CustodyAccountsEntity getCustodyAccounts() {
-        return custodyAccounts;
-    }
-
-    public CustomerProfileEntity getCustomerProfile() {
-        return customerProfile;
-    }
-
-    public boolean isDisableInvestment() {
-        return disableInvestment;
-    }
 
     public List<GroupEntity> getGroups() {
         return custodyAccounts != null ? custodyAccounts.getGroups() : Collections.emptyList();

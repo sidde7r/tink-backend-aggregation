@@ -7,7 +7,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Market;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -46,8 +48,12 @@ public class GroupAccountEntity {
         return displayAccountIdentifier;
     }
 
-    public InvestmentAccount toInvestmentAccount(String currency, List<Portfolio> portfolios) {
-        return InvestmentAccount.builder(accountIdentifier)
+    public InvestmentAccount toInvestmentAccount(
+            String currency, List<Portfolio> portfolios, DanskeBankConfiguration configuration) {
+        return InvestmentAccount.builder(
+                        configuration.getMarketCode().equals(Market.SE_MARKET)
+                                ? displayAccountIdentifier
+                                : accountIdentifier)
                 .setCashBalance(ExactCurrencyAmount.of(0.0, currency))
                 .setAccountNumber(displayAccountIdentifier)
                 .setName(name)
@@ -64,13 +70,17 @@ public class GroupAccountEntity {
                 .build();
     }
 
-    public Portfolio toTinkPortfolio(ListSecuritiesResponse response) {
+    public Portfolio toTinkPortfolio(
+            ListSecuritiesResponse response, DanskeBankConfiguration configuration) {
         Portfolio portfolio = new Portfolio();
-        portfolio.setTotalValue(response.getMarketValue());
+        portfolio.setTotalValue(response.getMarketValue().doubleValue());
         portfolio.setRawType(type);
         portfolio.setType(getTinkPortfolioType());
-        portfolio.setUniqueIdentifier(accountIdentifier);
-        portfolio.setTotalProfit(response.getPerformance());
+        portfolio.setUniqueIdentifier(
+                configuration.getMarketCode().equals(Market.SE_MARKET)
+                        ? displayAccountIdentifier
+                        : accountIdentifier);
+        portfolio.setTotalProfit(response.getPerformance().doubleValue());
         return portfolio;
     }
 
