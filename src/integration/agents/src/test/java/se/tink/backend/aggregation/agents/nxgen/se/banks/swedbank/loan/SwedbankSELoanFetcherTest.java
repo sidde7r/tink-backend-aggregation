@@ -22,20 +22,20 @@ public class SwedbankSELoanFetcherTest {
 
     private SwedbankSEApiClient apiClient;
     private SwedbankSELoanFetcher fetcher;
+    private EngagementOverviewResponse engagementOverviewResponse;
 
     @Before
     public void before() {
         apiClient = Mockito.mock(SwedbankSEApiClient.class);
         fetcher = new SwedbankSELoanFetcher(apiClient);
+        engagementOverviewResponse =
+                SerializationUtils.deserializeFromString(
+                        SwedBankSELoansFetcherTestData.ENGAGEMENT_OVERVIEW,
+                        EngagementOverviewResponse.class);
     }
 
     @Test
     public void fetchLoans_parseMembershipLoan() {
-        Mockito.when(apiClient.engagementOverview())
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                SwedBankSELoansFetcherTestData.ENGAGEMENT_OVERVIEW,
-                                EngagementOverviewResponse.class));
 
         LoanOverviewResponse loanOverviewResponse =
                 SerializationUtils.deserializeFromString(
@@ -55,7 +55,7 @@ public class SwedbankSELoanFetcherTest {
                                 DetailedLoanResponse.class));
 
         ArrayList<LoanAccount> loanAccounts = new ArrayList<>();
-        fetcher.fetchLoans(loanAccounts, loanOverviewResponse);
+        fetcher.fetchLoans(loanAccounts, loanOverviewResponse, engagementOverviewResponse);
 
         List<LoanAccount> membershipLoans =
                 loanAccounts.stream()
@@ -73,12 +73,6 @@ public class SwedbankSELoanFetcherTest {
 
     @Test
     public void fetchLoans_parseMortgage() {
-        Mockito.when(apiClient.engagementOverview())
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                SwedBankSELoansFetcherTestData.ENGAGEMENT_OVERVIEW,
-                                EngagementOverviewResponse.class));
-
         LoanOverviewResponse loanOverviewResponse =
                 SerializationUtils.deserializeFromString(
                         SwedBankSELoansFetcherTestData.OVERVIEW_OF_LOANS,
@@ -97,7 +91,7 @@ public class SwedbankSELoanFetcherTest {
                                 DetailedLoanResponse.class));
 
         ArrayList<LoanAccount> loanAccounts = new ArrayList<>();
-        fetcher.fetchLoans(loanAccounts, loanOverviewResponse);
+        fetcher.fetchLoans(loanAccounts, loanOverviewResponse, engagementOverviewResponse);
 
         List<LoanAccount> mortageList =
                 loanAccounts.stream()

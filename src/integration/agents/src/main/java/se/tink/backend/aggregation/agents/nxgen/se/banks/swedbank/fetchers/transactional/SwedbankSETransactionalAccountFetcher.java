@@ -39,7 +39,8 @@ public class SwedbankSETransactionalAccountFetcher
         for (BankProfile bankProfile : apiClient.getBankProfiles()) {
             apiClient.selectProfile(bankProfile);
 
-            EngagementOverviewResponse engagementOverviewResponse = apiClient.engagementOverview();
+            EngagementOverviewResponse engagementOverviewResponse =
+                    bankProfile.getEngagementOverViewResponse();
 
             accounts.addAll(
                     engagementOverviewResponse.getTransactionAccounts().stream()
