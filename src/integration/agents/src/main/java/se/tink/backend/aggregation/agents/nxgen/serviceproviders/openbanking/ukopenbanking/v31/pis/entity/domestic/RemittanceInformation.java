@@ -30,6 +30,19 @@ public class RemittanceInformation {
         return remittanceInformation;
     }
 
+    // This is a short term fix to cover the following scenario:
+    // During a customer onboarding, we have identified that some banks don't display
+    // unstructured remittance information at all to the creditor
+    // We are currently experimenting with setting both values and observing the behaviour
+
+    public static RemittanceInformation ofUnstructuredAndReference(String value) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.unstructured = value;
+
+        remittanceInformation.reference = value;
+        return remittanceInformation;
+    }
+
     public String getReference() {
         return reference;
     }

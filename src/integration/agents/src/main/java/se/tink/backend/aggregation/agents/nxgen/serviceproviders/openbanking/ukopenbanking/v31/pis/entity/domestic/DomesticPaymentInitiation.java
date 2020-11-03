@@ -52,7 +52,7 @@ public class DomesticPaymentInitiation {
                         .map(se.tink.libraries.transfer.rpc.RemittanceInformation::getValue)
                         .orElse("");
         this.remittanceInformation =
-                RemittanceInformation.ofUnstructured(unstructuredRemittanceInformation);
+                RemittanceInformation.ofUnstructuredAndReference(unstructuredRemittanceInformation);
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;
         this.creditorAccount =
