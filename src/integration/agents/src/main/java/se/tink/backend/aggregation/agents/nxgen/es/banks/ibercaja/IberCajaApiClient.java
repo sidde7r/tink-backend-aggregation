@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transa
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -101,16 +102,19 @@ public class IberCajaApiClient {
 
     public boolean isAlive() {
         try {
-            final ErrorResponse response =
-                    createRequestInSession(Urls.KEEP_ALIVE).get(ErrorResponse.class);
-            if (response.getNumber() != 0) {
+            HttpResponse httpResponse =
+                    createRequestInSession(Urls.KEEP_ALIVE).get(HttpResponse.class);
+            String contentType =
+                    httpResponse.getHeaders().getFirst(IberCajaConstants.Headers.CONTENT_TYPE);
+            if (contentType.startsWith(MediaType.TEXT_HTML)) {
                 return false;
+            } else {
+                ErrorResponse response = httpResponse.getBody(ErrorResponse.class);
+                return response.getNumber() == 0;
             }
         } catch (HttpResponseException | HttpClientException e) {
             return false;
         }
-
-        return true;
     }
 
     private RequestBuilder createRequest(URL url) {
