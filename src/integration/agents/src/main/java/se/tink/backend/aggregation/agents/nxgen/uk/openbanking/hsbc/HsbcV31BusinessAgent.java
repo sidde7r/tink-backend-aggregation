@@ -45,7 +45,7 @@ public final class HsbcV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     @Inject
     public HsbcV31BusinessAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, false);
+        super(componentProvider, jwtSigner, aisConfig);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

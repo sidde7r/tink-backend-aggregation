@@ -44,7 +44,7 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
             UkOpenBankingAisConfig aisConfig) {
         super(componentProvider);
         ukOpenBankingBaseAgent =
-                new UkOpenBankingBaseAgentImpl(componentProvider, configuration, aisConfig, true);
+                new UkOpenBankingBaseAgentImpl(componentProvider, configuration, aisConfig);
         this.aisConfig = aisConfig;
     }
 
@@ -60,7 +60,6 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                         componentProvider,
                         configuration,
                         aisConfig,
-                        true,
                         creditCardAccountMapper,
                         transactionalAccountMapper);
         this.aisConfig = aisConfig;
@@ -74,6 +73,8 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
     @Override
     public final void setConfiguration(AgentsServiceConfiguration configuration) {
         ukOpenBankingBaseAgent.setConfiguration(configuration);
+        // fixme make sure that cert is verified - add root ca to eidas proxy
+        client.disableSslVerification();
     }
 
     @Override
@@ -128,16 +129,14 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
         UkOpenBankingBaseAgentImpl(
                 AgentComponentProvider componentProvider,
                 AgentsServiceConfiguration configuration,
-                UkOpenBankingAisConfig agentConfig,
-                boolean disableSslVerification) {
+                UkOpenBankingAisConfig agentConfig) {
             super(
                     componentProvider,
                     createEidasJwtSigner(
                             configuration,
                             componentProvider.getContext(),
                             UkOpenBankingBaseAgentImpl.class),
-                    agentConfig,
-                    disableSslVerification);
+                    agentConfig);
             creditCardAccountMapper = defaultCreditCardAccountMapper();
             transactionalAccountMapper = defaultTransactionalAccountMapper();
         }
@@ -146,7 +145,6 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                 AgentComponentProvider componentProvider,
                 AgentsServiceConfiguration configuration,
                 UkOpenBankingAisConfig agentConfig,
-                boolean disableSslVerification,
                 CreditCardAccountMapper creditCardAccountMapper,
                 TransactionalAccountMapper transactionalAccountMapper) {
             super(
@@ -155,8 +153,7 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                             configuration,
                             componentProvider.getContext(),
                             UkOpenBankingBaseAgentImpl.class),
-                    agentConfig,
-                    disableSslVerification);
+                    agentConfig);
             this.creditCardAccountMapper = creditCardAccountMapper;
             this.transactionalAccountMapper = transactionalAccountMapper;
         }

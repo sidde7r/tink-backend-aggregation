@@ -43,7 +43,7 @@ public final class BarclaysV31CorporateAgent extends UkOpenBankingBaseAgent {
     @Inject
     public BarclaysV31CorporateAgent(
             AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, true);
+        super(componentProvider, jwtSigner, aisConfig);
     }
 
     @Override

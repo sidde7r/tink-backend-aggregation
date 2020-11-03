@@ -45,7 +45,7 @@ public class TideBusinessAgent extends UkOpenBankingBaseAgent {
 
     @Inject
     public TideBusinessAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, true);
+        super(componentProvider, jwtSigner, aisConfig);
     }
 
     @Override

@@ -44,7 +44,7 @@ public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
 
     @Inject
     public MarkAndSpencerV31Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, false);
+        super(componentProvider, jwtSigner, aisConfig);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

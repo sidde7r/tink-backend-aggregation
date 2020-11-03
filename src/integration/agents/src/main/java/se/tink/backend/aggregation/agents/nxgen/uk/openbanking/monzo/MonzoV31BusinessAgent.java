@@ -46,7 +46,7 @@ public final class MonzoV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     @Inject
     public MonzoV31BusinessAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, false);
+        super(componentProvider, jwtSigner, aisConfig);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

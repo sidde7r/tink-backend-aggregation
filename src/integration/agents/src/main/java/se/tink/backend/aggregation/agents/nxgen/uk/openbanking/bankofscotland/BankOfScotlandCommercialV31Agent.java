@@ -44,7 +44,7 @@ public final class BankOfScotlandCommercialV31Agent extends UkOpenBankingBaseAge
     @Inject
     public BankOfScotlandCommercialV31Agent(
             AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, false);
+        super(componentProvider, jwtSigner, aisConfig);
     }
 
     @Override

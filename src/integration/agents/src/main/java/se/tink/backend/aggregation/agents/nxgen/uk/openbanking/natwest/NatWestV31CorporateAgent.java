@@ -48,7 +48,7 @@ public final class NatWestV31CorporateAgent extends UkOpenBankingBaseAgent {
 
     @Inject
     public NatWestV31CorporateAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, false);
+        super(componentProvider, jwtSigner, aisConfig);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

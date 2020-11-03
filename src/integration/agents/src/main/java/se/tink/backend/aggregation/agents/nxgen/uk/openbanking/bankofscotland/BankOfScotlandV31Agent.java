@@ -54,8 +54,7 @@ public final class BankOfScotlandV31Agent extends UkOpenBankingBaseAgent {
                 componentProvider,
                 jwtSigner,
                 aisConfig,
-                new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL),
-                false);
+                new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
