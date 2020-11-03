@@ -20,7 +20,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -98,7 +98,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -176,7 +176,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -254,7 +254,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -298,7 +298,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with authentication errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with authentication errors is between 10 - 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -315,7 +315,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with authentication errors is below 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with authentication errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -332,7 +332,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -410,7 +410,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -454,7 +454,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with Bank errors is between 10 - 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -471,7 +471,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is below 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with Bank errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -488,7 +488,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -566,7 +566,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -644,7 +644,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -722,7 +722,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -802,7 +802,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -881,7 +881,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -959,7 +959,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -991,9 +991,9 @@ spec:
     - alert: AllLoginSuccessRatesBelow60AndGreater50WithAuthenticationErrorsAndAttemptLimitDK_OB
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) < 0.6
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) < 0.5
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) >= 0.5
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) >= 0.4
         and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgeobAgentsnts }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
@@ -1003,14 +1003,14 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all authentication types with authentication errors is between 50 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all authentication types with authentication errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
-    - alert: AllLoginSuccessRatesBelow50WithAuthenticationErrorsAndAttemptLimitDK_OB
+    - alert: AllLoginSuccessRatesBelow40WithAuthenticationErrorsAndAttemptLimitDK_OB
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) < 0.5
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) < 0.4
         and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
@@ -1020,7 +1020,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all authentication types with authentication errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all authentication types with authentication errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -1037,7 +1037,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -1115,7 +1115,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -1144,12 +1144,12 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
-    - alert: AllLoginSuccessRatesBelow60AndGreater50WithBankErrorsAndAttemptLimitDK_OB
+    - alert: AllLoginSuccessRatesBelow50AndGreater40WithBankErrorsAndAttemptLimitDK_OB
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DK"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) < 0.6
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) < 0.5
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DK"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) >= 0.5
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) >= 0.4
         and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgeobAgentsnts }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
@@ -1159,14 +1159,14 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Bank types with Bank errors is between 50 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all Bank types with Bank errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
-    - alert: AllLoginSuccessRatesBelow50WithBankErrorsAndAttemptLimitDK_OB
+    - alert: AllLoginSuccessRatesBelow40WithBankErrorsAndAttemptLimitDK_OB
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DK"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) < 0.5
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"})) < 0.4
         and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
@@ -1176,7 +1176,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Bank types with Bank errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all Bank types with Bank errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -1193,7 +1193,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -1271,7 +1271,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -1349,7 +1349,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -1427,7 +1427,7 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -1505,13 +1505,31 @@ spec:
         and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with All Errors is between 45 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last 30 minutes.
+        tags: {{ .Values.teletubbiesTags }}
+
+    - alert: SplitLoginSuccessRatesBelow45AndGreater35WithAllErrorsAndAttemptLimitDK_OB
+      expr: |
+        (sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DK"})) < 0.45
+        and (sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DK"})) >= 0.35
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for one of login type with All Errors is between 25 - 35% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -1525,30 +1543,12 @@ spec:
       for: 5m
       labels:
         severity: urgent
-        priority: P3
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with All Errors is between 35 - 45% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
-
-    - alert: SplitLoginSuccessRatesBelow45AndGreater35WithAllErrorsAndAttemptLimitDK_OB
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DK"})) < 0.45
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DK"})) >= 0.35
-      for: 5m
-      labels:
-        severity: urgent
         priority: P2
         who: integration-teletubbies
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with All Errors is between 25 - 35% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for one of login type with All Errors is between 35 - 45% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -1567,7 +1567,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with All Errors is below 25% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}      and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DK"}) > 4
+        tags: {{ .Values.teletubbiesTags }}
 
           #### Agent refresh ####
 
@@ -1584,7 +1584,7 @@ spec:
          and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -1662,7 +1662,7 @@ spec:
          and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:
@@ -1727,23 +1727,6 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
-    - alert: AgentRefreshesBelow50DueToAllErrorsWithRateLimitDK
-      expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", outcome=~"completed", market="DK"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"})) < 0.4
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"}) > 4
-      for: 5m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Refresh unavailable rate is below 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
-        tags: {{ .Values.teletubbiesTags }}
-
     #################################
     ### AllErrors - Agent Refresh ###
     #################################
@@ -1757,7 +1740,7 @@ spec:
          and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"}) > 4
       for: 5m
       labels:
-        severity: ping
+        severity: urgent
         priority: P4
         who: integration-teletubbies
       annotations:

@@ -338,6 +338,10 @@ public class NemIdIFrameController {
     }
 
     private void updateStatusPayload(final Credentials credentials, final String message) {
+        log.info(
+                "Updating payload: {} (current credential status: {})",
+                message,
+                credentials.getStatus());
         statusUpdater.updateStatus(credentials.getStatus(), message);
     }
 }
