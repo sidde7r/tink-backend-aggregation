@@ -6,8 +6,12 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.assertj.core.util.Preconditions;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.ChannelEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.ControlFlowEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.MethodEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.OtpFormatEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.OtpFormatEntity.Challenge;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.OtpFormatEntity.Data;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.AnonymousInvokeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.AssertFormResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.BindResponse;
@@ -113,9 +117,14 @@ public class AxaStorage {
     }
 
     public void storeValues(AnonymousInvokeResponse response) {
+        List<ControlFlowEntity> controlFlows = response.getData().getControlFlow();
         sessionStorage.put(RESPONSE_CHALLENGE, response.getData().getChallenge());
         sessionStorage.put(
-                ASSERTION_ID, response.getData().getControlFlow().get(0).getAssertionId());
+                ASSERTION_ID,
+                controlFlows.stream()
+                        .map(ControlFlowEntity::getAssertionId)
+                        .findFirst()
+                        .orElseThrow(NoSuchElementException::new));
         persistentStorage.put(UID, response.getUid());
         persistentStorage.put(HEADER_DEVICE_ID, response.getDeviceId());
         persistentStorage.put(HEADER_SESSION_ID, response.getSessionId());
@@ -170,8 +179,13 @@ public class AxaStorage {
     }
 
     public void storeValuesFromFirstOtpResponse(AssertFormResponse response) {
+        List<ControlFlowEntity> controlFlows = response.getData().getControlFlow();
         sessionStorage.put(
-                ASSERTION_ID, response.getData().getControlFlow().get(0).getAssertionId());
+                ASSERTION_ID,
+                controlFlows.stream()
+                        .map(ControlFlowEntity::getAssertionId)
+                        .findFirst()
+                        .orElseThrow(NoSuchElementException::new));
     }
 
     public String getPanSequenceNumber() {
@@ -193,26 +207,24 @@ public class AxaStorage {
     }
 
     public void storeValuesFromBindResponse(BindResponse response) {
+        List<ControlFlowEntity> controlFlows = response.getData().getControlFlow();
         sessionStorage.put(
                 ASSERTION_ID,
-                response.getData()
-                        .getControlFlow()
-                        .get(0)
-                        .getMethods()
-                        .get(0)
-                        .getChannels()
-                        .get(0)
-                        .getAssertionId());
+                controlFlows.stream()
+                        .flatMap(c -> c.getMethods().stream())
+                        .flatMap(m -> m.getChannels().stream())
+                        .map(ChannelEntity::getAssertionId)
+                        .findFirst()
+                        .orElseThrow(NoSuchElementException::new));
         sessionStorage.put(
                 OTP_CHALLENGE,
-                response.getData()
-                        .getControlFlow()
-                        .get(0)
-                        .getMethods()
-                        .get(0)
-                        .getOtpFormat()
-                        .getData()
-                        .getChallenge());
+                controlFlows.stream()
+                        .flatMap(c -> c.getMethods().stream())
+                        .map(MethodEntity::getOtpFormat)
+                        .map(OtpFormatEntity::getData)
+                        .map(Data::getChallenge)
+                        .findFirst()
+                        .orElseThrow(NoSuchElementException::new));
         sessionStorage.put(RESPONSE_CHALLENGE, response.getData().getChallenge());
         persistentStorage.put(HEADER_DEVICE_ID, response.getDeviceId());
         persistentStorage.put(HEADER_SESSION_ID, response.getSessionId());
@@ -233,19 +245,18 @@ public class AxaStorage {
                         .findFirst()
                         .map(Challenge::getCard)
                         .orElseThrow(NoSuchElementException::new);
+        List<ControlFlowEntity> controlFlows = response.getData().getControlFlow();
 
         sessionStorage.put(OTP_CHALLENGE, otpChallenge);
         sessionStorage.put(PARTIAL_CARD_NUMBER_CHALLENGE, partialCardNumber);
         sessionStorage.put(
                 ASSERTION_ID,
-                response.getData()
-                        .getControlFlow()
-                        .get(0)
-                        .getMethods()
-                        .get(0)
-                        .getChannels()
-                        .get(0)
-                        .getAssertionId());
+                controlFlows.stream()
+                        .flatMap(c -> c.getMethods().stream())
+                        .flatMap(m -> m.getChannels().stream())
+                        .map(ChannelEntity::getAssertionId)
+                        .findFirst()
+                        .orElseThrow(NoSuchElementException::new));
     }
 
     public void storeValuesFromAssertRegistrationResponse(AssertFormResponse response) {
