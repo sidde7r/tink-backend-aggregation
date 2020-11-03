@@ -79,7 +79,7 @@ public class SendDataForProcessingAgentWorkerCommand extends AgentWorkerCommand
                                     "Not implemented! Developer should take action");
                     }
                     action.completed();
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     action.failed();
                     log.warn("Couldn't process ProcessableItem({})", processableItem);
 

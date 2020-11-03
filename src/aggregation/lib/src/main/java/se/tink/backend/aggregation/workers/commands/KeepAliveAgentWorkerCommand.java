@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class KeepAliveAgentWorkerCommand extends AgentWorkerCommand {
     private static final Logger logger =
@@ -22,7 +21,6 @@ public class KeepAliveAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
-        CredentialsRequest request = context.getRequest();
         Agent agent = context.getAgent();
 
         if (agent instanceof PersistentLogin) {
@@ -47,9 +45,7 @@ public class KeepAliveAgentWorkerCommand extends AgentWorkerCommand {
             return AgentWorkerCommandResult.CONTINUE;
         } else {
             logger.info(
-                    String.format(
-                            "Agent %s does not implement PersistentLogin",
-                            agent.getAgentClass().getName()));
+                    "Agent {} does not implement PersistentLogin", agent.getAgentClass().getName());
 
             return AgentWorkerCommandResult.ABORT;
         }

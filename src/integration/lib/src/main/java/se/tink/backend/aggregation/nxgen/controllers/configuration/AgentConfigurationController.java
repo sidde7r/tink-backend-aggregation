@@ -39,6 +39,10 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private static final Logger log = LoggerFactory.getLogger(AgentConfigurationController.class);
     private static final ObjectMapper OBJECT_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    private static final String TRY_READ_FROM_K8_LOGGER_MSG =
+            "Trying to read information from k8s for an OB agent: {}. Consider uploading the configuration to ESS instead.";
+
     private final TppSecretsServiceClient tppSecretsServiceClient;
     private final IntegrationsConfiguration integrationsConfiguration;
     private final boolean tppSecretsServiceEnabled;
@@ -90,7 +94,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         Preconditions.checkNotNull(
                 provider.getAccessType(), "provider.getAccessType() cannot be null.");
         Preconditions.checkNotNull(provider.getType(), "provider.getType() cannot be null.");
-        Preconditions.checkNotNull(provider.getName(), "provider.getName() cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
 
@@ -98,7 +101,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         //  get empty or null appIds.
         // Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
         if (Strings.emptyToNull(appId) == null) {
-            log.warn("appId cannot be empty/null for clusterId : " + clusterId);
+            log.warn("appId cannot be empty/null for clusterId: {}", clusterId);
         }
 
         this.tppSecretsServiceEnabled = tppSecretsServiceClient.isEnabled();
@@ -181,13 +184,12 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                 Preconditions.checkNotNull(
                         e.getStatus(), "Status cannot be null for StatusRuntimeException: " + e);
                 if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
-                    log.info("Could not find secrets" + getSecretsServiceParamsString());
+                    log.info("Could not find secrets {}", getSecretsServiceParamsString());
                 } else {
                     log.error(
-                            "StatusRuntimeException when trying to retrieve secrets"
-                                    + getSecretsServiceParamsString()
-                                    + "with Status: "
-                                    + e.getStatus(),
+                            "StatusRuntimeException when trying to retrieve secrets {} with Status: {}",
+                            getSecretsServiceParamsString(),
+                            e.getStatus(),
                             e);
                     throw e;
                 }
@@ -317,10 +319,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             String integrationName, String clientName, Class<T> clientConfigClass) {
 
         if (isOpenBankingAgent) {
-            log.warn(
-                    "Trying to read information from k8s for an OB agent: "
-                            + clientConfigClass.toString()
-                            + ". Consider uploading the configuration to ESS instead.");
+            log.warn(TRY_READ_FROM_K8_LOGGER_MSG, clientConfigClass);
         }
 
         Object clientConfigurationAsObject =
@@ -343,10 +342,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     public <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
             String integrationName, Class<T> clientConfigClass) {
         if (isOpenBankingAgent) {
-            log.warn(
-                    "Trying to read information from k8s for an OB agent: "
-                            + clientConfigClass.toString()
-                            + ". Consider uploading the configuration to ESS instead.");
+            log.warn(TRY_READ_FROM_K8_LOGGER_MSG, clientConfigClass);
         }
 
         Object clientConfigurationAsObject =
@@ -369,17 +365,13 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     public <T extends ClientConfiguration> Optional<T> getAgentConfigurationFromK8sAsOptional(
             String integrationName, Class<T> clientConfigClass) {
         if (isOpenBankingAgent) {
-            log.warn(
-                    "Trying to read information from k8s for an OB agent: "
-                            + clientConfigClass.toString()
-                            + ". Consider uploading the configuration to ESS instead.");
+            log.warn(TRY_READ_FROM_K8_LOGGER_MSG, clientConfigClass);
         }
 
         Optional<Object> clientConfigurationAsObject =
                 integrationsConfiguration.getIntegration(integrationName);
 
-        clientConfigurationAsObject.ifPresent(
-                clientConfiguration -> extractSensitiveValues(clientConfiguration));
+        clientConfigurationAsObject.ifPresent(this::extractSensitiveValues);
 
         return clientConfigurationAsObject.map(
                 clientConfiguration ->
