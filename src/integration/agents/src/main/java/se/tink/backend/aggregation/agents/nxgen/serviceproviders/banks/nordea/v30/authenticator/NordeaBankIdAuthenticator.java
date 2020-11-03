@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.BankIdAutostartResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.FetchCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.InitBankIdAutostartRequest;
+import se.tink.backend.aggregation.agents.utils.business.OrganisationNumberSeLogger;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
@@ -25,6 +26,8 @@ import se.tink.libraries.identitydata.IdentityData;
 public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAutostartResponse> {
     private final NordeaBaseApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final String organisationNumber;
+
     private String givenSsn;
     private String state;
     private String nonce;
@@ -36,16 +39,23 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
     public NordeaBankIdAuthenticator(
             NordeaBaseApiClient apiClient,
             SessionStorage sessionStorage,
-            NordeaConfiguration nordeaConfiguration) {
+            NordeaConfiguration nordeaConfiguration,
+            String organisationNumber) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.nordeaConfiguration = nordeaConfiguration;
+        this.organisationNumber = organisationNumber;
     }
 
     @Override
     public BankIdAutostartResponse init(String ssn)
             throws BankServiceException, AuthorizationException, AuthenticationException {
         this.givenSsn = ssn;
+
+        if (nordeaConfiguration.isBusinessAgent()) {
+            OrganisationNumberSeLogger.logIfUnknownOrgnumber(organisationNumber);
+        }
+
         return refreshAutostartToken();
     }
 
@@ -125,6 +135,11 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
         } catch (HttpResponseException e) {
             return BankIdStatus.NO_CLIENT;
         }
+
+        if (nordeaConfiguration.isBusinessAgent()) {
+            OrganisationNumberSeLogger.logIfUnknownOrgnumberForSuccessfulLogin(organisationNumber);
+        }
+
         return BankIdStatus.DONE;
     }
 
