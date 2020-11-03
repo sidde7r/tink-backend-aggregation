@@ -23,6 +23,9 @@ public class DeutscheKnownErrorsFilter extends Filter {
                             "Parameters submitted by TPP are missing or invalid : psu_id should be 10 characters",
                             LoginError.INCORRECT_CREDENTIALS)
                     .put(
+                            "Parameters submitted by TPP are missing or invalid : psu_id should be 8 characters",
+                            LoginError.INCORRECT_CREDENTIALS)
+                    .put(
                             "The system has encountered a Technical/Server Error. Hence cannot process the request at this time. Please try again after sometime.",
                             BankServiceError.BANK_SIDE_FAILURE)
                     .build();
