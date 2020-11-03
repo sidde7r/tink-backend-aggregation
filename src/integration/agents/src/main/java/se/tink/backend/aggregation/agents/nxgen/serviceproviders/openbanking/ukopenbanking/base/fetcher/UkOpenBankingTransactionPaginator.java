@@ -32,7 +32,6 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
     private static final int PAGINATION_LIMIT =
             50; // Limits number of pages fetched in order to reduce loading.
-    private static final int PAGINATION_GRACE_LIMIT = 5;
     private static final long DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS = 23;
     // we can decrease this to 15 days also in future.
     private static final long DEFAULT_MAX_ALLOWED_DAYS = 89;
@@ -84,17 +83,6 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         try {
             return fetchTransactions(account, key);
         } catch (HttpResponseException e) {
-
-            // NatWest seems to have an bug where they will send us next links even though it goes
-            // out of range for how
-            // many pages of transactions they actually can give us, causing an internal server
-            // error.
-            // This code ignores http 500 error if we have already fetched several pages from the
-            // given account.
-            if (paginationCount > PAGINATION_GRACE_LIMIT && e.getResponse().getStatus() == 500) {
-                logger.warn("Ignoring http 500 (Internal server error) in pagination.", e);
-                return TransactionKeyPaginatorResponseImpl.createEmpty();
-            }
 
             if (e.getResponse().getStatus() == 401 || e.getResponse().getStatus() == 403) {
                 return handle401Or403ResponseErrorStatus(account, e);
