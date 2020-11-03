@@ -47,7 +47,7 @@ public class Initiation {
                         : null;
         this.remittanceInformation =
                 Objects.nonNull(payment.getRemittanceInformation())
-                        ? RemittanceInformation.ofUnstructured(
+                        ? RemittanceInformation.ofUnstructuredAndReference(
                                 payment.getRemittanceInformation().getValue())
                         : null;
     }

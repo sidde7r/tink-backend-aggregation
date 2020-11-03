@@ -59,7 +59,7 @@ public class DomesticScheduledPaymentInitiation {
                         .map(se.tink.libraries.transfer.rpc.RemittanceInformation::getValue)
                         .orElse("");
 
-        return RemittanceInformation.ofUnstructured(unstructuredRemittanceInformation);
+        return RemittanceInformation.ofUnstructuredAndReference(unstructuredRemittanceInformation);
     }
 
     private static DebtorAccount getDebtorAccount(Payment payment) {

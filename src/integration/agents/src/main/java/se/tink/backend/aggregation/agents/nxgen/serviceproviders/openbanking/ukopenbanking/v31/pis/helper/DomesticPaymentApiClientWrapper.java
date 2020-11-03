@@ -21,10 +21,6 @@ public class DomesticPaymentApiClientWrapper implements ApiClientWrapper {
         final DomesticPaymentConsentRequest consentRequest =
                 new DomesticPaymentConsentRequest(paymentRequest.getPayment());
 
-        if (apiClient.isAgentRequiringReference()) {
-            consentRequest.getData().getInitiation().setReferenceAsUnstructured();
-        }
-
         final DomesticPaymentConsentResponse response =
                 apiClient.createDomesticPaymentConsent(
                         consentRequest, DomesticPaymentConsentResponse.class);
@@ -67,10 +63,6 @@ public class DomesticPaymentApiClientWrapper implements ApiClientWrapper {
                         consentId,
                         endToEndIdentification,
                         instructionIdentification);
-
-        if (apiClient.isAgentRequiringReference()) {
-            request.getData().getInitiation().setReferenceAsUnstructured();
-        }
 
         return apiClient
                 .executeDomesticPayment(request, DomesticPaymentResponse.class)

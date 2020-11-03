@@ -76,8 +76,6 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                     RBS_ORG_ID,
                     NATWEST_ORG_ID,
                     BARCLAYS_ORG_ID);
-    private static final List<String> REQUIRE_REFERENCE_GROUP =
-            Arrays.asList(MONZO_ORG_ID, HSBC_ORG_ID);
 
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
@@ -295,10 +293,6 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
      */
     private boolean isHSBCFamily() {
         return HSBC_ORG_ID.equals(aisConfig.getOrganisationId());
-    }
-
-    public boolean isAgentRequiringReference() {
-        return REQUIRE_REFERENCE_GROUP.contains(aisConfig.getOrganisationId());
     }
 
     private String createPs256SignatureWithB64Header(Map<String, Object> payloadClaims) {
