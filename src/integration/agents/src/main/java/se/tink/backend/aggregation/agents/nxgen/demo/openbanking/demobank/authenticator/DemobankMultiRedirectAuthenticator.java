@@ -6,7 +6,6 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -24,7 +23,7 @@ public class DemobankMultiRedirectAuthenticator implements TypedAuthenticator {
     private final String callbackUri;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CredentialsRequest request;
-    private final RandomValueGenerator randomValueGenerator;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     @Override
     public void authenticate(Credentials credentials)
@@ -53,7 +52,7 @@ public class DemobankMultiRedirectAuthenticator implements TypedAuthenticator {
                         supplementalInformationHelper,
                         demobankRedirectAuthenticator,
                         request.getCredentials(),
-                        new StrongAuthenticationState(request.getAppUriId(), randomValueGenerator));
+                        strongAuthenticationState);
 
         return new ThirdPartyAppAuthenticationController<>(
                 controller, supplementalInformationHelper);

@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class IccreaAgent extends CbiGlobeAgent {
@@ -38,7 +37,7 @@ public final class IccreaAgent extends CbiGlobeAgent {
             authenticator =
                     new IccreaAuthenticator(
                             apiClient,
-                            new StrongAuthenticationState(request.getState()),
+                            strongAuthenticationState,
                             userState,
                             getAgentConfiguration().getProviderSpecificConfiguration(),
                             supplementalRequester,
