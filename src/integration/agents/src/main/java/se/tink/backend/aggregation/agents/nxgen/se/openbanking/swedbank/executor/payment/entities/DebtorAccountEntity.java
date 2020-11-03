@@ -10,19 +10,19 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 @JsonInclude(Include.NON_NULL)
 public class DebtorAccountEntity extends AccountEntity {
 
-  DebtorAccountEntity(String accountNumber, Type accountIdentifierType) {
-    switch (accountIdentifierType) {
-      case IBAN:
-        this.iban = accountNumber;
-        break;
-      case SE:
-        this.bban = accountNumber;
-        break;
-      default:
-        throw new IllegalStateException(
-            String.format(
-                ErrorMessages.INVALID_ACCOUNT_TYPE,
-                accountIdentifierType.toString()));
+    DebtorAccountEntity(String accountNumber, Type accountIdentifierType) {
+        switch (accountIdentifierType) {
+            case IBAN:
+                this.iban = accountNumber;
+                break;
+            case SE:
+                this.bban = accountNumber;
+                break;
+            default:
+                throw new IllegalStateException(
+                        String.format(
+                                ErrorMessages.INVALID_ACCOUNT_TYPE,
+                                accountIdentifierType.toString()));
+        }
     }
-  }
 }

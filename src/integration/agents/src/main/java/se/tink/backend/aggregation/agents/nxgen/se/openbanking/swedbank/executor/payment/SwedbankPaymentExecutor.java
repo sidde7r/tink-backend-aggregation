@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executo
 
 import java.util.ArrayList;
 import java.util.List;
+import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.AccountEntity;
@@ -9,8 +10,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.enums.SwedbankPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest.CreatePaymentRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.util.SwedbankRemittanceInformationUtil;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.util.AccountTypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -25,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -43,22 +47,31 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest)
+            throws ReferenceValidationException {
+        final Payment payment = paymentRequest.getPayment();
         AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);
         AmountEntity amount = AmountEntity.amountOf(paymentRequest);
+        SwedbankRemittanceInformationUtil remittanceInformationUtil =
+                SwedbankRemittanceInformationUtil.of(paymentRequest);
 
-        CreatePaymentRequest createPaymentRequest =
-                new CreatePaymentRequest(
-                        creditor,
-                        debtor,
-                        amount,
-                        "Sweden somewhere",
-                        "Marcus Gadre",
-                        "Testing PIS",
-                        "URGENT",
-                        "OUR",
-                        "Annica Alstermark");
+        CreatePaymentRequestBuilder builder =
+                CreatePaymentRequest.builder()
+                        .creditorAccount(creditor)
+                        .debtorAccount(debtor)
+                        .instructedAmount(amount)
+                        .executionDate(null)
+                        .remittanceInformationStructured(
+                                remittanceInformationUtil.getRemittanceInformationStructured())
+                        .remittanceInformationUnstructured(
+                                remittanceInformationUtil.getRemittanceInformationUnStructured())
+                        .debtorAccountStatementText(payment.getCreditor().getName());
+
+        if (Type.SE.equals(paymentRequest.getPayment().getCreditor().getAccountIdentifierType())) {
+            builder.creditorFriendlyName(payment.getCreditor().getName());
+        }
+        CreatePaymentRequest createPaymentRequest = builder.build();
 
         AccountTypePair accountTypePair =
                 new AccountTypePair(paymentRequest.getPayment().getCreditorAndDebtorAccountType());
