@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
@@ -66,6 +67,11 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
     }
 
     @Override
+    protected Authenticator constructAuthenticator() {
+        return ukOpenBankingBaseAgent.constructAuthenticator();
+    }
+
+    @Override
     public final void setConfiguration(AgentsServiceConfiguration configuration) {
         ukOpenBankingBaseAgent.setConfiguration(configuration);
     }
@@ -108,11 +114,6 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return ukOpenBankingBaseAgent.fetchTransferDestinations(accounts);
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return ukOpenBankingBaseAgent.constructAuthenticator();
     }
 
     @Override
@@ -168,11 +169,6 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
         }
 
         @Override
-        protected Authenticator constructAuthenticator() {
-            return super.constructAuthenticator(aisConfig);
-        }
-
-        @Override
         protected UkOpenBankingAis makeAis() {
             return new DanskeBankOpenBankingV31Ais(
                     aisConfig,
@@ -180,6 +176,13 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                     localDateTimeSource,
                     creditCardAccountMapper,
                     transactionalAccountMapper);
+        }
+
+        @Override
+        protected Authenticator constructAuthenticator() {
+            UkOpenBankingAisAuthenticator authenticator =
+                    new UkOpenBankingAisAuthenticator(apiClient);
+            return createOpenIdFlowWithAuthenticator(authenticator, aisConfig.getAppToAppURL());
         }
     }
 }

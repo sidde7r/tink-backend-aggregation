@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.BarclaysConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
@@ -62,11 +61,6 @@ public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
         UkOpenBankingV31Ais ukOpenBankingV31Ais =
                 new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
         return new BarclaysV31Ais(ukOpenBankingV31Ais, aisConfig);
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return super.constructAuthenticator(aisConfig);
     }
 
     @Override

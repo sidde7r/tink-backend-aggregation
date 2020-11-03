@@ -57,7 +57,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
-    private final URL wellKnownURL;
     private final JwtSigner jwtSigner;
     private final boolean disableSslVerification;
 
@@ -71,7 +70,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
-    private final UkOpenBankingAisConfig agentConfig;
+    private final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingPisConfig pisConfig;
     private AccountFetcher<TransactionalAccount> transactionalAccountFetcher;
 
@@ -81,14 +80,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
-            UkOpenBankingAisConfig agentConfig,
+            UkOpenBankingAisConfig aisConfig,
             UkOpenBankingPisConfig pisConfig,
             boolean disableSslVerification) {
         super(componentProvider);
-        this.wellKnownURL = agentConfig.getWellKnownURL();
         this.jwtSigner = jwtSigner;
         this.disableSslVerification = disableSslVerification;
-        this.agentConfig = agentConfig;
+        this.aisConfig = aisConfig;
         this.pisConfig = pisConfig;
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
@@ -100,9 +98,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
-            UkOpenBankingAisConfig agentConfig,
+            UkOpenBankingAisConfig aisConfig,
             boolean disableSslVerification) {
-        this(componentProvider, jwtSigner, agentConfig, null, disableSslVerification);
+        this(componentProvider, jwtSigner, aisConfig, null, disableSslVerification);
     }
 
     // Different part between UkOpenBankingBaseAgent and this class
@@ -185,17 +183,15 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 softwareStatement,
                 redirectUrl,
                 providerConfiguration,
-                wellKnownURL,
+                aisConfig.getWellKnownURL(),
                 randomValueGenerator,
                 persistentStorage,
-                agentConfig,
+                aisConfig,
                 pisConfig);
     }
 
     @Override
-    protected abstract Authenticator constructAuthenticator();
-
-    protected Authenticator constructAuthenticator(UkOpenBankingAisConfig aisConfig) {
+    protected Authenticator constructAuthenticator() {
         UkOpenBankingAisAuthenticator authenticator = new UkOpenBankingAisAuthenticator(apiClient);
         return createOpenIdFlowWithAuthenticator(authenticator, aisConfig.getAppToAppURL());
     }

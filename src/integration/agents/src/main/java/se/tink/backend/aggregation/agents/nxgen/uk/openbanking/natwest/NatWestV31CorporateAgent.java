@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.NatWestConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
@@ -51,11 +50,6 @@ public final class NatWestV31CorporateAgent extends UkOpenBankingBaseAgent {
     public NatWestV31CorporateAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(componentProvider, jwtSigner, aisConfig, false);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return super.constructAuthenticator(aisConfig);
     }
 
     @Override

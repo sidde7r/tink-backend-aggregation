@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstants.Urls.V313;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 
 @AgentDependencyModulesForProductionMode(
@@ -53,10 +52,5 @@ public final class HsbcV31BusinessAgent extends UkOpenBankingBaseAgent {
     @Override
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return super.constructAuthenticator(aisConfig);
     }
 }
