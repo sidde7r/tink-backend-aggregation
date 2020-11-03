@@ -65,6 +65,7 @@ public class IberCajaConstants {
         public static final String NIP = "nip";
         public static final String TOKEN_IDENTITY = "TokenIdentity";
         public static final String CONTRACT = "contrato";
+        public static final String CONTENT_TYPE = "Content-Type";
     }
 
     public static class QueryParams {
