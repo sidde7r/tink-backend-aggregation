@@ -30,10 +30,6 @@ public class StrongAuthenticationState {
         this.state = generateState(appUriId);
     }
 
-    public StrongAuthenticationState() {
-        this(null);
-    }
-
     private String generateState(String appUriId) {
         if (Strings.isNullOrEmpty(appUriId)) {
             log.warn("The appUriId should not be null or empty");

@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -38,19 +39,23 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
     public OAuth2Authenticator(
             final OAuth2AuthorizationSpecification authorizationSpecification,
             final PersistentStorage persistentStorage,
-            final TinkHttpClient httpClient) {
+            final TinkHttpClient httpClient,
+            final StrongAuthenticationState strongAuthenticationState) {
         this(
                 authorizationSpecification,
                 new OAuth2TokenStorageDefaultImpl(persistentStorage),
-                httpClient);
+                httpClient,
+                strongAuthenticationState);
     }
 
     public OAuth2Authenticator(
             final OAuth2AuthorizationSpecification authorizationSpecification,
             final OAuth2TokenStorage tokenStorage,
-            final TinkHttpClient httpClient) {
+            final TinkHttpClient httpClient,
+            final StrongAuthenticationState strongAuthenticationState) {
         this(
-                new OAuth2AuthorizationServerStandardClient(httpClient, authorizationSpecification),
+                new OAuth2AuthorizationServerStandardClient(
+                        httpClient, authorizationSpecification, strongAuthenticationState),
                 tokenStorage);
     }
 

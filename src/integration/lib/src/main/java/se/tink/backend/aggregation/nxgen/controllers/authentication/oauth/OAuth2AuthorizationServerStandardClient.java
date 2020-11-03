@@ -28,12 +28,13 @@ public class OAuth2AuthorizationServerStandardClient implements OAuth2Authorizat
 
     public OAuth2AuthorizationServerStandardClient(
             TinkHttpClient httpClient,
-            OAuth2AuthorizationSpecification authorizationSpecification) {
+            OAuth2AuthorizationSpecification authorizationSpecification,
+            StrongAuthenticationState strongAuthenticationState) {
         this.httpClient = httpClient;
         this.authorizationSpecification = authorizationSpecification;
         this.waitDuration = DEFAULT_WAIT_FOR_MINUTES;
         this.waitTimeUnit = TimeUnit.MINUTES;
-        this.strongAuthenticationState = new StrongAuthenticationState();
+        this.strongAuthenticationState = strongAuthenticationState;
         this.tokenResponseParser =
                 new OAuth2TokenResponseStandardParser(
                         authorizationSpecification.getDefaultAccessTokenLifetime().orElse(null),
@@ -52,12 +53,13 @@ public class OAuth2AuthorizationServerStandardClient implements OAuth2Authorizat
             long waitDuration,
             TimeUnit waitTimeUnit,
             OAuth2TokenIssueStrategy codeTypeTokenIssueStrategy,
-            OAuth2TokenIssueStrategy tokenTypeTokenIssueStrategy) {
+            OAuth2TokenIssueStrategy tokenTypeTokenIssueStrategy,
+            StrongAuthenticationState strongAuthenticationState) {
         this.httpClient = httpClient;
         this.authorizationSpecification = authorizationSpecification;
         this.waitDuration = waitDuration;
         this.waitTimeUnit = waitTimeUnit;
-        this.strongAuthenticationState = new StrongAuthenticationState();
+        this.strongAuthenticationState = strongAuthenticationState;
         this.codeTypeTokenIssueStrategy = codeTypeTokenIssueStrategy;
         this.tokenTypeTokenIssueStrategy = tokenTypeTokenIssueStrategy;
         this.tokenResponseParser =

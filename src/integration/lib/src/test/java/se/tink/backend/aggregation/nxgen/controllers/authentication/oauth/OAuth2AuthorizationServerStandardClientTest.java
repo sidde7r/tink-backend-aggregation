@@ -16,18 +16,22 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.wiremock.WireMockIntegrationTest;
 
 public class OAuth2AuthorizationServerStandardClientTest extends WireMockIntegrationTest {
 
     private static final long WAIT_TIMEOUT = 60;
     private static final TimeUnit WAIT_TIME_UNIT = TimeUnit.MINUTES;
+    private static final String VALID_V4_UUID = "00000000-0000-4000-0000-000000000000";
+    private static final String VALID_KEY = "tpcb_" + VALID_V4_UUID;
     private OAuth2TokenIssueStrategy codeTypeIssueStrategy;
     private OAuth2TokenIssueStrategy tokenTypeIssueStrategy;
     private OAuth2Token codeTypeIssuedToken;
     private OAuth2Token tokenTypeIssuedToken;
     private OAuth2AuthorizationSpecification authorizationSpecification;
     private OAuth2AuthorizationServerStandardClient objectUnderTest;
+    private StrongAuthenticationState strongAuthenticationState;
 
     @Before
     public void init() {
@@ -35,10 +39,13 @@ public class OAuth2AuthorizationServerStandardClientTest extends WireMockIntegra
         tokenTypeIssueStrategy = Mockito.mock(OAuth2TokenIssueStrategy.class);
         codeTypeIssuedToken = Mockito.mock(OAuth2Token.class);
         tokenTypeIssuedToken = Mockito.mock(OAuth2Token.class);
+        strongAuthenticationState = Mockito.mock(StrongAuthenticationState.class);
         Mockito.when(codeTypeIssueStrategy.issueToken(Mockito.anyMap()))
                 .thenReturn(codeTypeIssuedToken);
         Mockito.when(tokenTypeIssueStrategy.issueToken(Mockito.anyMap()))
                 .thenReturn(tokenTypeIssuedToken);
+        Mockito.when(strongAuthenticationState.getSupplementalKey()).thenReturn(VALID_KEY);
+        Mockito.when(strongAuthenticationState.getState()).thenReturn(VALID_V4_UUID);
         authorizationSpecification = Mockito.mock(OAuth2AuthorizationSpecification.class);
         objectUnderTest =
                 new OAuth2AuthorizationServerStandardClient(
@@ -47,7 +54,8 @@ public class OAuth2AuthorizationServerStandardClientTest extends WireMockIntegra
                         WAIT_TIMEOUT,
                         WAIT_TIME_UNIT,
                         codeTypeIssueStrategy,
-                        tokenTypeIssueStrategy);
+                        tokenTypeIssueStrategy,
+                        strongAuthenticationState);
     }
 
     @Test
@@ -207,7 +215,7 @@ public class OAuth2AuthorizationServerStandardClientTest extends WireMockIntegra
                         && query.contains("client_id=" + clientId)
                         && query.contains("redirect_uri=" + URLEncoder.encode(redirectUrl, "UTF-8"))
                         && query.contains("scope=" + scope)
-                        && query.contains("state="));
+                        && query.contains("state=" + VALID_V4_UUID));
     }
 
     @Test
@@ -217,7 +225,7 @@ public class OAuth2AuthorizationServerStandardClientTest extends WireMockIntegra
         // then
         Assert.assertEquals(WAIT_TIME_UNIT, result.getTimeUnit());
         Assert.assertEquals(WAIT_TIMEOUT, result.getWaitFor());
-        Assert.assertNotNull(result.getKey());
+        Assert.assertEquals(VALID_KEY, result.getKey());
     }
 
     @Test

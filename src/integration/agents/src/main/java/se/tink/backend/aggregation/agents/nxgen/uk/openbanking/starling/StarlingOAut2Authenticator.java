@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configur
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.EndpointSpecification;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationSpecification;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -31,11 +32,13 @@ public class StarlingOAut2Authenticator extends OAuth2Authenticator {
             final PersistentStorage persistentStorage,
             final TinkHttpClient httpClient,
             final ClientConfigurationEntity aisConfiguration,
-            final String redirectUrl) {
+            final String redirectUrl,
+            final StrongAuthenticationState strongAuthenticationState) {
         super(
                 createAuthorizationSpecification(aisConfiguration, redirectUrl),
                 persistentStorage,
-                httpClient);
+                httpClient,
+                strongAuthenticationState);
     }
 
     private static OAuth2AuthorizationSpecification createAuthorizationSpecification(
