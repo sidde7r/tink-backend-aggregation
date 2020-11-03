@@ -171,7 +171,7 @@ public final class SpankkiAgent extends NextGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         // There is also the endpoint "/v2/core/customer/profile" that can also fetch identity data
-        return sessionStorage
+        return persistentStorage
                 .get(Storage.CUSTOMER_ENTITY, CustomerEntity.class)
                 .map(CustomerEntity::toTinkIdentity)
                 .map(FetchIdentityDataResponse::new)
