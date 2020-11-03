@@ -298,7 +298,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with authentication errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with authentication errors is between 10 - 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -315,7 +315,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with authentication errors is below 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with authentication errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -454,7 +454,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with Bank errors is between 10 - 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -471,7 +471,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is below 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with Bank errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -1144,12 +1144,12 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
-    - alert: AllLoginSuccessRatesBelow60AndGreater50WithBankErrorsAndAttemptLimitNO_OB
+    - alert: AllLoginSuccessRatesBelow50AndGreater40WithBankErrorsAndAttemptLimitNO_OB
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="NO"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="NO"})) < 0.6
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="NO"})) < 0.5
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="NO"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="NO"})) >= 0.5
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="NO"})) >= 0.4
         and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgeobAgentsnts }}, provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
@@ -1159,14 +1159,14 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Bank types with Bank errors is between 50 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all Bank types with Bank errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
-    - alert: AllLoginSuccessRatesBelow50WithBankErrorsAndAttemptLimitNO_OB
+    - alert: AllLoginSuccessRatesBelow40WithBankErrorsAndAttemptLimitNO_OB
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="NO"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="NO"})) < 0.5
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="NO"})) < 0.4
         and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
@@ -1176,7 +1176,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Bank types with Bank errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all Bank types with Bank errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
@@ -1315,7 +1315,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Agent types with Agent errors is between 30 - 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all Agent types with Agent errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
 
