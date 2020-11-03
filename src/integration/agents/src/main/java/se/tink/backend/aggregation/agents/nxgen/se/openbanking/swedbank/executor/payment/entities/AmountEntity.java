@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executo
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -15,15 +17,15 @@ public class AmountEntity {
 
     @JsonCreator
     private AmountEntity(
-            @JsonProperty("amount") double amount, @JsonProperty("currency") String currency) {
-        this.amount = String.valueOf(amount);
+            @JsonProperty("amount") BigDecimal amount, @JsonProperty("currency") String currency) {
+        this.amount = amount.toString();
         this.currency = currency;
     }
 
     @JsonIgnore
     public static AmountEntity amountOf(PaymentRequest paymentRequest) {
-        Amount amount = paymentRequest.getPayment().getAmount();
-        return new AmountEntity(amount.getValue(), amount.getCurrency());
+        final ExactCurrencyAmount amount = paymentRequest.getPayment().getExactCurrencyAmount();
+        return new AmountEntity(amount.getExactValue(), amount.getCurrencyCode());
     }
 
     @JsonIgnore
