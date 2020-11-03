@@ -150,10 +150,20 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 constructTransactionalAccountRefreshController();
     }
 
+    /**
+     * @deprecated use @link {@link
+     *     se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.KeySignerProvider}
+     */
+    @Deprecated
     private void useEidasProxy(TinkHttpClient httpClient) {
         httpClient.setEidasProxy(configuration.getEidasProxy());
     }
 
+    /**
+     * @deprecated use @link {@link
+     *     se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.KeySignerProvider}
+     */
+    @Deprecated
     protected static JwtSigner createEidasJwtSigner(
             final AgentsServiceConfiguration configuration,
             final EidasContext context,
