@@ -149,6 +149,8 @@ public final class SwedbankConstants {
         public static final String INVALID_ACCOUNT_TYPE = "Invalid account type: %s";
         public static final String INVALID_PAYMENT_TYPE =
                 "No SwedbankPaymentType found for AccountIdentifiers pair %s";
+        public static final String INVALID_REMITTANCE_INFORMATION_VALUE =
+                "Invalid destination message.";
     }
 
     public static class ConsentStatus {
@@ -191,6 +193,17 @@ public final class SwedbankConstants {
         public static final String USER_CANCEL = "USER_CANCEL";
         public static final String LOGIN_SESSION_INTERRUPTED = "Other login session is ongoing";
         public static final String EMPTY_USER_ID = "Mandatory header value is empty: PSU-ID";
+    }
+
+    public static final class AccountIdentifierPrefix {
+        public static final String PERSONAL_ACCOUNT = "PA ";
+        public static final String BANK_GIRO = "BG ";
+        public static final String PLUS_GIRO = "PG ";
+    }
+
+    public static final class ReferenceType {
+        public static final String OCR = "OCR";
+        public static final String MSG = "MSG";
     }
 
     public enum HeadersToSign {
