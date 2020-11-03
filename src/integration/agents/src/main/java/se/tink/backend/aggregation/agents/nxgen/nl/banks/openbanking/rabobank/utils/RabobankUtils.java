@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.NoSuchElementException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
@@ -16,6 +18,14 @@ public class RabobankUtils {
 
     public static void removeOauthToken(final PersistentStorage persistentStorage) {
         persistentStorage.remove(StorageKey.OAUTH_TOKEN);
+    }
+
+    public static String getRefreshTokenExpireDate(final Long refreshTokenExpiresInSeconds) {
+        return Instant.ofEpochMilli(System.currentTimeMillis())
+                .atZone(ZoneId.systemDefault())
+                .plusSeconds(refreshTokenExpiresInSeconds)
+                .toLocalDate()
+                .toString();
     }
 
     public static String createSignatureString(

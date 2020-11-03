@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator;
 
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -11,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -20,6 +24,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RabobankAuthenticator implements OAuth2Authenticator {
+
+    private static final Logger logger = LoggerFactory.getLogger(RabobankAuthenticator.class);
 
     private final RabobankApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -75,8 +81,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
 
         final TokenResponse tokenResponse = apiClient.exchangeAuthorizationCode(request);
         persistentStorage.put(StorageKey.CONSENT_ID, tokenResponse.getConsentId());
-
-        return tokenResponse.toOauthToken();
+        return tokenResponse.toOauthToken(persistentStorage);
     }
 
     @Override
@@ -93,8 +98,19 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         .build();
 
         try {
-            return apiClient.refreshAccessToken(request).toOauthToken();
+            return apiClient.refreshAccessToken(request).toOauthToken(persistentStorage);
         } catch (final HttpResponseException exception) {
+            /* The logs will be removed after problem investigation */
+            if (exception.getResponse().getBody(String.class).contains("invalid_grant")) {
+                final OAuth2Token oAuth2Token = RabobankUtils.getOauthToken(persistentStorage);
+                final String refreshedTokenExpireDate =
+                        persistentStorage.get(StorageKey.TOKEN_EXPIRY_DATE);
+                logger.info(
+                        "Refresh token: {}, Is token expire? {}, Expiry date: {}",
+                        Hash.sha256AsHex(oAuth2Token.getRefreshToken().get()),
+                        oAuth2Token.hasRefreshExpire(),
+                        refreshedTokenExpireDate);
+            }
             throw SessionError.SESSION_EXPIRED.exception(exception);
         }
     }
