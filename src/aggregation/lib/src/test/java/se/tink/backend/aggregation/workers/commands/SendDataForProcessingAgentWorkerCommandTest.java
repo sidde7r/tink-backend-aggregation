@@ -133,18 +133,7 @@ public class SendDataForProcessingAgentWorkerCommandTest {
         command.doPostProcess();
 
         // then
-        verify(metrics)
-                .buildAction(
-                        new MetricId.MetricLabels()
-                                .add("action", "process")
-                                .add("item", "ACCOUNTS"));
         verify(accountsAction).completed();
-        // and
-        verify(metrics)
-                .buildAction(
-                        new MetricId.MetricLabels()
-                                .add("action", "process")
-                                .add("item", "TRANSACTIONS"));
         verify(transactionsAction).completed();
     }
 
@@ -165,11 +154,6 @@ public class SendDataForProcessingAgentWorkerCommandTest {
         Throwable t = catchThrowable(() -> command.doPostProcess());
 
         // then
-        verify(metrics)
-                .buildAction(
-                        new MetricId.MetricLabels()
-                                .add("action", "process")
-                                .add("item", "ACCOUNTS"));
         verify(accountsAction).failed();
         // and
         assertThat(t).isInstanceOf(RuntimeException.class);

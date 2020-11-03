@@ -23,6 +23,9 @@ public class ClearSensitivePayloadOnForceAuthenticateCommandTest {
     public void setUp() {
         context = mock(AgentWorkerCommandContext.class, Answers.RETURNS_DEEP_STUBS);
         command = new ClearSensitivePayloadOnForceAuthenticateCommand(context);
+
+        Agent agent = mock(MyAgent.class);
+        given(context.getAgent()).willReturn(agent);
     }
 
     @Test
@@ -30,9 +33,6 @@ public class ClearSensitivePayloadOnForceAuthenticateCommandTest {
             doExecuteShouldNukeSensitiveStorageAndContinueWhenAgentIsPersistedLoginTypeAndForceAuth()
                     throws Exception {
         // given
-        Agent agent = mock(MyAgent.class);
-        given(context.getAgent()).willReturn(agent);
-        // and
         given(context.getRequest().isForceAuthenticate()).willReturn(true);
 
         // when
@@ -47,9 +47,7 @@ public class ClearSensitivePayloadOnForceAuthenticateCommandTest {
     public void doExecuteShouldNotNukeSensitiveStorageWhenAgentIsNotPersistedLoginType()
             throws Exception {
         // given
-        Agent agent = mock(Agent.class);
-        given(context.getAgent()).willReturn(agent);
-        // and
+        given(context.getAgent()).willReturn(mock(Agent.class));
         given(context.getRequest().isForceAuthenticate()).willReturn(true);
 
         // when
@@ -63,9 +61,6 @@ public class ClearSensitivePayloadOnForceAuthenticateCommandTest {
     @Test
     public void doExecuteShouldNotNukeSensitiveStorageWhenAuthIsNotForced() throws Exception {
         // given
-        Agent agent = mock(MyAgent.class);
-        given(context.getAgent()).willReturn(agent);
-        // and
         given(context.getRequest().isForceAuthenticate()).willReturn(false);
 
         // when
