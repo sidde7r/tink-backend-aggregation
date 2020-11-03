@@ -4,16 +4,20 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.BelfiusPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.BelfiusPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.BelfiusTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -23,12 +27,15 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
+@Slf4j
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class BelfiusAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
@@ -108,6 +115,39 @@ public final class BelfiusAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(accountFetcher)));
+    }
+
+    @Override
+    public boolean login() throws AuthenticationException, AuthorizationException {
+        boolean login = super.login();
+        try {
+            logOauth2TokenDetails();
+        } catch (RuntimeException e) {
+            log.error("error logging oauth 2 token details");
+        }
+        return login;
+    }
+
+    private void logOauth2TokenDetails() {
+        persistentStorage
+                .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
+                .ifPresent(this::logToken);
+    }
+
+    private void logToken(OAuth2Token token) {
+        String accessTokenHash = generateHash(token.getAccessToken());
+        String refreshTokenHash = token.getRefreshToken().map(this::generateHash).orElse("empty");
+        log.info(
+                "about to persist OAUTH_2_TOKEN with accessTokenHash: {}, refreshTokenHash: {}, expiresInSeconds: {}, refreshExpiresInSeconds: {}, issuedAt: {}",
+                accessTokenHash,
+                refreshTokenHash,
+                token.getExpiresInSeconds(),
+                token.getRefreshExpiresInSeconds(),
+                token.getIssuedAt());
+    }
+
+    private String generateHash(String input) {
+        return Hash.sha256Base64(input.getBytes()).substring(0, 2);
     }
 
     @Override
