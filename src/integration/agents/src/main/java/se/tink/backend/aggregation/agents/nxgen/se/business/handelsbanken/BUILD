@@ -16,6 +16,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/business",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",

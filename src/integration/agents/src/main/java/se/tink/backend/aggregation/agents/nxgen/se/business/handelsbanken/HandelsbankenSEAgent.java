@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -33,11 +34,19 @@ public final class HandelsbankenSEAgent
         extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration>
         implements RefreshCheckingAccountsExecutor, RefreshIdentityDataExecutor {
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final String organisationNumber;
 
     @Inject
     public HandelsbankenSEAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider, new HandelsbankenSEConfiguration());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        organisationNumber =
+                Optional.ofNullable(
+                                agentComponentProvider
+                                        .getCredentialsRequest()
+                                        .getCredentials()
+                                        .getField(Key.CORPORATE_ID))
+                        .orElse("");
     }
 
     @Override
@@ -60,9 +69,9 @@ public final class HandelsbankenSEAgent
                     supplementalRequester,
                     new HandelsbankenBankIdAuthenticator(
                             bankClient,
-                            credentials,
                             handelsbankenPersistentStorage,
-                            handelsbankenSessionStorage),
+                            handelsbankenSessionStorage,
+                            organisationNumber),
                     persistentStorage,
                     credentials)
         };
