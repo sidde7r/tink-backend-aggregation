@@ -65,10 +65,13 @@ public class TokenResponse {
     }
 
     public OAuth2Token toOauthToken(final PersistentStorage persistentStorage) {
-        logger.info("New Refresh Token: {}, Expire at: {}", Hash.sha256AsHex(getRefreshToken()));
-        persistentStorage.put(
-                StorageKey.TOKEN_EXPIRY_DATE,
-                RabobankUtils.getRefreshTokenExpireDate(getRefreshTokenExpiresIn()));
+        final String refreshTokenExpiryDate =
+                RabobankUtils.getRefreshTokenExpireDate(getRefreshTokenExpiresIn());
+        logger.info(
+                "New Refresh Token: {}, Expires on: {}",
+                Hash.sha256AsHex(getRefreshToken()),
+                refreshTokenExpiryDate);
+        persistentStorage.put(StorageKey.TOKEN_EXPIRY_DATE, refreshTokenExpiryDate);
         return OAuth2Token.create(
                 getTokenType(),
                 getAccessToken(),
