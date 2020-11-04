@@ -10,6 +10,8 @@ public interface RandomValueGenerator {
 
     String generateRandomHexEncoded(int size);
 
+    String generateRandomAlphanumeric(int size);
+
     int randomInt(int bound);
 
     int generateRandomNumberInRange(int minimum, int maximum);

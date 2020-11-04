@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness;
 
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Hex;
@@ -29,6 +30,13 @@ public class MockRandomValueGenerator implements RandomValueGenerator {
     public String generateRandomHexEncoded(int size) {
         byte[] randomData = secureRandom(size);
         return Hex.encodeHexString(randomData);
+    }
+
+    @Override
+    public String generateRandomAlphanumeric(int size) {
+        char[] chars = new char[size];
+        Arrays.fill(chars, 'A');
+        return new String(chars);
     }
 
     @Override

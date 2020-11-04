@@ -53,6 +53,8 @@ public class N26AuthenticationController
 
     private static final String TOKEN_ID = "tokenId";
 
+    private static final int MAX_REF_ID_LENGTH = 18;
+
     private final N26ApiClient apiClient;
     private final AgentConfiguration<N26Configuration> configuration;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -142,7 +144,7 @@ public class N26AuthenticationController
                         n26Configuration.getRealmId());
         final ToEntity toEntity = new ToEntity(n26Configuration.getMemberId(), aliasEntity);
         final AccessBodyEntity accessBodyEntity = new AccessBodyEntity(Scope.AIS);
-        String refId = randomValueGenerator.generateRandomHexEncoded(9);
+        String refId = randomValueGenerator.generateRandomAlphanumeric(MAX_REF_ID_LENGTH);
         final RequestPayload requestPayload =
                 new RequestPayload(
                         strongAuthenticationState.getState(),

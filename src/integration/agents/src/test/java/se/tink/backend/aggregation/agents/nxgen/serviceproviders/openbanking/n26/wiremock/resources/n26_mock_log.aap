@@ -5,13 +5,13 @@ Content-Type: application/json
 Accept: application/json
 X-Aggregator: Tink Testing
 
-{"requestPayload":{"callbackState":"00000000-0000-4000-0000-000000000000","to":{"id":"DUMMY_MEMBER_ID","alias":{"type":"EIDAS","value":"PSDSE-FINA-44059","realmId":"DUMMY_REALM_ID"}},"accessBody":{"type":["ACCOUNTS","BALANCES","TRANSACTIONS","STANDING_ORDERS","TRANSFER_DESTINATIONS"]},"redirectUrl":"https://127.0.0.1:7357/api/v1/thirdparty/callback","refId":"000000000000000000"}}
+{"requestPayload":{"callbackState":"00000000-0000-4000-0000-000000000000","to":{"id":"DUMMY_MEMBER_ID","alias":{"type":"EIDAS","value":"PSDSE-FINA-44059","realmId":"DUMMY_REALM_ID"}},"accessBody":{"type":["ACCOUNTS","BALANCES","TRANSACTIONS","STANDING_ORDERS","TRANSFER_DESTINATIONS"]},"redirectUrl":"https://127.0.0.1:7357/api/v1/thirdparty/callback","refId":"AAAAAAAAAAAAAAAAAA"}}
 
 RESPONSE 1
 200
 Content-Type: application/json
 
-{"tokenRequest":{"id":"DUMMY_ACCESS_TOKEN","requestPayload":{"redirectUrl":"https://127.0.0.1:7357/api/v1/thirdparty/callback","to":{"id":"DUMMY_MEMBER_ID","alias":{"type":"EIDAS","value":"PSDSE-FINA-44059","realmId":"DUMMY_REALM_ID"}},"accessBody":{"type":["ACCOUNTS","BALANCES","TRANSACTIONS","STANDING_ORDERS","TRANSFER_DESTINATIONS"]},"callbackState":"00000000-0000-4000-0000-000000000000","refId":"000000000000000000"}}}
+{"tokenRequest":{"id":"DUMMY_ACCESS_TOKEN","requestPayload":{"redirectUrl":"https://127.0.0.1:7357/api/v1/thirdparty/callback","to":{"id":"DUMMY_MEMBER_ID","alias":{"type":"EIDAS","value":"PSDSE-FINA-44059","realmId":"DUMMY_REALM_ID"}},"accessBody":{"type":["ACCOUNTS","BALANCES","TRANSACTIONS","STANDING_ORDERS","TRANSFER_DESTINATIONS"]},"callbackState":"00000000-0000-4000-0000-000000000000","refId":"AAAAAAAAAAAAAAAAAA"}}}
 
 REQUEST 2
 GET https://api.token.io/tokens/DUMMY_ACCESS_TOKEN

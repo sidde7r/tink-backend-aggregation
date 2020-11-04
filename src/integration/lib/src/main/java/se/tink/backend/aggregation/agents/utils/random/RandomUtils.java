@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Random;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.RandomStringUtils;
 
 public class RandomUtils {
 
@@ -24,6 +25,10 @@ public class RandomUtils {
     public static String generateRandomHexEncoded(int size) {
         byte[] randomData = secureRandom(size);
         return Hex.encodeHexString(randomData);
+    }
+
+    public static String generateRandomAlphanumericString(Integer size) {
+        return RandomStringUtils.random(size, 0, 0, true, true, null, random);
     }
 
     public static int randomInt(int bound) {
