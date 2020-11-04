@@ -309,7 +309,9 @@ public final class NewAgentTestContext extends AgentContext {
                                     row.put("number", loan.getLoanNumber());
                                     row.put("name", loan.getName());
                                     row.put("balance", String.valueOf(loan.getBalance()));
-                                    row.put("interest", String.valueOf(loan.getInterest()));
+                                    row.put(
+                                            "interest",
+                                            CliPrintUtils.formatPercent(loan.getInterest()));
 
                                     Optional<LoanDetails> details =
                                             Optional.ofNullable(loan.getLoanDetails());
