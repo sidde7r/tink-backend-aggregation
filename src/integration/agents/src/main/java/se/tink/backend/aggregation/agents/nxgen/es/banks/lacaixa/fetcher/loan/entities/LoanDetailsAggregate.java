@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.e
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.LaCaixaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -18,7 +18,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
 public class LoanDetailsAggregate {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LaCaixaLoanFetcher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoanDetailsAggregate.class);
 
     private final LoanEntity loanEntity;
     private final LoanDetailsResponse loanDetailsResponse;
@@ -75,8 +75,11 @@ public class LoanDetailsAggregate {
     }
 
     private Double getInterestRate() {
-        return AgentParsingUtils.parsePercentageFormInterest(
-                this.loanDetailsResponse.getNominalInterest());
+        LOGGER.info("Interest rate value is {}", this.loanDetailsResponse.getNominalInterest());
+        return Optional.ofNullable(loanDetailsResponse)
+                .map(LoanDetailsResponse::getNominalInterest)
+                .map(AgentParsingUtils::parsePercentageFormInterest)
+                .orElse(0.0);
     }
 
     private ExactCurrencyAmount getInitialBalance() {
