@@ -6,12 +6,8 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.Error;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.entities.ResponseStatusEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.TransactionsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -20,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 /**
  * This class does the transaction fetching for both transactional accounts and credit card accounts
@@ -49,25 +44,12 @@ public class IcaBankenTransactionFetcher {
 
         LocalDate fromDate = getFromDate(toDate);
 
-        try {
-            TransactionsBodyEntity transactionsBody =
-                    apiClient.fetchTransactionsWithDate(account, fromDate, toDate);
+        TransactionsBodyEntity transactionsBody =
+                apiClient.fetchTransactionsWithDate(account, fromDate, toDate);
 
-            return new TransactionKeyPaginatorResponseImpl<>(
-                    transactionsBody.toTinkTransactions(),
-                    fromDate.isEqual(oldestAllowedFromDate) ? null : transactionsBody.getNextKey());
-        } catch (HttpResponseException hre) {
-            if (hre.getResponse().getStatus() != HttpStatus.SC_FORBIDDEN) {
-                throw hre;
-            }
-
-            ResponseStatusEntity error = hre.getResponse().getBody(ResponseStatusEntity.class);
-            if (error.getCode() == Error.MULTIPLE_LOGIN_ERROR_CODE) {
-                throw BankServiceError.MULTIPLE_LOGIN.exception(hre);
-            }
-
-            throw hre;
-        }
+        return new TransactionKeyPaginatorResponseImpl<>(
+                transactionsBody.toTinkTransactions(),
+                fromDate.isEqual(oldestAllowedFromDate) ? null : transactionsBody.getNextKey());
     }
 
     public Collection<UpcomingTransaction> fetchUpcomingTransactions(TransactionalAccount account) {

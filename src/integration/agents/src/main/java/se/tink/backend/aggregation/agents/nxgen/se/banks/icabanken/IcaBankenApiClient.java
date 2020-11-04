@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.Error;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdAuthInitBodyEntity;
@@ -20,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.EvaluatedPoliciesResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.entities.ResponseStatusEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.PaymentNameBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.TransferBankEntity;
@@ -57,6 +61,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class IcaBankenApiClient {
@@ -164,19 +169,32 @@ public class IcaBankenApiClient {
 
     public TransactionsBodyEntity fetchTransactionsWithDate(
             Account account, LocalDate fromDate, LocalDate toDate) {
-        return createRequest(
-                        IcaBankenConstants.Urls.TRANSACTIONS
-                                .parameter(
-                                        IcaBankenConstants.IdTags.IDENTIFIER_TAG,
-                                        account.getApiIdentifier())
-                                .queryParam(
-                                        IcaBankenConstants.IdTags.FROM_DATE_TAG,
-                                        fromDate.toString())
-                                .queryParam(
-                                        IcaBankenConstants.IdTags.TO_DATE_TAG,
-                                        toDate.toString()))
-                .get(TransactionsResponse.class)
-                .getBody();
+        try {
+            return createRequest(
+                            IcaBankenConstants.Urls.TRANSACTIONS
+                                    .parameter(
+                                            IcaBankenConstants.IdTags.IDENTIFIER_TAG,
+                                            account.getApiIdentifier())
+                                    .queryParam(
+                                            IcaBankenConstants.IdTags.FROM_DATE_TAG,
+                                            fromDate.toString())
+                                    .queryParam(
+                                            IcaBankenConstants.IdTags.TO_DATE_TAG,
+                                            toDate.toString()))
+                    .get(TransactionsResponse.class)
+                    .getBody();
+        } catch (HttpResponseException hre) {
+            if (hre.getResponse().getStatus() != HttpStatus.SC_FORBIDDEN) {
+                throw hre;
+            }
+
+            ResponseStatusEntity error = hre.getResponse().getBody(ResponseStatusEntity.class);
+            if (error.getCode() == Error.MULTIPLE_LOGIN_ERROR_CODE) {
+                throw BankServiceError.MULTIPLE_LOGIN.exception(hre);
+            }
+
+            throw hre;
+        }
     }
 
     public TransactionsBodyEntity fetchTransactions(Account account) {
