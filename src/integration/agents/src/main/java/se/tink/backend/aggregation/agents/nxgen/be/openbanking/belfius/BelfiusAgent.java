@@ -119,26 +119,28 @@ public final class BelfiusAgent extends NextGenerationAgent
 
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
+        logOauth2TokenDetails(false);
         boolean login = super.login();
-        try {
-            logOauth2TokenDetails();
-        } catch (RuntimeException e) {
-            log.error("error logging oauth 2 token details");
-        }
+        logOauth2TokenDetails(true);
         return login;
     }
 
-    private void logOauth2TokenDetails() {
-        persistentStorage
-                .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
-                .ifPresent(this::logToken);
+    private void logOauth2TokenDetails(boolean after) {
+        try {
+            persistentStorage
+                    .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
+                    .ifPresent(token -> logToken(token, after));
+        } catch (RuntimeException e) {
+            log.error("error logging oauth 2 token details");
+        }
     }
 
-    private void logToken(OAuth2Token token) {
+    private void logToken(OAuth2Token token, boolean after) {
         String accessTokenHash = generateHash(token.getAccessToken());
         String refreshTokenHash = token.getRefreshToken().map(this::generateHash).orElse("empty");
         log.info(
-                "about to persist OAUTH_2_TOKEN with accessTokenHash: {}, refreshTokenHash: {}, expiresInSeconds: {}, refreshExpiresInSeconds: {}, issuedAt: {}",
+                "The OAUTH_2_TOKEN {} login has properties: accessTokenHash: {}, refreshTokenHash: {}, expiresInSeconds: {}, refreshExpiresInSeconds: {}, issuedAt: {}",
+                after ? "after" : "before",
                 accessTokenHash,
                 refreshTokenHash,
                 token.getExpiresInSeconds(),
