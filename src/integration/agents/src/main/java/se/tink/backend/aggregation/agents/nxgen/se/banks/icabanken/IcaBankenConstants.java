@@ -107,6 +107,7 @@ public class IcaBankenConstants {
         public static final String IDENTIFIER_TAG = "identifier";
         public static final String POLICIES_TAG = "policies";
         public static final String TO_DATE_TAG = "toDate";
+        public static final String FROM_DATE_TAG = "fromDate";
         public static final String FUND_ID_TAG = "fundId";
         public static final String GIRO_NUMBER_TAG = "pgnumber";
         public static final String REQUEST_ID_TAG = "requestId";

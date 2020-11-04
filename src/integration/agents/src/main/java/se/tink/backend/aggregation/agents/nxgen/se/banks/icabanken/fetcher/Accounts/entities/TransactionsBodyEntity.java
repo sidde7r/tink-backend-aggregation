@@ -2,12 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.acco
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Comparator;
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import lombok.Getter;
+import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.date.DateUtils;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 
+@Getter
 @JsonObject
 public class TransactionsBodyEntity {
     @JsonProperty("Transactions")
@@ -17,40 +23,28 @@ public class TransactionsBodyEntity {
     private boolean noMoreTransactions;
 
     @JsonProperty("FromDate")
-    private String fromDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate fromDate;
 
     @JsonProperty("ToDate")
-    private String toDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate toDate;
 
     @JsonIgnore
-    public Date getNextKey() {
-        return noMoreTransactions ? null : getNextDate();
+    public LocalDate getNextKey() {
+        return noMoreTransactions ? null : getNextToDate();
     }
 
-    /**
-     * The next date will be the posted date of the oldest transaction minus one day. This is how
-     * the ICA Banken app does the transaction fetching.
-     */
-    private Date getNextDate() {
-        return transactions.stream()
-                .min(Comparator.comparing(TransactionEntity::getPostedDate))
-                .map(transactionEntity -> DateUtils.addDays(transactionEntity.getPostedDate(), -1))
-                .orElse(null);
+    /** The next toDate will be the fromDate - 1 day */
+    @JsonIgnore
+    private LocalDate getNextToDate() {
+        return fromDate == null ? null : fromDate.minusDays(1);
     }
 
-    public List<TransactionEntity> getTransactions() {
-        return transactions;
-    }
-
-    public boolean isNoMoreTransactions() {
-        return noMoreTransactions;
-    }
-
-    public String getFromDate() {
-        return fromDate;
-    }
-
-    public String getToDate() {
-        return toDate;
+    @JsonIgnore
+    public Collection<Transaction> toTinkTransactions() {
+        return ListUtils.emptyIfNull(transactions).stream()
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 }
