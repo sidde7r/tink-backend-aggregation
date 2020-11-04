@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator;
 
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
@@ -28,10 +27,6 @@ public class DeutscheBankAuthenticator {
         this.credentials = credentials;
     }
 
-    public Optional<String> getPersistedConsentId() {
-        return Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID));
-    }
-
     public URL authenticate(String state) {
         ConsentResponse consent =
                 apiClient.getConsent(state, credentials.getField(CredentialKeys.USERNAME));
@@ -40,16 +35,24 @@ public class DeutscheBankAuthenticator {
     }
 
     public void verifyPersistedConsentIdIsValid() {
-        Optional.ofNullable(apiClient.getConsentStatus())
-                .map(ConsentStatusResponse::getConsentStatus)
-                .filter(
-                        consentStatus ->
-                                consentStatus.equals(DeutscheBankConstants.StatusValues.VALID))
-                .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
+        if (!isPersistedConsentIdValid()) {
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+        }
+    }
+
+    public void verifyPersistedConsentIdIsNotExpired() {
+        if (!isPersistedConsentIdValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     public void storeSessionExpiry() {
         ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails();
         credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
+    }
+
+    private boolean isPersistedConsentIdValid() {
+        ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
+        return consentStatus != null && consentStatus.isValid();
     }
 }

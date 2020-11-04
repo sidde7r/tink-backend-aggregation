@@ -86,6 +86,9 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
     @Override
     public void autoAuthenticate()
             throws SessionException, BankServiceException, AuthorizationException {
-        throw SessionError.SESSION_EXPIRED.exception();
+        ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
+        if (!consentStatus.isValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 }

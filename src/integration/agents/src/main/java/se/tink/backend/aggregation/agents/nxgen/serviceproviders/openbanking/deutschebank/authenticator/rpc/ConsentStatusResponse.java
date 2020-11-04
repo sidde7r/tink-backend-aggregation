@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StatusValues;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -11,5 +12,10 @@ public class ConsentStatusResponse {
     @JsonIgnore
     public String getConsentStatus() {
         return consentStatus;
+    }
+
+    @JsonIgnore
+    public boolean isValid() {
+        return StatusValues.VALID.equalsIgnoreCase(consentStatus);
     }
 }
