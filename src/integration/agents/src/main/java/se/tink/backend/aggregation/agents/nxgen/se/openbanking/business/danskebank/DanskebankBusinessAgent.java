@@ -40,9 +40,10 @@ public final class DanskebankBusinessAgent extends UkOpenBankingBaseAgent {
                         configuration,
                         componentProvider.getContext(),
                         DanskebankBusinessAgent.class),
-                aisConfig,
-                true);
+                aisConfig);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        // fixme make sure that cert is verified - add root ca to eidas proxy
+        componentProvider.getTinkHttpClient().disableSslVerification();
     }
 
     @Override

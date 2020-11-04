@@ -47,7 +47,7 @@ public class SantanderV31BusinessAgent extends UkOpenBankingBaseAgent {
     @Inject
     public SantanderV31BusinessAgent(
             AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, true);
+        super(componentProvider, jwtSigner, aisConfig);
     }
 
     @Override

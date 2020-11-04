@@ -40,7 +40,7 @@ public class UlsterV31CorporateAgent extends UkOpenBankingBaseAgent {
 
     @Inject
     public UlsterV31CorporateAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, false);
+        super(componentProvider, jwtSigner, aisConfig);
     }
 
     @Override

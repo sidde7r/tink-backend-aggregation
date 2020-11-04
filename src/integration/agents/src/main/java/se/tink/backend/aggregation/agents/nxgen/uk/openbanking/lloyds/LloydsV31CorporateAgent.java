@@ -43,7 +43,7 @@ public final class LloydsV31CorporateAgent extends UkOpenBankingBaseAgent {
 
     @Inject
     public LloydsV31CorporateAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, false);
+        super(componentProvider, jwtSigner, aisConfig);
     }
 
     @Override

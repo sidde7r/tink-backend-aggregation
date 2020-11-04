@@ -56,8 +56,7 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
                 componentProvider,
                 jwtSigner,
                 aisConfig,
-                new UkOpenBankingV31PisConfiguration(V313.PERSONAL_PIS_API_URL),
-                false);
+                new UkOpenBankingV31PisConfiguration(V313.PERSONAL_PIS_API_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }

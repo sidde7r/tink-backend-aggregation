@@ -52,8 +52,7 @@ public final class BarclaysV31Agent extends UkOpenBankingBaseAgent {
                 componentProvider,
                 jwtSigner,
                 aisConfig,
-                new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL),
-                true);
+                new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL));
     }
 
     @Override

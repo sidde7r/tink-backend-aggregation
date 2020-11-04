@@ -48,7 +48,7 @@ public class RbsV31CorporateAgent extends UkOpenBankingBaseAgent {
 
     @Inject
     public RbsV31CorporateAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, false);
+        super(componentProvider, jwtSigner, aisConfig);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

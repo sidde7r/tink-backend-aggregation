@@ -58,7 +58,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
     private final JwtSigner jwtSigner;
-    private final boolean disableSslVerification;
 
     protected UkOpenBankingApiClient apiClient;
     protected SoftwareStatementAssertion softwareStatement;
@@ -81,11 +80,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
             UkOpenBankingAisConfig aisConfig,
-            UkOpenBankingPisConfig pisConfig,
-            boolean disableSslVerification) {
+            UkOpenBankingPisConfig pisConfig) {
         super(componentProvider);
         this.jwtSigner = jwtSigner;
-        this.disableSslVerification = disableSslVerification;
         this.aisConfig = aisConfig;
         this.pisConfig = pisConfig;
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
@@ -98,9 +95,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
-            UkOpenBankingAisConfig aisConfig,
-            boolean disableSslVerification) {
-        this(componentProvider, jwtSigner, aisConfig, null, disableSslVerification);
+            UkOpenBankingAisConfig aisConfig) {
+        this(componentProvider, jwtSigner, aisConfig, null);
     }
 
     // Different part between UkOpenBankingBaseAgent and this class
@@ -121,13 +117,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
 
-        if (this.disableSslVerification) {
-            client.disableSslVerification();
-        } else {
-            client.trustRootCaCertificate(
-                    UkOpenBankingV31Constants.UKOB_ROOT_CA_JKS,
-                    UkOpenBankingV31Constants.UKOB_ROOT_CA_JKS_PASSWORD);
-        }
+        client.trustRootCaCertificate(
+                UkOpenBankingV31Constants.UKOB_ROOT_CA_JKS,
+                UkOpenBankingV31Constants.UKOB_ROOT_CA_JKS_PASSWORD);
 
         ukOpenBankingConfiguration
                 .getTlsConfigurationOverride()

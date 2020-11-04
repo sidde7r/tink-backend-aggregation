@@ -45,7 +45,7 @@ public class DanskeBankV31BusinessAgent extends UkOpenBankingBaseAgent {
     @Inject
     public DanskeBankV31BusinessAgent(
             AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig, false);
+        super(componentProvider, jwtSigner, aisConfig);
     }
 
     @Override
