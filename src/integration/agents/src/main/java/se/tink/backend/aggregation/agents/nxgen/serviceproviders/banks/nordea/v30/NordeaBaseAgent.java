@@ -4,6 +4,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -73,6 +74,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
     private final NordeaBaseApiClient apiClient;
     private final NordeaConfiguration nordeaConfiguration;
     private final LocalDateTimeSource localDateTimeSource;
+    private final String organisationNumber;
 
     public NordeaBaseAgent(
             AgentComponentProvider componentProvider, NordeaConfiguration nordeaConfiguration) {
@@ -80,6 +82,13 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
         this.nordeaConfiguration = nordeaConfiguration;
         apiClient = new NordeaBaseApiClient(client, sessionStorage, nordeaConfiguration);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.organisationNumber =
+                Optional.ofNullable(
+                                componentProvider
+                                        .getCredentialsRequest()
+                                        .getCredentials()
+                                        .getField(Key.CORPORATE_ID))
+                        .orElse("");
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
@@ -151,7 +160,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
                 new BankIdAuthenticationController<>(
                         context,
                         new NordeaBankIdAuthenticator(
-                                apiClient, sessionStorage, nordeaConfiguration),
+                                apiClient, sessionStorage, nordeaConfiguration, organisationNumber),
                         persistentStorage,
                         credentials);
 
