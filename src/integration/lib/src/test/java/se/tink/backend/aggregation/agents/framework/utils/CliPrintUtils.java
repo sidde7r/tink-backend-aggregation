@@ -158,4 +158,11 @@ public class CliPrintUtils {
         }
         out.println(ROW_END);
     }
+
+    public static String formatPercent(Double number) {
+        if (number != null) {
+            return number.doubleValue() * 100 + "%";
+        }
+        return "null";
+    }
 }
