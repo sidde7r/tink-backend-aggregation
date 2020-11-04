@@ -1,5 +1,5 @@
 REQUEST 2
-POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile?dsid=AAAAAAAA
+POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile
 Accept: application/json
 Content-Type: application/json
 
@@ -23,7 +23,7 @@ Connection: Keep-Alive
 
 
 REQUEST 3 MATCH NEXT_1
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify
 Accept: application/json
 
 RESPONSE 3 SET NEXT_2
@@ -41,7 +41,7 @@ Connection: Keep-Alive
 {"extendedUsage":false,"status":"CLIENT_NOT_STARTED","links":{"next":{"method":"GET","uri":"/v5/identification/bankid/mobile/verify"}},"serverTime":"20200917 09:34","formattedServerTime":"2020-09-17 09:34"}
 
 REQUEST 4 MATCH NEXT_2
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify
 Accept: application/json
 
 RESPONSE 4
@@ -59,7 +59,7 @@ Connection: Keep-Alive
 {"extendedUsage":false,"status":"COMPLETE","links":{"next":{"method":"GET","uri":"/v5/profile/"}},"maskedUserId":"19850430****","serverTime":"20200917 09:34","formattedServerTime":"2020-09-17 09:34"}
 
 REQUEST 5
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/
 Accept: application/json
 
 RESPONSE 5
@@ -78,7 +78,7 @@ Connection: Keep-Alive
 
 
 REQUEST 6
-POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/a75351cc3a0908277184af20086b919a680e6e3f?dsid=AAAAAAAA
+POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/a75351cc3a0908277184af20086b919a680e6e3f
 Accept: application/json
 Content-Type: application/json
 
@@ -98,7 +98,7 @@ Connection: Keep-Alive
 
 
 REQUEST 7
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/overview?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/overview
 Accept: application/json
 
 RESPONSE 7
@@ -117,7 +117,7 @@ Connection: Keep-Alive
 
 
 REQUEST 8
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/baseinfo?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/baseinfo
 Accept: application/json
 
 RESPONSE 8
@@ -136,7 +136,7 @@ Connection: Keep-Alive
 
 
 REQUEST 10
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings
 Accept: application/json
 
 RESPONSE 10
@@ -154,7 +154,7 @@ Connection: Keep-Alive
 {"fundAccountPresent":false,"fundAccounts":[],"endowmentInsurances":[],"equityTraders":[],"savingsAccounts":[{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"transactionsLink":{"type":"TRANSACTION_LIST_DECORATED","links":{"next":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions"}}},"links":{"self":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8"},"next":{"method":"GET","uri":"/v5/engagement/transactions/01a858b71922aaac69b0cfa7be179129c6a498d8"}},"id":"01a858b71922aaac69b0cfa7be179129c6a498d8","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"1111-1","balance":{"amount":"8,64","currencyCode":"SEK"},"fullyFormattedNumber":"1111-1,333 333 333-3"}],"investmentSavings":[],"serverTime":"09:34","totalValue":{"amount":"8,64","currencyCode":"SEK"}}
 
 REQUEST 11
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/pensions?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/pensions
 Accept: application/json
 
 RESPONSE 11
@@ -172,7 +172,7 @@ Connection: Keep-Alive
 {"privatePensionInsurances":{"pensionInsurances":[],"totalValue":{"amount":"0,00","currencyCode":"SEK"}},"occupationalPensionInsurances":{"pensionInsurances":[],"totalValue":{"amount":"0,00","currencyCode":"SEK"}},"serverTime":"15:35","totalValue":{"amount":"0,00","currencyCode":"SEK"}}
 
 REQUEST 12
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/overview?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/overview
 Accept: application/json
 
 RESPONSE 12
@@ -190,8 +190,27 @@ Connection: Keep-Alive
 {"brokerAgencyLink":"https://www.fastighetsbyran.se/swedbank-vardering","isOngoingCasesActionRequired":false,"carLoans":[],"consumptionLoans":[],"collaterals":[],"mortgageLoanCommitments":[],"ongoingLoans":[],"mortgageCalculatorLink":"https://lana.swedbank.se/app/lana/bolanelofte/oinloggad/guide?tab=2&bankId=11111"}
 
 
+REQUEST 14
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings
+Accept: application/json
+
+RESPONSE 14
+200
+Server: -
+Date: Thu, 17 Sep 2020 07:34:27 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"fundAccountPresent":false,"fundAccounts":[],"endowmentInsurances":[],"equityTraders":[],"savingsAccounts":[{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"transactionsLink":{"type":"TRANSACTION_LIST_DECORATED","links":{"next":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions"}}},"links":{"self":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8"},"next":{"method":"GET","uri":"/v5/engagement/transactions/01a858b71922aaac69b0cfa7be179129c6a498d8"}},"id":"01a858b71922aaac69b0cfa7be179129c6a498d8","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"1111-1","balance":{"amount":"8,64","currencyCode":"SEK"},"fullyFormattedNumber":"1111-1,333 333 333-3"}],"investmentSavings":[],"serverTime":"09:34","totalValue":{"amount":"8,64","currencyCode":"SEK"}}
+
+
 REQUEST 15
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/confirmed?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/confirmed
 Accept: application/json
 
 RESPONSE 15
@@ -210,7 +229,7 @@ Connection: Keep-Alive
 
 
 REQUEST 16
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/account/2afd29de9249d2245ff6a5232170cb65a913ae7d/transactions?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/account/2afd29de9249d2245ff6a5232170cb65a913ae7d/transactions
 Accept: application/json
 
 RESPONSE 16
@@ -229,7 +248,7 @@ Connection: Keep-Alive
 
 
 REQUEST 18
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/account/a86130f25b3d66d64e557108346fa61d298e7fbd/transactions?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/account/a86130f25b3d66d64e557108346fa61d298e7fbd/transactions
 Accept: application/json
 
 RESPONSE 18
@@ -248,7 +267,7 @@ Connection: Keep-Alive
 
 
 REQUEST 20
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions
 Accept: application/json
 
 RESPONSE 20
@@ -267,7 +286,7 @@ Connection: Keep-Alive
 
 
 REQUEST 21
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/einvoice/incoming?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/einvoice/incoming
 Accept: application/json
 
 RESPONSE 21
@@ -286,7 +305,7 @@ Connection: Keep-Alive
 
 
 REQUEST 24
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch
 Accept: application/json
 
 RESPONSE 24

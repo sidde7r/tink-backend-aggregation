@@ -1,7 +1,7 @@
 
 
 REQUEST 1
-POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile?dsid=AAAAAAAA
+POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile
 Accept: application/json
 Content-Type: application/json
 {"generateEasyLoginId":true,"userId":"***MASKED***","useEasyLogin":false}
@@ -24,7 +24,7 @@ Connection: Keep-Alive
 
 
 REQUEST 2 MATCH NEXT_1
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify
 Accept: application/json
 
 RESPONSE 2 SET NEXT_2
@@ -43,7 +43,7 @@ Connection: Keep-Alive
 
 
 REQUEST 3 MATCH NEXT_2
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify
 Accept: application/json
 
 
@@ -63,7 +63,7 @@ Connection: Keep-Alive
 
 
 REQUEST 4
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/
 Accept: application/json
 
 RESPONSE 4
@@ -82,7 +82,7 @@ Connection: Keep-Alive
 
 
 REQUEST 5
-POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/9b689919ea6084b89b35cd4b52f4c5644ef76d55?dsid=AAAAAAAA
+POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/profile/9b689919ea6084b89b35cd4b52f4c5644ef76d55
 Accept: application/json
 Content-Type: application/json
 
@@ -102,7 +102,7 @@ Connection: Keep-Alive
 
 
 REQUEST 6
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/overview?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/overview
 Accept: application/json
 
 
@@ -122,7 +122,7 @@ Connection: Keep-Alive
 
 
 REQUEST 7
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/baseinfo?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/baseinfo
 Accept: application/json
 
 
@@ -142,7 +142,7 @@ Connection: Keep-Alive
 
 
 REQUEST 8
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings
 Accept: application/json
 
 RESPONSE 8
@@ -161,7 +161,7 @@ Connection: Keep-Alive
 
 
 REQUEST 9
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/pensions?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/pensions
 Accept: application/json
 
 RESPONSE 9
@@ -179,7 +179,7 @@ Connection: Keep-Alive
 {"privatePensionInsurances":{"pensionInsurances":[{"totalValue":{"amount":"67 267,69","currencyCode":"SEK"},"type":"INDIVIDUAL_SAVINGS_PENSION","performance":{"percent":"41,73","amount":{"amount":"0,00","currencyCode":"SEK"}},"marketValue":{"amount":"0,00","currencyCode":"SEK"},"holdingsFetched":true,"holdings":[],"links":{"self":{"method":"GET","uri":"/v5/portfolio/pensions/6a554dcc5aacce6cf764b87c94386a378715620d"}},"id":"6a554dcc5aacce6cf764b87c94386a378715620d","name":"Individuellt pensionssparande","accountNumber":"904 316 121-1","clearingNumber":"8827-9","fullyFormattedNumber":"8827-9,904 316 121-1"}],"totalValue":{"amount":"67 267,69","currencyCode":"SEK"}},"occupationalPensionInsurances":{"pensionInsurances":[{"totalValue":{"amount":"321 463,83","currencyCode":"SEK"},"type":"OCCUPATIONAL_PENSION","performance":{"percent":"45,78","amount":{"amount":"100 944,84","currencyCode":"SEK"}},"marketValue":{"amount":"0,00","currencyCode":"SEK"},"holdingsFetched":true,"holdings":[],"isTrad":false,"links":{"self":{"method":"GET","uri":"/v5/portfolio/pensions/15ab676affc38f926b35280fa1926a0aef44e3c6"}},"id":"15ab676affc38f926b35280fa1926a0aef44e3c6","name":"KAP-KL","accountNumber":"101 291 644-1","clearingNumber":"8811-6","fullyFormattedNumber":"8811-6,101 291 644-1"}],"totalValue":{"amount":"321 463,83","currencyCode":"SEK"}},"serverTime":"00:29","totalValue":{"amount":"388 731,52","currencyCode":"SEK"}}
 
 REQUEST 10
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/pensions/6a554dcc5aacce6cf764b87c94386a378715620d?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/pensions/6a554dcc5aacce6cf764b87c94386a378715620d
 Accept: application/json
 
 RESPONSE 10
@@ -197,7 +197,7 @@ Connection: Keep-Alive
 {"detailedPension":{"totalValue":{"amount":"351 936,87","currencyCode":"SEK"},"type":"INDIVIDUAL_SAVINGS_PENSION","performance":{"percent":"51,62","amount":{"amount":"119 822,48","currencyCode":"SEK"}},"marketValue":{"amount":"351 936,83","currencyCode":"SEK"},"holdingsFetched":true,"holdings":[{"name":"Swedbank Robur Transfer 80","fundCode":"T80"}],"acquisitionValue":{"amount":"232 114,35","currencyCode":"SEK"},"chartData":{"allocations":[{"allocationType":"EQUITY","text":"Aktieplaceringar","value":{"amount":"0,00","currencyCode":"SEK"},"percent":"90,00"},{"allocationType":"INTEREST","text":"Ränteplaceringar ","value":{"amount":"35 193,72","currencyCode":"SEK"},"percent":"10,00"},{"allocationType":"ALTERNATIVE","text":"Alternativa placeringar","value":{"amount":"0,00","currencyCode":"SEK"},"percent":"0,00"}],"chartsDataMissingText":"Cirkeldiagram kan för närvarande inte visas."},"placements":[{"name":"Fonder","subPlacements":[{"name":"Fonder","holdings":[{"changeOfValuePercent":"51,62","changeOfValue":{"amount":"119 822,48","currencyCode":"SEK"},"name":"Swedbank Robur Transfer 80","marketValue":{"amount":"351 936,83","currencyCode":"SEK"},"holdingType":"FUND","fundCode":"T80","numberOfFundParts":"1 282,8959","fundRate":{"amount":"274,33","currencyCode":"SEK"},"acquisitionValue":{"amount":"232 114,35","currencyCode":"SEK"},"changeTodayPercent":"1,11","corporateActionPresent":false,"fundguide":false}],"aggregatedMarketValue":{"amount":"351 936,83","currencyCode":"SEK"},"type":"FUNDS"}],"type":"FUNDS"}],"settlements":[{"id":"2abfde7566fca5400e0923996a3ffc71715bbc3a","availableAmount":{"amount":"0,04","currencyCode":"SEK"},"balance":{"amount":"0,04","currencyCode":"SEK"},"preliminaryLiquidity":{"amount":"0,04","currencyCode":"SEK"},"buyingPower":{"amount":"351 936,87","currencyCode":"SEK"},"fullyFormattedNumber":"8299-0,103 828 635-5","name":"Pensionssparkonto","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/2abfde7566fca5400e0923996a3ffc71715bbc3a"}}}],"operations":[{"type":"REGULARYSAVING","links":{"next":{"method":"GET","uri":"/v5/fund/account/afb7a177f2abc545c6662cdc52f28c2b0084e90c/recurringtransfer"}}},{"type":"AGREEMENT_INFORMATION","links":{"next":{"method":"GET","uri":"/v5/portfolio/holdings/6a554dcc5aacce6cf764b87c94386a378715620d/agreement/info"}}},{"type":"SWITCH_FUND"},{"type":"SELL_FUND"},{"type":"HISTORIC","links":{"next":{"method":"GET","uri":"/v5/fund/account/afb7a177f2abc545c6662cdc52f28c2b0084e90c/transactions"}}},{"type":"BUY_FUND"},{"type":"PREPARE_FUNDORDER","links":{"next":{"method":"GET","uri":"/v5/fund/account/order/baseinfo?fundAccountHashId=6a554dcc5aacce6cf764b87c94386a378715620d"}}}],"guaranteedValue":{"amount":"0,00","currencyCode":"SEK"},"encompassedHoldings":"FUNDS","id":"afb7a177f2abc545c6662cdc52f28c2b0084e90c","name":"Individuellt pensionssparande","accountNumber":"103 828 635-1","clearingNumber":"8899-0","fullyFormattedNumber":"8899-0,103 828 635-1"},"serverTime":"17:01"}
 
 REQUEST 11
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/pensions/15ab676affc38f926b35280fa1926a0aef44e3c6?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/pensions/15ab676affc38f926b35280fa1926a0aef44e3c6
 Accept: application/json
 
 RESPONSE 11
@@ -215,7 +215,7 @@ Connection: Keep-Alive
 {"detailedPension":{"totalValue":{"amount":"548 344,48","currencyCode":"SEK"},"type":"OCCUPATIONAL_PENSION","performance":{"percent":"42,71","amount":{"amount":"164 094,28","currencyCode":"SEK"}},"marketValue":{"amount":"548 344,48","currencyCode":"SEK"},"holdingsFetched":true,"holdings":[{"name":"Swedbank Generation Flex","fundCode":"SGF"},{"name":"Swedbank Generation KAP-KL","fundCode":"KAP"}],"isTrad":false,"portfolio":"","acquisitionValue":{"amount":"271 777,00","currencyCode":"SEK"},"chartData":{"allocations":[{"allocationType":"EQUITY","text":"Aktieplaceringar","value":{"amount":"0,00","currencyCode":"SEK"},"percent":"100,00"},{"allocationType":"INTEREST","text":"Ränteplaceringar ","value":{"amount":"0,00","currencyCode":"SEK"},"percent":"0,00"},{"allocationType":"ALTERNATIVE","text":"Alternativa placeringar","value":{"amount":"0,00","currencyCode":"SEK"},"percent":"0,00"}],"chartsDataMissingText":"Cirkeldiagram kan för närvarande inte visas."},"totalEquities":{"acquisitionValue":{"amount":"0,00","currencyCode":"SEK"},"changeAbsolute":{"amount":"0,00","currencyCode":"SEK"},"changePercent":"0,00","value":{"amount":"0,00","currencyCode":"SEK"},"buyingPower":{"amount":"0,00","currencyCode":"SEK"},"sumSettlements":{"amount":"0,00","currencyCode":"SEK"},"totalValueInclCash":{"amount":"548 344,48","currencyCode":"SEK"}},"placements":[{"name":"Fonder","subPlacements":[{"name":"Fonder","holdings":[{"changeOfValuePercent":"43,77","changeOfValue":{"amount":"135 991,62","currencyCode":"SEK"},"name":"Swedbank Generation Flex","marketValue":{"amount":"446 717,42","currencyCode":"SEK"},"holdingType":"FUND","fundCode":"SGF","numberOfFundParts":"0,0000","fundRate":{"currencyCode":"SEK"},"acquisitionValue":{"amount":"310 725,80","currencyCode":"SEK"},"corporateActionPresent":false,"instrumentCode":"25912","fundguide":false},{"changeOfValuePercent":"38,22","changeOfValue":{"amount":"28 102,66","currencyCode":"SEK"},"name":"Swedbank Generation KAP-KL","marketValue":{"amount":"101 627,06","currencyCode":"SEK"},"holdingType":"FUND","fundCode":"KAP","numberOfFundParts":"0,0000","fundRate":{"currencyCode":"SEK"},"acquisitionValue":{"amount":"73 524,40","currencyCode":"SEK"},"corporateActionPresent":false,"instrumentCode":"27276","fundguide":false}],"aggregatedMarketValue":{"amount":"548 344,48","currencyCode":"SEK"},"type":"FUNDS"}],"type":"FUNDS"}],"settlements":[],"operations":[{"type":"AGREEMENT_INFORMATION","links":{"next":{"method":"GET","uri":"/v5/portfolio/holdings/8f7d0b2f14bcd79312ae8499739d59bae9cfdba8/agreement/info"}}},{"type":"SWITCH_FUND"},{"type":"VIEW_ALLOCATION","links":{"next":{"method":"GET","uri":"/v5/insurance/fund/allocation/15ab676affc38f926b35280fa1926a0aef44e3c6"}}},{"type":"BUY_ALLOCATION","links":{"next":{"method":"GET","uri":"/v5/insurance/fund/allocation/15ab676affc38f926b35280fa1926a0aef44e3c6"}}}],"productId":"KAPKFOND","encompassedHoldings":"FUNDS","id":"3a8d2f4cc23efd748968822a0048557cb0f5d7b1","name":"KAP-KL","accountNumber":"8811601008942231","clearingNumber":"8811-6","fullyFormattedNumber":"8811-6,100 894 223-1"},"serverTime":"09:26"}
 
 REQUEST 12
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/fund/marketinfo/T80?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/fund/marketinfo/T80
 Accept: application/json
 
 RESPONSE 12
@@ -233,7 +233,7 @@ Connection: Keep-Alive
 {"entranceFund":false,"negativeReturnFund":false,"fundCompanyName":"Swedbank Robur","startDate":"2004-06-10","ppmcode":"747899","isincode":"SE0001175746","fundAssets":"36 354,60","description":"Transfer 80 är en generationsfond som främst vänder sig till dem som planerar att gå i pension under perioden 2045-2054. Den placerar i både aktier och räntepapper och placeringarna görs både i Sverige och i utlandet. Aktieandelen i fonden ska fram till och med år 2039 vara mellan 70 och 100 procent och ränteandelen mellan 0 och 30 procent. Under år 2040 sker en succesiv minskning av aktieandelen för att vid och efter 2050 uppgå till mellan 20-50 procent. Fonden får använda sig av derivatinstrument för att öka avkastningen. Fonden följer även fondbolagets policy för ansvarsfulla investeringar, läs mer om policyn i fondens informationsbroschyr. Fonden lämnar normalt ingen utdelning, utan vinster återinvesteras i fonden.","infoURLs":{"informationBrochure":"https://internetbank.swedbank.se/ConditionsEarchive/download?bankid=1111&id=WEBDOC-PRODE37522712","factSheet":"https://doc.morningstar.com/document/be3bbe56278b09489a70aed2c6375f38.msdoc/?clientid=swedbank&key=727e65e6c2083c53","fundConditions":"https://internetbank.swedbank.se/ConditionsEarchive/download?bankid=1111&id=WEBDOC-PRODE37513648","fundCompanyHomepage":"https://swedbankrobur.se/","annualReport":"https://internetbank.swedbank.se/ConditionsEarchive/download?bankid=1111&id=WEBDOC-PRODE37497656","aboutTheFund":"https://internetbank.swedbank.se/ConditionsEarchive/download?bankid=1111&id=WEBDOC-PRODE37492052"},"legalResidenceCountryCode":"SWE","category":"Blandfond - Generation 2046+","performanceToday":"1,11","fundAssetsUnit":"MSEK","fundCode":"T80","name":"Swedbank Robur Transfer 80","rate":{"value":"274,33","currency":"SEK"},"rateDate":"2020-11-03","rating":{"risk":5,"morningstar":3,"information":"Riskklass visar på sambandet mellan risk och möjlig avkastning i fonden. För mer information, se fondens faktablad och informationsbroschyr.","detailedInformation":"Fonden ska redovisa ett mått på sambandet mellan risk och möjlig avkastning i fonden. Skalan som används i Risk- och avkastningsindikatorn är 1-7, där 1 innebär lägst risk och 7 innebär högst risk och därmed högre möjlig avkastning. För fullständig information, se fondens faktablad och informationsbroschyr.","morningstarSustainability":5},"tsid":"F0GBR0572K","fundguide":false}
 
 REQUEST 13
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/fund/marketinfo/SGF?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/fund/marketinfo/SGF
 Accept: application/json
 
 RESPONSE 13
@@ -251,7 +251,7 @@ Connection: Keep-Alive
 {"entranceFund":true,"negativeReturnFund":false,"fundCompanyName":"","startDate":"1970-01-01","ppmcode":"0","isincode":"","fundAssets":"0,00","description":"","infoURLs":{"factSheet":"https://internetbank.swedbank.se/ConditionsEarchive/download?bankid=1111&id=WEBDOC-PRODE23232277"},"legalResidenceCountryCode":"","category":"","performanceToday":"0,00","fundAssetsUnit":"MSEK","fundCode":"SGF","name":"Swedbank Generation Flex","rate":{"value":"0,00","currency":"SEK"},"rateDate":"2011-05-11","rating":{"information":"Riskklass visar på sambandet mellan risk och möjlig avkastning i fonden. För mer information, se fondens faktablad och informationsbroschyr.","detailedInformation":"Fonden ska redovisa ett mått på sambandet mellan risk och möjlig avkastning i fonden. Skalan som används i Risk- och avkastningsindikatorn är 1-7, där 1 innebär lägst risk och 7 innebär högst risk och därmed högre möjlig avkastning. För fullständig information, se fondens faktablad och informationsbroschyr."},"tsid":"","fundguide":false}
 
 REQUEST 14
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/fund/marketinfo/KAP?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/fund/marketinfo/KAP
 Accept: application/json
 
 RESPONSE 14
@@ -269,7 +269,7 @@ Connection: Keep-Alive
 {"entranceFund":true,"negativeReturnFund":false,"fundCompanyName":"","startDate":"1970-01-01","ppmcode":"0","isincode":"","fundAssets":"0,00","description":"","infoURLs":{},"legalResidenceCountryCode":"","category":"","performanceToday":"0,00","fundAssetsUnit":"MSEK","fundCode":"KAP","name":"Swedbank Generation KAP-KL","rate":{"value":"0,00","currency":"SEK"},"rateDate":"2017-12-22","rating":{"information":"Riskklass visar på sambandet mellan risk och möjlig avkastning i fonden. För mer information, se fondens faktablad och informationsbroschyr.","detailedInformation":"Fonden ska redovisa ett mått på sambandet mellan risk och möjlig avkastning i fonden. Skalan som används i Risk- och avkastningsindikatorn är 1-7, där 1 innebär lägst risk och 7 innebär högst risk och därmed högre möjlig avkastning. För fullständig information, se fondens faktablad och informationsbroschyr."},"tsid":"","fundguide":false}
 
 REQUEST 15
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/cardaccount/b7a8b326edef7d616ade857555a963d481adc691?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/cardaccount/b7a8b326edef7d616ade857555a963d481adc691
 Accept: application/json
 
 RESPONSE 15
@@ -288,7 +288,7 @@ Connection: Keep-Alive
 
 
 REQUEST 16
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/overview?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/overview
 Accept: application/json
 
 RESPONSE 16
@@ -307,7 +307,7 @@ Connection: Keep-Alive
 
 
 REQUEST 17
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/b8778bad6329d7b67edc08641ed8dbf9f764e4b7?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/b8778bad6329d7b67edc08641ed8dbf9f764e4b7
 Accept: application/json
 
 RESPONSE 17
@@ -326,7 +326,7 @@ Connection: Keep-Alive
 
 
 REQUEST 18
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/27e06c7564bedd982251cdc6b44f9d56da8a64bf?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/27e06c7564bedd982251cdc6b44f9d56da8a64bf
 Accept: application/json
 
 RESPONSE 18
@@ -345,7 +345,7 @@ Connection: Keep-Alive
 
 
 REQUEST 19
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/38b0ef77c018348a23ef9ab7e214929dce09dbc4?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/38b0ef77c018348a23ef9ab7e214929dce09dbc4
 Accept: application/json
 
 RESPONSE 19
@@ -364,7 +364,7 @@ Connection: Keep-Alive
 
 
 REQUEST 20
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/confirmed?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/confirmed
 Accept: application/json
 
 RESPONSE 20
@@ -383,7 +383,7 @@ Connection: Keep-Alive
 
 
 REQUEST 21
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/a6e032552d002682141447a1443b26b0a9e1c8f2?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/a6e032552d002682141447a1443b26b0a9e1c8f2
 Accept: application/json
 
 RESPONSE 21
@@ -402,7 +402,7 @@ Connection: Keep-Alive
 
 
 REQUEST 22
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/a6e032552d002682141447a1443b26b0a9e1c8f2?transactionsPerPage=48&paginationId=a6e032552d002682141447a1443b26b0a9e1c8f2&page=2&dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/a6e032552d002682141447a1443b26b0a9e1c8f2?transactionsPerPage=48&paginationId=a6e032552d002682141447a1443b26b0a9e1c8f2&page=2
 Accept: application/json
 
 RESPONSE 22
@@ -421,7 +421,7 @@ Connection: Keep-Alive
 
 
 REQUEST 23
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/adcb4d0b3f047c7bcc5ca377ecf7ef45b8449f54?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/adcb4d0b3f047c7bcc5ca377ecf7ef45b8449f54
 Accept: application/json
 
 RESPONSE 23
@@ -440,7 +440,7 @@ Connection: Keep-Alive
 
 
 REQUEST 24
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/e22c7c25f4c2eb282776d1b6620fc70ad6893dbf?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/e22c7c25f4c2eb282776d1b6620fc70ad6893dbf
 Accept: application/json
 
 RESPONSE 24
@@ -459,7 +459,7 @@ Connection: Keep-Alive
 
 
 REQUEST 25
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/cardaccount/b7a8b326edef7d616ade857555a963d481adc691?transactionsPerPage=20&page=2&dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/cardaccount/b7a8b326edef7d616ade857555a963d481adc691?transactionsPerPage=20&page=2
 Accept: application/json
 
 RESPONSE 25
@@ -478,7 +478,7 @@ Connection: Keep-Alive
 
 
 REQUEST 26
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/einvoice/incoming?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/einvoice/incoming
 Accept: application/json
 
 RESPONSE 26
@@ -497,7 +497,7 @@ Connection: Keep-Alive
 
 
 REQUEST 27
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch?dsid=AAAAAAAA
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch
 Accept: application/json
 
 RESPONSE 27
