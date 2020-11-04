@@ -1,0 +1,55 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.santander.integration;
+
+import java.time.LocalDate;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class SantanderAgentWiremockTestFixtures {
+
+    static final String PROVIDER_NAME = "uk-santander-oauth2";
+    static final String AUTH_CODE = "DUMMY_AUTH_CODE";
+    private static final String DESTINATION_IDENTIFIER = "77788812345678";
+    private static final String CURRENCY = "GBP";
+    private static final LocalDate EXECUTION_DATE = LocalDate.now();
+    private static final String UNIQUE_ID = "b900555d03124056b54930e1c53c9cac";
+    private static final String REMITTANCE_INFO_VALUE = "UK Demo";
+    private static final String AMOUNT = "1.00";
+    private static final String CREDITOR_NAME = "Dummy creditor name";
+
+    static Payment createDomesticPayment() {
+        return new Payment.Builder()
+                .withCreditor(createCreditor())
+                .withExactCurrencyAmount(createExactCurrencyAmount())
+                .withExecutionDate(EXECUTION_DATE)
+                .withCurrency(CURRENCY)
+                .withRemittanceInformation(createUnstructuredRemittanceInformation())
+                .withUniqueId(UNIQUE_ID)
+                .build();
+    }
+
+    private static Creditor createCreditor() {
+        return new Creditor(
+                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, DESTINATION_IDENTIFIER),
+                CREDITOR_NAME);
+    }
+
+    private static ExactCurrencyAmount createExactCurrencyAmount() {
+        return ExactCurrencyAmount.of(AMOUNT, CURRENCY);
+    }
+
+    private static RemittanceInformation createUnstructuredRemittanceInformation() {
+        final RemittanceInformation result = new RemittanceInformation();
+
+        result.setType(RemittanceInformationType.UNSTRUCTURED);
+        result.setValue(REMITTANCE_INFO_VALUE);
+
+        return result;
+    }
+}
