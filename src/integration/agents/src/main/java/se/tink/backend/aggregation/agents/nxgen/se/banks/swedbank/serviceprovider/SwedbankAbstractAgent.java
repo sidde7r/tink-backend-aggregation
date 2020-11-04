@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankDefaultBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankTokenGeneratorAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
@@ -26,8 +25,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.identitydata.SwedbankIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transactional.SwedbankDefaultTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.SwedbankDefaultTransferDestinationFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankBaseHttpFilter;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.interfaces.SwedbankApiClientProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -45,8 +42,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
 public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
@@ -71,7 +66,6 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
             SwedbankDateUtils dateUtils) {
         super(componentProvider);
         this.dateUtils = dateUtils;
-        configureHttpClient(client);
         swedbankStorage = new SwedbankStorage();
         this.isBankId =
                 request.getProvider().getCredentialsType().equals(CredentialsTypes.MOBILE_BANKID);
@@ -89,15 +83,6 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(new SwedbankBaseHttpFilter());
-        client.addFilter(
-                new TimeoutRetryFilter(
-                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
-                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new SwedbankServiceUnavailableFilter());
     }
 
     @Override

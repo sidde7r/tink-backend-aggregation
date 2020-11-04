@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Retry;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitBankIdRequest;
@@ -51,6 +52,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.rpc.RegisterTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard.rpc.DetailedCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankBaseHttpFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfileHandler;
@@ -66,6 +69,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -110,8 +114,24 @@ public class SwedbankDefaultApiClient {
                                         .getCredentials()
                                         .getField(Key.CORPORATE_ID))
                         .orElse("");
-        setupPersistentHeaders();
         this.host = configuration.getHost();
+        configureHttpClient();
+    }
+
+    private void configureHttpClient() {
+        final String userAgent = configuration.getUserAgent();
+        if (!Strings.isNullOrEmpty(userAgent)) {
+            client.setUserAgent(userAgent);
+        }
+
+        client.addFilter(
+                new SwedbankBaseHttpFilter(
+                        SwedbankBaseConstants.generateAuthorization(configuration, username)));
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new SwedbankServiceUnavailableFilter());
     }
 
     protected <T> T makeGetRequest(URL url, Class<T> responseClass, boolean retry) {
@@ -485,17 +505,6 @@ public class SwedbankDefaultApiClient {
                 requestObject,
                 responseClass,
                 false);
-    }
-
-    private void setupPersistentHeaders() {
-        client.addPersistentHeader(
-                SwedbankBaseConstants.Headers.AUTHORIZATION_KEY,
-                SwedbankBaseConstants.generateAuthorization(configuration, username));
-
-        final String userAgent = configuration.getUserAgent();
-        if (!Strings.isNullOrEmpty(userAgent)) {
-            client.setUserAgent(userAgent);
-        }
     }
 
     public List<BankProfile> getBankProfiles() {
