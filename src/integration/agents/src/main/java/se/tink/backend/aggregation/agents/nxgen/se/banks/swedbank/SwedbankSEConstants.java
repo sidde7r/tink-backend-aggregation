@@ -72,7 +72,7 @@ public class SwedbankSEConstants {
     }
 
     public static class HeaderValues {
-        public static final String ADRUM = "isMobile:true";
-        public static final String ADRUM_1 = "isAjax:true";
+        public static final String ADRUM = "isAjax:true";
+        public static final String ADRUM_1 = "isMobile:true";
     }
 }
