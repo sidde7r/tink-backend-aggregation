@@ -13,6 +13,10 @@ public class LuhnCheck {
         String lastCharacter = numericString.substring(numericString.length() - 1);
         String otherCharacters = numericString.substring(0, numericString.length() - 1);
 
+        if (otherCharacters.isEmpty()) {
+            return false;
+        }
+
         int lastDigit = Integer.parseInt(lastCharacter);
         int calculatedCheck = calculateLuhnMod10Check(otherCharacters);
 

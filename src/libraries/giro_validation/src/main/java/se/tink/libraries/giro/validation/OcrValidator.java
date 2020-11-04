@@ -29,6 +29,13 @@ public class OcrValidator {
         // Disregard spaces in the validation.
         String ocrWithoutSpaces = ocr.replaceAll("\\s", "");
 
+        // Length check as per bankgiro specs(It must contain 2 to 25 digits including the check
+        // digit and, if used, a length digit)
+        // https://www.bankgirot.se/globalassets/dokument/anvandarmanualer/bankgiroreceivables_bankgiroinbetalningar_usermanaual_en.pdf
+        if (ocrWithoutSpaces.length() < 2 || ocrWithoutSpaces.length() > 25) {
+            return false;
+        }
+
         if (Objects.equal(ocrValidationLevel, OcrValidationLevel.NO_OCR)) {
             return false;
         }
