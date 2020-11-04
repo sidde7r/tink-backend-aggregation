@@ -86,11 +86,19 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
         return ImmutableList.<String>builder()
                 .add("2AB")
                 .add("2AE")
+                .add("2AF")
                 .add("2A3")
                 .add("2A4")
+                .add("2BA")
                 .add("2B4")
+                .add("2B5")
+                .add("2B6")
+                .add("2B7")
+                .add("2B9")
+                .add("2CY")
                 .add("2EH")
                 .add("2EX")
+                .add("3BG")
                 .add("3BH")
                 .build();
     }
@@ -102,13 +110,18 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .add("2CF")
                 .add("2C2")
                 .add("2DC")
+                .add("2DH")
+                .add("2EK")
                 .add("3CA")
                 .build();
     }
 
     @Override
     public Map<String, Loan.Type> getLoanAccountTypes() {
-        return ImmutableMap.<String, Loan.Type>builder().put("3BJ", Loan.Type.MORTGAGE).build();
+        return ImmutableMap.<String, Loan.Type>builder()
+                .put("3AC", Loan.Type.MORTGAGE)
+                .put("3BJ", Loan.Type.MORTGAGE)
+                .build();
     }
 
     public class BankIdStatus {
