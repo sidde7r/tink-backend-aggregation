@@ -5,6 +5,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.einvoice.rpc.EInvoiceDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.einvoice.rpc.EInvoiceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.einvoice.rpc.IncomingEinvoicesResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.DetailedPensionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.DetailedPortfolioResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.FundMarketInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.PensionPortfoliosResponse;
@@ -62,6 +63,10 @@ public class SwedbankSEApiClient extends SwedbankDefaultApiClient {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.PENSION_PORTFOLIOS,
                 PensionPortfoliosResponse.class);
+    }
+
+    public DetailedPensionResponse detailedPensionInfo(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, DetailedPensionResponse.class, true);
     }
 
     public DetailedPortfolioResponse detailedPortfolioInfo(LinkEntity linkEntity) {

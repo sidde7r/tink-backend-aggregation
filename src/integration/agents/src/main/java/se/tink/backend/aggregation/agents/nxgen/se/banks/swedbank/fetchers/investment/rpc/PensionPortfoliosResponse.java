@@ -13,6 +13,14 @@ public class PensionPortfoliosResponse {
     private PrivatePensionInsurancesEntity privatePensionInsurances;
     private OccupationalPensionInsurancesEntity occupationalPensionInsurances;
 
+    public PrivatePensionInsurancesEntity getPrivatePensionInsurances() {
+        return privatePensionInsurances;
+    }
+
+    public OccupationalPensionInsurancesEntity getOccupationalPensionInsurances() {
+        return occupationalPensionInsurances;
+    }
+
     /**
      * Temporary method to know if a user has holdings so that we can look at the responses in the
      * S3 logs.

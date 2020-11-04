@@ -6,15 +6,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.entities.PensionInsuranceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.AbstractInvestmentAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.DetailedPensionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.DetailedPortfolioResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.EndowmentInsuranceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.EquityTraderEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.FundAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.InvestmentSavingsAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.PensionPortfoliosResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.PortfolioHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
@@ -48,6 +52,8 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
 
             PortfolioHoldingsResponse portfolioHoldings = apiClient.portfolioHoldings();
 
+            PensionPortfoliosResponse pensionPortfolios = apiClient.getPensionPortfolios();
+
             investmentAccounts.addAll(
                     fundAccountsToInvestmentAccounts(portfolioHoldings.getFundAccounts()));
 
@@ -61,6 +67,8 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
             investmentAccounts.addAll(
                     investmentSavingsToTinkInvestmentAccounts(
                             portfolioHoldings.getInvestmentSavings()));
+
+            investmentAccounts.addAll(pensionAccountsToInvestmentAccounts(pensionPortfolios));
         }
 
         return investmentAccounts;
@@ -129,6 +137,35 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
                                         apiClient, defaultCurrency))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    private List<InvestmentAccount> pensionAccountsToInvestmentAccounts(
+            PensionPortfoliosResponse pensionPortfoliosResponse) {
+
+        List<PensionInsuranceEntity> pensionAccounts =
+                Stream.concat(
+                                pensionPortfoliosResponse.getPrivatePensionInsurances()
+                                        .getPensionInsurances().stream(),
+                                pensionPortfoliosResponse.getOccupationalPensionInsurances()
+                                        .getPensionInsurances().stream())
+                        .collect(Collectors.toList());
+
+        List<DetailedPensionResponse> detailedPensionResponses =
+                getDetailedPensionReponseList(pensionAccounts);
+
+        return detailedPensionResponses.stream()
+                .map(DetailedPensionResponse::getDetailedPension)
+                .map(detailedPension -> detailedPension.toTinkInvestmentAccount(apiClient))
+                .collect(Collectors.toList());
+    }
+
+    private List<DetailedPensionResponse> getDetailedPensionReponseList(
+            List<? extends AbstractInvestmentAccountEntity> entityList) {
+        return entityList.stream()
+                .map(AbstractInvestmentAccountEntity::getLinks)
+                .map(LinksEntity::getSelf)
+                .map(apiClient::detailedPensionInfo)
                 .collect(Collectors.toList());
     }
 
