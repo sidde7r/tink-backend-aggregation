@@ -19,7 +19,7 @@ spec:
 
 ### Response time alerts ###
   - alert: HighResponseTimeAggregationService
-    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="aggregation-controller", team_owner="INTEGRATION", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="aggregation-controller", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
     for: 1m
     labels:
       severity: ping
