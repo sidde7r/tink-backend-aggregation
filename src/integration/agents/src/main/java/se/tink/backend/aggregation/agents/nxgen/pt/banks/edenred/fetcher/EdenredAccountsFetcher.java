@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.fetcher;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredApiClient;
@@ -31,7 +33,11 @@ public class EdenredAccountsFetcher implements AccountFetcher<TransactionalAccou
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return edenredApiClient.getCards().getData().stream()
+        List<CardEntity> cards = edenredApiClient.getCards().getData();
+        if (cards == null) {
+            return Collections.emptyList();
+        }
+        return cards.stream()
                 .map(this::mapAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)

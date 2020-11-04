@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.authenticator.rpc.AuthenticationPinRequest;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.authenticator.rpc.SetPinRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.authenticator.rpc.SetPinResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.rpc.CardListResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.storage.EdenredStorage;
@@ -129,8 +131,14 @@ public class EdenredApiClient {
     }
 
     private RuntimeException mapResponseException(HttpResponseException exception) {
-        if (exception.getResponse() != null && exception.getResponse().getStatus() >= 500) {
-            return BankServiceError.BANK_SIDE_FAILURE.exception(exception);
+        if (exception.getResponse() != null) {
+            if (exception.getResponse().getStatus() >= 500) {
+                return BankServiceError.BANK_SIDE_FAILURE.exception(exception);
+            }
+            BaseResponse<?> response = exception.getResponse().getBody(BaseResponse.class);
+            if (EdenredConstants.NO_PERMISSION.equals(response.getInternalCode())) {
+                return new AccountRefreshException("No permission granted for account");
+            }
         }
         return exception;
     }

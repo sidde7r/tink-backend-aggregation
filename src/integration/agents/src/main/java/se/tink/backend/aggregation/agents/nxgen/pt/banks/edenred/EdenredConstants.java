@@ -51,4 +51,6 @@ public class EdenredConstants {
         public static final String TOKEN = "TOKEN";
         public static final String TRANSACTIONS = "TRANSACTIONS";
     }
+
+    public static final String NO_PERMISSION = "10412";
 }
