@@ -1,17 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Base64;
-import java.util.Enumeration;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.NoSuchElementException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
@@ -30,6 +20,14 @@ public class RabobankUtils {
         persistentStorage.remove(StorageKey.OAUTH_TOKEN);
     }
 
+    public static String getRefreshTokenExpireDate(final Long refreshTokenExpiresInSeconds) {
+        return Instant.ofEpochMilli(System.currentTimeMillis())
+                .atZone(ZoneId.systemDefault())
+                .plusSeconds(refreshTokenExpiresInSeconds)
+                .toLocalDate()
+                .toString();
+    }
+
     public static String createSignatureString(
             final String date, final String digest, final String requestId) {
         String result = Signature.SIGNING_STRING_DATE + date + "\n";
@@ -37,62 +35,6 @@ public class RabobankUtils {
                 Signature.SIGNING_STRING_DIGEST + Signature.SIGNING_STRING_SHA_512 + digest + "\n";
         result += Signature.SIGNING_STRING_REQUEST_ID + requestId;
         return result;
-    }
-
-    private static KeyStore getKeyStore(final byte[] pkcs12Bytes, final String password) {
-        final ByteArrayInputStream pkcs12Stream = new ByteArrayInputStream(pkcs12Bytes);
-        try {
-            final KeyStore p12 = KeyStore.getInstance("PKCS12", "BC");
-            p12.load(pkcs12Stream, password.toCharArray());
-            return p12;
-        } catch (final KeyStoreException
-                | NoSuchProviderException
-                | IOException
-                | NoSuchAlgorithmException
-                | CertificateException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private static X509Certificate getX509CertificateFromKeystore(final KeyStore keyStore) {
-        try {
-            final Enumeration<String> aliases = keyStore.aliases();
-            if (!aliases.hasMoreElements()) {
-                throw new IllegalStateException("No aliases in keystore!");
-            }
-
-            final String alias = aliases.nextElement();
-            final Certificate cert = keyStore.getCertificate(alias);
-            if (!(cert instanceof X509Certificate)) {
-                throw new IllegalStateException("Certificate is not x509!");
-            }
-            return (X509Certificate) cert;
-        } catch (final KeyStoreException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    public static X509Certificate getX509Certificate(
-            final byte[] pkcs12Bytes, final String password) {
-        final KeyStore keyStore = getKeyStore(pkcs12Bytes, password);
-        return getX509CertificateFromKeystore(keyStore);
-    }
-
-    public static String getB64EncodedX509Certificate(
-            final byte[] pkcs12Bytes, final String password) {
-        try {
-            return Base64.getEncoder()
-                    .encodeToString(getX509Certificate(pkcs12Bytes, password).getEncoded());
-        } catch (final CertificateEncodingException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    public static String getCertificateSerialNumber(
-            final byte[] pkcs12Bytes, final String password) {
-        final X509Certificate x509 =
-                getX509CertificateFromKeystore(getKeyStore(pkcs12Bytes, password));
-        return x509.getSerialNumber().toString();
     }
 
     public static String createSignatureHeader(
