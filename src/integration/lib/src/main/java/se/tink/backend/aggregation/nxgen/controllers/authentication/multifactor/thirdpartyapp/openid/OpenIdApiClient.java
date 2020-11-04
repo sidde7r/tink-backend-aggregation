@@ -124,7 +124,7 @@ public class OpenIdApiClient {
         return requestForm;
     }
 
-    private void handleFormAuthentication(
+    protected void handleFormAuthentication(
             TokenRequestForm requestForm, WellKnownResponse wellknownConfiguration) {
         TOKEN_ENDPOINT_AUTH_METHOD authMethod =
                 determineTokenEndpointAuthMethod(providerConfiguration, wellknownConfiguration);
@@ -180,7 +180,7 @@ public class OpenIdApiClient {
         return requestForm;
     }
 
-    private RequestBuilder createTokenRequest() {
+    protected RequestBuilder createTokenRequest() {
         WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
 
         RequestBuilder requestBuilder =

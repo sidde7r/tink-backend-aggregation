@@ -83,7 +83,6 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             SoftwareStatementAssertion softwareStatement,
             String redirectUrl,
             ClientInfo providerConfiguration,
-            URL wellKnownURL,
             RandomValueGenerator randomValueGenerator,
             PersistentStorage persistentStorage,
             UkOpenBankingAisConfig aisConfig,
@@ -94,7 +93,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 softwareStatement,
                 redirectUrl,
                 providerConfiguration,
-                wellKnownURL,
+                aisConfig.getWellKnownURL(),
                 randomValueGenerator);
         this.persistentStorage = persistentStorage;
         this.randomValueGenerator = randomValueGenerator;
