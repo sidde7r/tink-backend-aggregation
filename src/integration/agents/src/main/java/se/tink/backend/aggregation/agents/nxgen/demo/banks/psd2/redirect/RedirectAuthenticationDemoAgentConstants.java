@@ -59,8 +59,8 @@ public class RedirectAuthenticationDemoAgentConstants {
         public static final String BLANCOID = "7777-333334444444";
         public static final String MORTGAGELOANNAME = "Loan";
         public static final String BLANCOLOANNAME = "Santander";
-        public static final double MORTGAGEINTERESTNAME = 0.53;
-        public static final double BLANCOINTERESTNAME = 1.73;
+        public static final double MORTGAGEINTERESTNAME = 0.053;
+        public static final double BLANCOINTERESTNAME = 0.173;
         public static final double MORTGAGEBALANCE = -2300D;
         public static final double BLANCOBALANCE = -5D;
     }

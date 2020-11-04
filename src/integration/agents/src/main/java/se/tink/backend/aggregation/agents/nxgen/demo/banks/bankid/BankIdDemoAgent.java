@@ -143,12 +143,12 @@ public final class BankIdDemoAgent extends NextGenerationDemoAgent
 
             @Override
             public double getMortgageInterestName() {
-                return 0.19;
+                return 0.019;
             }
 
             @Override
             public double getBlancoInterestName() {
-                return 1.45;
+                return 0.145;
             }
 
             @Override

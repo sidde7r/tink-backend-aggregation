@@ -143,12 +143,12 @@ public final class PasswordDemoAgent extends NextGenerationDemoAgent {
 
                 @Override
                 public double getMortgageInterestName() {
-                    return 0.53;
+                    return 0.053;
                 }
 
                 @Override
                 public double getBlancoInterestName() {
-                    return 1.73;
+                    return 0.173;
                 }
 
                 @Override
