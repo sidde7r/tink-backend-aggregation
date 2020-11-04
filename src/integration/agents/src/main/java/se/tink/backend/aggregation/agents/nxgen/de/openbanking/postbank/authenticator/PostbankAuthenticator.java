@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StatusValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -52,20 +51,9 @@ public final class PostbankAuthenticator implements AutoAuthenticator {
 
     @Override
     public void autoAuthenticate() {
-        if (!isStoredConsentValid()) {
+        ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
+        if (!consentStatus.isValid()) {
             throw SessionError.SESSION_EXPIRED.exception();
-        }
-    }
-
-    private boolean isStoredConsentValid() {
-        if (persistentStorage.get(StorageKeys.CONSENT_ID) == null) {
-            return false;
-        }
-        try {
-            ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
-            return StatusValues.VALID.equalsIgnoreCase(consentStatus.getConsentStatus());
-        } catch (RuntimeException e) {
-            return false;
         }
     }
 }

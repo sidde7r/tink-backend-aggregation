@@ -135,7 +135,8 @@ public class DeutscheBankAuthenticatorTest {
     public void shouldThrowLoginErrorWhenStatusResponseIsEmpty() {
         // Given
         ConsentStatusResponse expected =
-                SerializationUtils.deserializeFromString("", ConsentStatusResponse.class);
+                SerializationUtils.deserializeFromString(
+                        "{\"consentStatus\":\"expired\"}\n", ConsentStatusResponse.class);
         when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
 
         // When

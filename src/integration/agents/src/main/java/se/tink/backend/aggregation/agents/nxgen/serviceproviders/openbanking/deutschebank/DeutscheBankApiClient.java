@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank;
 
 import com.google.common.base.Strings;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.IdKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryKeys;
@@ -88,7 +90,9 @@ public class DeutscheBankApiClient {
     }
 
     public ConsentStatusResponse getConsentStatus() {
-        String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        String consentId =
+                Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         return createRequest(
                         new URL(marketConfiguration.getBaseUrl() + Urls.CONSENTS_STATUS)
                                 .parameter(IdKeys.CONSENT_ID, consentId))
