@@ -55,6 +55,20 @@ public class GiroMessageValidatorTest {
         }
 
         @Test
+        public void oneCharacterNumericShouldNotThrowNpe() {
+            se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator
+                    giroMessageValidator =
+                            se.tink.backend.aggregation.agents.utils.giro.validation
+                                    .GiroMessageValidator.create(
+                                    OcrValidationConfiguration.softOcr());
+
+            se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator
+                            .ValidationResult
+                    validate = giroMessageValidator.validate("5");
+            assertThat(validate.getValidOcr()).isEmpty();
+        }
+
+        @Test
         public void nonEmptyMessageIsValidAsMessage() {
             se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator
                     giroMessageValidator =
