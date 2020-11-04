@@ -28,7 +28,7 @@ spec:
       description: The 95-%tile of the response duration for the Aggregation Service over the last 5 minutes is over 500 ms.
 
   - alert: HighResponseTimeProviderConfigurationService
-    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="provider-configuration-service", team_owner="INTEGRATION"}[5m])) by (method, path, le, kubernetes_pod_name)) > 0.5
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="provider-configuration-service", team_owner="CORE_AGGREGATION"}[5m])) by (method, path, le, kubernetes_pod_name)) > 0.5
     for: 1m
     labels:
       severity: ping
