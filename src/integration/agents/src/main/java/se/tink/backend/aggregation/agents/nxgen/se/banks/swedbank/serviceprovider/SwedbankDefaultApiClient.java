@@ -61,7 +61,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.MenuItemLinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.PrivateProfileEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.SelectedProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.TouchResponse;
@@ -531,7 +531,7 @@ public class SwedbankDefaultApiClient {
     private BankProfile activateProfile(BankProfile bankProfile) {
 
         Map<String, MenuItemLinkEntity> profileMenuItems =
-                fetchProfile(bankProfile.getBank().getProfile().getLinks().getNextOrThrow());
+                fetchProfile(bankProfile.getProfile().getLinks().getNextOrThrow());
         getBankProfileHandler().setMenuItems(profileMenuItems);
         getBankProfileHandler().setActiveBankProfile(bankProfile);
         swedbankStorage.setBankProfileHandler(getBankProfileHandler());
@@ -547,10 +547,9 @@ public class SwedbankDefaultApiClient {
                 createAndAddProfileToHandler(bank, bank.getPrivateProfile());
             }
         } else {
-            for (BankEntity bank : profileResponse.getBanks()) {
-                bank.setOrgNumber(organizationNumber);
 
-                bank.getMatchingBusinessProfile()
+            for (BankEntity bank : profileResponse.getBanks()) {
+                bank.getBusinessProfile(organizationNumber)
                         .ifPresent(
                                 businessProfileEntity ->
                                         createAndAddProfileToHandler(bank, businessProfileEntity));
@@ -565,7 +564,7 @@ public class SwedbankDefaultApiClient {
         swedbankStorage.setBankProfileHandler(bankProfileHandler);
     }
 
-    private void createAndAddProfileToHandler(BankEntity bank, PrivateProfileEntity profileEntity) {
+    private void createAndAddProfileToHandler(BankEntity bank, ProfileEntity profileEntity) {
         // fetch all profile details
         Map<String, MenuItemLinkEntity> menuItems =
                 fetchProfile(profileEntity.getLinks().getNextOrThrow());
@@ -576,7 +575,11 @@ public class SwedbankDefaultApiClient {
         // create and add profile
         BankProfile bankProfile =
                 new BankProfile(
-                        bank, menuItems, engagementOverViewResponse, paymentBaseinfoResponse);
+                        bank,
+                        menuItems,
+                        engagementOverViewResponse,
+                        paymentBaseinfoResponse,
+                        profileEntity.getId());
         bankProfileHandler.addBankProfile(bankProfile);
         // profile is already activated
         bankProfileHandler.setActiveBankProfile(bankProfile);

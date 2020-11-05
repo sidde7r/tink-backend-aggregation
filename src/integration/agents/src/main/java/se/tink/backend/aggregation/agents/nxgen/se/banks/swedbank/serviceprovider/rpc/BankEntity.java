@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,7 +16,6 @@ public class BankEntity {
     private String url;
     private String bankId;
     private PrivateProfileEntity privateProfile;
-    @JsonIgnore private String orgNumber;
 
     @JsonProperty("corporateProfiles")
     private List<BusinessProfileEntity> businessProfiles = new ArrayList<>();
@@ -34,36 +33,29 @@ public class BankEntity {
     }
 
     @JsonIgnore
-    public void setOrgNumber(String orgNumber) {
-        this.orgNumber = orgNumber;
-    }
-
-    @JsonIgnore
-    public PrivateProfileEntity getProfile() {
-        if (Strings.isNullOrEmpty(orgNumber)) {
+    public ProfileEntity getProfile(String profileId) {
+        if (Objects.nonNull(privateProfile) && privateProfile.getId().equalsIgnoreCase(profileId)) {
             return privateProfile;
         }
 
-        return getMatchingBusinessProfile().orElseThrow(IllegalStateException::new);
+        if (Objects.nonNull(businessProfiles)) {
+            return businessProfiles.stream()
+                    .filter(profile -> profile.getId().equalsIgnoreCase(profileId))
+                    .findFirst()
+                    .orElseThrow(IllegalStateException::new);
+        }
+
+        throw new IllegalStateException("Profile not found");
     }
 
     @JsonIgnore
-    public Optional<BusinessProfileEntity> getMatchingBusinessProfile() {
+    public Optional<BusinessProfileEntity> getBusinessProfile(String organizationNumber) {
+        if (Objects.isNull(businessProfiles)) {
+            return Optional.empty();
+        }
+
         return businessProfiles.stream()
-                .filter(
-                        profile ->
-                                profile.getCustomerNumber().contains(orgNumber)
-                                        || profile.getCustomerNumber()
-                                                .contains(orgNumber.replace("-", "")))
-                .findAny();
-    }
-
-    @JsonIgnore
-    public String getHolderName() {
-        PrivateProfileEntity profile = getProfile();
-        // For business, activeProfileName is set to company name
-        return Strings.isNullOrEmpty(profile.getActiveProfileName())
-                ? profile.getCustomerName()
-                : profile.getActiveProfileName();
+                .filter(profile -> profile.getCustomerNumber().equalsIgnoreCase(organizationNumber))
+                .findFirst();
     }
 }

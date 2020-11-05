@@ -69,7 +69,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                         .putInTemporaryStorage(StorageKey.NEXT_LINK, getLinkOrNull())
                         .putInTemporaryStorage(
                                 SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
-                        .setHolderName(new HolderName(bankProfile.getBank().getHolderName()))
+                        .setHolderName(new HolderName(bankProfile.getProfile().getHolderName()))
                         .build());
     }
 
