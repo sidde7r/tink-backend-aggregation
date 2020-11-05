@@ -31,7 +31,7 @@ public class SwedbankSEConstants {
                             "swedbank-business",
                             new ProfileParameters(
                                     "swedbank-business",
-                                    "kZJM0pxnADgWCcHa",
+                                    "b2Epp9ngZcpRirYH",
                                     false,
                                     "SwedbankMOBCorporateIOS/3.11.0_(iOS;_13.3.1)_Apple/iPhone9,3"))
                     .put(
