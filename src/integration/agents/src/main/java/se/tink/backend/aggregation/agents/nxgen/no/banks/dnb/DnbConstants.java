@@ -131,6 +131,8 @@ public final class DnbConstants {
                 "ukjent brukeridentitet eller feil format på brukeridentitet";
         public static final String USER_ID_BLOCKED =
                 "Din bruker-ID er sperret. Kontakt oss for mer informasjon.";
+
+        public static final String NO_ACCESS = "<div id=\"websealError\">no_access</div>";
     }
 
     public static class CardStatus {
