@@ -207,6 +207,9 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         if (collectBankId.isSuccess()) {
             apiClient.getFinalizeLogon(bankIdReferer);
             apiClient.getFirstRequestAfterLogon(bankIdReferer);
+            // fetch accounts to check if user has access. Needs to be done in authenticator to set
+            // Credentials status to AUTHENTICATION_ERROR instead of TEMPORARY_ERROR
+            apiClient.fetchAccounts();
             return BankIdStatus.DONE;
         }
 
