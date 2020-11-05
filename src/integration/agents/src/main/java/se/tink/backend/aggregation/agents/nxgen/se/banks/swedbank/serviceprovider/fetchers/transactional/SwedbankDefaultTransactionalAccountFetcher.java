@@ -184,7 +184,7 @@ public class SwedbankDefaultTransactionalAccountFetcher
         return transactionKeyPaginatorResponse;
     }
 
-    private EngagementTransactionsResponse fetchTransactions(
+    protected EngagementTransactionsResponse fetchTransactions(
             TransactionalAccount account, LinkEntity key) {
         try {
             EngagementTransactionsResponse rawResponse = apiClient.engagementTransactions(key);
