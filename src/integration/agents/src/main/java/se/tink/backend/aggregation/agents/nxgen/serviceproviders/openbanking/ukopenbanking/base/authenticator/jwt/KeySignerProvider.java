@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import java.security.cert.X509Certificate;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.AgentConfigurationControllerContext;
 import se.tink.backend.aggregation.agents.contexts.EidasContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.kid.JwksKidProvider;
@@ -17,13 +18,15 @@ import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 
+@Slf4j
 public final class KeySignerProvider implements Provider<JwtSigner> {
     // TODO this is temporary solution until we will able to fetch CERT_ID from TPA on the Agent
     // setup
     private static final String UKOB_CERT_ID = "UKOB";
     private static final ImmutableSet<String> EIDAS_ENABLED_APPS =
             ImmutableSet.of(
-                    "5f98e87106384b2981c0354a33b51590" // oxford-staging
+                    "5f98e87106384b2981c0354a33b51590", // oxford-staging
+                    "e643eb7981d24acfb47834ef338a4e2a" // oxford-prod
                     );
     private final AgentComponentProvider agentComponentProvider;
     private final UkOpenBankingConfiguration configuration;
@@ -51,6 +54,7 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
         // this is temporary solution, it should be deleted after the Tink and all of our clients
         // migration certificates to the eIDAS proxy
         if (EIDAS_ENABLED_APPS.contains(appId)) {
+            log.info("Initialize eIDAS JWT signer for '{}'", appId);
             X509Certificate certificate =
                     CertificateUtils.getX509CertificatesFromBase64EncodedCert(
                                     agentConfigurationControllerContext
