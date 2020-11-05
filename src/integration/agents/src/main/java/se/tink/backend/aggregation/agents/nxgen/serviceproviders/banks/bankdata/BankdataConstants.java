@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata;
 
 import com.google.common.collect.ImmutableMap;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BankdataConstants {
@@ -87,27 +85,12 @@ public class BankdataConstants {
                     .put("childsaving", Portfolio.Type.OTHER)
                     .build();
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.SAVINGS, "Opsparing")
-                    .put(
-                            AccountTypes.CHECKING,
-                            "Budget",
-                            "Totalkonto",
-                            "Totalkonto Ung",
-                            "Lønkonto",
-                            "Budgetkonto",
-                            "Budgetkonto Ung",
-                            "Grundkonto",
-                            "Forbrug")
-                    .build();
-
     public static class TimeoutRetryFilterParams {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
 
-    public static class HttpClientParams {
-        public static final int CLIENT_TIMEOUT = 60 * 1000;
+    static class HttpClientParams {
+        static final int CLIENT_TIMEOUT = 60 * 1000;
     }
 }
