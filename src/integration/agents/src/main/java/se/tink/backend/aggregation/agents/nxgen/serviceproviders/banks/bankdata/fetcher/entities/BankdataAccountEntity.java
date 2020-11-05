@@ -76,15 +76,15 @@ public class BankdataAccountEntity {
 
     public AccountTypes getType() {
         final String savingsPartialName = "Opsparing";
-        AccountTypes accountTypes =
-                StringUtils.containsIgnoreCase(name, savingsPartialName)
-                        ? AccountTypes.SAVINGS
-                        : AccountTypes.CHECKING;
-        return isLoanAccount(accountTypes) ? AccountTypes.LOAN : accountTypes;
-    }
-
-    private boolean isLoanAccount(AccountTypes accountTypes) {
-        return AccountTypes.CHECKING == accountTypes && drawingRight > 0;
+        AccountTypes accountTypes;
+        if (StringUtils.containsIgnoreCase(name, savingsPartialName)) {
+            accountTypes = AccountTypes.SAVINGS;
+        } else if (drawingRight > 0) {
+            accountTypes = AccountTypes.LOAN;
+        } else {
+            accountTypes = AccountTypes.CHECKING;
+        }
+        return accountTypes;
     }
 
     private String constructUniqueIdentifier() {
