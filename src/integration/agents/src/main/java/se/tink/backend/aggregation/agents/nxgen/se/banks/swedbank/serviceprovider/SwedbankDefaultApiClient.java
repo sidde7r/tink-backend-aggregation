@@ -84,7 +84,6 @@ public class SwedbankDefaultApiClient {
     private final SwedbankConfiguration configuration;
     private final String username;
     private final SwedbankStorage swedbankStorage;
-    private final AgentComponentProvider componentProvider;
     // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
     private final String organizationNumber;
@@ -106,7 +105,6 @@ public class SwedbankDefaultApiClient {
         this.configuration = configuration;
         this.username = username;
         this.swedbankStorage = swedbankStorage;
-        this.componentProvider = componentProvider;
         this.organizationNumber =
                 Optional.ofNullable(
                                 componentProvider
