@@ -61,13 +61,13 @@ class RetryableEC2CredentialsFetcher {
     private static final String TOKEN = "Token";
 
     /** The current instance profile credentials */
-    private volatile AWSCredentials credentials;
+    private AWSCredentials credentials;
 
     /** The expiration for the current instance profile credentials */
-    private volatile Date credentialsExpiration;
+    private Date credentialsExpiration;
 
     /** The time of the last attempt to check for new credentials */
-    protected volatile Date lastInstanceProfileCheck;
+    protected Date lastInstanceProfileCheck;
 
     /** Used to load the endpoint where the credentials are stored. */
     private final CredentialsEndpointProvider credentialsEndpointProvider;
@@ -121,8 +121,7 @@ class RetryableEC2CredentialsFetcher {
                                     credentialsEndpointProvider.getHeaders());
 
             LOGGER.info(
-                    "Endpoint for fetching AWS credentals = "
-                            + credentialsEndpointProvider.getCredentialsEndpoint());
+                    "Endpoint for fetching AWS credentals = {}", credentialsEndpointProvider.getCredentialsEndpoint());
 
             node = Jackson.jsonNodeOf(credentialsResponse);
             accessKey = node.get(ACCESS_KEY_ID);
@@ -153,7 +152,7 @@ class RetryableEC2CredentialsFetcher {
 
                 try {
                     credentialsExpiration = DateUtils.parseISO8601Date(expiration);
-                } catch (Exception ex) {
+                } catch (RuntimeException ex) {
                     handleError(
                             "Unable to parse credentials expiration date from Amazon EC2 instance",
                             ex);
@@ -207,16 +206,10 @@ class RetryableEC2CredentialsFetcher {
 
     private boolean expired() {
         if (credentialsExpiration != null) {
-            if (credentialsExpiration.getTime() < System.currentTimeMillis()) {
-                return true;
-            }
+            return credentialsExpiration.getTime() < System.currentTimeMillis();
         }
 
         return false;
-    }
-
-    public Date getCredentialsExpiration() {
-        return credentialsExpiration;
     }
 
     @Override

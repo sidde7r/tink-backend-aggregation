@@ -6,11 +6,11 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 
 public class PortfolioTrackingSerializer extends TrackingMapSerializer {
 
-    public static final String PORTFOLIO = "Portfolio";
+    private static final String PORTFOLIO_ENTITY_NAME = "Portfolio";
     final Portfolio portfolio;
 
     public PortfolioTrackingSerializer(Portfolio portfolio) {
-        super(String.format(PORTFOLIO + "<%s>", String.valueOf(portfolio.getType())));
+        super(String.format(PORTFOLIO_ENTITY_NAME + "<%s>", String.valueOf(portfolio.getType())));
 
         this.portfolio = portfolio;
 

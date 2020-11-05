@@ -29,10 +29,11 @@ public class TransactionResponse extends ArrayList<TransactionEntity>
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        if (this.isEmpty()) {
+        final String lastTransactionId = getLastTransactionId();
+        if (lastTransactionId == null) {
             return Optional.of(false);
         }
-        return Optional.of(!getLastTransactionId().equals(previousTransactionId));
+        return Optional.of(!lastTransactionId.equals(previousTransactionId));
     }
 
     @Override

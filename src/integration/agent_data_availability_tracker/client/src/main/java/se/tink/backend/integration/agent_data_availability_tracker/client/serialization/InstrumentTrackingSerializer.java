@@ -4,11 +4,11 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 
 public class InstrumentTrackingSerializer extends TrackingMapSerializer {
 
-    public static final String INSTRUMENT = "Instrument";
+    private static final String INSTRUMENT_ENTITY_NAME = "Instrument";
     private final Instrument instrument;
 
     public InstrumentTrackingSerializer(Instrument instrument) {
-        super(String.format(INSTRUMENT + "<%s>", String.valueOf(instrument.getType())));
+        super(String.format(INSTRUMENT_ENTITY_NAME + "<%s>", String.valueOf(instrument.getType())));
         this.instrument = instrument;
     }
 
