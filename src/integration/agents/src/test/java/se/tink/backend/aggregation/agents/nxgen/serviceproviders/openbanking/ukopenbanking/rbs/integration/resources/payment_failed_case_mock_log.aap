@@ -1,0 +1,64 @@
+REQUEST 1
+GET https://personal.secure1.rbs.co.uk/.well-known/openid-configuration
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/json
+Content-Length: 1302
+Connection: keep-alive
+Server: Apache
+Accept-Ranges: bytes
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+
+{"version":"3.0","issuer":"https://secure1.rbs.co.uk","authorization_endpoint":"https://personal.secure1.rbs.co.uk/as/authorization.oauth2","token_endpoint":"https://secure1t.rbs.co.uk/as/token.oauth2","jwks_uri":"https://keystore.openbanking.org.uk/0015800000jfwB4AAI/3Z5fMPENsz075hYLU9Rly5.jwks","scopes_supported":["openid","payments","accounts","fundsconfirmations"],"claims_supported":["aud","exp","iat","iss","openbanking_intent_id","sub","acr"],"response_modes_supported":["fragment","query","form_post"],"grant_types_supported":["authorization_code","refresh_token","client_credentials"],"subject_types_supported":["public"],"id_token_signing_alg_values_supported": ["HS256","HS384","HS512","RS256","RS384","RS512","ES256","ES384","ES512"],"token_endpoint_auth_methods_supported":["tls_client_auth"],"tls_client_certificate_bound_access_tokens":true,"token_endpoint_auth_signing_alg_values_supported":["RS256","RS384","RS512","ES256","ES384","ES512"],"claim_types_supported":["normal"],"claims_parameter_supported":true,"request_parameter_supported":true,"request_uri_parameter_supported":false,"request_object_signing_alg_values_supported": ["RS256","RS384","RS512","ES256","ES384","ES512"],"request_object_encryption_alg_values_supported":[],"request_object_encryption_enc_values_supported":[]}
+
+REQUEST 2
+POST https://secure1t.rbs.co.uk/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID
+
+RESPONSE 2 SET STATE_PAYMENT
+200
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Referrer-Policy: origin
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+
+{"access_token":"DUMMY_TPP_ACCESS_TOKEN","token_type":"bearer","expires_in":1799}
+
+REQUEST 3
+POST https://api.rbs.co.uk/open-banking/v3.1/pisp/domestic-payment-consents
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+x-idempotency-key: 0000000000000000
+Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
+x-fapi-financial-id: 0015800000jfwB4AAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+x-jws-signature: RkFLRV9TSUdOQVRVUkUK
+
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"InstructionIdentification":"4f0a6efca9c740e781419944143cdf13","EndToEndIdentification":"4f0a6efca9c740e781419944143cdf1","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469431111","Name":"Dummy name"},"RemittanceInformation":{"Unstructured":"UK Demo"}}}}
+
+RESPONSE 3
+400
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: Apache
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen,noopen
+Referrer-Header: no-referrer,no-referrer
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Code":"400 BadRequest","Id":"38838199-e299-4c3a-ad16-d5058b6ced21","Message":"Request error found.","Errors":[{"ErrorCode":"UK.OBIE.Field.Invalid","Message":"Creditor account failed to pass validation checks"}]}

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities;
 
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataPaymentAccountCapabilities;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -47,9 +47,9 @@ public class BankdataAccountEntity {
     private long accountOwnerRefNo;
 
     public TransactionalAccount toTinkAccount() {
-        AccountTypes accountType = getType();
+        AccountTypes tinkAccountType = getType();
         return CheckingAccount.builder(
-                        accountType,
+                        tinkAccountType,
                         constructUniqueIdentifier(),
                         ExactCurrencyAmount.of(balance, currencyCode))
                 .setAccountNumber(iban)
@@ -59,14 +59,15 @@ public class BankdataAccountEntity {
                 .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY, accountNo)
                 .canExecuteExternalTransfer(
                         BankdataPaymentAccountCapabilities.canExecuteExternalTransfer(
-                                name, accountType, this))
+                                name, tinkAccountType, this))
                 .canReceiveExternalTransfer(
                         BankdataPaymentAccountCapabilities.canReceiveExternalTransfer(
-                                name, accountType, this))
+                                name, tinkAccountType, this))
                 .canWithdrawCash(
-                        BankdataPaymentAccountCapabilities.canWithdrawCash(name, accountType))
+                        BankdataPaymentAccountCapabilities.canWithdrawCash(name, tinkAccountType))
                 .canPlaceFunds(
-                        BankdataPaymentAccountCapabilities.canPlaceFunds(name, accountType, this))
+                        BankdataPaymentAccountCapabilities.canPlaceFunds(
+                                name, tinkAccountType, this))
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                 .setHolderName(new HolderName(getAccountOwner()))
@@ -74,13 +75,16 @@ public class BankdataAccountEntity {
     }
 
     public AccountTypes getType() {
-        AccountTypes accountTypes =
-                BankdataConstants.ACCOUNT_TYPE_MAPPER.translate(name).orElse(AccountTypes.CHECKING);
-        return isLoanAccount(accountTypes) ? AccountTypes.LOAN : accountTypes;
-    }
-
-    private boolean isLoanAccount(AccountTypes accountTypes) {
-        return AccountTypes.CHECKING == accountTypes && drawingRight > 0;
+        final String savingsPartialName = "Opsparing";
+        AccountTypes accountTypes;
+        if (StringUtils.containsIgnoreCase(name, savingsPartialName)) {
+            accountTypes = AccountTypes.SAVINGS;
+        } else if (drawingRight > 0) {
+            accountTypes = AccountTypes.LOAN;
+        } else {
+            accountTypes = AccountTypes.CHECKING;
+        }
+        return accountTypes;
     }
 
     private String constructUniqueIdentifier() {
