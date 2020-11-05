@@ -39,7 +39,10 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
                             "AcceptedSettlementInProcess")
                     .put(PaymentStatus.CREATED, "AwaitingAuthorisation")
                     .put(PaymentStatus.REJECTED, "Rejected")
-                    .put(PaymentStatus.PAID, "AcceptedSettlementCompleted")
+                    .put(
+                            PaymentStatus.PAID,
+                            "AcceptedSettlementCompleted",
+                            "AcceptedCreditSettlementCompleted")
                     .build();
 
     private static final TypeMapper<PaymentStatus> SCHEDULED_PAYMENT_STATUS_MAPPER =
