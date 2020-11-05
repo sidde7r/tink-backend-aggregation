@@ -165,6 +165,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 c -> {
                     this.credential = c;
 
+                    // Replace credential object in context as well
+                    this.context.setCredential(c);
+
                     // Replace the log masker with one that includes the newly loaded credentials
                     this.context.setLogMasker(new FakeLogMasker());
                 });
