@@ -54,6 +54,6 @@ public class PasswordLoginInitStepTest extends BaseStep {
                         .getBelfiusProcessState();
 
         assertThat(processState.getSessionId()).isEqualTo(SESSION_ID);
-        assertThat(processState.getRequestCounterAggregated()).isEqualTo(1);
+        assertThat(processState.getRequestCounterAggregated()).isEqualTo(0);
     }
 }

@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+
 import com.google.inject.Inject;
+import java.net.URI;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
@@ -20,10 +23,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-
-import java.net.URI;
-
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfiguration>

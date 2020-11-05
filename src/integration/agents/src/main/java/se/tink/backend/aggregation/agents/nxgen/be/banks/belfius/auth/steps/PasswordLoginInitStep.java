@@ -28,6 +28,7 @@ public class PasswordLoginInitStep
         BelfiusProcessState processState = processStateAccessor.getBelfiusProcessState();
 
         new BelfiusSessionService(apiClient, processState).openSession();
+        processState.resetRequestCounterAggregated();
 
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(

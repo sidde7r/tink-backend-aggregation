@@ -29,6 +29,7 @@ public class SoftLoginInitStep
         BelfiusProcessState processState = belfiusProcessStateAccessor.getBelfiusProcessState();
 
         new BelfiusSessionService(apiClient, processState).openSession();
+        processState.resetRequestCounterAggregated();
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(
                         SoftLoginGetContactNumberAndChallegeStep.class.getSimpleName()),

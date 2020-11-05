@@ -113,7 +113,9 @@ public class AgentAuthenticationResultAggregationHandler
     }
 
     @Override
-    public void visit(AgentProceedNextStepAfterRemoteInteractionAuthenticationResult arg) {}
+    public void visit(AgentProceedNextStepAfterRemoteInteractionAuthenticationResult arg) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
 
     public AgentAuthenticationResultHandlingResult handle(
             final AgentAuthenticationResult authenticationResult) {
