@@ -154,7 +154,7 @@ public class IcaBankenConstants {
         public static final String ERROR_SAVING_RECIPIENT = "Error when saving recipient.";
 
         public static final String INVALID_REFERENCE_TYPE =
-                "Du måste ange ett meddelande som referens till mottagaren";
+                "du måste ange ett meddelande som referens till mottagaren";
     }
 
     public static final class AccountTypes {
