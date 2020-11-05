@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.filter;
 
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
@@ -32,7 +32,7 @@ public class ReAuthenticateFilter extends Filter {
             // prevent our framework to use the stored access token and prevent it from refreshing
             // it.
             persistentStorage.remove(OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN);
-            throw BankServiceError.CONSENT_REVOKED.exception(
+            throw SessionError.CONSENT_REVOKED.exception(
                     "User needs to re-authenticate, removed token from storage.");
         }
         return response;
