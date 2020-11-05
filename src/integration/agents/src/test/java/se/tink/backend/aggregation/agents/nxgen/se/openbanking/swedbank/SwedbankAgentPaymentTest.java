@@ -13,8 +13,9 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -46,39 +47,63 @@ public class SwedbankAgentPaymentTest {
     }
 
     @Test
-    public void testPayments() throws Exception {
-        builder.build().testGenericPayment(createListMockedPayment(1));
+    public void testBankTransfer() throws Exception {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("tinkTest");
+
+        builder.build()
+                .testGenericPayment(createListMockedPayment(1, Type.SE, remittanceInformation));
     }
 
-    private List<Payment> createListMockedPayment(int numberOfMockedPayments) {
+    @Test
+    public void testPayments() throws Exception {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.OCR);
+        remittanceInformation.setValue("13077598319");
+
+        builder.build()
+                .testGenericPayment(createListMockedPayment(1, Type.SE_BG, remittanceInformation));
+    }
+
+    private List<Payment> createListMockedPayment(
+            int numberOfMockedPayments,
+            Type creditorType,
+            RemittanceInformation remittanceInformation) {
         List<Payment> listOfMockedPayments = new ArrayList<>();
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn(Type.SE).when(creditor).getAccountIdentifierType();
-            doReturn(toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT))
+
+            AccountIdentifier sourceAccountIdentifier =
+                    AccountIdentifier.create(
+                            Type.SE,
+                            toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT));
+
+            AccountIdentifier destinationAccountIdentifier =
+                    AccountIdentifier.create(
+                            creditorType,
+                            toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT));
+
+            doReturn(creditorType).when(creditor).getAccountIdentifierType();
+            doReturn(destinationAccountIdentifier.getIdentifier())
                     .when(creditor)
                     .getAccountNumber();
+            doReturn("TinkTest").when(creditor).getName();
+
+            doReturn(destinationAccountIdentifier).when(creditor).getAccountIdentifier();
+
             Debtor debtor = mock(Debtor.class);
             doReturn(Type.SE).when(debtor).getAccountIdentifierType();
-            doReturn(toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT))
-                    .when(debtor)
-                    .getAccountNumber();
-
-            Amount amount = Amount.inSEK(3);
-
-            String currency = "SEK";
-
-            RemittanceInformation remittanceInformation = new RemittanceInformation();
-            remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
-            remittanceInformation.setValue("tinTest");
+            doReturn(sourceAccountIdentifier.getIdentifier()).when(debtor).getAccountNumber();
+            doReturn(sourceAccountIdentifier).when(debtor).getAccountIdentifier();
 
             listOfMockedPayments.add(
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
-                            .withCurrency(currency)
+                            .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1))
+                            .withCurrency("SEK")
                             .withRemittanceInformation(remittanceInformation)
                             .build());
         }

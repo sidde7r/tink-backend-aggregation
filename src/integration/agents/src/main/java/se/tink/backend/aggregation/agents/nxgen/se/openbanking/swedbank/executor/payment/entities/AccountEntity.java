@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executo
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.AccountIdentifier;
@@ -14,39 +13,19 @@ import se.tink.libraries.payment.rpc.Debtor;
 @JsonObject
 @JsonInclude(Include.NON_NULL)
 public class AccountEntity {
-    private String iban;
-    private String bban;
-
-    private AccountEntity(String accountNumber, Type accountIdentifierType) {
-        switch (accountIdentifierType) {
-            case IBAN:
-                this.iban = accountNumber;
-                break;
-            case SE:
-            case SE_BG:
-            case SE_PG:
-                this.bban = accountNumber;
-                break;
-            default:
-                throw new IllegalStateException(
-                        String.format(
-                                ErrorMessages.INVALID_ACCOUNT_TYPE,
-                                accountIdentifierType.toString()));
-        }
-    }
-
-    public AccountEntity() {}
+    protected String iban;
+    protected String bban;
 
     @JsonIgnore
     public static AccountEntity creditorOf(PaymentRequest paymentRequest) {
-        return new AccountEntity(
+        return new CreditorAccountEntity(
                 paymentRequest.getPayment().getCreditor().getAccountNumber(),
                 paymentRequest.getPayment().getCreditor().getAccountIdentifierType());
     }
 
     @JsonIgnore
     public static AccountEntity debtorOf(PaymentRequest paymentRequest) {
-        return new AccountEntity(
+        return new DebtorAccountEntity(
                 paymentRequest.getPayment().getDebtor().getAccountNumber(),
                 paymentRequest.getPayment().getDebtor().getAccountIdentifierType());
     }
