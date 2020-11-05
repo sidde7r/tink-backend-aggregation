@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingac
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.DnbCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.DnbCreditTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.DnbAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.filters.DnbErrorsFilter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.filters.DnbRetryFilter;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -72,7 +71,6 @@ public final class DnbAgent extends NextGenerationAgent
                 new DnbRetryFilter(
                         DnbConstants.RetryFilter.NUM_TIMEOUT_RETRIES,
                         DnbConstants.RetryFilter.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new DnbErrorsFilter());
     }
 
     @Override
