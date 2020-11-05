@@ -35,7 +35,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -126,7 +125,7 @@ public class DanskeBankExecutorHelper {
                         .allowDuplicateTransfer(true)
                         .amount(transfer.getAmount().getValue())
                         .bankName(creditorBankName)
-                        .bookingDate(formatDate(paymentDate))
+                        .bookingDate(paymentDate)
                         .currency(transfer.getAmount().getCurrency())
                         .regNoFromExt(sourceAccount.getAccountRegNoExt())
                         .savePayee(false)
@@ -170,7 +169,7 @@ public class DanskeBankExecutorHelper {
                         .allowDuplicateTransfer(true)
                         .amount(transfer.getAmount().getValue())
                         .bankName(null)
-                        .bookingDate(formatDate(paymentDate))
+                        .bookingDate(paymentDate)
                         .currency(transfer.getAmount().getCurrency())
                         .forcableErrorsRC("0000")
                         .textFrom(
@@ -303,7 +302,7 @@ public class DanskeBankExecutorHelper {
                         .accountNoIntFrom(sourceAccount.getAccountNoInt())
                         .accountProductFrom(sourceAccount.getAccountProduct())
                         .amount(transfer.getAmount().getValue())
-                        .bookingDate(formatDate(paymentDate))
+                        .bookingDate(paymentDate)
                         .cardType(payType)
                         .creditorId(transfer.getDestination().getIdentifier())
                         .creditorName(creditorName)
@@ -358,9 +357,5 @@ public class DanskeBankExecutorHelper {
                 .setEndUserMessage(EndUserMessage.BANKID_ANOTHER_IN_PROGRESS)
                 .setInternalStatus(InternalStatus.BANKID_ANOTHER_IN_PROGRESS.toString())
                 .build();
-    }
-
-    private String formatDate(Date date) {
-        return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(date);
     }
 }

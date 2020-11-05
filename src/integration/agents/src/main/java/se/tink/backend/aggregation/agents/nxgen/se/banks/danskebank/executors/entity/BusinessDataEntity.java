@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import lombok.Builder;
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -23,7 +25,10 @@ public class BusinessDataEntity {
     private boolean allowDuplicateTransfer;
     private double amount;
     private String bankName;
-    private String bookingDate;
+
+    @JsonFormat(pattern = "yyyyMMdd", timezone = "Europe/Stockholm")
+    private Date bookingDate;
+
     private String currency;
     private String forcableErrorsRC;
     private String payeeName;
