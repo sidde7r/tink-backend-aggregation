@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
@@ -86,7 +85,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 // is nothing left to do but to clear everything and start over.
                 persistentStorage.remove(Storage.CONSENT);
                 persistentStorage.remove(Storage.OAUTH_TOKEN);
-                throw BankServiceError.CONSENT_REVOKED.exception(e);
+                throw SessionError.CONSENT_REVOKED.exception(e);
             }
             throw e;
         }
