@@ -68,7 +68,7 @@ public final class NewAgentTestContext extends AgentContext {
     private IdentityData identityData = null;
 
     private final User user;
-    private final Credentials credential;
+    private Credentials credential;
     private final AgentTestServerClient agentTestServerClient;
     private final SupplementalRequester supplementalRequester;
     private final Provider provider;
@@ -102,6 +102,10 @@ public final class NewAgentTestContext extends AgentContext {
 
     public AgentTestServerClient getAgentTestServerClient() {
         return agentTestServerClient;
+    }
+
+    public void setCredential(Credentials credential) {
+        this.credential = credential;
     }
 
     @Override
