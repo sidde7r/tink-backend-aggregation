@@ -10,6 +10,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
@@ -25,8 +26,11 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstant
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 @AgentDependencyModulesForProductionMode(
         modules = {UkOpenBankingModule.class, JwtSignerModule.class})
@@ -36,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
+    private static final UkOpenBankingV31PisConfiguration pisConfig;
     private final LocalDateTimeSource localDateTimeSource;
     private final RandomValueGenerator randomValueGenerator;
 
@@ -48,15 +53,13 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
                         .withAppToAppURL(V313.PERSONAL_APP_TO_APP_AUTH_URL)
                         .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)
                         .build();
+
+        pisConfig = new UkOpenBankingV31PisConfiguration(V313.PERSONAL_PIS_API_URL);
     }
 
     @Inject
     public HsbcV31Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(
-                componentProvider,
-                jwtSigner,
-                aisConfig,
-                new UkOpenBankingV31PisConfiguration(V313.PERSONAL_PIS_API_URL));
+        super(componentProvider, jwtSigner, aisConfig, pisConfig);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
@@ -64,6 +67,25 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+    }
+
+    protected UkOpenBankingApiClient createApiClient(
+            TinkHttpClient httpClient,
+            JwtSigner signer,
+            SoftwareStatementAssertion softwareStatement,
+            String redirectUrl,
+            ClientInfo providerConfiguration) {
+
+        return new HsbcGroupApiClient(
+                httpClient,
+                signer,
+                softwareStatement,
+                redirectUrl,
+                providerConfiguration,
+                randomValueGenerator,
+                persistentStorage,
+                aisConfig,
+                pisConfig);
     }
 
     @Override

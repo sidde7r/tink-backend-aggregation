@@ -175,7 +175,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 softwareStatement,
                 redirectUrl,
                 providerConfiguration,
-                aisConfig.getWellKnownURL(),
                 randomValueGenerator,
                 persistentStorage,
                 aisConfig,

@@ -11,8 +11,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -48,10 +47,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class OpenIdAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-    private static final Logger logger =
-            LoggerFactory.getLogger(OpenIdAuthenticationController.class);
 
     private static final int DEFAULT_TOKEN_LIFETIME = 90;
     private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
@@ -67,12 +65,10 @@ public class OpenIdAuthenticationController
     private final String strongAuthenticationState;
     private final String strongAuthenticationStateSupplementalKey;
 
-    private final String nonce;
-
+    private final RandomValueGenerator randomValueGenerator;
     private final String callbackUri;
     private OAuth2Token clientOAuth2Token;
     private final URL appToAppRedirectURL;
-    private final RandomValueGenerator randomValueGenerator;
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -123,8 +119,6 @@ public class OpenIdAuthenticationController
                 strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
         this.randomValueGenerator = randomValueGenerator;
-
-        this.nonce = randomValueGenerator.generateRandomHexEncoded(8);
         this.appToAppRedirectURL = appToAppRedirectURL;
     }
 
@@ -137,14 +131,14 @@ public class OpenIdAuthenticationController
                                 OAuth2Token.class)
                         .orElseThrow(
                                 () -> {
-                                    logger.warn(
+                                    log.warn(
                                             "Failed to retrieve access token from persistent storage.");
                                     return SessionError.SESSION_EXPIRED.exception();
                                 });
 
         if (oAuth2Token.hasAccessExpired()) {
             if (!oAuth2Token.canRefresh()) {
-                logger.info(
+                log.info(
                         "Access token has expired and refreshing impossible. Expiring the session.");
                 throw SessionError.SESSION_EXPIRED.exception();
             } else {
@@ -159,7 +153,7 @@ public class OpenIdAuthenticationController
     }
 
     private OAuth2Token refreshAccessToken(OAuth2Token oAuth2Token) throws SessionException {
-        logger.info(
+        log.info(
                 "Trying to refresh access token. Issued: [{}] Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
                 new Date(oAuth2Token.getIssuedAt() * 1000),
                 new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
@@ -188,13 +182,13 @@ public class OpenIdAuthenticationController
 
         } catch (HttpResponseException e) {
 
-            logger.error("Refresh failed: {}", e.getResponse().getBody(String.class));
+            log.error("Refresh failed: {}", e.getResponse().getBody(String.class));
             // This will "fix" the invalid_grant error temporarily while waiting for more log
             // data. It might also filter some other errors.
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
-        logger.info(
+        log.info(
                 "Refresh success. New token: Access Expires: [{}] HasRefresh: [{}] Refresh Expires: [{}]",
                 new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
                 !oAuth2Token.isRefreshNullOrEmpty(),
@@ -217,6 +211,7 @@ public class OpenIdAuthenticationController
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
+        String nonce = randomValueGenerator.generateRandomHexEncoded(8);
 
         URL authorizeUrl =
                 apiClient.buildAuthorizeUrl(
@@ -272,7 +267,7 @@ public class OpenIdAuthenticationController
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.CODE)
                         .orElseGet(
                                 () -> {
-                                    logger.error(
+                                    log.error(
                                             "callbackData did not contain code. CallbackUri: {}, Data received: {}",
                                             callbackUri,
                                             SerializationUtils.serializeToString(callbackData));
@@ -287,7 +282,7 @@ public class OpenIdAuthenticationController
         if (idToken.isPresent()) {
             validateIdToken(idToken.get(), code, state);
         } else {
-            logger.warn("ID Token (code and state) validation - no token provided");
+            log.warn("ID Token (code and state) validation - no token provided");
         }
 
         OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(code);
@@ -304,7 +299,7 @@ public class OpenIdAuthenticationController
         if (oAuth2Token.getIdToken() != null) {
             validateIdToken(oAuth2Token.getIdToken(), oAuth2Token.getAccessToken());
         } else {
-            logger.warn("ID Token (access token) validation - no token provided");
+            log.warn("ID Token (access token) validation - no token provided");
         }
 
         credentials.setSessionExpiryDate(
@@ -328,10 +323,10 @@ public class OpenIdAuthenticationController
                             .withMode(ValidatorMode.LOGGING)
                             .execute();
             if (valid) {
-                logger.info("ID Token (code and state) validation successful");
+                log.info("ID Token (code and state) validation successful");
             }
         } else {
-            logger.warn("ID Token (code and state) validation not possible - no public keys");
+            log.warn("ID Token (code and state) validation not possible - no public keys");
         }
     }
 
@@ -344,10 +339,10 @@ public class OpenIdAuthenticationController
                             .withMode(ValidatorMode.LOGGING)
                             .execute();
             if (valid) {
-                logger.info("ID Token (access token) validation successful");
+                log.info("ID Token (access token) validation successful");
             }
         } else {
-            logger.warn("ID Token (access token) validation not possible - no public keys");
+            log.warn("ID Token (access token) validation not possible - no public keys");
         }
     }
 
@@ -380,7 +375,6 @@ public class OpenIdAuthenticationController
         if (Strings.isNullOrEmpty(value)) {
             return Optional.empty();
         }
-
         return Optional.of(value);
     }
 
@@ -392,7 +386,7 @@ public class OpenIdAuthenticationController
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR_DESCRIPTION);
 
         if (!error.isPresent()) {
-            logger.info("OpenId callback success.");
+            log.info("OpenId callback success.");
             return;
         }
 
@@ -409,7 +403,7 @@ public class OpenIdAuthenticationController
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
                 || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType)) {
 
-            logger.info("OpenId {} callback: {}", errorType, serializedCallbackData);
+            log.info("OpenId {} callback: {}", errorType, serializedCallbackData);
 
             // Store error information to make it possible for agent to determine cause and
             // give end user a proper error message.
