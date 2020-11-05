@@ -20,18 +20,7 @@ public class ValidatePaymentDateResponseTest {
                     + "}";
 
     private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private static final String SAME_TRANSFER_DATE = "2020-10-28 10:10:10";
     private static final String DIFFERENT_TRANSFER_DATE = "2020-10-29 10:10:10";
-
-    @Test
-    public void testForSameDate() throws ParseException {
-        ValidatePaymentDateResponse fetchPaymentResponse =
-                SerializationUtils.deserializeFromString(
-                        DATE_RESPONSE, ValidatePaymentDateResponse.class);
-        Date transferDate = new SimpleDateFormat(DATE_TIME_FORMAT).parse(SAME_TRANSFER_DATE);
-
-        Assert.assertTrue(fetchPaymentResponse.isTransferDateSameAsBookingDate(transferDate));
-    }
 
     @Test
     public void testForDifferentDate() throws ParseException {
