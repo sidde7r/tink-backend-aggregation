@@ -1,18 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration;
 
 import javax.annotation.Nullable;
-import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileParameters;
 
-public interface SwedbankConfiguration extends ClientConfiguration {
+@RequiredArgsConstructor
+public class SwedbankConfiguration {
+    private final ProfileParameters profileParameters;
+    private final String host;
 
-    String getHost();
+    public String getHost() {
+        return host;
+    }
 
-    String getApiKey();
+    public String getApiKey() {
+        return profileParameters.getApiKey();
+    }
 
-    String getName();
+    public String getName() {
+        return profileParameters.getName();
+    }
 
-    boolean isSavingsBank();
+    public boolean isSavingsBank() {
+        return profileParameters.isSavingsBank();
+    }
 
     @Nullable
-    String getUserAgent();
+    public String getUserAgent() {
+        return profileParameters.getUserAgent();
+    }
 }

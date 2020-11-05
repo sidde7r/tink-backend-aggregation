@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.inves
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.transactional.SwedbankSETransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSELoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankAbstractAgent;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
@@ -61,8 +62,13 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
     public SwedbankSEAgent(AgentComponentProvider componentProvider) {
         super(
                 componentProvider,
-                new SwedbankSEConfiguration(
-                        componentProvider.getCredentialsRequest().getProvider().getPayload()),
+                new SwedbankConfiguration(
+                        SwedbankSEConstants.PROFILE_PARAMETERS.get(
+                                componentProvider
+                                        .getCredentialsRequest()
+                                        .getProvider()
+                                        .getPayload()),
+                        SwedbankSEConstants.HOST),
                 new SwedbankSEApiClientProvider(),
                 new SwedbankDateUtils(ZoneId.of("Europe/Stockholm"), new Locale("sv", "SE")));
 
