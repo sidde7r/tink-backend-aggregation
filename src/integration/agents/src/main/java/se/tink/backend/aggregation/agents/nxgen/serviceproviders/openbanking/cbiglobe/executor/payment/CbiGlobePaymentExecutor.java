@@ -127,7 +127,32 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     }
 
     private CreatePaymentResponse fetchPaymentStatus(String paymentId) {
-        return apiClient.getPaymentStatus(paymentId);
+        CreatePaymentResponse createPaymentResponse = null;
+        // bank APIs are not stable and some times returns error due to 5xx in there system. Hence
+        // its better to retry polling status of payment again in case we get error.
+        int retryCount = 5;
+        do {
+            // some times bank takes more time to updates status of payment in there system
+            // hence we should wait to get updated payment status before polling status
+            // again to avoid getting same status on every poll.
+            sleep(1);
+
+            try {
+                createPaymentResponse = apiClient.getPaymentStatus(paymentId);
+            } catch (Exception e) {
+                logger.error(
+                        "Unable to fetch payment status from bank for paymentId={}, we will try to fetch status from bank again {} times if problem remains same",
+                        paymentId,
+                        retryCount,
+                        e);
+                retryCount--;
+                if (retryCount < 1) {
+                    throw e;
+                }
+            }
+        } while (createPaymentResponse == null);
+
+        return createPaymentResponse;
     }
 
     @Override
@@ -359,6 +384,14 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                                 new NotImplementedException(
                                         "No PaymentType found for your AccountIdentifiers pair "
                                                 + accountIdentifiersKey));
+    }
+
+    private void sleep(long seconds) {
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private boolean isBPMProvider() {
