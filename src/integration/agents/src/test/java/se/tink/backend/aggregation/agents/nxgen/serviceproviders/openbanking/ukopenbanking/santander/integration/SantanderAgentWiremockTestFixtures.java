@@ -15,6 +15,7 @@ public final class SantanderAgentWiremockTestFixtures {
 
     static final String PROVIDER_NAME = "uk-santander-oauth2";
     static final String AUTH_CODE = "DUMMY_AUTH_CODE";
+    static final String STATE = "00000000-0000-4000-0000-000000000000";
     private static final String DESTINATION_IDENTIFIER = "77788812345678";
     private static final String CURRENCY = "GBP";
     private static final LocalDate EXECUTION_DATE_TODAY = LocalDate.now();
