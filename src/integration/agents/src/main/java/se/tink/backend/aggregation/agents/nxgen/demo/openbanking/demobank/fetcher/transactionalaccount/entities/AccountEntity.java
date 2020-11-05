@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetch
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,7 +20,9 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditc
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -50,6 +53,8 @@ public class AccountEntity {
     @JsonProperty("holderType")
     private String holderType;
 
+    private List<DemobankAccountIdentifier> accountIdentifiers;
+
     @JsonIgnore
     public TransactionalAccount toTinkAccount(List<AccountHolder> accountHolders) {
         return TransactionalAccount.nxBuilder()
@@ -61,7 +66,7 @@ public class AccountEntity {
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(description)
-                                .addIdentifier(new IbanIdentifier(accountNumber))
+                                .addIdentifiers(getIdentifiers())
                                 .build())
                 .setHolderType(getAccountHolderType())
                 .addHolders(
@@ -72,6 +77,29 @@ public class AccountEntity {
                 .setApiIdentifier(getId())
                 .build()
                 .get();
+    }
+
+    @JsonIgnore
+    private List<AccountIdentifier> getIdentifiers() {
+        List<AccountIdentifier> validIdentifiers =
+                Optional.ofNullable(accountIdentifiers).orElse(Collections.emptyList()).stream()
+                        .map(this::toTinkAccountIdentifier)
+                        .filter(AccountIdentifier::isValid)
+                        .collect(Collectors.toList());
+        if (validIdentifiers.size() > 0) {
+            return validIdentifiers;
+        } else {
+            return Collections.singletonList(new IbanIdentifier(accountNumber));
+        }
+    }
+
+    private AccountIdentifier toTinkAccountIdentifier(DemobankAccountIdentifier id) {
+        try {
+            return AccountIdentifier.create(
+                    AccountIdentifier.Type.valueOf(id.getType()), id.getIdentifier());
+        } catch (RuntimeException e) {
+            return new NonValidIdentifier(id.getIdentifier());
+        }
     }
 
     private BalanceModule getBalancesModule() {
@@ -101,7 +129,7 @@ public class AccountEntity {
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(description)
-                                .addIdentifier(new IbanIdentifier(accountNumber))
+                                .addIdentifiers(getIdentifiers())
                                 .build())
                 .setHolderType(getAccountHolderType())
                 .addHolders(
