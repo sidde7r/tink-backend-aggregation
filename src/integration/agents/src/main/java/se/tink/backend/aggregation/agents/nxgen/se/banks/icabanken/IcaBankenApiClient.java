@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -58,7 +58,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class IcaBankenApiClient {
     private final TinkHttpClient client;
@@ -163,15 +162,18 @@ public class IcaBankenApiClient {
         return cachedCustomer;
     }
 
-    public TransactionsBodyEntity fetchTransactionsWithDate(Account account, Date toDate) {
+    public TransactionsBodyEntity fetchTransactionsWithDate(
+            Account account, LocalDate fromDate, LocalDate toDate) {
         return createRequest(
                         IcaBankenConstants.Urls.TRANSACTIONS
                                 .parameter(
                                         IcaBankenConstants.IdTags.IDENTIFIER_TAG,
                                         account.getApiIdentifier())
                                 .queryParam(
-                                        IcaBankenConstants.IdTags.TO_DATE_TAG,
-                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate)))
+                                        IcaBankenConstants.IdTags.FROM_DATE_TAG,
+                                        fromDate.toString())
+                                .queryParam(
+                                        IcaBankenConstants.IdTags.TO_DATE_TAG, toDate.toString()))
                 .get(TransactionsResponse.class)
                 .getBody();
     }

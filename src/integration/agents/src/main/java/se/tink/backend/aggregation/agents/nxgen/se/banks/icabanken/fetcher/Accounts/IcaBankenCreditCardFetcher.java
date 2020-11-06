@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 
 public class IcaBankenCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>,
-                TransactionKeyPaginator<CreditCardAccount, Date> {
+                TransactionKeyPaginator<CreditCardAccount, LocalDate> {
 
     private final IcaBankenApiClient apiClient;
     private final IcaBankenTransactionFetcher icaBankenTransactionFetcher;
@@ -47,8 +47,8 @@ public class IcaBankenCreditCardFetcher
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<Date> getTransactionsFor(
-            CreditCardAccount account, Date key) {
+    public TransactionKeyPaginatorResponse<LocalDate> getTransactionsFor(
+            CreditCardAccount account, LocalDate key) {
         return icaBankenTransactionFetcher.fetchTransactions(account, key);
     }
 }
