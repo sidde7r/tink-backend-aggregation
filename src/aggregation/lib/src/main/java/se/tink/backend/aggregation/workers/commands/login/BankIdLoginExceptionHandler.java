@@ -10,9 +10,14 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 
 public class BankIdLoginExceptionHandler extends AbstractLoginExceptionHandler {
 
+    private final AgentLoginEventPublisherService agentLoginEventPublisherService;
+
     public BankIdLoginExceptionHandler(
-            StatusUpdater statusUpdater, AgentWorkerCommandContext context) {
+            StatusUpdater statusUpdater,
+            AgentWorkerCommandContext context,
+            AgentLoginEventPublisherService agentLoginEventPublisherService) {
         super(statusUpdater, context, CredentialsStatus.UNCHANGED);
+        this.agentLoginEventPublisherService = agentLoginEventPublisherService;
     }
 
     @Override
@@ -20,6 +25,8 @@ public class BankIdLoginExceptionHandler extends AbstractLoginExceptionHandler {
             Exception exception, MetricActionIface metricAction) {
         if (exception instanceof BankIdException) {
             metricAction.cancelled();
+            agentLoginEventPublisherService.publishLoginBankIdErrorEvent(
+                    (BankIdException) exception);
             return Optional.of(AgentWorkerCommandResult.ABORT);
         }
         return Optional.empty();
