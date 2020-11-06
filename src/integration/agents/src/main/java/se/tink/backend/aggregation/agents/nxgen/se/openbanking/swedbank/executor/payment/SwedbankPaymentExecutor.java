@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest.CreatePaymentRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.util.SwedbankDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.util.SwedbankRemittanceInformationUtil;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.util.AccountTypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -61,7 +62,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                         .creditorAccount(creditor)
                         .debtorAccount(debtor)
                         .instructedAmount(amount)
-                        .executionDate(null)
+                        .executionDate(SwedbankDateUtil.getExecutionDateOrCurrentDate(payment))
                         .remittanceInformationStructured(
                                 remittanceInformationUtil.getRemittanceInformationStructured())
                         .remittanceInformationUnstructured(

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.AfterClass;
@@ -104,6 +105,7 @@ public class SwedbankAgentPaymentTest {
                             .withDebtor(debtor)
                             .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1))
                             .withCurrency("SEK")
+                            .withExecutionDate(LocalDate.now())
                             .withRemittanceInformation(remittanceInformation)
                             .build());
         }
