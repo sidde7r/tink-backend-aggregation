@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.EidasJwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationOverride;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -114,17 +115,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 getAgentConfiguration().getProviderSpecificConfiguration();
 
         softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertions();
-
         providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
-
-        client.trustRootCaCertificate(
-                UkOpenBankingV31Constants.UKOB_ROOT_CA_JKS,
-                UkOpenBankingV31Constants.UKOB_ROOT_CA_JKS_PASSWORD);
-
-        ukOpenBankingConfiguration
-                .getTlsConfigurationOverride()
-                .orElse(this::useEidasProxy)
-                .applyConfiguration(client);
+        configureTls(ukOpenBankingConfiguration);
 
         final String redirectUrl = getAgentConfiguration().getRedirectUrl();
 
@@ -140,13 +132,24 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 constructTransactionalAccountRefreshController();
     }
 
-    /**
-     * @deprecated use @link {@link
-     *     se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.KeySignerProvider}
-     */
-    @Deprecated
-    private void useEidasProxy(TinkHttpClient httpClient) {
-        httpClient.setEidasProxy(configuration.getEidasProxy());
+    private void configureTls(UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration) {
+        Optional<TlsConfigurationOverride> tlsConfigurationOverride =
+                ukOpenBankingConfiguration.getTlsConfigurationOverride();
+
+        /* Theres a bug in Apache http client prior to 4.5 that breaks verification chain when there
+        is more than one trust store added. Therefore UK certs must be set only if we use custom
+        tls config (no eidas proxy and its certificates at all).
+        https://tink.slack.com/archives/CSURV2YDA/p1604673821171200
+        */
+        if (tlsConfigurationOverride.isPresent()) {
+            client.trustRootCaCertificate(
+                    UkOpenBankingV31Constants.UKOB_ROOT_CA_JKS,
+                    UkOpenBankingV31Constants.UKOB_ROOT_CA_JKS_PASSWORD);
+
+            tlsConfigurationOverride.get().applyConfiguration(client);
+        } else {
+            client.setEidasProxy(configuration.getEidasProxy());
+        }
     }
 
     /**
