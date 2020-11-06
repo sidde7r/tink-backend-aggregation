@@ -10,4 +10,8 @@ public class PrepareContractUpdateResponse {
     public ChallengeValue getValue() {
         return value;
     }
+
+    public ChallengeBusinessMessageBulk getBusinessMessageBulk() {
+        return businessMessageBulk;
+    }
 }

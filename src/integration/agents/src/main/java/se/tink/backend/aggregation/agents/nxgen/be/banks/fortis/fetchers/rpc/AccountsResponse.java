@@ -14,4 +14,8 @@ public class AccountsResponse {
     public Collection<TransactionalAccount> toTinkAccounts() {
         return value.toTinkAccounts();
     }
+
+    public BusinessMessageBulk getBusinessMessageBulk() {
+        return businessMessageBulk;
+    }
 }

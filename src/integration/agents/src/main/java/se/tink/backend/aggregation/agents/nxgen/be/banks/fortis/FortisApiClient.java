@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.CheckForcedUpgradeRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ExecuteContractUpdateRequest;
@@ -98,50 +99,68 @@ public class FortisApiClient {
         checkForcedUpgrade(eBankingUsersRequest.getDistributorId());
         getDistributorAuthenticationMeans();
 
-        return getRequestBuilderWithCookies(FortisConstants.Urls.GET_E_BANKING_USERS)
-                .post(
-                        EbankingUsersResponse.class,
-                        SerializationUtils.serializeToString(eBankingUsersRequest));
+        EbankingUsersResponse response =
+                getRequestBuilderWithCookies(Urls.GET_E_BANKING_USERS)
+                        .post(
+                                EbankingUsersResponse.class,
+                                SerializationUtils.serializeToString(eBankingUsersRequest));
+        response.getBusinessMessageBulk().checkError();
+        return response;
     }
 
     public AuthenticationProcessResponse createAuthenticationProcess(
             AuthenticationProcessRequest authenticationProcessRequest) {
-        return getRequestBuilderWithCookies(FortisConstants.Urls.CREATE_AUTHENTICATION_PROCESS)
-                .post(
-                        AuthenticationProcessResponse.class,
-                        SerializationUtils.serializeToString(authenticationProcessRequest));
+        AuthenticationProcessResponse response =
+                getRequestBuilderWithCookies(Urls.CREATE_AUTHENTICATION_PROCESS)
+                        .post(
+                                AuthenticationProcessResponse.class,
+                                SerializationUtils.serializeToString(authenticationProcessRequest));
+        response.getBusinessMessageBulk().checkError();
+        return response;
     }
 
     public AccountsResponse fetchAccounts() {
-        return getRequestBuilderWithCookies(FortisConstants.Urls.GET_VIEW_ACCOUNT_LIST)
-                .post(
-                        AccountsResponse.class,
-                        SerializationUtils.serializeToString(new AccountsRequest()));
+        AccountsResponse response =
+                getRequestBuilderWithCookies(Urls.GET_VIEW_ACCOUNT_LIST)
+                        .post(
+                                AccountsResponse.class,
+                                SerializationUtils.serializeToString(new AccountsRequest()));
+        response.getBusinessMessageBulk().checkError();
+        return response;
     }
 
     public TransactionsResponse fetchTransactions(int page, String accountProductId) {
         TransactionsRequest request = new TransactionsRequest(accountProductId, page);
-        return getRequestBuilderWithCookies(FortisConstants.Urls.TRANSACTIONS)
-                .post(TransactionsResponse.class, SerializationUtils.serializeToString(request));
+        TransactionsResponse response =
+                getRequestBuilderWithCookies(Urls.TRANSACTIONS)
+                        .post(
+                                TransactionsResponse.class,
+                                SerializationUtils.serializeToString(request));
+        response.getBusinessMessageBulk().checkError();
+        return response;
     }
 
     public UpcomingTransactionsResponse fetchUpcomingTransactions(
             int page, String accountProductId) {
         TransactionsRequest request = new TransactionsRequest(accountProductId, page);
-        return getRequestBuilderWithCookies(FortisConstants.Urls.UPCOMING_TRANSACTIONS)
-                .post(
-                        UpcomingTransactionsResponse.class,
-                        SerializationUtils.serializeToString(request));
+        UpcomingTransactionsResponse response =
+                getRequestBuilderWithCookies(Urls.UPCOMING_TRANSACTIONS)
+                        .post(
+                                UpcomingTransactionsResponse.class,
+                                SerializationUtils.serializeToString(request));
+        response.getBusinessMessageBulk().checkError();
+        return response;
     }
 
     public String fetchChallenges(GenerateChallangeRequest challangeRequest) {
-        List<String> challenges =
-                getRequestBuilderWithCookies(FortisConstants.Urls.GENERATE_CHALLENGES)
+        ChallengeResponse response =
+                getRequestBuilderWithCookies(Urls.GENERATE_CHALLENGES)
                         .post(
                                 ChallengeResponse.class,
-                                SerializationUtils.serializeToString(challangeRequest))
-                        .getValue()
-                        .getChallenges();
+                                SerializationUtils.serializeToString(challangeRequest));
+        response.getBusinessMessageBulk().checkError();
+
+        List<String> challenges = response.getValue().getChallenges();
 
         if (challenges.size() > 1) {
             logger.warn(
@@ -155,18 +174,24 @@ public class FortisApiClient {
 
     public PrepareContractUpdateResponse prepareContractUpdate(
             PrepareContractUpdateRequest contractUpdateRequest) {
-        return getRequestBuilderWithCookies(FortisConstants.Urls.PREPARE_CONTRACT_UPDATE)
-                .post(
-                        PrepareContractUpdateResponse.class,
-                        SerializationUtils.serializeToString(contractUpdateRequest));
+        PrepareContractUpdateResponse response =
+                getRequestBuilderWithCookies(Urls.PREPARE_CONTRACT_UPDATE)
+                        .post(
+                                PrepareContractUpdateResponse.class,
+                                SerializationUtils.serializeToString(contractUpdateRequest));
+        response.getBusinessMessageBulk().checkError();
+        return response;
     }
 
     public ExecuteContractUpdateResponse executeContractUpdate(
             ExecuteContractUpdateRequest request) {
-        return getRequestBuilderWithCookies(FortisConstants.Urls.EXECUTE_CONTRACT_UPDATE)
-                .post(
-                        ExecuteContractUpdateResponse.class,
-                        SerializationUtils.serializeToString(request));
+        ExecuteContractUpdateResponse response =
+                getRequestBuilderWithCookies(Urls.EXECUTE_CONTRACT_UPDATE)
+                        .post(
+                                ExecuteContractUpdateResponse.class,
+                                SerializationUtils.serializeToString(request));
+        response.getBusinessMessageBulk().checkError();
+        return response;
     }
 
     public UserInfoResponse getUserInfo() {

@@ -6,4 +6,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ExecuteContractUpdateResponse {
     private boolean value;
     private BusinessMessageBulk businessMessageBulk;
+
+    public BusinessMessageBulk getBusinessMessageBulk() {
+        return businessMessageBulk;
+    }
 }
