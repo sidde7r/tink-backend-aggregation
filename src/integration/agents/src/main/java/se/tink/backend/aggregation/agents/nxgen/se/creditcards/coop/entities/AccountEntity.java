@@ -74,7 +74,7 @@ public class AccountEntity {
     public Optional<CreditCardAccount> toTinkCard(String credentialsId) {
         AccountTypes type = guessAccountType();
         if (type != AccountTypes.CREDIT_CARD) {
-            Optional.empty();
+            return Optional.empty();
         }
 
         Map<String, String> accountDetailsMap = getAccountDetailsMap();
@@ -105,7 +105,7 @@ public class AccountEntity {
     public Optional<TransactionalAccount> toTinkAccount(String credentialsId) {
         AccountTypes type = guessAccountType();
         if (type == AccountTypes.CREDIT_CARD) {
-            Optional.empty();
+            return Optional.empty();
         }
 
         Map<String, String> accountDetailsMap = getAccountDetailsMap();
