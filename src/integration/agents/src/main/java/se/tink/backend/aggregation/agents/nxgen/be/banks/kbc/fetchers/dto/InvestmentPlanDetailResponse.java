@@ -35,7 +35,7 @@ public class InvestmentPlanDetailResponse extends HeaderResponse {
 
     public ExactCurrencyAmount toCashBalance() {
         if (CollectionUtils.isEmpty(positions)) {
-            return ExactCurrencyAmount.of(0.0, "EUR");
+            return ExactCurrencyAmount.zero("EUR");
         }
 
         Optional<InvestmentPlanPositionDto> investmentPlanOpt =
@@ -67,7 +67,7 @@ public class InvestmentPlanDetailResponse extends HeaderResponse {
                     Double.parseDouble(investmentPlan.getAmount().getValue()),
                     investmentPlan.getCurrency().getValue());
         } else {
-            return ExactCurrencyAmount.of(0.0, "EUR");
+            return ExactCurrencyAmount.zero("EUR");
         }
     }
 }

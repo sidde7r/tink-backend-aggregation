@@ -63,7 +63,7 @@ public class SdcNoAccountFetcherTest {
 
     private TransactionalAccount transactionalAccount() {
         return TransactionalAccount.builder(
-                        AccountTypes.CHECKING, "sampleid", ExactCurrencyAmount.inEUR(12.34d))
+                        AccountTypes.CHECKING, "sampleid", ExactCurrencyAmount.inEUR(12.34))
                 .setAccountNumber("sample account number")
                 .setName("sample name")
                 .setBankIdentifier("sample bank identifier")

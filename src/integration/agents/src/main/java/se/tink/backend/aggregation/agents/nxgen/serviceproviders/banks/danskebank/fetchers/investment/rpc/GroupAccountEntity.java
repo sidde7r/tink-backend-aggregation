@@ -54,7 +54,7 @@ public class GroupAccountEntity {
                         configuration.getMarketCode().equals(Market.SE_MARKET)
                                 ? displayAccountIdentifier
                                 : accountIdentifier)
-                .setCashBalance(ExactCurrencyAmount.of(0.0, currency))
+                .setCashBalance(ExactCurrencyAmount.zero(currency))
                 .setAccountNumber(displayAccountIdentifier)
                 .setName(name)
                 .setPortfolios(portfolios)

@@ -141,7 +141,7 @@ public class AccountEntity {
         private ExactCurrencyAmount calculateAvailableBalance() {
             if (isCreditAccount()) {
                 if (hasUsedAllOwnMoney()) {
-                    return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
+                    return ExactCurrencyAmount.zero(currency);
                 } else {
                     return getAvailableBalance().subtract(getCreditLimit());
                 }
@@ -161,7 +161,7 @@ public class AccountEntity {
                     return getCreditLimit();
                 }
             }
-            return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
+            return ExactCurrencyAmount.zero(currency);
         }
 
         private ExactCurrencyAmount getAvailableBalance() {

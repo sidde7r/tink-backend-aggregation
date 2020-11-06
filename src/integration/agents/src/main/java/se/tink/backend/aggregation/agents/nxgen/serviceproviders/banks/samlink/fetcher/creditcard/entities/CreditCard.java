@@ -19,7 +19,7 @@ public class CreditCard extends LinksResponse {
     private ExactCurrencyAmount getAvailableCredit() {
         return availableCredit != null
                 ? availableCredit.toTinkAmount()
-                : ExactCurrencyAmount.inEUR(0d);
+                : ExactCurrencyAmount.inEUR(0);
     }
 
     public Optional<LinkEntity> getDetailsLink() {

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +89,7 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
 
     @Override
     public ExactCurrencyAmount getDefaultAmount() {
-        return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
+        return ExactCurrencyAmount.zero(currency);
     }
 
     public String getIban() {

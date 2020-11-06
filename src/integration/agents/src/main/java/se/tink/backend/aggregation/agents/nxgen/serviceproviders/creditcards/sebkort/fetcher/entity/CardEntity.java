@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity;
 
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConfiguration;
@@ -98,7 +97,7 @@ public class CardEntity {
         if (Objects.isNull(account)
                 || Objects.isNull(account.getDisposableAmount())
                 || !cardContract.isOwned()) {
-            return ExactCurrencyAmount.of(BigDecimal.ZERO, cardContract.getCurrencyCode());
+            return ExactCurrencyAmount.zero(cardContract.getCurrencyCode());
         }
 
         return ExactCurrencyAmount.of(account.getDisposableAmount(), account.getCurrencyCode());
@@ -121,6 +120,6 @@ public class CardEntity {
         return cardContract.isOwned()
                 ? ExactCurrencyAmount.of(
                         account.getCurrentBalance().negate(), account.getCurrencyCode())
-                : ExactCurrencyAmount.of(BigDecimal.ZERO, cardContract.getCurrencyCode());
+                : ExactCurrencyAmount.zero(cardContract.getCurrencyCode());
     }
 }

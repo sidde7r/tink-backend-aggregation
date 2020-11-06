@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.utils;
 
-import java.math.BigDecimal;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -10,7 +9,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class SebUtils {
 
     public static ExactCurrencyAmount getZeroBalance(String currencyCode) {
-        return ExactCurrencyAmount.of(BigDecimal.ZERO, currencyCode);
+        return ExactCurrencyAmount.zero(currencyCode);
     }
 
     public static CreditCardAccount createSubCreditCard(

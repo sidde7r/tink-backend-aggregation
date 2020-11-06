@@ -66,14 +66,13 @@ public class FundsPortfoliosResponse extends SpankkiResponse {
 
             investmentAccounts.add(
                     InvestmentAccount.builder(accountData.id)
-                            .setCashBalance(ExactCurrencyAmount.of(0.0, accountData.currency))
+                            .setCashBalance(ExactCurrencyAmount.zero(accountData.currency))
                             .setAccountNumber(accountData.id)
                             .setPortfolios(accountData.portfolios)
                             .setName(accountData.name)
                             .setBankIdentifier(accountData.id)
                             .build());
         }
-
         return investmentAccounts;
     }
 

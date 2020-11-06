@@ -12,7 +12,7 @@ public interface InvestmentBalanceStep<T> {
      * PortfolioModule#getTotalValue()} as account balance.
      *
      * <p>Similar to <code>
-     *   withCashBalance(ExactCurrencyAmount.of(0, currencyCode));
+     *   withCashBalance(ExactCurrencyAmount.zero(currencyCode));
      * </code>
      */
     WithIdStep<T> withZeroCashBalance(String currencyCode);

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +74,7 @@ public class ErsteAccountEntity implements BerlinGroupAccountEntity {
 
     @Override
     public ExactCurrencyAmount getDefaultAmount() {
-        return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
+        return ExactCurrencyAmount.zero(currency);
     }
 
     @Override

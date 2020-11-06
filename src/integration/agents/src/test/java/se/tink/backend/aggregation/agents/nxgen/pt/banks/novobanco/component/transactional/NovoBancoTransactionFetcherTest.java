@@ -125,7 +125,7 @@ public class NovoBancoTransactionFetcherTest {
                                         AccountIdentifier.Type.COUNTRY_SPECIFIC, accountId))
                         .build();
         BalanceModule balance =
-                BalanceModule.builder().withBalance(ExactCurrencyAmount.of(0.0, currency)).build();
+                BalanceModule.builder().withBalance(ExactCurrencyAmount.zero(currency)).build();
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withoutFlags()

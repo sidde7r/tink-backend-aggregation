@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +62,7 @@ public class AccountEntity {
     }
 
     private ExactCurrencyAmount getDefaultAmount() {
-        return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
+        return ExactCurrencyAmount.zero(currency);
     }
 
     public String getIban() {

@@ -71,7 +71,7 @@ public class BankdataPoolAccountEntity {
         portfolio.setTotalValue(getBalance());
 
         return InvestmentAccount.builder(getAccountNumber())
-                .setCashBalance(ExactCurrencyAmount.of(0.0, currency))
+                .setCashBalance(ExactCurrencyAmount.zero(currency))
                 .setAccountNumber(getFormattedAccountNumber())
                 .setBankIdentifier(getAccountNumber())
                 .setName(name)

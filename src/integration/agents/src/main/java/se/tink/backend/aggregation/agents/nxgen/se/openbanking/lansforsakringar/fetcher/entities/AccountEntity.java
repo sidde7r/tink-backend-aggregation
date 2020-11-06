@@ -108,7 +108,7 @@ public class AccountEntity {
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(getPan())
-                                .withBalance(ExactCurrencyAmount.of(0d, currency))
+                                .withBalance(ExactCurrencyAmount.zero(currency))
                                 .withAvailableCredit(getBalance())
                                 .withCardAlias(getName())
                                 .build())

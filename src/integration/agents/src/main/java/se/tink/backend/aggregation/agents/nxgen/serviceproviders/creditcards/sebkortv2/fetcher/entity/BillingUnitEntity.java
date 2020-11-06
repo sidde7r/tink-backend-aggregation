@@ -170,7 +170,7 @@ public class BillingUnitEntity {
     private ExactCurrencyAmount getAvailableCreditIfPresent(String currency) {
 
         if (Strings.isNullOrEmpty(disposableAmount)) {
-            return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
+            return ExactCurrencyAmount.zero(currency);
         }
 
         return ExactCurrencyAmount.of(

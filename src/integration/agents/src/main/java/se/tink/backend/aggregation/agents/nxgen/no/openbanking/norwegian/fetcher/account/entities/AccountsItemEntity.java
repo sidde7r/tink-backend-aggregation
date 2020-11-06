@@ -60,7 +60,7 @@ public class AccountsItemEntity {
                                 CreditCardModule.builder()
                                         .withCardNumber(bban)
                                         .withBalance(getAvailableBalance(balanceResponse))
-                                        .withAvailableCredit(ExactCurrencyAmount.of(0.0, currency))
+                                        .withAvailableCredit(ExactCurrencyAmount.zero(currency))
                                         .withCardAlias(name)
                                         .build())
                         .withInferredAccountFlags()

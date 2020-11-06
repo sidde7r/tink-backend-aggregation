@@ -62,7 +62,7 @@ public class InvestmentAccountBuilder extends AccountBuilder<InvestmentAccount, 
     @Override
     public WithIdStep<InvestmentBuildStep> withZeroCashBalance(@Nonnull String currencyCode) {
         Preconditions.checkNotNull(currencyCode, "Currency Code must not be null.");
-        return this.withCashBalance(ExactCurrencyAmount.of(BigDecimal.ZERO, currencyCode));
+        return this.withCashBalance(ExactCurrencyAmount.zero(currencyCode));
     }
 
     @Override

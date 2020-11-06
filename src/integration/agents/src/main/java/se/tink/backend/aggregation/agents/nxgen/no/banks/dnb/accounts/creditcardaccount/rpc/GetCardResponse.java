@@ -178,7 +178,7 @@ public class GetCardResponse {
         if (mainCard) {
             return ExactCurrencyAmount.of(-balanceAmount, "NOK");
         } else {
-            return ExactCurrencyAmount.of(0.0, "NOK");
+            return ExactCurrencyAmount.zero("NOK");
         }
     }
 

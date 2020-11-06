@@ -72,6 +72,6 @@ public class CardAccountEntity {
                 .filter(x -> type.equalsIgnoreCase(x.getBalanceType()))
                 .findFirst()
                 .map(x -> ExactCurrencyAmount.of(x.getBalanceAmount().getAmount(), currency))
-                .orElse(ExactCurrencyAmount.of(0.0, currency));
+                .orElse(ExactCurrencyAmount.zero(currency));
     }
 }

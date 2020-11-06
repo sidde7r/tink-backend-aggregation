@@ -64,7 +64,7 @@ public class PortfolioEntity {
     public InvestmentAccount toInvestmentAccount(
             HolderName holderName, List<Instrument> instruments) {
         return InvestmentAccount.builder(accountNumber)
-                .setCashBalance(ExactCurrencyAmount.of(0.0, currentValue.getCurrency()))
+                .setCashBalance(ExactCurrencyAmount.zero(currentValue.getCurrency()))
                 .setAccountNumber(contractNumber)
                 .setName(contractNumber)
                 .setHolderName(holderName)

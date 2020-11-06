@@ -40,7 +40,7 @@ public class PensionDetailsResponse extends BaseResponse {
         final BigDecimal value = pensionInfo.getValue().getAmount();
         return InvestmentAccount.nxBuilder()
                 .withPortfolios(toPortfolioModule(client, value.doubleValue()))
-                .withCashBalance(ExactCurrencyAmount.of(0.0, Currency.SEK))
+                .withCashBalance(ExactCurrencyAmount.zero(Currency.SEK))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(identifier)
@@ -57,7 +57,7 @@ public class PensionDetailsResponse extends BaseResponse {
         return InvestmentAccount.nxBuilder()
                 .withPortfolios(
                         Collections.singletonList(toPortfolioModule(client, custodyAccount)))
-                .withCashBalance(ExactCurrencyAmount.of(0.0, Currency.SEK))
+                .withCashBalance(ExactCurrencyAmount.zero(Currency.SEK))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(identifer)

@@ -38,6 +38,6 @@ public class NationwideCreditCardBalanceMapperTest {
         ExactCurrencyAmount returnedBalance = balanceMapper.getAvailableCredit(inputBalances);
 
         // then
-        assertThat(returnedBalance).isEqualByComparingTo(ExactCurrencyAmount.of(0d, "GBP"));
+        assertThat(returnedBalance).isEqualByComparingTo(ExactCurrencyAmount.zero("GBP"));
     }
 }

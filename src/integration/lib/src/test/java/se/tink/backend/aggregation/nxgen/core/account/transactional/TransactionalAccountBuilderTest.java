@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Assert;
@@ -203,24 +202,21 @@ public class TransactionalAccountBuilderTest {
         Optional<TransactionalAccount> creditCardAccount =
                 TransactionalAccount.nxBuilder()
                         .withTypeAndFlagsFrom(mapper, "a")
-                        .withBalance(
-                                BalanceModule.of(ExactCurrencyAmount.of(BigDecimal.ZERO, "SEK")))
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.zero("SEK")))
                         .withId(ID_MODULE)
                         .build();
 
         Optional<TransactionalAccount> loanAccount =
                 TransactionalAccount.nxBuilder()
                         .withTypeAndFlagsFrom(mapper, "c")
-                        .withBalance(
-                                BalanceModule.of(ExactCurrencyAmount.of(BigDecimal.ZERO, "SEK")))
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.zero("SEK")))
                         .withId(ID_MODULE)
                         .build();
 
         Optional<TransactionalAccount> checkingAccount =
                 TransactionalAccount.nxBuilder()
                         .withTypeAndFlagsFrom(mapper, "zz")
-                        .withBalance(
-                                BalanceModule.of(ExactCurrencyAmount.of(BigDecimal.ZERO, "SEK")))
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.zero("SEK")))
                         .withId(ID_MODULE)
                         .build();
 

@@ -20,7 +20,7 @@ public final class AccountStepBuilderTest {
     private static final String VALID_UNIQUE_ID = "MyUniqueId";
     private static final String VALID_ACCOUNT_NUMBER = "MyAccountNumber";
     private final Amount VALID_AMOUNT = Amount.inSEK(10);
-    private final ExactCurrencyAmount VALID_EXACT_AMOUNT = ExactCurrencyAmount.of(10d, "SEK");
+    private final ExactCurrencyAmount VALID_EXACT_AMOUNT = ExactCurrencyAmount.of(10, "SEK");
     private final AccountIdentifier VALID_IBAN_IDENTIFIER =
             AccountIdentifier.create(AccountIdentifier.Type.IBAN, "SE1004976016582303953969");
     private final AccountIdentifier VALID_TINK_IDENTIFIER =

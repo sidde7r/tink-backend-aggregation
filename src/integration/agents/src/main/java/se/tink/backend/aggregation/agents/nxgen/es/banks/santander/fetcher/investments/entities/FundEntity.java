@@ -47,7 +47,7 @@ public class FundEntity {
                 .setHolderName(getHolderName(fundDetailsResponse))
                 .setPortfolios(getPortfolios(fundDetailsResponse))
                 .setCashBalance(
-                        ExactCurrencyAmount.of(0.0, totalValue.getTinkAmount().getCurrencyCode()))
+                        ExactCurrencyAmount.zero(totalValue.getTinkAmount().getCurrencyCode()))
                 .build();
     }
 
