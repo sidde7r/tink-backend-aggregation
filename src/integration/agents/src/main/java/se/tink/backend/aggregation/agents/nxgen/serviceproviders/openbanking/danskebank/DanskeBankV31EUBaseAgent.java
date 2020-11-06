@@ -122,6 +122,21 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
         return SessionHandler.alwaysFail();
     }
 
+    @Override
+    public void persistLoginSession() {
+        ukOpenBankingBaseAgent.persistLoginSession();
+    }
+
+    @Override
+    public void loadLoginSession() {
+        ukOpenBankingBaseAgent.loadLoginSession();
+    }
+
+    @Override
+    public void clearLoginSession() {
+        ukOpenBankingBaseAgent.clearLoginSession();
+    }
+
     private class UkOpenBankingBaseAgentImpl extends UkOpenBankingBaseAgent {
         private final CreditCardAccountMapper creditCardAccountMapper;
         private final TransactionalAccountMapper transactionalAccountMapper;
