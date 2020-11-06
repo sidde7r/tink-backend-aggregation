@@ -5,11 +5,15 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -140,6 +144,21 @@ public class DetailedHoldingEntity {
         return amountNominalBlocked;
     }
 
+    public InstrumentModule toTinkInstrumentModule(String isin) {
+        return InstrumentModule.builder()
+                .withType(SwedbankSEConstants.INSTRUMENT_TYPE_MAP.translate(holdingType).get())
+                .withId(
+                        InstrumentIdModule.of(
+                                isin, nameMarketPlace, name, getUniqueIdentifier(isin)))
+                .withMarketPrice(0)
+                .withMarketValue(getMarketValue().toTinkAmount().getDoubleValue())
+                .withAverageAcquisitionPrice(getAcquisitionValue().toTinkAmount().getDoubleValue())
+                .withCurrency(getMarketValue().getCurrencyCode())
+                .withQuantity(AgentParsingUtils.parseAmount(numberOfFundParts))
+                .withProfit(changeOfValue.toTinkAmount().getDoubleValue())
+                .build();
+    }
+
     public Optional<Instrument> toTinkFundInstrument(String isinCode) {
         if (Strings.isNullOrEmpty(isinCode) || numberOfFundParts == null) {
             if (Strings.isNullOrEmpty(isinCode)) {
@@ -205,6 +224,10 @@ public class DetailedHoldingEntity {
         instrument.setMarketPlace(nameMarketPlace);
 
         return Optional.of(instrument);
+    }
+
+    private String getUniqueIdentifier(String isin) {
+        return isin + Optional.ofNullable(fundCode).orElse(EMPTY_STRING);
     }
 
     private String getInstrumentCurrency() {

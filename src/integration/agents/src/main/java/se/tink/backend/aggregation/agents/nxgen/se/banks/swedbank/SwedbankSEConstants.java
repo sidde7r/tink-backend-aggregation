@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank;
 
 import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileParameters;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 
 public class SwedbankSEConstants {
     /*
@@ -34,6 +36,13 @@ public class SwedbankSEConstants {
                     .put(
                             "savingsbank-business",
                             new ProfileParameters("savingsbank-business", "3tw7Anux312vVqZv", true))
+                    .build();
+
+    public static final TypeMapper<InstrumentModule.InstrumentType> INSTRUMENT_TYPE_MAP =
+            TypeMapper.<InstrumentModule.InstrumentType>builder()
+                    .put(InstrumentModule.InstrumentType.FUND, "FUND")
+                    .put(InstrumentModule.InstrumentType.OTHER, "EQUITY")
+                    .setDefaultTranslationValue(InstrumentModule.InstrumentType.OTHER)
                     .build();
 
     public static class StorageKey {
