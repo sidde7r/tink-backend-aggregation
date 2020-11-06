@@ -61,13 +61,13 @@ class RetryableEC2CredentialsFetcher {
     private static final String TOKEN = "Token";
 
     /** The current instance profile credentials */
-    private AWSCredentials credentials;
+    private volatile AWSCredentials credentials;
 
     /** The expiration for the current instance profile credentials */
-    private Date credentialsExpiration;
+    private volatile Date credentialsExpiration;
 
     /** The time of the last attempt to check for new credentials */
-    protected Date lastInstanceProfileCheck;
+    protected volatile Date lastInstanceProfileCheck;
 
     /** Used to load the endpoint where the credentials are stored. */
     private final CredentialsEndpointProvider credentialsEndpointProvider;
@@ -121,7 +121,8 @@ class RetryableEC2CredentialsFetcher {
                                     credentialsEndpointProvider.getHeaders());
 
             LOGGER.info(
-                    "Endpoint for fetching AWS credentals = {}", credentialsEndpointProvider.getCredentialsEndpoint());
+                    "Endpoint for fetching AWS credentals = {}",
+                    credentialsEndpointProvider.getCredentialsEndpoint());
 
             node = Jackson.jsonNodeOf(credentialsResponse);
             accessKey = node.get(ACCESS_KEY_ID);
@@ -205,11 +206,8 @@ class RetryableEC2CredentialsFetcher {
     }
 
     private boolean expired() {
-        if (credentialsExpiration != null) {
-            return credentialsExpiration.getTime() < System.currentTimeMillis();
-        }
-
-        return false;
+        return credentialsExpiration != null
+                && credentialsExpiration.getTime() < System.currentTimeMillis();
     }
 
     @Override

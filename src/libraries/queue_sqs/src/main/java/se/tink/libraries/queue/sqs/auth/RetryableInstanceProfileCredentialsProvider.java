@@ -56,7 +56,7 @@ public class RetryableInstanceProfileCredentialsProvider
     private final RetryableEC2CredentialsFetcher credentialsFetcher;
 
     /** The executor service used for refreshing the credentials in the background. */
-    private ScheduledExecutorService executor;
+    private volatile ScheduledExecutorService executor;
 
     private volatile boolean shouldRefresh = false;
 

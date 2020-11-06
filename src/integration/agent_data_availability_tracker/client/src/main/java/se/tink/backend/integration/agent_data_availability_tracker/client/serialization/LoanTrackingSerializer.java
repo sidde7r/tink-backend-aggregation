@@ -4,11 +4,11 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;
 
 public class LoanTrackingSerializer extends TrackingMapSerializer {
-    private static final String LOANENTITY_NAME = "Loan";
+    private static final String LOAN_ENTITY_NAME = "Loan";
     private final Loan loan;
 
     public LoanTrackingSerializer(Loan loan) {
-        super(String.format(LOANENTITY_NAME + "<%s>", String.valueOf(loan.getType())));
+        super(String.format(LOAN_ENTITY_NAME + "<%s>", String.valueOf(loan.getType())));
         this.loan = loan;
         Optional.of(loan)
                 .map(Loan::getLoanDetails)
