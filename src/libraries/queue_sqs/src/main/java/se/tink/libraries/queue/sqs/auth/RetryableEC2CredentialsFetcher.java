@@ -121,8 +121,8 @@ class RetryableEC2CredentialsFetcher {
                                     credentialsEndpointProvider.getHeaders());
 
             LOGGER.info(
-                    "Endpoint for fetching AWS credentals = "
-                            + credentialsEndpointProvider.getCredentialsEndpoint());
+                    "Endpoint for fetching AWS credentals = {}",
+                    credentialsEndpointProvider.getCredentialsEndpoint());
 
             node = Jackson.jsonNodeOf(credentialsResponse);
             accessKey = node.get(ACCESS_KEY_ID);
@@ -153,7 +153,7 @@ class RetryableEC2CredentialsFetcher {
 
                 try {
                     credentialsExpiration = DateUtils.parseISO8601Date(expiration);
-                } catch (Exception ex) {
+                } catch (RuntimeException ex) {
                     handleError(
                             "Unable to parse credentials expiration date from Amazon EC2 instance",
                             ex);
@@ -206,17 +206,8 @@ class RetryableEC2CredentialsFetcher {
     }
 
     private boolean expired() {
-        if (credentialsExpiration != null) {
-            if (credentialsExpiration.getTime() < System.currentTimeMillis()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public Date getCredentialsExpiration() {
-        return credentialsExpiration;
+        return credentialsExpiration != null
+                && credentialsExpiration.getTime() < System.currentTimeMillis();
     }
 
     @Override

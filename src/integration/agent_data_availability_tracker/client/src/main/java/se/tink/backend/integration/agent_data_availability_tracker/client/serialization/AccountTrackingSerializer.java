@@ -5,11 +5,11 @@ import se.tink.libraries.account.AccountIdentifier;
 
 public class AccountTrackingSerializer extends TrackingMapSerializer {
 
-    public static final String ACCOUNT = "Account";
+    private static final String ACCOUNT_ENTITY_NAME = "Account";
     private final Account account;
 
     public AccountTrackingSerializer(Account account) {
-        super(String.format(ACCOUNT + "<%s>", String.valueOf(account.getType())));
+        super(String.format(ACCOUNT_ENTITY_NAME + "<%s>", String.valueOf(account.getType())));
         this.account = account;
     }
 

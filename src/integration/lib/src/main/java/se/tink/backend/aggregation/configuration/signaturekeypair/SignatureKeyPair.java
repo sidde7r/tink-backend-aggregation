@@ -72,14 +72,15 @@ public final class SignatureKeyPair {
 
     @JsonIgnore
     public String getKeyId() {
-        if (getPublicKey() == null) {
+        final RSAPublicKey cachedPublicKey = getPublicKey();
+        if (cachedPublicKey == null) {
             log.error("Could not get the public key to calculate the keyId.");
             return null;
         }
 
         if (this.keyId == null) {
             // Changing algorithm will change all keyIds
-            byte[] digest = sha("SHA-256", getPublicKey().getEncoded());
+            byte[] digest = sha("SHA-256", cachedPublicKey.getEncoded());
             this.keyId = Hex.encodeHexString(digest).toLowerCase();
         }
 
