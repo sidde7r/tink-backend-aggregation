@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
@@ -35,7 +34,7 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
             final AgentComponentProvider componentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(componentProvider);
-        configureHttpClient(client, agentsServiceConfiguration);
+        configureHttpClient(client);
 
         ingConfiguration = new IngConfiguration(persistentStorage, sessionStorage, client);
 
@@ -44,15 +43,10 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
         transactionalAccountRefreshController = constructRefreshController();
     }
 
-    private void configureHttpClient(
-            TinkHttpClient client, AgentsServiceConfiguration agentsServiceConfiguration) {
+    private void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(Headers.USER_AGENT_VALUE);
         client.setFollowRedirects(false);
         client.addFilter(new TimeoutFilter());
-
-        final MultiIpGateway gateway =
-                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
-        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
     }
 
     private TransactionalAccountRefreshController constructRefreshController() {
