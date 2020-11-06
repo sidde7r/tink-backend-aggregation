@@ -116,7 +116,7 @@ public class DnbApiClient {
                 .queryParam(
                         QueryKeys.TO_DATE,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                java.sql.Date.valueOf(localDateTimeSource.now().toLocalDate())))
+                                localDateTimeSource.getInstant()))
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .get(HttpResponse.class);
     }
