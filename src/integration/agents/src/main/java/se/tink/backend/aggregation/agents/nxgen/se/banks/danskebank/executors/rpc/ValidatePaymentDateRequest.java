@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ValidatePaymentDateRequest {
     @JsonProperty("BookingDate")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Stockholm")
     private Date bookingDate;
 
     @JsonProperty("CountryCode")

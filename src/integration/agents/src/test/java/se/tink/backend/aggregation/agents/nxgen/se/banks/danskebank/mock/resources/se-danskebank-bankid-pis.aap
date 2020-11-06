@@ -292,3 +292,26 @@ Content-Type: application/json; charset=utf-8
 Connection: close
 
 {"Payload":null,"Status":1,"Error":null,"EupToken":null,"ResponseMessage":null,"ResponseCode":200,"StatusCode":200,"TraceId":null}
+
+REQUEST 10
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transfers/validateBookDate
+Referer: MobileBanking3 SE
+Accept: application/json
+x-ibm-client-id: 5ec4b8ad-a93d-43e1-831c-8e78ee6e661a
+Content-Type: application/json
+
+{"currencyTransaction":false,"BookingDate":"2020-10-28","CountryCode":"SE","IsCurrencyTransaction":false,"PayType":"B","ReceiverAccount":"5961111","TransferType":"payBill"}
+
+RESPONSE 10
+200
+Date: Wed, 28 Oct 2020 08:03:04 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+X-Request-ID: f370c203-3d7d-4532-8d3e-53e271b40d12
+Content-Type: application/json; charset=utf-8
+Connection: close
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":"","eupToken":null,"bookingDate":"2020-10-28"}
