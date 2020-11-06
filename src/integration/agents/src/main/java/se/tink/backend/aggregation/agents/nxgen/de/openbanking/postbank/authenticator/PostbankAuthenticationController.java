@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants.PollStatus;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ChallengeData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
@@ -83,7 +84,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
         switch (chosenScaMethod.getAuthenticationType().toUpperCase()) {
             case PUSH_OTP:
-                poll(username, initValues.getLinks().getScaStatus().getHref());
+                finishWithAcceptingPush(initValues, username);
                 break;
             case SMS_OTP:
             case CHIP_OTP:
@@ -126,6 +127,21 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                 Integer.parseInt(supplementalInformation.get(CommonFields.Selection.getFieldKey()))
                         - 1;
         return scaMethods.get(index);
+    }
+
+    private void finishWithAcceptingPush(AuthorisationResponse previousResponse, String username) {
+        showInfo(previousResponse.getChosenScaMethod().getName());
+        poll(username, previousResponse.getLinks().getScaStatus().getHref());
+    }
+
+    private void showInfo(String deviceName) {
+        Field informationField =
+                CommonFields.Information.build(
+                        PostbankConstants.InfoScreen.FIELD_KEY,
+                        catalog.getString(PostbankConstants.InfoScreen.DESCRIPTION),
+                        deviceName,
+                        catalog.getString(PostbankConstants.InfoScreen.HELP_TEXT));
+        supplementalInformationHelper.askSupplementalInformation(informationField);
     }
 
     private void poll(String username, String url) throws ThirdPartyAppException {

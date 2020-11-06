@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-10-26 11:23+0000\n"
-"PO-Revision-Date: 2020-10-26 11:23+0000\n"
+"POT-Creation-Date: 2020-11-09 08:25+0000\n"
+"PO-Revision-Date: 2020-11-09 08:25+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -10,18 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "Choose TAN Medium you want to use"
-msgstr "Elija el medio TAN que desee utilizar"
-
-msgid "tanCode"
-msgstr "tanCode"
-
-msgid "Please open PhotoTAN application and confirm the order"
-msgstr "Abra la aplicación PhotoTAN y confirme el pedido."
-
-msgid "waiting for confirmation"
-msgstr "esperando confirmación"
 
 msgid "Input the code from your code card"
 msgstr "Introduce la clave de tu tarjeta de coordenadas"
@@ -1851,3 +1839,15 @@ msgstr "Confirme ingresando el TAN generado."
 
 msgid "The value you entered is not valid."
 msgstr "El valor que ingresaste no es válido."
+
+msgid "Choose TAN Medium you want to use"
+msgstr "Elija el medio TAN que desee utilizar"
+
+msgid "tanCode"
+msgstr "tanCode"
+
+msgid "Please open PhotoTAN application and confirm the order"
+msgstr "Abra la aplicación PhotoTAN y confirme el pedido."
+
+msgid "waiting for confirmation"
+msgstr "esperando confirmación"
