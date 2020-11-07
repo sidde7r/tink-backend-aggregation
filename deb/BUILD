@@ -14,17 +14,6 @@ pkg_tar(
 
 # end data pkgs
 
-# service files
-
-pkg_tar(
-    name = "aggregation_system_tar",
-    srcs = [":tink-backend-aggregation.service"],
-    mode = "0444",
-    package_dir = "/lib/systemd/system",
-)
-
-# end service files
-
 # binary files
 pkg_tar(
     name = "phantomjs_bin_tar",
