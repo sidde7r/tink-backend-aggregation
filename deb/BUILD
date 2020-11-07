@@ -51,18 +51,3 @@ pkg_tar(
 )
 
 # end binary files
-
-# package tars
-
-pkg_tar(
-    name = "aggregation_tar",
-    deps = [
-        ":aggregation_bin_tar",
-        ":aggregation_data_tar",
-        ":aggregation_system_tar",
-        ":libkbc_wbaes_bin_tar",
-        ":phantomjs_bin_tar",
-    ],
-)
-
-# end package tars
