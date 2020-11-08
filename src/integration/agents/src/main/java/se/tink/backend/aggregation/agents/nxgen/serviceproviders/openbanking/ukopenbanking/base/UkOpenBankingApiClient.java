@@ -169,21 +169,29 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     private void checkForRestrictedDataForLastingConsentsError(
             HttpResponseException responseException) {
-        if (!RestrictedDataForLastingConsentsErrorChecker.isRestrictedDataLastingConsentsError(
-                responseException)) {
+        if (!new RestrictedDataForLastingConsentsErrorChecker(403)
+                .isRestrictedDataLastingConsentsError(responseException)) {
             throw responseException;
         }
     }
 
     public List<IdentityDataV31Entity> fetchV31Parties(String accountId) {
-        String path =
-                String.format(
-                        PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES.getPath(),
-                        accountId);
-        return createAisRequest(aisConfig.getApiBaseURL().concat(path))
-                .get(PartiesV31Response.class)
-                .getData()
-                .orElse(Collections.emptyList());
+        try {
+            String path =
+                    String.format(
+                            PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES.getPath(),
+                            accountId);
+            return createAisRequest(aisConfig.getApiBaseURL().concat(path))
+                    .get(PartiesV31Response.class)
+                    .getData()
+                    .orElse(Collections.emptyList());
+        } catch (HttpResponseException ex) {
+            if (!new RestrictedDataForLastingConsentsErrorChecker(401)
+                    .isRestrictedDataLastingConsentsError(ex)) {
+                throw ex;
+            }
+        }
+        return Collections.emptyList();
     }
 
     public <T> T fetchAccountBalance(String accountId, Class<T> responseType) {

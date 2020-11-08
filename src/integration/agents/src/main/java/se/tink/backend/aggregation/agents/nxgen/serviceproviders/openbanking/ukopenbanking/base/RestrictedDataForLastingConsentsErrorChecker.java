@@ -17,11 +17,20 @@ public class RestrictedDataForLastingConsentsErrorChecker {
         allowedEndpointsPatterns.add(Pattern.compile("/accounts/\\w+/transactions$"));
     }
 
-    public static boolean isRestrictedDataLastingConsentsError(HttpResponseException ex) {
-        return ex.getResponse().getStatus() == 403 && isDataRestricted(ex.getRequest().getUrl());
+    private final int restrictedDataLastingConsentErrorHttpStatus;
+
+    public RestrictedDataForLastingConsentsErrorChecker(
+            int restrictedDataLastingConsentErrorHttpStatus) {
+        this.restrictedDataLastingConsentErrorHttpStatus =
+                restrictedDataLastingConsentErrorHttpStatus;
     }
 
-    private static boolean isDataRestricted(URL url) {
+    public boolean isRestrictedDataLastingConsentsError(HttpResponseException ex) {
+        return ex.getResponse().getStatus() == restrictedDataLastingConsentErrorHttpStatus
+                && isDataRestricted(ex.getRequest().getUrl());
+    }
+
+    private boolean isDataRestricted(URL url) {
         for (Pattern allowedUrlPattern : allowedEndpointsPatterns) {
             if (allowedUrlPattern.matcher(url.toString()).find()) {
                 return false;

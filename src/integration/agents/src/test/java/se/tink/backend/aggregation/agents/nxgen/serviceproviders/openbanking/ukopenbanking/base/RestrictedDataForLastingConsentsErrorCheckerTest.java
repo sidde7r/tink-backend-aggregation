@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base;
 
-import static org.junit.Assert.*;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class RestrictedDataForLastingConsentsErrorCheckerTest {
 
+    RestrictedDataForLastingConsentsErrorChecker objectUnderTest;
     private HttpResponseException httpResponseException;
     private HttpResponse response;
     private HttpRequest request;
@@ -24,6 +23,7 @@ public class RestrictedDataForLastingConsentsErrorCheckerTest {
         request = Mockito.mock(HttpRequest.class);
         Mockito.when(httpResponseException.getRequest()).thenReturn(request);
         Mockito.when(httpResponseException.getResponse()).thenReturn(response);
+        objectUnderTest = new RestrictedDataForLastingConsentsErrorChecker(403);
     }
 
     @Test
@@ -34,8 +34,7 @@ public class RestrictedDataForLastingConsentsErrorCheckerTest {
         Mockito.when(response.getStatus()).thenReturn(403);
         // when
         boolean result =
-                RestrictedDataForLastingConsentsErrorChecker.isRestrictedDataLastingConsentsError(
-                        httpResponseException);
+                objectUnderTest.isRestrictedDataLastingConsentsError(httpResponseException);
         // then
         Assertions.assertThat(result).isTrue();
     }
@@ -55,17 +54,13 @@ public class RestrictedDataForLastingConsentsErrorCheckerTest {
         Mockito.when(response.getStatus()).thenReturn(403);
         // when
         boolean result1 =
-                RestrictedDataForLastingConsentsErrorChecker.isRestrictedDataLastingConsentsError(
-                        httpResponseException);
+                objectUnderTest.isRestrictedDataLastingConsentsError(httpResponseException);
         boolean result2 =
-                RestrictedDataForLastingConsentsErrorChecker.isRestrictedDataLastingConsentsError(
-                        httpResponseException);
+                objectUnderTest.isRestrictedDataLastingConsentsError(httpResponseException);
         boolean result3 =
-                RestrictedDataForLastingConsentsErrorChecker.isRestrictedDataLastingConsentsError(
-                        httpResponseException);
+                objectUnderTest.isRestrictedDataLastingConsentsError(httpResponseException);
         boolean result4 =
-                RestrictedDataForLastingConsentsErrorChecker.isRestrictedDataLastingConsentsError(
-                        httpResponseException);
+                objectUnderTest.isRestrictedDataLastingConsentsError(httpResponseException);
         // then
         Assertions.assertThat(result1).isFalse();
         Assertions.assertThat(result2).isFalse();
@@ -74,15 +69,14 @@ public class RestrictedDataForLastingConsentsErrorCheckerTest {
     }
 
     @Test
-    public void shouldReturnFalseWhenResponseStatusInNot403() {
+    public void shouldReturnFalseWhenHttpResponseStatusIsNotRestrictedDataError() {
         // given
         URL url = URL.of("http://bankdomain.com/accounts/sjkddaha76534/party");
         Mockito.when(request.getUrl()).thenReturn(url);
         Mockito.when(response.getStatus()).thenReturn(404);
         // when
         boolean result =
-                RestrictedDataForLastingConsentsErrorChecker.isRestrictedDataLastingConsentsError(
-                        httpResponseException);
+                objectUnderTest.isRestrictedDataLastingConsentsError(httpResponseException);
         // then
         Assertions.assertThat(result).isFalse();
     }
