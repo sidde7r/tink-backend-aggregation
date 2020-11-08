@@ -58,6 +58,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -142,21 +143,37 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public Optional<IdentityDataV31Entity> fetchV31Party() {
-        return createAisRequest(
+        return executeV31FetchPartyRequest(
+                createAisRequest(
                         aisConfig
                                 .getApiBaseURL()
-                                .concat(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY.getPath()))
-                .get(PartyV31Response.class)
-                .getData();
+                                .concat(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY.getPath())));
     }
 
     public Optional<IdentityDataV31Entity> fetchV31Party(String accountId) {
         String path =
                 String.format(
                         PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY.getPath(), accountId);
-        return createAisRequest(aisConfig.getApiBaseURL().concat(path))
-                .get(PartyV31Response.class)
-                .getData();
+        return executeV31FetchPartyRequest(
+                createAisRequest(aisConfig.getApiBaseURL().concat(path)));
+    }
+
+    private Optional<IdentityDataV31Entity> executeV31FetchPartyRequest(
+            RequestBuilder requestBuilder) {
+        try {
+            return requestBuilder.get(PartyV31Response.class).getData();
+        } catch (HttpResponseException ex) {
+            checkForRestrictedDataForLastingConsentsError(ex);
+            return Optional.empty();
+        }
+    }
+
+    private void checkForRestrictedDataForLastingConsentsError(
+            HttpResponseException responseException) {
+        if (!RestrictedDataForLastingConsentsErrorChecker.isRestrictedDataLastingConsentsError(
+                responseException)) {
+            throw responseException;
+        }
     }
 
     public List<IdentityDataV31Entity> fetchV31Parties(String accountId) {
