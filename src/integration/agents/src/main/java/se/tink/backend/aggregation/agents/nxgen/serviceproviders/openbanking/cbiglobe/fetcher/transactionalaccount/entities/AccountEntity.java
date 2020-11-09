@@ -93,4 +93,8 @@ public class AccountEntity {
     private String getAccountNumber() {
         return Optional.ofNullable(bban).orElse(iban);
     }
+
+    public boolean isEmptyAccountObject() {
+        return iban == null || resourceId == null;
+    }
 }
