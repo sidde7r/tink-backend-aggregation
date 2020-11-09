@@ -152,27 +152,42 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
         try {
             return apiClient.fetchLoginCode(fetchCodeRequest);
         } catch (HttpResponseException e) {
-            if (!(e.getResponse().getStatus() == HttpStatus.SC_CONFLICT
-                    && nordeaConfiguration.isBusinessAgent())) {
-                throw e;
-            }
+            verifyIsConflictForBusinessAgentOrThrow(e);
 
             MultipleAgreementsResponse multipleAgreementsResponse =
                     e.getResponse().getBody(MultipleAgreementsResponse.class);
 
-            if (!multipleAgreementsResponse.isAgreementConflictError()) {
-                throw e;
-            }
+            verifyIsAgreementConflictOrThrow(e, multipleAgreementsResponse);
 
-            Optional<String> agreementId =
-                    multipleAgreementsResponse.getIdOfMatchingAgreement(organisationNumber);
-
-            if (!agreementId.isPresent()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-
-            return apiClient.fetchLoginCodeWithAgreementId(fetchCodeRequest, agreementId.get());
+            String agreementId = getMatchingAgreementIdOrThrow(multipleAgreementsResponse);
+            return apiClient.fetchLoginCodeWithAgreementId(fetchCodeRequest, agreementId);
         }
+    }
+
+    private void verifyIsConflictForBusinessAgentOrThrow(HttpResponseException e) {
+        if (!(e.getResponse().getStatus() == HttpStatus.SC_CONFLICT
+                && nordeaConfiguration.isBusinessAgent())) {
+            throw e;
+        }
+    }
+
+    private void verifyIsAgreementConflictOrThrow(
+            HttpResponseException e, MultipleAgreementsResponse multipleAgreementsResponse) {
+        if (!multipleAgreementsResponse.isAgreementConflictError()) {
+            throw e;
+        }
+    }
+
+    private String getMatchingAgreementIdOrThrow(
+            MultipleAgreementsResponse multipleAgreementsResponse) {
+        Optional<String> agreementId =
+                multipleAgreementsResponse.getIdOfMatchingAgreement(organisationNumber);
+
+        if (!agreementId.isPresent()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        return agreementId.get();
     }
 
     private void checkIdentity() throws LoginException {
