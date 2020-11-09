@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.EnrollmentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.EnrollmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.FetchCodeRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.FetchCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.InitBankIdAutostartRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.InitDeviceAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.PasswordTokenRequest;
@@ -109,7 +110,7 @@ public class NordeaBaseApiClient {
         return request.get(BankIdAutostartResponse.class);
     }
 
-    public BankIdAutostartResponse fetchLoginCode(FetchCodeRequest fetchCodeRequest) {
+    public FetchCodeResponse fetchLoginCode(FetchCodeRequest fetchCodeRequest) {
         final RequestBuilder request =
                 httpClient
                         .request(
@@ -122,7 +123,7 @@ public class NordeaBaseApiClient {
             request.headers(NordeaBaseConstants.NORDEA_BUSINESS_HEADERS);
         }
 
-        return request.post(BankIdAutostartResponse.class);
+        return request.post(FetchCodeResponse.class);
     }
 
     public ResultBankIdResponse fetchAccessToken(String code, String codeVerifier) {

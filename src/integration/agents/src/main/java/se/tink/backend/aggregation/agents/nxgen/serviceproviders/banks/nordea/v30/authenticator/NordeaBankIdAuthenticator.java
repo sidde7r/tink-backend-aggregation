@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.BankIdAutostartResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.FetchCodeRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.FetchCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.InitBankIdAutostartRequest;
 import se.tink.backend.aggregation.agents.utils.business.OrganisationNumberSeLogger;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
@@ -119,21 +120,23 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
 
     private BankIdStatus fetchAccessToken(BankIdAutostartResponse bankIdAutostartResponse)
             throws LoginException {
-        try {
-            final FetchCodeRequest fetchCodeRequest =
-                    new FetchCodeRequest().setCode(bankIdAutostartResponse.getCode());
-            bankIdAutostartResponse = apiClient.fetchLoginCode(fetchCodeRequest);
 
-            apiClient
-                    .fetchAccessToken(bankIdAutostartResponse.getCode(), codeVerifier)
-                    .storeTokens(sessionStorage);
+        final FetchCodeRequest fetchCodeRequest =
+                new FetchCodeRequest().setCode(bankIdAutostartResponse.getCode());
 
-            // If SSN is given, check that it matches the logged in user
-            if (!Strings.isNullOrEmpty(this.givenSsn) && !nordeaConfiguration.isBusinessAgent()) {
-                checkIdentity();
-            }
-        } catch (HttpResponseException e) {
-            return BankIdStatus.NO_CLIENT;
+        FetchCodeResponse fetchCodeResponse = apiClient.fetchLoginCode(fetchCodeRequest);
+
+        if (Strings.isNullOrEmpty(fetchCodeResponse.getCode())) {
+            throw new IllegalStateException("Login code not present, can't fetch access token.");
+        }
+
+        apiClient
+                .fetchAccessToken(fetchCodeResponse.getCode(), codeVerifier)
+                .storeTokens(sessionStorage);
+
+        // If SSN is given, check that it matches the logged in user
+        if (!Strings.isNullOrEmpty(this.givenSsn) && !nordeaConfiguration.isBusinessAgent()) {
+            checkIdentity();
         }
 
         if (nordeaConfiguration.isBusinessAgent()) {
