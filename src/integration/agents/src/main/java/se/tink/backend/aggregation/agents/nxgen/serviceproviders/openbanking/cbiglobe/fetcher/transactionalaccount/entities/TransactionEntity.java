@@ -20,16 +20,16 @@ public class TransactionEntity {
     private String creditorName;
 
     public Transaction toPendingTransaction() {
-        return toTinkTransaction(false);
+        return toTinkTransaction(true);
     }
 
     public Transaction toBookedTransaction() {
-        return toTinkTransaction(true);
+        return toTinkTransaction(false);
     }
 
     private Transaction toTinkTransaction(boolean pending) {
         return Transaction.builder()
-                .setDate(Optional.ofNullable(bookingDate).orElse(valueDate))
+                .setDate(Optional.ofNullable(valueDate).orElse(bookingDate))
                 .setPending(pending)
                 .setAmount(transactionAmount.toAmount())
                 .setDescription(createDescription())
