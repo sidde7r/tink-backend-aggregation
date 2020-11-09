@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.math.BigDecimal;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -33,8 +32,8 @@ public class SubcardEntity {
         String accountNumber = transformCardNameToAccountNumber();
         return CreditCardAccount.builder(
                         accountNumber,
-                        ExactCurrencyAmount.of(BigDecimal.ZERO, configuration.getCurrency()),
-                        ExactCurrencyAmount.of(BigDecimal.ZERO, configuration.getCurrency()))
+                        ExactCurrencyAmount.zero(configuration.getCurrency()),
+                        ExactCurrencyAmount.zero(configuration.getCurrency()))
                 .setHolderName(getHolderName())
                 .setAccountNumber(accountNumber)
                 .setName(cardProductName)

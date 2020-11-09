@@ -45,7 +45,7 @@ public class NordeaMockServerPaymentAgentTest {
         Transfer transfer = new Transfer();
         transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "3300123456"));
         transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "3228756"));
-        transfer.setAmount(ExactCurrencyAmount.inSEK(4246d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(4246));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(
                 Date.from(LocalDate.of(2020, 6, 22).atStartOfDay(ZoneId.of("CET")).toInstant()));

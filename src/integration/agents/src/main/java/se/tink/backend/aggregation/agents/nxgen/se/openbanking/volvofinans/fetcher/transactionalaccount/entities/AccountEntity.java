@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.entities;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -70,6 +69,6 @@ public class AccountEntity {
                 .filter(BalanceEntity::isExpected)
                 .findFirst()
                 .map(BalanceEntity::getAmount)
-                .orElse(ExactCurrencyAmount.of(BigDecimal.ZERO, currency));
+                .orElse(ExactCurrencyAmount.zero(currency));
     }
 }

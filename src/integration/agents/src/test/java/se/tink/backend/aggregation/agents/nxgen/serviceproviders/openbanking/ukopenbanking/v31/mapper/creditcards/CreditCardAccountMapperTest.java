@@ -38,9 +38,9 @@ public class CreditCardAccountMapperTest {
     public void setUp() {
         balanceMapper = Mockito.mock(CreditCardBalanceMapper.class);
         when(balanceMapper.getAccountBalance(anyCollection()))
-                .thenReturn(ExactCurrencyAmount.of(123d, "GBP"));
+                .thenReturn(ExactCurrencyAmount.of(123, "GBP"));
         when(balanceMapper.getAvailableCredit(anyCollection()))
-                .thenReturn(ExactCurrencyAmount.of(1d, "GBP"));
+                .thenReturn(ExactCurrencyAmount.of(1, "GBP"));
 
         identifierMapper = mock(DefaultIdentifierMapper.class);
         when(identifierMapper.mapIdentifier(any())).thenCallRealMethod();
@@ -60,10 +60,10 @@ public class CreditCardAccountMapperTest {
         // when
         when(identifierMapper.getCreditCardIdentifier(anyCollection()))
                 .thenReturn(IdentifierFixtures.panIdentifier());
-        ExactCurrencyAmount expectedAccountBalance = ExactCurrencyAmount.of(-333.11d, "GBP");
+        ExactCurrencyAmount expectedAccountBalance = ExactCurrencyAmount.of(-333.11, "GBP");
         when(balanceMapper.getAccountBalance(balances)).thenReturn(expectedAccountBalance);
 
-        ExactCurrencyAmount expectedAvailableCredit = ExactCurrencyAmount.of(123.123d, "EUR");
+        ExactCurrencyAmount expectedAvailableCredit = ExactCurrencyAmount.of(123.123, "EUR");
         when(balanceMapper.getAvailableCredit(balances)).thenReturn(expectedAvailableCredit);
 
         Optional<CreditCardAccount> mappingResult =

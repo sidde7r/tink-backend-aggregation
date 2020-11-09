@@ -65,7 +65,7 @@ public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
 
         return InvestmentAccount.builder(product.getProductNumber())
                 .setAccountNumber(product.getProductNumber())
-                .setCashBalance(ExactCurrencyAmount.of(0.0, product.getCurrency()))
+                .setCashBalance(ExactCurrencyAmount.zero(product.getCurrency()))
                 .setPortfolios(Collections.singletonList(portfolio))
                 .setBankIdentifier(product.getUuid())
                 .setHolderName(new HolderName(product.getHolders().get(0).getAnyName()))

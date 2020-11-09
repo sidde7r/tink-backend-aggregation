@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +36,7 @@ class NationwideCreditCardBalanceMapper implements CreditCardBalanceMapper {
         if (availableCreditLines.isEmpty()) {
             log.debug(
                     "Calculating available credit impossible. API did not return credit lines. Setting to 0.");
-            return ExactCurrencyAmount.of(BigDecimal.ZERO, "GBP");
+            return ExactCurrencyAmount.zero("GBP");
         } else {
             return defaultCreditCardBalanceMapper.getAvailableCredit(balances);
         }

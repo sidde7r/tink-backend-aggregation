@@ -110,7 +110,7 @@ public class TransactionalAccountTransactionFetcherTest {
         given(mockAccount.getFromTemporaryStorage("productCode")).willReturn(PRODUCT_CODE);
         given(mockAccount.getFromTemporaryStorage("canFetchTransactions", Boolean.class))
                 .willReturn(Optional.of(Boolean.TRUE));
-        given(mockAccount.getExactBalance()).willReturn(ExactCurrencyAmount.of(0.0, "NOK"));
+        given(mockAccount.getExactBalance()).willReturn(ExactCurrencyAmount.zero("NOK"));
         return mockAccount;
     }
 

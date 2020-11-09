@@ -130,7 +130,7 @@ public class OtmlResponseConverter {
         switch (accountType.toUpperCase()) {
             case BankAustriaConstants.BankAustriaAccountTypes.CURRENT:
                 return CheckingAccount.builder(
-                                AccountTypes.CHECKING, accountNumber, ExactCurrencyAmount.inEUR(0D))
+                                AccountTypes.CHECKING, accountNumber, ExactCurrencyAmount.inEUR(0))
                         .setAccountNumber(accountNumber)
                         .setName(accountNickName)
                         .setBankIdentifier(accountKey)

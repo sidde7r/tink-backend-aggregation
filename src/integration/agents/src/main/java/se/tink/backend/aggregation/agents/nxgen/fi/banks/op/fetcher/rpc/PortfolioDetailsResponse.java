@@ -30,7 +30,7 @@ public class PortfolioDetailsResponse extends OpBankResponseEntity {
     @JsonIgnore
     public InvestmentAccount toTinkInvestmentAccount() {
         return InvestmentAccount.builder(portfolioId)
-                .setCashBalance(ExactCurrencyAmount.of(0.0, currency))
+                .setCashBalance(ExactCurrencyAmount.zero(currency))
                 .setAccountNumber(portfolioId)
                 .setBankIdentifier(portfolioId)
                 .setPortfolios(Lists.newArrayList(getTinkPortfolio()))

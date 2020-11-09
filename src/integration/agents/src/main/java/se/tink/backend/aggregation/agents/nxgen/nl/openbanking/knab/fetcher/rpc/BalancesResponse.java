@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.rpc;
 
-import java.math.BigDecimal;
 import java.util.List;
 import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.entity.AccountEntity;
@@ -22,6 +21,6 @@ public class BalancesResponse {
     }
 
     private ExactCurrencyAmount getDefaultAmount() {
-        return ExactCurrencyAmount.of(BigDecimal.ZERO, account.getCurrency());
+        return ExactCurrencyAmount.zero(account.getCurrency());
     }
 }

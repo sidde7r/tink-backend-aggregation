@@ -125,7 +125,7 @@ public class GenericCardEntity {
     public CreditCardAccount toTinkCard(ExactCurrencyAmount balance) {
         final ExactCurrencyAmount availableCredit;
         if (isPrepaidCard()) {
-            availableCredit = ExactCurrencyAmount.of(BigDecimal.ZERO, LaCaixaConstants.CURRENCY);
+            availableCredit = ExactCurrencyAmount.zero(LaCaixaConstants.CURRENCY);
         } else {
             availableCredit = getAvailableCredit();
         }
@@ -156,7 +156,7 @@ public class GenericCardEntity {
         final BigDecimal availableCredit = liquidationData.getAvailableCredit();
         if (Objects.isNull(availableCredit)) {
             LOG.warn("Available credit is null: {}", SerializationUtils.serializeToString(this));
-            return ExactCurrencyAmount.of(BigDecimal.ZERO, LaCaixaConstants.CURRENCY);
+            return ExactCurrencyAmount.zero(LaCaixaConstants.CURRENCY);
         } else {
             return ExactCurrencyAmount.of(availableCredit, LaCaixaConstants.CURRENCY);
         }

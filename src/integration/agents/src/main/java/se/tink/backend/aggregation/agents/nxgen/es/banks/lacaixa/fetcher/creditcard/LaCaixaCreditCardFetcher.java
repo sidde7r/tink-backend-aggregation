@@ -73,8 +73,7 @@ public class LaCaixaCreditCardFetcher
             GenericCardEntity card, List<GenericCardEntity> cardsInContract) {
         boolean isFirstCardOnContract = cardsInContract.get(0).equals(card);
         if (!isFirstCardOnContract) {
-            return card.toTinkCard(
-                    ExactCurrencyAmount.of(BigDecimal.ZERO, LaCaixaConstants.CURRENCY));
+            return card.toTinkCard(ExactCurrencyAmount.zero(LaCaixaConstants.CURRENCY));
         }
         try {
             // Prepaid cards have no contract, so we use their balance directly

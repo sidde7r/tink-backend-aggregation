@@ -40,7 +40,7 @@ public class PaymentEntityTest {
         Transfer transfer = new Transfer();
         transfer.setSource(AccountIdentifier.create(Type.SE, SOURCE_ACCOUNT));
         transfer.setDestination(AccountIdentifier.create(Type.SE_BG, DESTINATION_ACCOUNT));
-        transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1));
         transfer.setType(TransferType.PAYMENT);
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue(MESSAGE);

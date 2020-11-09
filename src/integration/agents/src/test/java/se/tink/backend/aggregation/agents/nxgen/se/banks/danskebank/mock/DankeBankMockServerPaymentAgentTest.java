@@ -47,7 +47,7 @@ public class DankeBankMockServerPaymentAgentTest {
         Transfer transfer = new Transfer();
         transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "3300123456"));
         transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "5961111"));
-        transfer.setAmount(ExactCurrencyAmount.inSEK(7138d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(7138));
         transfer.setType(TransferType.PAYMENT);
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("610550873500157");

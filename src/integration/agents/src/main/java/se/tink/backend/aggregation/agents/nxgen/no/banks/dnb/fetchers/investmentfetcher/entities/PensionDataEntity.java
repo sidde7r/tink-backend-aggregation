@@ -85,7 +85,7 @@ public class PensionDataEntity {
         return InvestmentAccount.builder(accountNumbers.get(0))
                 .setAccountNumber(accountNumbers.get(0))
                 .setName("Pension")
-                .setCashBalance(ExactCurrencyAmount.of(0.0, "NOK"))
+                .setCashBalance(ExactCurrencyAmount.zero("NOK"))
                 .setPortfolios(Collections.singletonList(toTinkPortfolio()))
                 .build();
     }

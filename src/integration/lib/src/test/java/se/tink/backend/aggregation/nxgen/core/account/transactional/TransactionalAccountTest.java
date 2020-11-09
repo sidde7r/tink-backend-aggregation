@@ -33,8 +33,8 @@ public class TransactionalAccountTest {
                 TransactionalAccount.builder(AccountTypes.CHECKING, ACCOUNT_NUMBER)
                         .setHolderName(new HolderName("name"))
                         .setAccountNumber(ACCOUNT_NUMBER)
-                        .setExactBalance(ExactCurrencyAmount.of(12d, "DKK"));
-        transactionalBuilder.setExactBalance(ExactCurrencyAmount.of(20d, "DKK"));
+                        .setExactBalance(ExactCurrencyAmount.of(12, "DKK"));
+        transactionalBuilder.setExactBalance(ExactCurrencyAmount.of(20, "DKK"));
         TransactionalAccount transactionalAccount = transactionalBuilder.build();
         assertThat(transactionalAccount.getExactBalance().getDoubleValue()).isEqualTo(20);
     }
@@ -45,10 +45,10 @@ public class TransactionalAccountTest {
                 TransactionalAccount.builder(AccountTypes.OTHER, ACCOUNT_NUMBER)
                         .setHolderName(new HolderName("name"))
                         .setAccountNumber(ACCOUNT_NUMBER)
-                        .setExactBalance(ExactCurrencyAmount.of(12d, "DKK"));
+                        .setExactBalance(ExactCurrencyAmount.of(12, "DKK"));
         TransactionalAccount transactionalAccount = transactionalBuilder.build();
         assertThat(transactionalAccount.getExactBalance())
-                .isEqualTo(ExactCurrencyAmount.of(12d, "DKK"));
+                .isEqualTo(ExactCurrencyAmount.of(12, "DKK"));
         assertThat(transactionalAccount.getType()).isEqualTo(AccountTypes.OTHER);
     }
 
@@ -59,7 +59,7 @@ public class TransactionalAccountTest {
                         // setting additional data before general one
                         .setInterestRate(1d)
                         .setAccountNumber(ACCOUNT_NUMBER)
-                        .setExactBalance(ExactCurrencyAmount.of(1d, "DKK"))
+                        .setExactBalance(ExactCurrencyAmount.of(1, "DKK"))
                         // setting additional data after general one
                         .setInterestRate(2d)
                         .build();

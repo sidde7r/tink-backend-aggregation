@@ -100,7 +100,7 @@ public class FundAccountEntity {
         return InvestmentAccount.builder(accountNumber)
                 .setAccountNumber(accountNumber)
                 .setName(accountName)
-                .setCashBalance(ExactCurrencyAmount.of(0.0, "NOK"))
+                .setCashBalance(ExactCurrencyAmount.zero("NOK"))
                 .setPortfolios(Collections.singletonList(toTinkPortfolio()))
                 .build();
     }

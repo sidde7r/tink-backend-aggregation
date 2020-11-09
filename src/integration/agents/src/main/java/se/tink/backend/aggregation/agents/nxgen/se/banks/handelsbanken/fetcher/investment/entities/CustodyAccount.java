@@ -84,6 +84,6 @@ public class CustodyAccount extends BaseResponse {
     public ExactCurrencyAmount getTinkAmount() {
         return Optional.ofNullable(marketValue)
                 .map(HandelsbankenAmount::toExactCurrencyAmount)
-                .orElse(ExactCurrencyAmount.of(0.0, "SEK"));
+                .orElse(ExactCurrencyAmount.zero("SEK"));
     }
 }

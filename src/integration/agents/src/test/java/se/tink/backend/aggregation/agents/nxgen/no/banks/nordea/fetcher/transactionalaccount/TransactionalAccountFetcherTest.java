@@ -73,7 +73,7 @@ public class TransactionalAccountFetcherTest {
                 account,
                 ExactCurrencyAmount.of(401.22, "NOK"),
                 ExactCurrencyAmount.of(102.22, "NOK"),
-                ExactCurrencyAmount.of(0.0, "NOK"));
+                ExactCurrencyAmount.zero("NOK"));
     }
 
     private void assertThatAccountIsProperlyMapped(

@@ -1,6 +1,5 @@
 package se.tink.libraries.amount;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -95,7 +94,7 @@ public class ExactCurrencyAmountTest {
     }
 
     @Test
-    public void TestStringValueHasProperFormat() {
+    public void testStringValueHasProperFormat() {
         ExactCurrencyAmount value1 = ExactCurrencyAmount.of(new BigDecimal("1"), "GBP");
         ExactCurrencyAmount value2 = ExactCurrencyAmount.of(new BigDecimal("1.00"), "GBP");
         ExactCurrencyAmount value3 = ExactCurrencyAmount.of(new BigDecimal("1.1"), "GBP");
@@ -125,5 +124,23 @@ public class ExactCurrencyAmountTest {
         assertThat(result1).isZero();
         assertThat(result2).isNegative();
         assertThat(result3).isPositive();
+    }
+
+    @Test
+    public void zeroStaticMethodReturnsZeroWithExpectedCurrency() {
+        // given
+        String currencyEur = "EUR";
+        String currencyPln = "PLN";
+
+        // when
+        ExactCurrencyAmount zeroEur = ExactCurrencyAmount.zero(currencyEur);
+        ExactCurrencyAmount zeroPln = ExactCurrencyAmount.zero(currencyPln);
+
+        // then
+        assertThat(zeroEur.getExactValue()).isEqualTo(BigDecimal.ZERO);
+        assertThat(zeroEur.getCurrencyCode()).isEqualTo(currencyEur);
+
+        assertThat(zeroPln.getExactValue()).isEqualTo(BigDecimal.ZERO);
+        assertThat(zeroPln.getCurrencyCode()).isEqualTo(currencyPln);
     }
 }

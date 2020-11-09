@@ -42,7 +42,7 @@ public class TransactionalAccountMapperTest {
         mapper = new TransactionalAccountMapper(balanceMapper, identifierMapper);
 
         when(balanceMapper.getAccountBalance(anyCollection()))
-                .thenReturn(ExactCurrencyAmount.of(12345d, "EUR"));
+                .thenReturn(ExactCurrencyAmount.of(12345, "EUR"));
         when(identifierMapper.mapIdentifier(any())).thenCallRealMethod();
         when(identifierMapper.getTransactionalAccountPrimaryIdentifier(anyList(), anyList()))
                 .thenReturn(sortCodeIdentifier());
@@ -51,10 +51,10 @@ public class TransactionalAccountMapperTest {
     @Test
     public void shouldMapBalances_usingBalanceMapper() {
         // given
-        ExactCurrencyAmount accBalance = ExactCurrencyAmount.of(-123.22d, "GBP");
+        ExactCurrencyAmount accBalance = ExactCurrencyAmount.of(-123.22, "GBP");
         ExactCurrencyAmount availableBalance = ExactCurrencyAmount.of(432.44, "EUR");
-        ExactCurrencyAmount availableCredit = ExactCurrencyAmount.of(888d, "GBP");
-        ExactCurrencyAmount creditLimit = ExactCurrencyAmount.of(11.888d, "PLN");
+        ExactCurrencyAmount availableCredit = ExactCurrencyAmount.of(888, "GBP");
+        ExactCurrencyAmount creditLimit = ExactCurrencyAmount.of(11.888, "PLN");
 
         // when
         when(balanceMapper.getAccountBalance(anyCollection())).thenReturn(accBalance);

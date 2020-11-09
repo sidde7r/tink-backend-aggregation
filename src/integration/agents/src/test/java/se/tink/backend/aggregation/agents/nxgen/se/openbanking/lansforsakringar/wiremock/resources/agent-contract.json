@@ -62,9 +62,9 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "doubleValue" : 0.0,
-      "scale" : 1,
+      "scale" : 0,
       "unscaledValue" : 0,
-      "exactValue" : 0.0
+      "exactValue" : 0
     },
     "currencyCode" : "SEK",
     "bankId" : "1111",

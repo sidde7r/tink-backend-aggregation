@@ -16,31 +16,31 @@ public class EuroInformationUtilsTest {
     @Test
     public void parseAmount_whenCurrencySpecified() {
         ExactCurrencyAmount amount = EuroInformationUtils.parseAmount("+23.30SEK", CURRENCY_INPUT);
-        assertEquals(ExactCurrencyAmount.inEUR(23.30d), amount);
+        assertEquals(ExactCurrencyAmount.inEUR(23.30), amount);
     }
 
     @Test
     public void parseAmount_whenCurrencyNotSpecified() {
         ExactCurrencyAmount amount = EuroInformationUtils.parseAmount("+23.30SEK");
-        assertEquals(ExactCurrencyAmount.inSEK(23.30d), amount);
+        assertEquals(ExactCurrencyAmount.inSEK(23.30), amount);
     }
 
     @Test
     public void parseAmount_withNegativeValue() {
         ExactCurrencyAmount amount = EuroInformationUtils.parseAmount("-23.30SEK", CURRENCY_INPUT);
-        assertEquals(ExactCurrencyAmount.inEUR(-23.30d), amount);
+        assertEquals(ExactCurrencyAmount.inEUR(-23.30), amount);
     }
 
     @Test
     public void parseAmount_zeroWithSign() {
         ExactCurrencyAmount amount = EuroInformationUtils.parseAmount("+0.00SEK", CURRENCY_INPUT);
-        assertEquals(ExactCurrencyAmount.inEUR(0.00d), amount);
+        assertEquals(ExactCurrencyAmount.inEUR(0.00), amount);
     }
 
     @Test
     public void parseAmount_zeroWithoutSign() {
         ExactCurrencyAmount amount = EuroInformationUtils.parseAmount("0.00SEK", CURRENCY_INPUT);
-        assertEquals(ExactCurrencyAmount.inEUR(0.00d), amount);
+        assertEquals(ExactCurrencyAmount.inEUR(0.00), amount);
     }
 
     @Test
