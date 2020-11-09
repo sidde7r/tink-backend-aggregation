@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.paymen
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc.GetPaymentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -27,7 +28,8 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class FinecoBankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -44,7 +46,11 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor, FetchablePaym
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         AmountEntity amountEntity = AmountEntity.of(paymentRequest);
-        Reference reference = paymentRequest.getPayment().getReference();
+
+        RemittanceInformation remittanceInformation =
+                paymentRequest.getPayment().getRemittanceInformation();
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
 
         CreatePaymentRequest requestBody =
                 new CreatePaymentRequest.Builder()
@@ -52,7 +58,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor, FetchablePaym
                         .withDebtorAccount(debtorEntity)
                         .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
                         .withInstructedAmount(amountEntity)
-                        .withRemittanceInformationUnstructured(reference.getValue())
+                        .withRemittanceInformationUnstructured(remittanceInformation.getValue())
                         .build();
 
         CreatePaymentResponse createPaymentResponse =
