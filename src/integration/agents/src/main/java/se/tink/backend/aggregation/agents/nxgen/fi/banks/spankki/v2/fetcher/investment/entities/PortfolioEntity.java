@@ -65,6 +65,9 @@ public class PortfolioEntity {
 
     @JsonIgnore
     private BigDecimal calculateTotalProfit() {
+        if (BigDecimal.ZERO.equals(totalMarketValue.setScale(0, RoundingMode.HALF_UP))) {
+            return BigDecimal.ZERO;
+        }
         return positions.stream()
                 .map(PositionsEntity::calculateOriginalValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
