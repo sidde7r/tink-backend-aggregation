@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -26,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentBody;
@@ -46,6 +48,8 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -254,5 +258,36 @@ public class Xs2aDevelopersApiClientTest {
         assertThat(result).isEqualTo(createPaymentResponse);
         verify(tinkHttpClient).request(url);
         verifyNoMoreInteractions(tinkHttpClient);
+    }
+
+    @Test
+    public void shouldThrowBankServiceExceptionWhenRefreshingTokenFailsWith500() {
+        // given
+        GetTokenForm getTokenForm =
+                GetTokenForm.builder()
+                        .setClientId("asdf")
+                        .setCode("zxcv")
+                        .setCodeVerifier("bnm")
+                        .setGrantType("uiop")
+                        .setRedirectUri("iopp")
+                        .setValidRequest(true)
+                        .build();
+
+        HttpResponseException hre = mock(HttpResponseException.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(hre.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getStatus()).thenReturn(500);
+
+        URL url = new URL(BASE_URL + TOKEN);
+        when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
+        when(requestBuilder.post(GetTokenResponse.class)).thenThrow(hre);
+
+        // when
+        Throwable throwable = catchThrowable(() -> apiClient.getToken(getTokenForm));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOf(BankServiceException.class)
+                .hasMessage("Cause: BankServiceError.BANK_SIDE_FAILURE");
     }
 }

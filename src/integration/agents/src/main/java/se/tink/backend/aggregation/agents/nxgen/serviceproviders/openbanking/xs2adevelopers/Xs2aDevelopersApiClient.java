@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderKeys;
@@ -35,9 +37,11 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class Xs2aDevelopersApiClient {
 
     private static final DateTimeFormatter DATE_FORMATTER =
@@ -120,9 +124,18 @@ public class Xs2aDevelopersApiClient {
     }
 
     public GetTokenResponse getToken(GetTokenForm getTokenForm) {
-        return createRequest(new URL(configuration.getBaseUrl() + ApiServices.TOKEN))
-                .body(getTokenForm, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(GetTokenResponse.class);
+        try {
+            return createRequest(new URL(configuration.getBaseUrl() + ApiServices.TOKEN))
+                    .body(getTokenForm, MediaType.APPLICATION_FORM_URLENCODED)
+                    .post(GetTokenResponse.class);
+        } catch (HttpResponseException hre) {
+            log.error("Error caught while getting/refreshing access token", hre);
+            if (hre.getResponse().getStatus() == 500) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hre);
+            } else {
+                throw hre;
+            }
+        }
     }
 
     public GetAccountsResponse getAccounts() {
