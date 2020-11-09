@@ -120,7 +120,6 @@ public final class SwedbankConstants {
     }
 
     public static class RequestValues {
-        public static final String SWEDBANK_BANKID = "08999";
         public static final String PSD2 = "PSD2";
         public static final String MOBILE_ID = "MOBILE_ID";
         public static final String ALL_SCOPES =
