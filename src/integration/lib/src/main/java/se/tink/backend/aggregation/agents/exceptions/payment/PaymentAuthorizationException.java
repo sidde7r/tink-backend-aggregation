@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.exceptions.payment;
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
+import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class PaymentAuthorizationException extends PaymentException {
     public static final String DEFAULT_MESSAGE = "Payment was not authorised. Please try again.";
-    protected OpenIdError openIdError;
+    protected ErrorEntity errorEntity;
 
     public PaymentAuthorizationException(String message, Throwable cause) {
         super(message, cause);
@@ -20,9 +20,9 @@ public class PaymentAuthorizationException extends PaymentException {
         super(DEFAULT_MESSAGE);
     }
 
-    public PaymentAuthorizationException(OpenIdError openIdError, String message) {
+    public PaymentAuthorizationException(ErrorEntity errorEntity, String message) {
         super(message);
-        this.openIdError = openIdError;
+        this.errorEntity = errorEntity;
     }
 
     public PaymentAuthorizationException(String message, InternalStatus internalStatus) {
