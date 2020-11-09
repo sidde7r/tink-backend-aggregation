@@ -63,7 +63,9 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+        UkOpenBankingV31Ais ukOpenBankingV31Ais =
+                new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+        return new MonzoV31Ais(ukOpenBankingV31Ais, aisConfig, persistentStorage);
     }
 
     @Override

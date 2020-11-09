@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServ
 
 import com.google.common.base.Strings;
 import java.security.PublicKey;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Date;
@@ -306,6 +307,7 @@ public class OpenIdAuthenticationController
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                         oAuth2Token, tokenLifetime, tokenLifetimeUnit));
 
+        saveStrongAuthenticationTime();
         saveAccessToken(oAuth2Token);
 
         instantiateAuthFilter(oAuth2Token);
@@ -344,6 +346,10 @@ public class OpenIdAuthenticationController
         } else {
             log.warn("ID Token (access token) validation not possible - no public keys");
         }
+    }
+
+    private void saveStrongAuthenticationTime() {
+        persistentStorage.put(PersistentStorageKeys.LAST_SCA_TIME, LocalDateTime.now().toString());
     }
 
     private void saveAccessToken(OAuth2Token oAuth2Token) {

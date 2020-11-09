@@ -1,0 +1,35 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "mock",
+    srcs = glob(["*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//data:cryptography_test",
+        "//data:provider_configurations",
+        "//etc:development",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/monzo/mock/resources",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/monzo",
+        "//src/integration/amount",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/enums",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/random",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockpayment",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/payment:rpc",
+        "//src/libraries/account_identifier",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
+    ],
+)
