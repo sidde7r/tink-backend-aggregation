@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
@@ -30,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -61,15 +64,21 @@ public final class OpBankApiClient {
     }
 
     public TokenResponse fetchNewToken() {
-        HttpResponse response =
-                client.request(Urls.OAUTH_TOKEN)
-                        .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
-                        .body(
-                                new TokenForm()
-                                        .setClientId(configuration.getClientId())
-                                        .setClientSecret(configuration.getClientSecret()),
-                                MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                        .post(HttpResponse.class);
+        HttpResponse response;
+
+        try {
+            response =
+                    client.request(Urls.OAUTH_TOKEN)
+                            .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
+                            .body(
+                                    new TokenForm()
+                                            .setClientId(configuration.getClientId())
+                                            .setClientSecret(configuration.getClientSecret()),
+                                    MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                            .post(HttpResponse.class);
+        } catch (HttpResponseException e) {
+            throw mapServiceException(e);
+        }
 
         try {
             return MAPPER.readValue(response.getBodyInputStream(), TokenResponse.class);
@@ -191,5 +200,13 @@ public final class OpBankApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
+    }
+
+    private BankServiceException mapServiceException(HttpResponseException exception) {
+        if (exception.getResponse().getStatus() == 503) {
+            return BankServiceError.BANK_SIDE_FAILURE.exception();
+        } else {
+            throw exception;
+        }
     }
 }
