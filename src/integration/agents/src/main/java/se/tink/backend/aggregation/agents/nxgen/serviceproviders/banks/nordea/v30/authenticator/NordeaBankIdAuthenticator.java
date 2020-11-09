@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 import com.google.common.base.Strings;
 import java.util.Optional;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.FetchCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.FetchCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.InitBankIdAutostartRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.MultipleAgreementsResponse;
 import se.tink.backend.aggregation.agents.utils.business.OrganisationNumberSeLogger;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -121,10 +123,7 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
     private BankIdStatus fetchAccessToken(BankIdAutostartResponse bankIdAutostartResponse)
             throws LoginException {
 
-        final FetchCodeRequest fetchCodeRequest =
-                new FetchCodeRequest().setCode(bankIdAutostartResponse.getCode());
-
-        FetchCodeResponse fetchCodeResponse = apiClient.fetchLoginCode(fetchCodeRequest);
+        FetchCodeResponse fetchCodeResponse = getLoginCode(bankIdAutostartResponse);
 
         if (Strings.isNullOrEmpty(fetchCodeResponse.getCode())) {
             throw new IllegalStateException("Login code not present, can't fetch access token.");
@@ -144,6 +143,36 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
         }
 
         return BankIdStatus.DONE;
+    }
+
+    private FetchCodeResponse getLoginCode(BankIdAutostartResponse bankIdAutostartResponse) {
+        final FetchCodeRequest fetchCodeRequest =
+                new FetchCodeRequest().setCode(bankIdAutostartResponse.getCode());
+
+        try {
+            return apiClient.fetchLoginCode(fetchCodeRequest);
+        } catch (HttpResponseException e) {
+            if (!(e.getResponse().getStatus() == HttpStatus.SC_CONFLICT
+                    && nordeaConfiguration.isBusinessAgent())) {
+                throw e;
+            }
+
+            MultipleAgreementsResponse multipleAgreementsResponse =
+                    e.getResponse().getBody(MultipleAgreementsResponse.class);
+
+            if (!multipleAgreementsResponse.isAgreementConflictError()) {
+                throw e;
+            }
+
+            Optional<String> agreementId =
+                    multipleAgreementsResponse.getIdOfMatchingAgreement(organisationNumber);
+
+            if (!agreementId.isPresent()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            return apiClient.fetchLoginCodeWithAgreementId(fetchCodeRequest, agreementId.get());
+        }
     }
 
     private void checkIdentity() throws LoginException {

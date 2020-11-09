@@ -88,6 +88,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
                                         .getCredentialsRequest()
                                         .getCredentials()
                                         .getField(Key.CORPORATE_ID))
+                        .map(s -> s.replace("-", ""))
+                        .map(String::trim)
                         .orElse("");
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();

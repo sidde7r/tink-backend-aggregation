@@ -126,6 +126,20 @@ public class NordeaBaseApiClient {
         return request.post(FetchCodeResponse.class);
     }
 
+    public FetchCodeResponse fetchLoginCodeWithAgreementId(
+            FetchCodeRequest fetchCodeRequest, String agreementId) {
+        return httpClient
+                .request(
+                        Urls.getUrl(
+                                        nordeaConfiguration.getBaseUrl(),
+                                        Urls.FETCH_LOGIN_CODE_WITH_AGREEMENT_ID)
+                                .parameter(IdTags.AGREEMENT_ID, agreementId))
+                .headers(NordeaBaseConstants.NORDEA_BUSINESS_HEADERS)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(fetchCodeRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(FetchCodeResponse.class);
+    }
+
     public ResultBankIdResponse fetchAccessToken(String code, String codeVerifier) {
         Form form = new Form(NordeaBaseConstants.REQUEST_TOKEN_FORM);
         form.put(FormParams.CODE, code);
