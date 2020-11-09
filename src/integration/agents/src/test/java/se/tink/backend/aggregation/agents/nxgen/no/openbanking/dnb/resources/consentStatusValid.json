@@ -1,0 +1,47 @@
+{
+    "_links": {
+        "self": {
+            "href": "/v1/consents/***MASKED***/***MASKED***"
+        }
+    },
+    "access": {
+        "accounts": [
+            {
+                "iban": "NO1234567894565"
+            },
+            {
+                "iban": "NO2347678345788"
+            },
+            {
+                "iban": "NO5446546445665"
+            }
+        ],
+        "balances": [
+            {
+                "iban": "NO1234567894565"
+            },
+            {
+                "iban": "NO2347678345788"
+            },
+            {
+                "iban": "NO5446546445665"
+            }
+        ],
+        "transactions": [
+            {
+                "iban": "NO1234567894565"
+            },
+            {
+                "iban": "NO2347678345788"
+            },
+            {
+                "iban": "NO5446546445665"
+            }
+        ]
+    },
+    "consentStatus": "valid",
+    "frequencyPerDay": 4,
+    "lastActionDate": "2020-10-23T07:58:50Z",
+    "recurringIndicator": true,
+    "validUntil": "2021-01-20"
+}

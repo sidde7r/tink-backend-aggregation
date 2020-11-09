@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.enums;
 
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.util.TypePair;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.TypePair;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;

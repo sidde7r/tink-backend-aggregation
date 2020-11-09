@@ -3,11 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticato
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.CredentialsKeys;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbStorage;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.rpc.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
@@ -20,33 +24,30 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@AllArgsConstructor
 public class DnbAuthenticator implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
+
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
+    private final DnbStorage storage;
     private final DnbApiClient apiClient;
     private final Credentials credentials;
 
-    public DnbAuthenticator(
-            SupplementalInformationHelper supplementalInformationHelper,
-            StrongAuthenticationState strongAuthenticationState,
-            DnbApiClient apiClient,
-            Credentials credentials) {
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.strongAuthenticationState = strongAuthenticationState;
-        this.apiClient = apiClient;
-        this.credentials = credentials;
-    }
-
     @Override
     public void autoAuthenticate() {
-        if (!apiClient.isConsentValid()) {
+        if (!isStoredConsentValid()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 
+    private boolean isStoredConsentValid() {
+        return storage.containsConsentId()
+                && apiClient.fetchConsentDetails(storage.getConsentId()).isValid();
+    }
+
     @Override
     public ThirdPartyAppResponse<String> init() {
-        if (StringUtils.isEmpty(credentials.getField(DnbConstants.CredentialsKeys.PSU_ID))) {
+        if (StringUtils.isEmpty(credentials.getField(CredentialsKeys.PSU_ID))) {
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.AUTHENTICATION_ERROR);
         } else {
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
@@ -55,12 +56,16 @@ public class DnbAuthenticator implements AutoAuthenticator, ThirdPartyAppAuthent
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        final URL authorizeUrl = apiClient.getAuthorizeUrl(strongAuthenticationState.getState());
-        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
+        ConsentResponse consentResponse =
+                apiClient.createConsent(strongAuthenticationState.getState());
+
+        storage.storeConsentId(consentResponse.getConsentId());
+
+        return ThirdPartyAppAuthenticationPayload.of(new URL(consentResponse.getScaRedirectLink()));
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(final String reference) {
+    public ThirdPartyAppResponse<String> collect(String reference) {
         Optional<Map<String, String>> supplementalInfo =
                 this.supplementalInformationHelper.waitForSupplementalInformation(
                         strongAuthenticationState.getSupplementalKey(),
@@ -70,16 +75,21 @@ public class DnbAuthenticator implements AutoAuthenticator, ThirdPartyAppAuthent
         ThirdPartyAppStatus result;
         if (!supplementalInfo.isPresent()) {
             result = ThirdPartyAppStatus.TIMED_OUT;
-        } else if (apiClient.isConsentValid()) {
-            result = ThirdPartyAppStatus.DONE;
         } else {
-            result = ThirdPartyAppStatus.AUTHENTICATION_ERROR;
+            ConsentDetailsResponse consentDetails =
+                    apiClient.fetchConsentDetails(storage.getConsentId());
+            if (consentDetails.isValid()) {
+                result = ThirdPartyAppStatus.DONE;
+                credentials.setSessionExpiryDate(consentDetails.getValidUntil());
+            } else {
+                result = ThirdPartyAppStatus.AUTHENTICATION_ERROR;
+            }
         }
         return ThirdPartyAppResponseImpl.create(result);
     }
 
     @Override
-    public Optional<LocalizableKey> getUserErrorMessageFor(final ThirdPartyAppStatus status) {
+    public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
     }
 }

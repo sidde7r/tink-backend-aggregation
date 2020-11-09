@@ -1,0 +1,76 @@
+{
+    "cardAccounts": [
+        {
+            "_links": {
+                "balances": {
+                    "href": "/v1/card-accounts/123456789/balances"
+                },
+                "transactions": {
+                    "href": "/v1/card-accounts/123456789/transactions"
+                }
+            },
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": "9100.00",
+                        "currency": "NOK"
+                    },
+                    "balanceType": "interimAvailable"
+                },
+                {
+                    "balanceAmount": {
+                        "amount": "900.00",
+                        "currency": "NOK"
+                    },
+                    "balanceType": "forwardAvailable"
+                }
+            ],
+            "creditLimit": {
+                "amount": "10000.00",
+                "currency": "NOK"
+            },
+            "currency": "NOK",
+            "maskedPan": "*******3214",
+            "name": "Cresco Access ",
+            "product": "Cresco Access ",
+            "resourceId": "123456789",
+            "usage": "PRIV"
+        },
+        {
+            "_links": {
+                "balances": {
+                    "href": "/v1/card-accounts/98764321/balances"
+                },
+                "transactions": {
+                    "href": "/v1/card-accounts/98764321/transactions"
+                }
+            },
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": "-5.91",
+                        "currency": "NOK"
+                    },
+                    "balanceType": "interimAvailable"
+                },
+                {
+                    "balanceAmount": {
+                        "amount": "5.91",
+                        "currency": "NOK"
+                    },
+                    "balanceType": "forwardAvailable"
+                }
+            ],
+            "creditLimit": {
+                "amount": "0.00",
+                "currency": "NOK"
+            },
+            "currency": "NOK",
+            "maskedPan": "*******1234",
+            "name": "",
+            "product": "",
+            "resourceId": "98764321",
+            "usage": "PRIV"
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "account": {
+        "bban": "2132123131"
+    },
+    "transactions": {
+        "booked": [
+            {
+                "additionalInformation": "Morsom  SDJKFH  VJJjaskfjjkhasdkjhjk",
+                "bookingDate": "2020-11-02",
+                "dnbTransactionDateTime": "2020-11-02T00:00:00",
+                "dnbTransactionType": "Morsom  SDJKFH",
+                "transactionAmount": {
+                    "amount": "-120.00",
+                    "currency": "NOK"
+                },
+                "transactionId": "0214_0018902323234862_0000001",
+                "valueDate": "2020-11-02"
+            }
+        ],
+        "pending": [
+        ]
+    }
+}
