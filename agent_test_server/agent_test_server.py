@@ -1,14 +1,16 @@
 from __future__ import print_function, unicode_literals
-from builtins import input
-from builtins import object
-import sys
+
 import argparse
 import os
-from flask import Flask, jsonify, request, abort, Response, redirect
+import sys
 import webbrowser
-from bankid import generate_bankid_qrcode
-from cacheout import Cache
+from builtins import input
+from builtins import object
 
+from cacheout import Cache
+from flask import Flask, jsonify, request, abort, Response, redirect
+
+from bankid import generate_bankid_qrcode
 from memqueue import MemoryMessageQueue
 
 cache = Cache()
@@ -220,6 +222,11 @@ def thirdparty_callback():
 
 
 autoStartToken = None
+
+
+@app.route("/bankid/bankid-iframe.html", methods=("GET",))
+def bankid_iframe_page():
+    return app.send_static_file("bankid-iframe.html")
 
 
 @app.route("/bankid", methods=("GET",))

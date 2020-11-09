@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BankID Authentication</title>
+    <meta charset="UTF-8">
+    <style>
+        html,
+        body,
+        #oidcIframeContainer {
+            width: 100%;
+            height: 100%;
+        }
+
+        #oidcIframeContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        #oidcIframe {
+            min-width: 600px;
+            min-height: 600px;
+            border-style: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="oidcIframeContainer">
+    <iframe id="oidcIframe" title="BankID Authentication"></iframe>
+</div>
+
+<script>
+    const queryParamsList = window.location.search.substring(1).split("&");
+    const queryParams = {};
+    for (let i = 0; i < queryParamsList.length; i++) {
+        const queryParamPair = queryParamsList[i].split("=");
+        queryParams[queryParamPair[0]] = decodeURIComponent(queryParamPair[1]);
+    }
+
+    const callbackUrl = queryParams["callbackUrl"];
+    const iframeUrl = queryParams["iframeUrl"];
+    const state = queryParams["state"];
+
+    window.addEventListener('message', function (e) {
+        const fullCallbackUrl = callbackUrl + "?"
+            + "state=" + state + "&"
+            + "data=" + encodeURIComponent(JSON.stringify(e.data));
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", fullCallbackUrl, true);
+        xhr.send();
+    });
+
+    document.getElementById("oidcIframe").src = iframeUrl
+</script>
+
+</body>
+</html>
