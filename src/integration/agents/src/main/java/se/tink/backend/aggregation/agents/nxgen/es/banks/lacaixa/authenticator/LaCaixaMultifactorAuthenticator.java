@@ -5,6 +5,7 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.AuthenticationParams;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.CaixaPayloadValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.TemporaryStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.Pin1ScaEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.SmsEntity;
@@ -28,6 +30,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.r
 import se.tink.backend.aggregation.agents.utils.crypto.LaCaixaPasswordHash;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Desktop;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -191,8 +196,7 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
 
         // launch signing app
         supplementalInformationHelper.openThirdPartyApp(
-                ThirdPartyAppAuthenticationPayload.of(new URL(AuthenticationParams.SIGNING_URL)));
-
+                createAppPayload(new URL(AuthenticationParams.SIGNING_URL)));
         waitForAppSign();
 
         authStorage.put(TemporaryStorage.ENROLMENT_CODE, "");
@@ -215,5 +219,27 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private ThirdPartyAppAuthenticationPayload createAppPayload(URL url) {
+        Preconditions.checkNotNull(url, "URL must not be null.");
+        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
+        Android androidPayload = new Android();
+        androidPayload.setIntent(url.get());
+        androidPayload.setPackageName(CaixaPayloadValues.ANDROID_PACKAGE_NAME);
+
+        Ios iOsPayload = new Ios();
+        iOsPayload.setAppScheme(url.getScheme());
+        iOsPayload.setDeepLinkUrl(url.get());
+        iOsPayload.setAppStoreUrl(CaixaPayloadValues.IOS_APP_STORE_URL);
+
+        Desktop desktop = new Desktop();
+        desktop.setUrl(url.get());
+
+        payload.setAndroid(androidPayload);
+        payload.setIos(iOsPayload);
+        payload.setDesktop(desktop);
+
+        return payload;
     }
 }
