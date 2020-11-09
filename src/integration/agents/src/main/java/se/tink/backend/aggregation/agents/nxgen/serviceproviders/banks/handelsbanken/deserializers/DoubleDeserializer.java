@@ -14,6 +14,11 @@ public class DoubleDeserializer extends StdDeserializer<Double> {
     @Override
     public Double deserialize(JsonParser jsonParser, DeserializationContext ctxt)
             throws IOException {
-        return StringUtils.parseAmount(jsonParser.getText());
+        String str = jsonParser.getText();
+        if (str != null) {
+            // replace unicode hyphen with regular hyphen
+            str = str.replace("−", "-");
+        }
+        return StringUtils.parseAmount(str);
     }
 }
