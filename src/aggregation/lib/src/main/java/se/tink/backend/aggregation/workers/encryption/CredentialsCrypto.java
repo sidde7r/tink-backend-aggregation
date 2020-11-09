@@ -69,7 +69,8 @@ public class CredentialsCrypto {
         }
 
         String sensitiveData =
-                pickMostRecentSensitiveData(cachedSensitiveData, credentialsSensitiveData);
+                pickMostRecentSensitiveData(
+                        cachedSensitiveData, credentialsSensitiveData, credentials.getId());
         Preconditions.checkState(
                 !Strings.isNullOrEmpty(sensitiveData), "Sensitive data was not set.");
 
@@ -220,7 +221,7 @@ public class CredentialsCrypto {
                 .inc();
     }
 
-    private String pickMostRecentSensitiveData(String a, String b) {
+    private String pickMostRecentSensitiveData(String a, String b, String credentialsId) {
         // Return the other one if one is null.
         if (Strings.isNullOrEmpty(a)) {
             return b;
@@ -234,6 +235,12 @@ public class CredentialsCrypto {
 
         EncryptedPayloadHead baseB =
                 SerializationUtils.deserializeFromString(b, EncryptedPayloadHead.class);
+
+        logger.info(
+                "a.getTimestamp {}, b.getTimestamp of credentialsId: {}",
+                baseA.getTimestamp(),
+                baseB.getTimestamp(),
+                credentialsId);
 
         if (baseB.getTimestamp() == null || baseA.getTimestamp().after(baseB.getTimestamp())) {
             return a;
