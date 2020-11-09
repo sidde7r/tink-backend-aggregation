@@ -37,7 +37,8 @@ public class CreatePaymentResponse {
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(PaymentStatus.PENDING)
-                        .withReference(paymentRequest.getPayment().getReference())
+                        .withRemittanceInformation(
+                                paymentRequest.getPayment().getRemittanceInformation())
                         .build();
 
         return new PaymentResponse(payment);
