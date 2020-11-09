@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.protobuf.Any;
-import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Assert;
@@ -16,12 +14,11 @@ import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.workers.commands.login.BankIdLoginExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.login.AgentLoginEventPublisherService;
 import se.tink.backend.aggregation.workers.commands.login.LoginExecutor;
 import se.tink.backend.aggregation.workers.commands.login.SupplementalInformationControllerUsageMonitorProxy;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
-import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.eventproducerservice.grpc.BatchEventAck;
 import se.tink.backend.eventproducerservice.grpc.BatchEventAckAsync;
 import se.tink.backend.eventproducerservice.grpc.EventAck;
@@ -30,6 +27,7 @@ import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.Ag
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
+import se.tink.libraries.i18n.Catalog;
 
 public class LoginExecutorTest {
 
@@ -83,30 +81,30 @@ public class LoginExecutorTest {
 
         Mockito.when(context.getCorrelationId()).thenReturn("dummy-correlation-id");
         Mockito.when(context.getAppId()).thenReturn("dummy-app-id");
+        Mockito.when(context.getCatalog()).thenReturn(Mockito.mock(Catalog.class));
         Mockito.when(context.getClusterId()).thenReturn("dummy-cluster-id");
 
         final Agent agent = Mockito.mock(NextGenerationAgent.class);
         Mockito.doThrow(LoginError.INCORRECT_CREDENTIALS.exception()).when(agent).login();
-
+        SupplementalInformationControllerUsageMonitorProxy
+                supplementalInformationControllerUsageMonitorProxy =
+                        Mockito.mock(SupplementalInformationControllerUsageMonitorProxy.class);
         final FakeEventProducerServiceClient producerClient = new FakeEventProducerServiceClient();
         final LoginAgentEventProducer loginAgentEventProducer =
                 new LoginAgentEventProducer(producerClient, true);
-
-        final BankIdLoginExceptionHandler handler = Mockito.mock(BankIdLoginExceptionHandler.class);
-        Mockito.when(handler.handleLoginException(Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.of(AgentWorkerCommandResult.ABORT));
+        final AgentLoginEventPublisherService agentLoginEventPublisherService =
+                new AgentLoginEventPublisherService(
+                        loginAgentEventProducer,
+                        0,
+                        context,
+                        supplementalInformationControllerUsageMonitorProxy);
 
         final LoginExecutor executor =
                 new LoginExecutor(
                         Mockito.mock(StatusUpdater.class),
                         context,
                         Mockito.mock(SupplementalInformationControllerUsageMonitorProxy.class),
-                        loginAgentEventProducer,
-                        0);
-
-        Field field = LoginExecutor.class.getDeclaredField("loginExceptionHandlerChain");
-        field.setAccessible(true);
-        field.set(executor, Collections.singletonList(handler));
+                        agentLoginEventPublisherService);
 
         // when
         executor.executeLogin(

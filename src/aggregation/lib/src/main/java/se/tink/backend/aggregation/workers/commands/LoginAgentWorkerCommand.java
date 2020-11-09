@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
+import se.tink.backend.aggregation.workers.commands.login.AgentLoginEventPublisherService;
 import se.tink.backend.aggregation.workers.commands.login.LoginExecutor;
 import se.tink.backend.aggregation.workers.commands.login.SupplementalInformationControllerUsageMonitorProxy;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
@@ -300,8 +301,11 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                             statusUpdater,
                             context,
                             supplementalInformationController,
-                            loginAgentEventProducer,
-                            startTime)
+                            new AgentLoginEventPublisherService(
+                                    loginAgentEventProducer,
+                                    startTime,
+                                    context,
+                                    supplementalInformationController))
                     .executeLogin(agent, createLoginMetricAction(), context.getRequest());
         } finally {
             stopCommandContexts(loginTimerContext);

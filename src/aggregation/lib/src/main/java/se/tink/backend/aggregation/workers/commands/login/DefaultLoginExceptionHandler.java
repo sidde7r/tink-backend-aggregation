@@ -13,9 +13,14 @@ public class DefaultLoginExceptionHandler extends AbstractLoginExceptionHandler 
 
     private static final Logger log = LoggerFactory.getLogger(DefaultLoginExceptionHandler.class);
 
+    private final AgentLoginEventPublisherService agentLoginEventPublisherService;
+
     public DefaultLoginExceptionHandler(
-            StatusUpdater statusUpdater, AgentWorkerCommandContext context) {
+            StatusUpdater statusUpdater,
+            AgentWorkerCommandContext context,
+            AgentLoginEventPublisherService agentLoginEventPublisherService) {
         super(statusUpdater, context, CredentialsStatus.TEMPORARY_ERROR);
+        this.agentLoginEventPublisherService = agentLoginEventPublisherService;
     }
 
     @Override
@@ -23,6 +28,7 @@ public class DefaultLoginExceptionHandler extends AbstractLoginExceptionHandler 
             Exception exception, MetricActionIface metricAction) {
         log.error(exception.getMessage(), exception);
         metricAction.failed();
+        agentLoginEventPublisherService.publishLoginErrorUnknown();
         return Optional.of(AgentWorkerCommandResult.ABORT);
     }
 }
