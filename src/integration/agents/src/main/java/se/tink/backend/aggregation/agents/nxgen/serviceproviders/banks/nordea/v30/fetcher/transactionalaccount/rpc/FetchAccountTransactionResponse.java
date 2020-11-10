@@ -22,9 +22,11 @@ public class FetchAccountTransactionResponse {
     private String continuationKey;
 
     @JsonIgnore
-    public List<Transaction> toTinkTransactions(NordeaConfiguration nordeaConfiguration) {
+    public List<Transaction> toTinkTransactions(
+            NordeaConfiguration nordeaConfiguration, boolean skipPendingTransactions) {
         return getTransactions().stream()
                 .map(te -> te.toTinkTransaction(nordeaConfiguration))
+                .filter(transaction -> !(skipPendingTransactions && transaction.isPending()))
                 .collect(Collectors.toList());
     }
 }

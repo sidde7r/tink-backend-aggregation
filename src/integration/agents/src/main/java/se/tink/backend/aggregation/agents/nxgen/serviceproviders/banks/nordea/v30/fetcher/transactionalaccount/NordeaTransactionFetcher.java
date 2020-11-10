@@ -31,9 +31,15 @@ public class NordeaTransactionFetcher implements TransactionDatePaginator<Transa
 
         String continuationKey = null;
         do {
+            // Nordea returns pending transactions in every response in the same date interval.
+            // Parse the pending transactions from the first response and skip the rest.
+            boolean skipPendingTransactions = continuationKey != null;
+
             transactionsResponse =
                     apiClient.fetchAccountTransactions(account, continuationKey, fromDate, toDate);
-            tinkTransactions.addAll(transactionsResponse.toTinkTransactions(nordeaConfiguration));
+            tinkTransactions.addAll(
+                    transactionsResponse.toTinkTransactions(
+                            nordeaConfiguration, skipPendingTransactions));
 
             continuationKey = transactionsResponse.getContinuationKey();
         } while (continuationKey != null);
