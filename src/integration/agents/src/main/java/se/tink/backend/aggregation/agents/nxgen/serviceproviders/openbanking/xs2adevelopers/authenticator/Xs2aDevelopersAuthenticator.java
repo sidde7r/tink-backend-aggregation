@@ -87,6 +87,7 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
 
     public void invalidateToken() {
         persistentStorage.remove(StorageKeys.OAUTH_TOKEN);
+        persistentStorage.remove(StorageKeys.CONSENT_ID);
     }
 
     protected AccessEntity getAccessEntity() {

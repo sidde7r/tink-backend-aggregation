@@ -10,6 +10,7 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
@@ -481,7 +482,7 @@ public class HandelsbankenBaseApiClient {
 
     private void verifyKnowYourCustomer(HttpResponseException hre) {
         if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
-            throw BankServiceError.CONSENT_INVALID.exception(
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception(
                     HandelsbankenBaseConstants.UnacceptedTermsAndConditionsException
                             .KNOW_YOUR_CUSTOMER);
         }

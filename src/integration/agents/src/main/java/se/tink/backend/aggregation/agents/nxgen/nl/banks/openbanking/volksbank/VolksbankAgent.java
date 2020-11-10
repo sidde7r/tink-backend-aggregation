@@ -121,7 +121,7 @@ public final class VolksbankAgent
         client.addFilter(
                 new VolksbankRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new BankErrorResponseFilter());
+        client.addFilter(new BankErrorResponseFilter(persistentStorage));
         client.getInternalClient();
     }
 

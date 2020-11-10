@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.AccountsResponseDto;
@@ -95,7 +95,7 @@ public class AmexApiClient {
                             .post(TokenResponseDto.class);
 
             return Optional.ofNullable(response);
-        } catch (BankServiceException ex) {
+        } catch (SessionException ex) {
             log.error("Refresh token failed.");
             log.error(ex.getMessage(), ex);
         } catch (HttpResponseException e) {

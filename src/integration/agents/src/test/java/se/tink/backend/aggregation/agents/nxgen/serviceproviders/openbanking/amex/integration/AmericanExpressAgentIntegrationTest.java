@@ -47,7 +47,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.Urls;
@@ -210,8 +210,8 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(BankServiceException.class)
-                .hasMessage("Cause: BankServiceError.CONSENT_REVOKED");
+                .isExactlyInstanceOf(SessionException.class)
+                .hasMessage("Cause: SessionError.CONSENT_REVOKED");
     }
 
     private SteppableAuthenticationResponse makeInitialLoginCall(

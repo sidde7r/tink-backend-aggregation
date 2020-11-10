@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.au
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationResponse;
@@ -54,8 +54,8 @@ public class HandelsbankenOAuth2Authenticator implements OAuth2Authenticator {
                                         baseAuthUrl, consent.getConsentId(), state))
                 .orElseThrow(
                         () ->
-                                new BankServiceException(
-                                        BankServiceError.CONSENT_INVALID,
+                                new SessionException(
+                                        SessionError.CONSENT_INVALID,
                                         "Bank did not provide redirect link for the given consent"));
     }
 
