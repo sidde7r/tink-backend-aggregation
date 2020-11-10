@@ -45,6 +45,8 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class AgentWorkerCommandContext extends AgentWorkerContext {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
+    public static final MetricId NUMBER_ACCOUNTS_FETCHED_BY_TYPE =
+            MetricId.newId("no_accounts_fetched");
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
 
@@ -160,7 +162,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                         accountType ->
                                 getMetricRegistry()
                                         .meter(
-                                                MetricId.newId("no_accounts_fetched")
+                                                NUMBER_ACCOUNTS_FETCHED_BY_TYPE
                                                         .label(defaultMetricLabels)
                                                         .label("type", accountType.toString()))
                                         .inc());
