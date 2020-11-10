@@ -198,10 +198,11 @@ public class NordeaBaseApiClient {
     }
 
     public FetchAccountTransactionResponse fetchAccountTransactions(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+            TransactionalAccount account, String continuationKey, Date fromDate, Date toDate) {
         final URL url =
                 Urls.getUrl(nordeaConfiguration.getBaseUrl(), Urls.FETCH_TRANSACTIONS)
                         .parameter(IdTags.ACCOUNT_NUMBER, account.getApiIdentifier())
+                        .queryParam(QueryParams.CONTINUATION_KEY, continuationKey)
                         .queryParam(
                                 NordeaBaseConstants.PROUDCT_CODE,
                                 account.getFromTemporaryStorage(NordeaBaseConstants.PROUDCT_CODE))
@@ -215,11 +216,7 @@ public class NordeaBaseApiClient {
         final RequestBuilder request =
                 httpClient.request(url).accept(MediaType.APPLICATION_JSON_TYPE);
 
-        final FetchAccountTransactionResponse accountTransactionResponse =
-                requestRefreshableGet(request, FetchAccountTransactionResponse.class);
-        accountTransactionResponse.setConfiguration(nordeaConfiguration);
-
-        return accountTransactionResponse;
+        return requestRefreshableGet(request, FetchAccountTransactionResponse.class);
     }
 
     public FetchCardsResponse fetchCards() {
