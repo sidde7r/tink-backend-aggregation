@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.CreditorAgentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.RemittanceInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentType;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -39,6 +40,8 @@ import se.tink.libraries.account.identifiers.se.ClearingNumber.Bank;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExecutor {
 
@@ -74,7 +77,7 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
         final SwedishIdentifier identifier = new SwedishIdentifier(debtor.getAccountNumber());
         final AccountEntity accountEntity =
                 new AccountEntity(identifier.getAccountNumber(), PaymentAccountType.BBAN);
-        accountEntity.setText(Strings.emptyToNull(payment.getReference().getValue()));
+        accountEntity.setText(Strings.emptyToNull(payment.getRemittanceInformation().getValue()));
         return accountEntity;
     }
 
@@ -130,8 +133,13 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
             default:
                 giroIdentifier = null;
         }
+        // SHB's docs have a generic field remittanceInformation/text
+        // which is used for both OCR and message
+        // no field type required
+        // so our RemittanceInfoTypes (OCR, UNSTRUCTURED), would only be helpful
+        // to check if intended OCR is a valid OCR, which we are doing at paymentService level
 
-        final String text = Strings.emptyToNull(payment.getReference().getValue());
+        final String text = Strings.emptyToNull(payment.getRemittanceInformation().getValue());
         if (Objects.isNull(giroIdentifier)) {
             return new RemittanceInformationEntity(text);
         } else {
@@ -203,7 +211,15 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
     protected void validateRemittanceInformation(
             HandelsbankenPaymentType paymentType, Payment payment)
             throws ReferenceValidationException {
-        final String text = Strings.nullToEmpty(payment.getReference().getValue());
+
+        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation,
+                null,
+                RemittanceInformationType.UNSTRUCTURED,
+                RemittanceInformationType.OCR);
+
+        final String text = Strings.nullToEmpty(payment.getRemittanceInformation().getValue());
         int maxLength = getRemittanceInformationMaxLength(paymentType, payment.getCreditor());
 
         if (text.length() > maxLength) {

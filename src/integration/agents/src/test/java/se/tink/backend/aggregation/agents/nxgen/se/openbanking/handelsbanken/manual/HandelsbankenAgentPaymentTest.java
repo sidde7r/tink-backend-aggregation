@@ -17,7 +17,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class HandelsbankenAgentPaymentTest {
     private enum Arg implements ArgumentManagerEnum {
@@ -74,7 +74,8 @@ public class HandelsbankenAgentPaymentTest {
 
         Amount amount = Amount.inSEK(1);
         LocalDate executionDate = LocalDate.now();
-        Reference reference = new Reference(null, "Testing PIS");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("Testing PIS");
 
         return new Payment.Builder()
                 .withCreditor(creditor)
@@ -82,7 +83,7 @@ public class HandelsbankenAgentPaymentTest {
                 .withAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(amount.getCurrency())
-                .withReference(reference)
+                .withRemittanceInformation(remittanceInformation)
                 .build();
     }
 }

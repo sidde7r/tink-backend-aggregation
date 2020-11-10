@@ -29,7 +29,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class HandelsbankenSEPaymentExecutorTest {
     private static final String CURRENCY = "SEK";
@@ -146,6 +146,8 @@ public class HandelsbankenSEPaymentExecutorTest {
             AccountIdentifier toAccount,
             String text,
             LocalDate executionDate) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue(text);
         return new PaymentRequest(
                 new Payment.Builder()
                         .withCreditor(new Creditor(toAccount, toAccount.getName().orElse(null)))
@@ -153,7 +155,7 @@ public class HandelsbankenSEPaymentExecutorTest {
                         .withExactCurrencyAmount(ExactCurrencyAmount.of(BigDecimal.ONE, CURRENCY))
                         .withExecutionDate(executionDate)
                         .withCurrency(CURRENCY)
-                        .withReference(new Reference(null, text))
+                        .withRemittanceInformation(remittanceInformation)
                         .build());
     }
 }
