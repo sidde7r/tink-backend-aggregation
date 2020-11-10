@@ -130,7 +130,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        final NordeaTransactionFetcher transactionFetcher = new NordeaTransactionFetcher(apiClient);
+        final NordeaTransactionFetcher transactionFetcher =
+                new NordeaTransactionFetcher(apiClient, nordeaConfiguration);
         final NordeaUpcomingTransactionFetcher upcomingTransactionFetcher =
                 new NordeaUpcomingTransactionFetcher(apiClient, nordeaConfiguration);
 

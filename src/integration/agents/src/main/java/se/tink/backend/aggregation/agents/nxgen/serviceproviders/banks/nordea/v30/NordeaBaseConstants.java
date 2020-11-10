@@ -128,6 +128,7 @@ public class NordeaBaseConstants {
     public static class QueryParams {
         public static final String START_DATE = "start_date";
         public static final String END_DATE = "end_date";
+        public static final String CONTINUATION_KEY = "continuation_key";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
         public static final String PAGE_SIZE_LIMIT =
