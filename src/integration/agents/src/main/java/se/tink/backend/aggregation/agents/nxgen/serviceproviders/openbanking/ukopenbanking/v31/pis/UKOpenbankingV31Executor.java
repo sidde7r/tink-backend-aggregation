@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
@@ -18,19 +19,17 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants.Step;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.ClientInfo;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UkOpenBankingPisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.helper.UkOpenbankingV31PaymentHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.FundsConfirmationResponse;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -129,8 +128,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         // token.
         PersistentStorage dummyStorage = new PersistentStorage();
 
-        OpenIdAuthenticationController openIdAuthenticationController =
-                new OpenIdAuthenticationController(
+        UkOpenBankingAuthenticationController openIdAuthenticationController =
+                new UkOpenBankingAuthenticationController(
                         dummyStorage,
                         supplementalInformationHelper,
                         apiClient,
@@ -156,18 +155,18 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             }
 
             if (hasWellKnownOpenIdError(apiClient)) {
-                OpenIdError openIdError = apiClient.getOpenIdError().get();
+                ErrorEntity errorEntity = apiClient.getErrorEntity().get();
 
-                String errorMessage = openIdError.getErrorMessage();
+                String errorMessage = errorEntity.getErrorMessage();
                 ExceptionFuzzyMatcher exceptionMatcher = new ExceptionFuzzyMatcher();
                 if (Strings.isNullOrEmpty(errorMessage)) {
                     throw new PaymentAuthorizationException();
-                } else if (exceptionMatcher.isAuthorizationCancelledByUser(openIdError)) {
-                    throw new PaymentAuthorizationCancelledByUserException(openIdError);
-                } else if (exceptionMatcher.isAuthorizationTimeOut(openIdError)) {
-                    throw new PaymentAuthorizationTimeOutException(openIdError);
-                } else if (exceptionMatcher.isAuthorizationFailedByUser(openIdError)) {
-                    throw new PaymentAuthorizationFailedByUserException(openIdError);
+                } else if (exceptionMatcher.isAuthorizationCancelledByUser(errorEntity)) {
+                    throw new PaymentAuthorizationCancelledByUserException(errorEntity);
+                } else if (exceptionMatcher.isAuthorizationTimeOut(errorEntity)) {
+                    throw new PaymentAuthorizationTimeOutException(errorEntity);
+                } else if (exceptionMatcher.isAuthorizationFailedByUser(errorEntity)) {
+                    throw new PaymentAuthorizationFailedByUserException(errorEntity);
                 } else {
                     // Log unknown error message and return the generic end user message for when
                     // payment wasn't authorised.
@@ -185,12 +184,12 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     }
 
     private boolean hasWellKnownOpenIdError(UkOpenBankingApiClient apiClient) {
-        if (!apiClient.getOpenIdError().isPresent()) {
+        if (!apiClient.getErrorEntity().isPresent()) {
             return false;
         }
 
-        OpenIdError openIdError = apiClient.getOpenIdError().get();
-        return isKnownOpenIdError(openIdError.getErrorType());
+        ErrorEntity errorEntity = apiClient.getErrorEntity().get();
+        return isKnownOpenIdError(errorEntity.getErrorType());
     }
 
     /**
@@ -199,8 +198,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
      * login_required means that user didn't authenticate at all.
      */
     private boolean isKnownOpenIdError(String errorType) {
-        return OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
-                || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType);
+        return UkOpenBankingV31Constants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
+                || UkOpenBankingV31Constants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType);
     }
 
     @Override
