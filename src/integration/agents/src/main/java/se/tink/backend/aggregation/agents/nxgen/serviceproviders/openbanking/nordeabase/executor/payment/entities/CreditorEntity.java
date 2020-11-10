@@ -2,10 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.enums.NordeaAccountType;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @JsonObject
 public class CreditorEntity {
@@ -43,11 +46,27 @@ public class CreditorEntity {
     public static CreditorEntity of(PaymentRequest paymentRequest) {
         CreditorEntity creditorEntity =
                 new CreditorEntity.Builder().withAccount(getAccount(paymentRequest)).build();
-        String referenceMessage = paymentRequest.getPayment().getReference().getValue();
+        RemittanceInformation remittanceInformation =
+                paymentRequest.getPayment().getRemittanceInformation();
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation,
+                null,
+                RemittanceInformationType.UNSTRUCTURED,
+                RemittanceInformationType.OCR);
+
+        // we would have to implement the case where RemittanceInformationType is null
+        // and we would have to implement the guessing to see if value is intended to be OCR OR
+        // message
         if (isTypeBgPg(paymentRequest.getPayment().getCreditor().getAccountIdentifierType())) {
-            creditorEntity.setReference(new ReferenceEntity("OCR", referenceMessage));
+            if (remittanceInformation.isOfType(RemittanceInformationType.OCR)) {
+                creditorEntity.setReference(
+                        new ReferenceEntity("OCR", remittanceInformation.getValue()));
+            } else {
+                // according to nordea's docs, if it is not an OCR, it will be a message
+                creditorEntity.setMessage(remittanceInformation.getValue());
+            }
         } else {
-            creditorEntity.setMessage(referenceMessage);
+            creditorEntity.setMessage(remittanceInformation.getValue());
         }
         return creditorEntity;
     }
