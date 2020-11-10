@@ -28,7 +28,7 @@ public final class OpBankConstants {
         public static final String OAUTH_TOKEN = BASE_URL + "/oauth/token";
         public static final String ACCOUNTS_AUTHORIZATION =
                 BASE_URL + "/accounts-psd2/v1/authorizations";
-        public static final String GET_ACCOUNTS = BASE_URL + "/accounts-psd2/v1/accounts";
+        public static final String GET_ACCOUNTS = BASE_URL + "/accounts-psd2/v3/accounts";
         public static final String GET_TRANSACTIONS = GET_ACCOUNTS + "/{accountId}/transactions";
 
         public static final String AUTHORIZATION_URL = "https://authorize.op.fi/oauth/authorize";
