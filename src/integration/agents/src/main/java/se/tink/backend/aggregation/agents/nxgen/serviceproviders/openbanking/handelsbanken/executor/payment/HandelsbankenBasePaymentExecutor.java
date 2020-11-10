@@ -129,7 +129,7 @@ public abstract class HandelsbankenBasePaymentExecutor
     }
 
     protected RemittanceInformationEntity getRemittanceInformationEntity(Payment payment) {
-        final String text = Strings.emptyToNull(payment.getReference().getValue());
+        final String text = Strings.emptyToNull(payment.getRemittanceInformation().getValue());
         return new RemittanceInformationEntity(text);
     }
 
