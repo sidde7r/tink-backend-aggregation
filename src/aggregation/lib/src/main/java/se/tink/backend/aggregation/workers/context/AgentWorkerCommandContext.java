@@ -47,6 +47,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
     public static final MetricId NUMBER_ACCOUNTS_FETCHED_BY_TYPE =
             MetricId.newId("no_accounts_fetched");
+    public static final MetricId NUMBER_ACCOUNTS_FETCHED_BY_REFRESH =
+            MetricId.newId("number_accounts_fetched_by_refresh");
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
 
@@ -166,6 +168,17 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                                                         .label(defaultMetricLabels)
                                                         .label("type", accountType.toString()))
                                         .inc());
+
+        int size = allCollectedAccounts.size();
+        String numAccounts = size >= 20 ? "20+" : String.valueOf(size);
+
+        getMetricRegistry()
+                .meter(
+                        NUMBER_ACCOUNTS_FETCHED_BY_REFRESH
+                                .label("market", request.getProvider().getMarket())
+                                .label("provider", request.getProvider().getName())
+                                .label("num_accounts", numAccounts))
+                .inc();
 
         // Requires Accounts in list to have been "updated" towards System's UpdateService to get
         // their real stored id
