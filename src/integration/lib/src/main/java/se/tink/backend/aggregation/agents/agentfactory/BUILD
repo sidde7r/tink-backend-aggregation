@@ -270,6 +270,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/handelsbanken",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/nordea",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/nordeapartner",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/nordeapoc",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sdcno",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sparebank1",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sparebankensor",
