@@ -48,7 +48,10 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
                             .build());
         }
 
-        processThirdPartyCallback();
+        if (consentType.equals(ConsentType.BALANCE_TRANSACTION)) {
+            processThirdPartyCallback();
+            return AuthenticationStepResponse.authenticationSucceeded();
+        }
 
         return AuthenticationStepResponse.executeNextStep();
     }
@@ -61,19 +64,17 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
     }
 
     private void processThirdPartyCallback() throws AuthorizationException {
-        if (consentType.equals(ConsentType.BALANCE_TRANSACTION)) {
-            try {
-                if (consentManager.isConsentAccepted()) {
-                    userState.finishManualAuthenticationStep();
-                    consentManager.storeConsentValidUntilDateInCredentials();
-                } else {
-                    throw new SessionException(SessionError.SESSION_EXPIRED);
-                }
-            } catch (SessionException e) {
-                throw new AuthorizationException(
-                        AuthorizationError.UNAUTHORIZED,
-                        "Authorization failed, problem with consents.");
+        try {
+            if (consentManager.isConsentAccepted()) {
+                userState.finishManualAuthenticationStep();
+                consentManager.storeConsentValidUntilDateInCredentials();
+            } else {
+                throw new SessionException(SessionError.SESSION_EXPIRED);
             }
+        } catch (SessionException e) {
+            throw new AuthorizationException(
+                    AuthorizationError.UNAUTHORIZED,
+                    "Authorization failed, problem with consents.");
         }
     }
 
