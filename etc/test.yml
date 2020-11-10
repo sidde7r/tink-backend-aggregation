@@ -6980,6 +6980,9 @@ agentsServiceConfiguration:
         redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
         scopes:
         - AIS
+    nordea-bankid:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     nordeapartner:
       neston-staging:
         baseUrl: https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2
