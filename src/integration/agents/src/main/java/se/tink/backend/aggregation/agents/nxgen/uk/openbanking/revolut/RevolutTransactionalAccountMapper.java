@@ -65,7 +65,7 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
                 uniqueIdentifier);
     }
 
-    protected Optional<TransactionalAccount> buildTransactionalAccount(
+    private Optional<TransactionalAccount> buildTransactionalAccount(
             AccountEntity account,
             Collection<AccountBalanceEntity> balances,
             Collection<IdentityDataV31Entity> parties,
