@@ -86,6 +86,8 @@ public class NordeaBaseConstants {
                 "ca/bankidse-v1/bankidse/authentications/";
         public static final String FETCH_LOGIN_CODE =
                 "ca/user-accounts-service-v1/user-accounts/primary/authorization";
+        public static final String FETCH_LOGIN_CODE_WITH_AGREEMENT_ID =
+                "ca/user-accounts-service-v1/user-accounts/{agreementId}/authorization";
         public static final String FETCH_ACCESS_TOKEN = "ca/token-service-v3/oauth/token";
         public static final String LOGIN_BANKID =
                 "se/authentication-bankid-v1/security/oauth/token";
@@ -173,6 +175,7 @@ public class NordeaBaseConstants {
         public static final String ORDER_REF = "orderRef";
         public static final String APPLICATION_ID = "applicationId";
         public static final String ENROLLMENT_ID = "enrollmentId";
+        public static final String AGREEMENT_ID = "agreementId";
     }
 
     public static class TagValues {
@@ -293,6 +296,8 @@ public class NordeaBaseConstants {
     public static class ErrorCodes {
         // token required
         public static final String TOKEN_REQUIRED = "token_required";
+
+        public static final String AGREEMENT_CONFLICT = "agreement_conflict";
 
         // user has no agreement (for investments)
         public static final String AGREEMENT_NOT_CONFIRMED =
