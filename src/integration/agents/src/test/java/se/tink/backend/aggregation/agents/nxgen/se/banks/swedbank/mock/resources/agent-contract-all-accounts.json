@@ -4,10 +4,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 1,
-      "unscaledValue" : -6124960,
       "exactValue" : -612496.0,
-      "doubleValue" : -612496.0
+      "doubleValue" : -612496.0,
+      "scale" : 1,
+      "unscaledValue" : -6124960
     },
     "currencyCode" : "SEK",
     "bankId" : "880395152157938",
@@ -25,21 +25,46 @@
     "availableCredit" : 0.0,
     "balance" : -612496.0
   }, {
+    "accountNumber" : "8811601008942231",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 548344.48,
+      "doubleValue" : 548344.48,
+      "scale" : 2,
+      "unscaledValue" : 54834448
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "8811601008942231",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "KAP-KL",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 548344.48
+  }, {
     "accountNumber" : "5435 60** **** 0419",
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
       "currencyCode" : "SEK",
-      "scale" : 2,
-      "unscaledValue" : 3138267,
       "exactValue" : 31382.67,
-      "doubleValue" : 31382.67
+      "doubleValue" : 31382.67,
+      "scale" : 2,
+      "unscaledValue" : 3138267
     },
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 2,
-      "unscaledValue" : -361733,
       "exactValue" : -3617.33,
-      "doubleValue" : -3617.33
+      "doubleValue" : -3617.33,
+      "scale" : 2,
+      "unscaledValue" : -361733
     },
     "currencyCode" : "SEK",
     "bankId" : "5435600419",
@@ -70,10 +95,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 2,
-      "unscaledValue" : 6726769,
       "exactValue" : 67267.69,
-      "doubleValue" : 67267.69
+      "doubleValue" : 67267.69,
+      "scale" : 2,
+      "unscaledValue" : 6726769
     },
     "currencyCode" : "SEK",
     "bankId" : "832799043161216",
@@ -104,10 +129,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 1,
-      "unscaledValue" : -6124960,
       "exactValue" : -612496.0,
-      "doubleValue" : -612496.0
+      "doubleValue" : -612496.0,
+      "scale" : 1,
+      "unscaledValue" : -6124960
     },
     "currencyCode" : "SEK",
     "bankId" : "880395152157920",
@@ -129,10 +154,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 1,
-      "unscaledValue" : -6075920,
       "exactValue" : -607592.0,
-      "doubleValue" : -607592.0
+      "doubleValue" : -607592.0,
+      "scale" : 1,
+      "unscaledValue" : -6075920
     },
     "currencyCode" : "SEK",
     "bankId" : "880395152157953",
@@ -154,10 +179,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 2,
-      "unscaledValue" : 2326592,
       "exactValue" : 23265.92,
-      "doubleValue" : 23265.92
+      "doubleValue" : 23265.92,
+      "scale" : 2,
+      "unscaledValue" : 2326592
     },
     "currencyCode" : "SEK",
     "bankId" : "832799748966059",
@@ -188,10 +213,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 1,
-      "unscaledValue" : 0,
       "exactValue" : 0.0,
-      "doubleValue" : 0.0
+      "doubleValue" : 0.0,
+      "scale" : 1,
+      "unscaledValue" : 0
     },
     "currencyCode" : "SEK",
     "bankId" : "832799043161109",
@@ -218,14 +243,39 @@
     "availableCredit" : 0.0,
     "balance" : 0.0
   }, {
+    "accountNumber" : "103 828 635-1",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 351936.87,
+      "doubleValue" : 351936.87,
+      "scale" : 2,
+      "unscaledValue" : 35193687
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "1038286351",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Individuellt pensionssparande",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "availableCredit" : 0.0,
+    "balance" : 351936.87
+  }, {
     "accountNumber" : "8327-9,974 896 768-5",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 2,
-      "unscaledValue" : 16484053,
       "exactValue" : 164840.53,
-      "doubleValue" : 164840.53
+      "doubleValue" : 164840.53,
+      "scale" : 2,
+      "unscaledValue" : 16484053
     },
     "currencyCode" : "SEK",
     "bankId" : "832799748967685",

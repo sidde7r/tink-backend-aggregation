@@ -153,6 +153,23 @@ Connection: Keep-Alive
 
 {"fundAccountPresent":false,"fundAccounts":[],"endowmentInsurances":[],"equityTraders":[],"savingsAccounts":[{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"transactionsLink":{"type":"TRANSACTION_LIST_DECORATED","links":{"next":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions"}}},"links":{"self":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8"},"next":{"method":"GET","uri":"/v5/engagement/transactions/01a858b71922aaac69b0cfa7be179129c6a498d8"}},"id":"01a858b71922aaac69b0cfa7be179129c6a498d8","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"1111-1","balance":{"amount":"8,64","currencyCode":"SEK"},"fullyFormattedNumber":"1111-1,333 333 333-3"}],"investmentSavings":[],"serverTime":"09:34","totalValue":{"amount":"8,64","currencyCode":"SEK"}}
 
+REQUEST 11
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/pensions?dsid=AAAAAAAA
+Accept: application/json
+
+RESPONSE 11
+200
+Server: -
+Date: Thu, 17 Sep 2020 07:34:27 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"privatePensionInsurances":{"pensionInsurances":[],"totalValue":{"amount":"0,00","currencyCode":"SEK"}},"occupationalPensionInsurances":{"pensionInsurances":[],"totalValue":{"amount":"0,00","currencyCode":"SEK"}},"serverTime":"15:35","totalValue":{"amount":"0,00","currencyCode":"SEK"}}
 
 REQUEST 12
 GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/lending/loan/overview?dsid=AAAAAAAA
@@ -171,25 +188,6 @@ Vary: Accept-Encoding
 Connection: Keep-Alive
 
 {"brokerAgencyLink":"https://www.fastighetsbyran.se/swedbank-vardering","isOngoingCasesActionRequired":false,"carLoans":[],"consumptionLoans":[],"collaterals":[],"mortgageLoanCommitments":[],"ongoingLoans":[],"mortgageCalculatorLink":"https://lana.swedbank.se/app/lana/bolanelofte/oinloggad/guide?tab=2&bankId=11111"}
-
-
-REQUEST 14
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings?dsid=AAAAAAAA
-Accept: application/json
-
-RESPONSE 14
-200
-Server: -
-Date: Thu, 17 Sep 2020 07:34:27 GMT
-Content-language: sv_SE
-Content-type: application/json; charset=UTF-8
-Pragma: no-cache
-Cache-control: no-cache, no-store, max-age=0
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
-Vary: Accept-Encoding
-Connection: Keep-Alive
-
-{"fundAccountPresent":false,"fundAccounts":[],"endowmentInsurances":[],"equityTraders":[],"savingsAccounts":[{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"transactionsLink":{"type":"TRANSACTION_LIST_DECORATED","links":{"next":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions"}}},"links":{"self":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8"},"next":{"method":"GET","uri":"/v5/engagement/transactions/01a858b71922aaac69b0cfa7be179129c6a498d8"}},"id":"01a858b71922aaac69b0cfa7be179129c6a498d8","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"1111-1","balance":{"amount":"8,64","currencyCode":"SEK"},"fullyFormattedNumber":"1111-1,333 333 333-3"}],"investmentSavings":[],"serverTime":"09:34","totalValue":{"amount":"8,64","currencyCode":"SEK"}}
 
 
 REQUEST 15

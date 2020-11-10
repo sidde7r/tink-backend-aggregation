@@ -145,23 +145,22 @@ public class Instrument {
 
     @JsonIgnore
     public void setAverageAcquisitionPriceFromAmount(ExactCurrencyAmount averageAcquisitionPrice) {
-        this.averageAcquisitionPrice =
-                getAmountValueFromExactAmount(averageAcquisitionPrice).doubleValue();
+        this.averageAcquisitionPrice = getAmountValueFromExactAmount(averageAcquisitionPrice);
     }
 
     @JsonIgnore
     public void setMarketValueFromAmount(ExactCurrencyAmount marketValue) {
-        this.marketValue = getAmountValueFromExactAmount(marketValue).doubleValue();
+        this.marketValue = getAmountValueFromExactAmount(marketValue);
     }
 
     @JsonIgnore
     public void setPriceFromAmount(ExactCurrencyAmount price) {
-        this.price = getAmountValueFromExactAmount(price).doubleValue();
+        this.price = getAmountValueFromExactAmount(price);
     }
 
     @JsonIgnore
     public void setProfitFromAmount(ExactCurrencyAmount profit) {
-        this.profit = getAmountValueFromExactAmount(profit).doubleValue();
+        this.profit = getAmountValueFromExactAmount(profit);
     }
 
     public enum Type {
