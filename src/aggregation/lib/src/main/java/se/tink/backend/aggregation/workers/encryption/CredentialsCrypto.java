@@ -228,10 +228,13 @@ public class CredentialsCrypto {
     private String pickMostRecentSensitiveData(String cached, String incoming) {
         // Return the other one if one is null.
         if (Strings.isNullOrEmpty(cached)) {
-            logger.info("using incoming sensitive data");
+            logger.info(
+                    "using incoming sensitive data with timestamp: {}",
+                    formatDate(getDate(incoming)));
             return incoming;
         } else if (Strings.isNullOrEmpty(incoming)) {
-            logger.info("using cached sensitive data");
+            logger.info(
+                    "using cached sensitive data with timestamp: {}", formatDate(getDate(cached)));
             return cached;
         }
 
@@ -257,6 +260,15 @@ public class CredentialsCrypto {
 
             return incoming;
         }
+    }
+
+    private Date getDate(String serialized) {
+        if (null == serialized) {
+            return null;
+        }
+        EncryptedPayloadHead deserialized =
+                SerializationUtils.deserializeFromString(serialized, EncryptedPayloadHead.class);
+        return deserialized.getTimestamp();
     }
 
     private String formatDate(Date date) {
