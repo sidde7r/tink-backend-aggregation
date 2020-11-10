@@ -17,6 +17,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
 import se.tink.libraries.i18n.Catalog;
@@ -81,9 +82,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
         Throwable throwable = catchThrowable(() -> objUnderTest.doLogin(credentials));
 
         // then
-        assertThat(throwable)
-                .isInstanceOf(LoginException.class)
-                .hasMessage("User did not accept bank id");
+        assertThat(throwable).isInstanceOf(BankIdException.class);
     }
 
     @Test
