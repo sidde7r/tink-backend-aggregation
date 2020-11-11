@@ -16,47 +16,56 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
-
     private String accountId;
-    private String name;
-    private String nickname;
-    private BigDecimal balance;
-    private String currency;
-    private String identifierScheme;
+    private String productName;
+    private String identifierSchema;
     private String identifier;
-    private String servicerScheme;
-    private String servicerIdentifier;
+    private String servicerSchema;
+    private String servicer;
+    private String owner;
+    private BigDecimal netBalance;
+    private String grossBalance;
+    private String coverReservationAmount;
+    private String currency;
 
     public String getAccountId() {
         return accountId;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getProductName() {
+        return productName;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getIdentifierScheme() {
-        return identifierScheme;
+    public String getIdentifierSchema() {
+        return identifierSchema;
     }
 
     public String getIdentifier() {
         return identifier;
     }
 
-    public String getServicerScheme() {
-        return servicerScheme;
+    public String getServicerSchema() {
+        return servicerSchema;
     }
 
-    public String getServicerIdentifier() {
-        return servicerIdentifier;
+    public String getServicer() {
+        return servicer;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
+    public String getOwner() {
+        return owner;
+    }
+
+    public BigDecimal getNetBalance() {
+        return netBalance;
+    }
+
+    public String getGrossBalance() {
+        return grossBalance;
+    }
+
+    public String getCoverReservationAmount() {
+        return coverReservationAmount;
     }
 
     public String getCurrency() {
@@ -67,23 +76,26 @@ public class AccountEntity {
     public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
-                        OpBankConstants.ACCOUNT_TYPE_MAPPER, name, TransactionalAccountType.OTHER)
+                        OpBankConstants.ACCOUNT_TYPE_MAPPER,
+                        productName,
+                        TransactionalAccountType.OTHER)
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountId)
                                 .withAccountNumber(identifier)
-                                .withAccountName(name)
+                                .withAccountName(productName)
                                 .addIdentifier(new IbanIdentifier(identifier))
                                 .build())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, getAccountId())
                 .setBankIdentifier(accountId)
                 .setApiIdentifier(accountId)
+                .addHolderName(owner)
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .build();
     }
 
     public ExactCurrencyAmount getAvailableBalance() {
-        return new ExactCurrencyAmount(getBalance(), getCurrency());
+        return new ExactCurrencyAmount(getNetBalance(), getCurrency());
     }
 }
