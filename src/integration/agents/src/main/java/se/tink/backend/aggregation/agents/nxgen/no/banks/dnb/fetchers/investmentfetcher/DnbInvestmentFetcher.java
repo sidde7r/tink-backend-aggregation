@@ -95,7 +95,8 @@ public class DnbInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
             return accounts;
         } catch (HttpResponseException e) {
-            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)) {
+            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)
+                    || DnbExceptionsHelper.noResourceFoundForTheCustomer(e)) {
                 return Collections.emptyList();
             }
             throw e;
