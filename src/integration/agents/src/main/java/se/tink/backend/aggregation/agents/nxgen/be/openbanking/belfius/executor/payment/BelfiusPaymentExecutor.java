@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.entities.OriginAccount;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.entities.RemoteAccount;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -30,6 +31,8 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class BelfiusPaymentExecutor implements PaymentExecutor {
 
@@ -65,10 +68,15 @@ public class BelfiusPaymentExecutor implements PaymentExecutor {
             payment.setExecutionDate(dateHelper.getNowAsLocalDate());
         }
 
+        RemittanceInformation remittanceInformation =
+                paymentRequest.getPayment().getRemittanceInformation();
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
+
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest(
                         payment.getAmount().getValue(),
-                        payment.getReference().getValue(),
+                        remittanceInformation.getValue(),
                         FormValues.FREE_TEXT,
                         payment.getAmount().getCurrency(),
                         payment.getExecutionDate()
