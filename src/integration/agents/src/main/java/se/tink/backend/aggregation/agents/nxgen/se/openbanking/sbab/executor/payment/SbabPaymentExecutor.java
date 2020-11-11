@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.pay
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.SbabDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.TypePair;
+import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -43,6 +44,8 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -90,7 +93,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .withTransferDate(getExecutionDate(payment))
                         .withCounterPartStatement(
                                 getCounterPartStatementIfValidOrThrow(
-                                        payment.getReference().getValue()))
+                                        payment.getRemittanceInformation()))
                         .build();
 
         CreatePaymentRequest createPaymentRequest =
@@ -106,9 +109,12 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                 payment.getCreditor().getAccountNumber());
     }
 
-    private String getCounterPartStatementIfValidOrThrow(String counterPartStatement)
-            throws PaymentException {
+    private String getCounterPartStatementIfValidOrThrow(
+            RemittanceInformation remittanceInformation) throws PaymentException {
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
 
+        String counterPartStatement = remittanceInformation.getValue();
         if (Strings.isNullOrEmpty(counterPartStatement)) {
             return counterPartStatement;
         }
