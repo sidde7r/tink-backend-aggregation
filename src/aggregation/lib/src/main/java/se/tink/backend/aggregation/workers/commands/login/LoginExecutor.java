@@ -37,6 +37,9 @@ public class LoginExecutor {
 
     private void initLoginHandlerChain() {
         loginHandlerChain.add(
+                new AgentPlatformAuthenticatorLoginHandler(
+                        supplementalInformationController, agentLoginEventPublisherService));
+        loginHandlerChain.add(
                 new ProgressiveAuthenticatorLoginHandler(
                         supplementalInformationController, agentLoginEventPublisherService));
         loginHandlerChain.add(new DefaultAgentLoginController(agentLoginEventPublisherService));
@@ -44,6 +47,9 @@ public class LoginExecutor {
     }
 
     private void initLoginExceptionHandlerChain(final StatusUpdater statusUpdater) {
+        loginExceptionHandlerChain.add(
+                new AgentPlatformAuthenticationProcessExceptionHandler(
+                        statusUpdater, context, agentLoginEventPublisherService));
         loginExceptionHandlerChain.add(
                 new BankIdLoginExceptionHandler(
                         statusUpdater, context, agentLoginEventPublisherService));

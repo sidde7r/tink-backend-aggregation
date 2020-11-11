@@ -14,6 +14,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class AgentPlatformAuthenticatorLoginHandler implements LoginHandler {
 
     private final SupplementalInformationController supplementalInformationController;
+    private final AgentLoginEventPublisherService agentLoginEventPublisherService;
 
     @Override
     public Optional<AgentWorkerCommandResult> handleLogin(
@@ -22,6 +23,8 @@ public class AgentPlatformAuthenticatorLoginHandler implements LoginHandler {
         if (agent instanceof AgentPlatformAuthenticator) {
             AgentPlatformAuthenticationExecutor.processAuthentication(
                     agent, credentialsRequest, supplementalInformationController);
+            metricAction.completed();
+            agentLoginEventPublisherService.publishLoginSuccessEvent();
             return Optional.of(AgentWorkerCommandResult.CONTINUE);
         }
         return Optional.empty();

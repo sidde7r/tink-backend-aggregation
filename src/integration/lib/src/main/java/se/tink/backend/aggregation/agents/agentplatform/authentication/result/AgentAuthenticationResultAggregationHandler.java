@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.UserInteractionService;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentAuthenticationError;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessError;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
@@ -58,7 +58,7 @@ public class AgentAuthenticationResultAggregationHandler
                                                                         data))))
                         .orElse(
                                 AgentAuthenticationResultHandlingResult.authenticationFailed(
-                                        new AgentAuthenticationError(
+                                        new AgentPlatformAuthenticationProcessError(
                                                 new NoUserInteractionResponseError())));
     }
 
@@ -75,7 +75,8 @@ public class AgentAuthenticationResultAggregationHandler
         if (values.isEmpty()) {
             handlingResult =
                     AgentAuthenticationResultHandlingResult.authenticationFailed(
-                            new AgentAuthenticationError(new NoUserInteractionResponseError()));
+                            new AgentPlatformAuthenticationProcessError(
+                                    new NoUserInteractionResponseError()));
         } else {
 
             handlingResult =
@@ -104,7 +105,7 @@ public class AgentAuthenticationResultAggregationHandler
                 .ifPresent(data -> persistentStorageService.writeToAgentPersistentStorage(data));
         handlingResult =
                 AgentAuthenticationResultHandlingResult.authenticationFailed(
-                        new AgentAuthenticationError(arg.getError()));
+                        new AgentPlatformAuthenticationProcessError(arg.getError()));
     }
 
     @Override

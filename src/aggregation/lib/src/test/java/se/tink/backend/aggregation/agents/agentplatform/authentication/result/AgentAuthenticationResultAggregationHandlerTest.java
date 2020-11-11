@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.UserInteractionService;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentAuthenticationError;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessError;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
@@ -78,7 +78,7 @@ public class AgentAuthenticationResultAggregationHandlerTest {
                 .writeToAgentPersistentStorage(agentAuthenticationPersistedData);
         Assert.assertTrue(result.getAuthenticationError().isPresent());
         Assert.assertEquals(
-                new AgentAuthenticationError(new InvalidCredentialsError()),
+                new AgentPlatformAuthenticationProcessError(new InvalidCredentialsError()),
                 result.getAuthenticationError().get());
         Assert.assertTrue(result.isFinalResult());
     }

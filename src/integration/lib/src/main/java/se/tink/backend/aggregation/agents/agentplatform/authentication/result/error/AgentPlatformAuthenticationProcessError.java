@@ -1,23 +1,22 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication.result.error;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agentsplatform.framework.error.AgentBankApiError;
-import se.tink.backend.aggregation.agentsplatform.framework.error.ServerError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 @EqualsAndHashCode
-public class AgentAuthenticationError implements AgentError {
+@AllArgsConstructor
+@Getter
+public class AgentPlatformAuthenticationProcessError implements AgentError {
 
     private static final String METHOD_IS_NOT_ALLOWED_TO_USE_MESSAGE =
             "Method is not allowed to use";
 
     private final AgentBankApiError agentBankApiError;
-
-    public AgentAuthenticationError(AgentBankApiError agentBankApiError) {
-        this.agentBankApiError = agentBankApiError;
-    }
 
     @Override
     public String name() {
@@ -31,10 +30,7 @@ public class AgentAuthenticationError implements AgentError {
 
     @Override
     public AgentException exception() {
-        if (agentBankApiError instanceof ServerError) {
-            return new ServerErrorAgentAuthenticationException(this, buildExceptionMessage());
-        }
-        return new AgentAuthenticationException(this, buildExceptionMessage());
+        return new AgentPlatformAuthenticationProcessException(this, buildExceptionMessage());
     }
 
     @Override

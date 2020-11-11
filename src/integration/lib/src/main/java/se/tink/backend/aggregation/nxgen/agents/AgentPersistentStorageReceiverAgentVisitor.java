@@ -13,7 +13,7 @@ public class AgentPersistentStorageReceiverAgentVisitor implements AgentVisitor 
     public void visit(Agent agent) {
         if (agent instanceof SubsequentGenerationAgent) {
             SubsequentGenerationAgent subsequentGenerationAgent = (SubsequentGenerationAgent) agent;
-            persistentStorage = subsequentGenerationAgent.persistentStorage;
+            persistentStorage = subsequentGenerationAgent.getPersistentStorage();
         }
     }
 
