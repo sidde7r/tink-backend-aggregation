@@ -55,8 +55,6 @@ public class ThreadSafeDateFormat {
             new ThreadSafeDateFormat("yyyy-MM-dd--HH:mm:ss");
     public static final ThreadSafeDateFormat FORMATTER_SECONDS_T =
             new ThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    public static final ThreadSafeDateFormat FORMATTER_SECONDS_T_T =
-            new ThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss'T'");
     public static final ThreadSafeDateFormat FORMATTER_SECONDS_WITH_TIMEZONE =
             new ThreadSafeDateFormat("yyyy-MM-dd HH:mm:ssZ");
     public static final ThreadSafeDateFormat FORMATTER_MINS_WITH_TIMEZONE =

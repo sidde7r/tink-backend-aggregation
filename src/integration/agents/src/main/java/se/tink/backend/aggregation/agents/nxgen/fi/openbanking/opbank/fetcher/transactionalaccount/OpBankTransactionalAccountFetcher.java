@@ -26,7 +26,7 @@ public class OpBankTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.getAccounts().getAccountsList().stream()
+        return apiClient.getAccounts().stream()
                 .map(AccountEntity::toTinkAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
