@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.OAuth;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.rpc.AccountResponse;
@@ -20,17 +19,11 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.rpc.TokenRequ
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.enums.BerlinGroupPaymentType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BerlinGroupAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -191,42 +184,6 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
                         getConfiguration().getPsuIpAddress())
                 .post(ConsentBaseResponse.class)
                 .getConsentId();
-    }
-
-    public CreatePaymentResponse createPayment(
-            CreatePaymentRequest createPaymentRequest,
-            BerlinGroupPaymentType paymentType,
-            String state) {
-        return getPaymentRequestBuilder(
-                        new URL(getConfiguration().getBaseUrl() + Urls.PAYMENTS)
-                                .parameter(IdTags.PAYMENT_PRODUCT, paymentType.toString()))
-                .header(
-                        HeaderKeys.TPP_REDIRECT_URI,
-                        getRedirectUrl().concat("?state=").concat(state))
-                .post(CreatePaymentResponse.class, createPaymentRequest);
-    }
-
-    public GetPaymentStatusResponse getPaymentStatus(
-            String paymentId, BerlinGroupPaymentType paymentType) {
-        return getPaymentRequestBuilder(
-                        new URL(getConfiguration().getBaseUrl() + Urls.PAYMENT_STATUS)
-                                .parameter(IdTags.PAYMENT_PRODUCT, paymentType.toString())
-                                .parameter(IdTags.PAYMENT_ID, paymentId))
-                .get(GetPaymentStatusResponse.class);
-    }
-
-    @Override
-    protected RequestBuilder getPaymentRequestBuilder(final URL url) {
-        return client.request(url)
-                .addBearerToken(tokenFromClientId())
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress());
-    }
-
-    private OAuth2Token tokenFromClientId() {
-        return OAuth2Token.create(OAuth.BEARER, getConfiguration().getClientId(), null, 864000);
     }
 
     private static void validateIban(String iban) {

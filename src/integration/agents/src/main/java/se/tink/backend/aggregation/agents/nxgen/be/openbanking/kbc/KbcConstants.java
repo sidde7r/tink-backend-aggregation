@@ -52,8 +52,6 @@ public final class KbcConstants {
         public static final String BASE_PIS = "/psd2/v2";
         public static final String PAYMENTS = BASE_PIS + "/payments/{paymentProduct}";
         public static final String PAYMENT_STATUS = PAYMENTS + "/{paymentId}/status";
-        public static final String AUTHORIZE_PAYMENT =
-                BASE_PIS + "/authorization/payments/{paymentId}";
         public static final String TRANSACTIONS = ACCOUNTS + "/{account-id}/transactions";
     }
 
