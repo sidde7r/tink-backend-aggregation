@@ -32,16 +32,10 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-
         ConsentResponse consent = apiClient.getConsent();
-        ConsentResponse authorizeConsentResponse =
-                apiClient.authorizeConsent(consent.getConsentId());
+        persistentStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
 
-        persistentStorage.put(StorageKeys.CONSENT_ID, authorizeConsentResponse.getConsentId());
-        persistentStorage.put(
-                StorageKeys.AUTHORIZATION_ID, authorizeConsentResponse.getAuthorisationId());
-
-        return apiClient.buildAuthorizeUrl(state, authorizeConsentResponse.getAuthorisationId());
+        return apiClient.buildAuthorizeUrl(state, consent.getAuthorisationId());
     }
 
     @Override
