@@ -22,13 +22,10 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.SupremeCardApiConstants.TimeoutConfig;
@@ -53,13 +50,12 @@ import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class SupremeCardAgent extends AbstractAgent
-        implements RefreshCreditCardAccountsExecutor, RefreshIdentityDataExecutor {
+        implements RefreshCreditCardAccountsExecutor {
     private static final int MAX_ATTEMPTS = 65;
     private final Credentials credentials;
     private final SupremeCardApiAgent apiAgent;
@@ -455,14 +451,16 @@ public final class SupremeCardAgent extends AbstractAgent
         return new FetchTransactionsResponse(transactionsMap);
     }
 
-    @Override
-    public FetchIdentityDataResponse fetchIdentityData() {
-        String myPage = apiAgent.fetchMyPage();
-        String customerName = SupremeCardParsingUtils.parseName(myPage);
-
-        return new FetchIdentityDataResponse(
-                SeIdentityData.of(customerName, credentials.getField(Key.USERNAME)));
-    }
+    // Should be fixed in, it looks like myPage has changed
+    // https://tinkab.atlassian.net/browse/TC-3266
+    //    @Override
+    //    public FetchIdentityDataResponse fetchIdentityData() {
+    //        String myPage = apiAgent.fetchMyPage();
+    //        String customerName = SupremeCardParsingUtils.parseName(myPage);
+    //
+    //        return new FetchIdentityDataResponse(
+    //                SeIdentityData.of(customerName, credentials.getField(Key.USERNAME)));
+    //    }
 
     //////////////////////////////////////////
 }
