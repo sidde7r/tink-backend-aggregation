@@ -37,7 +37,8 @@ public class DnbAccountFetcher implements AccountFetcher<TransactionalAccount> {
                     .map(Optional::get)
                     .collect(Collectors.toList());
         } catch (HttpResponseException e) {
-            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)) {
+            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)
+                    || DnbExceptionsHelper.noResourceFoundForTheCustomer(e)) {
                 return Collections.emptyList();
             }
             throw e;

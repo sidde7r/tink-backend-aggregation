@@ -74,7 +74,8 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
 
             return PaginatorResponseImpl.create(transactions, canFetchMore);
         } catch (HttpResponseException e) {
-            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)) {
+            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)
+                    || DnbExceptionsHelper.noResourceFoundForTheCustomer(e)) {
                 return PaginatorResponseImpl.create(Collections.emptyList(), false);
             } else if (e.getResponse().getStatus() != BAD_REQUEST_CODE) {
                 resetState();

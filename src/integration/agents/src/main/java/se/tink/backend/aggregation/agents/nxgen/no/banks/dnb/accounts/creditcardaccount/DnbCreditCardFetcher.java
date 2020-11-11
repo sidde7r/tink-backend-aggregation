@@ -33,7 +33,8 @@ public class DnbCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
             return creditcardAccounts;
 
         } catch (HttpResponseException e) {
-            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)) {
+            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)
+                    || DnbExceptionsHelper.noResourceFoundForTheCustomer(e)) {
                 return creditcardAccounts;
             }
             throw e;

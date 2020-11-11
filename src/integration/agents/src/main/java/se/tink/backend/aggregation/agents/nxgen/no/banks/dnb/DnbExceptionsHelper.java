@@ -20,4 +20,18 @@ public final class DnbExceptionsHelper {
         }
         return false;
     }
+
+    public static boolean noResourceFoundForTheCustomer(HttpResponseException e) {
+        if (e.getResponse().getStatus() == 404
+                && e.getResponse().hasBody()
+                && e.getResponse()
+                        .getBody(String.class)
+                        .contains(DnbConstants.Messages.NO_ACCOUNT_SUFFIX)) {
+            log.warn(
+                    "[DNB] Resource for customer not found {}.",
+                    e.getResponse().getBody(String.class));
+            return true;
+        }
+        return false;
+    }
 }

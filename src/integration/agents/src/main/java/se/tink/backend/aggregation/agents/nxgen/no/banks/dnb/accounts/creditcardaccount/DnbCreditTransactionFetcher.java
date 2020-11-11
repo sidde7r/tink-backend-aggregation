@@ -38,7 +38,8 @@ public class DnbCreditTransactionFetcher implements TransactionFetcher<CreditCar
                     .map(TransactionEntity::toTinkTransaction)
                     .collect(Collectors.toList());
         } catch (HttpResponseException e) {
-            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)) {
+            if (DnbExceptionsHelper.customerDoesNotHaveAccessToResource(e)
+                    || DnbExceptionsHelper.noResourceFoundForTheCustomer(e)) {
                 return Collections.emptyList();
             }
             throw e;
