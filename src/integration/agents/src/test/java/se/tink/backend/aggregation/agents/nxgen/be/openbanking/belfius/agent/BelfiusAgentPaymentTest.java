@@ -17,7 +17,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class BelfiusAgentPaymentTest {
     private enum Arg implements ArgumentManagerEnum {
@@ -58,8 +58,8 @@ public class BelfiusAgentPaymentTest {
             doReturn(Arg.CREDITORS_IBAN).when(creditor).getAccountNumber();
             doReturn(Arg.CREDITORS_NAME).when(creditor).getName();
 
-            Reference reference = mock(Reference.class);
-            doReturn("Message").when(reference).getValue();
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
+            remittanceInformation.setValue("Message");
 
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
@@ -76,7 +76,7 @@ public class BelfiusAgentPaymentTest {
                             .withDebtor(debtor)
                             .withAmount(amount)
                             .withExecutionDate(executionDate)
-                            .withReference(reference)
+                            .withRemittanceInformation(remittanceInformation)
                             .withCurrency(currency)
                             .build());
         }
