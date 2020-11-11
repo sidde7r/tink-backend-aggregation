@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.protobuf.Any;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,20 +12,10 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
-import se.tink.backend.aggregation.workers.commands.DummyTestAgentPlatformAuthenticatorAgent;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
-import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.eventproducerservice.grpc.BatchEventAck;
 import se.tink.backend.eventproducerservice.grpc.BatchEventAckAsync;
 import se.tink.backend.eventproducerservice.grpc.EventAck;
@@ -130,36 +119,5 @@ public class LoginExecutorTest {
         Assert.assertEquals(
                 LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS,
                 producerClient.getPostedData().unpack(AgentLoginCompletedEvent.class).getResult());
-    }
-
-    @Test
-    public void shouldProcessAuthenticationForAgentPlatformAuthenticator() {
-        // given
-        AgentAuthenticationProcess authenticationProcess =
-                Mockito.mock(AgentAuthenticationProcess.class);
-        AgentAuthenticationProcessStep firstStep =
-                Mockito.mock(AgentAuthenticationProcessStep.class);
-        AgentSucceededAuthenticationResult agentSucceededAuthenticationResult =
-                Mockito.mock(AgentSucceededAuthenticationResult.class);
-        Mockito.when(firstStep.execute(Mockito.any()))
-                .thenReturn(agentSucceededAuthenticationResult);
-        Mockito.when(authenticationProcess.getStartStep()).thenReturn(firstStep);
-        Agent agentPlatformAuthenticator =
-                new DummyTestAgentPlatformAuthenticatorAgent(
-                        createDummyAgentComponentProvider(), authenticationProcess);
-        // when
-        AgentWorkerCommandResult result =
-                objectUnderTest.executeLogin(
-                        agentPlatformAuthenticator, metricAction, credentialsRequest);
-        // then
-        Assertions.assertThat(result).isEqualTo(AgentWorkerCommandResult.CONTINUE);
-    }
-
-    private AgentComponentProvider createDummyAgentComponentProvider() {
-        return new AgentComponentProvider(
-                Mockito.mock(TinkHttpClientProvider.class),
-                Mockito.mock(SupplementalInformationProvider.class),
-                Mockito.mock(AgentContextProvider.class),
-                Mockito.mock(GeneratedValueProvider.class));
     }
 }

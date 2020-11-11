@@ -211,22 +211,4 @@ public class KbcApiClient extends BerlinGroupAgentPlatformStorageApiClient<KbcCo
         }
         return authData;
     }
-
-    @Override
-    protected String getConsentIdFromStorage() {
-        return getKbcPersistedData().getConsentId();
-    }
-
-    private KbcAuthenticationData getKbcPersistedData() {
-
-        if (authData == null) {
-            authData =
-                    new KbcPersistedDataAccessorFactory(new ObjectMapperFactory().getInstance())
-                            .createKbcAuthenticationPersistedDataAccessor(
-                                    new PersistentStorageService(persistentStorage)
-                                            .readFromAgentPersistentStorage())
-                            .getKbcAuthenticationData();
-        }
-        return authData;
-    }
 }
