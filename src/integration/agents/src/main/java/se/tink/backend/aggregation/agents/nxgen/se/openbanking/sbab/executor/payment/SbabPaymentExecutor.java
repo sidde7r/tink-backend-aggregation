@@ -116,7 +116,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
         String counterPartStatement = remittanceInformation.getValue();
         if (Strings.isNullOrEmpty(counterPartStatement)) {
-            return counterPartStatement;
+            return Strings.nullToEmpty(counterPartStatement);
         }
 
         if (counterPartStatement.length() > PaymentValue.MAX_DEST_MSG_LEN) {
