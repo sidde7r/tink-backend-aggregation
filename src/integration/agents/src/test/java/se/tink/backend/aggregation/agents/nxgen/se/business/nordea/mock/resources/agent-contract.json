@@ -55,15 +55,15 @@
     ],
     "transactions": [
         {
-            "amount": -23586.0,
-            "date": 1600077600000,
-            "description": "dummyDescription",
+            "amount": -100.0,
+            "date": 1605006000000,
+            "description": "Reservation Kortköp",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {
-                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"5050-1055\"}"
+                "DETAILS": "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
             },
-            "pending": false,
+            "pending": true,
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false
