@@ -53,7 +53,7 @@ public class AccountResponse extends HtmlResponse {
         final String ibanString =
                 evaluateXPath(
                                 accountDetails,
-                                "//dt[text()='Cuenta']/following-sibling::dd",
+                                "//dt[text()='Cuenta' or text()='Compte']/following-sibling::dd",
                                 String.class)
                         .replaceAll("[\\s\\u202F\\u00A0]", "");
         AccountIdentifier identifier = AccountIdentifier.create(Type.IBAN, ibanString);
