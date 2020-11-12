@@ -37,7 +37,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class FrOpenBankingPaymentExecutorTest {
 
@@ -69,7 +69,8 @@ public class FrOpenBankingPaymentExecutorTest {
         // given
         Iban sourceIban = new Iban.Builder().countryCode(CountryCode.FR).buildRandom();
         Iban destIban = new Iban.Builder().countryCode(CountryCode.FR).buildRandom();
-
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("ReferenceToCreditor");
         PaymentRequest paymentRequest =
                 new PaymentRequest(
                         new Payment.Builder()
@@ -78,7 +79,7 @@ public class FrOpenBankingPaymentExecutorTest {
                                 .withDebtor(new Debtor(new IbanIdentifier(destIban.toString())))
                                 .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
                                 .withCurrency("EUR")
-                                .withReference(new Reference("Message", "ReferenceToCreditor"))
+                                .withRemittanceInformation(remittanceInformation)
                                 .withUniqueId(UUID.randomUUID().toString())
                                 .build());
 

@@ -14,7 +14,7 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class N26AgentWireMockTest {
 
@@ -71,6 +71,8 @@ public class N26AgentWireMockTest {
     private Payment createMockedDomesticPayment() {
         String currency = "EUR";
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", currency);
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("test");
 
         return new Payment.Builder()
                 .withCreditor(
@@ -82,7 +84,7 @@ public class N26AgentWireMockTest {
                                 new IbanIdentifier("AGRIFRPP881", "FR1261401750597365134612940")))
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
-                .withReference(new Reference("TRANSFER", "test"))
+                .withRemittanceInformation(remittanceInformation)
                 .withUniqueId("paymentId")
                 .build();
     }
