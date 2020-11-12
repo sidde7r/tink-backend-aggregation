@@ -147,6 +147,15 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum> & Arg
         }
     }
 
+    public enum BankIDPasswordArgumentEnum implements ArgumentManagerEnum {
+        BANKID_PASSWORD;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
     public interface ArgumentManagerEnum {
         boolean isOptional();
     }

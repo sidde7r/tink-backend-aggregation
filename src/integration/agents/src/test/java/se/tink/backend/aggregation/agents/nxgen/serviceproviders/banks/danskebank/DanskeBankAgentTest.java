@@ -9,6 +9,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.BankIDPasswordArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
@@ -34,6 +35,8 @@ public class DanskeBankAgentTest {
     private final ArgumentManager<Arg> marketManager = new ArgumentManager<>(Arg.values());
     private final ArgumentManager<UsernamePasswordArgumentEnum> usernamePasswordManager =
             new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
+    private final ArgumentManager<BankIDPasswordArgumentEnum> bankIDPasswordManager =
+            new ArgumentManager<>(BankIDPasswordArgumentEnum.values());
 
     @AfterClass
     public static void afterClass() {
@@ -44,6 +47,7 @@ public class DanskeBankAgentTest {
     public void setup() {
         usernamePasswordManager.before();
         marketManager.before();
+        bankIDPasswordManager.before();
         final String market = marketManager.get(Arg.MARKET);
         assert providerName.containsKey(market);
 
@@ -52,6 +56,7 @@ public class DanskeBankAgentTest {
                         .addCredentialField(
                                 Field.Key.USERNAME,
                                 usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))
+                        // for NO - please provide service code for app as password
                         .addCredentialField(
                                 Field.Key.PASSWORD,
                                 usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD))
@@ -59,6 +64,12 @@ public class DanskeBankAgentTest {
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
+
+        if (market.equals("no")) {
+            builder.addCredentialField(
+                    Field.Key.BANKID_PASSWORD,
+                    bankIDPasswordManager.get(BankIDPasswordArgumentEnum.BANKID_PASSWORD));
+        }
     }
 
     @Test
