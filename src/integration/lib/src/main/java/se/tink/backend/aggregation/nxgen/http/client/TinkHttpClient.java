@@ -58,6 +58,9 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void disableAggregatorHeader();
 
+    /** Change the way logging (to s3 file) is done */
+    void setLoggingStrategy(LoggingStrategy loggingStrategy);
+
     void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration);
 
     void setTimeout(int milliseconds);

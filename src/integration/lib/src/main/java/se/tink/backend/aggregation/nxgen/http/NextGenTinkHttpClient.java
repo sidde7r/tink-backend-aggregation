@@ -64,6 +64,7 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
+import se.tink.backend.aggregation.agents.utils.jersey.ResponseLoggingFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
@@ -74,6 +75,7 @@ import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
@@ -86,9 +88,11 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.Header;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.PersistentHeaderFilter;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.hostnameverifier.ProxyHostnameVerifier;
+import se.tink.backend.aggregation.nxgen.http.legacy.DefaultRequestLoggingAdapter;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpRequestExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
@@ -121,6 +125,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private String userAgent;
     private final AggregatorInfo aggregator;
     private boolean shouldAddAggregatorHeader = true;
+    private LoggingStrategy loggingStrategy = LoggingStrategy.DEFAULT;
 
     private List<String> cipherSuites;
 
@@ -227,6 +232,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private NextGenTinkHttpClient(
             final Builder builder, LogMasker logMasker, LoggingMode loggingMode) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(builder.getSignatureKeyPair());
+
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
         this.internalRequestConfigBuilder = RequestConfig.custom();
@@ -449,21 +455,34 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         // ApacheHttpClient4 library.
         TinkApacheHttpClient4Handler httpHandler = new TinkApacheHttpClient4Handler(httpClient);
         this.internalClient = new TinkApacheHttpClient4(httpHandler, this.internalClientConfig);
+        setupLogging();
 
-        // Add agent debug `LoggingFilter`, todo: move this into nxgen
-        try {
-            if (this.logOutputStream != null) {
-                this.internalClient.addFilter(
-                        new LoggingFilter(
-                                new PrintStream(logOutputStream, true, "UTF-8"),
-                                logMasker,
-                                loggingMode));
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }
         if (this.metricRegistry != null && this.provider != null) {
             addFilter(new MetricFilter(this.metricRegistry, this.provider));
+        }
+    }
+
+    private void setupLogging() {
+        // Add agent debug `LoggingFilter`, todo: move this into nxgen
+        if (this.logOutputStream != null) {
+            if (this.loggingStrategy == LoggingStrategy.EXPERIMENTAL) {
+                LoggingExecutor loggingExecutor =
+                        new LoggingExecutor(logOutputStream, logMasker, loggingMode);
+                DefaultRequestLoggingAdapter executorLoggingAdapter =
+                        new DefaultRequestLoggingAdapter(loggingExecutor);
+                requestExecutor.setRequestLoggingAdapter(executorLoggingAdapter);
+                this.internalClient.addFilter(new ResponseLoggingFilter(loggingExecutor));
+            } else if (this.loggingStrategy == LoggingStrategy.DEFAULT) {
+                try {
+                    this.internalClient.addFilter(
+                            new LoggingFilter(
+                                    new PrintStream(logOutputStream, true, "UTF-8"),
+                                    logMasker,
+                                    loggingMode));
+                } catch (UnsupportedEncodingException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
         }
     }
 
@@ -521,6 +540,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     @Override
     public void disableAggregatorHeader() {
         this.shouldAddAggregatorHeader = false;
+    }
+
+    @Override
+    public void setLoggingStrategy(LoggingStrategy loggingStrategy) {
+        this.loggingStrategy = loggingStrategy;
     }
 
     @Override
