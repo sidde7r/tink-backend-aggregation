@@ -417,6 +417,10 @@ public class UkOpenBankingAuthenticationController
             // give end user a proper error message.
             apiClient.storeOpenIdError(ErrorEntity.create(errorType, errorDescription));
 
+            if (UkOpenBankingV31Constants.Errors.PSU_CANCELLED.equalsIgnoreCase(errorDescription)) {
+                throw ThirdPartyAppError.CANCELLED.exception();
+            }
+
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else if (UkOpenBankingV31Constants.Errors.SERVER_ERROR.equalsIgnoreCase(errorType)) {
             throw BANK_SIDE_FAILURE.exception(errorDescription);

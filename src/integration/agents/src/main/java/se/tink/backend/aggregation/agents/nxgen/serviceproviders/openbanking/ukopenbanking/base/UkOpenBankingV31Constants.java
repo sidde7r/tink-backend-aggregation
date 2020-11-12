@@ -215,6 +215,7 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
         public static final String LOGIN_REQUIRED = "login_required";
         static final String SERVER_ERROR = "server_error";
         static final String TEMPORARILY_UNAVAILABLE = "temporarily_unavailable";
+        public static final String PSU_CANCELLED = "PSU Cancelled";
     }
 
     public static class Ps256 {
