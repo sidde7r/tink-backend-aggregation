@@ -65,7 +65,9 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -128,6 +130,8 @@ public class UkOpenBankingApiClient {
         this.pisConfig = pisConfig;
 
         addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        addFilter(new BankServiceInternalErrorFilter());
+        addFilter(new TimeoutFilter());
         addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
     }
 
