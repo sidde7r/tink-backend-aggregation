@@ -192,8 +192,12 @@ public final class SwedbankApiClient {
     }
 
     public AuthenticationResponse authenticate(String ssn) {
+
         final AuthorizeRequest authorizeRequest =
-                new AuthorizeRequest(configuration.getClientId(), getRedirectUrl());
+                new AuthorizeRequest(
+                        configuration.getClientId(),
+                        getRedirectUrl(),
+                        credentialsRequest.getProvider().getPayload());
 
         return createRequest(SwedbankConstants.Urls.AUTHORIZATION)
                 .header(HeaderKeys.PSU_ID, ssn)
