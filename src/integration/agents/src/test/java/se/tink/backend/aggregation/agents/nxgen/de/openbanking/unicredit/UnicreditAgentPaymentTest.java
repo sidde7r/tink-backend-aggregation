@@ -23,7 +23,7 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class UnicreditAgentPaymentTest {
 
@@ -77,8 +77,8 @@ public class UnicreditAgentPaymentTest {
             doReturn(Iban.random(CountryCode.DE).toString()).when(creditor).getAccountNumber();
             doReturn("Creditor Name").when(creditor).getName();
 
-            Reference reference = mock(Reference.class);
-            doReturn("Message").when(reference).getValue();
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
+            remittanceInformation.setValue("Message");
 
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
@@ -95,7 +95,7 @@ public class UnicreditAgentPaymentTest {
                             .withAmount(amount)
                             .withType(PaymentType.DOMESTIC)
                             .withExecutionDate(executionDate)
-                            .withReference(reference)
+                            .withRemittanceInformation(remittanceInformation)
                             .withCurrency(currency)
                             .build());
         }
