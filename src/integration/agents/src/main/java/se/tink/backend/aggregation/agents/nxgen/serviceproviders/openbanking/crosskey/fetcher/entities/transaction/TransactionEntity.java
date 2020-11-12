@@ -108,17 +108,18 @@ public class TransactionEntity {
     @JsonIgnore
     private String getDescription() {
         return Optional.ofNullable(transactionInformation)
-                .orElse(getProprietaryBankTransactionCode());
+                .orElse(StringUtils.capitalize(getProprietaryBankTransactionCode()));
     }
 
     private String getProprietaryBankTransactionCode() {
-        return Optional.ofNullable(
-                        StringUtils.capitalize(proprietaryBankTransactionCodeEntity.getCode()))
+        return Optional.ofNullable(proprietaryBankTransactionCodeEntity)
+                .map(ProprietaryBankTransactionCodeEntity::getCode)
                 .orElse(getBankTransactionCodeEntity());
     }
 
     private String getBankTransactionCodeEntity() {
-        return Optional.ofNullable(StringUtils.capitalize(bankTransactionCodeEntity.getCode()))
+        return Optional.ofNullable(bankTransactionCodeEntity)
+                .map(BankTransactionCodeEntity::getCode)
                 .orElse("");
     }
 }
