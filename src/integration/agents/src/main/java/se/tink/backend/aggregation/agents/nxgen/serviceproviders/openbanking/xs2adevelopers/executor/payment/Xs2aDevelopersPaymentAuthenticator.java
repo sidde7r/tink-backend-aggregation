@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -36,8 +36,8 @@ public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-        GetTokenForm getTokenForm =
-                GetTokenForm.builder()
+        TokenForm tokenForm =
+                TokenForm.builder()
                         .setClientId(configuration.getClientId())
                         .setCode(code)
                         .setCodeVerifier(persistentStorage.get(StorageKeys.CODE_VERIFIER))
@@ -46,14 +46,14 @@ public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
                         .setValidRequest(true)
                         .build();
 
-        return apiClient.getToken(getTokenForm).toTinkToken();
+        return apiClient.getToken(tokenForm).toTinkToken();
     }
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
-        GetTokenForm refreshTokenForm =
-                GetTokenForm.builder()
+        TokenForm refreshTokenForm =
+                TokenForm.builder()
                         .setClientId(configuration.getClientId())
                         .setGrantType(FormValues.REFRESH_TOKEN)
                         .setRefreshToken(refreshToken)

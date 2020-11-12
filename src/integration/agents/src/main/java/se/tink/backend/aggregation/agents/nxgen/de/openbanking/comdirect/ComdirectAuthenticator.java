@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.comdirect;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
@@ -13,12 +14,14 @@ public class ComdirectAuthenticator extends Xs2aDevelopersAuthenticator {
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
             Xs2aDevelopersProviderConfiguration xs2ADevelopersProviderConfiguration,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            Credentials credentials) {
         super(
                 apiClient,
                 persistentStorage,
                 xs2ADevelopersProviderConfiguration,
-                localDateTimeSource);
+                localDateTimeSource,
+                credentials);
     }
 
     @Override

@@ -1,0 +1,10 @@
+{
+  "access": {
+    "allPsd2": "allAccounts"
+  },
+  "recurringIndicator": true,
+  "validUntil": "2030-01-01",
+  "frequencyPerDay": 4,
+  "lastActionDate": "2020-11-12",
+  "consentStatus": "valid"
+}

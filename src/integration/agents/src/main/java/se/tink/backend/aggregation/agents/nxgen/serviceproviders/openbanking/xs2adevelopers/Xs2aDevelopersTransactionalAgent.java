@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersOAuth2AuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentAuthenticator;
@@ -80,7 +81,8 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 apiClient,
                 persistentStorage,
                 configuration,
-                componentProvider.getLocalDateTimeSource());
+                componentProvider.getLocalDateTimeSource(),
+                credentials);
     }
 
     protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
@@ -91,7 +93,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         final TransactionFetcher<TransactionalAccount> transactionFetcher =
                 new TransactionKeyWithInitDateFromFetcherController<>(
                         request,
-                        new Xs2aDevelopersTransactionDateFromFetcher(
+                        new Xs2aDevelopersTransactionDateFromFetcher<TransactionalAccount>(
                                 apiClient, agentComponentProvider.getLocalDateTimeSource()));
 
         return new TransactionalAccountRefreshController(
@@ -107,20 +109,21 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final OAuth2AuthenticationController controller =
+        final OAuth2AuthenticationController oAuth2Controller =
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,
                         credentials,
                         strongAuthenticationState);
-
+        final Xs2aDevelopersOAuth2AuthenticatorController controller =
+                new Xs2aDevelopersOAuth2AuthenticatorController(oAuth2Controller, authenticator);
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
                         controller, supplementalInformationHelper),
-                controller);
+                oAuth2Controller);
     }
 
     @Override

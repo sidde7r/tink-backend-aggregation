@@ -28,7 +28,7 @@ public class TransactionEntityTest {
 
     @Test
     @Parameters(method = "allTransactionPossibilities")
-    public void shouldReturnProperlyMappedTransactionDescription(
+    public void should_return_properly_mapped_transaction_description(
             String transactionJson, String expectedDescription, double expectedAmount) {
         // given
         TransactionEntity transactionEntity =

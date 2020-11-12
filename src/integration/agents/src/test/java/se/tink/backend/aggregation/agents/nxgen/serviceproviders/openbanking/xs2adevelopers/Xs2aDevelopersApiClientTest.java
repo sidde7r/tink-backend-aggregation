@@ -8,9 +8,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.CONSENT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.CREATE_PAYMENT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.GET_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.POST_CONSENT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.TOKEN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.OAUTH_TOKEN;
@@ -22,16 +22,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentBody;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenForm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
@@ -97,13 +96,13 @@ public class Xs2aDevelopersApiClientTest {
     }
 
     @Test(expected = SessionException.class)
-    public void shouldThrowSessionExceptionWhenTokenDoesNotExistsInStorageDuringAis() {
+    public void should_throw_session_exception_when_token_does_not_exists_in_storage_during_ais() {
         when(storage.get(OAUTH_TOKEN, OAuth2Token.class)).thenReturn(Optional.empty());
         apiClient.getAccounts();
     }
 
     @Test
-    public void shouldBuildAuthorizeUrl() {
+    public void should_build_authorize_url() {
         URL result = apiClient.buildAuthorizeUrl("STATE", "SCOPE", "HREF");
 
         assertThat(result.toString())
@@ -113,7 +112,7 @@ public class Xs2aDevelopersApiClientTest {
     }
 
     @Test
-    public void shouldBuildAndExecuteGetAccountsRequest() {
+    public void should_build_and_execute_get_accounts_request() {
         // given
         URL url = new URL(BASE_URL + GET_ACCOUNTS);
         GetAccountsResponse getAccountsResponse =
@@ -133,7 +132,7 @@ public class Xs2aDevelopersApiClientTest {
     }
 
     @Test
-    public void shouldBuildAndExecuteGetBalanceRequest() {
+    public void should_build_and_execute_get_balance_request() {
         // given
         URL url = new URL(BASE_URL + "/berlingroup/v1/accounts/1/balances");
         GetBalanceResponse getBalanceResponse =
@@ -153,12 +152,12 @@ public class Xs2aDevelopersApiClientTest {
     }
 
     @Test
-    public void shouldBuildAndExecuteGetTransactionsRequest() {
+    public void should_build_and_execute_get_transactions_request() {
         // given
         URL url = new URL(BASE_URL + "/berlingroup/v1/accounts/1/transactions");
         GetTransactionsResponse getTransactionsResponse =
                 Mockito.mock(GetTransactionsResponse.class);
-        List transactions = Lists.newArrayList(Mockito.mock(Transaction.class));
+        List<Transaction> transactions = Lists.newArrayList(Mockito.mock(Transaction.class));
         Mockito.when(getTransactionsResponse.toTinkTransactions()).thenReturn(transactions);
         TransactionsLinksEntity linksEntity = Mockito.mock(TransactionsLinksEntity.class);
         Mockito.when(linksEntity.getNext()).thenReturn(Optional.empty());
@@ -175,14 +174,14 @@ public class Xs2aDevelopersApiClientTest {
                 apiClient.getTransactions(account, LocalDate.now(), LocalDate.now());
 
         // then
-        Assert.assertTrue(result.size() == 1);
+        assertThat(result).hasSize(1);
         assertThat(result.get(0)).isEqualTo(getTransactionsResponse.toTinkTransactions().get(0));
         verify(tinkHttpClient).request(url);
         verifyNoMoreInteractions(tinkHttpClient);
     }
 
     @Test
-    public void shouldBuildAndExecuteGetPaymentRequest() {
+    public void should_build_and_execute_get_payment_request() {
         // given
         URL url = new URL(BASE_URL + "/berlingroup/v1/payments/sepa-credit-transfers/1");
         GetPaymentResponse getPaymentResponse =
@@ -200,49 +199,47 @@ public class Xs2aDevelopersApiClientTest {
     }
 
     @Test
-    public void shouldBuildAndExecuteGetTokenRequest() {
+    public void should_build_and_execute_get_token_request() {
         // given
         URL url = new URL(BASE_URL + TOKEN);
-        GetTokenResponse getTokenResponse =
-                deserializeFromString(JSON_MOCK, GetTokenResponse.class);
+        TokenResponse tokenResponse = deserializeFromString(JSON_MOCK, TokenResponse.class);
         when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
-        when(requestBuilder.post(GetTokenResponse.class)).thenReturn(getTokenResponse);
+        when(requestBuilder.post(TokenResponse.class)).thenReturn(tokenResponse);
 
         // when
-        GetTokenResponse result =
+        TokenResponse result =
                 apiClient.getToken(
-                        GetTokenForm.builder()
+                        TokenForm.builder()
                                 .setClientId("clientId")
                                 .setGrantType("grantType")
                                 .build());
 
         // then
-        assertThat(result).isEqualTo(getTokenResponse);
+        assertThat(result).isEqualTo(tokenResponse);
         verify(tinkHttpClient).request(url);
         verifyNoMoreInteractions(tinkHttpClient);
     }
 
     @Test
-    public void shouldBuildAndExecuteCreateConsentRequest() {
+    public void should_build_and_execute_create_consent_request() {
         // given
-        URL url = new URL(BASE_URL + POST_CONSENT);
-        PostConsentResponse postConsentResponse =
-                deserializeFromString(JSON_MOCK, PostConsentResponse.class);
+        URL url = new URL(BASE_URL + CONSENT);
+        ConsentResponse consentResponse = deserializeFromString(JSON_MOCK, ConsentResponse.class);
         when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
-        when(requestBuilder.post(PostConsentResponse.class)).thenReturn(postConsentResponse);
-        PostConsentBody postConsentBody = mock(PostConsentBody.class);
+        when(requestBuilder.post(ConsentResponse.class)).thenReturn(consentResponse);
+        ConsentRequest consentRequest = mock(ConsentRequest.class);
 
         // when
-        PostConsentResponse result = apiClient.createConsent(postConsentBody);
+        ConsentResponse result = apiClient.createConsent(consentRequest);
 
         // then
-        assertThat(result).isEqualTo(postConsentResponse);
+        assertThat(result).isEqualTo(consentResponse);
         verify(tinkHttpClient).request(url);
         verifyNoMoreInteractions(tinkHttpClient);
     }
 
     @Test
-    public void shouldBuildAndExecuteCreatePaymentRequest() {
+    public void should_build_and_execute_create_payment_request() {
         // given
         URL url = new URL(BASE_URL + CREATE_PAYMENT);
         CreatePaymentResponse createPaymentResponse =
@@ -261,10 +258,10 @@ public class Xs2aDevelopersApiClientTest {
     }
 
     @Test
-    public void shouldThrowBankServiceExceptionWhenRefreshingTokenFailsWith500() {
+    public void should_throw_bank_service_exception_when_refreshing_token_fails_with500() {
         // given
-        GetTokenForm getTokenForm =
-                GetTokenForm.builder()
+        TokenForm getTokenForm =
+                TokenForm.builder()
                         .setClientId("asdf")
                         .setCode("zxcv")
                         .setCodeVerifier("bnm")
@@ -280,7 +277,7 @@ public class Xs2aDevelopersApiClientTest {
 
         URL url = new URL(BASE_URL + TOKEN);
         when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
-        when(requestBuilder.post(GetTokenResponse.class)).thenThrow(hre);
+        when(requestBuilder.post(TokenResponse.class)).thenThrow(hre);
 
         // when
         Throwable throwable = catchThrowable(() -> apiClient.getToken(getTokenForm));

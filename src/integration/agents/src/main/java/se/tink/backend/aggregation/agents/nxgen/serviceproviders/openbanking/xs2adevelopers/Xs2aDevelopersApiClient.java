@@ -18,10 +18,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentBody;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenForm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
@@ -100,13 +102,35 @@ public class Xs2aDevelopersApiClient {
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
-    public PostConsentResponse createConsent(PostConsentBody postConsentBody) {
-        return createRequest(new URL(configuration.getBaseUrl() + ApiServices.POST_CONSENT))
+    public ConsentResponse createConsent(ConsentRequest consentRequest) {
+        return createRequest(new URL(configuration.getBaseUrl() + ApiServices.CONSENT))
                 .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                .body(postConsentBody)
-                .post(PostConsentResponse.class);
+                .body(consentRequest)
+                .post(ConsentResponse.class);
+    }
+
+    public ConsentDetailsResponse getConsentDetails() {
+        String consentId =
+                Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        return createRequest(
+                        new URL(configuration.getBaseUrl() + ApiServices.CONSENT_DETAILS)
+                                .parameter(IdTags.CONSENT_ID, consentId))
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                .get(ConsentDetailsResponse.class);
+    }
+
+    public ConsentStatusResponse getConsentStatus() {
+        String consentId =
+                Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        return createRequest(
+                        new URL(configuration.getBaseUrl() + ApiServices.CONSENT_STATUS)
+                                .parameter(IdTags.CONSENT_ID, consentId))
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                .get(ConsentStatusResponse.class);
     }
 
     public URL buildAuthorizeUrl(String state, String scope, String href) {
@@ -123,11 +147,11 @@ public class Xs2aDevelopersApiClient {
                 .queryParam(QueryKeys.CODE_CHALLENGE_TYPE_M, QueryValues.CODE_CHALLENGE_TYPE);
     }
 
-    public GetTokenResponse getToken(GetTokenForm getTokenForm) {
+    public TokenResponse getToken(TokenForm tokenForm) {
         try {
             return createRequest(new URL(configuration.getBaseUrl() + ApiServices.TOKEN))
-                    .body(getTokenForm, MediaType.APPLICATION_FORM_URLENCODED)
-                    .post(GetTokenResponse.class);
+                    .body(tokenForm, MediaType.APPLICATION_FORM_URLENCODED)
+                    .post(TokenResponse.class);
         } catch (HttpResponseException hre) {
             log.error("Error caught while getting/refreshing access token", hre);
             if (hre.getResponse().getStatus() == 500) {
@@ -150,7 +174,7 @@ public class Xs2aDevelopersApiClient {
                 .get(GetBalanceResponse.class);
     }
 
-    public List<? extends Transaction> getTransactions(
+    public List<Transaction> getTransactions(
             TransactionalAccount account, LocalDate fromDate, LocalDate toDate) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<Transaction> fetchedTransactions = new LinkedList<>();

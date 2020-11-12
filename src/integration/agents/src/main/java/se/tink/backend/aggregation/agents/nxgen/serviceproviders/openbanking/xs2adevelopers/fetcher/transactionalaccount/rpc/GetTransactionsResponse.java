@@ -22,7 +22,7 @@ public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<
     private TransactionsEntity transactions;
 
     @JsonIgnore
-    public List<? extends Transaction> toTinkTransactions() {
+    public List<Transaction> toTinkTransactions() {
         return Optional.ofNullable(transactions)
                 .orElse(new TransactionsEntity())
                 .toTinkTransactions();
