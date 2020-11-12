@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
-
 import com.google.common.collect.Collections2;
 import io.vavr.collection.Stream;
 import java.util.Collection;
@@ -48,7 +46,6 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
                 identifierMapper.getTransactionalAccountPrimaryIdentifier(
                         accountIdentifiers, getAllowedTransactionalAccountIdentifiers());
         String accountNumber = primaryIdentifier.getIdentification();
-        String uniqueIdentifier = getUniqueIdentifier(account, primaryIdentifier);
 
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
@@ -57,7 +54,7 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
                         .withBalance(buildBalanceModule(balances))
                         .withId(
                                 IdModule.builder()
-                                        .withUniqueIdentifier(uniqueIdentifier)
+                                        .withUniqueIdentifier(accountNumber)
                                         .withAccountNumber(accountNumber)
                                         .withAccountName(
                                                 pickDisplayName(account, primaryIdentifier))
@@ -73,11 +70,8 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
         return builder.build();
     }
 
-    protected String getUniqueIdentifier(
-            AccountEntity account, AccountIdentifierEntity primaryIdentifier) {
-        return isRevolutAccount(account)
-                ? account.getAccountId()
-                : primaryIdentifier.getIdentification();
+    protected String getUniqueIdentifier(AccountIdentifierEntity primaryIdentifier) {
+        return primaryIdentifier.getIdentification();
     }
 
     protected List<UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code>
@@ -94,13 +88,6 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
         balanceMapper.getAvailableBalance(balances).ifPresent(builder::setAvailableBalance);
 
         return builder.build();
-    }
-
-    private boolean isRevolutAccount(AccountEntity account) {
-        return account.getIdentifiers().stream()
-                .filter(i -> i.getIdentifierType().equals(IBAN))
-                .map(AccountIdentifierEntity::getIdentification)
-                .anyMatch(i -> i.contains("REVO"));
     }
 
     private String pickDisplayName(AccountEntity account, AccountIdentifierEntity identifier) {
