@@ -314,6 +314,7 @@ public class NordeaBaseConstants {
         // refresh token has expired
         public static final String INVALID_GRANT = "invalid_grant";
         public static final String AUTH_NOT_STARTED = "start_failed";
+        public static final String CHALLENGE_EXPIRED = "challenge_expired";
         public static final String RESOURCE_NOT_FOUND = "resource_not_found";
         public static final String AUTHENTICATION_COLLISION = "authentication_collision";
         public static final String AUTHENTICATION_FAILED = "authentication_failed";

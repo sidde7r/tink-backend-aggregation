@@ -83,8 +83,13 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+
                 if (errorResponse.isAutostartTokenExpired()) {
                     return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+                }
+
+                if (errorResponse.isBankIdTimeout()) {
+                    return BankIdStatus.TIMEOUT;
                 }
             }
 

@@ -50,6 +50,11 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean isBankIdTimeout() {
+        return NordeaBaseConstants.ErrorCodes.CHALLENGE_EXPIRED.equalsIgnoreCase(error);
+    }
+
+    @JsonIgnore
     public boolean isInvalidAccessToken() {
         return NordeaBaseConstants.ErrorCodes.INVALID_TOKEN.equalsIgnoreCase(error);
     }
