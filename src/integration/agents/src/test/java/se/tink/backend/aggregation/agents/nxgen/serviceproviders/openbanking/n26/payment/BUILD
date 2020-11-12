@@ -15,6 +15,7 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/payment:rpc",
+        "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
     ],
 )
