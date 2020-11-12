@@ -1,0 +1,25 @@
+{
+    "id": "1234567",
+    "accountNumber": "123456789",
+    "prettyDescription": "",
+    "postingDate": "2018-01-26T00:00:00",
+    "bokfoeringsdato": "2018-01-26T00:00:00",
+    "valueDate": "2018-01-27T00:00:00",
+    "beloep": {
+        "verdi": -30.0,
+        "verdiNok": 0,
+        "valutakode": "NOK"
+    },
+    "archiveRef": "1234567",
+    "serialNo": 1,
+    "numRef": 0,
+    "alfaRef": "",
+    "txCode": 123,
+    "descriptionShort": "VARER",
+    "beskrivelse": "SPOTIFY ADDRESS CITY",
+    "balanceAfterTransaction": 5000.0,
+    "draweeAccount": "00000000000",
+    "orgUnit": "99999",
+    "functionCode": 2000760,
+    "movementDetailIndex": 1
+}
