@@ -18,10 +18,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.JwtSignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingModule;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UKOpenbankingExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.BarclaysConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -52,7 +52,7 @@ public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
                 componentProvider,
                 jwtSigner,
                 aisConfig,
-                new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL));
+                new UkOpenBankingPisConfiguration(V31.PIS_API_URL));
     }
 
     @Override
@@ -64,8 +64,8 @@ public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        UKOpenbankingV31Executor ukOpenbankingV31Executor =
-                new UKOpenbankingV31Executor(
+        UKOpenbankingExecutor ukOpenbankingExecutor =
+                new UKOpenbankingExecutor(
                         softwareStatement,
                         providerConfiguration,
                         apiClient,
@@ -73,7 +73,6 @@ public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
                         credentials,
                         strongAuthenticationState,
                         randomValueGenerator);
-        return Optional.of(
-                new PaymentController(ukOpenbankingV31Executor, ukOpenbankingV31Executor));
+        return Optional.of(new PaymentController(ukOpenbankingExecutor, ukOpenbankingExecutor));
     }
 }

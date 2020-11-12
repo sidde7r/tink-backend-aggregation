@@ -16,8 +16,8 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class SantanderAgentTest {
 
-    private final String SOURCE_IDENTIFIER = "";
-    private final String DESTINATION_IDENTIFIER = "";
+    private static final String SOURCE_IDENTIFIER = "";
+    private static final String DESTINATION_IDENTIFIER = "";
 
     @Test
     public void test() throws Exception {
@@ -38,7 +38,7 @@ public class SantanderAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("santander")
+                        .setFinancialInstitutionId("santander-uk")
                         .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
