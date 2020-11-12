@@ -162,6 +162,6 @@ class AgentPlatformAuthenticationProcessExceptionBankApiErrorVisitor
 
     @Override
     public CredentialsStatus visit(FetchDataError error) {
-        return null;
+        throw new IllegalStateException("Fetching data error is not allowed during authentication");
     }
 }
