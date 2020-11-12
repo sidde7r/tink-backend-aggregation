@@ -13,7 +13,8 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class PaymentControllerTest {
 
@@ -27,7 +28,6 @@ public class PaymentControllerTest {
 
     @Test
     public void testGetPaymentProductTypeForBbanToBbanIsDomestic() {
-
         Payment payment =
                 new Payment.Builder()
                         .withAmount(Amount.inSEK(1.0))
@@ -44,7 +44,8 @@ public class PaymentControllerTest {
                                                 SOURCE_IDENTIFIER_BBAN)))
                         .withCurrency("SEK")
                         .withExecutionDate(LocalDate.now())
-                        .withReference(new Reference("Transfer", "random"))
+                        .withRemittanceInformation(
+                                createAndGetRemittanceInformation(null, "random"))
                         .build();
 
         paymentController = new PaymentController(mock(PaymentExecutor.class));
@@ -72,7 +73,8 @@ public class PaymentControllerTest {
                                                 SOURCE_IDENTIFIER_BBAN)))
                         .withCurrency("SEK")
                         .withExecutionDate(LocalDate.now().plusDays(2))
-                        .withReference(new Reference("Transfer", "random"))
+                        .withRemittanceInformation(
+                                createAndGetRemittanceInformation(null, "random"))
                         .build();
 
         paymentController = new PaymentController(mock(PaymentExecutor.class));
@@ -100,7 +102,8 @@ public class PaymentControllerTest {
                                                 SOURCE_IDENTIFIER_IBAN_SE)))
                         .withCurrency("SEK")
                         .withExecutionDate(LocalDate.now())
-                        .withReference(new Reference("Transfer", "random"))
+                        .withRemittanceInformation(
+                                createAndGetRemittanceInformation(null, "random"))
                         .build();
 
         paymentController = new PaymentController(mock(PaymentExecutor.class));
@@ -128,7 +131,8 @@ public class PaymentControllerTest {
                                                 SOURCE_IDENTIFIER_IBAN_GB)))
                         .withCurrency("£")
                         .withExecutionDate(LocalDate.now())
-                        .withReference(new Reference("Transfer", "random"))
+                        .withRemittanceInformation(
+                                createAndGetRemittanceInformation(null, "random"))
                         .build();
 
         paymentController = new PaymentController(mock(PaymentExecutor.class));
@@ -157,7 +161,8 @@ public class PaymentControllerTest {
                                                 SOURCE_IDENTIFIER_IBAN_GB)))
                         .withCurrency("£")
                         .withExecutionDate(LocalDate.now())
-                        .withReference(new Reference("Transfer", "random"))
+                        .withRemittanceInformation(
+                                createAndGetRemittanceInformation(null, "random"))
                         .build();
 
         paymentController = new PaymentController(mock(PaymentExecutor.class));
@@ -182,10 +187,19 @@ public class PaymentControllerTest {
                                         AccountIdentifier.create(null, SOURCE_IDENTIFIER_IBAN_GB)))
                         .withCurrency("SEK")
                         .withExecutionDate(LocalDate.now())
-                        .withReference(new Reference("Transfer", "random"))
+                        .withRemittanceInformation(
+                                createAndGetRemittanceInformation(null, "random"))
                         .build();
 
         paymentController = new PaymentController(mock(PaymentExecutor.class));
         paymentController.getPaymentProductType(payment);
+    }
+
+    private RemittanceInformation createAndGetRemittanceInformation(
+            RemittanceInformationType type, String value) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(type);
+        remittanceInformation.setValue(value);
+        return remittanceInformation;
     }
 }
