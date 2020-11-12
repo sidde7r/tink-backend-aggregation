@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
@@ -80,14 +81,15 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
 
     @Override
     public AccountFetcher<TransactionalAccount> makeTransactionalAccountFetcher(
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
 
         return new TransactionalAccountV31Fetcher(
                 new AccountV31Fetcher<>(
                         apiClient,
                         defaultPartyDataFetcher(apiClient, ukOpenBankingAisConfig),
                         new AccountTypeMapper(ukOpenBankingAisConfig),
-                        transactionalAccountMapper));
+                        transactionalAccountMapper,
+                        instrumentation));
     }
 
     @Override
@@ -115,13 +117,14 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
 
     @Override
     public AccountFetcher<CreditCardAccount> makeCreditCardAccountFetcher(
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
         return new CreditCardAccountV31Fetcher(
                 new AccountV31Fetcher<>(
                         apiClient,
                         defaultPartyDataFetcher(apiClient, ukOpenBankingAisConfig),
                         new AccountTypeMapper(ukOpenBankingAisConfig),
-                        creditCardAccountMapper));
+                        creditCardAccountMapper,
+                        instrumentation));
     }
 
     @Override

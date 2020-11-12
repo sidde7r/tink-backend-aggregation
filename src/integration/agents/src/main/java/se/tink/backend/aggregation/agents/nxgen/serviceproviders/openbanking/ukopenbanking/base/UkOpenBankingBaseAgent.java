@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.identitydata.IdentityData;
@@ -76,6 +77,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected final RandomValueGenerator randomValueGenerator;
     protected final LocalDateTimeSource localDateTimeSource;
 
+    private FetcherInstrumentationRegistry fetcherInstrumentation;
+
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
@@ -87,6 +90,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.pisConfig = pisConfig;
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
     }
 
     public UkOpenBankingBaseAgent(
@@ -239,7 +243,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                ais.makeCreditCardAccountFetcher(apiClient),
+                ais.makeCreditCardAccountFetcher(apiClient, fetcherInstrumentation),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         ais.makeCreditCardTransactionPaginatorController(apiClient)));
@@ -283,12 +287,18 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                                         .build()));
     }
 
+    @Override
+    public Optional<FetcherInstrumentationRegistry> getFetcherInstrumentation() {
+        return Optional.of(fetcherInstrumentation);
+    }
+
     private AccountFetcher<TransactionalAccount> getTransactionalAccountFetcher() {
         if (Objects.nonNull(transactionalAccountFetcher)) {
             return transactionalAccountFetcher;
         }
 
-        transactionalAccountFetcher = getAisSupport().makeTransactionalAccountFetcher(apiClient);
+        transactionalAccountFetcher =
+                getAisSupport().makeTransactionalAccountFetcher(apiClient, fetcherInstrumentation);
         return transactionalAccountFetcher;
     }
 
