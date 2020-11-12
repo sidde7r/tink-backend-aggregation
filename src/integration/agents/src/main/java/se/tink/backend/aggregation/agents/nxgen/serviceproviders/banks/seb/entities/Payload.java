@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.entities.DeviceIdentification;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.entities.InitResult;
@@ -31,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 @JsonObject
 @JsonInclude(Include.NON_NULL)
 public class Payload {
+    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(Payload.class);
 
     @JsonProperty("ResultInfo")
     private ResultInfo resultInfo;
@@ -206,6 +210,13 @@ public class Payload {
     @JsonIgnore
     public String getHolderNameBusiness() {
         Preconditions.checkNotNull(vodb);
-        return vodb.businessAccountInfo.get(0).getHolderName();
+
+        if (CollectionUtils.isNotEmpty(vodb.businessAccountInfo)) {
+            return vodb.businessAccountInfo.get(0).getHolderName();
+        }
+
+        log.error("Business account info not present - can't get business holder name");
+        // Returning null since getHolderName() will default to another value if null.
+        return null;
     }
 }
