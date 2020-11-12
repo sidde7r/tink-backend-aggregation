@@ -13,20 +13,15 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigration;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigrator;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BefiusAuthenticationConfig;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAgentPlatformStorageMigrator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.HumanInteractionDelaySimulator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.BelfiusSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -48,9 +43,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class BelfiusAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                AgentPlatformAuthenticator,
-                AgentPlatformStorageMigration {
+                RefreshSavingsAccountsExecutor /*,
+                                               AgentPlatformAuthenticator,
+                                               AgentPlatformStorageMigration*/ {
 
     private final BelfiusApiClient apiClient;
     private final AgentPlatformBelfiusApiClient agentPlatformApiClient;
@@ -207,7 +202,7 @@ public final class BelfiusAgent extends NextGenerationAgent
         return new BelfiusSessionHandler(this.apiClient);
     }
 
-    @Override
+    /*@Override
     public AgentAuthenticationProcess getAuthenticationProcess() {
         return befiusAuthenticationConfig.belfiusAuthProcess();
     }
@@ -221,5 +216,5 @@ public final class BelfiusAgent extends NextGenerationAgent
     public AgentPlatformStorageMigrator getMigrator() {
         return new BelfiusAgentPlatformStorageMigrator(
                 credentials, objectMapperFactory.getInstance());
-    }
+    }*/
 }
