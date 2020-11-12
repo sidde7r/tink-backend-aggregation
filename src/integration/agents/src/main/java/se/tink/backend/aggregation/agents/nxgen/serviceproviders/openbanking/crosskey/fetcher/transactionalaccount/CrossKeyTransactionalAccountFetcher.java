@@ -19,11 +19,11 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class TransactionalAccountAccountFetcher implements AccountFetcher<TransactionalAccount> {
+public class CrossKeyTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final CrosskeyBaseApiClient apiClient;
 
-    public TransactionalAccountAccountFetcher(CrosskeyBaseApiClient apiClient) {
+    public CrossKeyTransactionalAccountFetcher(CrosskeyBaseApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

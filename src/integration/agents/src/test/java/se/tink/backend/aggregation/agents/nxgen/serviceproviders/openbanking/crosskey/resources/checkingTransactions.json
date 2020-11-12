@@ -1,0 +1,52 @@
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "AccountId",
+        "TransactionId": "20201116392992358787",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2020-11-16T00:00:00Z",
+        "Amount": {
+          "Amount": "1443.01",
+          "Currency": "EUR"
+        },
+        "BankTransactionCode": {
+          "Code": "CCRD",
+          "SubCode": "POSD"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "KOO"
+        },
+        "CreditorAccount": {
+          "Name": "SUPERMARKET"
+        }
+      },
+      {
+        "AccountId": "AccountId",
+        "TransactionId": "20201116392901416504",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2020-11-16T00:00:00Z",
+        "Amount": {
+          "Amount": "8.03",
+          "Currency": "EUR"
+        },
+        "BankTransactionCode": {
+          "Code": "RCDT",
+          "SubCode": "ESCT"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "GIR"
+        },
+        "DebtorAccount": {
+          "Name": "NAME"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "**HASHED:P8**/open-banking/v3.1/aisp/accounts/AccountId/transactions"
+  },
+  "Meta": {}
+}

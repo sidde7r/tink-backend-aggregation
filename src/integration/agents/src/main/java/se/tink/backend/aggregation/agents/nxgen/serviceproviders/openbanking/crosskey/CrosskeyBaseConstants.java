@@ -95,6 +95,8 @@ public abstract class CrosskeyBaseConstants {
     public static class UrlParameters {
         public static final String ACCOUNT_ID = "accountId";
         public static final String INTERNATIONAL_PAYMENT_ID = "internationalPaymentId";
+        public static final String FROM_BOOKING_DATE = "fromBookingDateTime";
+        public static final String TO_BOOKING_DATE = "toBookingDateTime";
     }
 
     public static class AccountType {
@@ -112,8 +114,13 @@ public abstract class CrosskeyBaseConstants {
         public static final String DEBIT = "Debit";
     }
 
+    public static class TransactionsFetching {
+        public static final String EARLIEST_DATE_STRING = "2010-11-26T13:06:00.258";
+    }
+
     public static class Format {
         public static final String TRANSACTION_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ssX";
+        public static final String TRANSACTION_DATE_FETCHER = "yyyy-MM-dd'T'HH:mm:ss";
     }
 
     public static class ExceptionMessagePatterns {

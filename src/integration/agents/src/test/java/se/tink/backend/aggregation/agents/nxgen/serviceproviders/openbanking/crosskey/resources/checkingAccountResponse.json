@@ -1,0 +1,24 @@
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "AccountId1",
+        "Currency": "EUR",
+        "AccountType": "Personal",
+        "AccountSubType": "CurrentAccount",
+        "Description": "S-TILI",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.IBAN",
+            "Identification": "Identification1",
+            "Name": "Name"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "**HASHED:P8**/open-banking/v3.1/aisp/accounts"
+  },
+  "Meta": {}
+}

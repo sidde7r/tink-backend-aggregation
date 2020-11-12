@@ -1,0 +1,30 @@
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "AccountId1",
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimBooked",
+        "DateTime": "2020-11-12T08:50:22.866Z",
+        "Amount": {
+          "Amount": "100.00",
+          "Currency": "EUR"
+        }
+      },
+      {
+        "AccountId": "AccountId1",
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimAvailable",
+        "DateTime": "2020-11-12T08:50:22.866Z",
+        "Amount": {
+          "Amount": "50.00",
+          "Currency": "EUR"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "**HASHED:Rr**/open-banking/v3.1/aisp/accounts/AccountId1/balances"
+  },
+  "Meta": {}
+}

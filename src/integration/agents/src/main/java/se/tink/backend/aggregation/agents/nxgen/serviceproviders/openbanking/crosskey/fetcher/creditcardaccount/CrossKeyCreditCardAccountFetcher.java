@@ -17,10 +17,10 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
+public class CrossKeyCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
     private final CrosskeyBaseApiClient apiClient;
 
-    public CreditCardAccountFetcher(CrosskeyBaseApiClient apiClient) {
+    public CrossKeyCreditCardAccountFetcher(CrosskeyBaseApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -48,12 +48,11 @@ public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccoun
             AccountEntity accountEntity,
             Optional<AccountDetailsEntity> accountDetails,
             AmountEntity amount) {
-        final String uniqueIdentifier =
+
+        final String maskedCardNumber =
                 accountDetails
                         .map(AccountDetailsEntity::getIdentification)
                         .orElse(accountEntity.getAccountId());
-
-        final String maskedCardNumber = accountDetails.get().getIdentification();
 
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
@@ -71,10 +70,10 @@ public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccoun
                 .withoutFlags()
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(uniqueIdentifier)
-                                .withAccountNumber(uniqueIdentifier)
+                                .withUniqueIdentifier(maskedCardNumber)
+                                .withAccountNumber(maskedCardNumber)
                                 .withAccountName(accountEntity.getDescription())
-                                .addIdentifier(new PaymentCardNumberIdentifier(uniqueIdentifier))
+                                .addIdentifier(new PaymentCardNumberIdentifier(maskedCardNumber))
                                 .setProductName(accountEntity.getDescription())
                                 .build())
                 .setApiIdentifier(accountEntity.getAccountId())
