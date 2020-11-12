@@ -44,6 +44,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import src.integration.bankid.BankIdOidcIframeAuthenticationService;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, MORTGAGE_AGGREGATION})
@@ -67,7 +68,10 @@ public final class NordeaNoPocAgent extends NextGenerationAgent
     private final LoanRefreshController loanRefreshController;
 
     @Inject
-    public NordeaNoPocAgent(AgentContext agentContext, AgentComponentProvider componentProvider) {
+    public NordeaNoPocAgent(
+            CredentialsRequest credentialsRequest,
+            AgentContext agentContext,
+            AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.storage = new NordeaNoStorage(persistentStorage);
 
@@ -88,7 +92,7 @@ public final class NordeaNoPocAgent extends NextGenerationAgent
                 new BankIdOidcIframeAuthenticationService(
                         supplementalInformationHelper,
                         strongAuthenticationState,
-                        getAgentsRedirectUrlFromConfiguration(),
+                        getTinkApiUrl(credentialsRequest),
                         agentContext.isTestContext());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
@@ -103,10 +107,8 @@ public final class NordeaNoPocAgent extends NextGenerationAgent
                 authenticationClient, storage, new RandomValueGeneratorImpl(), bankIdOidcService);
     }
 
-    private String getAgentsRedirectUrlFromConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(NordeaNoAgentConfiguration.class)
-                .getRedirectUrl();
+    private String getTinkApiUrl(CredentialsRequest credentialsRequest) {
+        return credentialsRequest.getProvider().getPayload();
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
