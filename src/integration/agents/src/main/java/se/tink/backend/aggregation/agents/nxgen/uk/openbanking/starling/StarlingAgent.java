@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.OAuth2AuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
@@ -47,8 +46,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                AgentPlatformAuthenticator {
+                RefreshSavingsAccountsExecutor {
     private StarlingApiClient apiClient;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -158,7 +156,6 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         return authenticator;
     }
 
-    @Override
     public AgentAuthenticationProcess getAuthenticationProcess() {
         return new OAuth2AuthenticationConfig()
                 .authenticationProcess(
@@ -167,7 +164,6 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                                 aisConfiguration, redirectUrl));
     }
 
-    @Override
     public boolean isBackgroundRefreshPossible() {
         return true;
     }

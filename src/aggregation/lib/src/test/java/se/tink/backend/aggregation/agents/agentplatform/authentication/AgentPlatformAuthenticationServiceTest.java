@@ -8,7 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentAuthenticationException;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessException;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
@@ -118,7 +118,8 @@ public class AgentPlatformAuthenticationServiceTest {
                         () -> objectUnderTest.authenticate(agentPlatformAuthenticator));
 
         // then
-        Assertions.assertThat(thrown).isInstanceOf(AgentAuthenticationException.class);
+        Assertions.assertThat(thrown)
+                .isInstanceOf(AgentPlatformAuthenticationProcessException.class);
         Assertions.assertThat(persistentStorage.isEmpty()).isTrue();
     }
 

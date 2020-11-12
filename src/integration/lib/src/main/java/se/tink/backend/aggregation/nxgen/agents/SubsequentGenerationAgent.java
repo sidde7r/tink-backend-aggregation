@@ -216,4 +216,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     }
 
     public abstract Auth getAuthenticator();
+
+    protected PersistentStorage getPersistentStorage() {
+        return persistentStorage;
+    }
 }

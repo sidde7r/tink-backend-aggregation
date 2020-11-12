@@ -432,7 +432,7 @@ public class AgentLoginEventPublisherService {
                 AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult.UNKNOWN_ERROR);
     }
 
-    private void publishLoginResultEvent(
+    void publishLoginResultEvent(
             AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason) {
         eventPublisher.sendLoginCompletedEvent(
                 context.getRequest().getCredentials().getProviderName(),

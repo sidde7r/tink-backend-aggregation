@@ -1,17 +1,17 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication.result;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentAuthenticationError;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentAuthenticationRequest;
 
 public class AgentAuthenticationResultHandlingResult {
 
-    private AgentAuthenticationError authenticationError;
+    private AgentPlatformAuthenticationProcessError authenticationError;
 
     private AgentAuthenticationRequest agentAuthenticationNextRequest;
 
     private AgentAuthenticationResultHandlingResult(
-            AgentAuthenticationError authenticationException) {
+            AgentPlatformAuthenticationProcessError authenticationException) {
         this.authenticationError = authenticationException;
     }
 
@@ -22,7 +22,7 @@ public class AgentAuthenticationResultHandlingResult {
 
     private AgentAuthenticationResultHandlingResult() {}
 
-    public Optional<AgentAuthenticationError> getAuthenticationError() {
+    public Optional<AgentPlatformAuthenticationProcessError> getAuthenticationError() {
         return Optional.ofNullable(authenticationError);
     }
 
@@ -35,7 +35,7 @@ public class AgentAuthenticationResultHandlingResult {
     }
 
     public static AgentAuthenticationResultHandlingResult authenticationFailed(
-            final AgentAuthenticationError authenticationError) {
+            final AgentPlatformAuthenticationProcessError authenticationError) {
         return new AgentAuthenticationResultHandlingResult(authenticationError);
     }
 
