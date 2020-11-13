@@ -19,7 +19,9 @@ import se.tink.libraries.account.identifiers.account.TestAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
@@ -111,7 +113,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     public void testTransferInternalWithTwoDecimals() throws Exception {
         Transfer transfer = new Transfer();
         transfer.setAmount(Amount.inSEK(1.34));
-        transfer.setDestinationMessage("Tink 2dec");
+        transfer.setRemittanceInformation(createAndGetRemittanceInformation(null, "Tink 2dec"));
         transfer.setSourceMessage("Tink 2dec");
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setDueDate(DateUtils.getToday());
@@ -126,7 +128,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     public void testTransferInternalWithThreeDecimals() throws Exception {
         Transfer transfer = new Transfer();
         transfer.setAmount(Amount.inSEK(1.567));
-        transfer.setDestinationMessage("Tink 3dec");
+        transfer.setRemittanceInformation(createAndGetRemittanceInformation(null, "Tink 3dec"));
         transfer.setSourceMessage("Tink 3dec");
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setDueDate(DateUtils.getToday());
@@ -141,7 +143,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     public void testTransferExternalWithThreeDecimals() throws Exception {
         Transfer transfer = new Transfer();
         transfer.setAmount(Amount.inSEK(1.567));
-        transfer.setDestinationMessage("Tink 3dec");
+        transfer.setRemittanceInformation(createAndGetRemittanceInformation(null, "Tink 3dec"));
         transfer.setSourceMessage("Tink 3dec");
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setDueDate(DateUtils.getToday());
@@ -217,7 +219,9 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     @Test(expected = TransferMessageException.class)
     public void testTransferExternalWithTooLongDestinationMessage() throws Exception {
         Transfer transfer = create1SEKTransfer();
-        transfer.setDestinationMessage("This message is too long for being a destination message");
+        transfer.setRemittanceInformation(
+                createAndGetRemittanceInformation(
+                        null, "This message is too long for being a destination message"));
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.HANDELSBANKEN_NO));
 
@@ -243,7 +247,9 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     @Test(expected = TransferMessageException.class)
     public void testTransferInternalWithTooLongDestinationMessage() throws Exception {
         Transfer transfer = create1SEKTransfer();
-        transfer.setDestinationMessage("This message is too long for being a destination message");
+        transfer.setRemittanceInformation(
+                createAndGetRemittanceInformation(
+                        null, "This message is too long for being a destination message"));
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.SBAB_ANOTHER_NO));
 
@@ -270,11 +276,19 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
         Transfer transfer = new Transfer();
 
         transfer.setAmount(Amount.inSEK(1.0));
-        transfer.setDestinationMessage("Tink dest");
+        transfer.setRemittanceInformation(createAndGetRemittanceInformation(null, "Tink dest"));
         transfer.setSourceMessage("Tink source");
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setDueDate(DateUtils.getToday());
 
         return transfer;
+    }
+
+    private RemittanceInformation createAndGetRemittanceInformation(
+            RemittanceInformationType type, String value) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(type);
+        remittanceInformation.setValue(value);
+        return remittanceInformation;
     }
 }

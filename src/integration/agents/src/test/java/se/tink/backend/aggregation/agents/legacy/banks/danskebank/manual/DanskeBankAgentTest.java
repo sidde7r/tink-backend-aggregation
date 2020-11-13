@@ -24,8 +24,10 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.social.security.ssn.TestSSN;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.mocks.TransferMock;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
@@ -90,7 +92,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         t.setAmount(Amount.inSEK(2.24));
         t.setSource(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
         t.setDestination(new BankGiroIdentifier(BG_IDENTIFIER));
-        t.setDestinationMessage(DESTINATION_MESSAGE);
+        t.setRemittanceInformation(createAndGetRemittanceInformation(null, DESTINATION_MESSAGE));
         t.setSourceMessage("AmEx test1");
         t.setType(TransferType.PAYMENT);
         t.setDueDate(DateUtils.addDays(new Date(), 2));
@@ -107,7 +109,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         t.setAmount(Amount.inSEK(20.2424));
         t.setSource(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
         t.setDestination(new BankGiroIdentifier(BG_IDENTIFIER));
-        t.setDestinationMessage(DESTINATION_MESSAGE);
+        t.setRemittanceInformation(createAndGetRemittanceInformation(null, DESTINATION_MESSAGE));
         t.setSourceMessage("AmEx test1");
         t.setType(TransferType.PAYMENT);
 
@@ -120,7 +122,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         t.setAmount(Amount.inSEK(20.2424));
         t.setSource(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
         t.setDestination(new BankGiroIdentifier(BG_IDENTIFIER));
-        t.setDestinationMessage(DESTINATION_MESSAGE);
+        t.setRemittanceInformation(createAndGetRemittanceInformation(null, DESTINATION_MESSAGE));
         t.setSourceMessage("AmEx test1");
         t.setType(TransferType.PAYMENT);
         t.setDueDate(new Date());
@@ -134,7 +136,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         t.setAmount(Amount.inSEK(20.2424));
         t.setSource(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
         t.setDestination(new BankGiroIdentifier(BG_IDENTIFIER));
-        t.setDestinationMessage(DESTINATION_MESSAGE);
+        t.setRemittanceInformation(createAndGetRemittanceInformation(null, DESTINATION_MESSAGE));
         t.setSourceMessage("AmEx test1");
         t.setType(TransferType.PAYMENT);
         t.setDueDate(getNextFriday());
@@ -148,7 +150,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         t.setAmount(Amount.inSEK(20.2424));
         t.setSource(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
         t.setDestination(new BankGiroIdentifier(BG_IDENTIFIER));
-        t.setDestinationMessage(DESTINATION_MESSAGE);
+        t.setRemittanceInformation(createAndGetRemittanceInformation(null, DESTINATION_MESSAGE));
         t.setSourceMessage("AmEx test1");
         t.setType(TransferType.PAYMENT);
         t.setDueDate(getNextNonBusinessDay());
@@ -162,7 +164,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         t.setAmount(Amount.inSEK(20.2424));
         t.setSource(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
         t.setDestination(new BankGiroIdentifier(BG_IDENTIFIER));
-        t.setDestinationMessage(DESTINATION_MESSAGE);
+        t.setRemittanceInformation(createAndGetRemittanceInformation(null, DESTINATION_MESSAGE));
         t.setSourceMessage("AmEx test1");
         t.setType(TransferType.PAYMENT);
         t.setDueDate(DateUtils.addDays(new Date(), 2));
@@ -176,7 +178,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         t.setAmount(Amount.inSEK(2.24));
         t.setSource(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
         t.setDestination(new PlusGiroIdentifier(PG_IDENTIFIER));
-        t.setDestinationMessage("Från Fredrik");
+        t.setRemittanceInformation(createAndGetRemittanceInformation(null, "Från Fredrik"));
         t.setSourceMessage("AmEx test1");
         t.setType(TransferType.PAYMENT);
         t.setDueDate(DateUtils.addDays(new Date(), 2));
@@ -358,7 +360,8 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
                             .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                             .to(TestAccount.IdentifiersWithName.HANDELSBANKEN_FH)
                             .withAmountInSEK(1.0)
-                            .withDestinationMessage("tink test")
+                            .withRemittanceInformation(
+                                    createAndGetRemittanceInformation(null, "Tink Test"))
                             .withDueDate(new Date())
                             .build();
 
@@ -372,7 +375,8 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
                             .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                             .to(TestAccount.IdentifiersWithName.HANDELSBANKEN_FH)
                             .withAmountInSEK(1.0)
-                            .withDestinationMessage("tink test")
+                            .withRemittanceInformation(
+                                    createAndGetRemittanceInformation(null, "Tink Test"))
                             .withDueDate(getNextFriday())
                             .build();
 
@@ -395,7 +399,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         transfer.setAmount(Amount.inSEK(1.0));
         transfer.setSource(new SwedishIdentifier(sourceAccount));
         transfer.setDestination(new SwedishIdentifier(destinationAccount));
-        transfer.setDestinationMessage("Tink Test");
+        transfer.setRemittanceInformation(createAndGetRemittanceInformation(null, "Tink Test"));
         transfer.setSourceMessage("Tink Test");
         return transfer;
     }
@@ -416,5 +420,13 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
     public static Date getNextNonBusinessDay() {
         final LocalDate nextSaturday = LocalDate.now().with(next(DayOfWeek.SATURDAY));
         return Date.from(nextSaturday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    private static RemittanceInformation createAndGetRemittanceInformation(
+            RemittanceInformationType type, String value) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(type);
+        remittanceInformation.setValue(value);
+        return remittanceInformation;
     }
 }

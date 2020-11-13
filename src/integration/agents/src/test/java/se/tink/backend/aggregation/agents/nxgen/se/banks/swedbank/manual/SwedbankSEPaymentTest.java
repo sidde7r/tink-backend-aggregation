@@ -45,6 +45,8 @@ public class SwedbankSEPaymentTest {
 
     @Test
     public void testTransfer() throws Exception {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("This is a test transfer");
         Transfer transfer = new Transfer();
         transfer.setSource(
                 AccountIdentifier.create(
@@ -56,7 +58,7 @@ public class SwedbankSEPaymentTest {
         transfer.setAmount(Amount.inSEK(1d));
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setDueDate(getDueDate());
-        transfer.setDestinationMessage("This is a test transfer");
+        transfer.setRemittanceInformation(remittanceInformation);
 
         builder.addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                 .build()
@@ -77,7 +79,6 @@ public class SwedbankSEPaymentTest {
         transfer.setAmount(Amount.inSEK(1d));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(getDueDate());
-        transfer.setDestinationMessage("Reference");
 
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("Reference");
