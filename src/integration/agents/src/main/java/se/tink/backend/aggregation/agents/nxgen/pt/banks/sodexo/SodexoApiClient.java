@@ -86,7 +86,8 @@ public class SodexoApiClient {
     }
 
     private LoginException mapAuthenticationException(HttpResponseException exception) {
-        if (exception.getResponse().getStatus() == 409) {
+        if (exception.getResponse().getStatus() == 409
+                || exception.getResponse().getStatus() == 400) {
             return LoginError.INCORRECT_CREDENTIALS.exception();
         } else {
             throw exception;
