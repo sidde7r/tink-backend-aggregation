@@ -21,14 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankApiConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.PaymentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.StartAuthorizationProcessResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.TransactionResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -110,44 +104,6 @@ public class SparebankApiClient {
     public TransactionResponse fetchNextTransactions(String path) {
         return createRequest(new URL(apiConfiguration.getBaseUrl() + path))
                 .get(TransactionResponse.class);
-    }
-
-    public CreatePaymentResponse createPayment(
-            String paymentProduct, CreatePaymentRequest paymentRequest) {
-        final String digest = "SHA-256=" + Hash.sha256Base64(paymentRequest.toData().getBytes());
-
-        return createRequest(
-                        new URL(apiConfiguration.getBaseUrl() + Urls.CREATE_PAYMENT)
-                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct),
-                        Optional.of(digest))
-                .type(MediaType.APPLICATION_JSON)
-                .post(CreatePaymentResponse.class, paymentRequest);
-    }
-
-    public GetPaymentResponse getPayment(String paymentProduct, String paymentId) {
-        return createRequest(
-                        new URL(apiConfiguration.getBaseUrl() + Urls.GET_PAYMENT)
-                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
-                                .parameter(IdTags.PAYMENT_ID, paymentId))
-                .get(GetPaymentResponse.class);
-    }
-
-    public StartAuthorizationProcessResponse startAuthorizationProcess(
-            String paymentProduct, String paymentId) {
-
-        return createRequest(
-                        new URL(apiConfiguration.getBaseUrl() + Urls.SIGN_PAYMENT)
-                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
-                                .parameter(IdTags.PAYMENT_ID, paymentId))
-                .post(StartAuthorizationProcessResponse.class);
-    }
-
-    public PaymentStatusResponse getPaymentStatus(String paymentProduct, String paymentId) {
-        return createRequest(
-                        new URL(apiConfiguration.getBaseUrl() + Urls.GET_PAYMENT_STATUS)
-                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
-                                .parameter(IdTags.PAYMENT_ID, paymentId))
-                .get(PaymentStatusResponse.class);
     }
 
     private Map<String, Object> getHeaders(String requestId, Optional<String> digest) {

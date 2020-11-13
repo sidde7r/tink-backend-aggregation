@@ -6,7 +6,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import java.security.cert.CertificateException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -19,8 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.SparebankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.SparebankController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankApiConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.SparebankPaymentController;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.SparebankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.SparebankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.SparebankTransactionFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -30,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -146,23 +142,6 @@ public final class SparebankAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
-    }
-
-    @Override
-    public Optional<PaymentController> constructPaymentController() {
-        SparebankPaymentExecutor sparebankPaymentExecutor =
-                new SparebankPaymentExecutor(
-                        apiClient,
-                        sessionStorage,
-                        getAgentConfiguration().getProviderSpecificConfiguration());
-
-        return Optional.of(
-                new SparebankPaymentController(
-                        sparebankPaymentExecutor,
-                        sparebankPaymentExecutor,
-                        supplementalInformationHelper,
-                        sessionStorage,
-                        strongAuthenticationState));
     }
 
     private List<String> splitPayload(String payload) {
