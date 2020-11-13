@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.danskebank;
 
 final class DanskeBankConstants {
 
+    static final String ORGANISATION_ID = "0015800000jf7AeAAI";
+
     class Urls {
 
         class V31 {

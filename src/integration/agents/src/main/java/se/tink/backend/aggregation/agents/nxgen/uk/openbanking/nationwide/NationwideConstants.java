@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide;
 
 public class NationwideConstants {
 
+    static final String ORGANISATION_ID = "0015800000jf8aKAAQ";
+
     public class Urls {
 
         class V31 {

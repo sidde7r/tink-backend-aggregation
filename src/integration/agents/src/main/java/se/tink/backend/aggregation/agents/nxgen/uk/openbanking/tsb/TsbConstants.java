@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tsb;
 
 final class TsbConstants {
 
+    static final String ORGANISATION_ID = "0015800001ZEZ3hAAH";
+
     class Urls {
 
         class V31 {

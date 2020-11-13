@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.danskebank.mapper.fixtures;
 
 import org.junit.Ignore;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountIdentifierEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore
