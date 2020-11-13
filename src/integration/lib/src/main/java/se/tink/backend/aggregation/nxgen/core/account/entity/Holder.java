@@ -61,7 +61,8 @@ public class Holder {
 
     public enum Role {
         HOLDER(HolderRole.HOLDER),
-        AUTHORIZED_USER(HolderRole.AUTHORIZED_USER);
+        AUTHORIZED_USER(HolderRole.AUTHORIZED_USER),
+        OTHER(HolderRole.OTHER);
 
         private final HolderRole systemRole;
 
