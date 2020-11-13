@@ -272,6 +272,8 @@ public class AgentWorkerOperationFactory {
                             createCommandMetricState(request),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer));
+
+            commands.add(new FetcherInstrumentationAgentWorkerCommand(context, itemsToRefresh));
         }
 
         for (RefreshableItem item : nonAccountItems) {
@@ -319,8 +321,6 @@ public class AgentWorkerOperationFactory {
                             createCommandMetricState(request),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer));
-
-            commands.add(new FetcherInstrumentationAgentWorkerCommand(context, itemsToRefresh));
         }
 
         return commands;
