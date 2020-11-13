@@ -5,13 +5,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class PostConsentResponse {
+public class ConsentResponse {
 
     @JsonProperty("_links")
     private ConsentLinksEntity links;
 
     private String consentId;
-    private String consentStatus;
 
     public String getConsentId() {
         return consentId;

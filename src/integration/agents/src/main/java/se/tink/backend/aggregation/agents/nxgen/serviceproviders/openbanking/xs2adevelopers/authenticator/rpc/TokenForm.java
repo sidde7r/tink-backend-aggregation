@@ -4,8 +4,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormKeys;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
-public class GetTokenForm extends AbstractForm {
-    private GetTokenForm(
+public class TokenForm extends AbstractForm {
+    private TokenForm(
             String grantType,
             String code,
             String redirectUri,
@@ -71,8 +71,8 @@ public class GetTokenForm extends AbstractForm {
             return this;
         }
 
-        public GetTokenForm build() {
-            return new GetTokenForm(
+        public TokenForm build() {
+            return new TokenForm(
                     this.grantType,
                     this.code,
                     this.redirectUri,

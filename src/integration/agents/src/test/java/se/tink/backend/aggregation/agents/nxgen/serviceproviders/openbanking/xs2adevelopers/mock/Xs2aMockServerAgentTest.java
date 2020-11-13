@@ -14,7 +14,7 @@ public class Xs2aMockServerAgentTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers/mock/resources/configuration.yml";
 
     @Test
-    public void testRefreshWithPaginationError() throws Exception {
+    public void test_refresh_with_pagination_error() throws Exception {
 
         // given
         final String wireMockFilePath =

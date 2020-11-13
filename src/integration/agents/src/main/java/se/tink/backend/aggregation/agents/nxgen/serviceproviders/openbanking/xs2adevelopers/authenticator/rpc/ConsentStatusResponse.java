@@ -1,0 +1,17 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StatusValues;
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
+public class ConsentStatusResponse {
+
+    @JsonProperty private String consentStatus;
+
+    @JsonIgnore
+    public boolean isValid() {
+        return StatusValues.VALID.equalsIgnoreCase(consentStatus);
+    }
+}

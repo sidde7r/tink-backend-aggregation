@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
-public class GetTokenResponse {
+public class TokenResponse {
 
     @JsonProperty("access_token")
     private String accessToken;
@@ -16,8 +16,6 @@ public class GetTokenResponse {
 
     @JsonProperty("refresh_token")
     private String refreshToken;
-
-    private String scope;
 
     @JsonProperty("token_type")
     private String tokenType;

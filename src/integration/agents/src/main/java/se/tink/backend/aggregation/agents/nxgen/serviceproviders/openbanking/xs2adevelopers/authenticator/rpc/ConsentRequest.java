@@ -1,27 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc;
 
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class PostConsentBody {
+@AllArgsConstructor
+public class ConsentRequest {
 
     private AccessEntity access;
     private Boolean combinedServiceIndicator;
     private int frequencyPerDay;
     private Boolean recurringIndicator;
     private String validUntil;
-
-    public PostConsentBody(
-            AccessEntity access,
-            Boolean combinedServiceIndicator,
-            int frequencyPerDay,
-            Boolean recurringIndicator,
-            String validUntil) {
-        this.access = access;
-        this.combinedServiceIndicator = combinedServiceIndicator;
-        this.frequencyPerDay = frequencyPerDay;
-        this.recurringIndicator = recurringIndicator;
-        this.validUntil = validUntil;
-    }
 }

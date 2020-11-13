@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator;
 
 import java.time.format.DateTimeFormatter;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentBody;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -22,41 +25,44 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
     private final PersistentStorage persistentStorage;
     private final Xs2aDevelopersProviderConfiguration configuration;
     private final LocalDateTimeSource localDateTimeSource;
+    private final Credentials credentials;
 
     public Xs2aDevelopersAuthenticator(
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
             Xs2aDevelopersProviderConfiguration configuration,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;
         this.localDateTimeSource = localDateTimeSource;
+        this.credentials = credentials;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
         AccessEntity accessEntity = getAccessEntity();
-        PostConsentBody postConsentBody =
-                new PostConsentBody(
+        ConsentRequest consentRequest =
+                new ConsentRequest(
                         accessEntity,
                         FormValues.FALSE,
                         FormValues.FREQUENCY_PER_DAY,
                         FormValues.TRUE,
                         localDateTimeSource.now().plusDays(89).format(DateTimeFormatter.ISO_DATE));
 
-        PostConsentResponse postConsentResponse = apiClient.createConsent(postConsentBody);
-        persistentStorage.put(StorageKeys.CONSENT_ID, postConsentResponse.getConsentId());
+        ConsentResponse consentResponse = apiClient.createConsent(consentRequest);
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
         return apiClient.buildAuthorizeUrl(
                 state,
-                QueryValues.SCOPE + postConsentResponse.getConsentId(),
-                postConsentResponse.getLinks().getScaOAuth());
+                QueryValues.SCOPE + consentResponse.getConsentId(),
+                consentResponse.getLinks().getScaOAuth());
     }
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) {
-        GetTokenForm getTokenForm =
-                GetTokenForm.builder()
+        TokenForm tokenForm =
+                TokenForm.builder()
                         .setClientId(configuration.getClientId())
                         .setCode(code)
                         .setCodeVerifier(persistentStorage.get(StorageKeys.CODE_VERIFIER))
@@ -65,13 +71,13 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
                         .setValidRequest(true)
                         .build();
 
-        return apiClient.getToken(getTokenForm).toTinkToken();
+        return apiClient.getToken(tokenForm).toTinkToken();
     }
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) {
-        GetTokenForm refreshTokenForm =
-                GetTokenForm.builder()
+        TokenForm refreshTokenForm =
+                TokenForm.builder()
                         .setClientId(configuration.getClientId())
                         .setGrantType(FormValues.REFRESH_TOKEN)
                         .setRefreshToken(refreshToken)
@@ -92,5 +98,15 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
 
     protected AccessEntity getAccessEntity() {
         return new AccessEntity(FormValues.ALL_ACCOUNTS);
+    }
+
+    protected void storeConsentDetails() {
+        ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails();
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
+    }
+
+    protected boolean isPersistedConsentValid() {
+        ConsentStatusResponse consentStatusResponse = apiClient.getConsentStatus();
+        return consentStatusResponse != null && consentStatusResponse.isValid();
     }
 }
