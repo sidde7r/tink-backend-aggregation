@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.DanskeRequestHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -37,8 +38,10 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
 
     public InitResponse initiateBankIdLogin(String logonPackage) {
         String response =
-                client.request(constants.getBankidInitLogonUrl())
-                        .header(DanskeRequestHeaders.REFERRER, constants.getBankidInitLogonUrl())
+                client.request(DanskeBankConstants.Urls.BANK_ID_INIT_LOGON_URL)
+                        .header(
+                                DanskeRequestHeaders.REFERRER,
+                                DanskeBankConstants.Urls.BANK_ID_INIT_LOGON_URL)
                         .post(String.class, InitRequest.createFromMessage(logonPackage));
 
         return DanskeBankDeserializer.convertStringToObject(response, InitResponse.class);
@@ -46,58 +49,69 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
 
     public PollResponse pollBankId(String reference) {
         String response =
-                client.request(constants.getBankidPollUrl())
-                        .header(DanskeRequestHeaders.REFERRER, constants.getBankidPollUrl())
+                client.request(DanskeBankConstants.Urls.BANKID_POLL_URL)
+                        .header(
+                                DanskeRequestHeaders.REFERRER,
+                                DanskeBankConstants.Urls.BANKID_POLL_URL)
                         .post(String.class, PollRequest.createFromReference(reference));
 
         return DanskeBankDeserializer.convertStringToObject(response, PollResponse.class);
     }
 
     public ListPayeesResponse getBeneficiaries(ListPayeesRequest request) {
-        return postRequest(constants.getListPayeesUrl(), ListPayeesResponse.class, request);
+        return postRequest(
+                DanskeBankConstants.Urls.LIST_PAYEES_URL, ListPayeesResponse.class, request);
     }
 
     public CreditorResponse creditorName(CreditorRequest request) {
-        return postRequest(constants.getCreditorNameUrl(), CreditorResponse.class, request);
+        return postRequest(
+                DanskeBankConstants.Urls.CREDITOR_NAME_URL, CreditorResponse.class, request);
     }
 
     public CreditorResponse creditorBankName(CreditorRequest request) {
-        return postRequest(constants.getCreditorBankNameUrl(), CreditorResponse.class, request);
+        return postRequest(
+                DanskeBankConstants.Urls.CREDITOR_BANK_NAME_URL, CreditorResponse.class, request);
     }
 
     public ValidatePaymentDateResponse validatePaymentDate(ValidatePaymentDateRequest request) {
         return postRequest(
-                constants.getValidatePaymentRequestUrl(),
+                DanskeBankConstants.Urls.VALIDATE_PAYMENT_REQUEST_URL,
                 ValidatePaymentDateResponse.class,
                 request);
     }
 
     public RegisterPaymentResponse registerPayment(RegisterPaymentRequest request) {
         return postRequest(
-                constants.getRegisterPaymentUrl(), RegisterPaymentResponse.class, request);
+                DanskeBankConstants.Urls.REGISTER_PAYMENT_URL,
+                RegisterPaymentResponse.class,
+                request);
     }
 
     public PollResponse signPayment(SignRequest request) {
-        return client.request(constants.getBankidPollUrl())
-                .header(DanskeRequestHeaders.REFERRER, constants.getBankidPollUrl())
+        return client.request(DanskeBankConstants.Urls.BANKID_POLL_URL)
+                .header(DanskeRequestHeaders.REFERRER, DanskeBankConstants.Urls.BANKID_POLL_URL)
                 .post(PollResponse.class, request);
     }
 
     public AcceptSignatureResponse acceptSignature(
             String signatureType, AcceptSignatureRequest request) {
         return postRequest(
-                constants.getAcceptSignatureUrl(signatureType),
+                DanskeBankConstants.Urls.getAcceptSignatureUrl(signatureType),
                 AcceptSignatureResponse.class,
                 request);
     }
 
     public ValidateGiroResponse validateGiroRequest(ValidateGiroRequest request) {
         return postRequest(
-                constants.getValidateGiroRequestUrl(), ValidateGiroResponse.class, request);
+                DanskeBankConstants.Urls.VALIDATE_GIRO_REQUEST_URL,
+                ValidateGiroResponse.class,
+                request);
     }
 
     public ValidateOCRResponse validateOcr(ValidateOCRRequest request) {
         return postRequest(
-                constants.getValidateOcrRequestUrl(), ValidateOCRResponse.class, request);
+                DanskeBankConstants.Urls.VALIDATE_OCR_REQUEST_URL,
+                ValidateOCRResponse.class,
+                request);
     }
 }

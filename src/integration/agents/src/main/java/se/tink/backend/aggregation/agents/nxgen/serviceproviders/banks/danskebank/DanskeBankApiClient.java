@@ -50,7 +50,6 @@ public class DanskeBankApiClient {
     private final Credentials credentials;
     protected final TinkHttpClient client;
     protected final DanskeBankConfiguration configuration;
-    protected final DanskeBankConstants constants;
     private final Catalog catalog;
     private ListAccountsResponse accounts;
 
@@ -61,7 +60,6 @@ public class DanskeBankApiClient {
             Catalog catalog) {
         this.client = client;
         this.configuration = configuration;
-        this.constants = new DanskeBankConstants();
         this.credentials = credentials;
         this.catalog = catalog;
     }
@@ -73,7 +71,9 @@ public class DanskeBankApiClient {
     public HttpResponse collectDynamicLogonJavascript(String securitySystem, String brand) {
         return client.request(
                         String.format(
-                                constants.getDynamicJsAuthenticateUrl(), securitySystem, brand))
+                                DanskeBankConstants.Urls.DYNAMIC_JS_AUTHENTICATE_URL,
+                                securitySystem,
+                                brand))
                 .header(
                         DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                         configuration.getAppReferer())
@@ -118,7 +118,9 @@ public class DanskeBankApiClient {
         try {
             response =
                     postRequest(
-                            constants.getFinalizeAuthenticationUrl(), HttpResponse.class, request);
+                            DanskeBankConstants.Urls.FINALIZE_AUTHENTICATION_URL,
+                            HttpResponse.class,
+                            request);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e);
@@ -136,48 +138,56 @@ public class DanskeBankApiClient {
         if (accounts == null) {
             accounts =
                     postRequest(
-                            constants.getListAccountsUrl(), ListAccountsResponse.class, request);
+                            DanskeBankConstants.Urls.LIST_ACCOUNTS_URL,
+                            ListAccountsResponse.class,
+                            request);
         }
 
         return accounts;
     }
 
     public ListLoansResponse listLoans(ListLoansRequest request) {
-        return postRequest(constants.getListLoansUrl(), ListLoansResponse.class, request);
+        return postRequest(
+                DanskeBankConstants.Urls.LIST_LOANS_URL, ListLoansResponse.class, request);
     }
 
     public LoanDetailsResponse loanDetails(LoanDetailsRequest request) {
-        return postRequest(constants.getLoanDetailsUrl(), LoanDetailsResponse.class, request);
+        return postRequest(
+                DanskeBankConstants.Urls.LOAN_DETAILS_URL, LoanDetailsResponse.class, request);
     }
 
     public ListTransactionsResponse listTransactions(ListTransactionsRequest request) {
         return postRequest(
-                constants.getListTransactionsUrl(), ListTransactionsResponse.class, request);
+                DanskeBankConstants.Urls.LIST_TRANSACTIONS_URL,
+                ListTransactionsResponse.class,
+                request);
     }
 
     public FutureTransactionsResponse listUpcomingTransactions(FutureTransactionsRequest request) {
         return postRequest(
-                constants.getListUpcomingTransactionsUrl(),
+                DanskeBankConstants.Urls.LIST_UPCOMING_TRANSACTIONS_URL,
                 FutureTransactionsResponse.class,
                 request);
     }
 
     public InvestmentAccountsResponse listCustodyAccounts() {
         String response =
-                postRequest(constants.getListCustodyAccountsUrl(), new JSONObject().toString());
+                postRequest(
+                        DanskeBankConstants.Urls.LIST_CUSTODY_ACCOUNTS_URL,
+                        new JSONObject().toString());
 
         return DanskeBankDeserializer.convertStringToObject(
                 response, InvestmentAccountsResponse.class);
     }
 
     public ListSecuritiesResponse listSecurities(ListSecuritiesRequest request) {
-        String response = postRequest(constants.getListSecuritiesUrl(), request);
+        String response = postRequest(DanskeBankConstants.Urls.LIST_SECURITIES_URL, request);
 
         return DanskeBankDeserializer.convertStringToObject(response, ListSecuritiesResponse.class);
     }
 
     public ListSecurityDetailsResponse listSecurityDetails(ListSecurityDetailsRequest request) {
-        String response = postRequest(constants.getListSecurityDetailsUrl(), request);
+        String response = postRequest(DanskeBankConstants.Urls.LIST_SECURITY_DETAILS_URL, request);
 
         return DanskeBankDeserializer.convertStringToObject(
                 response, ListSecurityDetailsResponse.class);
@@ -186,7 +196,7 @@ public class DanskeBankApiClient {
     public BindDeviceResponse bindDevice(String stepUpTokenValue, BindDeviceRequest request) {
         String secSystem = configuration.getBindDeviceSecuritySystem().orElse("");
         RequestBuilder requestBuilder =
-                client.request(constants.getDeviceBindBindUrl(secSystem))
+                client.request(DanskeBankConstants.Urls.getDeviceBindBindUrl(secSystem))
                         .header(
                                 DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                                 configuration.getAppReferer());
@@ -205,7 +215,7 @@ public class DanskeBankApiClient {
     }
 
     public HttpResponse collectDynamicChallengeJavascript() {
-        return client.request(constants.getDynamicJsAuthorizeUrl())
+        return client.request(DanskeBankConstants.Urls.DYNAMIC_JS_AUTHORIZE_URL)
                 .header(
                         DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                         configuration.getAppReferer())
@@ -214,7 +224,7 @@ public class DanskeBankApiClient {
 
     public ListOtpResponse listOtpInformation(ListOtpRequest request) {
         String response =
-                client.request(constants.getDeviceListOtpUrl())
+                client.request(DanskeBankConstants.Urls.DEVICE_LIST_OTP_URL)
                         .header(
                                 DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                                 configuration.getAppReferer())
@@ -227,7 +237,7 @@ public class DanskeBankApiClient {
         InitOtpRequest request = new InitOtpRequest(deviceType, deviceSerialNo, catalog);
 
         String response =
-                client.request(constants.getDeviceInitOtpUrl())
+                client.request(DanskeBankConstants.Urls.DEVICE_INIT_OTP_URL)
                         .header(
                                 DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                                 configuration.getAppReferer())
@@ -239,7 +249,7 @@ public class DanskeBankApiClient {
     public CheckDeviceResponse checkDevice(
             String deviceSerialNumberValue, String stepUpTokenValue) {
         RequestBuilder requestBuilder =
-                client.request(constants.getDeviceBindCheckUrl())
+                client.request(DanskeBankConstants.Urls.DEVICE_BIND_CHECK_URL)
                         .header(
                                 DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                                 configuration.getAppReferer())
@@ -262,7 +272,7 @@ public class DanskeBankApiClient {
     }
 
     public DanskeIdStatusResponse getStatus(DanskeIdStatusRequest request) {
-        return client.request(constants.DANSKEID_STATUS)
+        return client.request(DanskeBankConstants.Urls.DANSKEID_STATUS)
                 .header(
                         DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                         configuration.getAppReferer())
@@ -270,7 +280,7 @@ public class DanskeBankApiClient {
     }
 
     public DanskeIdInitResponse danskeIdInit(DanskeIdInitRequest request) {
-        return client.request(constants.DANSKEID_INIT)
+        return client.request(DanskeBankConstants.Urls.DANSKEID_INIT)
                 .header(
                         DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                         configuration.getAppReferer())
