@@ -73,7 +73,8 @@ public class SBABTransferExecutor {
     }
 
     private void makeInternalTransfer(Transfer transfer) {
-        TransferMessageFormatter.Messages messages = messageFormatter.getMessages(transfer, true);
+        TransferMessageFormatter.Messages messages =
+                messageFormatter.getMessagesFromRemittanceInformation(transfer, true);
 
         TransferRequest transferRequest = TransferRequest.create(transfer, messages, true);
         transferClient.validateTransfer(transferRequest);
@@ -82,7 +83,8 @@ public class SBABTransferExecutor {
     }
 
     private void makeExternalTransfer(Transfer transfer) {
-        TransferMessageFormatter.Messages messages = messageFormatter.getMessages(transfer, false);
+        TransferMessageFormatter.Messages messages =
+                messageFormatter.getMessagesFromRemittanceInformation(transfer, false);
 
         boolean destinationIsSavedRecipient = transferClient.isSavedRecipient(transfer);
 
