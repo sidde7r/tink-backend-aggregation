@@ -7,7 +7,6 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.QueryKeys;
@@ -23,8 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.entities.TransactionKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.rpc.EnterCardPaymentInitiationResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.rpc.PaymentInitiationRequest;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -167,14 +164,6 @@ public final class EnterCardApiClient {
 
     public void setTokenToStorage(OAuth2Token token) {
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
-    }
-
-    public EnterCardPaymentInitiationResponse createPayment(
-            PaymentInitiationRequest paymentInitiationRequest) throws PaymentException {
-        return client.request(Urls.PAYMENT_ENDPOINT)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(EnterCardPaymentInitiationResponse.class, paymentInitiationRequest);
     }
 
     public OAuth2Token getPersistRefreshToken() {
