@@ -13,6 +13,7 @@ java_library(
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/annotation",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",

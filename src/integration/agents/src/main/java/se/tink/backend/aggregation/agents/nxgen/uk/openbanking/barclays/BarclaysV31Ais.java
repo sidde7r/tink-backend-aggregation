@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 
 @RequiredArgsConstructor
 public class BarclaysV31Ais implements UkOpenBankingAis {
@@ -29,7 +30,7 @@ public class BarclaysV31Ais implements UkOpenBankingAis {
 
     @Override
     public AccountFetcher<TransactionalAccount> makeTransactionalAccountFetcher(
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
 
         AccountTypeMapper accountTypeMapper = new AccountTypeMapper(aisConfig);
         BarclaysPartyDataFetcher accountPartyFetcher =
@@ -42,7 +43,8 @@ public class BarclaysV31Ais implements UkOpenBankingAis {
                         apiClient,
                         accountPartyFetcher,
                         accountTypeMapper,
-                        defaultTransactionalAccountMapper()));
+                        defaultTransactionalAccountMapper(),
+                        instrumentation));
     }
 
     @Override
@@ -59,7 +61,7 @@ public class BarclaysV31Ais implements UkOpenBankingAis {
 
     @Override
     public AccountFetcher<CreditCardAccount> makeCreditCardAccountFetcher(
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
 
         AccountTypeMapper accountTypeMapper = new AccountTypeMapper(aisConfig);
         BarclaysPartyDataFetcher accountPartyFetcher =
@@ -72,7 +74,8 @@ public class BarclaysV31Ais implements UkOpenBankingAis {
                         apiClient,
                         accountPartyFetcher,
                         accountTypeMapper,
-                        defaultCreditCardAccountMapper()));
+                        defaultCreditCardAccountMapper(),
+                        instrumentation));
     }
 
     @Override
