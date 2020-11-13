@@ -10,7 +10,7 @@
             "type": "CHECKING",
             "identifiers": "[\"sort-code://00000000000000\"]",
             "closed": false,
-            "holderName": "LITTLE BIG DIGITAL LTD",
+            "holderName": null,
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "availableCredit": 0.0,
             "balance": 30.0

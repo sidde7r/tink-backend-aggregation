@@ -4,6 +4,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +47,11 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
     }
 
     private Single<List<IdentityDataV31Entity>> fetchParties(AccountEntity account) {
-        return Single.fromCallable(() -> accountPartyFetcher.fetchAccountParties(account))
-                .subscribeOn(Schedulers.io());
+        return Single.just(Collections.emptyList());
+        // Todo temporarily disabling identity fetching - since it triggers SCA, it breaks BG
+        // refresh. It will be reenabled after auth rework.
+        //        return Single.fromCallable(() -> accountPartyFetcher.fetchAccountParties(account))
+        //                .subscribeOn(Schedulers.io());
     }
 
     private Single<List<AccountBalanceEntity>> fetchBalance(AccountEntity account) {
