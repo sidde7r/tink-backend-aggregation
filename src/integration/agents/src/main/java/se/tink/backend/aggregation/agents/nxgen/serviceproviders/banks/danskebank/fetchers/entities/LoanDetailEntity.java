@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.entities;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 // this class contains information about interest and som dates
@@ -28,7 +29,7 @@ public class LoanDetailEntity {
     private String principal;
     private String nextPaymentAfterTax;
     private String contribution;
-    private String interest;
+    @Getter private String interest;
     private String instalment;
     private String paymentFrequency;
     private String nextPaymentAmount;
