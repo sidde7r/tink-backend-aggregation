@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.i18n.Catalog;
 
 public class DanskeBankApiClient {
     private static final Logger logger =
@@ -50,28 +51,19 @@ public class DanskeBankApiClient {
     protected final TinkHttpClient client;
     protected final DanskeBankConfiguration configuration;
     protected final DanskeBankConstants constants;
+    private final Catalog catalog;
     private ListAccountsResponse accounts;
-
-    protected DanskeBankApiClient(
-            TinkHttpClient client, DanskeBankConfiguration configuration, Credentials credentials) {
-        /*
-         * By default we inject DanskeBankConstants object to use default endpoints. However for DK
-         * we need to inject a custom constants object because we want to use a different host
-         * (different endpoints). For this reason, we implemented a second constructor which allows
-         * us to do so.
-         */
-        this(client, configuration, new DanskeBankConstants(), credentials);
-    }
 
     protected DanskeBankApiClient(
             TinkHttpClient client,
             DanskeBankConfiguration configuration,
-            DanskeBankConstants constants,
-            Credentials credentials) {
+            Credentials credentials,
+            Catalog catalog) {
         this.client = client;
         this.configuration = configuration;
-        this.constants = constants;
+        this.constants = new DanskeBankConstants();
         this.credentials = credentials;
+        this.catalog = catalog;
     }
 
     public void addPersistentHeader(String key, String value) {
@@ -232,7 +224,7 @@ public class DanskeBankApiClient {
     }
 
     public InitOtpResponse initOtp(String deviceType, String deviceSerialNo) {
-        InitOtpRequest request = new InitOtpRequest(deviceType, deviceSerialNo);
+        InitOtpRequest request = new InitOtpRequest(deviceType, deviceSerialNo, catalog);
 
         String response =
                 client.request(constants.getDeviceInitOtpUrl())

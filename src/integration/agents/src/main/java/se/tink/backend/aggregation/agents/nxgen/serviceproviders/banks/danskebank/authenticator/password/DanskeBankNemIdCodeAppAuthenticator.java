@@ -45,7 +45,6 @@ public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticat
                         preferredDevice.getDeviceType(), preferredDevice.getDeviceSerialNumber());
 
         String otpChallenge = initOtpResponse.getOtpChallenge();
-        decryptOtpChallenge(username, otpChallenge, CodeAppEntity.class);
         return decryptOtpChallenge(username, otpChallenge, CodeAppEntity.class);
     }
 

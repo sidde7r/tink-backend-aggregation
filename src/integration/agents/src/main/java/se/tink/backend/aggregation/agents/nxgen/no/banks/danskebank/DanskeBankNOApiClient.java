@@ -5,13 +5,15 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.libraries.i18n.Catalog;
 
 public class DanskeBankNOApiClient extends DanskeBankApiClient {
     protected DanskeBankNOApiClient(
             TinkHttpClient client,
             DanskeBankNOConfiguration configuration,
-            Credentials credentials) {
-        super(client, configuration, credentials);
+            Credentials credentials,
+            Catalog catalog) {
+        super(client, configuration, credentials, catalog);
 
         client.setUserAgent(configuration.getUserAgent());
     }

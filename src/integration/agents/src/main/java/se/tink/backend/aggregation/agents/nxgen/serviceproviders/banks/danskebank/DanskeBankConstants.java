@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class DanskeBankConstants {
 
@@ -191,10 +192,10 @@ public class DanskeBankConstants {
         public static final String DEVICE_TYPE_DANSKEID = "DANSKEID";
         public static final String USER_ID_TYPE = "PRIV";
         public static final String SUPPRESS_PUSH = "N";
-        public static final String LANGUAGE_CODE = "EN";
+        public static final LocalizableKey LANGUAGE_CODE = new LocalizableKey("EN");
         // This is the text shown in the code app.
-        public static final String REGISTER_TRANSACTION_TEXT =
-                "Register with Danske Mobile Banking";
+        public static final LocalizableKey REGISTER_TRANSACTION_TEXT =
+                new LocalizableKey("Register with Danske Mobile Banking");
     }
 
     public static class Account {

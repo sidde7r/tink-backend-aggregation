@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-11-09 08:25+0000\n"
-"PO-Revision-Date: 2020-11-09 08:25+0000\n"
+"POT-Creation-Date: 2020-11-13 11:44+0000\n"
+"PO-Revision-Date: 2020-11-13 11:44+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: da\n"
@@ -10,6 +10,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "EN"
+msgstr "DA"
+
+msgid "Register with Danske Mobile Banking"
+msgstr "Tilmeld dig Danske Mobile Banking"
 
 msgid ""
 "You need to activate your personal code for telephone and mobile services on "
@@ -107,6 +113,9 @@ msgid "There is an error with your mobile operator. Please try again later."
 msgstr ""
 "Der er en fejl med din tele-operatør. Forsøg venligst igen på et senere "
 "tidspunkt."
+
+msgid "Error from"
+msgstr "Fejl fra"
 
 msgid ""
 "You use your card reader and personal code the same way as you would in the "

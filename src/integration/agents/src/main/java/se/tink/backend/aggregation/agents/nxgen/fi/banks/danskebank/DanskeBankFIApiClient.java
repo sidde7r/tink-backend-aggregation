@@ -5,13 +5,15 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.danskebank.rpc.FetchHou
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.danskebank.rpc.FetchHouseholdFIResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.libraries.i18n.Catalog;
 
 public class DanskeBankFIApiClient extends DanskeBankApiClient {
     protected DanskeBankFIApiClient(
             TinkHttpClient client,
             DanskeBankFIConfiguration configuration,
-            Credentials credentials) {
-        super(client, configuration, credentials);
+            Credentials credentials,
+            Catalog catalog) {
+        super(client, configuration, credentials, catalog);
     }
 
     public FetchHouseholdFIResponse fetchHousehold() {
