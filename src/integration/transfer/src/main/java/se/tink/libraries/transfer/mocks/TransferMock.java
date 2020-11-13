@@ -1,11 +1,9 @@
 package se.tink.libraries.transfer.mocks;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -17,42 +15,6 @@ public class TransferMock {
 
     public static PaymentBuilder payment() {
         return new PaymentBuilder();
-    }
-
-    public static EInvoiceBuilder eInvoice() {
-        return new EInvoiceBuilder();
-    }
-
-    public static class EInvoiceBuilder extends Builder<EInvoiceBuilder> {
-        private static final ObjectMapper MAPPER = new ObjectMapper();
-
-        private EInvoiceBuilder() {
-            super(TransferType.EINVOICE);
-        }
-
-        public EInvoiceBuilder withOriginalTransfer(Transfer originalTransfer) {
-            try {
-                transfer.addPayload(
-                        TransferPayloadType.ORIGINAL_TRANSFER,
-                        MAPPER.writeValueAsString(originalTransfer));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-
-            return this;
-        }
-
-        public EInvoiceBuilder createUpdateTransferFromOriginal(Transfer originalTransfer) {
-            from(originalTransfer.getSource())
-                    .to(originalTransfer.getDestination())
-                    .withAmount(originalTransfer.getAmount())
-                    .withDestinationMessage(originalTransfer.getDestinationMessage())
-                    .withSourceMessage(originalTransfer.getSourceMessage())
-                    .withDueDate(originalTransfer.getDueDate());
-
-            withOriginalTransfer(originalTransfer);
-            return this;
-        }
     }
 
     public static class PaymentBuilder extends Builder<PaymentBuilder> {
@@ -105,14 +67,9 @@ public class TransferMock {
             return (T) this;
         }
 
-        public T withDestinationMessage(String destinationMessage) {
-            transfer.setDestinationMessage(destinationMessage);
-            return (T) this;
-        }
-
         public T withMessage(String message) {
             withSourceMessage(message);
-            withDestinationMessage(message);
+            withRemittanceInformation(createAndGetRemittanceInformation(null, message));
             return (T) this;
         }
 
@@ -122,8 +79,10 @@ public class TransferMock {
         }
 
         public T withTooLongMessage() {
-            withDestinationMessage(
-                    "DstMsgLong Too long message I want to have since it is way too long for to read on the transaction list that hopefully either throws or gets cut off by the agent using some transfer message formatting");
+            withRemittanceInformation(
+                    createAndGetRemittanceInformation(
+                            null,
+                            "DstMsgLong Too long message I want to have since it is way too long for to read on the transaction list that hopefully either throws or gets cut off by the agent using some transfer message formatting"));
             withSourceMessage(
                     "SrcMsgLong Too long message I want to have since it is way too long for to read on the transaction list that hopefully either throws or gets cut off by the agent using some transfer message formatting");
             return (T) this;
@@ -132,6 +91,14 @@ public class TransferMock {
         public T withDueDate(Date dueDate) {
             transfer.setDueDate(dueDate);
             return (T) this;
+        }
+
+        private static RemittanceInformation createAndGetRemittanceInformation(
+                RemittanceInformationType type, String value) {
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
+            remittanceInformation.setType(type);
+            remittanceInformation.setValue(value);
+            return remittanceInformation;
         }
 
         public Transfer build() {
