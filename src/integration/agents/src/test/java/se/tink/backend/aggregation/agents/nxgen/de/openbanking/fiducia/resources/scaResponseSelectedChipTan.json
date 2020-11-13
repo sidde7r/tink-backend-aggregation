@@ -1,11 +1,11 @@
 {
-  "_links": {
-    "authoriseTransaction": {
-      "href": "/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id"
-    }
-  },
-  "challengeData": {
-    "additionalInformation": "1. Stecken Sie Ihre Chipkarte in den TAN-Generator und drücken \"TAN\"<br>2. Geben Sie den Startcode \"123456789\" ein und drücken \"OK\"<br>3. Prüfen Sie die Anzeige auf dem Leserdisplay und drücken \"OK\"<br><br>Bitte geben Sie die auf Ihrem TAN-Generator angezeigte TAN hier ein und bestätigen Sie diese mit \"OK\""
-  },
-  "scaStatus": "started"
+    "_links": {
+        "authoriseTransaction": {
+            "href": "/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id"
+        }
+    },
+    "challengeData": {
+        "additionalInformation": "1. Stecken Sie Ihre Chipkarte in den TAN-Generator und drücken \"TAN\"<br>2. Geben Sie den Startcode \"555777999666\" ein und drücken \"OK\"<br>3. Prüfen Sie die Anzeige auf dem Leserdisplay und drücken \"OK\"<br><br>Bitte geben Sie die auf Ihrem TAN-Generator angezeigte TAN hier ein und bestätigen Sie diese mit \"OK\""
+    },
+    "scaStatus": "started"
 }
