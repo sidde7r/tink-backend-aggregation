@@ -2,29 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 
 import java.util.Arrays;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.payment.enums.PaymentType;
 
 public abstract class BecConstants {
 
     public static final String INTEGRATION_NAME = "bec";
-
-    public static final TypeMapper<PaymentType> PAYMENT_TYPE_MAPPER =
-            TypeMapper.<PaymentType>builder()
-                    .put(PaymentType.DOMESTIC, PaymentProducts.DOMESTIC_CREDIT_TRANSFER)
-                    .put(PaymentType.SEPA, PaymentProducts.SEPA_CREDIT_TRANSFERS)
-                    .build();
-
-    public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
-            TypeMapper.<PaymentStatus>builder()
-                    .put(PaymentStatus.PENDING, "PNDG", "RCVD")
-                    .put(PaymentStatus.CANCELLED, "CANC")
-                    .put(PaymentStatus.REJECTED, "RJCT")
-                    .put(PaymentStatus.SIGNED, "ACCP", "ACSP", "ACSC")
-                    .build();
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
@@ -119,8 +102,6 @@ public abstract class BecConstants {
         public static final String GET_CONSENT_STATUS = "/consents/{consentId}/status";
         public static final String GET_ACCOUNTS = "/accounts";
         public static final String GET_TRANSACTIONS = "/accounts/{accountId}/transactions";
-        public static final String CREATE_PAYMENT = "/payments/{paymentType}";
-        public static final String GET_PAYMENT = "/payments/{paymentId}";
         public static final String GET_BALANCES = "/accounts/{accountId}/balances";
     }
 
@@ -179,15 +160,12 @@ public abstract class BecConstants {
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
-        public static final String PAYMENT_TYPE = "paymentType";
-        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_REDIRECT_INFO = "Missing redirect information";
     }
 
     public static class PaymentProducts {
