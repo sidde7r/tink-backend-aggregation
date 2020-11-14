@@ -27,7 +27,7 @@ public class PostbankApiClient extends DeutscheBankApiClient {
     private static final String ERR_BAD_REQUEST = "Bad Request";
     private static final String ERR_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
 
-    PostbankApiClient(
+    public PostbankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             DeutscheHeaderValues headerValues,

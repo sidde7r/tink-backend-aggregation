@@ -1,0 +1,21 @@
+{
+  "consentId": "**HASHED:4Q**",
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**/authorisations/e89166ea-2a05-4b3b-b860-cfae5d03a33c"
+    },
+    "startAuthorisationWithEncryptedPsuAuthentication": {
+      "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**/authorisations/e89166ea-2a05-4b3b-b860-cfae5d03a33c"
+    },
+    "self": {
+      "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**"
+    },
+    "aspspCertificates": {
+      "href": "https://xs2a.db.com/pb/aspsp-certificates/"
+    },
+    "status": {
+      "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**/status"
+    }
+  },
+  "consentStatus": "received"
+}

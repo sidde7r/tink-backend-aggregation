@@ -1,0 +1,14 @@
+{
+  "scaStatus": "scaMethodSelected",
+  "chosenScaMethod": {
+    "name": "iphone1",
+    "authenticationType": "PUSH_OTP",
+    "authenticationMethodId": "3"
+  },
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**/authorisations/e89166ea-2a05-4b3b-b860-cfae5d03a33c"
+    }
+  },
+  "psuMessage": "Bitte prüfen Sie alle Angaben auf der Anzeige Ihrer App bzw. Ihres Geräts und bestätigen Sie Ihren Auftrag.\n\nÖffnen Sie Ihre App und prüfen Sie die angezeigten Auftragsdaten. Geben Sie den Auftrag per Fingerabdruck, Face ID oder Passwort frei.\n\nSollten die Auftragsdaten fehlerhaft sein, können Sie den Vorgang jederzeit abbrechen."
+}

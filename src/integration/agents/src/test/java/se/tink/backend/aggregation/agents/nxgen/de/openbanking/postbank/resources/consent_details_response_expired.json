@@ -1,0 +1,16 @@
+{
+  "access": {
+    "allPsd2": "allAccounts"
+  },
+  "_links": {
+    "account": {
+      "href": "https://xs2a.db.com/ais/DE/Postbank/v1/accounts"
+    }
+  },
+  "consentStatus": "expired",
+  "validUntil": "2020-01-01",
+  "recurringIndicator": true,
+  "lastActionDate": "2020-11-25",
+  "frequencyPerDay": 4
+}
+
