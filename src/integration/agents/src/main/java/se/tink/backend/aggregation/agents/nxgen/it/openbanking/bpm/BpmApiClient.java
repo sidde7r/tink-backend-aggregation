@@ -24,11 +24,10 @@ public class BpmApiClient extends CbiGlobeApiClient {
                 client,
                 persistentStorage,
                 sessionStorage,
-                requestManual,
                 temporaryStorage,
                 InstrumentType.ACCOUNTS,
                 providerConfiguration,
-                psuIpAddress);
+                requestManual ? psuIpAddress : null);
     }
 
     @Override

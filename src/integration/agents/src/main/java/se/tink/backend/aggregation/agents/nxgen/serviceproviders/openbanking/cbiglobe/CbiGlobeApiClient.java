@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.exception.NoAccountsException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
@@ -54,7 +55,6 @@ public class CbiGlobeApiClient {
     private final SessionStorage sessionStorage;
     private CbiGlobeConfiguration configuration;
     protected String redirectUrl;
-    private boolean requestManual;
     protected TemporaryStorage temporaryStorage;
     protected InstrumentType instrumentType;
     private CbiGlobeProviderConfiguration providerConfiguration;
@@ -64,7 +64,6 @@ public class CbiGlobeApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            boolean requestManual,
             TemporaryStorage temporaryStorage,
             InstrumentType instrumentType,
             CbiGlobeProviderConfiguration providerConfiguration,
@@ -72,7 +71,6 @@ public class CbiGlobeApiClient {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
-        this.requestManual = requestManual;
         this.temporaryStorage = temporaryStorage;
         this.instrumentType = instrumentType;
         this.providerConfiguration = providerConfiguration;
@@ -181,6 +179,7 @@ public class CbiGlobeApiClient {
     public GetAccountsResponse getAccounts() {
         GetAccountsResponse getAccountsResponse =
                 createAccountsRequestWithConsent().get(GetAccountsResponse.class);
+        getAccountsResponse.getAccounts().removeIf(AccountEntity::isEmptyAccountObject);
         if (CollectionUtils.isEmpty(getAccountsResponse.getAccounts())) {
             throw new NoAccountsException("There are no bank accounts!");
         }
@@ -221,7 +220,7 @@ public class CbiGlobeApiClient {
         GetTransactionsResponse getTransactionsResponse =
                 response.getBody(GetTransactionsResponse.class);
 
-        if (Objects.nonNull(totalPages) && Integer.valueOf(totalPages) > page) {
+        if (Objects.nonNull(totalPages) && Integer.parseInt(totalPages) > page) {
             getTransactionsResponse.setPageRemaining(true);
         }
         return getTransactionsResponse;
@@ -313,9 +312,7 @@ public class CbiGlobeApiClient {
                 (psuIpAddress != null
                         ? psuIpAddress
                         : sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS));
-        return requestManual
-                ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, originatingUserIPAddress)
-                : requestBuilder;
+        return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, originatingUserIPAddress);
     }
 
     public void invalidateToken() {
