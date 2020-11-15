@@ -21,7 +21,7 @@ bazel_skylib_workspace()
 # Usually this should be set to the version of Bazel used for CI
 load("@bazel_skylib//lib:versions.bzl", "versions")
 
-versions.check("3.0.0", "3.3.1")
+versions.check("3.0.0", "3.4.1")
 
 # rules_pkg
 http_archive(
