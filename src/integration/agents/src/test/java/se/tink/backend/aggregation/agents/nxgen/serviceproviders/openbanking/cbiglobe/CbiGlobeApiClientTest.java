@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -17,6 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.exception.NoAccountsException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -37,18 +40,39 @@ public class CbiGlobeApiClientTest {
     @Test
     public void empty_transactions_are_not_converted_to_tink_transactions() {
         // given
-        TinkHttpClient tinkHttpClient = mockHttpClient();
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        RequestBuilder requestBuilder = mock(RequestBuilder.class);
+        TinkHttpClient tinkHttpClient = mockHttpClient(httpResponse, requestBuilder);
+        mockEmptyTransactionsResponses(httpResponse);
+
         CbiGlobeApiClient cbiGlobeApiClient = createCbiGlobeApiClient(tinkHttpClient);
 
         // when
         GetTransactionsResponse getTransactionsResponse =
                 cbiGlobeApiClient.getTransactions(
-                        "apiIdentifier", LocalDate.now(), LocalDate.now(), "bookingtType", 1);
+                        "apiIdentifier", LocalDate.now(), LocalDate.now(), "bookingType", 1);
         Collection<? extends Transaction> transactions =
                 getTransactionsResponse.getTinkTransactions();
 
         // then
         assertThat(transactions).isEmpty();
+    }
+
+    @Test
+    public void null_account_are_not_converted_to_account() {
+        // given
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        RequestBuilder requestBuilder = mock(RequestBuilder.class);
+        TinkHttpClient tinkHttpClient = mockHttpClient(httpResponse, requestBuilder);
+        mockNullAccountResponses(requestBuilder);
+
+        CbiGlobeApiClient cbiGlobeApiClient = createCbiGlobeApiClient(tinkHttpClient);
+
+        // when
+        Throwable thrown = catchThrowable(cbiGlobeApiClient::getAccounts);
+
+        // then
+        assertThat(thrown).isInstanceOf(NoAccountsException.class);
     }
 
     private CbiGlobeApiClient createCbiGlobeApiClient(TinkHttpClient tinkHttpClient) {
@@ -59,7 +83,6 @@ public class CbiGlobeApiClientTest {
                 tinkHttpClient,
                 persistentStorage,
                 new SessionStorage(),
-                true,
                 new TemporaryStorage(),
                 InstrumentType.ACCOUNTS,
                 cbiGlobeProviderConfiguration,
@@ -74,11 +97,10 @@ public class CbiGlobeApiClientTest {
         return persistentStorage;
     }
 
-    private TinkHttpClient mockHttpClient() {
+    private TinkHttpClient mockHttpClient(
+            HttpResponse httpResponse, RequestBuilder requestBuilder) {
         TinkHttpClient tinkHttpClient = mock(TinkHttpClient.class);
-        HttpResponse httpResponse = mock(HttpResponse.class);
 
-        RequestBuilder requestBuilder = mock(RequestBuilder.class);
         when(tinkHttpClient.request(any(URL.class))).thenReturn(requestBuilder);
         when(requestBuilder.accept(any(MediaType.class))).thenReturn(requestBuilder);
         when(requestBuilder.type(any(String.class))).thenReturn(requestBuilder);
@@ -89,6 +111,10 @@ public class CbiGlobeApiClientTest {
         when(requestBuilder.queryParam(anyString(), anyString())).thenReturn(requestBuilder);
         when(requestBuilder.get(HttpResponse.class)).thenReturn(httpResponse);
 
+        return tinkHttpClient;
+    }
+
+    private void mockEmptyTransactionsResponses(HttpResponse httpResponse) {
         MultivaluedMap<String, String> multivaluedMap = new MultivaluedMapImpl();
         multivaluedMap.putSingle(QueryKeys.TOTAL_PAGES, "1");
         when(httpResponse.getHeaders()).thenReturn(multivaluedMap);
@@ -98,6 +124,13 @@ public class CbiGlobeApiClientTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "transactions_response.json").toFile(),
                                 GetTransactionsResponse.class));
-        return tinkHttpClient;
+    }
+
+    private void mockNullAccountResponses(RequestBuilder requestBuilder) {
+        when(requestBuilder.get(GetAccountsResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "accounts_response.json").toFile(),
+                                GetAccountsResponse.class));
     }
 }

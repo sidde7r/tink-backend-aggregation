@@ -22,10 +22,9 @@ public class NexiApiClient extends CbiGlobeApiClient {
                 client,
                 persistentStorage,
                 sessionStorage,
-                requestManual,
                 temporaryStorage,
                 InstrumentType.CARDS_ACCOUNTS,
                 providerConfiguration,
-                psuIpAddress);
+                requestManual ? psuIpAddress : null);
     }
 }
