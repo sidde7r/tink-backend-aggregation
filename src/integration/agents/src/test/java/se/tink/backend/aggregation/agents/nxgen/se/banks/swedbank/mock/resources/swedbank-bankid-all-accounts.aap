@@ -1,10 +1,28 @@
+REQUEST 0
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch
+Accept: application/json
+
+RESPONSE 0
+200
+Server: -
+Date: Fri, 06 Mar 2020 23:29:12 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"chosenProfileName":"","identifiedUserName":"","identifiedUser":"","chosenProfile":"","authMethodName":"UNIDENTIFIED","authMethodDescription":"Unidentified","bankId":"","bankName":"","chosenProfileLanguage":"sv","client":{"software":{"name":"SwedbankMOBPrivateIOS","version":"7.25.0","family":"SWEDBANK_APP"},"os":{"name":"iOS","version":"13.3.1","family":"IOS"},"device":{"manufacturer":"Apple","model":"iPhone9,3"}},"authenticationRole":"CUSTOMER","serverTime":"20200101 13:37","formattedServerTime":"2020-01-01 13:37"}
 
 
 REQUEST 1
 POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile
 Accept: application/json
 Content-Type: application/json
-{"generateEasyLoginId":true,"userId":"***MASKED***","useEasyLogin":false}
+
+{"bankIdOnSameDevice":true}
 
 RESPONSE 1 SET NEXT_1
 200
@@ -47,7 +65,7 @@ GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/b
 Accept: application/json
 
 
-RESPONSE 3
+RESPONSE 3 SET LOGGED_IN
 200
 Server: -
 Date: Fri, 06 Mar 2020 23:29:03 GMT
@@ -494,22 +512,3 @@ Vary: Accept-Encoding
 Connection: Keep-Alive
 
 {"totalSum":"0,00","einvoices":[],"fromAccountGroups":[{"accounts":[{"currencyCode":"SEK","scopes":["TRANSFER_FROM","DEFAULT_FROM","PAYMENT_FROM"],"amount":"23 265,92","name":"Privatkonto","accountNumber":"974 896 605-9","clearingNumber":"8327-9","id":"a6e032552d002682141447a1443b26b0a9e1c8f2","fullyFormattedNumber":"8327-9,974 896 605-9"}],"name":"Konton i svenska kronor"},{"accounts":[{"currencyCode":"SEK","scopes":["TRANSFER_FROM","PAYMENT_FROM"],"amount":"164 840,53","name":"e-sparkonto","accountNumber":"974 896 768-5","clearingNumber":"8327-9","id":"e22c7c25f4c2eb282776d1b6620fc70ad6893dbf","fullyFormattedNumber":"8327-9,974 896 768-5"}],"name":"Sparkonton"}]}
-
-
-REQUEST 27
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch
-Accept: application/json
-
-RESPONSE 27
-200
-Server: -
-Date: Fri, 06 Mar 2020 23:29:12 GMT
-Content-language: sv_SE
-Content-type: application/json; charset=UTF-8
-Pragma: no-cache
-Cache-control: no-cache, no-store, max-age=0
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
-Vary: Accept-Encoding
-Connection: Keep-Alive
-
-{"chosenProfileName":"Wiremock User","identifiedUserName":"Wiremock User","identifiedUser":"19900101-0101","chosenProfile":"***MASKED***","authMethodName":"BANKID_MOBILE","authMethodDescription":"Mobile BankID","authMethodExtendedUsage":false,"bankId":"08999","bankName":"Swedbank AB (publ)","chosenProfileLanguage":"sv","client":{"software":{"name":"Tink","version":"unknown","family":"OTHER"},"os":{"name":"+https://www.tink.se/","version":"noc@tink.se)","family":"OTHER"},"device":{"manufacturer":"unknown","model":"unknown"}},"authenticationRole":"CUSTOMER","serverTime":"20200307 00:29","formattedServerTime":"2020-03-07 00:29"}

@@ -1,3 +1,21 @@
+REQUEST 1
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch
+Accept: application/json
+
+RESPONSE 1
+200
+Server: -
+Date: Fri, 06 Mar 2020 23:29:12 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"chosenProfileName":"","identifiedUserName":"","identifiedUser":"","chosenProfile":"","authMethodName":"UNIDENTIFIED","authMethodDescription":"Unidentified","bankId":"","bankName":"","chosenProfileLanguage":"sv","client":{"software":{"name":"SwedbankMOBPrivateIOS","version":"7.25.0","family":"SWEDBANK_APP"},"os":{"name":"iOS","version":"13.3.1","family":"IOS"},"device":{"manufacturer":"Apple","model":"iPhone9,3"}},"authenticationRole":"CUSTOMER","serverTime":"20200101 13:37","formattedServerTime":"2020-01-01 13:37"}
+
 REQUEST 2
 POST https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile
 Accept: application/json
@@ -9,8 +27,6 @@ RESPONSE 2 SET NEXT_1
 200
 Server: -
 Date: Thu, 17 Sep 2020 07:34:11 GMT
-Set-cookie: *** MASKED ***
-Set-cookie: *** MASKED ***
 Content-language: sv_SE
 Content-type: application/json; charset=UTF-8
 Pragma: no-cache
@@ -22,25 +38,7 @@ Connection: Keep-Alive
 {"status":"USER_SIGN","autoStartToken":"74495342-4a40-47e5-b1de-e97798a7e2aa","links":{"next":{"method":"GET","uri":"/v5/identification/bankid/mobile/verify"}}}
 
 
-REQUEST 3 MATCH NEXT_1
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify
-Accept: application/json
-
-RESPONSE 3 SET NEXT_2
-200
-Server: -
-Date: Thu, 17 Sep 2020 07:34:11 GMT
-Content-language: sv_SE
-Content-type: application/json; charset=UTF-8
-Pragma: no-cache
-Cache-control: no-cache, no-store, max-age=0
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
-Vary: Accept-Encoding
-Connection: Keep-Alive
-
-{"extendedUsage":false,"status":"CLIENT_NOT_STARTED","links":{"next":{"method":"GET","uri":"/v5/identification/bankid/mobile/verify"}},"serverTime":"20200917 09:34","formattedServerTime":"2020-09-17 09:34"}
-
-REQUEST 4 MATCH NEXT_2
+REQUEST 4 MATCH NEXT_1
 GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/bankid/mobile/verify
 Accept: application/json
 
@@ -190,25 +188,6 @@ Connection: Keep-Alive
 {"brokerAgencyLink":"https://www.fastighetsbyran.se/swedbank-vardering","isOngoingCasesActionRequired":false,"carLoans":[],"consumptionLoans":[],"collaterals":[],"mortgageLoanCommitments":[],"ongoingLoans":[],"mortgageCalculatorLink":"https://lana.swedbank.se/app/lana/bolanelofte/oinloggad/guide?tab=2&bankId=11111"}
 
 
-REQUEST 14
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings
-Accept: application/json
-
-RESPONSE 14
-200
-Server: -
-Date: Thu, 17 Sep 2020 07:34:27 GMT
-Content-language: sv_SE
-Content-type: application/json; charset=UTF-8
-Pragma: no-cache
-Cache-control: no-cache, no-store, max-age=0
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
-Vary: Accept-Encoding
-Connection: Keep-Alive
-
-{"fundAccountPresent":false,"fundAccounts":[],"endowmentInsurances":[],"equityTraders":[],"savingsAccounts":[{"type":"SAVINGSACCOUNT","rightOfDisposal":false,"holdings":[],"placements":[],"transactionsLink":{"type":"TRANSACTION_LIST_DECORATED","links":{"next":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8/transactions"}}},"links":{"self":{"method":"GET","uri":"/v5/engagement/account/01a858b71922aaac69b0cfa7be179129c6a498d8"},"next":{"method":"GET","uri":"/v5/engagement/transactions/01a858b71922aaac69b0cfa7be179129c6a498d8"}},"id":"01a858b71922aaac69b0cfa7be179129c6a498d8","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"1111-1","balance":{"amount":"8,64","currencyCode":"SEK"},"fullyFormattedNumber":"1111-1,333 333 333-3"}],"investmentSavings":[],"serverTime":"09:34","totalValue":{"amount":"8,64","currencyCode":"SEK"}}
-
-
 REQUEST 15
 GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/confirmed
 Accept: application/json
@@ -302,22 +281,3 @@ Vary: Accept-Encoding
 Connection: Keep-Alive
 
 {"totalSum":"0,00","einvoices":[],"fromAccountGroups":[{"accounts":[{"currencyCode":"SEK","scopes":["PAYMENT_FROM","TRANSFER_FROM"],"amount":"0,00","name":"Bokonto","accountNumber":"111 111 111-1","clearingNumber":"1111-1","id":"2afd29de9249d2245ff6a5232170cb65a913ae7d","fullyFormattedNumber":"1111-1,111 111 111-1"},{"currencyCode":"SEK","scopes":["PAYMENT_FROM","TRANSFER_FROM"],"amount":"383,62","name":"Privatkonto","accountNumber":"222 222 222-2","clearingNumber":"2222-2","id":"a86130f25b3d66d64e557108346fa61d298e7fbd","fullyFormattedNumber":"2222-2,222 222 222-2"}],"name":"Konton i svenska kronor"},{"accounts":[{"currencyCode":"SEK","scopes":["PAYMENT_FROM","TRANSFER_FROM"],"amount":"8,64","name":"e-sparkonto","accountNumber":"333 333 333-3","clearingNumber":"3333-3","id":"01a858b71922aaac69b0cfa7be179129c6a498d8","fullyFormattedNumber":"3333-3,333 333 333-3"}],"name":"Sparkonton"}]}
-
-
-REQUEST 24
-GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch
-Accept: application/json
-
-RESPONSE 24
-200
-Server: -
-Date: Thu, 17 Sep 2020 07:34:29 GMT
-Content-language: sv_SE
-Content-type: application/json; charset=UTF-8
-Pragma: no-cache
-Cache-control: no-cache, no-store, max-age=0
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
-Vary: Accept-Encoding
-Connection: Keep-Alive
-
-{"chosenProfileName":"Kristoffer Gauffin","identifiedUserName":"Kristoffer Gauffin","identifiedUser":"19850430-0255","chosenProfile":"198504300255","authMethodName":"BANKID_MOBILE","authMethodDescription":"Mobile BankID","authMethodExtendedUsage":false,"bankId":"11111","bankName":"Swedbank AB (publ)","chosenProfileLanguage":"sv","client":{"software":{"name":"SwedbankMOBPrivateIOS","version":"7.23.0","family":"SWEDBANK_APP"},"os":{"name":"iOS","version":"13.6.1","family":"IOS"},"device":{"manufacturer":"Apple","model":"iPhone8,1"}},"authenticationRole":"CUSTOMER","serverTime":"20200917 09:34","formattedServerTime":"2020-09-17 09:34"}
