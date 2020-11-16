@@ -116,6 +116,10 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     }
 
     private ScaMethod askUserForSelection(List<ScaMethod> onlySupportedScaMethods) {
+        if (onlySupportedScaMethods.size() == 1) {
+            return onlySupportedScaMethods.get(0);
+        }
+
         Field scaMethodField =
                 CommonFields.Selection.build(
                         catalog,
