@@ -71,7 +71,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                 request.getProvider().getCredentialsType().equals(CredentialsTypes.MOBILE_BANKID);
         this.swedbankConfiguration = configuration;
         this.apiClient =
-                apiClientProvider.getApiAgent(
+                apiClientProvider.createApiClient(
                         client, configuration, swedbankStorage, componentProvider);
 
         creditCardRefreshController = constructCreditCardRefreshController();

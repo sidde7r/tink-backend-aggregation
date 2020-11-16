@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 public class SwedbankSEApiClientProvider implements SwedbankApiClientProvider {
 
     @Override
-    public SwedbankSEApiClient getApiAgent(
+    public SwedbankSEApiClient createApiClient(
             TinkHttpClient client,
             SwedbankConfiguration configuration,
             SwedbankStorage swedbankStorage,

@@ -18,7 +18,7 @@ public class SwedbankFallbackApiClientProvider implements SwedbankApiClientProvi
     }
 
     @Override
-    public SwedbankFallbackApiClient getApiAgent(
+    public SwedbankFallbackApiClient createApiClient(
             TinkHttpClient client,
             SwedbankConfiguration configuration,
             SwedbankStorage swedbankStorage,
