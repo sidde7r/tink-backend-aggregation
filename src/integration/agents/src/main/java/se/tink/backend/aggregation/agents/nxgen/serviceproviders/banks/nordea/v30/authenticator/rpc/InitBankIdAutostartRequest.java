@@ -28,6 +28,9 @@ public class InitBankIdAutostartRequest {
     @JsonProperty("client_id")
     private String clientId = "";
 
+    @JsonProperty("signing_order_id")
+    private String signingOrderId;
+
     public InitBankIdAutostartRequest setState(String state) {
         this.state = state;
         return this;
@@ -50,6 +53,16 @@ public class InitBankIdAutostartRequest {
 
     public InitBankIdAutostartRequest setClientId(String clientId) {
         this.clientId = clientId;
+        return this;
+    }
+
+    public InitBankIdAutostartRequest setSigningOrderId(String signingOrderId) {
+        this.signingOrderId = signingOrderId;
+        return this;
+    }
+
+    public InitBankIdAutostartRequest setUserId(String userId) {
+        this.userId = userId;
         return this;
     }
 }

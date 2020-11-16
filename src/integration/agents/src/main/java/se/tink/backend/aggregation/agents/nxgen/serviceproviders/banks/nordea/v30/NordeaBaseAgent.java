@@ -243,7 +243,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        NordeaExecutorHelper executorHelper = new NordeaExecutorHelper(context, catalog, apiClient);
+        NordeaExecutorHelper executorHelper =
+                new NordeaExecutorHelper(context, catalog, apiClient, nordeaConfiguration);
 
         return Optional.of(
                 new TransferController(

@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.VerifyPersonalCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.entities.Form;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.BankPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.ConfirmTransferResponse;
@@ -377,6 +378,39 @@ public class NordeaBaseApiClient {
         return requestRefreshablePost(request, ConfirmTransferResponse.class);
     }
 
+    public BankIdAutostartResponse signPayment(
+            InitBankIdAutostartRequest initBankIdAutostartRequest) {
+        final RequestBuilder request =
+                httpClient
+                        .request(
+                                Urls.getUrl(
+                                        nordeaConfiguration.getBaseUrl(),
+                                        Urls.LOGIN_BANKID_AUTOSTART))
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .body(initBankIdAutostartRequest, MediaType.APPLICATION_JSON_TYPE);
+
+        if (nordeaConfiguration.isBusinessAgent()) {
+            request.headers(NordeaBaseConstants.NORDEA_BUSINESS_HEADERS);
+        }
+
+        return requestRefreshablePost(request, BankIdAutostartResponse.class);
+    }
+
+    public CompleteTransferResponse completeTransfer(
+            String orderRef, CompleteTransferRequest completeTransferRequest) {
+        final RequestBuilder request =
+                httpClient
+                        .request(
+                                Urls.getUrl(
+                                                nordeaConfiguration.getBaseUrl(),
+                                                Urls.COMPLETE_TRANSFER)
+                                        .parameter(IdTags.ORDER_REF, orderRef))
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .body(completeTransferRequest, MediaType.APPLICATION_JSON_TYPE);
+
+        return requestRefreshablePost(request, CompleteTransferResponse.class);
+    }
+
     public SignatureResponse signTransfer(SignatureRequest signatureRequest) {
         final RequestBuilder request =
                 httpClient
@@ -400,20 +434,6 @@ public class NordeaBaseApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE);
 
         return requestRefreshableGet(request, ResultSignResponse.class);
-    }
-
-    public CompleteTransferResponse completeTransfer(String orderRef) {
-        final RequestBuilder request =
-                httpClient
-                        .request(
-                                Urls.getUrl(
-                                                nordeaConfiguration.getBaseUrl(),
-                                                Urls.COMPLETE_TRANSFER)
-                                        .parameter(IdTags.ORDER_REF, orderRef))
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .type(MediaType.APPLICATION_JSON_TYPE);
-
-        return requestRefreshablePost(request, CompleteTransferResponse.class);
     }
 
     public void keepAlive() throws SessionException {
