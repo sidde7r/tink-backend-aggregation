@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistenc
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.LoginResponseStatus;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -44,7 +45,9 @@ public class SoftLoginStepTest extends BaseStep {
 
         when(signer.hash(DEVICE_TOKEN)).thenReturn(DEVICE_TOKEN_HASHED);
         when(signer.hash(DEVICE_TOKEN_HASHED)).thenReturn(DEVICE_TOKEN_HASHED_IOS_COMPARISON);
-        when(signer.createSignatureSoft(CHALLENGE, DEVICE_TOKEN, PAN_NUMBER)).thenReturn(SIGNATURE);
+        when(signer.createSignatureSoft(
+                        CHALLENGE, DEVICE_TOKEN, BelfiusStringUtils.formatPanNumber(PAN_NUMBER)))
+                .thenReturn(SIGNATURE);
 
         when(apiClient.login(
                         SESSION_ID,
@@ -104,7 +107,9 @@ public class SoftLoginStepTest extends BaseStep {
 
         when(signer.hash(DEVICE_TOKEN)).thenReturn(DEVICE_TOKEN_HASHED);
         when(signer.hash(DEVICE_TOKEN_HASHED)).thenReturn(DEVICE_TOKEN_HASHED_IOS_COMPARISON);
-        when(signer.createSignatureSoft(CHALLENGE, DEVICE_TOKEN, PAN_NUMBER)).thenReturn(SIGNATURE);
+        when(signer.createSignatureSoft(
+                        CHALLENGE, DEVICE_TOKEN, BelfiusStringUtils.formatPanNumber(PAN_NUMBER)))
+                .thenReturn(SIGNATURE);
 
         when(apiClient.login(
                         SESSION_ID,

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistenc
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.PrepareLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.SessionOpenedResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -39,7 +40,11 @@ public class AutoAuthenticationInitStepTest extends BaseStep {
         when(apiClient.openSession("XXX"))
                 .thenReturn(new SessionOpenedResponse(SESSION_ID, MACHINE_ID, 1));
 
-        when(apiClient.prepareLogin(SESSION_ID, MACHINE_ID, "2", PAN_NUMBER))
+        when(apiClient.prepareLogin(
+                        SESSION_ID,
+                        MACHINE_ID,
+                        "2",
+                        BelfiusStringUtils.formatPanNumber(PAN_NUMBER)))
                 .thenReturn(Mockito.mock(PrepareLoginResponse.class, a -> CONTRACT_NUMBER));
 
         when(signer.hash(any())).thenReturn(DEVICE_TOKEN_HASHED);
