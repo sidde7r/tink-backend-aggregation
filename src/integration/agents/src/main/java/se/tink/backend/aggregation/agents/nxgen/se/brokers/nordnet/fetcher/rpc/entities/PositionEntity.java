@@ -3,13 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Getter
 @JsonObject
 public class PositionEntity {
+    private static final Logger log = LoggerFactory.getLogger(PositionEntity.class);
 
     @JsonProperty("accno")
     private String accountNumber;
@@ -89,20 +93,19 @@ public class PositionEntity {
                         .build());
     }
 
-    private Double getProfit() {
-        if (getQuantity() == 0) {
-            return null;
+    private double getProfit() {
+
+        if (getMarketValue() == null
+                || getAcquisitionPrice() == null
+                || getMarketValue().getValue() == null
+                || getAcquisitionPrice().getValue() == null) {
+            log.warn("Not receiving marketValue or acquisitionPrice");
+            return 0.0;
         }
 
-        if (getMarketValue() == null || getMarketValue().getValue().intValue() == 0) {
-            return null;
-        }
-
-        if (getAcquisitionPrice() == null || getAcquisitionPrice().getValue().intValue() == 0) {
-            return null;
-        }
-
-        return getMarketValue().getValue().intValue()
-                - (getQuantity() * getAcquisitionPrice().getValue().intValue());
+        return ExactCurrencyAmount.inSEK(
+                        getMarketValue().getValue().doubleValue()
+                                - (getQuantity() * getAcquisitionPrice().getValue().doubleValue()))
+                .getDoubleValue();
     }
 }
