@@ -1,0 +1,23 @@
+version: '2'
+services:
+  app:
+    image: "gcr.io/tink-containers/google-java-format:1.7"
+    working_dir: /tink-backend
+    entrypoint: ''
+    volumes:
+      - "${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}"
+      - ..:/tink-backend
+      - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker:ro
+    environment:
+      - SSH_AUTH_SOCK
+      - VERSION
+      - BUILDKITE_JOB_ID
+      - BUILDKITE_BUILD_ID
+      - BUILDKITE_BRANCH
+      - BUILDKITE_PULL_REQUEST
+      - BUILDKITE_AGENT_ACCESS_TOKEN
+      - TINK_REPO_UPLOAD_ACCESS_KEY_ID
+      - TINK_REPO_UPLOAD_SECRET_ACCESS_KEY
+      - GOOGLE_CLOUD_ACCOUNT_JSON

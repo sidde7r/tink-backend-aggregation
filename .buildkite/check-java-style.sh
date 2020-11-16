@@ -17,7 +17,5 @@ handle_result()
 
 trap handle_result EXIT
 
-./bazel-wrapper build //tools/format:google-java-format
-
 find $(git rev-parse --show-toplevel) -type f -name "*.java" \
-    | xargs -n500 bazel-bin/tools/format/google-java-format --aosp --dry-run --set-exit-if-changed
+    | xargs -n500 /usr/bin/java -jar /app/google-java-format.jar --aosp --dry-run --set-exit-if-changed
