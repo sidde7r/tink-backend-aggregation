@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.DanishFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 import se.tink.libraries.i18n.Catalog;
@@ -292,13 +293,7 @@ public class NemIdIFrameController {
         updateStatusPayload(
                 credentials, catalog.getString(UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON));
 
-        Field field =
-                Field.builder()
-                        .immutable(true)
-                        .description("")
-                        .value(catalog.getString(UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON))
-                        .name("name")
-                        .build();
+        Field field = DanishFields.NemIdInfo.build(catalog);
 
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(Collections.singletonList(field)));

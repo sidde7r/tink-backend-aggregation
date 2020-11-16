@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.auth
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -13,19 +14,19 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ScaOptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.ScaOptionsEncryptedPayload;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.SingleSupplementalFieldAuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.step.SupplementalFieldsAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -55,10 +56,10 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
                         getDeviceId(),
                         catalog),
                 new KeyCardAuthenticationStep(sessionStorage, apiClient, getDeviceId()),
-                new SingleSupplementalFieldAuthenticationStep(
-                        SingleSupplementalFieldAuthenticationStep.class.getName(),
+                new SupplementalFieldsAuthenticationStep(
+                        SupplementalFieldsAuthenticationStep.class.getName(),
                         this::keyCardAuth,
-                        prepareKeyCardField()),
+                        prepareKeyCardFields()),
                 new FinalKeyCardAuthenticationStep(
                         sessionStorage, persistentStorage, apiClient, getDeviceId()));
     }
@@ -93,29 +94,22 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
         return true;
     }
 
-    private AuthenticationStepResponse keyCardAuth(String challengeResponseValue) {
+    private AuthenticationStepResponse keyCardAuth(Map<String, String> callbackData) {
+        String challengeResponseValue = callbackData.get(CommonFields.KeyCardCode.getFieldKey());
         sessionStorage.put(StorageKeys.KEY_CARD_CHALLENGE_RESPONSE_KEY, challengeResponseValue);
 
         return AuthenticationStepResponse.executeStepWithId(FinalKeyCardAuthenticationStep.STEP_ID);
     }
 
-    private Field prepareKeyCardField() {
-        LocalizableParametrizedKey codeFromKeyCard =
-                new LocalizableParametrizedKey("Please enter code {0} from key card number {1}")
-                        .cloneWith(
-                                sessionStorage.get(StorageKeys.CHALLENGE_STORAGE_KEY),
-                                sessionStorage.get(StorageKeys.KEY_CARD_NUMBER_STORAGE_KEY));
+    private Field[] prepareKeyCardFields() {
+        Field keyCardInfoField =
+                CommonFields.KeyCardInfo.build(
+                        catalog,
+                        sessionStorage.get(StorageKeys.CHALLENGE_STORAGE_KEY),
+                        sessionStorage.get(StorageKeys.KEY_CARD_NUMBER_STORAGE_KEY));
+        Field keyCardCodeField = CommonFields.KeyCardCode.build(catalog, 6);
 
-        return Field.builder()
-                .immutable(false)
-                .description(catalog.getString(codeFromKeyCard))
-                .name("challengeValue")
-                .numeric(true)
-                .minLength(6)
-                .maxLength(6)
-                .hint("NNNNNN")
-                .pattern("([0-9]{4})")
-                .build();
+        return new Field[] {keyCardInfoField, keyCardCodeField};
     }
 
     private String getDeviceId() {

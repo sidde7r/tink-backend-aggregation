@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authe
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.SingleSupplementalFieldAuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.step.SupplementalFieldsAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @AllArgsConstructor
@@ -39,7 +39,7 @@ public class KeyCardAuthenticationStep implements AuthenticationStep {
         sessionStorage.put(StorageKeys.CHALLENGE_STORAGE_KEY, keyCardEntity.getNemidChallenge());
 
         return AuthenticationStepResponse.executeStepWithId(
-                SingleSupplementalFieldAuthenticationStep.class.getName());
+                SupplementalFieldsAuthenticationStep.class.getName());
     }
 
     @Override
