@@ -14,9 +14,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.AktiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.TransactionsAndLockedEventsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.response.TransactionsAndLockedEventsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.converter.AktiaTransactionalAccountConverter;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class AktiaTransactionFetcherTest {
@@ -25,15 +23,11 @@ public class AktiaTransactionFetcherTest {
 
     private AktiaApiClient aktiaApiClientMock;
 
-    private AktiaTransactionalAccountConverter transactionalAccountConverterMock;
-
     @Before
     public void setUp() {
         aktiaApiClientMock = mock(AktiaApiClient.class);
-        transactionalAccountConverterMock = mock(AktiaTransactionalAccountConverter.class);
 
-        transactionFetcher =
-                new AktiaTransactionFetcher(aktiaApiClientMock, transactionalAccountConverterMock);
+        transactionFetcher = new AktiaTransactionFetcher(aktiaApiClientMock);
     }
 
     @Test
@@ -41,8 +35,6 @@ public class AktiaTransactionFetcherTest {
     public void shouldGetTransactionsFor() {
         // given
         final TransactionalAccount transactionalAccount = getTransactionalAccount();
-        final TransactionKeyPaginatorResponse<String> expectedResult =
-                mock(TransactionKeyPaginatorResponse.class);
 
         final TransactionsAndLockedEventsResponseDto dto =
                 mock(TransactionsAndLockedEventsResponseDto.class);
@@ -56,14 +48,12 @@ public class AktiaTransactionFetcherTest {
         when(aktiaApiClientMock.getTransactionsAndLockedEvents(ACCOUNT_ID, CONTINUATION_KEY))
                 .thenReturn(response);
 
-        when(transactionalAccountConverterMock.toPaginatorResponse(dto)).thenReturn(expectedResult);
-
         // when
         final PaginatorResponse result =
                 transactionFetcher.getTransactionsFor(transactionalAccount, CONTINUATION_KEY);
 
         // then
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isNotEqualTo(null);
     }
 
     @Test

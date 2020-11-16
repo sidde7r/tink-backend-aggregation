@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticat
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configuration.AktiaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.AktiaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.AktiaTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.converter.AktiaTransactionalAccountConverter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
@@ -107,14 +106,12 @@ public final class AktiaAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final AktiaTransactionalAccountConverter transactionalAccountConverter =
-                new AktiaTransactionalAccountConverter();
 
         final AktiaTransactionalAccountFetcher accountFetcher =
-                new AktiaTransactionalAccountFetcher(aktiaApiClient, transactionalAccountConverter);
+                new AktiaTransactionalAccountFetcher(aktiaApiClient);
 
         final AktiaTransactionFetcher transactionFetcher =
-                new AktiaTransactionFetcher(aktiaApiClient, transactionalAccountConverter);
+                new AktiaTransactionFetcher(aktiaApiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

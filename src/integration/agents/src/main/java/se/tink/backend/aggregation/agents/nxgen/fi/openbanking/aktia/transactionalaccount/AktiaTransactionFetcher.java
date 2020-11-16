@@ -13,7 +13,6 @@ public class AktiaTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
 
     private final AktiaApiClient aktiaApiClient;
-    private final AktiaTransactionalAccountConverter transactionalAccountConverter;
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
@@ -24,7 +23,7 @@ public class AktiaTransactionFetcher
                 aktiaApiClient.getTransactionsAndLockedEvents(accountId, key);
         validateTransactionsAndLockedEventsResponse(response);
 
-        return transactionalAccountConverter.toPaginatorResponse(
+        return AktiaTransactionalAccountConverter.toPaginatorResponse(
                 response.getTransactionsAndLockedEventsResponseDto());
     }
 
