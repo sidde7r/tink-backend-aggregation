@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loan
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.util.Maps;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +26,6 @@ public class LoanEntity {
     private long initialDate;
     private String applicants;
 
-    @JsonProperty("InterestRatesDetails")
-    private List<InterestRateMapEntity> interestRatesDetails;
-
     @JsonProperty("LoanDetails")
     private List<InterestRateMapEntity> loanDetails;
 
@@ -43,21 +39,6 @@ public class LoanEntity {
     private String type;
 
     @JsonIgnore private Map<String, String> transformedLoanDetails;
-
-    private Double parseInterestRate(InterestRateMapEntity interestRatesDetails) {
-        return Double.parseDouble(interestRatesDetails.getValue().split(",")[0].replace(",", "."));
-    }
-
-    public Double getInterestRate() {
-        if (interestRatesDetails.isEmpty()) {
-            log.info("interestRatesDetails has no elements: {}", interestRatesDetails);
-        }
-        return interestRatesDetails.stream()
-                .filter(i -> LocalDate.now().toString().compareTo(i.getKey()) > 0)
-                .map(this::parseInterestRate)
-                .findAny()
-                .orElseThrow(IllegalStateException::new);
-    }
 
     public void setLoanDetails(List<InterestRateMapEntity> loanDetails) {
         this.loanDetails = loanDetails;
@@ -93,7 +74,7 @@ public class LoanEntity {
         return LoanModule.builder()
                 .withType(LoanDetails.Type.BLANCO)
                 .withBalance(loanParsingHelper.getCurrentBalance())
-                .withInterestRate(getInterestRate())
+                .withInterestRate(loanParsingHelper.getInterestRate())
                 .setAmortized(loanParsingHelper.getAmortized(presentDebt))
                 .setApplicants(loanParsingHelper.getApplicantsList())
                 .setInitialBalance(loanParsingHelper.getInitialBalance())
