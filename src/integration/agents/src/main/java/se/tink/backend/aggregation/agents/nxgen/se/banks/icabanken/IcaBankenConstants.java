@@ -4,6 +4,8 @@ import java.time.ZoneId;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -167,6 +169,16 @@ public class IcaBankenConstants {
         public static final String PAYMENT_BG = "paymentbg";
         public static final String PAYMENT_PG = "paymentpg";
         public static final String PAYMENT = "payment";
+
+        public static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
+                TypeMapper.<LoanDetails.Type>builder()
+                        .put(
+                                LoanDetails.Type.BLANCO,
+                                "ICA Privatlån",
+                                "ICA Kundlån",
+                                "ICA Privatlån anställd",
+                                "ICA Kundlån anställd")
+                        .build();
     }
 
     public static class TimeoutFilter {
