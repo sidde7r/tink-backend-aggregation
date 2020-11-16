@@ -285,10 +285,6 @@ public class SwedbankDefaultApiClient {
         return profileResponse;
     }
 
-    public EngagementOverviewResponse engagementOverview() {
-        return fetchEngagementOverview();
-    }
-
     public EngagementTransactionsResponse engagementTransactions(LinkEntity linkEntity) {
         return makeRequest(linkEntity, EngagementTransactionsResponse.class, true);
     }
