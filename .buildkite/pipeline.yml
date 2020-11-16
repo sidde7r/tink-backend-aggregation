@@ -51,13 +51,13 @@ steps:
       queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
-  - command: .buildkite/check-java-style.sh
+  - name: ':java: Check Java style'
+    command: .buildkite/check-java-style.sh
     plugins:
       docker-compose#v3.0.3:
         run: app
-        config: docker/docker-compose.bazel.yml
+        config: docker/docker-compose.checkstyle.yml
     branches: '!master'
-    name: ':java: Check Java style'
     timeout_in_minutes: 30
     agents:
       queue: default
