@@ -1462,6 +1462,12 @@ msgstr ""
 msgid "Currently only Mobile BankID login method is supported"
 msgstr ""
 
+ msgid "Supplemental information wait timeout."
+ msgstr ""
+
+ msgid "A supplemental information was not provided within the given time"
+ msgstr ""
+
 msgid "Activation code is incorrect. Please try again."
 msgstr ""
 

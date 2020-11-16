@@ -5,6 +5,9 @@ import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public enum SupplementalInfoError implements AgentError {
+    WAIT_TIMEOUT(
+            new LocalizableKey(
+                    "A supplemental information was not provided within the given time")),
     NO_VALID_CODE(new LocalizableKey("You have not entered a valid code. Please try again"));
 
     private LocalizableKey userMessage;

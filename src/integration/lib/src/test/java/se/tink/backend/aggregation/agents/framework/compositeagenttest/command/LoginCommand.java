@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import org.junit.Assert;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
@@ -32,7 +34,11 @@ public final class LoginCommand implements CompositeAgentTestCommand {
             return;
         }
 
-        if (agent instanceof ProgressiveAuthAgent) {
+        if (agent instanceof AgentPlatformAuthenticator) {
+            AgentPlatformAuthenticationExecutor.processAuthentication(
+                    agent, credentialsRequest, supplementalInformationController);
+            return;
+        } else if (agent instanceof ProgressiveAuthAgent) {
             final ProgressiveLoginExecutor executor =
                     new ProgressiveLoginExecutor(
                             supplementalInformationController, (ProgressiveAuthAgent) agent);

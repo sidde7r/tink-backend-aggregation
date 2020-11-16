@@ -35,6 +35,7 @@ junit_test(
     ]),
     data = [
         "//data:aggregation_test",
+        "//data:cryptography_test",
         "//data:provider_configurations",
         "//etc:development",
     ],
@@ -44,6 +45,8 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/framework",
         "//src/integration/agents",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/belfius",
         "//src/integration/amount",

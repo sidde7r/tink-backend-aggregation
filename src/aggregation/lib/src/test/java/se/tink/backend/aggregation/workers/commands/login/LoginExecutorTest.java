@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers.commands;
+package se.tink.backend.aggregation.workers.commands.login;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.protobuf.Any;
@@ -14,9 +14,6 @@ import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.workers.commands.login.AgentLoginEventPublisherService;
-import se.tink.backend.aggregation.workers.commands.login.LoginExecutor;
-import se.tink.backend.aggregation.workers.commands.login.SupplementalInformationControllerUsageMonitorProxy;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.eventproducerservice.grpc.BatchEventAck;
@@ -61,14 +58,16 @@ public class LoginExecutorTest {
         }
     }
 
+    private LoginExecutor objectUnderTest;
+    private FakeEventProducerServiceClient producerClient;
+    private MetricActionIface metricAction;
+    private CredentialsRequest credentialsRequest;
+
     @Before
-    public void init() throws Exception {}
+    public void init() throws Exception {
+        metricAction = Mockito.mock(MetricActionIface.class);
+        credentialsRequest = Mockito.mock(CredentialsRequest.class);
 
-    @Test
-    public void eventProducerServiceShouldEmitProperEventWhenAgentGetsLoginError()
-            throws Exception {
-
-        // given
         final AgentWorkerCommandContext context = Mockito.mock(AgentWorkerCommandContext.class);
         final CredentialsRequest request = Mockito.mock(CredentialsRequest.class);
         final Credentials credentials = Mockito.mock(Credentials.class);
@@ -84,12 +83,10 @@ public class LoginExecutorTest {
         Mockito.when(context.getCatalog()).thenReturn(Mockito.mock(Catalog.class));
         Mockito.when(context.getClusterId()).thenReturn("dummy-cluster-id");
 
-        final Agent agent = Mockito.mock(NextGenerationAgent.class);
-        Mockito.doThrow(LoginError.INCORRECT_CREDENTIALS.exception()).when(agent).login();
         SupplementalInformationControllerUsageMonitorProxy
                 supplementalInformationControllerUsageMonitorProxy =
                         Mockito.mock(SupplementalInformationControllerUsageMonitorProxy.class);
-        final FakeEventProducerServiceClient producerClient = new FakeEventProducerServiceClient();
+        producerClient = new FakeEventProducerServiceClient();
         final LoginAgentEventProducer loginAgentEventProducer =
                 new LoginAgentEventProducer(producerClient, true);
         final AgentLoginEventPublisherService agentLoginEventPublisherService =
@@ -99,18 +96,24 @@ public class LoginExecutorTest {
                         context,
                         supplementalInformationControllerUsageMonitorProxy);
 
-        final LoginExecutor executor =
+        objectUnderTest =
                 new LoginExecutor(
                         Mockito.mock(StatusUpdater.class),
                         context,
                         Mockito.mock(SupplementalInformationControllerUsageMonitorProxy.class),
                         agentLoginEventPublisherService);
+    }
+
+    @Test
+    public void eventProducerServiceShouldEmitProperEventWhenAgentGetsLoginError()
+            throws Exception {
+
+        // given
+        final Agent agent = Mockito.mock(NextGenerationAgent.class);
+        Mockito.doThrow(LoginError.INCORRECT_CREDENTIALS.exception()).when(agent).login();
 
         // when
-        executor.executeLogin(
-                agent,
-                Mockito.mock(MetricActionIface.class),
-                Mockito.mock(CredentialsRequest.class));
+        objectUnderTest.executeLogin(agent, metricAction, credentialsRequest);
 
         // then
         Assert.assertEquals(

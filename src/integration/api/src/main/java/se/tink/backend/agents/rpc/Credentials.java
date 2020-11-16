@@ -123,6 +123,11 @@ public class Credentials implements Cloneable {
         return getField(field.getFieldKey());
     }
 
+    @JsonIgnore
+    public Optional<String> getOptionalField(Field.Key field) {
+        return Optional.ofNullable(getField(field.getFieldKey()));
+    }
+
     public Map<String, String> getFields() {
         if (Strings.isNullOrEmpty(fieldsSerialized)) {
             return Maps.newHashMap();

@@ -19,7 +19,7 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class BelfiusAgentPaymentTest {
+public class BelfiusPersistedDataAccessorAgentPaymentTest {
     private enum Arg implements ArgumentManagerEnum {
         IBAN,
         CREDITORS_NAME,
