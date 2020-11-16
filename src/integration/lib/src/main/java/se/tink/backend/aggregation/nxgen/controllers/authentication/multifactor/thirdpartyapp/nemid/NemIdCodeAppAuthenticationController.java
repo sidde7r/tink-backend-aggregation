@@ -10,6 +10,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.DanishFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.libraries.i18n.Catalog;
@@ -51,15 +52,7 @@ public class NemIdCodeAppAuthenticationController
     }
 
     private void displayMessageAndWait() {
-        Field field =
-                Field.builder()
-                        .immutable(true)
-                        .description(
-                                catalog.getString(
-                                        NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP))
-                        .value(catalog.getString(NemIdCodeAppConstants.UserMessage.OPEN_NEM_ID_APP))
-                        .name("name")
-                        .build();
+        Field field = DanishFields.NemIdInfo.build(catalog);
 
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(Collections.singletonList(field)));

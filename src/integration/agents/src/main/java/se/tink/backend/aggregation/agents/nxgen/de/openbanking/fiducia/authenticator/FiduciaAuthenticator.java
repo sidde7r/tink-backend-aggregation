@@ -36,8 +36,7 @@ import se.tink.libraries.i18n.Catalog;
 @AllArgsConstructor
 public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
-    private static final Pattern STARTCODE_CHIP_PATTERN =
-            Pattern.compile("Startcode\\s\\\\\"(\\d+)");
+    private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s\\\"(\\d+)");
 
     private static final String PSU_AUTHENTICATED = "psuAuthenticated";
     private static final String STARTED = "started";

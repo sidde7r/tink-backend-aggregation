@@ -1,0 +1,18 @@
+{
+  "consentStatus": "received",
+  "consentId": "1604575204-ba78d90",
+  "_links": {
+    "scaOAuth": {
+      "href": "https://psd.xs2a-api.com/public/berlingroup/authorize/55d7b2c8-d120-441c-ab3c-ca930e2f6ec9"
+    },
+    "scaStatus": {
+      "href": "https://xs2a-api.com/berlingroup/v1/consents/1604575204-ba78d90/authorisations/55d7b2c8-d120-441c-ab3c-ca930e2f6ec9"
+    },
+    "status": {
+      "href": "https://xs2a-api.com/berlingroup/v1/consents/1604575204-ba78d90/status"
+    },
+    "self": {
+      "href": "https://xs2a-api.com/berlingroup/v1/consents/1604575204-ba78d90"
+    }
+  }
+}

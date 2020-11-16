@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-10-26 11:23+0000\n"
-"PO-Revision-Date: 2020-10-26 11:23+0000\n"
+"POT-Creation-Date: 2020-11-09 08:25+0000\n"
+"PO-Revision-Date: 2020-11-09 08:25+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -10,18 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "Choose TAN Medium you want to use"
-msgstr "Wählen Sie das TAN-Medium, das Sie verwenden möchten"
-
-msgid "tanCode"
-msgstr "tanCode"
-
-msgid "Please open PhotoTAN application and confirm the order"
-msgstr "Bitte öffnen Sie die PhotoTAN-App und bestätigen Sie den Auftrag"
-
-msgid "waiting for confirmation"
-msgstr "warten auf Bestätigung"
 
 msgid "Input the code from your code card"
 msgstr "Geben Sie den Code von der Codekarte ein."
@@ -1910,3 +1898,25 @@ msgstr "Bestätigen Sie durch Eingabe der generierten TAN."
 
 msgid "The value you entered is not valid."
 msgstr "Der eingegebene Wert ist nicht gültig."
+
+msgid "Choose TAN Medium you want to use"
+msgstr "Wählen Sie das TAN-Medium, das Sie verwenden möchten"
+
+msgid "tanCode"
+msgstr "tanCode"
+
+msgid "Please open PhotoTAN application and confirm the order"
+msgstr "Bitte öffnen Sie die PhotoTAN-App und bestätigen Sie den Auftrag"
+
+msgid "waiting for confirmation"
+msgstr "warten auf Bestätigung"
+
+msgid ""
+"Please open the BestSign app and confirm login. Then click the \"Submit\" "
+"button"
+msgstr ""
+"Bitte öffnen Sie die BestSign-App und bestätigen Sie die Anmeldung. Klicken "
+"Sie dann auf die Schaltfläche „Senden“"
+
+msgid "Waiting for confirmation"
+msgstr "Warten auf Bestätigung"

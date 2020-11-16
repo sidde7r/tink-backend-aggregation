@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authent
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +14,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants.PollStatus;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ChallengeData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
@@ -30,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class PostbankAuthenticationController implements TypedAuthenticator {
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode:\\s(\\d+)");
@@ -39,15 +44,18 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     private static final String PUSH_OTP = "PUSH_OTP";
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalRequester supplementalRequester;
     private final PostbankAuthenticator authenticator;
 
     public PostbankAuthenticationController(
             Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
+            SupplementalRequester supplementalRequester,
             PostbankAuthenticator authenticator) {
         this.catalog = Preconditions.checkNotNull(catalog);
         this.supplementalInformationHelper =
                 Preconditions.checkNotNull(supplementalInformationHelper);
+        this.supplementalRequester = supplementalRequester;
         this.authenticator = authenticator;
     }
 
@@ -83,7 +91,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
         switch (chosenScaMethod.getAuthenticationType().toUpperCase()) {
             case PUSH_OTP:
-                poll(username, initValues.getLinks().getScaStatus().getHref());
+                finishWithAcceptingPush(initValues, username, credentials);
                 break;
             case SMS_OTP:
             case CHIP_OTP:
@@ -126,6 +134,26 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                 Integer.parseInt(supplementalInformation.get(CommonFields.Selection.getFieldKey()))
                         - 1;
         return scaMethods.get(index);
+    }
+
+    private void finishWithAcceptingPush(
+            AuthorisationResponse previousResponse, String username, Credentials credentials) {
+        showInfo(previousResponse.getChosenScaMethod().getName(), credentials);
+        poll(username, previousResponse.getLinks().getScaStatus().getHref());
+    }
+
+    private void showInfo(String deviceName, Credentials credentials) {
+        Field informationField =
+                CommonFields.Information.build(
+                        PostbankConstants.InfoScreen.FIELD_KEY,
+                        catalog.getString(PostbankConstants.InfoScreen.DESCRIPTION),
+                        deviceName,
+                        catalog.getString(PostbankConstants.InfoScreen.HELP_TEXT));
+
+        credentials.setSupplementalInformation(
+                SerializationUtils.serializeToString(Collections.singletonList(informationField)));
+        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
+        supplementalRequester.requestSupplementalInformation(credentials, true);
     }
 
     private void poll(String username, String url) throws ThirdPartyAppException {

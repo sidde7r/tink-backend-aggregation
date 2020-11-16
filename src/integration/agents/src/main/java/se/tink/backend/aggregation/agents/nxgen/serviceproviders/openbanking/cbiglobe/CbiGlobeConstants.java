@@ -137,4 +137,9 @@ public final class CbiGlobeConstants {
     public static class PaymentStep {
         public static final String IN_PROGRESS = "IN_PROGRESS";
     }
+
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 5;
+        public static final int RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }

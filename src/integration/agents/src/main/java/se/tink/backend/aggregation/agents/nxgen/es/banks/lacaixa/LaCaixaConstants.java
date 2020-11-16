@@ -8,7 +8,8 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.enums.AccountFlag;
 
-public class LaCaixaConstants {
+public final class LaCaixaConstants {
+    private LaCaixaConstants() {}
 
     public static final String CURRENCY = "EUR";
     public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAPPER =
@@ -40,11 +41,15 @@ public class LaCaixaConstants {
                     .build();
 
     public static class LoanTypeName {
+        private LoanTypeName() {}
+
         public static final String MORTGAGE = "PRS";
         public static final String CONSUMER_LOAN = "CRV";
     }
 
     public static class ErrorCode {
+        private ErrorCode() {}
+
         public static final String EMPTY_LIST = "ERR_TRXM01_007";
         public static final String NO_SECURITIES = "131";
         public static final String NO_ACCOUNTS = "1575";
@@ -54,6 +59,8 @@ public class LaCaixaConstants {
     }
 
     public static class Urls {
+        private Urls() {}
+
         private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
 
         public static final URL INIT_LOGIN =
@@ -98,6 +105,8 @@ public class LaCaixaConstants {
     }
 
     public static class DefaultRequestParams {
+        private DefaultRequestParams() {}
+
         public static final String LANGUAGE_ES = "es";
         public static final String ORIGIN =
                 "51402"; // Can seemingly be anything as long as it exists, purpose unknown.
@@ -114,6 +123,8 @@ public class LaCaixaConstants {
     }
 
     public static class AuthenticationParams {
+        private AuthenticationParams() {}
+
         public static final String INSTALLATION_ID_PREFIX = "cIAPPLPh9,3";
         public static final String DEVICE_NAME = "Tink";
         public static final String SCA_TYPE_APP = "MOTP";
@@ -124,6 +135,8 @@ public class LaCaixaConstants {
     }
 
     public static class QueryParams {
+        private QueryParams() {}
+
         public static final String FROM_BEGIN = "inicio";
         public static final String ACCOUNT_NUMBER = "numeroCuenta";
         public static final String DEPOSIT_ID = "idExpediente";
@@ -134,6 +147,8 @@ public class LaCaixaConstants {
     }
 
     public static class TemporaryStorage {
+        private TemporaryStorage() {}
+
         public static final String ACCOUNT_REFERENCE = "accountRef";
         public static final String SCA_SMS = "scaSms";
         public static final String CODE_CARD = "codeCard";
@@ -141,14 +156,20 @@ public class LaCaixaConstants {
     }
 
     public static class PersistentStorage {
+        private PersistentStorage() {}
+
         public static final String SCA_UNFINISHED = "scaUnfinished";
     }
 
     public static class StatusCodes {
+        private StatusCodes() {}
+
         public static final int INCORRECT_USERNAME_PASSWORD = 409; // Conflict
     }
 
     public static class UserData {
+        private UserData() {}
+
         public static final String FULL_HOLDER_NAME = "linkNombreEmp";
         public static final String DNI = "linkDNI";
         public static final String DATE_OF_BIRTH = "linkDatnac";
@@ -158,6 +179,16 @@ public class LaCaixaConstants {
     }
 
     public static class LiquidationSimulation {
+        private LiquidationSimulation() {}
+
         public static final String TRUE = "S";
+    }
+
+    public static class CaixaPayloadValues {
+        private CaixaPayloadValues() {}
+
+        public static final String ANDROID_PACKAGE_NAME = "es.caixabank.caixabanksign";
+        public static final String IOS_APP_STORE_URL =
+                "https://apps.apple.com/es/app/caixabank-sign/id1328811481";
     }
 }

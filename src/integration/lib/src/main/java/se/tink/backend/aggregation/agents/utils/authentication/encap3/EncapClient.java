@@ -74,10 +74,7 @@ public class EncapClient {
         String registrationMessage = messageUtils.buildRegistrationMessage();
         RegistrationResponse registrationResponse =
                 messageUtils.encryptAndSend(registrationMessage, RegistrationResponse.class);
-        if (!registrationResponse.isValid()) {
-            log.error("RegistrationResponse is not valid.");
-            throw LoginError.REGISTER_DEVICE_ERROR.exception();
-        }
+        logAndThrowErrorIfRegistrationResponseIsInvalid(registrationResponse);
 
         RegistrationResultEntity registrationResultEntity = registrationResponse.getResult();
         storeRegistrationResult(registrationResultEntity);
@@ -85,9 +82,7 @@ public class EncapClient {
         String activationMessage = messageUtils.buildActivationMessage(registrationResultEntity);
         SamlResponse samlResponse =
                 messageUtils.encryptAndSend(activationMessage, SamlResponse.class);
-        if (!samlResponse.isValid()) {
-            throw new IllegalStateException("SamlResponse is not valid.");
-        }
+        logAndThrowErrorIfSamlResponseIsInvalid(samlResponse);
         String samlObjectB64 = samlResponse.getResult().getSamlObjectAsBase64();
 
         String activateDeviceBody =
@@ -99,6 +94,21 @@ public class EncapClient {
         return createDeviceRegistrationResponse(activateDeviceSoapResponse);
     }
 
+    private void logAndThrowErrorIfRegistrationResponseIsInvalid(
+            RegistrationResponse registrationResponse) {
+        if (!registrationResponse.isValid()) {
+            log.error("RegistrationResponse is not valid.");
+            throw LoginError.REGISTER_DEVICE_ERROR.exception();
+        }
+    }
+
+    private void logAndThrowErrorIfSamlResponseIsInvalid(SamlResponse samlResponse) {
+        if (!samlResponse.isValid()) {
+            log.error("SamlResponse is not valid.");
+            throw LoginError.DEFAULT_MESSAGE.exception();
+        }
+    }
+
     public DeviceAuthenticationResponse authenticateDevice(
             AuthenticationMethod authenticationMethod) {
         return authenticateDevice(authenticationMethod, null);
@@ -107,7 +117,8 @@ public class EncapClient {
     public DeviceAuthenticationResponse authenticateDevice(
             AuthenticationMethod authenticationMethod, @Nullable String authenticationId) {
         if (!storage.load()) {
-            throw new IllegalStateException("Storage is not valid.");
+            log.error("Storage is not valid.");
+            throw LoginError.DEFAULT_MESSAGE.exception();
         }
 
         String username = storage.getUsername();
@@ -127,9 +138,7 @@ public class EncapClient {
                 messageUtils.buildAuthenticationMessage(identificationEntity, authenticationMethod);
         SamlResponse samlResponse =
                 messageUtils.encryptAndSend(authenticationMessage, SamlResponse.class);
-        if (!samlResponse.isValid()) {
-            throw new IllegalStateException("SamlResponse is not valid.");
-        }
+        logAndThrowErrorIfSamlResponseIsInvalid(samlResponse);
 
         String samlObjectB64 = samlResponse.getResult().getSamlObjectAsBase64();
 
@@ -145,13 +154,20 @@ public class EncapClient {
             IdentificationResponse identificationResponse) {
         // (Wiski) delete this logging logic after getting some more information about these errors
         if (!identificationResponse.isValid()) {
-            log.error(
-                    "IdentificationResponse is not valid.\nCode: {}\nOutdated: {}\nResult: {}",
-                    identificationResponse.getCode(),
-                    identificationResponse.isOutdated(),
-                    Optional.ofNullable(identificationResponse.getResult()).orElse(null));
+            logIdentificationResponse(identificationResponse, "invalid");
             throw LoginError.DEFAULT_MESSAGE.exception();
         }
+        logIdentificationResponse(identificationResponse, "valid");
+    }
+
+    private void logIdentificationResponse(
+            IdentificationResponse identificationResponse, String validity) {
+        log.info(
+                "IdentificationResponse is {}.\nCode: {}\nOutdated: {}\nResult: {}",
+                validity,
+                identificationResponse.getCode(),
+                identificationResponse.isOutdated(),
+                Optional.ofNullable(identificationResponse.getResult()).orElse(null));
     }
 
     public void saveDevice() {

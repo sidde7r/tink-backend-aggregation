@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 import com.google.common.base.Strings;
 import java.util.Optional;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -14,7 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.BankIdAutostartResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.FetchCodeRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.FetchCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.InitBankIdAutostartRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.MultipleAgreementsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.business.OrganisationNumberSeLogger;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -77,7 +81,19 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
                     return BankIdStatus.FAILED_UNKNOWN;
             }
         } catch (HttpResponseException e) {
-            return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+
+                if (errorResponse.isAutostartTokenExpired()) {
+                    return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+                }
+
+                if (errorResponse.isBankIdTimeout()) {
+                    return BankIdStatus.TIMEOUT;
+                }
+            }
+
+            throw e;
         }
     }
 
@@ -119,21 +135,20 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
 
     private BankIdStatus fetchAccessToken(BankIdAutostartResponse bankIdAutostartResponse)
             throws LoginException {
-        try {
-            final FetchCodeRequest fetchCodeRequest =
-                    new FetchCodeRequest().setCode(bankIdAutostartResponse.getCode());
-            bankIdAutostartResponse = apiClient.fetchLoginCode(fetchCodeRequest);
 
-            apiClient
-                    .fetchAccessToken(bankIdAutostartResponse.getCode(), codeVerifier)
-                    .storeTokens(sessionStorage);
+        FetchCodeResponse fetchCodeResponse = getLoginCode(bankIdAutostartResponse);
 
-            // If SSN is given, check that it matches the logged in user
-            if (!Strings.isNullOrEmpty(this.givenSsn) && !nordeaConfiguration.isBusinessAgent()) {
-                checkIdentity();
-            }
-        } catch (HttpResponseException e) {
-            return BankIdStatus.NO_CLIENT;
+        if (Strings.isNullOrEmpty(fetchCodeResponse.getCode())) {
+            throw new IllegalStateException("Login code not present, can't fetch access token.");
+        }
+
+        apiClient
+                .fetchAccessToken(fetchCodeResponse.getCode(), codeVerifier)
+                .storeTokens(sessionStorage);
+
+        // If SSN is given, check that it matches the logged in user
+        if (!Strings.isNullOrEmpty(this.givenSsn) && !nordeaConfiguration.isBusinessAgent()) {
+            checkIdentity();
         }
 
         if (nordeaConfiguration.isBusinessAgent()) {
@@ -141,6 +156,62 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
         }
 
         return BankIdStatus.DONE;
+    }
+
+    private FetchCodeResponse getLoginCode(BankIdAutostartResponse bankIdAutostartResponse) {
+        final FetchCodeRequest fetchCodeRequest =
+                new FetchCodeRequest().setCode(bankIdAutostartResponse.getCode());
+
+        try {
+            return apiClient.fetchLoginCode(fetchCodeRequest);
+        } catch (HttpResponseException e) {
+            handleNotACustomer(e);
+
+            verifyIsConflictForBusinessAgentOrThrow(e);
+
+            MultipleAgreementsResponse multipleAgreementsResponse =
+                    e.getResponse().getBody(MultipleAgreementsResponse.class);
+
+            verifyIsAgreementConflictOrThrow(e, multipleAgreementsResponse);
+
+            String agreementId = getMatchingAgreementIdOrThrow(multipleAgreementsResponse);
+            return apiClient.fetchLoginCodeWithAgreementId(fetchCodeRequest, agreementId);
+        }
+    }
+
+    private void handleNotACustomer(HttpResponseException e) {
+        if (e.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if (errorResponse.isNotACustomer()) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
+        }
+    }
+
+    private void verifyIsConflictForBusinessAgentOrThrow(HttpResponseException e) {
+        if (!(e.getResponse().getStatus() == HttpStatus.SC_CONFLICT
+                && nordeaConfiguration.isBusinessAgent())) {
+            throw e;
+        }
+    }
+
+    private void verifyIsAgreementConflictOrThrow(
+            HttpResponseException e, MultipleAgreementsResponse multipleAgreementsResponse) {
+        if (!multipleAgreementsResponse.isAgreementConflictError()) {
+            throw e;
+        }
+    }
+
+    private String getMatchingAgreementIdOrThrow(
+            MultipleAgreementsResponse multipleAgreementsResponse) {
+        Optional<String> agreementId =
+                multipleAgreementsResponse.getIdOfMatchingAgreement(organisationNumber);
+
+        if (!agreementId.isPresent()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        return agreementId.get();
     }
 
     private void checkIdentity() throws LoginException {

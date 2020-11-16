@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-28 11:13+0100\n"
+"POT-Creation-Date: 2020-11-09 09:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1462,6 +1462,12 @@ msgstr ""
 msgid "Currently only Mobile BankID login method is supported"
 msgstr ""
 
+ msgid "Supplemental information wait timeout."
+ msgstr ""
+
+ msgid "A supplemental information was not provided within the given time"
+ msgstr ""
+
 msgid "Activation code is incorrect. Please try again."
 msgstr ""
 
@@ -1564,4 +1570,12 @@ msgid ""
 msgstr ""
 
 msgid "Enter activation password."
+msgstr ""
+
+msgid ""
+"Please open the BestSign app and confirm login. Then click the \"Submit\" "
+"button"
+msgstr ""
+
+msgid "Waiting for confirmation"
 msgstr ""

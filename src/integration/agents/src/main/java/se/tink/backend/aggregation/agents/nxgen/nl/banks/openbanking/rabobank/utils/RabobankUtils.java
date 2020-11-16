@@ -20,6 +20,10 @@ public class RabobankUtils {
         persistentStorage.remove(StorageKey.OAUTH_TOKEN);
     }
 
+    public static void removeConsent(final PersistentStorage persistentStorage) {
+        persistentStorage.remove(StorageKey.CONSENT_ID);
+    }
+
     public static String getRefreshTokenExpireDate(final Long refreshTokenExpiresInSeconds) {
         return Instant.ofEpochMilli(System.currentTimeMillis())
                 .atZone(ZoneId.systemDefault())

@@ -20,7 +20,7 @@ public class TransactionsEntity {
     private List<TransactionEntity> pending;
 
     @JsonIgnore
-    public List<? extends Transaction> toTinkTransactions() {
+    public List<Transaction> toTinkTransactions() {
         return Stream.concat(
                         Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
                                 .map(TransactionEntity::toBookedTinkTransaction),

@@ -16,9 +16,6 @@ public abstract class BnpParibasFortisConstants {
         public static final String OAUTH = "/authorize";
         public static final String TOKEN = "/token";
         public static final String ACCOUNTS = "/v1/accounts";
-        public static final String PAYMENTS = "/v1/payment-requests";
-        public static final String GET_PAYMENT = PAYMENTS + "/%s";
-        public static final String AUTH_PAYMENT = "/payment-requests/{paymentId}/consent";
     }
 
     public static class StorageKeys {
@@ -67,11 +64,5 @@ public abstract class BnpParibasFortisConstants {
 
     public static class IdTags {
         public static final String PAYMENT_ID = "paymentId";
-    }
-
-    public static class PaymentRequestValues {
-        public static final String INITIATING_PARTY = "TINK";
-        public static final int NUMBER_OF_TRANSACTIONS = 1;
-        public static final String AUTHENTICATION_METHODS = "REDIRECT";
     }
 }

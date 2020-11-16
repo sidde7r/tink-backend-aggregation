@@ -5,6 +5,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class TransactionalAccountFixtures {
 
+    private static final String CURRENT_ACCOUNT_BUSINESS =
+            "{\"AccountId\":\"xxxiddddxxxx\",\"Currency\":\"GBP\",\"AccountType\":\"Business\",\"AccountSubType\":\"CurrentAccount\",\"Nickname\":\"someNickname\",\"Account\":[{\"SchemeName\":\"UK.OBIE.SortCodeAccountNumber\",\"Identification\":\"07111111111111\",\"Name\":\"Myszon Jelen\"},{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"1234 NAIA 5678 1234 55 1111\",\"Name\":\"Myszo Jelen\"}]}";
     private static final String CURRENT_ACCOUNT =
             "{\"AccountId\":\"xxxiddddxxxx\",\"Currency\":\"GBP\",\"AccountType\":\"Personal\",\"AccountSubType\":\"CurrentAccount\",\"Nickname\":\"someNickname\",\"Account\":[{\"SchemeName\":\"UK.OBIE.SortCodeAccountNumber\",\"Identification\":\"07111111111111\",\"Name\":\"Myszon Jelen\"},{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"1234 NAIA 5678 1234 55 1111\",\"Name\":\"Myszo Jelen\"}]}";
     private static final String SAVINGS_ACCOUNT =
@@ -14,6 +16,11 @@ public class TransactionalAccountFixtures {
 
     public static AccountEntity currentAccount() {
         return SerializationUtils.deserializeFromString(CURRENT_ACCOUNT, AccountEntity.class);
+    }
+
+    public static AccountEntity currentAccountBusiness() {
+        return SerializationUtils.deserializeFromString(
+                CURRENT_ACCOUNT_BUSINESS, AccountEntity.class);
     }
 
     public static AccountEntity savingsAccount() {

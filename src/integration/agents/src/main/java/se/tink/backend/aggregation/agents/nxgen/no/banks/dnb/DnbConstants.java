@@ -133,6 +133,12 @@ public final class DnbConstants {
                 "Din bruker-ID er sperret. Kontakt oss for mer informasjon.";
 
         public static final String NO_ACCESS = "<div id=\"websealError\">no_access</div>";
+        public static final String NO_ACCOUNT_SUFFIX = "ikke funnet";
+        public static final String SERVER_UNAVAILABLE =
+                "The server is temporarily unable to service your request";
+        public static final String SERVICE_NOT_AVAILABLE_PREFIX = "Vi beklager at tjenesten";
+        public static final String TRY_IN_A_FEW_MINUTES_PREFIX = "fem minutter";
+        public static final String TRY_IN_5_MINUTES_PREFIX = "Vent 5 minutter";
     }
 
     public static class CardStatus {

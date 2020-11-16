@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
@@ -56,7 +56,7 @@ public class Xs2aDevelopersTransactionalAccountFetcher
                 return PaginatorResponseImpl.createEmpty(false);
             } else if (isConsentTimeoutException(e)) {
                 authenticator.invalidateToken();
-                throw BankServiceError.CONSENT_EXPIRED.exception(e.getMessage());
+                throw SessionError.CONSENT_EXPIRED.exception(e.getMessage());
             }
             throw e;
         }

@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusCo
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.utils.CryptoUtils;
@@ -114,22 +113,5 @@ public final class BelfiusApiClient {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public String createPayment(CreatePaymentRequest body, String signature) {
-        client.setFollowRedirects(false);
-        HttpResponse res =
-                createRequestInSession(
-                                new URL(configuration.getBaseUrl().concat(Urls.CREATE_PAYMENT)))
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.ACCEPT, HeaderValues.PAYMENT_ACCEPT)
-                        .header(
-                                HeaderKeys.CODE_CHALLENGE,
-                                CryptoUtils.getCodeChallenge(CryptoUtils.getCodeVerifier()))
-                        .header(HeaderKeys.CODE_CHALLENGE_METHOD, HeaderValues.CODE_CHALLENGE_TYPE)
-                        .header(HeaderKeys.SIGNATURE, signature)
-                        .post(HttpResponse.class, body);
-
-        return res.getHeaders().get(HeaderKeys.LOCATION).get(0);
     }
 }

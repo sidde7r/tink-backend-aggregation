@@ -10,6 +10,6 @@ public class FaultResponse {
 
     @JsonIgnore
     public boolean isServerFault() {
-        return faultcode.equalsIgnoreCase(ErrorCodes.SERVER);
+        return ErrorCodes.SERVER.equalsIgnoreCase(faultcode);
     }
 }

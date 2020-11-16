@@ -157,8 +157,11 @@ public class LoanEntity {
 
     private Loan.Type getLoanType() {
         if (isMortgage()) {
+            logger.info("Loan with type {} categorised as mortgage", type);
             return Loan.Type.MORTGAGE;
         }
+
+        logger.info("Loan with type {} categorised as other", type);
         return Loan.Type.OTHER;
     }
 

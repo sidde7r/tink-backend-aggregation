@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiC
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 
 @JsonObject
 public class SubPlacementEntity {
@@ -89,6 +90,19 @@ public class SubPlacementEntity {
         }
 
         return instruments;
+    }
+
+    /**
+     * We are passing the apiClient all the way down to this entity. The architecture of this flow
+     * should be reworked.
+     */
+    public List<InstrumentModule> toTinkPensionInstruments(SwedbankSEApiClient apiClient) {
+        List<InstrumentModule> instrumentModules = new ArrayList<>();
+        for (DetailedHoldingEntity holding : getHoldingsOrEmptyList()) {
+            String isinCode = getIsinOfFund(apiClient, holding.getFundCode());
+            instrumentModules.add(holding.toTinkInstrumentModule(isinCode));
+        }
+        return instrumentModules;
     }
 
     private String getIsinOfFund(SwedbankSEApiClient apiClient, String fundCode) {

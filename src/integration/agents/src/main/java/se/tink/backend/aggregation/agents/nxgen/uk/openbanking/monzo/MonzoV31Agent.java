@@ -15,18 +15,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.JwtSignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.module.UkOpenBankingModule;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UKOpenbankingExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.Urls;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
 @AgentDependencyModulesForProductionMode(
@@ -56,20 +56,22 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
                 componentProvider,
                 jwtSigner,
                 aisConfig,
-                new UkOpenBankingV31PisConfiguration(Urls.PIS_API_URL));
+                new UkOpenBankingPisConfiguration(Urls.PIS_API_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+        UkOpenBankingV31Ais ukOpenBankingV31Ais =
+                new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+        return new MonzoV31Ais(ukOpenBankingV31Ais, aisConfig, persistentStorage);
     }
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        UKOpenbankingV31Executor paymentExecutor =
-                new UKOpenbankingV31Executor(
+        UKOpenbankingExecutor paymentExecutor =
+                new UKOpenbankingExecutor(
                         softwareStatement,
                         providerConfiguration,
                         apiClient,

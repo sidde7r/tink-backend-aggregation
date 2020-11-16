@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.workers.encryption;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
@@ -197,15 +199,18 @@ public class CredentialsCrypto {
                 request.getCredentials().getId(),
                 CACHE_EXPIRE_TIME,
                 serializedEncryptedCredentials);
+        logger.info(
+                "cached sensitive data with timestamp: {}",
+                formatDate(encryptedCredentials.getTimestamp()));
 
         cryptoMetrics(CREDENTIALS_ENCRYPT, encryptedCredentials, true);
 
         if (doUpdateCredential) {
-            logger.info("Updating sensitive data");
             controllerWrapper.updateCredentialSensitive(
                     request.getCredentials(),
                     serializedEncryptedCredentials,
                     request.getOperationId());
+            logger.info("sensitive data saved in database");
         }
 
         return true;
@@ -220,25 +225,56 @@ public class CredentialsCrypto {
                 .inc();
     }
 
-    private String pickMostRecentSensitiveData(String a, String b) {
+    private String pickMostRecentSensitiveData(String cached, String incoming) {
         // Return the other one if one is null.
-        if (Strings.isNullOrEmpty(a)) {
-            return b;
-        } else if (Strings.isNullOrEmpty(b)) {
-            return a;
+        if (Strings.isNullOrEmpty(cached)) {
+            logger.info(
+                    "using incoming sensitive data with timestamp: {}",
+                    formatDate(getDate(incoming)));
+            return incoming;
+        } else if (Strings.isNullOrEmpty(incoming)) {
+            logger.info(
+                    "using cached sensitive data with timestamp: {}", formatDate(getDate(cached)));
+            return cached;
         }
 
         // Return the latest one if both are set.
-        EncryptedPayloadHead baseA =
-                SerializationUtils.deserializeFromString(a, EncryptedPayloadHead.class);
+        EncryptedPayloadHead cachedDeserialized =
+                SerializationUtils.deserializeFromString(cached, EncryptedPayloadHead.class);
 
-        EncryptedPayloadHead baseB =
-                SerializationUtils.deserializeFromString(b, EncryptedPayloadHead.class);
+        EncryptedPayloadHead incomingDeserialized =
+                SerializationUtils.deserializeFromString(incoming, EncryptedPayloadHead.class);
 
-        if (baseB.getTimestamp() == null || baseA.getTimestamp().after(baseB.getTimestamp())) {
-            return a;
+        if (incomingDeserialized.getTimestamp() == null
+                || cachedDeserialized.getTimestamp().after(incomingDeserialized.getTimestamp())) {
+            logger.info(
+                    "using cached sensitive data, incoming timestamp:{}, cached timestamp:{}",
+                    formatDate(incomingDeserialized.getTimestamp()),
+                    formatDate(cachedDeserialized.getTimestamp()));
+            return cached;
         } else {
-            return b;
+            logger.info(
+                    "using incoming sensitive data, incoming timestamp:{}, cached timestamp:{}",
+                    formatDate(incomingDeserialized.getTimestamp()),
+                    formatDate(cachedDeserialized.getTimestamp()));
+
+            return incoming;
         }
+    }
+
+    private Date getDate(String serialized) {
+        if (null == serialized) {
+            return null;
+        }
+        EncryptedPayloadHead deserialized =
+                SerializationUtils.deserializeFromString(serialized, EncryptedPayloadHead.class);
+        return deserialized.getTimestamp();
+    }
+
+    private String formatDate(Date date) {
+        if (null == date) {
+            return null;
+        }
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(date);
     }
 }

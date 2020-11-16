@@ -138,6 +138,11 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         String redirectUrl = sessionStorage.get(StorageKeys.LINK);
         if (redirectUrl != null) { // dont redirect if CBI globe dont provide redirect URL.
             openThirdPartyApp(new URL(redirectUrl));
+            // after redirect is done remove old redirect link from session, because
+            // if 5xx received from CBI Globe bank status polling then old redirect link is not
+            // removed from session and TL again redirect to bank.
+            sessionStorage.put(StorageKeys.LINK, null);
+
             waitForSupplementalInformation();
         }
 

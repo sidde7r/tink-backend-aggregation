@@ -73,6 +73,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.LegacyFilterable;
@@ -440,6 +441,11 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
 
     @Override
     public void disableAggregatorHeader() {
+        throw new NotImplementedException("Use NextGenHttpClient instead");
+    }
+
+    @Override
+    public void setLoggingStrategy(LoggingStrategy loggingStrategy) {
         throw new NotImplementedException("Use NextGenHttpClient instead");
     }
 

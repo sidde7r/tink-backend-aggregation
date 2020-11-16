@@ -36,6 +36,10 @@ public class TransactionEntity {
                 .build();
     }
 
+    public boolean isNotEmpty() {
+        return transactionAmount.isNotEmpty();
+    }
+
     private String createDescription() {
         if (Objects.nonNull(this.remittanceInformationUnstructured)) {
             final String unstructured = this.remittanceInformationUnstructured;

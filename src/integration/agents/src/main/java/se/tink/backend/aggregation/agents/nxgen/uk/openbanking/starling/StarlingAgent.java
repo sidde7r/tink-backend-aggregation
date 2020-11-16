@@ -18,12 +18,15 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.OAuth2AuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.StarlingTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -151,5 +154,17 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public OAuth2Authenticator getAuthenticator() {
         return authenticator;
+    }
+
+    public AgentAuthenticationProcess getAuthenticationProcess() {
+        return new OAuth2AuthenticationConfig()
+                .authenticationProcess(
+                        new AgentPlatformHttpClient(client),
+                        new StarlingOAuth2AuthorizationSpecification(
+                                aisConfiguration, redirectUrl));
+    }
+
+    public boolean isBackgroundRefreshPossible() {
+        return true;
     }
 }

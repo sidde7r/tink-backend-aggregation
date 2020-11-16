@@ -87,7 +87,14 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
             if (shouldRemoveAlreadyAggregatedAccounts) {
                 removeRestrictedAccounts(restrictedAccounts);
             }
-            // TODO register account filtering https://tinkab.atlassian.net/browse/AGG-421
+            if (!restrictedAccounts.isEmpty()) {
+                log.info(
+                        "Applying PSD2 payment account restriction filter for credentialsId: {}",
+                        context.getRequest().getCredentials().getId());
+                this.context
+                        .getAccountDataCache()
+                        .addFilter(a -> !shouldFilterRestrictedAccount(a));
+            }
         } catch (RuntimeException e) {
             log.warn("Could not execute Psd2PaymentAccountRestrictionWorkerCommand", e);
         }

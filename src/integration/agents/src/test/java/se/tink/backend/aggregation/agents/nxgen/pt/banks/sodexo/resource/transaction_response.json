@@ -1,0 +1,49 @@
+{
+    "transactions": [
+        {
+            "description": "CARREGAMENTO DE BENEF\u00cdCIO",
+            "date": "15.10",
+            "date_iso_8601": "2020-10-15",
+            "type": 1,
+            "amount": 147
+        },
+        {
+            "description": "CARREGAMENTO DE BENEF\u00cdCIO",
+            "date": "10.09",
+            "date_iso_8601": "2020-09-10",
+            "type": 1,
+            "amount": 147
+        },
+        {
+            "description": "CARREGAMENTO DE BENEF\u00cdCIO",
+            "date": "22.07",
+            "date_iso_8601": "2020-07-22",
+            "type": 1,
+            "amount": 147
+        },
+        {
+            "description": "CARREGAMENTO DE BENEF\u00cdCIO",
+            "date": "03.07",
+            "date_iso_8601": "2020-07-03",
+            "type": 1,
+            "amount": 147
+        },
+        {
+            "description": "CARREGAMENTO DE BENEF\u00cdCIO",
+            "date": "11.05",
+            "date_iso_8601": "2020-05-11",
+            "type": 1,
+            "amount": 147
+        },
+        {
+            "description": "CARREGAMENTO DE BENEF\u00cdCIO",
+            "date": "11.05",
+            "date_iso_8601": "2020-05-11",
+            "type": 1,
+            "amount": 147
+        }
+    ],
+    "next-index": null,
+    "subsets": 1,
+    "earliest_date_balance": "294.00"
+}

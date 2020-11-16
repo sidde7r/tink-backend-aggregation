@@ -18,7 +18,7 @@ public class GetTransactionsResponse implements PaginatorResponse {
     private boolean pageRemaining;
 
     @Override
-    public Collection<? extends Transaction> getTinkTransactions() {
+    public Collection<Transaction> getTinkTransactions() {
         if (transactions == null) {
             return Collections.emptyList();
         }

@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/constants",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
         "//src/libraries/date",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client/factory",

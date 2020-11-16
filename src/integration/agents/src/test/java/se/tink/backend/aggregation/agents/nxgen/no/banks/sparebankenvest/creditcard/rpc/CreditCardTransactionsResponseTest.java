@@ -27,7 +27,7 @@ public class CreditCardTransactionsResponseTest {
                 SerializationUtils.deserializeFromString(
                         TEST_DATA_PARSE, CreditCardTransactionsResponse.class);
 
-        assertThat(response.hasMoreTransactions()).isTrue();
+        assertThat(response.hasMoreTransactions()).isFalse();
         assertThat(response.getNextStartOffset()).isEqualTo(50);
         List<CreditCardTransaction> transactions = response.getTinkTransactions();
         assertEquals(11, response.getTinkTransactions().size());

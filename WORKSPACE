@@ -145,7 +145,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "8b1ae0f89470299b863dbfffdaf336b7210e0bd1",
+    commit = "d08caa924c2c27c09bf5348192bd3d410f63d2e1",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
@@ -153,7 +153,7 @@ git_repository(
 # To be used only by //src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework
 git_repository(
     name = "tink_backend_for_agents_framework",
-    commit = "b569ad7af323bdb56fa980e50c50dd297227bc89",
+    commit = "3653b9438eb8d7fd6aea27b10f1a8cfe22b71cad",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1595000000 +0000",
 )
@@ -639,6 +639,10 @@ agent_platform_deps("@tink_backend_for_agents_framework//src/agents-platform:age
 load("@agents_platform_maven//:defs.bzl", pin_agent_platform = "pinned_maven_install")
 
 pin_agent_platform()
+
+load("@tink_backend_for_agents_framework//src/libraries/cryptography:deps.bzl", "cryptography_lib_deps")
+
+cryptography_lib_deps("@tink_backend_for_agents_framework//src/libraries/cryptography:cryptography_lib_install.json")
 
 # This aims become the singular place for specifying the full collection of direct and transitive
 # dependencies of the aggregation service monolith jar. All aggregation code -- including agent code
@@ -1230,17 +1234,6 @@ maven_install(
         "org.slf4j:log4j-over-slf4j:1.7.29",
         "ch.qos.logback:logback-core:1.2.3",
         "ch.qos.logback:logback-classic:1.2.3",
-    ],
-    fetch_sources = True,
-    repositories = MAVEN_REPOS,
-)
-
-maven_install(
-    name = "standalone_agent_test_deps",
-    artifacts = [
-        "org.springframework:spring-test:5.2.1.RELEASE",
-        "org.mockito:mockito-core:2.10.0",
-        "junit:junit:4.12",
     ],
     fetch_sources = True,
     repositories = MAVEN_REPOS,

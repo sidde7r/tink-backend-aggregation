@@ -169,6 +169,8 @@ public class GetCardResponse {
                                                 cardNumber))
                                 .build())
                 .setApiIdentifier(cardId)
+                .putInTemporaryStorage(
+                        DnbConstants.CreditCard.TRANSACTION_TYPE, getTransactionType())
                 .addHolderName(firstName + " " + lastName)
                 .build();
     }

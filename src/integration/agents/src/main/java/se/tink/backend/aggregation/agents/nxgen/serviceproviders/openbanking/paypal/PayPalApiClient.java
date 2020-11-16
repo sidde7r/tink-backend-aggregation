@@ -9,7 +9,6 @@ import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.PathTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.StorageKeys;
@@ -22,10 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pay
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.PersonalPaymentRequestBody;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.PersonalPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.WipPaymentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.WipPaymentRequestBody;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -33,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.payment.rpc.Payment;
 
 public final class PayPalApiClient {
     private final TinkHttpClient client;
@@ -166,28 +160,5 @@ public final class PayPalApiClient {
         calendar.add(Calendar.YEAR, -1);
         return new SimpleDateFormat(PayPalConstants.Formats.TRANSACTION_DATE_FORMAT)
                 .format(calendar.getTime());
-    }
-
-    public PersonalPaymentResponse createPayment(PersonalPaymentRequestBody body) {
-        return createRequestInSession(PayPalConstants.Urls.CREATE_PERSONAL_PAYMENT)
-                .body(body)
-                .post(PersonalPaymentResponse.class);
-    }
-
-    public PersonalPaymentResponse fetchPersonalPaymentDetails(Payment payment) {
-        URL PAYMENT_DETAILS =
-                Urls.PAYMENT_DETAILS.parameter(PathTags.PAYMENT_TOKEN, payment.getUniqueId());
-        return createRequestInSession(PAYMENT_DETAILS).get(PersonalPaymentResponse.class);
-    }
-
-    public WipPaymentDetailsResponse createPayment(WipPaymentRequestBody body) {
-        return createRequestInSession(PayPalConstants.Urls.ORDER_PAYMENT)
-                .body(body)
-                .post(WipPaymentDetailsResponse.class);
-    }
-
-    public WipPaymentDetailsResponse fetchOrderTransactionDetails(String paymentId) {
-        URL PAYMENT_DETAILS = Urls.ORDER_PAYMENT_DETAILS.parameter(PathTags.PAYMENT_ID, paymentId);
-        return createRequestInSession(PAYMENT_DETAILS).get(WipPaymentDetailsResponse.class);
     }
 }

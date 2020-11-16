@@ -3,6 +3,7 @@ package se.tink.libraries.date;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import java.text.ParseException;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -160,6 +161,10 @@ public class ThreadSafeDateFormat {
 
     public String format(ReadablePartial date) {
         return dateFormat.print(date);
+    }
+
+    public String format(Instant instant) {
+        return dateFormat.print(Date.from(instant).getTime());
     }
 
     public Date parse(String string) throws ParseException {

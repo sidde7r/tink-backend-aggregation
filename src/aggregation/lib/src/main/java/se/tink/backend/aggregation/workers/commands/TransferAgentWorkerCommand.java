@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -249,7 +250,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("Could not validate the destination account."));
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), CreditorValidationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -264,7 +267,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("Could not validate the date you entered for the payment."));
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), DateValidationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -279,7 +284,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("Could not execute payment due to insufficient funds."));
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), InsufficientFundsException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -295,7 +302,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
                     catalog.getString(
-                            "Could not validate the account, you are trying to pay from."));
+                            getStatusMessage(
+                                    e.getMessage(), DebtorValidationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -310,7 +318,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("The reference you provided for the payment is not valid."));
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), ReferenceValidationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -324,7 +334,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
-            signableOperation.setStatusMessage(catalog.getString("Payment authentication failed."));
+            signableOperation.setStatusMessage(
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(),
+                                    PaymentAuthenticationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -338,7 +352,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
-            signableOperation.setStatusMessage(catalog.getString("Payment authorization failed."));
+            signableOperation.setStatusMessage(
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(),
+                                    PaymentAuthorizationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -352,7 +370,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
-            signableOperation.setStatusMessage(catalog.getString("Payment validation failed."));
+            signableOperation.setStatusMessage(
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), PaymentValidationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -464,5 +485,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     private static class MetricName {
         private static final String METRIC = "agent_transfer";
         private static final String EXECUTE_TRANSFER = "execute";
+    }
+
+    private String getStatusMessage(String message, String defaultMessage) {
+        return Strings.isNullOrEmpty(message) ? defaultMessage : message;
     }
 }

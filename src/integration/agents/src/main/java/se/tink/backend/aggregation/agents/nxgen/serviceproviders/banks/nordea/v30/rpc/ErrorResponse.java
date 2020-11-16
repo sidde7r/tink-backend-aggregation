@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
@@ -18,16 +19,12 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ErrorResponse {
-    @JsonProperty("http_status")
     private int httpStatus;
-
-    @JsonProperty private String error;
-
-    @JsonProperty("error_description")
+    private String error;
     private String errorDescription;
-
-    @JsonProperty private List<Detail> details;
+    private List<Detail> details;
 
     /**
      * @throws HttpResponseException if the http response doesn't have application/json content type
@@ -40,6 +37,21 @@ public class ErrorResponse {
             return response.getBody(ErrorResponse.class);
         }
         throw e;
+    }
+
+    @JsonIgnore
+    public boolean isNotACustomer() {
+        return NordeaBaseConstants.ErrorCodes.RESOURCE_NOT_FOUND.equalsIgnoreCase(error);
+    }
+
+    @JsonIgnore
+    public boolean isAutostartTokenExpired() {
+        return NordeaBaseConstants.ErrorCodes.AUTH_NOT_STARTED.equalsIgnoreCase(error);
+    }
+
+    @JsonIgnore
+    public boolean isBankIdTimeout() {
+        return NordeaBaseConstants.ErrorCodes.CHALLENGE_EXPIRED.equalsIgnoreCase(error);
     }
 
     @JsonIgnore

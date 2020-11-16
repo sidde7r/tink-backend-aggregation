@@ -18,11 +18,13 @@ public class TransactionsEntity {
     private List<TransactionEntity> booked;
     private List<TransactionEntity> pending;
 
-    public Collection<? extends Transaction> getTinkTransactions() {
+    public Collection<Transaction> getTinkTransactions() {
         return Stream.concat(
                         Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
+                                .filter(TransactionEntity::isNotEmpty)
                                 .map(TransactionEntity::toBookedTransaction),
                         Optional.ofNullable(pending).orElse(Collections.emptyList()).stream()
+                                .filter(TransactionEntity::isNotEmpty)
                                 .map(TransactionEntity::toPendingTransaction))
                 .collect(Collectors.toList());
     }

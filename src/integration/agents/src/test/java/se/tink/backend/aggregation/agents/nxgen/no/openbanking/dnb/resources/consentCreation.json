@@ -1,0 +1,12 @@
+{
+    "_links": {
+        "scaRedirect": {
+            "href": "https://www.test.com/segp/appo/logon/psd2Start?blob=ASDF&redirectUrl=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3Dtest_state"
+        },
+        "self": {
+            "href": "/v1/consents/test_consent_id"
+        }
+    },
+    "consentId": "test_consent_id",
+    "consentStatus": "received"
+}

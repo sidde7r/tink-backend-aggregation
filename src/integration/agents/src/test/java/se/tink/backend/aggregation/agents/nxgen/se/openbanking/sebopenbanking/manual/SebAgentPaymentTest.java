@@ -19,7 +19,8 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Payment.Builder;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 // DISCLAIMER! Actual money being transferred, run under own responsability
 public class SebAgentPaymentTest {
@@ -66,7 +67,8 @@ public class SebAgentPaymentTest {
                         creditorDebtorManager.get(SebAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-        Reference reference = new Reference("Message", "ToSomeone");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("ToSomeone");
 
         Amount amount = Amount.inSEK(1);
         LocalDate executionDate = LocalDate.now();
@@ -79,7 +81,7 @@ public class SebAgentPaymentTest {
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
-                        .withReference(reference)
+                        .withRemittanceInformation(remittanceInformation)
                         .build());
     }
 
@@ -94,7 +96,9 @@ public class SebAgentPaymentTest {
                         creditorDebtorManager.get(SebAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-        Reference reference = new Reference("OCR", "50000038393");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.OCR);
+        remittanceInformation.setValue("50000038393");
 
         Amount amount = Amount.inSEK(1);
         LocalDate executionDate = LocalDate.now().plusDays(1);
@@ -107,7 +111,7 @@ public class SebAgentPaymentTest {
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
-                        .withReference(reference)
+                        .withRemittanceInformation(remittanceInformation)
                         .build());
     }
 

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -12,8 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pay
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.authenticator.PayPalAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.authenticator.PayPalOrderTransactionAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.configuration.PayPalConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.executor.payment.PayPalOrderPaymentExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.executor.payment.PayPalPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.PayPalTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.PayPalTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -23,9 +20,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -107,20 +101,6 @@ public final class PayPalAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
-    }
-
-    @Override
-    public Optional<PaymentController> constructPaymentController() {
-        // PayPal has two types of payments, P2P and WiP.
-        // P2P uses one controller while WiP uses another.
-        // Switch between two payment controllers, P2P and WiP.
-
-        PaymentExecutor paymentExecutor =
-                isWiPPaymentInitiated()
-                        ? new PayPalOrderPaymentExecutor(apiClient, supplementalInformationHelper)
-                        : new PayPalPaymentExecutor(apiClient, supplementalInformationHelper);
-        FetchablePaymentExecutor fetchable = (FetchablePaymentExecutor) paymentExecutor;
-        return Optional.of(new PaymentController(paymentExecutor, fetchable));
     }
 
     private boolean isWiPPaymentInitiated() {

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature;
 
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 
 public class BelfiusSignatureCreator {
@@ -12,6 +13,16 @@ public class BelfiusSignatureCreator {
                 String.format(
                         "%s%s%s%s",
                         challengeUpperCase, challengeUpperCase, deviceToken, panNumberStripped));
+    }
+
+    public String createSignaturePw(
+            String challenge, String contractNumber, BelfiusAuthenticationData authData) {
+        return createSignaturePw(
+                challenge,
+                authData.getDeviceToken(),
+                authData.getPanNumber(),
+                contractNumber,
+                authData.getPassword());
     }
 
     public String createSignaturePw(

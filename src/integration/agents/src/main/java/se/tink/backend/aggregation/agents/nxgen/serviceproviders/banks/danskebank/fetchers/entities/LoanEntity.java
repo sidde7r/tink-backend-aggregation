@@ -55,12 +55,21 @@ public class LoanEntity {
                 .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                 .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
                 .canWithdrawCash(AccountCapabilities.Answer.UNKNOWN)
+                .setInterestRate(parseInterestRate(loanDetailsResponse))
                 .sourceInfo(
                         AccountSourceInfo.builder()
                                 .bankProductName(loanTypeName)
                                 .bankProductCode(loanType)
                                 .build())
                 .build();
+    }
+
+    private Double parseInterestRate(LoanDetailsResponse loanDetailsResponse) {
+        try {
+            return Double.valueOf(loanDetailsResponse.getLoanDetail().getInterest());
+        } catch (NumberFormatException | NullPointerException e) {
+            return null;
+        }
     }
 
     @JsonIgnore

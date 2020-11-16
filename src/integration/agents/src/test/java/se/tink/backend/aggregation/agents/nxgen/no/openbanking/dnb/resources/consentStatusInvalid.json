@@ -1,0 +1,8 @@
+{
+    "_links": {
+        "self": {
+            "href": "/v1/consents/***MASKED***/***MASKED***"
+        }
+    },
+    "consentStatus": "rejected"
+}

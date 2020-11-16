@@ -27,7 +27,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Payment.Builder;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class SbabAgentPaymentTest {
 
@@ -74,7 +74,8 @@ public class SbabAgentPaymentTest {
         AccountIdentifier debtorAccountIdentifier =
                 new SwedishIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
-        Reference reference = new Reference("Message", "ToSomeone111");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("ToSomeone111");
 
         Amount amount = Amount.inSEK(1);
         LocalDate executionDate = LocalDate.now();
@@ -87,7 +88,7 @@ public class SbabAgentPaymentTest {
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
-                        .withReference(reference)
+                        .withRemittanceInformation(remittanceInformation)
                         .build());
     }
 

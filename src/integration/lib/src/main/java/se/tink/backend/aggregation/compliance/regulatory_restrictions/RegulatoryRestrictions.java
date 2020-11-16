@@ -63,7 +63,6 @@ public class RegulatoryRestrictions {
                 return paymentAccountClassification
                         == Psd2PaymentAccountClassificationResult.UNDETERMINED_PAYMENT_ACCOUNT;
             default:
-                logger.warn("Unrecognized restriction: " + restriction);
                 return false;
         }
     }

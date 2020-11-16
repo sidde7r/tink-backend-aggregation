@@ -1,29 +1,43 @@
 {
-  "account": {
-    "bban": "12045357110",
-    "currency": "NOK"
-  },
-  "balances": [
-    {
-      "balanceAmount": {
-        "amount": "63257.00",
+    "account": {
+        "bban": "12045357110",
         "currency": "NOK"
-      },
-      "balanceType": "openingBooked"
     },
-    {
-      "balanceAmount": {
-        "amount": "63257.00",
-        "currency": "NOK"
-      },
-      "balanceType": "authorised"
-    },
-    {
-      "balanceAmount": {
-        "amount": "63257.00",
-        "currency": "NOK"
-      },
-      "balanceType": "expected"
-    }
-  ]
+    "balances": [
+        {
+            "balanceAmount": {
+                "amount": "1234.00",
+                "currency": "NOK"
+            },
+            "balanceType": "openingBooked"
+        },
+        {
+            "balanceAmount": {
+                "amount": "2345.00",
+                "currency": "NOK"
+            },
+            "balanceType": "authorised"
+        },
+        {
+            "balanceAmount": {
+                "amount": "3456.00",
+                "currency": "NOK"
+            },
+            "balanceType": "expected"
+        },
+        {
+            "balanceAmount": {
+                "amount": "-0.99",
+                "currency": "NOK"
+            },
+            "balanceType": "interimAvailable"
+        },
+        {
+            "balanceAmount": {
+                "amount": "10000.99",
+                "currency": "NOK"
+            },
+            "balanceType": "forwardAvailable"
+        }
+    ]
 }

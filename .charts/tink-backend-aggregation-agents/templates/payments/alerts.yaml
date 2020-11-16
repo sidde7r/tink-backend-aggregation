@@ -27,23 +27,23 @@ spec:
     {{- if .Values.Environment }}
     {{- if eq .Values.Environment "production" }}
     - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier2Banks
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h])) >= 5
+      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h])) >= 8
       labels:
         severity: urgent
         who: payments
         priority: P4
       annotations:
-        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/NMhMIXRGz/se-trends-from-aggregation-service-pov?orgId=1&from=now-12h&to=now
+        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/O0WQ492Mz/payments-connectivity-overview?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier1Banks
-      expr: sum by (provider, outcome) (increase(tink_agent_transfer_total{market="SE", provider=~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h])) >= 5
+      expr: sum by (provider, outcome) (increase(tink_agent_transfer_total{market="SE", provider=~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h])) >= 8
       labels:
         severity: urgent
         who: payments
         priority: P3
       annotations:
-        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/NMhMIXRGz/se-trends-from-aggregation-service-pov?orgId=1&from=now-12h&to=now
+        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/O0WQ492Mz/payments-connectivity-overview?orgId=1
         summary: Threshold exceed for ( <{ $labels.provider }> ) for transfers with outcome ( <{ $labels.outcome }> ).
     {{- end }}
     {{- end }}

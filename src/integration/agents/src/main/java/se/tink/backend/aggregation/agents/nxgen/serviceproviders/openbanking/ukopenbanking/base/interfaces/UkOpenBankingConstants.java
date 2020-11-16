@@ -9,6 +9,9 @@ public interface UkOpenBankingConstants {
     class HttpHeaders {
         public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
         public static final String X_JWS_SIGNATURE = "x-jws-signature";
+        public static final String AUTHORIZATION = "Authorization";
+        public static final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
+        public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
     }
 
     enum PartyEndpoint {
@@ -61,7 +64,6 @@ public interface UkOpenBankingConstants {
                 "/accounts/%s/scheduled-payments";
         public static final String ACCOUNT_BENEFICIARIES_REQUEST = "/accounts/%s/beneficiaries";
         public static final String PAYMENTS = "/payments";
-        public static final String PAYMENT_SUBMISSIONS = "/payment-submissions";
 
         public static class Domestic {
             public static final String PAYMENT_CONSENT = "/domestic-payment-consents";

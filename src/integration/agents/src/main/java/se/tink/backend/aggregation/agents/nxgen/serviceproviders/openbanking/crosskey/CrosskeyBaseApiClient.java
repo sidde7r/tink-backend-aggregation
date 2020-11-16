@@ -67,6 +67,7 @@ public class CrosskeyBaseApiClient {
             SessionStorage sessionStorage,
             CrosskeyMarketConfiguration marketConfiguration) {
         this.client = client;
+        client.setTimeout(60 * 1000);
         this.sessionStorage = sessionStorage;
         this.baseAuthUrl = marketConfiguration.getBaseAuthURL();
         this.baseApiUrl = marketConfiguration.getBaseApiURL();

@@ -12,10 +12,10 @@ public class AuthorizeRequest {
     private String redirectUri;
     private String scope = RequestValues.ALL_SCOPES;
 
-    public AuthorizeRequest(String clientID, String redirectUri) {
+    public AuthorizeRequest(String clientID, String redirectUri, String bankId) {
         this.clientID = clientID;
         this.redirectUri = redirectUri;
-        psuData = new PsuDataEntity();
+        psuData = new PsuDataEntity(bankId);
     }
 
     public AuthorizeRequest() {}

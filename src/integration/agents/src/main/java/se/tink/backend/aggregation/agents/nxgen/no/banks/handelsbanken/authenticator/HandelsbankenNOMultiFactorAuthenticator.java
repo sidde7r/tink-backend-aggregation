@@ -102,7 +102,6 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
         if (pollStatus.equalsIgnoreCase(
                 HandelsbankenNOConstants.BankIdAuthenticationStatus.COMPLETE)) {
             executeLogin(getBankIdEvryToken());
-            executeLogin(getActivateEvryToken());
             return BankIdStatus.DONE;
         } else if (pollStatus.equalsIgnoreCase(
                 HandelsbankenNOConstants.BankIdAuthenticationStatus.NONE)) {
@@ -119,6 +118,11 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
                 "unexpected state when polling for bank ID: "
                         + SerializationUtils.serializeToString(pollBankIdResponse));
         return BankIdStatus.FAILED_UNKNOWN;
+    }
+
+    @Override
+    public void sendActivationCode() throws SupplementalInfoException {
+        executeLogin(getActivateEvryToken());
     }
 
     private void handleReferenceWordsError(Document parsedDocument) {

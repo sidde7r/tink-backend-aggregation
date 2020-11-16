@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -10,12 +12,15 @@ import static org.mockito.Mockito.when;
 import com.google.common.collect.ImmutableMap;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -42,6 +47,7 @@ public class FiduciaAuthenticatorTest {
     private static final String PASSWORD = "password";
     private static final String CONSENT_ID = "consentId";
     private static final String OTP_CODE = "123456";
+    private static final String STARTCODE = "555777999666";
     private static final String SCA_METHOD_ID_CHIP_TAN = "962";
     private static final String AUTH_PATH =
             "/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id";
@@ -50,14 +56,18 @@ public class FiduciaAuthenticatorTest {
     private FiduciaApiClient apiClient;
     private PersistentStorage persistentStorage;
     private SessionStorage sessionStorage;
+    private SupplementalInformationHelper supplementalInformationHelper;
+
+    private Credentials credentials;
+
+    @Captor ArgumentCaptor<Field> fieldCaptor;
 
     @Before
     public void setup() {
         apiClient = mock(FiduciaApiClient.class);
         persistentStorage = mock(PersistentStorage.class);
         sessionStorage = mock(SessionStorage.class);
-        SupplementalInformationHelper supplementalInformationHelper =
-                mock(SupplementalInformationHelper.class);
+        supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         Catalog catalog = mock(Catalog.class);
 
         authenticator =
@@ -70,22 +80,29 @@ public class FiduciaAuthenticatorTest {
 
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
 
-        Map<String, String> suppData = new HashMap<>();
-        suppData.put("tanField", OTP_CODE);
-        suppData.put("selectAuthMethodField", "2");
-        when(supplementalInformationHelper.askSupplementalInformation(any())).thenReturn(suppData);
+        Map<String, String> otpCodeData = new HashMap<>();
+        otpCodeData.put("tanField", OTP_CODE);
+        otpCodeData.put("selectAuthMethodField", "2");
+        when(supplementalInformationHelper.askSupplementalInformation(any()))
+                .thenReturn(otpCodeData);
+    }
+
+    private void beforeFullAuth() {
+        credentials = new Credentials();
+        credentials.setFields(
+                ImmutableMap.of(
+                        CredentialKeys.PSU_ID, USERNAME, CredentialKeys.PASSWORD, PASSWORD));
+
+        when(apiClient.createConsent()).thenReturn(CONSENT_ID);
+
+        fieldCaptor = ArgumentCaptor.forClass(Field.class);
     }
 
     @Test
     public void authenticateShouldInvokeApiClientAndSaveDataInStorage()
             throws SupplementalInfoException {
         // given
-        Credentials credentials = new Credentials();
-        credentials.setFields(
-                ImmutableMap.of(
-                        CredentialKeys.PSU_ID, USERNAME, CredentialKeys.PASSWORD, PASSWORD));
-
-        when(apiClient.createConsent()).thenReturn(CONSENT_ID);
+        beforeFullAuth();
         when(apiClient.authorizeConsent(CONSENT_ID, PASSWORD))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
@@ -107,18 +124,19 @@ public class FiduciaAuthenticatorTest {
         verify(apiClient).authorizeConsent(CONSENT_ID, PASSWORD);
         verify(apiClient).authorizeWithOtpCode(AUTH_PATH, OTP_CODE);
         verifyNoMoreInteractions(apiClient);
+
+        // and verify supplement interactions
+        verify(supplementalInformationHelper).askSupplementalInformation(fieldCaptor.capture());
+        List<Field> allValues = fieldCaptor.getAllValues();
+        assertThat(allValues).hasSize(1);
+        assertThat(allValues.get(0).getName()).isEqualTo("tanField");
     }
 
     @Test
     public void authenticateShouldInvokeApiClientAndSaveDataInStorageWithChipTanSelected()
             throws SupplementalInfoException {
         // given
-        Credentials credentials = new Credentials();
-        credentials.setFields(
-                ImmutableMap.of(
-                        CredentialKeys.PSU_ID, USERNAME, CredentialKeys.PASSWORD, PASSWORD));
-
-        when(apiClient.createConsent()).thenReturn(CONSENT_ID);
+        beforeFullAuth();
         when(apiClient.authorizeConsent(CONSENT_ID, PASSWORD))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
@@ -135,7 +153,6 @@ public class FiduciaAuthenticatorTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaFinalised.json").toFile(),
                                 ScaStatusResponse.class));
-
         // when
         authenticator.authenticate(credentials);
 
@@ -147,6 +164,16 @@ public class FiduciaAuthenticatorTest {
         verify(apiClient).authorizeWithOtpCode(AUTH_PATH, OTP_CODE);
         verify(apiClient).selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN);
         verifyNoMoreInteractions(apiClient);
+
+        // and verify supplement interactions
+        verify(supplementalInformationHelper, times(2))
+                .askSupplementalInformation(fieldCaptor.capture());
+        List<Field> allValues = fieldCaptor.getAllValues();
+        assertThat(allValues).hasSize(3);
+        assertThat(allValues.get(0).getName()).isEqualTo("selectAuthMethodField");
+        assertThat(allValues.get(1).getName()).isEqualTo("startcodeField");
+        assertThat(allValues.get(1).getValue()).isEqualTo(STARTCODE);
+        assertThat(allValues.get(2).getName()).isEqualTo("tanField");
     }
 
     @Test
@@ -176,7 +203,7 @@ public class FiduciaAuthenticatorTest {
         Throwable thrown = catchThrowable(() -> authenticator.autoAuthenticate());
 
         // then
-        Assertions.assertThat(thrown)
+        assertThat(thrown)
                 .isInstanceOf(SessionException.class)
                 .hasMessage("Cause: SessionError.SESSION_EXPIRED");
         verify(persistentStorage).get(StorageKeys.CONSENT_ID, String.class);
@@ -194,7 +221,7 @@ public class FiduciaAuthenticatorTest {
         Throwable thrown = catchThrowable(() -> authenticator.autoAuthenticate());
 
         // then
-        Assertions.assertThat(thrown)
+        assertThat(thrown)
                 .isInstanceOf(SessionException.class)
                 .hasMessage("Cause: SessionError.SESSION_EXPIRED");
         verify(persistentStorage).get(StorageKeys.CONSENT_ID, String.class);
