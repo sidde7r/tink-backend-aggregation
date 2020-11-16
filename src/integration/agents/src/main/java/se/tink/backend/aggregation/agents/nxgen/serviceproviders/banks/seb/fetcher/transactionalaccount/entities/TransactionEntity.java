@@ -218,6 +218,29 @@ public class TransactionEntity {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(
+                rowId,
+                accountNumber,
+                bookingDate,
+                date,
+                batchNumber,
+                accountingDate,
+                verificationNumber,
+                description,
+                voucherNumber,
+                amount,
+                accountBalance,
+                transactionType,
+                additionalInformation,
+                BGL_ROR,
+                hasPaymentInformation,
+                RTE_SATS1,
+                sebUniqueTransactionId,
+                creationTimestamp);
+    }
+
     @JsonIgnore
     private boolean isForeignTransaction() {
         return TransactionType.FOREIGN_CARD_TRANSACTION.equalsIgnoreCase(transactionType)
