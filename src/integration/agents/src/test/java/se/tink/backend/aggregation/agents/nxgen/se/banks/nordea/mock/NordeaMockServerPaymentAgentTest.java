@@ -5,6 +5,7 @@ import static se.tink.libraries.enums.MarketCode.SE;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.TransferCommand;
@@ -16,6 +17,7 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+@Ignore
 public class NordeaMockServerPaymentAgentTest {
 
     private static final String CONFIGURATION_PATH =
