@@ -54,12 +54,12 @@ agents:
     test:
       partnerId: "bf873fdc-035b-48ef-a616-3b3c3fc243df"
       baseUrl: "https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2"
-      nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzTHUSrVhLcbA59fdf+utR2w1MdWTG0fUnsmJa9YlgaI3mVFQDlKXc0+oflTqLnIMDchn74a74sPbCZ20Tv3U8upFZ8WPZlqjGlGRv5OVGf5yHxaybjS0kpByhLaZZrRzeC2AGXL9FJ/V2wyUz+RQLWWf3/VQcTjMXxoMOxIYY/3mOla2TgU/Xsa5SNEVaYvsoysrVqMA6YZqGfdLzNSU8tbVrC0j1SvWXmW+8fjXHR+HY7T4EyJTw/pqfrk8s5KIBijgQDhOv7AvACOb1AkykljFQ182bTZv6gzBBGc2DALA7IKG4oq0bzMgn77w7zRkVpnOQTwHIBybhvsdPvgmlwIDAQAB"
+      nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtdoeEj7Vg9/YwYBjugMk33Ao8fmsjpBCuh4PlqgjAIEHob16GxyKoGvIsI2AHdFVGXBE7PBIDMghUDqp9XlrT69Lz+5U+KkCoLnPxeKZKo5/+6w91cDwuwRr3gjrJ47bDjLngrC6Qi3fmF8emcYd9sliaBS/GD96M5WIY1vYCj1qCrWl+IzRry/TLg52VfNuzg9yPqBKbnh2vab3LXE+uxzFhr0V24h6BmHR1+S23Ist8R8REFms/svXl2EHJDlN/ZVtq/e8QuNZDDhfhFCA9CR8gjyINzWI0Jycm3KFrdQO806FrhN+2lcFbXi4sa7fOKva53TbN/MxwhVTX7p4HwIDAQAB"
       keyId: "tink-nordea-encrypt"
     preprod:
       partnerId: "bf873fdc-035b-48ef-a616-3b3c3fc243df"
       baseUrl: "https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2"
-      nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzTHUSrVhLcbA59fdf+utR2w1MdWTG0fUnsmJa9YlgaI3mVFQDlKXc0+oflTqLnIMDchn74a74sPbCZ20Tv3U8upFZ8WPZlqjGlGRv5OVGf5yHxaybjS0kpByhLaZZrRzeC2AGXL9FJ/V2wyUz+RQLWWf3/VQcTjMXxoMOxIYY/3mOla2TgU/Xsa5SNEVaYvsoysrVqMA6YZqGfdLzNSU8tbVrC0j1SvWXmW+8fjXHR+HY7T4EyJTw/pqfrk8s5KIBijgQDhOv7AvACOb1AkykljFQ182bTZv6gzBBGc2DALA7IKG4oq0bzMgn77w7zRkVpnOQTwHIBybhvsdPvgmlwIDAQAB"
+      nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtdoeEj7Vg9/YwYBjugMk33Ao8fmsjpBCuh4PlqgjAIEHob16GxyKoGvIsI2AHdFVGXBE7PBIDMghUDqp9XlrT69Lz+5U+KkCoLnPxeKZKo5/+6w91cDwuwRr3gjrJ47bDjLngrC6Qi3fmF8emcYd9sliaBS/GD96M5WIY1vYCj1qCrWl+IzRry/TLg52VfNuzg9yPqBKbnh2vab3LXE+uxzFhr0V24h6BmHR1+S23Ist8R8REFms/svXl2EHJDlN/ZVtq/e8QuNZDDhfhFCA9CR8gjyINzWI0Jycm3KFrdQO806FrhN+2lcFbXi4sa7fOKva53TbN/MxwhVTX7p4HwIDAQAB"
       keyId: "tink-nordea-encrypt"
     prod:
       partnerId: "bf873fdc-035b-48ef-a616-3b3c3fc243df"
