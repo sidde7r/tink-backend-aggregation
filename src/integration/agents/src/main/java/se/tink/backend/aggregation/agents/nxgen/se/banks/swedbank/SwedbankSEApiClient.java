@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.profile.SwedbankProfileSelector;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -27,8 +28,9 @@ public class SwedbankSEApiClient extends SwedbankDefaultApiClient {
             TinkHttpClient client,
             SwedbankConfiguration configuration,
             SwedbankStorage swedbankStorage,
+            SwedbankProfileSelector profileSelector,
             AgentComponentProvider componentProvider) {
-        super(client, configuration, swedbankStorage, componentProvider);
+        super(client, configuration, swedbankStorage, profileSelector, componentProvider);
         this.client.addFilter(new SwedbankSeHttpFilter(configuration.getUserAgent()));
     }
 

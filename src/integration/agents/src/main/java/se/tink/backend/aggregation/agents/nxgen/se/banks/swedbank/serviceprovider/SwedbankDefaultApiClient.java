@@ -54,6 +54,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankBaseHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankServiceUnavailableFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.profile.SwedbankProfileSelector;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfileHandler;
@@ -73,6 +74,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -82,11 +84,11 @@ public class SwedbankDefaultApiClient {
     @Getter private final String host;
     protected final TinkHttpClient client;
     private final SwedbankConfiguration configuration;
+    private final SwedbankProfileSelector profileSelector;
     private final String username;
     private final SwedbankStorage swedbankStorage;
     // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
-    private final String organizationNumber;
 
     private enum Method {
         GET,
@@ -99,19 +101,14 @@ public class SwedbankDefaultApiClient {
             TinkHttpClient client,
             SwedbankConfiguration configuration,
             SwedbankStorage swedbankStorage,
+            SwedbankProfileSelector profileSelector,
             AgentComponentProvider componentProvider) {
         this.client = client;
         this.configuration = configuration;
+        this.profileSelector = profileSelector;
         this.username =
                 componentProvider.getCredentialsRequest().getCredentials().getField(Key.USERNAME);
         this.swedbankStorage = swedbankStorage;
-        this.organizationNumber =
-                Optional.ofNullable(
-                                componentProvider
-                                        .getCredentialsRequest()
-                                        .getCredentials()
-                                        .getField(Key.CORPORATE_ID))
-                        .orElse("");
         this.host = configuration.getHost();
         configureHttpClient();
     }
@@ -536,23 +533,10 @@ public class SwedbankDefaultApiClient {
     private void setupProfiles(ProfileResponse profileResponse) {
         bankProfileHandler = new BankProfileHandler();
 
-        if (Strings.isNullOrEmpty(organizationNumber)) {
-            for (BankEntity bank : profileResponse.getBanks()) {
-                createAndAddProfileToHandler(bank, bank.getPrivateProfile());
-            }
-        } else {
-
-            for (BankEntity bank : profileResponse.getBanks()) {
-                bank.getBusinessProfile(organizationNumber)
-                        .ifPresent(
-                                businessProfileEntity ->
-                                        createAndAddProfileToHandler(bank, businessProfileEntity));
-            }
-
-            if (bankProfileHandler.getBankProfiles().isEmpty()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(
-                        "No business profile matched organisation number provider by user.");
-            }
+        // delegate profile selection
+        for (Pair<BankEntity, ProfileEntity> pair :
+                profileSelector.selectBankProfiles(profileResponse.getBanks())) {
+            createAndAddProfileToHandler(pair.first, pair.second);
         }
 
         swedbankStorage.setBankProfileHandler(bankProfileHandler);
@@ -564,7 +548,8 @@ public class SwedbankDefaultApiClient {
                 fetchProfile(profileEntity.getLinks().getNextOrThrow());
         bankProfileHandler.setMenuItems(menuItems);
         EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
-        PaymentBaseinfoResponse paymentBaseinfoResponse = getPaymentBaseInfoIfNotBusiness();
+        PaymentBaseinfoResponse paymentBaseinfoResponse =
+                profileSelector.hasPayments() ? fetchPaymentBaseinfo() : null;
 
         // create and add profile
         BankProfile bankProfile =
@@ -577,24 +562,6 @@ public class SwedbankDefaultApiClient {
         bankProfileHandler.addBankProfile(bankProfile);
         // profile is already activated
         bankProfileHandler.setActiveBankProfile(bankProfile);
-    }
-
-    /**
-     * Half temporary fix to handle that some business users don't have any payment related menu
-     * items. Fetching of payment base info is only relevant for PIS, which is not implemented for
-     * business. To be consistent we won't fetch payment base info for any business users.
-     *
-     * <p>Bank profile setup is very messy, we need to go over the fetching of engagement overview
-     * and payment base info as we store it on the bank profiles but don't use any of the stored
-     * data except for in BaseTransferExecutor. The private vs business setup is also getting
-     * increasingly complex (see TC-3614).
-     */
-    private PaymentBaseinfoResponse getPaymentBaseInfoIfNotBusiness() {
-        if (Strings.isNullOrEmpty(organizationNumber)) {
-            return fetchPaymentBaseinfo();
-        }
-
-        return null;
     }
 
     private BankProfileHandler getBankProfileHandler() {

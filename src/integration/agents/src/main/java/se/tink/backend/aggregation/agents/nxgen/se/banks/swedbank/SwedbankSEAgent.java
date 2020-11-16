@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankS
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankAbstractAgent;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.profile.SwedbankPrivateProfileSelector;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -69,7 +70,7 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
                                         .getProvider()
                                         .getPayload()),
                         SwedbankSEConstants.HOST),
-                new SwedbankSEApiClientProvider(),
+                new SwedbankSEApiClientProvider(new SwedbankPrivateProfileSelector()),
                 new SwedbankDateUtils(ZoneId.of("Europe/Stockholm"), new Locale("sv", "SE")));
 
         this.loanRefreshController =
