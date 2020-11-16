@@ -42,10 +42,9 @@ public class BelfiusAuthenticationData {
     }
 
     public String getPanNumber() {
-        if (null == panNumber || panNumber.contains(" ")) {
+        if (null == panNumber) {
             return panNumber;
         }
-        panNumber = formatPanNumber(panNumber);
-        return panNumber;
+        return formatPanNumber(panNumber);
     }
 }

@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusPro
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.SendCardNumberResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -38,7 +39,11 @@ public class PasswordLoginEncryptStepTest extends BaseStep {
                                 .machineId(MACHINE_ID),
                         persistenceData);
 
-        when(apiClient.sendCardNumber(SESSION_ID, MACHINE_ID, "1", PAN_NUMBER))
+        when(apiClient.sendCardNumber(
+                        SESSION_ID,
+                        MACHINE_ID,
+                        "1",
+                        BelfiusStringUtils.formatPanNumber(PAN_NUMBER)))
                 .thenReturn(Mockito.mock(SendCardNumberResponse.class, a -> CHALLENGE));
 
         when(signer.createSignaturePw(CHALLENGE, CONTRACT_NUMBER, persistenceData))

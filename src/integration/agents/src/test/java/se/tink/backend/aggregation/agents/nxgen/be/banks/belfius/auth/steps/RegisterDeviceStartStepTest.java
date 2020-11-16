@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusPro
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.SessionOpenedResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -55,7 +56,11 @@ public class RegisterDeviceStartStepTest extends BaseStep {
 
         verify(apiClient)
                 .sendIsDeviceRegistered(
-                        SESSION_ID, MACHINE_ID, "2", PAN_NUMBER, DEVICE_TOKEN_HASHED);
+                        SESSION_ID,
+                        MACHINE_ID,
+                        "2",
+                        BelfiusStringUtils.formatPanNumber(PAN_NUMBER),
+                        DEVICE_TOKEN_HASHED);
 
         assertThat(nextStepResult.getAuthenticationProcessState()).isPresent();
         BelfiusProcessState processState =
