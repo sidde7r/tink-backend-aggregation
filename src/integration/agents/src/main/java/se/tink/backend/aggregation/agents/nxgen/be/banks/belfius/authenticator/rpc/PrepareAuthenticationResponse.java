@@ -28,6 +28,17 @@ public class PrepareAuthenticationResponse extends BelfiusResponse {
         }
     }
 
+    public boolean isCredentialsOk() {
+        Widget widget =
+                ScreenUpdateResponse.findWidget(this, BelfiusConstants.Widget.PAN).orElse(null);
+
+        if (widget == null) {
+            return true;
+        }
+
+        return widget.getProperties(Valid.class).isValid();
+    }
+
     public String getChallenge() {
         return ScreenUpdateResponse.findWidgetOrElseThrow(
                         this, BelfiusConstants.Widget.IWS_LOGIN_SIGNATURE_CHALLENGE)

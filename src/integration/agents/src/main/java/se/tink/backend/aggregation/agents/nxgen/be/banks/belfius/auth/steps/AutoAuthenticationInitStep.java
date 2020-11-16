@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.steps;
 
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.DeviceRegistrationError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessState;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessStateAccessor;
@@ -14,8 +16,10 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.Belfi
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
+import se.tink.backend.aggregation.agentsplatform.framework.error.AgentBankApiError;
 
 @AllArgsConstructor
 @Slf4j
@@ -37,7 +41,14 @@ public class AutoAuthenticationInitStep
         BelfiusAuthenticationData persistence =
                 belfiusPersistedDataAccessor.getBelfiusAuthenticationData();
         BelfiusProcessState processState = processStateAccessor.getBelfiusProcessState();
-        initProcessState(processState, belfiusPersistedDataAccessor.getBelfiusAuthenticationData());
+        Optional<AgentBankApiError> maybeError =
+                initProcessState(
+                        processState, belfiusPersistedDataAccessor.getBelfiusAuthenticationData());
+        if (maybeError.isPresent()) {
+            return new AgentFailedAuthenticationResult(
+                    maybeError.get(),
+                    belfiusPersistedDataAccessor.clearBelfiusAuthenticationData());
+        }
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(
                         PasswordLoginEncryptStep.class.getSimpleName()),
@@ -45,23 +56,26 @@ public class AutoAuthenticationInitStep
                 belfiusPersistedDataAccessor.storeBelfiusAuthenticationData(persistence));
     }
 
-    private void initProcessState(
+    private Optional<AgentBankApiError> initProcessState(
             BelfiusProcessState processState, BelfiusAuthenticationData persistence) {
         requestConfigIos();
         new BelfiusSessionService(apiClient, processState).openSession("XXX");
-        prepareLogin(persistence, processState);
+        PrepareLoginResponse prepareLoginResponse = prepareLogin(persistence, processState);
+        if (prepareLoginResponse.isDeviceRegistrationError()) {
+            return Optional.of(new DeviceRegistrationError());
+        }
+        processState.setContractNumber(prepareLoginResponse.getContractNumber());
         prepareDeviceToken(processState, persistence);
+        return Optional.empty();
     }
 
-    private void prepareLogin(
+    private PrepareLoginResponse prepareLogin(
             BelfiusAuthenticationData persistence, BelfiusProcessState processState) {
-        PrepareLoginResponse response =
-                apiClient.prepareLogin(
-                        processState.getSessionId(),
-                        processState.getMachineId(),
-                        processState.incrementAndGetRequestCounterAggregated(),
-                        persistence.getPanNumber());
-        processState.setContractNumber(response.getContractNumber());
+        return apiClient.prepareLogin(
+                processState.getSessionId(),
+                processState.getMachineId(),
+                processState.incrementAndGetRequestCounterAggregated(),
+                persistence.getPanNumber());
     }
 
     private void requestConfigIos() {

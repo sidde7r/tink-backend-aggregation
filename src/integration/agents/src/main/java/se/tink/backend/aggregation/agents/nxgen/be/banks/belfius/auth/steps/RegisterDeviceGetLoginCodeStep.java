@@ -9,13 +9,16 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusPro
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusPersistedDataAccessor;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.PrepareAuthenticationResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginDescriptionAgentField;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginInputAgentField;
+import se.tink.backend.aggregation.agentsplatform.framework.error.InvalidCredentialsError;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -36,17 +39,23 @@ public class RegisterDeviceGetLoginCodeStep
         BelfiusAuthenticationData persistenceData =
                 persistedDataAccessor.getBelfiusAuthenticationData();
         BelfiusProcessState processState = processStateAccessor.getBelfiusProcessState();
-        String challenge = prepareAuthentication(persistenceData, processState);
-        return new AgentUserInteractionDefinitionResult(
-                AgentAuthenticationProcessStepIdentifier.of(
-                        RegisterDeviceLoginStep.class.getSimpleName()),
-                persistedDataAccessor.storeBelfiusAuthenticationData(persistenceData),
-                processStateAccessor.storeBelfiusProcessState(processState),
-                new CardReaderLoginDescriptionAgentField(challenge),
-                new CardReaderLoginInputAgentField());
+        PrepareAuthenticationResponse response =
+                prepareAuthentication(persistenceData, processState);
+        if (response.isCredentialsOk()) {
+            return new AgentUserInteractionDefinitionResult(
+                    AgentAuthenticationProcessStepIdentifier.of(
+                            RegisterDeviceLoginStep.class.getSimpleName()),
+                    persistedDataAccessor.storeBelfiusAuthenticationData(persistenceData),
+                    processStateAccessor.storeBelfiusProcessState(processState),
+                    new CardReaderLoginDescriptionAgentField(response.getChallenge()),
+                    new CardReaderLoginInputAgentField());
+        }
+        return new AgentFailedAuthenticationResult(
+                new InvalidCredentialsError(),
+                persistedDataAccessor.clearBelfiusAuthenticationData());
     }
 
-    private String prepareAuthentication(
+    private PrepareAuthenticationResponse prepareAuthentication(
             BelfiusAuthenticationData persistence, BelfiusProcessState processState) {
         return apiClient.prepareAuthentication(
                 processState.getSessionId(),

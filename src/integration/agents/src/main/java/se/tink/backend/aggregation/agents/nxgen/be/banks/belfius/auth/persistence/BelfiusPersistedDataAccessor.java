@@ -8,7 +8,7 @@ public class BelfiusPersistedDataAccessor
         extends AgentJsonRepresentationAuthenticationPersistedDataAccessor<
                 BelfiusAuthenticationData> {
 
-    BelfiusPersistedDataAccessor(
+    public BelfiusPersistedDataAccessor(
             AgentAuthenticationPersistedData agentAuthenticationPersistedData,
             ObjectMapper objectMapper) {
         super(agentAuthenticationPersistedData, objectMapper, BelfiusAuthenticationData.class);
@@ -26,5 +26,9 @@ public class BelfiusPersistedDataAccessor
     public AgentAuthenticationPersistedData storeBelfiusAuthenticationData(
             BelfiusAuthenticationData belfiusAuthenticationData) {
         return super.store(belfiusAuthenticationData);
+    }
+
+    public AgentAuthenticationPersistedData clearBelfiusAuthenticationData() {
+        return super.store(new BelfiusAuthenticationData());
     }
 }
