@@ -72,7 +72,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         this.swedbankConfiguration = configuration;
         this.apiClient =
                 apiClientProvider.getApiAgent(
-                        client, configuration, credentials, swedbankStorage, componentProvider);
+                        client, configuration, swedbankStorage, componentProvider);
 
         creditCardRefreshController = constructCreditCardRefreshController();
 

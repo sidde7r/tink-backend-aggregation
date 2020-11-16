@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback;
 
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
@@ -22,7 +21,6 @@ public class SwedbankFallbackApiClientProvider implements SwedbankApiClientProvi
     public SwedbankFallbackApiClient getApiAgent(
             TinkHttpClient client,
             SwedbankConfiguration configuration,
-            Credentials credentials,
             SwedbankStorage swedbankStorage,
             AgentComponentProvider componentProvider) {
 

@@ -26,10 +26,9 @@ public class SwedbankSEApiClient extends SwedbankDefaultApiClient {
     public SwedbankSEApiClient(
             TinkHttpClient client,
             SwedbankConfiguration configuration,
-            String username,
             SwedbankStorage swedbankStorage,
             AgentComponentProvider componentProvider) {
-        super(client, configuration, username, swedbankStorage, componentProvider);
+        super(client, configuration, swedbankStorage, componentProvider);
         this.client.addFilter(new SwedbankSeHttpFilter(configuration.getUserAgent()));
     }
 

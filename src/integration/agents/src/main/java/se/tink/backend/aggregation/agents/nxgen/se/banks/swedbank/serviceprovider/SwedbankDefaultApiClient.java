@@ -98,12 +98,12 @@ public class SwedbankDefaultApiClient {
     protected SwedbankDefaultApiClient(
             TinkHttpClient client,
             SwedbankConfiguration configuration,
-            String username,
             SwedbankStorage swedbankStorage,
             AgentComponentProvider componentProvider) {
         this.client = client;
         this.configuration = configuration;
-        this.username = username;
+        this.username =
+                componentProvider.getCredentialsRequest().getCredentials().getField(Key.USERNAME);
         this.swedbankStorage = swedbankStorage;
         this.organizationNumber =
                 Optional.ofNullable(

@@ -11,9 +11,8 @@ public class SwedbankFallbackApiClient extends SwedbankDefaultApiClient {
     protected SwedbankFallbackApiClient(
             TinkHttpClient client,
             SwedbankConfiguration configuration,
-            String username,
             SwedbankStorage swedbankStorage,
             AgentComponentProvider componentProvider) {
-        super(client, configuration, username, swedbankStorage, componentProvider);
+        super(client, configuration, swedbankStorage, componentProvider);
     }
 }
