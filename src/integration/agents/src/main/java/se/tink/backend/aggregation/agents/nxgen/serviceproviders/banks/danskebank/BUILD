@@ -7,6 +7,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//po:i18n",
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
@@ -37,6 +38,7 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_googlecode_gettext_commons_gettext_commons",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",

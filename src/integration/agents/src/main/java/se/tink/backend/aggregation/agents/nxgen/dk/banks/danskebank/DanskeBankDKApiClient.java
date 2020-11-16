@@ -6,13 +6,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.i18n.Catalog;
 
 public class DanskeBankDKApiClient extends DanskeBankApiClient {
     DanskeBankDKApiClient(
             TinkHttpClient client,
             DanskeBankDKConfiguration configuration,
-            Credentials credentials) {
-        super(client, configuration, credentials);
+            Credentials credentials,
+            Catalog catalog) {
+        super(client, configuration, credentials, catalog);
     }
 
     @Override

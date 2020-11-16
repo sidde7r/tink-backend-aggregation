@@ -69,7 +69,7 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
     protected DanskeBankApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankSEApiClient(
-                client, (DanskeBankSEConfiguration) configuration, credentials);
+                client, (DanskeBankSEConfiguration) configuration, credentials, catalog);
     }
 
     protected void configureHttpClient(TinkHttpClient client) {

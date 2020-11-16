@@ -84,7 +84,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
     protected DanskeBankApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankDKApiClient(
-                client, (DanskeBankDKConfiguration) configuration, credentials);
+                client, (DanskeBankDKConfiguration) configuration, credentials, catalog);
     }
 
     @Override
