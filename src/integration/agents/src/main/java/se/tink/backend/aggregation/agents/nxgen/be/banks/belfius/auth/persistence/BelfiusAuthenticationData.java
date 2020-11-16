@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence;
 
+import static se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils.formatPanNumber;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,5 +39,13 @@ public class BelfiusAuthenticationData {
     public BelfiusAuthenticationData deviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
         return this;
+    }
+
+    public String getPanNumber() {
+        if (null == panNumber || panNumber.contains(" ")) {
+            return panNumber;
+        }
+        panNumber = formatPanNumber(panNumber);
+        return panNumber;
     }
 }
