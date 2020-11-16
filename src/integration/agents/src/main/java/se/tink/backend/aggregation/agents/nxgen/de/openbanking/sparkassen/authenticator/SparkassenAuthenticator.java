@@ -197,6 +197,10 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
     private ScaMethodEntity collectScaMethod(List<ScaMethodEntity> scaMethods)
             throws SupplementalInfoException {
+        if (scaMethods.size() == 1) {
+            return scaMethods.get(0);
+        }
+
         Field scaMethodField = fieldBuilder.getChooseScaMethodField(scaMethods);
         Map<String, String> supplementalInformation =
                 supplementalInformationHelper.askSupplementalInformation(scaMethodField);

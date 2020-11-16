@@ -123,6 +123,10 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     }
 
     private ScaMethod collectScaMethod(List<ScaMethod> scaMethods) {
+        if (scaMethods.size() == 1) {
+            return scaMethods.get(0);
+        }
+
         Map<String, String> supplementalInformation =
                 supplementalInformationHelper.askSupplementalInformation(
                         CommonFields.Selection.build(

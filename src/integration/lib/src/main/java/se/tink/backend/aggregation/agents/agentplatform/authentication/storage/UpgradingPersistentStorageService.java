@@ -1,9 +1,14 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication.storage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class UpgradingPersistentStorageService extends PersistentStorageService {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(UpgradingPersistentStorageService.class);
 
     // indicator that given storage was upgraded
     public static final String MARKER = "IS_TRANSFORMED_FOR_AGENT_PLATFORM_COMPATIBILITY";
@@ -20,7 +25,10 @@ public class UpgradingPersistentStorageService extends PersistentStorageService 
     @Override
     public AgentAuthenticationPersistedData readFromAgentPersistentStorage() {
         if (wasNotMarkedAsUpgraded()) {
-            return agentPlatformStorageMigrator.migrate(agentPersistentStorage);
+            AgentAuthenticationPersistedData agentAuthenticationPersistedData =
+                    agentPlatformStorageMigrator.migrate(agentPersistentStorage);
+            LOG.info("Persistent storage to the Agent Platform model has been migrated");
+            return agentAuthenticationPersistedData;
         }
         return super.readFromAgentPersistentStorage();
     }
