@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.collections4.CollectionUtils;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.exception.NoAccountsException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
@@ -48,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class CbiGlobeApiClient {
 
     private final TinkHttpClient client;
@@ -180,15 +180,16 @@ public class CbiGlobeApiClient {
         GetAccountsResponse getAccountsResponse =
                 createAccountsRequestWithConsent().get(GetAccountsResponse.class);
         getAccountsResponse.getAccounts().removeIf(AccountEntity::isEmptyAccountObject);
-        if (CollectionUtils.isEmpty(getAccountsResponse.getAccounts())) {
-            throw new NoAccountsException("There are no bank accounts!");
-        }
-
+        log.info(
+                "Number of received checking accounts {}",
+                getAccountsResponse.getAccounts().size());
         return getAccountsResponse;
     }
 
     public GetBalancesResponse getBalances(String resourceId) {
-        return createRequestWithConsent(getBalancesUrl().parameter(IdTags.ACCOUNT_ID, resourceId))
+        return addPsuIpAddressHeaderIfNeeded(
+                        createRequestWithConsent(
+                                getBalancesUrl().parameter(IdTags.ACCOUNT_ID, resourceId)))
                 .get(GetBalancesResponse.class);
     }
 
@@ -205,12 +206,15 @@ public class CbiGlobeApiClient {
             String bookingType,
             int page) {
         HttpResponse response =
-                createRequestWithConsent(
-                                getTransactionsUrl().parameter(IdTags.ACCOUNT_ID, apiIdentifier))
-                        .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
-                        .queryParam(QueryKeys.DATE_FROM, fromDate.toString())
-                        .queryParam(QueryKeys.DATE_TO, toDate.toString())
-                        .queryParam(QueryKeys.OFFSET, String.valueOf(page))
+                addPsuIpAddressHeaderIfNeeded(
+                                createRequestWithConsent(
+                                                getTransactionsUrl()
+                                                        .parameter(
+                                                                IdTags.ACCOUNT_ID, apiIdentifier))
+                                        .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
+                                        .queryParam(QueryKeys.DATE_FROM, fromDate.toString())
+                                        .queryParam(QueryKeys.DATE_TO, toDate.toString())
+                                        .queryParam(QueryKeys.OFFSET, String.valueOf(page)))
                         .get(HttpResponse.class);
 
         String totalPages = getTotalPages(response, apiIdentifier);
