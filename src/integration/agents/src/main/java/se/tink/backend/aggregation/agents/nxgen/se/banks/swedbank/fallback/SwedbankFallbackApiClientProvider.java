@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback;
 
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.interfaces.SwedbankApiClientProvider;
@@ -27,10 +26,6 @@ public class SwedbankFallbackApiClientProvider implements SwedbankApiClientProvi
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 
         return new SwedbankFallbackApiClient(
-                client,
-                configuration,
-                credentials.getField(Field.Key.USERNAME),
-                swedbankStorage,
-                componentProvider);
+                client, configuration, swedbankStorage, componentProvider);
     }
 }
