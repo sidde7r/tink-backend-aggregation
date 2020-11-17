@@ -36,7 +36,8 @@ public final class SwedbankSEBusinessAgent extends SwedbankAbstractAgent {
                                         .getCredentialsRequest()
                                         .getProvider()
                                         .getPayload()),
-                        SwedbankSEConstants.HOST),
+                        SwedbankSEConstants.HOST,
+                        false),
                 new SwedbankSEApiClientProvider(
                         new SwedbankBusinessProfileSelector(
                                 componentProvider

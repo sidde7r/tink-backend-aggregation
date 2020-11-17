@@ -32,9 +32,4 @@ public class SwedbankBusinessProfileSelector implements SwedbankProfileSelector 
         throw LoginError.INCORRECT_CREDENTIALS.exception(
                 "No business profile matched organisation number provider by user.");
     }
-
-    @Override
-    public boolean hasPayments() {
-        return false;
-    }
 }

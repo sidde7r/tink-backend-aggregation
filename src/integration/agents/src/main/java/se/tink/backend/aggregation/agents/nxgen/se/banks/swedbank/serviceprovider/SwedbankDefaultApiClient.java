@@ -549,7 +549,7 @@ public class SwedbankDefaultApiClient {
         bankProfileHandler.setMenuItems(menuItems);
         EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
         PaymentBaseinfoResponse paymentBaseinfoResponse =
-                profileSelector.hasPayments() ? fetchPaymentBaseinfo() : null;
+                configuration.hasPayments() ? fetchPaymentBaseinfo() : null;
 
         // create and add profile
         BankProfile bankProfile =

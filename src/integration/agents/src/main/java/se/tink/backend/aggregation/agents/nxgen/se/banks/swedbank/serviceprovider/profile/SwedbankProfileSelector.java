@@ -7,6 +7,4 @@ import se.tink.libraries.pair.Pair;
 
 public interface SwedbankProfileSelector {
     List<Pair<BankEntity, ProfileEntity>> selectBankProfiles(List<BankEntity> banks);
-
-    boolean hasPayments();
 }

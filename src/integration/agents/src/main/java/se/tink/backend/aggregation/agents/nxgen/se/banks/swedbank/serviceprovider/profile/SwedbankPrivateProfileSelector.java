@@ -15,9 +15,4 @@ public class SwedbankPrivateProfileSelector implements SwedbankProfileSelector {
                 .map(bank -> new Pair<BankEntity, ProfileEntity>(bank, bank.getPrivateProfile()))
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public boolean hasPayments() {
-        return true;
-    }
 }

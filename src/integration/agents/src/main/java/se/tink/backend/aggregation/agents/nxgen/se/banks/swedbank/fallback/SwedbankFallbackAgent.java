@@ -45,7 +45,8 @@ public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
                                         .getCredentialsRequest()
                                         .getProvider()
                                         .getPayload()),
-                        SwedbankFallbackConstants.HOST),
+                        SwedbankFallbackConstants.HOST,
+                        true),
                 new SwedbankFallbackApiClientProvider(agentsServiceConfiguration),
                 new SwedbankDateUtils(ZoneId.of("Europe/Stockholm"), new Locale("sv", "SE")));
 

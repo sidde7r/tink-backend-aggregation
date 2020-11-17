@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 public class SwedbankConfiguration {
     private final ProfileParameters profileParameters;
     private final String host;
+    private final boolean hasPayments;
 
     public String getHost() {
         return host;
@@ -28,5 +29,9 @@ public class SwedbankConfiguration {
     @Nullable
     public String getUserAgent() {
         return profileParameters.getUserAgent();
+    }
+
+    public boolean hasPayments() {
+        return hasPayments;
     }
 }

@@ -69,7 +69,8 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
                                         .getCredentialsRequest()
                                         .getProvider()
                                         .getPayload()),
-                        SwedbankSEConstants.HOST),
+                        SwedbankSEConstants.HOST,
+                        true),
                 new SwedbankSEApiClientProvider(new SwedbankPrivateProfileSelector()),
                 new SwedbankDateUtils(ZoneId.of("Europe/Stockholm"), new Locale("sv", "SE")));
 
