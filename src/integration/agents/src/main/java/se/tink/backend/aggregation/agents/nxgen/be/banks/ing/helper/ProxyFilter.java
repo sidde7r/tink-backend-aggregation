@@ -36,13 +36,19 @@ public class ProxyFilter extends Filter {
 
     private final IngCryptoUtils ingCryptoUtils;
 
+    private final IngLoggingAdapter ingLoggingAdapter;
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     private final boolean debug;
 
-    public ProxyFilter(IngStorage ingStorage, IngCryptoUtils ingCryptoUtils) {
+    public ProxyFilter(
+            IngStorage ingStorage,
+            IngCryptoUtils ingCryptoUtils,
+            IngLoggingAdapter ingLoggingAdapter) {
         this.ingStorage = ingStorage;
         this.ingCryptoUtils = ingCryptoUtils;
+        this.ingLoggingAdapter = ingLoggingAdapter;
         this.debug = false; // DO NOT USE ON PROD. ONLY FOR LOCAL DEBUGGING
     }
 
@@ -57,6 +63,7 @@ public class ProxyFilter extends Filter {
 
     private void handleRequest(HttpRequest httpRequest) {
         serialize(httpRequest);
+        logRequest(httpRequest);
         encrypt(httpRequest);
         sign(httpRequest);
         if (debug) {
@@ -70,6 +77,7 @@ public class ProxyFilter extends Filter {
         }
         verifySign(httpResponse);
         decrypt(httpResponse);
+        logResponse(httpResponse);
         changeMimeType(httpResponse);
     }
 
@@ -164,5 +172,13 @@ public class ProxyFilter extends Filter {
 
     private SecretKeySpec getEncryptionKey() {
         return ingStorage.getEncryptionKey();
+    }
+
+    private void logRequest(HttpRequest httpRequest) {
+        ingLoggingAdapter.logRequest(httpRequest);
+    }
+
+    private void logResponse(HttpResponse httpResponse) {
+        ingLoggingAdapter.logResponse(httpResponse);
     }
 }

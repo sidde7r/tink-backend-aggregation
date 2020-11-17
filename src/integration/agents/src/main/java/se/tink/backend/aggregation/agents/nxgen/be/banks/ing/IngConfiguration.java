@@ -5,10 +5,14 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngAu
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.crypto.IngCryptoUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.IngTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.IngTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.IngLoggingAdapter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.IngRequestFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.ProxyFilter;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -22,13 +26,21 @@ public class IngConfiguration {
     private final IngRequestFactory ingRequestFactory;
 
     public IngConfiguration(
+            AgentComponentProvider agentComponentProvider,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
             TinkHttpClient httpClient) {
         this.ingCryptoUtils = new IngCryptoUtils();
         this.ingStorage = new IngStorage(persistentStorage, sessionStorage, ingCryptoUtils);
-        this.ingDirectApiClient = new IngDirectApiClient(httpClient);
-        ProxyFilter proxyFilter = new ProxyFilter(ingStorage, ingCryptoUtils);
+        LoggingExecutor loggingExecutor =
+                new LoggingExecutor(
+                        agentComponentProvider.getContext().getLogOutputStream(),
+                        agentComponentProvider.getContext().getLogMasker(),
+                        LogMaskerImpl.shouldLog(
+                                agentComponentProvider.getCredentialsRequest().getProvider()));
+        IngLoggingAdapter ingLoggingAdapter = new IngLoggingAdapter(loggingExecutor);
+        this.ingDirectApiClient = new IngDirectApiClient(httpClient, ingLoggingAdapter);
+        ProxyFilter proxyFilter = new ProxyFilter(ingStorage, ingCryptoUtils, ingLoggingAdapter);
         this.ingProxyApiClient = new IngProxyApiClient(httpClient, proxyFilter, ingStorage);
         this.ingRequestFactory = new IngRequestFactory(ingStorage);
     }
