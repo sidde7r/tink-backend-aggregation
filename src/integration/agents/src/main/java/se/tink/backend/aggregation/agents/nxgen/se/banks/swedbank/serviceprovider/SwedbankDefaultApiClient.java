@@ -299,10 +299,6 @@ public class SwedbankDefaultApiClient {
         return makeRequest(linkEntity, DetailedCardAccountResponse.class, true);
     }
 
-    public PaymentBaseinfoResponse paymentBaseinfo() {
-        return fetchPaymentBaseinfo();
-    }
-
     public RegisterRecipientResponse registerPayee(RegisterPayeeRequest registerPayeeRequest)
             throws TransferExecutionException {
 

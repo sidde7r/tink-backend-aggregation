@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -95,6 +96,13 @@ public class BankProfileHandler {
             logger.warn(String.format("Could not find key: %s", menuItemKey.getKey()));
             return false;
         }
+    }
+
+    @JsonIgnore
+    public PaymentBaseinfoResponse getActivePaymentBaseInfo() {
+        return Preconditions.checkNotNull(
+                getActiveBankProfile().getPaymentBaseinfoResponse(),
+                "Expected to have payment base info");
     }
 
     public Map<String, MenuItemLinkEntity> getMenuItems() {

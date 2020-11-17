@@ -74,7 +74,8 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
 
     private RegisteredTransfersResponse registerTransfer(
             Transfer transfer, String sourceAccountId) {
-        PaymentBaseinfoResponse paymentBaseinfo = apiClient.paymentBaseinfo();
+        PaymentBaseinfoResponse paymentBaseinfo =
+                swedbankStorage.getBankProfileHandler().getActivePaymentBaseInfo();
 
         AccountIdentifier destinationAccount =
                 SwedbankTransferHelper.getDestinationAccount(transfer);
