@@ -58,7 +58,8 @@ public class PostAuthDriverProcessor {
         if (isNotACustomer(errorMessage)) {
             throw LoginError.NOT_CUSTOMER.exception();
         } else {
-            log.error("[SDC] Unknown error was found: {}", errorMessage);
+            log.error(
+                    "[SDC] Unknown error was found - check page source {}", driver.getPageSource());
             throw LoginError.DEFAULT_MESSAGE.exception();
         }
     }
