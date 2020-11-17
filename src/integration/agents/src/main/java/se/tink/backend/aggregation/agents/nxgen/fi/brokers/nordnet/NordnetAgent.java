@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet;
+package se.tink.backend.aggregation.agents.nxgen.fi.brokers.nordnet;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
