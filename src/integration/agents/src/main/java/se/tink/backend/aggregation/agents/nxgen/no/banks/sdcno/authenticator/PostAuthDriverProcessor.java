@@ -43,29 +43,39 @@ public class PostAuthDriverProcessor {
 
     public void processLogonCasesAfterSuccessfulBankIdAuthentication() {
         try {
-            checkIfNotACustomer();
+            checkForErrors();
             checkIfMultipleAgreements();
         } catch (NoSuchElementException e) {
-            // successful logon
+            // If we do not find error element or agreement list element,
+            // we know that login was successful.
         }
     }
 
-    private void checkIfNotACustomer() {
+    private void checkForErrors() {
         WebElement errorMessageElement = driver.findElement(ERROR_MESSAGE);
         String errorMessage = errorMessageElement.findElement(ERROR_MESSAGE_CONTENT).getText();
 
-        if (errorMessage
-                .toLowerCase()
-                .contains(SdcNoConstants.ErrorMessages.NO_ACCOUNT_FOR_BANK_ID.toLowerCase())) {
+        if (isNotACustomer(errorMessage)) {
             throw LoginError.NOT_CUSTOMER.exception();
+        } else {
+            log.error("[SDC] Unknown error was found: {}", errorMessage);
+            throw LoginError.DEFAULT_MESSAGE.exception();
         }
+    }
+
+    private boolean isNotACustomer(String errorMessage) {
+        return errorMessage
+                .toLowerCase()
+                .contains(SdcNoConstants.ErrorMessages.NO_ACCOUNT_FOR_BANK_ID.toLowerCase());
     }
 
     private void checkIfMultipleAgreements() {
         WebElement agreementsList = driver.findElement(AGREEMENT_LIST);
         WebElement firstAgreement = agreementsList.findElement(AGREEMENT_LIST_FIRST_OPTION);
         chooseFirstAgreement(firstAgreement);
-        // ITE-1457, remove after investigation
+        // ITE-1457 - we are not sure that it will work correctly
+        // Probably there is a chance that we need to iterate through all agreements,
+        // but for now we can choose first agreement and additionally log some information.
         log.info(
                 "[SDC] Multiple agreements - first agreement chosen - page source: {}",
                 driver.getPageSource());
