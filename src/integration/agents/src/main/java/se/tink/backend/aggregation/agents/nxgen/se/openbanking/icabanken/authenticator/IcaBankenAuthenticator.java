@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator;
 
+import com.google.common.base.Strings;
 import java.security.cert.CertificateException;
 import java.util.Map;
 import org.apache.http.HttpStatus;
@@ -65,6 +66,15 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
+        // Added check for Tink app credentials which were created when the provider didn't have
+        // the SSN field. Put the credential in auth error so that users have to make an update
+        // where they need to populate SSN. Not adding a fancy error message as we just want the
+        // credentials in auth error and incorrect credentials is "good enough". This can be removed
+        // when the Tink app is gone.
+        if (Strings.isNullOrEmpty(credentials.getField(Field.Key.USERNAME))) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
         final Form params =
                 Form.builder()
                         .put(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
