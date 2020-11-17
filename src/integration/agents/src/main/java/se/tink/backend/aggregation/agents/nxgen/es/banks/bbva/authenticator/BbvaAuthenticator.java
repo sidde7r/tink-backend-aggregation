@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@Slf4j
 public class BbvaAuthenticator implements MultiFactorAuthenticator {
     private final SessionStorage sessionStorage;
     private BbvaApiClient apiClient;
@@ -41,6 +43,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
                 new LoginRequest(BbvaUtils.formatUsername(username), password, null);
         try {
             LoginResponse loginResponse = apiClient.login(loginRequest);
+            log.info("Authentication state: {}", loginResponse.getAuthenticationState());
             if (loginResponse
                     .getAuthenticationState()
                     .equalsIgnoreCase(AuthenticationStates.GO_ON)) {
