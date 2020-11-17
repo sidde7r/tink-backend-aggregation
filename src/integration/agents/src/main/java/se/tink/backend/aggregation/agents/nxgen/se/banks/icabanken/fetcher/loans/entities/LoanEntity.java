@@ -3,13 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loan
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.util.Maps;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.IcaBankenLoanParsingHelper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -19,16 +18,9 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.Lo
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
+@Slf4j
 public class LoanEntity {
-    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(LoanEntity.class);
-
     private String loanName;
-    private double initialDebt;
-    private long initialDate;
-    private String applicants;
-
-    @JsonProperty("InterestRatesDetails")
-    private List<InterestRateMapEntity> interestRatesDetails;
 
     @JsonProperty("LoanDetails")
     private List<InterestRateMapEntity> loanDetails;
@@ -43,21 +35,6 @@ public class LoanEntity {
     private String type;
 
     @JsonIgnore private Map<String, String> transformedLoanDetails;
-
-    private Double parseInterestRate(InterestRateMapEntity interestRatesDetails) {
-        return Double.parseDouble(interestRatesDetails.getValue().split(",")[0].replace(",", "."));
-    }
-
-    public Double getInterestRate() {
-        if (interestRatesDetails.isEmpty()) {
-            log.info("interestRatesDetails has no elements: {}", interestRatesDetails);
-        }
-        return interestRatesDetails.stream()
-                .filter(i -> LocalDate.now().toString().compareTo(i.getKey()) > 0)
-                .map(this::parseInterestRate)
-                .findAny()
-                .orElseThrow(IllegalStateException::new);
-    }
 
     public void setLoanDetails(List<InterestRateMapEntity> loanDetails) {
         this.loanDetails = loanDetails;
@@ -88,12 +65,10 @@ public class LoanEntity {
 
     @JsonIgnore
     private LoanModule buildLoanDetails(IcaBankenLoanParsingHelper loanParsingHelper) {
-        logLoanType();
-
         return LoanModule.builder()
-                .withType(LoanDetails.Type.BLANCO)
+                .withType(getTinkLoanType())
                 .withBalance(loanParsingHelper.getCurrentBalance())
-                .withInterestRate(getInterestRate())
+                .withInterestRate(loanParsingHelper.getInterestRate())
                 .setAmortized(loanParsingHelper.getAmortized(presentDebt))
                 .setApplicants(loanParsingHelper.getApplicantsList())
                 .setInitialBalance(loanParsingHelper.getInitialBalance())
@@ -114,6 +89,17 @@ public class LoanEntity {
                 .withAccountName(loanParsingHelper.getLoanName())
                 .addIdentifier(new SwedishIdentifier(loanNumber))
                 .build();
+    }
+
+    private LoanDetails.Type getTinkLoanType() {
+        LoanDetails.Type loanType =
+                IcaBankenConstants.AccountTypes.LOAN_TYPE_MAPPER
+                        .translate(this.type)
+                        .orElse(LoanDetails.Type.OTHER);
+        if (LoanDetails.Type.OTHER == loanType) {
+            logLoanType();
+        }
+        return loanType;
     }
 
     private void logLoanType() {
