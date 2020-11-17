@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.banks.sbab.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -39,7 +38,7 @@ public class LoanEntity {
     private long status;
 
     @JsonProperty("laneTyp")
-    private long type;
+    private int type;
 
     @JsonProperty("lanekapital")
     private BigDecimal amount;
@@ -148,21 +147,23 @@ public class LoanEntity {
     }
 
     /**
-     * Note: this logic was taken from the JavaScript code at sbab.se. That is, the loan is a
-     * mortgage if the value laneobjekt.beteckning is present.
+     * Loan type mapping based on type number. We have seen that type 14, 60, 61, 62 are loans with
+     * securities so they are mapped as mortgage. Type 70 are loans without securities and a higher
+     * interest rate so they are mapped as blanco.
      */
-    private boolean isMortgage() {
-        return getSecurity() != null && !Strings.isNullOrEmpty(getSecurity().getLabel());
-    }
-
     private Loan.Type getLoanType() {
-        if (isMortgage()) {
-            logger.info("Loan with type {} categorised as mortgage", type);
-            return Loan.Type.MORTGAGE;
+        switch (type) {
+            case 14:
+            case 60:
+            case 61:
+            case 62:
+                return Loan.Type.MORTGAGE;
+            case 70:
+                return Loan.Type.BLANCO;
+            default:
+                logger.info("Unknown loan type {} categorised as other", type);
+                return Loan.Type.OTHER;
         }
-
-        logger.info("Loan with type {} categorised as other", type);
-        return Loan.Type.OTHER;
     }
 
     public Optional<Account> toTinkAccount() {
